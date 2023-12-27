@@ -1,0 +1,38 @@
+{
+  "name": "sleepapi-bot",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/app.js",
+  "scripts": {
+    "clean": "rm -rf ./dist/",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "start": "node ./dist/app.js",
+    "predev": "npm run build",
+    "dev": "nodemon",
+    "test": "jest"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts",
+    "exec": "ts-node src/app.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.20",
+    "@types/morgan": "^1.9.7",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

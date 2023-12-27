@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<script src="functions.js"></script>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/cook.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/app.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <title>Sleep API</title>
+  </head>
+  <body>
+    <div class="topnav" id="topnavId">
+      <a href="home.html">Home</a>
+      <a href="production-calculator.html">Production Calculator</a>
+      <a href="optimal-sets.html">Optimal Sets</a>
+      <a class="active" href="tier-lists.html">Tier Lists</a>
+      <a href="meal-rankings.html">Meal Rankings</a>
+      <a href="pokemon-flexible.html">Flexible Pokémon</a>
+      <a href="pokemon-focused.html">Focused Pokémon</a>
+      <a href="javascript:void(0);" class="icon" onclick="showMenu()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+
+    <header style="text-align: center">
+      <br />
+      <h1>Cooking Tier Lists</h1>
+      <h4>Ranks Pokémon with high cooking potential for lategame strategies</h4>
+
+      <p>
+        <a
+          class="btn btn-outline-dark"
+          data-bs-toggle="collapse"
+          href="#collapseExample"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        >
+          Show more details
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <h4>
+            <u><strong>How to Use</strong></u
+            ><br />
+            Select your tier list from the dropdown. <br />
+            Choose level 60 or 50 version. <br />
+            Hit the submit button. <br /><br />
+
+            When changing between level 60/50 versions you have to hit the submit button to updated the results again.
+            <br /><br />
+
+            <u><strong>Deciding Tier List Placement</strong></u>
+            <br />
+            The tier lists are produced using simulation-based data.<br />
+            The underlying algorithms are written by the Sleep API authors, the results are thus not hand-picked. The
+            placements are simply what the data shows.
+          </h4>
+          <br />
+          <h4>
+            <u><strong>The Algorithm</strong></u
+            ><br />
+            In short; Sleep API simulates cooking every recipe for every ingredient list available for every Pokémon and
+            then with every possible team composition to ensure we find the optimal ways to use each Pokémon.<br /><br />
+
+            For each Pokémon it does the following: find all available ingredient lists, calculate produced ingredients
+            in a meal window for each ingredient list, check contribution to each recipe, find optimal team compositions
+            to finish each recipe, adjust contribution power dependant on resulting team composition difficulty for
+            finishing the recipe, add filler value.
+            <br />
+            <br />
+
+            When calculating a meal window of produce we assume optimal sub-skills and nature, but to avoid locking
+            certain team composition requirements or paid play we avoid good camp, helping bonus and energy skills from
+            influencing the produce. <br />
+            <br />
+
+            When finding optimal team compositions for each Pokémon/ingredient-list/recipe we use the produced
+            ingredients and each recipe's required ingredients. <br />
+            We find which ingredients the Pokémon couldn't cover for each recipe in the meal window. Then we simulate
+            running each Pokémon with every possible team composition to find optimal ways for this Pokémon to complete
+            each recipe.<br />
+            <br />
+
+            The raw contribution power to each recipe is calculated as: <br />
+            <code
+              >relevant ingredients of recipe covered * ingredient base value * recipe bonus% * recipe level 50
+              factor</code
+            >. <br />
+            <br />
+            We calculate a filler tax for each ingredient based on their raw value compared to Slowpoke Tail
+            percentage-wise:
+            <br />
+            <code>(ingredient base value / Slowpoke Tail base value) * ingredient base value</code><br /><br />
+            The total ingredient filler value is then calculated as: <br />
+            <code>surplus ingredients not used in recipe * taxed ingredient value</code>. <br />
+            <br />
+            The final contribution score it calculated as: <br />
+            <code>(raw contribution power / (0.2*team size required for recipe)) + filler value</code>.<br /><br />
+
+            For the overall tier list we then select the 3 best performing recipes, we boost the value of the very best
+            recipe by 50% and finally combine the contribution powers into a final score by which we rank the ingredient
+            lists of all Pokémon.<br /><br />
+            For the meal type-specific tier lists we only calculate contribution value for recipes of that type. Since
+            we're looking at a specific meal-type here, we only count the best 2 recipes. We still boost the best recipe
+            by 50% and count a second recipe as fallback.<br />
+            <br />
+          </h4>
+        </div>
+      </div>
+    </header>
+
+    <div style="text-align: center">
+      <h3>Select Tier List</h3>
+      <select id="tierlistType" name="tierlistType" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="overall" selected>Overall</option>
+        <option value="curry">Curry</option>
+        <option value="salad">Salad</option>
+        <option value="dessert">Dessert</option>
+      </select>
+      <br />
+
+      <div class="d-flex justify-content-center" style="text-align: center">
+        <div class="form-check form-switch ms-3 order-2">
+          <input class="form-check-input" type="checkbox" role="switch" id="mode" checked />
+          <div class="level50">Level 50</div>
+          <div class="level60">Level 60</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3" style="margin-bottom: 20px">
+      <button
+        class="btn black-button btn-outline-dark text-center"
+        style="width: 300px"
+        type="button"
+        onclick="goToTierLists(createTierList)"
+      >
+        Submit
+      </button>
+    </div>
+
+    <div class="tierlist-container"></div>
+
+    <div id="spinner-div" style="display: none"></div>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <p id="modal-text">Error: No text set, please let developers know..</p>
+        <span class="close"><button class="btn btn-danger">close</button></span>
+      </div>
+    </div>
+
+    <footer class="w3-container w3-black mt-10">
+      <a href="https://discord.gg/w97qFff8n4">Sleep API authors</a> on Discord for questions
+    </footer>
+  </body>
+</html>
+
+<script>
+  var modal = document.getElementById('myModal');
+
+  var container = document.querySelector('.tierlist-container');
+  var span = document.querySelector('.close');
+  var modalText = document.getElementById('modal-text');
+
+  container.addEventListener('click', function (event) {
+    if (
+      event.target.classList.contains('modal-button') ||
+      event.target.parentElement.classList.contains('modal-button')
+    ) {
+      var text = event.target.getAttribute('data-text') ?? event.target.parentElement.getAttribute('data-text');
+      modalText.textContent = text;
+      modalText.style.whiteSpace = 'pre-line';
+      modal.style.display = 'block';
+    }
+  });
+
+  // When the user clicks on close, close the modal
+  span.onclick = function () {
+    modal.style.display = 'none';
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
+</script>
+
+<script>
+  function createTierList(data) {
+    var container = document.querySelector('.tierlist-container');
+
+    var oldTierList = container.querySelector('div');
+    if (oldTierList) {
+      container.removeChild(oldTierList);
+    }
+
+    var verticalBtnGroup = document.createElement('div');
+    verticalBtnGroup.className = 'btn-group-vertical';
+
+    var tiers = data;
+    for (var j = 0; j < tiers.length; j++) {
+      var tier = document.createElement('button');
+      tier.type = 'button';
+      tier.className = 'btn btn-lg btn-block ' + getColorClass(tiers[j].tier);
+      tier.disabled = true;
+      tier.innerText = `${tiers[j].tier} Tier`;
+
+      var chunkSize = 5;
+      var allPokemonInTier = tiers[j].pokemonWithDetails;
+
+      verticalBtnGroup.appendChild(tier);
+
+      for (var k = 0; k < allPokemonInTier.length; k += chunkSize) {
+        var row = allPokemonInTier.slice(k, k + chunkSize);
+
+        var btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group';
+        btnGroup.role = 'group';
+
+        for (var i = 0; i < row.length; i++) {
+          var pokemonWithDetails = row[i];
+          var modalButton = document.createElement('button');
+          modalButton.type = 'button';
+          modalButton.className = 'btn btn-secondary modal-button';
+          modalButton.dataset.text =
+            `${pokemonWithDetails.pokemon} - INGREDIENT LISTS\n\n` + pokemonWithDetails.details;
+          modalButton.style.overflow = 'hidden';
+
+          var img = document.createElement('img');
+          img.src = `./pokemon/${pokemonWithDetails.pokemon}.png`;
+          img.className = 'img-fluid';
+          img.style.transform = 'scale(1.5)';
+
+          img.alt = pokemonWithDetails.pokemon;
+
+          modalButton.appendChild(img);
+          btnGroup.appendChild(modalButton);
+        }
+
+        if (row.length !== 5) {
+          for (var z = 0; z < 5 - row.length; z++) {
+            var modalButton = document.createElement('button');
+            modalButton.type = 'button';
+            modalButton.className = 'btn btn-dark';
+            modalButton.disabled = true;
+            modalButton.style.overflow = 'hidden';
+
+            var img = document.createElement('img');
+            img.src = './pokemon/empty.png';
+            img.className = 'img-fluid';
+            img.style.transform = 'scale(1.5)';
+
+            modalButton.appendChild(img);
+            btnGroup.appendChild(modalButton);
+          }
+        }
+
+        verticalBtnGroup.appendChild(btnGroup);
+      }
+    }
+
+    container.appendChild(verticalBtnGroup);
+    container.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  }
+</script>
+
+<style>
+  .tierlist-container {
+    margin: auto;
+    margin-bottom: 50px;
+  }
+
+  @media (min-width: 1000px) {
+    .tierlist-container {
+      width: 60%;
+    }
+
+    .modal-content {
+      padding: 10px;
+      width: 40%;
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .tierlist-container {
+      width: 90%;
+    }
+
+    .modal-content {
+      padding: 5px;
+      width: 90%;
+    }
+  }
+
+  .level50,
+  .level60 {
+    color: black;
+    font-weight: normal;
+    display: inline-block;
+  }
+
+  #mode:not(:checked) + .level50 {
+    color: #f04545 !important;
+    font-weight: bold !important;
+  }
+
+  #mode:checked ~ .level60 {
+    color: #f04545 !important;
+    font-weight: bold !important;
+  }
+
+  .black-button {
+    background-color: #555;
+    color: #ffffff;
+  }
+
+  .dropdown-toggle {
+    white-space: normal;
+  }
+
+  .dropdown-label {
+    background: none;
+    padding: 0;
+  }
+
+  .btn-outline-dark {
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-color: #000;
+  }
+
+  select,
+  option {
+    width: 300px;
+  }
+
+  .form-switch .form-check-input:focus {
+    border-color: rgba(0, 0, 0, 0.25);
+    outline: 0;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+  .form-switch .form-check-input:checked {
+    background-color: #f04545;
+    border-color: #f04545;
+    border: none;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 10px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    border: 1px solid #888;
+    text-align: center;
+  }
+
+  .close {
+    color: #aaaaaa;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn:disabled {
+    color: black;
+  }
+
+  .tierlist-container .btn-s {
+    background-color: red;
+  }
+
+  .tierlist-container .btn-a {
+    background-color: orangered;
+  }
+
+  .tierlist-container .btn-b {
+    background-color: orange;
+  }
+
+  .tierlist-container .btn-c {
+    background-color: yellow;
+  }
+
+  .tierlist-container .btn-d {
+    background-color: yellowgreen;
+  }
+
+  .tierlist-container .btn-e {
+    background-color: limegreen;
+  }
+
+  .tierlist-container .btn-f {
+    background-color: green;
+  }
+</style>
+
+<script>
+  function getColorClass(tier) {
+    switch (tier) {
+      case 'S':
+        return 'btn-s';
+      case 'A':
+        return 'btn-a';
+      case 'B':
+        return 'btn-b';
+      case 'C':
+        return 'btn-c';
+      case 'D':
+        return 'btn-d';
+      case 'E':
+        return 'btn-e';
+      case 'F':
+        return 'btn-f';
+      default:
+        return 'btn-default';
+    }
+  }
+</script>

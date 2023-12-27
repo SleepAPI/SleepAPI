@@ -1,0 +1,14 @@
+@import 'bulma/sass/utilities/_all.sass';
+
+// sneasel
+$sneasel-feather: hsla(3, 100%, 69%, 1);
+$sneasel-feather-background: hsla(3, 100%, 69%, 0.2);
+$sneasel-skin: #3d6061;
+$sneasel-skin-background: #3d606130; // TODO: need this color, but not transparent
+
+// base
+$text: #999;
+$text-header: white;
+$white: white;
+$border: rgba(84, 84, 84, 0.48);
+$background: #181818;

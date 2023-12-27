@@ -1,0 +1,54 @@
+{
+  "folders": [
+    {
+      "name": "backend",
+      "path": "backend"
+    },
+    {
+      "name": "frontend",
+      "path": "frontend"
+    },
+    {
+      "name": "bot",
+      "path": "bot"
+    },
+    {
+      "name": "Project files",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "eslint.validate": ["javascript", "typescript"],
+    "files.exclude": {
+      "backend": true,
+      "frontend": true,
+      "bot": true,
+      ".vscode": true,
+      "dist": true,
+      "node_modules": true,
+      "package-lock.json": true,
+      "*.tsbuildinfo": true,
+      "coverage": true,
+      ".eslintrc.cjs": true,
+      ".prettierignore": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "EditorConfig.EditorConfig",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "Vue.volar",
+      "Vue.vscode-typescript-vue-plugin"
+    ]
+  }
+}
