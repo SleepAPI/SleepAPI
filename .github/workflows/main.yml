@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: Sleep API - CI
 
 on:
   push:
@@ -13,16 +13,20 @@ jobs:
   test-and-lint:
     runs-on: ubuntu-latest
     steps:
-      #- uses: actions/checkout@v3
-      #- name: Setup Node
-      #  uses: actions/setup-node@v3
-      #  with:
-      #    node-version: 18
-      #    check-latest: true
-      #    cache: "npm"
-      #    cache-dependency-path: backend/package-lock.json
-      #- name: Test and lint
-      #  working-directory: ./backend
-      #  run: npm ci && npm run build --if-present && npm run test && npm run lint
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          check-latest: true
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+      - name: Test and lint
+        working-directory: ./backend
+        run: npm ci && npm run build --if-present && npm run test && npm run lint
       - name: Conventional Commits
         uses: webiny/action-conventional-commits@v1.1.0
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

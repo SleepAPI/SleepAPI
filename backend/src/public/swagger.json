@@ -1,0 +1,2034 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Ingredient": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"taxedValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"longName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"taxedValue",
+					"longName"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IngredientDrop": {
+				"properties": {
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"$ref": "#/components/schemas/Ingredient"
+					}
+				},
+				"required": [
+					"amount",
+					"ingredient"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Nature": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"prettyName": {
+						"type": "string"
+					},
+					"frequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"type": "number",
+						"format": "double"
+					},
+					"skill": {
+						"type": "number",
+						"format": "double"
+					},
+					"energy": {
+						"type": "number",
+						"format": "double"
+					},
+					"exp": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"prettyName",
+					"frequency",
+					"ingredient",
+					"skill",
+					"energy",
+					"exp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubSkill": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"frequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"type": "number",
+						"format": "double"
+					},
+					"skill": {
+						"type": "number",
+						"format": "double"
+					},
+					"inventory": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"frequency",
+					"ingredient",
+					"skill",
+					"inventory"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Berry": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MainSkill": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"amount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pokemon": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"specialty": {
+						"type": "string",
+						"enum": [
+							"berry",
+							"ingredient",
+							"skill"
+						]
+					},
+					"frequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredientPercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillPercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"berry": {
+						"$ref": "#/components/schemas/Berry"
+					},
+					"carrySize": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient0": {
+						"$ref": "#/components/schemas/IngredientDrop"
+					},
+					"ingredient30": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"ingredient60": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"skill": {
+						"$ref": "#/components/schemas/MainSkill"
+					}
+				},
+				"required": [
+					"name",
+					"specialty",
+					"frequency",
+					"ingredientPercentage",
+					"skillPercentage",
+					"berry",
+					"carrySize",
+					"maxCarrySize",
+					"ingredient0",
+					"ingredient30",
+					"ingredient60",
+					"skill"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonCombination": {
+				"properties": {
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"pokemon": {
+						"$ref": "#/components/schemas/Pokemon"
+					}
+				},
+				"required": [
+					"ingredientList",
+					"pokemon"
+				],
+				"type": "object"
+			},
+			"BerryDrop": {
+				"properties": {
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"berry": {
+						"$ref": "#/components/schemas/Berry"
+					}
+				},
+				"required": [
+					"amount",
+					"berry"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Produce": {
+				"properties": {
+					"berries": {
+						"$ref": "#/components/schemas/BerryDrop"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"berries",
+					"ingredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DetailedProduce": {
+				"properties": {
+					"produce": {
+						"$ref": "#/components/schemas/Produce"
+					},
+					"spilledIngredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"sneakySnack": {
+						"$ref": "#/components/schemas/BerryDrop"
+					},
+					"helpsBeforeSS": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpsAfterSS": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"produce",
+					"spilledIngredients",
+					"sneakySnack",
+					"helpsBeforeSS",
+					"helpsAfterSS"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CustomStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"level",
+					"nature",
+					"subskills"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CustomPokemonCombinationWithProduce": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonCombination"
+					},
+					"detailedProduce": {
+						"$ref": "#/components/schemas/DetailedProduce"
+					},
+					"customStats": {
+						"$ref": "#/components/schemas/CustomStats"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"detailedProduce",
+					"customStats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubskillSet": {
+				"type": "string",
+				"enum": [
+					"optimal",
+					"neutral"
+				]
+			},
+			"FilteredQueryParams": {
+				"properties": {
+					"limit30": {
+						"type": "boolean"
+					},
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"e4e": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingbonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"nature": {
+						"type": "string"
+					},
+					"subskills": {
+						"$ref": "#/components/schemas/SubskillSet"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetPokemonQueryParams": {
+				"properties": {
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MealsForPokemonRequestQueryParams": {
+				"properties": {
+					"limit30": {
+						"type": "boolean"
+					},
+					"advanced": {
+						"type": "boolean"
+					},
+					"unlocked": {
+						"type": "boolean"
+					},
+					"lategame": {
+						"type": "boolean"
+					},
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Meal": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"value50": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"curry",
+							"salad",
+							"dessert"
+						]
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"unlockables": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"value50",
+					"type",
+					"ingredients",
+					"bonus",
+					"unlockables"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Contribution": {
+				"properties": {
+					"meal": {
+						"$ref": "#/components/schemas/Meal"
+					},
+					"percentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"contributedPower": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"meal",
+					"percentage",
+					"contributedPower"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CombinedContribution": {
+				"properties": {
+					"bestMeals": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
+					},
+					"averagePercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"summedContributedPower": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"bestMeals",
+					"averagePercentage",
+					"summedContributedPower"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonCombinationContribution": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonCombination"
+					},
+					"combinedContribution": {
+						"$ref": "#/components/schemas/CombinedContribution"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"combinedContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTierListRequestBody": {
+				"properties": {
+					"limit50": {
+						"type": "boolean"
+					},
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"minRecipeBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"nrOfMeals": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"limit50",
+					"cyan",
+					"taupe",
+					"snowdrop",
+					"curry",
+					"salad",
+					"dessert",
+					"minRecipeBonus",
+					"nrOfMeals"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TierlistType": {
+				"type": "string",
+				"enum": [
+					"overall",
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"GetTierListQueryParams": {
+				"properties": {
+					"tierlistType": {
+						"$ref": "#/components/schemas/TierlistType"
+					},
+					"limit50": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"onlyBest": {
+						"type": "boolean"
+					},
+					"previous": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"tierlistType",
+					"limit50",
+					"pretty",
+					"onlyBest",
+					"previous"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductionRequest": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"type": "string"
+					},
+					"subskills": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"e4e": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingbonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"level",
+					"nature",
+					"subskills",
+					"e4e",
+					"helpingbonus",
+					"camp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SelectedMealQueryParams": {
+				"properties": {
+					"advanced": {
+						"type": "boolean"
+					},
+					"unlocked": {
+						"type": "boolean"
+					},
+					"lategame": {
+						"type": "boolean"
+					},
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CombinationForMealType": {
+				"properties": {
+					"pokemon": {
+						"type": "string"
+					},
+					"percentage": {
+						"type": "string"
+					},
+					"contributedPower": {
+						"type": "string"
+					},
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"producedIngredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"pokemon",
+					"percentage",
+					"contributedPower",
+					"ingredientList",
+					"producedIngredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AllCombinationsForMealType": {
+				"properties": {
+					"meal": {
+						"type": "string"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"recipe": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"combinations": {
+						"items": {
+							"$ref": "#/components/schemas/CombinationForMealType"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"meal",
+					"bonus",
+					"value",
+					"recipe",
+					"combinations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RankingsForMealQueryParams": {
+				"properties": {
+					"limit30": {
+						"type": "boolean"
+					},
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CombinationForFlexibleRankingType": {
+				"properties": {
+					"pokemon": {
+						"type": "string"
+					},
+					"averagePercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"pokemon",
+					"averagePercentage",
+					"ingredientList"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilteredWithMealsQueryParams": {
+				"properties": {
+					"limit30": {
+						"type": "boolean"
+					},
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"advanced": {
+						"type": "boolean"
+					},
+					"unlocked": {
+						"type": "boolean"
+					},
+					"lategame": {
+						"type": "boolean"
+					},
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CombinationForFocusedRankingType": {
+				"properties": {
+					"pokemon": {
+						"type": "string"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"pokemon",
+					"total",
+					"meals",
+					"ingredientList"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilteredExtQueryParams": {
+				"properties": {
+					"limit30": {
+						"type": "boolean"
+					},
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"advanced": {
+						"type": "boolean"
+					},
+					"unlocked": {
+						"type": "boolean"
+					},
+					"lategame": {
+						"type": "boolean"
+					},
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"csv": {
+						"type": "boolean"
+					},
+					"nrOfMeals": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BuddyForFlexibleRanking": {
+				"properties": {
+					"buddy2_ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"buddy2_pokemon": {
+						"type": "string"
+					},
+					"buddy1_ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"buddy1_pokemon": {
+						"type": "string"
+					},
+					"average_percentage": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"buddy2_ingredientList",
+					"buddy2_pokemon",
+					"buddy1_ingredientList",
+					"buddy1_pokemon",
+					"average_percentage"
+				],
+				"type": "object"
+			},
+			"BuddyForMeal": {
+				"properties": {
+					"combinations": {
+						"items": {
+							"properties": {
+								"buddy2_producedIngredients": {
+									"items": {
+										"$ref": "#/components/schemas/IngredientDrop"
+									},
+									"type": "array"
+								},
+								"buddy2_ingredientList": {
+									"items": {
+										"$ref": "#/components/schemas/IngredientDrop"
+									},
+									"type": "array"
+								},
+								"buddy2_pokemon": {
+									"type": "string"
+								},
+								"buddy1_producedIngredients": {
+									"items": {
+										"$ref": "#/components/schemas/IngredientDrop"
+									},
+									"type": "array"
+								},
+								"buddy1_ingredientList": {
+									"items": {
+										"$ref": "#/components/schemas/IngredientDrop"
+									},
+									"type": "array"
+								},
+								"buddy1_pokemon": {
+									"type": "string"
+								},
+								"contributed_power": {
+									"type": "number",
+									"format": "double"
+								},
+								"percentage": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"buddy2_producedIngredients",
+								"buddy2_ingredientList",
+								"buddy2_pokemon",
+								"buddy1_producedIngredients",
+								"buddy1_ingredientList",
+								"buddy1_pokemon",
+								"contributed_power",
+								"percentage"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"recipe": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"meal": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"combinations",
+					"recipe",
+					"value",
+					"bonus",
+					"meal"
+				],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "sleep-api",
+		"version": "5.0.0",
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/optimal/{name}": {
+			"get": {
+				"operationId": "GetOptimalPokemonForMealRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"teams": {
+											"items": {
+												"properties": {
+													"member5": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													},
+													"member4": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													},
+													"member3": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													},
+													"member2": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													},
+													"member1": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													},
+													"prettyCombinedProduce": {
+														"type": "string"
+													},
+													"prettySurplus": {
+														"type": "string"
+													},
+													"sumSurplus": {
+														"type": "number",
+														"format": "double"
+													}
+												},
+												"required": [
+													"member5",
+													"member4",
+													"member3",
+													"member2",
+													"member1",
+													"prettyCombinedProduce",
+													"prettySurplus",
+													"sumSurplus"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"filter": {
+											"properties": {
+												"goodCamp": {
+													"type": "boolean"
+												},
+												"helpingBonus": {
+													"type": "number",
+													"format": "double"
+												},
+												"e4eProcs": {
+													"type": "number",
+													"format": "double"
+												},
+												"subskills": {
+													"items": {
+														"$ref": "#/components/schemas/SubSkill"
+													},
+													"type": "array"
+												},
+												"nature": {
+													"$ref": "#/components/schemas/Nature"
+												},
+												"level": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"goodCamp",
+												"helpingBonus",
+												"e4eProcs",
+												"subskills",
+												"nature",
+												"level"
+											],
+											"type": "object"
+										},
+										"value": {
+											"type": "number",
+											"format": "double"
+										},
+										"recipe": {
+											"items": {
+												"$ref": "#/components/schemas/IngredientDrop"
+											},
+											"type": "array"
+										},
+										"meal": {
+											"type": "string"
+										},
+										"bonus": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"teams",
+										"filter",
+										"value",
+										"recipe",
+										"meal",
+										"bonus"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit30",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "e4e",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "helpingbonus",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "camp",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nature",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "subskills",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SubskillSet"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/pokemon": {
+			"get": {
+				"operationId": "GetPokemon",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/pokemon/{name}": {
+			"get": {
+				"operationId": "GetPokemonRankingRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit30",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "advanced",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "unlocked",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lategame",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "curry",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "salad",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dessert",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/tierlist/cooking": {
+			"get": {
+				"operationId": "GetCookingTierlist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/PokemonCombinationContribution"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "tierlistType",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TierlistType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit50",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "onlyBest",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "previous",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/calculator/production/{name}": {
+			"post": {
+				"operationId": "CalculatePokemonProduction",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"pokemonCombinations": {
+											"items": {
+												"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+											},
+											"type": "array"
+										},
+										"filters": {
+											"properties": {
+												"goodCamp": {
+													"type": "boolean"
+												},
+												"helpingBonus": {
+													"type": "number",
+													"format": "double"
+												},
+												"e4eProcs": {
+													"type": "number",
+													"format": "double"
+												},
+												"subskills": {
+													"items": {
+														"$ref": "#/components/schemas/SubSkill"
+													},
+													"type": "array"
+												},
+												"nature": {
+													"$ref": "#/components/schemas/Nature"
+												},
+												"level": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"goodCamp",
+												"helpingBonus",
+												"e4eProcs",
+												"subskills",
+												"nature",
+												"level"
+											],
+											"type": "object"
+										}
+									},
+									"required": [
+										"pokemonCombinations",
+										"filters"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProductionRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/meal": {
+			"get": {
+				"operationId": "GetMeals",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "advanced",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "unlocked",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lategame",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "curry",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "salad",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dessert",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/meal/{name}": {
+			"get": {
+				"operationId": "GetMealRankingRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AllCombinationsForMealType"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit30",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/ranking/meal/flexible": {
+			"get": {
+				"operationId": "GetMealGeneralistRankingRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CombinationForFlexibleRankingType"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit30",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "advanced",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "unlocked",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lategame",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "curry",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "salad",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dessert",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/ranking/meal/focused": {
+			"get": {
+				"operationId": "GetMealFocusedRankingRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CombinationForFocusedRankingType"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit30",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "advanced",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "unlocked",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lategame",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "curry",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "salad",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dessert",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "csv",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nrOfMeals",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

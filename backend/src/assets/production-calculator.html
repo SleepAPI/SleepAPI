@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<script src="functions.js"></script>
+
+<html>
+  <script type="text/javascript">
+    window.onload = function () {
+      var selects = document.querySelectorAll("[id^='subskill']");
+
+      function removeSelectedOption() {
+        var prevValue = this.dataset.prevValue;
+        var currValue = this.value;
+
+        for (var i = 0; i < selects.length; i++) {
+          // if select same option do nothing
+          if (selects[i] == this) continue;
+
+          // iterate all options, find the current selected value and remove it
+          for (var j = 0; j < selects[i].options.length; j++) {
+            if (currValue != 'None' && selects[i].options[j].value == currValue) {
+              selects[i].remove(j);
+              break;
+            }
+          }
+          if (prevValue != 'None') {
+            var option = document.createElement('option');
+            option.value = prevValue;
+            option.text = prevValue;
+            var select = selects[i];
+            var options = Array.from(select.options);
+            options.push(option);
+            options.sort(function (a, b) {
+              return a.text.localeCompare(b.text);
+            });
+            select.innerHTML = '';
+            for (var k = 0; k < options.length; k++) {
+              select.add(options[k]);
+            }
+          }
+        }
+        this.dataset.prevValue = currValue;
+      }
+
+      // this triggers once on window load, then registers function
+      for (var i = 0; i < selects.length; i++) {
+        selects[i].dataset.prevValue = selects[i].value;
+        selects[i].addEventListener('change', removeSelectedOption);
+      }
+    };
+  </script>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/cook.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/app.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <title>Sleep API</title>
+  </head>
+  <body>
+    <div class="topnav" id="topnavId">
+      <a href="home.html">Home</a>
+      <a class="active" href="production-calculator.html">Production Calculator</a>
+      <a href="optimal-sets.html">Optimal Sets</a>
+      <a href="tier-lists.html">Tier Lists</a>
+      <a href="meal-rankings.html">Meal Rankings</a>
+      <a href="pokemon-flexible.html">Flexible Pokémon</a>
+      <a href="pokemon-focused.html">Focused Pokémon</a>
+      <a href="javascript:void(0);" class="icon" onclick="showMenu()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+
+    <header style="text-align: center">
+      <br />
+      <h1>Production Calculator</h1>
+      <h4>Calculate a Pokémon's output per meal window</h4>
+
+      <p>
+        <a
+          class="btn btn-outline-dark"
+          data-bs-toggle="collapse"
+          href="#collapseExample"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        >
+          Show more details
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <h3>
+            Production output numbers are average amounts available per meal. <br />
+            This means if you want the 24h produce, you multiply the results by 3. <br />The calculator assumes 15.5
+            hours of wake time and 8.5 hours of sleep.
+          </h3>
+          <br />
+          <h4>
+            This calculates produce using the Pokémon's frequency, base ingredient percent and carry size. <br />The
+            calculator accounts for energy change, both natural decline and optional e4e refill. <br />It also
+            accurately accounts for spilled ingredients during the night. <br /><br />Note that produced ingredients are
+            per meal window, but spilled ingredients are listed in total amount spilled at night, <br />therefore by
+            maxing the inventory you will at most save 1/3rd of those per meal window. <br />Output converted to sneaky
+            snacking at night is included in the 24h berry output.<br /><br />If you select more subskills than your
+            chosen level allows it won't use the unavailable subskills. <br />For example if you set level to 50 but
+            choose 5 subskills only the first 3 will be calculated.
+          </h4>
+        </div>
+      </div>
+    </header>
+
+    <div style="text-align: center">
+      <h3>Select your settings</h3>
+      <select id="pokemon" name="pokemon" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="Pokémon" selected>Pokémon</option>
+        <option value="ABOMASNOW">Abomasnow</option>
+        <option value="ABSOL">Absol</option>
+        <option value="AMPHAROS">Ampharos</option>
+        <option value="ALTARIA">Altaria</option>
+        <option value="ARBOK">Arbok</option>
+        <option value="ARCANINE">Arcanine</option>
+        <option value="BANETTE">Banette</option>
+        <option value="BLASTOISE">Blastoise</option>
+        <option value="BUTTERFREE">Butterfree</option>
+        <option value="CHARIZARD">Charizard</option>
+        <option value="CLEFABLE">Clefable</option>
+        <option value="DELIBIRD">Delibird</option>
+        <option value="DITTO">Ditto</option>
+        <option value="DODRIO">Dodrio</option>
+        <option value="DUGTRIO">Dugtrio</option>
+        <option value="ESPEON">Espeon</option>
+        <option value="FERALIGATR">Feraligatr</option>
+        <option value="FLAREON">Flareon</option>
+        <option value="GENGAR">Gengar</option>
+        <option value="GLACEON">Glaceon</option>
+        <option value="GOLDUCK">Golduck</option>
+        <option value="GOLEM">Golem</option>
+        <option value="HERACROSS">Heracross</option>
+        <option value="HOUNDOOM">Houndoom</option>
+        <option value="JOLTEON">Jolteon</option>
+        <option value="KANGASKHAN">Kangaskhan</option>
+        <option value="LEAFEON">Leafeon</option>
+        <option value="LUCARIO">Lucario</option>
+        <option value="MAGNEZONE">Magnezone</option>
+        <option value="MAROWAK">Marowak</option>
+        <option value="MEGANIUM">Meganium</option>
+        <option value="MR_MIME">Mr. Mime</option>
+        <option value="ONIX">Onix</option>
+        <option value="PERSIAN">Persian</option>
+        <option value="PIKACHU_HALLOWEEN">Pikachu H'ween</option>
+        <option value="PINSIR">Pinsir</option>
+        <option value="PRIMEAPE">Primeape</option>
+        <option value="PUPITAR">Pupitar</option>
+        <option value="RAICHU">Raichu</option>
+        <option value="RATICATE">Raticate</option>
+        <option value="SABLEYE">Sableye</option>
+        <option value="SLAKING">Slaking</option>
+        <option value="SLOWBRO">Slowbro</option>
+        <option value="SLOWKING">Slowking</option>
+        <option value="STEELIX">Steelix</option>
+        <option value="SUDOWOODO">Sudowoodo</option>
+        <option value="SWALOT">Swalot</option>
+        <option value="SYLVEON">Sylveon</option>
+        <option value="TOGEKISS">Togekiss</option>
+        <option value="TOXICROAK">Toxicroak</option>
+        <option value="TYPHLOSION">Typhlosion</option>
+        <option value="TYRANITAR">Tyranitar</option>
+        <option value="UMBREON">Umbreon</option>
+        <option value="VAPOREON">Vaporeon</option>
+        <option value="VENUSAUR">Venusaur</option>
+        <option value="VICTREEBEL">Victreebel</option>
+        <option value="VIGOROTH">Vigoroth</option>
+        <option value="WALREIN">Walrein</option>
+        <option value="WIGGLYTUFF">Wigglytuff</option>
+        <option value="WOBBUFFET">Wobbuffet</option>
+      </select>
+      <br />
+
+      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="bashful" selected>Nature</option>
+        <option value="lonely">Lonely (+speed -energy)</option>
+        <option value="adamant">Adamant (+speed -ing)</option>
+        <option value="naughty">Naughty (+speed -skill)</option>
+        <option value="brave">Brave (+speed -exp)</option>
+
+        <option value="bold">Bold (+energy -speed)</option>
+        <option value="impish">Impish (+energy -ing)</option>
+        <option value="lax">Lax (+energy -skill)</option>
+        <option value="relaxed">Relaxed (+energy -exp)</option>
+
+        <option value="modest">Modest (+ing -speed)</option>
+        <option value="mild">Mild (+ing -energy)</option>
+        <option value="rash">Rash (+ing -skill)</option>
+        <option value="quiet">Quiet (+ing -exp)</option>
+
+        <option value="calm">Calm (+skill -speed)</option>
+        <option value="gentle">Gentle (+skill -energy)</option>
+        <option value="careful">Careful (+skill -ing)</option>
+        <option value="sassy">Sassy (+skill -exp)</option>
+
+        <option value="timid">Timid (+exp -speed)</option>
+        <option value="hasty">Hasty (+exp -energy)</option>
+        <option value="jolly">Jolly (+exp -ing)</option>
+        <option value="naive">Naive (+exp -skill)</option>
+
+        <option value="bashful">Bashful</option>
+        <option value="hardy">Hardy</option>
+        <option value="docile">Docile</option>
+        <option value="quirky">Quirky</option>
+        <option value="serious">Serious</option>
+      </select>
+
+      <div class="container" id="subskills" style="margin-bottom: 10px">
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-dark black-outline-button dropdown-toggle"
+            type="button"
+            id="multiSelectDropdown"
+            style="width: 300px"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Subskills
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="BFS" value="Berry Finding S" id="Berry Finding S" />
+                Berry Finding S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Help M" value="Helping Speed M" id="Helping Speed M" />
+                Helping Speed M
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Help S" value="Helping Speed S" id="Helping Speed S" />
+                Helping Speed S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Ing M" value="Ingredient Finder M" id="Ingredient Finder M" />
+                Ingredient Finder M
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Ing S" value="Ingredient Finder S" id="Ingredient Finder S" />
+                Ingredient Finder S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv L" value="Inventory Up L" id="Inventory Up L" />
+                Inventory Up L
+              </label>
+            </li>
+            <li></li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv M" value="Inventory Up M" id="Inventory Up M" />
+                Inventory Up M
+              </label>
+            </li>
+            <li></li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv S" value="Inventory Up S" id="Inventory Up S" />
+                Inventory Up S
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <label for="level" class="form-label">Level:&nbsp;</label><span id="levelValue">60</span><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="level"
+        name="level"
+        value="60"
+        min="1"
+        max="100"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="e4e"
+        name="e4e"
+        value="0"
+        min="0"
+        max="5"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
+      ><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="helpingbonus"
+        name="helpingbonus"
+        value="0"
+        min="0"
+        max="5"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <div class="d-flex justify-content-center">
+        <label class="form-check-label order-1" for="camp">Good camp:</label>
+        <div class="form-check form-switch ms-3 order-2">
+          <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+      <button
+        class="btn black-button btn-outline-dark text-center w-50"
+        type="button"
+        onclick="goToProductionCalculator()"
+      >
+        Calculate!
+      </button>
+    </div>
+
+    <div id="spinner-div" style="display: none"></div>
+
+    <div id="rankings" class="w3-container"></div>
+
+    <footer class="w3-container w3-black">
+      <a href="https://discord.gg/w97qFff8n4">Sleep API authors</a> on Discord for questions
+    </footer>
+  </body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+<script>
+  const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
+  const dpBtn = document.getElementById('multiSelectDropdown');
+  let mySelectedListItems = [];
+
+  function handleCB() {
+    mySelectedListItems = [];
+    let mySelectedListItemsText = '';
+
+    chBoxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        mySelectedListItems.push(checkbox.value);
+        mySelectedListItemsText += checkbox.name + ', ';
+      }
+    });
+
+    dpBtn.innerText = mySelectedListItems.length > 0 ? mySelectedListItemsText.slice(0, -2) : 'Subskills';
+  }
+
+  chBoxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', handleCB);
+  });
+</script>
+
+<script>
+  // updates the range slider values
+  function updateValue(slider) {
+    var output = document.getElementById(slider.id + 'Value');
+    output.innerHTML = slider.value;
+  }
+</script>
+
+<style>
+  .black-button {
+    background-color: #555;
+    color: #ffffff;
+  }
+
+  .dropdown-toggle {
+    white-space: normal;
+  }
+
+  .dropdown-label {
+    background: none;
+    padding: 0;
+  }
+
+  .btn-outline-dark {
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-color: #000;
+  }
+
+  select,
+  option {
+    width: 300px;
+  }
+
+  /* accordion */
+  .panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: '\2212';
+    float: right;
+    color: grey;
+  }
+
+  .panel-heading a.collapsed:after {
+    content: '\2b';
+  }
+
+  .panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: '\2212';
+    float: right;
+    color: grey;
+  }
+  .panel-heading a.collapsed:after {
+    content: '\2b';
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    background: #f04545;
+  }
+
+  input[type='range']::-moz-range-thumb {
+    background: #f04545;
+  }
+
+  .form-switch .form-check-input:focus {
+    border-color: rgba(0, 0, 0, 0.25);
+    outline: 0;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+  .form-switch .form-check-input:checked {
+    background-color: #f04545;
+    border-color: #f04545;
+    border: none;
+  }
+</style>

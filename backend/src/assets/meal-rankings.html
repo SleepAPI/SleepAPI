@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<script src="functions.js"></script>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/cook.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/app.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <title>Sleep API</title>
+  </head>
+  <body>
+    <div class="topnav" id="topnavId">
+      <a href="home.html">Home</a>
+      <a href="production-calculator.html">Production Calculator</a>
+      <a href="optimal-sets.html">Optimal Sets</a>
+      <a href="tier-lists.html">Tier Lists</a>
+      <a class="active" href="meal-rankings.html">Meal Rankings</a>
+      <a href="pokemon-flexible.html">Flexible Pokémon</a>
+      <a href="pokemon-focused.html">Focused Pokémon</a>
+      <a href="javascript:void(0);" class="icon" onclick="showMenu()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+
+    <header style="text-align: center">
+      <h1>Best Pokémon for recipe</h1>
+      <h3>Select any filters by clicking the check boxes below. <br />Then select a recipe and click the button.</h3>
+      <hr />
+    </header>
+    <div style="text-align: center">
+      <h3>Choose your filters</h3>
+      <input type="checkbox" id="limit30" name="limit30" />
+      <label for="limit30Id">Limit to level 30</label>
+      <input type="checkbox" id="cyan" name="cyan" />
+      <label for="cyanId">Only Cyan Pokémon</label>
+      <input type="checkbox" id="taupe" name="taupe" />
+      <label for="taupeId">Only Taupe Pokémon</label>
+      <input type="checkbox" id="snowdrop" name="snowdrop" />
+      <label for="snowdropId">Only Snowdrop Pokémon</label>
+    </div>
+
+    <div id="spinner-div" style="display: none"></div>
+
+    <div class="w3-container">
+      <h1 style="text-align: center"></h1>
+      <table class="w3-table w3-bordered w3-striped w3-auto" style="width: 50%">
+        <thead style="text-align: center">
+          <tr>
+            <th>Choose meal</th>
+            <th>Button</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <label for="meal"></label>
+              <select id="meal" onclick="event.stopPropagation()">
+                <option value="" selected>None</option>
+                <option value="FANCY_APPLE_CURRY">Fancy Apple Curry</option>
+                <option value="SIMPLE_CHOWDER">Simple Chowder</option>
+                <option value="MILD_HONEY_CURRY">Mild Honey Curry</option>
+                <option value="BEANBURGER_CURRY">Beanburger Curry</option>
+                <option value="HEARTY_CHEESEBURGER_CURRY">Hearty Cheeseburger Curry</option>
+                <option value="DROUGHT_KATSU_CURRY">Drought Katsu Curry</option>
+                <option value="SOLAR_POWER_TOMATO_CURRY">Solar Power Tomato Curry</option>
+                <option value="MELTY_OMELETTE_CURRY">Melty Omelette Curry</option>
+                <option value="SOFT_POTATO_CHOWDER">Soft Potato Chowder</option>
+                <option value="BULK_UP_BEAN_CURRY">Bulk Up Bean Curry</option>
+                <option value="SPORE_MUSHROOM_CURRY">Spore Mushroom Curry</option>
+                <option value="EGG_BOMB_CURRY">Egg Bomb Curry</option>
+                <option value="SPICY_LEEK_CURRY">Spicy Leek Curry</option>
+                <option value="NINJA_CURRY">Ninja Curry</option>
+                <option value="GRILLED_TAIL_CURRY">Grilled Tail Curry</option>
+                <option value="DREAM_EATER_BUTTER_CURRY">Dream Eater Butter Curry</option>
+                <option value="FANCY_APPLE_SALAD">Fancy Apple Salad</option>
+                <option value="BEAN_HAM_SALAD">Bean Ham Salad</option>
+                <option value="SNOOZY_TOMATO_SALAD">Snoozy Tomato Salad</option>
+                <option value="SNOW_CLOAK_CAESAR_SALAD">Snow Cloak Caesar Salad</option>
+                <option value="WATER_VEIL_TOFU_SALAD">Water Veil Tofu Salad</option>
+                <option value="HEAT_WAVE_TOFU_SALAD">Heat Wave Tofu Salad</option>
+                <option value="DAZZLING_APPLE_CHEESE_SALAD">Dazzling Apple Cheese Salad</option>
+                <option value="MOOMOO_CAPRESE_SALAD">Moomoo Caprese Salad</option>
+                <option value="IMMUNITY_LEEK_SALAD">Immunity Leek Salad</option>
+                <option value="SUPERPOWER_EXTREME_SALAD">Superpower Extreme Salad</option>
+                <option value="CONTRARY_CHOCOLATE_MEAT_SALAD">Contrary Chocolate Meat Salad</option>
+                <option value="GLUTTONY_POTATO_SALAD">Gluttony Potato Salad</option>
+                <option value="OVERHEAT_GINGER_SALAD">Overheat Ginger Salad</option>
+                <option value="SPORE_MUSHROOM_SALAD">Spore Mushroom Salad</option>
+                <option value="SLOWPOKE_TAIL_PEPPER_SALAD">Slowpoke Tail Pepper Salad</option>
+                <option value="NINJA_SALAD">Ninja Salad</option>
+                <option value="WARM_MOOMOO_MILK">Warm Moomoo Milk</option>
+                <option value="FANCY_APPLE_JUICE">Fancy Apple Juice</option>
+                <option value="CRAFT_SODA_POP">Craft Soda Pop</option>
+                <option value="LUCKY_CHANT_APPLE_PIE">Lucky Chant Apple Pie</option>
+                <option value="FLUFFY_SWEET_POTATOES">Fluffy Sweet Potatoes</option>
+                <option value="EMBER_GINGER_TEA">Ember Ginger Tea</option>
+                <option value="CLOUD_NINE_SOY_CAKE">Cloud Nine Soy Cake</option>
+                <option value="STALWART_VEGETABLE_JUICE">Stalwart Vegetable Juice</option>
+                <option value="BIG_MALASADA">Big Malasada</option>
+                <option value="HUSTLE_PROTEIN_SMOOTHIE">Hustle Protein Smoothie</option>
+                <option value="HUGE_POWER_SOY_DONUTS">Huge Power Soy Donuts</option>
+                <option value="SWEET_SCENT_CHOCOLATE_CAKE">Sweet Scent Chocolate Cake</option>
+                <option value="LOVELY_KISS_SMOOTHIE">Lovely Kiss Smoothie</option>
+                <option value="STEADFAST_GINGER_COOKIES">Steadfast Ginger Cookies</option>
+                <option value="NEROLIS_RESTORATIVE_TEA">Neroli's Restorative Tea</option>
+                <option value="JIGGLYPUFFS_FRUITY_FLAN">Jigglypuff's Fruity Flan</option>
+              </select>
+            </td>
+            <td>
+              <button
+                onclick="goToMealRanking()"
+                style="background-color: #333; border: 2px solid rgb(58, 57, 57); border-radius: 15px; color: white"
+              >
+                CLICK ME FOR RANKINGS!
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="rankings" class="w3-container">
+      <h1 style="text-align: center"></h1>
+    </div>
+
+    <footer class="w3-container w3-black">
+      <a href="https://discord.gg/w97qFff8n4">Sleep API authors</a> on Discord for questions
+    </footer>
+  </body>
+</html>
