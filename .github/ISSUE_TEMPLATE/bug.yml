@@ -1,0 +1,52 @@
+name: Bug Report
+description: Please add a short description of what is not working as intended.
+body:
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Is this a production or development bug?
+      options:
+        - Production (https://sleepapi.azurewebsites.net/)
+        - Development (https://dev-sleepapi.azurewebsites.net/)
+        - Local (https://localhost:3000/)
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to Reproduce
+      description: Please add a detailed description of how we can reproduce the issue.
+      placeholder: |-
+        1. do this
+        2. then do this
+        3. finally do this
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+      description: Please add logs, screenshots and additional info here.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      placeholder: https://sleepapi.azurewebsites.net/production-calculator.html/...
+      description: If on Azure, where exactly did you find the bug?
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |-
+        ## Thank you! 🙏
+    validations:
+      required: false
