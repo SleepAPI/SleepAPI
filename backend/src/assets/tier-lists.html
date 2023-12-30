@@ -78,9 +78,9 @@
             <br />
             <br />
 
-            When calculating a meal window of produce we assume optimal sub-skills and nature, but to avoid locking
-            certain team composition requirements or paid play we avoid good camp, helping bonus and energy skills from
-            influencing the produce. <br />
+            When calculating a meal window of produce we assume optimal sub-skills and nature as well as max carry size
+            bonus from evolutions, but to avoid locking certain team composition requirements or paid play we avoid good
+            camp, helping bonus and energy skills from influencing the produce. <br />
             <br />
 
             When finding optimal team compositions for each Pokémon/ingredient-list/recipe we use the produced
@@ -92,19 +92,22 @@
 
             The raw contribution power to each recipe is calculated as: <br />
             <code
-              >relevant ingredients of recipe covered * ingredient base value * recipe bonus% * recipe level 50
-              factor</code
+              >relevant ingredients of recipe covered * ingredient base value * recipe bonus% * recipe level 51
+              bonus%</code
             >. <br />
             <br />
             We calculate a filler tax for each ingredient based on their raw value compared to Slowpoke Tail
-            percentage-wise:
+            percentage-wise. <br />
+            The purpose of the tax is, to decrease the impact of fillers to the total score. Better fillers, like
+            Slowpoke Tail, which are less abundant, get less (no) tax:
             <br />
             <code>(ingredient base value / Slowpoke Tail base value) * ingredient base value</code><br /><br />
             The total ingredient filler value is then calculated as: <br />
             <code>surplus ingredients not used in recipe * taxed ingredient value</code>. <br />
             <br />
             The final contribution score it calculated as: <br />
-            <code>(raw contribution power / (0.2*team size required for recipe)) + filler value</code>.<br /><br />
+            <code>(raw contribution power / (1 - (0.2 * team size required for recipe))) + filler value</code
+            >.<br /><br />
 
             For the overall tier list we then select the 3 best performing recipes, we boost the value of the very best
             recipe by 50% and finally combine the contribution powers into a final score by which we rank the ingredient
@@ -112,6 +115,14 @@
             For the meal type-specific tier lists we only calculate contribution value for recipes of that type. Since
             we're looking at a specific meal-type here, we only count the best 2 recipes. We still boost the best recipe
             by 50% and count a second recipe as fallback.<br />
+            <br />
+
+            When deciding our tier list placements we divide all contributions scores in buckets.<br />
+            Once a Pokémon no longer fits the threshold for a tier they are moved to the next tier and set the threshold
+            for that tier.<br />
+            The thresholds for the tiers are [S: 90%, A: 80%, B: 80%, C: 85%, D: 85%, E: 90%, F: 90%].<br />
+            This leads to exclusivity on the outer ends, with upper-middle bracket being a little more lenient,
+            upper-middle is usually where big jumps in score occur.
             <br />
           </h4>
         </div>
