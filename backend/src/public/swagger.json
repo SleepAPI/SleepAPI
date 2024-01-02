@@ -1308,6 +1308,100 @@
 				]
 			}
 		},
+		"/optimal/meal/pokemon": {
+			"get": {
+				"operationId": "GetFlexiblePokemonSuggestions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"meals": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											},
+											"score": {
+												"type": "number",
+												"format": "double"
+											},
+											"pokemon": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"meals",
+											"score",
+											"pokemon"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/optimal/meal/teams": {
+			"get": {
+				"operationId": "GetTeamCompositionSuggestions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"meals": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											},
+											"countedMeals": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											},
+											"score": {
+												"type": "number",
+												"format": "double"
+											},
+											"pokemonCombinations": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											}
+										},
+										"required": [
+											"meals",
+											"countedMeals",
+											"score",
+											"pokemonCombinations"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/pokemon": {
 			"get": {
 				"operationId": "GetPokemon",

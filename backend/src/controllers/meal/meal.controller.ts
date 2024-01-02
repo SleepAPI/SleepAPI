@@ -1,6 +1,6 @@
 import { Controller, Get, Path, Queries, Route } from 'tsoa';
 import { RankingsForMealQueryParams } from '../../routes/meal-router/meal-router';
-import { getMealDataAndRankingFor, getMealNamesForFilter } from '../../services/routing-service/meal-ranking';
+import { getMealDataAndRankingFor, getMealNamesForFilter } from '../../services/api-service/meal-ranking';
 import { SelectedMealQueryParams, queryAsBoolean } from '../../utils/routing/routing-utils';
 
 @Route('meal')

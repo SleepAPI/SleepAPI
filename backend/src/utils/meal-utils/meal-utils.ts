@@ -45,3 +45,7 @@ export function getMealsForFilterWithBonus(params: {
   }
   return meals.filter((m) => m.bonus >= minRecipeBonus);
 }
+
+export function getMealsAboveBonus(minBonus: number) {
+  return MEALS.filter((m) => m.bonus >= minBonus);
+}

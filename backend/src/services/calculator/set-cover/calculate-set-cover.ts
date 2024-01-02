@@ -12,8 +12,7 @@ import {
   getAllIngredientCombinationsForLevel,
 } from '../ingredient/ingredient-calculate';
 
-export function calculateSetCover(params: {
-  recipe: IngredientDrop[];
+export function calculateOptimalProductionForSetCover(params: {
   level: number;
   nature: Nature;
   subskills: SubSkill[];
@@ -22,7 +21,7 @@ export function calculateSetCover(params: {
   e4eProcs: number;
   helpingBonus: number;
 }) {
-  const { recipe, level, nature, subskills, allowedBerries, goodCamp, e4eProcs, helpingBonus } = params;
+  const { level, nature, subskills, allowedBerries, goodCamp, e4eProcs, helpingBonus } = params;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
   const pokemonWithCorrectBerries = POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
@@ -56,10 +55,26 @@ export function calculateSetCover(params: {
     }
   }
 
+  return pokemonProduction;
+}
+
+export function calculateSetCover(params: {
+  recipe: IngredientDrop[];
+  pokemonProduction: CustomPokemonCombinationWithProduce[];
+  memoizedParams: Map<string, CustomPokemonCombinationWithProduce[][]>;
+}) {
+  const { recipe, pokemonProduction, memoizedParams } = params;
+
+  const firstPokemon = pokemonProduction.at(0);
+  if (!firstPokemon) {
+    throw new Error("Can't calculate Optimal Set without Pokémon");
+  }
+  const limit50 = firstPokemon.pokemonCombination.ingredientList.length < 3;
+
   const setCover = new SetCover(
     createPokemonByIngredientReverseIndex(pokemonProduction),
-    { limit50: level < 60, pokemon: pokemonProduction.map((pkmn) => pkmn.pokemonCombination.pokemon.name) },
-    new Map()
+    { limit50, pokemon: pokemonProduction.map((pkmn) => pkmn.pokemonCombination.pokemon.name) },
+    memoizedParams
   );
   return setCover.findOptimalCombinationFor(recipe);
 }

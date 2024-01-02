@@ -66,6 +66,42 @@ class OptimalCombinationRouterImpl {
         }
       }
     );
+
+    this.router.get(
+      '/optimal/meal/pokemon',
+      async (req: Request<unknown, unknown, unknown, { pretty: boolean }>, res: Response) => {
+        try {
+          Logger.log('Entered /optimal/meal/pokemon');
+          const { pretty } = req.query;
+
+          const data = controller.getFlexiblePokemonSuggestions();
+
+          // TODO: pretty for site
+          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
+    this.router.get(
+      '/optimal/meal/teams',
+      async (req: Request<unknown, unknown, unknown, { pretty: boolean }>, res: Response) => {
+        try {
+          Logger.log('Entered /optimal/meal/teams');
+          const { pretty } = req.query;
+
+          const data = controller.getTeamCompositionSuggestions();
+
+          // TODO: pretty for site
+          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
   }
 }
 

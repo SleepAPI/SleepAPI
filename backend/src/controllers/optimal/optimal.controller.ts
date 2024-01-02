@@ -1,5 +1,9 @@
 import { Controller, Get, Path, Queries, Route } from 'tsoa';
-import { getOptimalPokemonFor } from '../../services/routing-service/optimal-ranking';
+import {
+  getOptimalFlexiblePokemon,
+  getOptimalPokemonFor,
+  getOptimalSetTeamIntersections,
+} from '../../services/api-service/optimal/optimal-service';
 import { FilteredQueryParams, queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 
 @Route('optimal')
@@ -19,5 +23,17 @@ export default class OptimalController extends Controller {
       snowdrop: queryAsBoolean(queryParams.snowdrop),
     };
     return getOptimalPokemonFor(params);
+  }
+
+  @Get('meal/pokemon')
+  // TODO: rename
+  public getFlexiblePokemonSuggestions() {
+    return getOptimalFlexiblePokemon();
+  }
+
+  @Get('meal/teams')
+  // TODO: rename
+  public getTeamCompositionSuggestions() {
+    return getOptimalSetTeamIntersections();
   }
 }

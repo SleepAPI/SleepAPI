@@ -1,4 +1,3 @@
-import { PokemonResult } from '@src/routes/pokemon-router/pokemon-router';
 import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/combination/buddy-types';
 import {
   AllCombinationsForMealType,
@@ -10,6 +9,7 @@ import { ProductionFilter } from '../../domain/computed/production';
 import { Nature } from '../../domain/stat/nature';
 import { SubSkill } from '../../domain/stat/subskill';
 import { OptimalSetResult, OptimalTeamType } from '../../routes/optimal-router/optimal-router';
+import { PokemonResult } from '../../routes/pokemon-router/pokemon-router';
 import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
 import { roundDown } from '../../utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '../../utils/json/json-utils';
