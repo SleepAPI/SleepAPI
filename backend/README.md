@@ -1,6 +1,6 @@
 # Sleep API - Backend
 
-As explained in [Development Setup](../DEVELOPMENT_SETUP.md) you should now have Node installed with NVM and set up your development environment. We'll now talk about getting the backend up and running.
+As explained in [Development Setup](../DEVELOPMENT_SETUP.md) you should now have Node installed with NVM and set up your development environment. We'll now talk about getting the backend up and running. Start by installing the required node modules with `npm install` inside the backend folder.
 
 The backend also currently hosts the website you see on [Sleep API][sleepapi]
 
