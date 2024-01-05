@@ -1,9 +1,8 @@
 import knex, { Knex } from 'knex';
-import { config } from '../config';
+import { config } from '../config/config';
 
 class DatabaseServiceImpl {
   #knex: Knex | undefined;
-  #prodKnex: Knex | undefined;
 
   async getKnex() {
     if (!this.#knex) {
@@ -29,32 +28,6 @@ class DatabaseServiceImpl {
     }
 
     return this.#knex;
-  }
-
-  async getProdKnex() {
-    if (!this.#prodKnex) {
-      const host = config.PROD_DB_HOST;
-      const port = config.PROD_DB_PORT;
-      const user = config.PROD_DB_USER;
-      const password = config.PROD_DB_PASS;
-
-      if (!host || !port || !user || !password) {
-        throw new Error('Missing environment variables for prod database connection');
-      }
-
-      this.#prodKnex = knex({
-        client: 'mysql2',
-        connection: {
-          host,
-          port: +port,
-          user,
-          password,
-          database: 'pokemonsleep',
-        },
-      });
-    }
-
-    return this.#prodKnex;
   }
 }
 
