@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { config } from '../../config';
+import { config } from '../../config/config';
 import OptimalController from '../../controllers/optimal/optimal.controller';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProductionFilter } from '../../domain/computed/production';
@@ -49,15 +49,12 @@ class OptimalCombinationRouterImpl {
           const data: OptimalSetResult = controller.getOptimalPokemonForMealRaw(mealName, req.query);
 
           if (queryAsBoolean(csv)) {
-            if (config.ENVIRONMENT !== 'DEV') {
+            if (config.NODE_ENV !== 'DEV') {
               return res.status(500).send('CSV inaccessible for quota reasons, contact admin if you need access');
             }
             const optimalData = CSVConverterService.toOptimalSet(data);
             respondWithCSV(res, optimalData, `optimal-${mealName}${queryParamsToString(req.query)}`);
           } else if (queryAsBoolean(pretty)) {
-            if (config.ENVIRONMENT !== 'DEV') {
-              return res.status(500).send('Raw inaccessible for quota reasons, contact admin if you need access');
-            }
             const optimalData = WebsiteConverterService.toOptimalSet(data);
             res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
           } else {

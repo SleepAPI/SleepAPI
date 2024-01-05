@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { config } from '../../config';
+import { config } from '../../config/config';
 import TierlistController from '../../controllers/tierlist/tierlist.controller';
 import { PokemonCombinationContribution } from '../../domain/combination/combination-contribution';
 import { Logger } from '../../services/logger/logger';

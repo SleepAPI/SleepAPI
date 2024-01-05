@@ -4,7 +4,7 @@ import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import { config } from './config';
+import { config } from './config/config';
 import ProductionController from './controllers/calculator/production.controller';
 import HealthController from './controllers/health/health.controller';
 import MealController from './controllers/meal/meal.controller';
