@@ -1,5 +1,5 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { POKEDEX } from '../../../domain/pokemon/pokemon';
+import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
 import { Berry } from '../../../domain/produce/berry';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { Nature } from '../../../domain/stat/nature';
@@ -25,7 +25,7 @@ export function calculateSetCover(params: {
   const { recipe, level, nature, subskills, allowedBerries, goodCamp, e4eProcs, helpingBonus } = params;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
-  const pokemonWithCorrectBerries = POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
+  const pokemonWithCorrectBerries = OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
   for (const pokemon of pokemonWithCorrectBerries) {
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const customStats: CustomStats = {
