@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import { POKEDEX } from '../../domain/pokemon/pokemon';
+import { OPTIMAL_POKEDEX } from '../../domain/pokemon/pokemon';
 import { RASH } from '../../domain/stat/nature';
 import { HELPING_SPEED_M, INGREDIENT_FINDER_M, INVENTORY_L } from '../../domain/stat/subskill';
 import {
@@ -40,7 +40,7 @@ class PokemonCombinationDAOImpl extends AbstractDAO<typeof DBPokemonCombinationS
     }
 
     const pokemonCombinations = [];
-    for (const pokemon of POKEDEX) {
+    for (const pokemon of OPTIMAL_POKEDEX) {
       for (const combination of getAllIngredientCombinationsForLevel(pokemon, 60)) {
         const [ingredientDrop0, ingredientDrop30, ingredientDrop60] = combination;
         const [producedIngredient0, producedIngredient30, producedIngredient60] = calculateProducePerMealWindow({

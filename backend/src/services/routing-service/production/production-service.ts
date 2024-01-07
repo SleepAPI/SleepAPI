@@ -1,5 +1,5 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { POKEDEX } from '../../../domain/pokemon/pokemon';
+import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
 import { NATURES, Nature } from '../../../domain/stat/nature';
 import { SUBSKILLS, SubSkill } from '../../../domain/stat/subskill';
 import { ProductionRequest } from '../../../routes/calculator-router/production-router';
@@ -17,7 +17,7 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
     helpingbonus: helpingBonus,
     camp: goodCamp,
   } = details;
-  const pokemon = POKEDEX.find((pokemon) => pokemon.name.toUpperCase() === pokemonName.toUpperCase());
+  const pokemon = OPTIMAL_POKEDEX.find((pokemon) => pokemon.name.toUpperCase() === pokemonName.toUpperCase());
   if (!pokemon) {
     throw new Error("Can't find pokemon with name: " + pokemonName.toUpperCase());
   }
