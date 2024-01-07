@@ -65,7 +65,7 @@ For a complete list of available scripts, check the `package.json` file.
 
 Sleep API uses MySQL as the database. We provide you with a Docker compose file to setup the necessary container and initial schema.
 
-Note: If `docker compose` does not work on your system follow instructions here: https://docs.docker.com/compose/install/
+Note: If `docker compose` does not work on your system follow instructions [here](https://docs.docker.com/compose/install/). If you're developing on Windows with WSL, you may need [these instructions](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers) as well.
 
 Starting the container
 

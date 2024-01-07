@@ -17,6 +17,12 @@ The project acts as a monorepo where each module is individually deployed. It's 
 | VSCode | <https://code.visualstudio.com/> |
 | NVM    | <https://github.com/nvm-sh/nvm>  |
 
+On Windows it is recommended to use nvm inside WSL (Windows Subsystem for Linux), but other alternatives like nvm-windows exist.
+
+| Tool | URL                                                     |
+| ---- | ------------------------------------------------------- |
+| WSL  | <https://learn.microsoft.com/en-us/windows/wsl/install> |
+
 ### 1. Setup correct version of node
 
 Download the configured version of node. This version is specified in .nvmrc in the root of the repository.
