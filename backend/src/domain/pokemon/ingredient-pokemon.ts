@@ -1,3 +1,4 @@
+import { toSeconds } from '../../utils/time-utils/time-utils';
 import {
   BLUK,
   CHESTO,
@@ -33,15 +34,15 @@ import {
 import { CHARGE_ENERGY_S, CHARGE_STRENGTH_S, CHARGE_STRENGTH_S_RANGE, INGREDIENT_MAGNET_S } from '../stat/mainskill';
 import { Pokemon } from './pokemon';
 
-export const VENUSAUR: Pokemon = {
-  name: 'VENUSAUR',
+export const BULBASAUR: Pokemon = {
+  name: 'BULBASAUR',
   specialty: 'ingredient',
-  frequency: 2800,
-  ingredientPercentage: 26.58,
-  skillPercentage: 2.25,
+  frequency: toSeconds(1, 13, 20),
+  ingredientPercentage: 25.71,
+  skillPercentage: 0,
   berry: DURIN,
-  carrySize: 17,
-  maxCarrySize: 27,
+  carrySize: 11,
+  maxCarrySize: 11,
   ingredient0: { amount: 2, ingredient: HONEY },
   ingredient30: [
     { amount: 5, ingredient: HONEY },
@@ -55,15 +56,35 @@ export const VENUSAUR: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
-export const CHARIZARD: Pokemon = {
-  name: 'CHARIZARD',
+export const IVYSAUR: Pokemon = {
+  ...BULBASAUR,
+  name: 'IVYSAUR',
+  frequency: toSeconds(0, 55, 0),
+  ingredientPercentage: 25.49,
+  skillPercentage: 0,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const VENUSAUR: Pokemon = {
+  ...BULBASAUR,
+  name: 'VENUSAUR',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 26.58,
+  skillPercentage: 2.25,
+  carrySize: 17,
+  maxCarrySize: 27,
+};
+
+export const CHARMANDER: Pokemon = {
+  name: 'CHARMANDER',
   specialty: 'ingredient',
-  frequency: 2400,
-  ingredientPercentage: 22.38,
-  skillPercentage: 1.717,
+  frequency: toSeconds(0, 58, 20),
+  ingredientPercentage: 20.09,
+  skillPercentage: 0,
   berry: LEPPA,
-  carrySize: 19,
-  maxCarrySize: 29,
+  carrySize: 12,
+  maxCarrySize: 12,
   ingredient0: { amount: 2, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 5, ingredient: BEAN_SAUSAGE },
@@ -77,15 +98,35 @@ export const CHARIZARD: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
-export const BLASTOISE: Pokemon = {
-  name: 'BLASTOISE',
+export const CHARMELEON: Pokemon = {
+  ...CHARMANDER,
+  name: 'CHARMELEON',
+  frequency: toSeconds(0, 50, 0),
+  ingredientPercentage: 22.72,
+  skillPercentage: 0,
+  carrySize: 15,
+  maxCarrySize: 20,
+};
+
+export const CHARIZARD: Pokemon = {
+  ...CHARMANDER,
+  name: 'CHARIZARD',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 22.38,
+  skillPercentage: 1.717,
+  carrySize: 19,
+  maxCarrySize: 29,
+};
+
+export const SQUIRTLE: Pokemon = {
+  name: 'SQUIRTLE',
   specialty: 'ingredient',
-  frequency: 2800,
-  ingredientPercentage: 27.46,
-  skillPercentage: 2.249,
+  frequency: toSeconds(1, 15, 0),
+  ingredientPercentage: 27.09,
+  skillPercentage: 0,
   berry: ORAN,
-  carrySize: 17,
-  maxCarrySize: 27,
+  carrySize: 10,
+  maxCarrySize: 10,
   ingredient0: { amount: 2, ingredient: MOOMOO_MILK },
   ingredient30: [
     { amount: 5, ingredient: MOOMOO_MILK },
@@ -99,15 +140,35 @@ export const BLASTOISE: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
-export const DUGTRIO: Pokemon = {
-  name: 'DUGTRIO',
+export const WARTORTLE: Pokemon = {
+  ...SQUIRTLE,
+  name: 'WARTORTLE',
+  frequency: toSeconds(0, 56, 40),
+  ingredientPercentage: 27.09,
+  skillPercentage: 0,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const BLASTOISE: Pokemon = {
+  ...SQUIRTLE,
+  name: 'BLASTOISE',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 27.46,
+  skillPercentage: 2.249,
+  carrySize: 17,
+  maxCarrySize: 27,
+};
+
+export const DIGLETT: Pokemon = {
+  name: 'DIGLETT',
   specialty: 'ingredient',
-  frequency: 2800,
-  ingredientPercentage: 18.96,
-  skillPercentage: 2.002,
+  frequency: toSeconds(1, 11, 40),
+  ingredientPercentage: 19.2,
+  skillPercentage: 0,
   berry: FIGY,
-  carrySize: 16,
-  maxCarrySize: 21,
+  carrySize: 10,
+  maxCarrySize: 10,
   ingredient0: { amount: 2, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 5, ingredient: SNOOZY_TOMATO },
@@ -121,15 +182,25 @@ export const DUGTRIO: Pokemon = {
   skill: CHARGE_STRENGTH_S,
 };
 
-export const VICTREEBEL: Pokemon = {
-  name: 'VICTREEBEL',
+export const DUGTRIO: Pokemon = {
+  ...DIGLETT,
+  name: 'DUGTRIO',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 18.96,
+  skillPercentage: 2.002,
+  carrySize: 16,
+  maxCarrySize: 21,
+};
+
+export const BELLSPROUT: Pokemon = {
+  name: 'BELLSPROUT',
   specialty: 'ingredient',
-  frequency: 2800,
-  ingredientPercentage: 23.3,
-  skillPercentage: 4.53,
+  frequency: toSeconds(1, 26, 40),
+  ingredientPercentage: 23.28,
+  skillPercentage: 0,
   berry: DURIN,
-  carrySize: 17,
-  maxCarrySize: 27,
+  carrySize: 8,
+  maxCarrySize: 8,
   ingredient0: { amount: 2, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 5, ingredient: SNOOZY_TOMATO },
@@ -143,15 +214,35 @@ export const VICTREEBEL: Pokemon = {
   skill: CHARGE_ENERGY_S,
 };
 
-export const GOLEM: Pokemon = {
-  name: 'GOLEM',
+export const WEEPINBELL: Pokemon = {
+  ...BELLSPROUT,
+  name: 'WEEPINBELL',
+  frequency: toSeconds(1, 3, 20),
+  ingredientPercentage: 23.5,
+  skillPercentage: 0,
+  carrySize: 12,
+  maxCarrySize: 17,
+};
+
+export const VICTREEBEL: Pokemon = {
+  ...BELLSPROUT,
+  name: 'VICTREEBEL',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 23.3,
+  skillPercentage: 4.53,
+  carrySize: 17,
+  maxCarrySize: 27,
+};
+
+export const GEODUDE: Pokemon = {
+  name: 'GEODUDE',
   specialty: 'ingredient',
-  frequency: 3100,
-  ingredientPercentage: 28,
-  skillPercentage: 2.991,
+  frequency: toSeconds(1, 35, 0),
+  ingredientPercentage: 28.1,
+  skillPercentage: 0,
   berry: SITRUS,
-  carrySize: 16,
-  maxCarrySize: 26,
+  carrySize: 9,
+  maxCarrySize: 9,
   ingredient0: { amount: 2, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
     { amount: 5, ingredient: GREENGRASS_SOYBEANS },
@@ -165,15 +256,35 @@ export const GOLEM: Pokemon = {
   skill: CHARGE_STRENGTH_S_RANGE,
 };
 
-export const GENGAR: Pokemon = {
-  name: 'GENGAR',
+export const GRAVELER: Pokemon = {
+  ...GEODUDE,
+  name: 'GRAVELER',
+  frequency: toSeconds(1, 6, 40),
+  ingredientPercentage: 27.21,
+  skillPercentage: 0,
+  carrySize: 12,
+  maxCarrySize: 17,
+};
+
+export const GOLEM: Pokemon = {
+  ...GEODUDE,
+  name: 'GOLEM',
+  frequency: toSeconds(0, 51, 40),
+  ingredientPercentage: 28,
+  skillPercentage: 2.991,
+  carrySize: 16,
+  maxCarrySize: 26,
+};
+
+export const GASTLY: Pokemon = {
+  name: 'GASTLY',
   specialty: 'ingredient',
-  frequency: 2200,
-  ingredientPercentage: 16.1,
-  skillPercentage: 1.377,
+  frequency: toSeconds(1, 3, 20),
+  ingredientPercentage: 14.4,
+  skillPercentage: 0,
   berry: BLUK,
-  carrySize: 18,
-  maxCarrySize: 28,
+  carrySize: 10,
+  maxCarrySize: 10,
   ingredient0: { amount: 2, ingredient: FIERY_HERB },
   ingredient30: [
     { amount: 5, ingredient: FIERY_HERB },
@@ -187,10 +298,30 @@ export const GENGAR: Pokemon = {
   skill: CHARGE_STRENGTH_S_RANGE,
 };
 
+export const HAUNTER: Pokemon = {
+  ...GASTLY,
+  name: 'HAUNTER',
+  frequency: toSeconds(0, 50, 0),
+  ingredientPercentage: 15.7,
+  skillPercentage: 0,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const GENGAR: Pokemon = {
+  ...GASTLY,
+  name: 'GENGAR',
+  frequency: toSeconds(0, 36, 40),
+  ingredientPercentage: 16.1,
+  skillPercentage: 1.377,
+  carrySize: 18,
+  maxCarrySize: 28,
+};
+
 export const KANGASKHAN: Pokemon = {
   name: 'KANGASKHAN',
   specialty: 'ingredient',
-  frequency: 2800,
+  frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 22.21,
   skillPercentage: 1.818,
   berry: PERSIM,
@@ -212,7 +343,7 @@ export const KANGASKHAN: Pokemon = {
 export const MR_MIME: Pokemon = {
   name: 'MR_MIME',
   specialty: 'ingredient',
-  frequency: 2800,
+  frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 21.61,
   skillPercentage: 3.873,
   berry: MAGO,
@@ -234,7 +365,7 @@ export const MR_MIME: Pokemon = {
 export const PINSIR: Pokemon = {
   name: 'PINSIR',
   specialty: 'ingredient',
-  frequency: 2400,
+  frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 20.59,
   skillPercentage: 3.101,
   berry: LUM,
@@ -256,7 +387,7 @@ export const PINSIR: Pokemon = {
 export const DITTO: Pokemon = {
   name: 'DITTO',
   specialty: 'ingredient',
-  frequency: 3500,
+  frequency: toSeconds(0, 58, 20),
   ingredientPercentage: 20.07,
   skillPercentage: 2.073,
   berry: PERSIM,
@@ -278,7 +409,7 @@ export const DITTO: Pokemon = {
 export const DELIBIRD: Pokemon = {
   name: 'DELIBIRD',
   specialty: 'ingredient',
-  frequency: 2500,
+  frequency: toSeconds(0, 41, 40),
   ingredientPercentage: 18.81,
   skillPercentage: 2,
   berry: PAMTRE,
@@ -297,15 +428,15 @@ export const DELIBIRD: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
-export const PUPITAR: Pokemon = {
-  name: 'PUPITAR',
+export const LARVITAR: Pokemon = {
+  name: 'LARVITAR',
   specialty: 'ingredient',
-  frequency: 3600,
-  ingredientPercentage: 24.71,
-  skillPercentage: 5.2,
+  frequency: toSeconds(1, 20, 0),
+  ingredientPercentage: 23.79,
+  skillPercentage: 0,
   berry: SITRUS,
-  carrySize: 13,
-  maxCarrySize: 18,
+  carrySize: 9,
+  maxCarrySize: 9,
   ingredient0: { amount: 2, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 5, ingredient: WARMING_GINGER },
@@ -319,32 +450,31 @@ export const PUPITAR: Pokemon = {
   skill: CHARGE_ENERGY_S,
 };
 
+export const PUPITAR: Pokemon = {
+  ...LARVITAR,
+  name: 'PUPITAR',
+  frequency: toSeconds(1, 0, 0),
+  ingredientPercentage: 24.71,
+  skillPercentage: 5.2,
+  carrySize: 13,
+  maxCarrySize: 18,
+};
+
 export const TYRANITAR: Pokemon = {
+  ...LARVITAR,
   name: 'TYRANITAR',
-  specialty: 'ingredient',
-  frequency: 2700,
+  frequency: toSeconds(0, 45, 0),
   ingredientPercentage: 26.6,
   skillPercentage: 6.32,
   berry: WIKI,
   carrySize: 19,
   maxCarrySize: 29,
-  ingredient0: { amount: 2, ingredient: WARMING_GINGER },
-  ingredient30: [
-    { amount: 5, ingredient: WARMING_GINGER },
-    { amount: 5, ingredient: GREENGRASS_SOYBEANS },
-  ],
-  ingredient60: [
-    { amount: 7, ingredient: WARMING_GINGER },
-    { amount: 8, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 8, ingredient: BEAN_SAUSAGE },
-  ],
-  skill: CHARGE_ENERGY_S,
 };
 
 export const ABSOL: Pokemon = {
   name: 'ABSOL',
   specialty: 'ingredient',
-  frequency: 3100,
+  frequency: toSeconds(0, 51, 40),
   ingredientPercentage: 17.78,
   skillPercentage: 3.803,
   berry: WIKI,
@@ -363,15 +493,25 @@ export const ABSOL: Pokemon = {
   skill: CHARGE_STRENGTH_S,
 };
 
-export const TOXICROAK: Pokemon = {
-  name: 'TOXICROAK',
+export const MIME_JR: Pokemon = {
+  ...MR_MIME,
+  name: 'MIME_JR',
+  frequency: toSeconds(1, 11, 40),
+  ingredientPercentage: 20.11,
+  skillPercentage: 0,
+  carrySize: 7,
+  maxCarrySize: 7,
+};
+
+export const CROAGUNK: Pokemon = {
+  name: 'CROAGUNK',
   specialty: 'ingredient',
-  frequency: 3400,
-  ingredientPercentage: 22.87,
-  skillPercentage: 4.296,
+  frequency: toSeconds(1, 33, 20),
+  ingredientPercentage: 22.78,
+  skillPercentage: 0,
   berry: CHESTO,
-  carrySize: 14,
-  maxCarrySize: 19,
+  carrySize: 10,
+  maxCarrySize: 10,
   ingredient0: { amount: 2, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 5, ingredient: PURE_OIL },
@@ -384,15 +524,25 @@ export const TOXICROAK: Pokemon = {
   skill: CHARGE_STRENGTH_S,
 };
 
-export const ABOMASNOW: Pokemon = {
-  name: 'ABOMASNOW',
+export const TOXICROAK: Pokemon = {
+  ...CROAGUNK,
+  name: 'TOXICROAK',
+  frequency: toSeconds(0, 56, 40),
+  ingredientPercentage: 22.87,
+  skillPercentage: 4.296,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const SNOVER: Pokemon = {
+  name: 'SNOVER',
   specialty: 'ingredient',
-  frequency: 3000,
-  ingredientPercentage: 25.01,
-  skillPercentage: 2,
+  frequency: toSeconds(1, 33, 20),
+  ingredientPercentage: 25.1,
+  skillPercentage: 0,
   berry: RAWST,
-  carrySize: 21,
-  maxCarrySize: 26,
+  carrySize: 10,
+  maxCarrySize: 10,
   ingredient0: { amount: 2, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 5, ingredient: SNOOZY_TOMATO },
@@ -406,7 +556,17 @@ export const ABOMASNOW: Pokemon = {
   skill: CHARGE_STRENGTH_S_RANGE,
 };
 
-export const INGREDIENT_SPECIALISTS = [
+export const ABOMASNOW: Pokemon = {
+  ...SNOVER,
+  name: 'ABOMASNOW',
+  frequency: toSeconds(0, 50, 0),
+  ingredientPercentage: 25.01,
+  skillPercentage: 2,
+  carrySize: 21,
+  maxCarrySize: 26,
+};
+
+export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   ABOMASNOW,
   VENUSAUR,
   GOLEM,
@@ -424,4 +584,29 @@ export const INGREDIENT_SPECIALISTS = [
   PINSIR,
   TOXICROAK,
   MR_MIME,
+];
+
+export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
+  BULBASAUR,
+  IVYSAUR,
+  CHARMANDER,
+  CHARMELEON,
+  SQUIRTLE,
+  WARTORTLE,
+  DIGLETT,
+  BELLSPROUT,
+  WEEPINBELL,
+  GEODUDE,
+  GRAVELER,
+  GASTLY,
+  HAUNTER,
+  LARVITAR,
+  MIME_JR,
+  CROAGUNK,
+  SNOVER,
+];
+
+export const ALL_INGREDIENT_SPECIALISTS: Pokemon[] = [
+  ...OPTIMAL_INGREDIENT_SPECIALISTS,
+  ...INFERIOR_INGREDIENT_SPECIALISTS,
 ];

@@ -1,6 +1,6 @@
 import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/coverage';
-import { POKEDEX } from '../../../domain/pokemon/pokemon';
+import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { Meal } from '../../../domain/recipe/meal';
 import { CreateTierListRequestBody } from '../../../routes/tierlist-router/tierlist-router';
@@ -21,7 +21,7 @@ export function getAllOptimalIngredientPokemonProduce(
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
 
   const allowedBerries = getBerriesForFilter(details);
-  const pokemonForBerries = POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
+  const pokemonForBerries = OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
 
   for (const pokemon of pokemonForBerries) {
     const customStats = getOptimalIngredientStats(details.limit50 ? 50 : 60);

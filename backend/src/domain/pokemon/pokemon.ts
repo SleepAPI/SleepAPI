@@ -10,9 +10,13 @@
 import { Berry } from '../produce/berry';
 import { IngredientDrop } from '../produce/ingredient';
 import { MainSkill } from '../stat/mainskill';
-import { BERRY_SPECIALISTS } from './berry-pokemon';
-import { INGREDIENT_SPECIALISTS } from './ingredient-pokemon';
-import { SKILL_SPECIALISTS } from './skill-pokemon';
+import { ALL_BERRY_SPECIALISTS, INFERIOR_BERRY_SPECIALISTS, OPTIMAL_BERRY_SPECIALISTS } from './berry-pokemon';
+import {
+  ALL_INGREDIENT_SPECIALISTS,
+  INFERIOR_INGREDIENT_SPECIALISTS,
+  OPTIMAL_INGREDIENT_SPECIALISTS,
+} from './ingredient-pokemon';
+import { ALL_SKILL_SPECIALISTS, INFERIOR_SKILL_SPECIALISTS, OPTIMAL_SKILL_SPECIALISTS } from './skill-pokemon';
 
 export interface Pokemon {
   name: string;
@@ -29,4 +33,20 @@ export interface Pokemon {
   skill: MainSkill;
 }
 
-export const POKEDEX: Pokemon[] = [...BERRY_SPECIALISTS, ...INGREDIENT_SPECIALISTS, ...SKILL_SPECIALISTS];
+export const OPTIMAL_POKEDEX: Pokemon[] = [
+  ...OPTIMAL_BERRY_SPECIALISTS,
+  ...OPTIMAL_INGREDIENT_SPECIALISTS,
+  ...OPTIMAL_SKILL_SPECIALISTS,
+];
+
+export const INFERIOR_POKEDEX: Pokemon[] = [
+  ...INFERIOR_BERRY_SPECIALISTS,
+  ...INFERIOR_INGREDIENT_SPECIALISTS,
+  ...INFERIOR_SKILL_SPECIALISTS,
+];
+
+export const COMPLETE_POKEDEX: Pokemon[] = [
+  ...ALL_BERRY_SPECIALISTS,
+  ...ALL_INGREDIENT_SPECIALISTS,
+  ...ALL_SKILL_SPECIALISTS,
+];

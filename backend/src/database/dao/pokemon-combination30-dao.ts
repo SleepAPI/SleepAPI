@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import { POKEDEX } from '../../domain/pokemon/pokemon';
+import { OPTIMAL_POKEDEX } from '../../domain/pokemon/pokemon';
 import { RASH } from '../../domain/stat/nature';
 import { HELPING_SPEED_M, INGREDIENT_FINDER_M, INVENTORY_L, SubSkill } from '../../domain/stat/subskill';
 import {
@@ -36,7 +36,7 @@ class PokemonCombination30DAOImpl extends AbstractDAO<typeof DBPokemonCombinatio
     }
 
     const pokemonCombinations = [];
-    for (const pokemon of POKEDEX) {
+    for (const pokemon of OPTIMAL_POKEDEX) {
       for (const combination of getAllIngredientCombinationsForLevel(pokemon, 30)) {
         const [ingredientDrop0, ingredientDrop30] = combination;
         const subskills: SubSkill[] =
