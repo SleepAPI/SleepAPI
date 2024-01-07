@@ -23,6 +23,8 @@ On Windows it is recommended to use nvm inside WSL (Windows Subsystem for Linux)
 | ---- | ------------------------------------------------------- |
 | WSL  | <https://learn.microsoft.com/en-us/windows/wsl/install> |
 
+The repository includes `sleepapi.code-workspace`, which can be opened with Visual Studio Code's "Open Workspace From File" to automatically download recommended plugins and linters. Code edited without this workspace should be run through [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/).
+
 ### 1. Setup correct version of node
 
 Download the configured version of node. This version is specified in .nvmrc in the root of the repository.
