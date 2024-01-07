@@ -40,7 +40,8 @@
       "coverage": true,
       ".eslintrc.cjs": true,
       ".prettierignore": true
-    }
+    },
+    "files.eol": "\n"
   },
   "extensions": {
     "recommendations": [
