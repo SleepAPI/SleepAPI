@@ -55,7 +55,7 @@ async function main() {
   app.use(express.static(path.join(__dirname, 'assets')));
   app.get('/', (req: Request, res: Response) => {
     try {
-      res.sendFile('./assets/home.html', { root: __dirname });
+      res.sendFile('./assets/index.html', { root: __dirname });
     } catch (err) {
       Logger.error(err as Error);
       res.status(500).send('Something went wrong');
