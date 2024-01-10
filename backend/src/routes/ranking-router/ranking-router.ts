@@ -3,14 +3,25 @@ import RankingController from '../../controllers/ranking/ranking.controller';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import {
-  FilteredWithMealsQueryParams,
-  queryAsBoolean,
-  queryParamsToString,
-  respondWithCSV,
-} from '../../utils/routing/routing-utils';
+import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
 
-export interface FilteredExtQueryParams extends FilteredWithMealsQueryParams {
+export interface FilteredMealsQueryParams {
+  limit30?: boolean;
+  cyan?: boolean;
+  taupe?: boolean;
+  snowdrop?: boolean;
+  lapis?: boolean;
+  advanced?: boolean;
+  unlocked?: boolean;
+  lategame?: boolean;
+  curry?: boolean;
+  salad?: boolean;
+  dessert?: boolean;
+  pretty?: boolean;
+  csv?: boolean;
+}
+
+export interface FilteredExtQueryParams extends FilteredMealsQueryParams {
   nrOfMeals?: number;
   page?: number;
 }
@@ -21,7 +32,7 @@ class RankingRouterImpl {
   public async register(controller: RankingController) {
     this.router.get(
       '/ranking/meal/flexible',
-      async (req: Request<{ name: string }, unknown, unknown, FilteredWithMealsQueryParams>, res: Response) => {
+      async (req: Request<{ name: string }, unknown, unknown, FilteredMealsQueryParams>, res: Response) => {
         try {
           Logger.log('Entered /ranking/meal/flexible');
           const { pretty, csv } = req.query;

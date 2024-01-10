@@ -20,6 +20,7 @@ export interface CreateTierListRequestBody {
   cyan: boolean;
   taupe: boolean;
   snowdrop: boolean;
+  lapis: boolean;
   curry: boolean;
   salad: boolean;
   dessert: boolean;
@@ -100,6 +101,7 @@ class TierlistRouterImpl {
       cyan: queryAsBoolean(input.cyan),
       taupe: queryAsBoolean(input.taupe),
       snowdrop: queryAsBoolean(input.snowdrop),
+      lapis: queryAsBoolean(input.lapis),
       curry: queryAsBoolean(input.curry),
       salad: queryAsBoolean(input.salad),
       dessert: queryAsBoolean(input.dessert),

@@ -1,47 +1,7 @@
 import { Response } from 'express';
-import { SubskillSet } from '../../domain/stat/subskill';
-
-export interface SelectedMealQueryParams {
-  advanced?: boolean;
-  unlocked?: boolean;
-  lategame?: boolean;
-  curry?: boolean;
-  salad?: boolean;
-  dessert?: boolean;
-  csv?: boolean;
-}
-
-export interface FilteredQueryParams {
-  limit30?: boolean;
-  cyan?: boolean;
-  taupe?: boolean;
-  snowdrop?: boolean;
-  e4e?: number;
-  helpingbonus?: number;
-  camp?: boolean;
-  nature?: string;
-  subskills?: SubskillSet;
-  pretty?: boolean;
-  csv?: boolean;
-}
-
-export interface FilteredWithMealsQueryParams {
-  limit30?: boolean;
-  cyan?: boolean;
-  taupe?: boolean;
-  snowdrop?: boolean;
-  advanced?: boolean;
-  unlocked?: boolean;
-  lategame?: boolean;
-  curry?: boolean;
-  salad?: boolean;
-  dessert?: boolean;
-  pretty?: boolean;
-  csv?: boolean;
-}
 
 interface QueryToCSVFileName {
-  limit30?: boolean;
+  level?: number;
   advanced?: boolean;
   unlocked?: boolean;
   lategame?: boolean;
@@ -56,11 +16,18 @@ export function queryAsNumber(value: string | number | undefined): number | unde
   return value ? +value : undefined;
 }
 
+export function queryAsMandatoryNumber(key: string, value: string | number | undefined): number {
+  if (!value) {
+    throw new Error(`Missing query parameter value for [${key}]`);
+  }
+  return +value;
+}
+
 export function queryParamsToString(params: QueryToCSVFileName): string {
   let result = '';
-  const { limit30, advanced, unlocked, lategame, nrOfMeals } = params;
-  if (queryAsBoolean(limit30)) {
-    result += '-limit30';
+  const { level, advanced, unlocked, lategame, nrOfMeals } = params;
+  if (queryAsNumber(level)) {
+    result += '-level';
   }
   if (queryAsBoolean(advanced)) {
     result += '-advanced';

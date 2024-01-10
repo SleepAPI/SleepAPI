@@ -1,6 +1,7 @@
 import { PokemonCombinationForMealDAO } from '../../database/dao/pokemon-combination-for-meal-dao';
 import { PokemonCombinationForMeal30DAO } from '../../database/dao/pokemon-combination-for-meal30-dao';
-import { getBerriesForFilter, getBerryNames } from '../../utils/berry-utils/berry-utils';
+import { Island } from '../../domain/island/island';
+import { getBerriesForFilter, getBerriesForIsland, getBerryNames } from '../../utils/berry-utils/berry-utils';
 import { getMealsForFilter } from '../../utils/meal-utils/meal-utils';
 
 export function getMealNamesForFilter(params: {
@@ -15,15 +16,9 @@ export function getMealNamesForFilter(params: {
   return meals.map((meal) => meal.name);
 }
 
-export async function getMealDataAndRankingFor(params: {
-  name: string;
-  limit30: boolean;
-  cyan: boolean;
-  taupe: boolean;
-  snowdrop: boolean;
-}) {
-  const { name, limit30 } = params;
-  const allowedBerries = getBerryNames(getBerriesForFilter(params));
+export async function getMealDataAndRankingFor(params: { name: string; limit30: boolean; island?: Island }) {
+  const { name, limit30, island } = params;
+  const allowedBerries = getBerryNames(getBerriesForIsland(island));
 
   const pokemonCombinations = limit30
     ? await PokemonCombinationForMeal30DAO.getPokemonCombinationsForMeal(name, allowedBerries)
@@ -49,6 +44,7 @@ export async function getMealGeneralistRanking(params: {
   cyan: boolean;
   taupe: boolean;
   snowdrop: boolean;
+  lapis: boolean;
 }) {
   const meals = getMealNamesForFilter(params);
   const allowedBerries = getBerryNames(getBerriesForFilter(params));
@@ -75,6 +71,7 @@ export async function getMealFocusedRanking(params: {
   cyan: boolean;
   taupe: boolean;
   snowdrop: boolean;
+  lapis: boolean;
   nrOfMeals?: number;
 }) {
   const { nrOfMeals = 3 } = params;

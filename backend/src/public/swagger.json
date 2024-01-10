@@ -368,17 +368,12 @@
 			},
 			"FilteredQueryParams": {
 				"properties": {
-					"limit30": {
-						"type": "boolean"
+					"level": {
+						"type": "number",
+						"format": "double"
 					},
-					"cyan": {
-						"type": "boolean"
-					},
-					"taupe": {
-						"type": "boolean"
-					},
-					"snowdrop": {
-						"type": "boolean"
+					"island": {
+						"type": "string"
 					},
 					"e4e": {
 						"type": "number",
@@ -416,6 +411,9 @@
 						"type": "boolean"
 					},
 					"snowdrop": {
+						"type": "boolean"
+					},
+					"lapis": {
 						"type": "boolean"
 					},
 					"csv": {
@@ -582,6 +580,9 @@
 					"snowdrop": {
 						"type": "boolean"
 					},
+					"lapis": {
+						"type": "boolean"
+					},
 					"curry": {
 						"type": "boolean"
 					},
@@ -605,6 +606,7 @@
 					"cyan",
 					"taupe",
 					"snowdrop",
+					"lapis",
 					"curry",
 					"salad",
 					"dessert",
@@ -786,19 +788,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RankingsForMealQueryParams": {
+			"MealRankingQueryParams": {
 				"properties": {
 					"limit30": {
 						"type": "boolean"
 					},
-					"cyan": {
-						"type": "boolean"
-					},
-					"taupe": {
-						"type": "boolean"
-					},
-					"snowdrop": {
-						"type": "boolean"
+					"island": {
+						"type": "string"
 					},
 					"csv": {
 						"type": "boolean"
@@ -846,6 +842,9 @@
 						"type": "boolean"
 					},
 					"snowdrop": {
+						"type": "boolean"
+					},
+					"lapis": {
 						"type": "boolean"
 					},
 					"advanced": {
@@ -916,6 +915,9 @@
 						"type": "boolean"
 					},
 					"snowdrop": {
+						"type": "boolean"
+					},
+					"lapis": {
 						"type": "boolean"
 					},
 					"advanced": {
@@ -1217,34 +1219,19 @@
 					},
 					{
 						"in": "query",
-						"name": "limit30",
+						"name": "level",
 						"required": false,
 						"schema": {
-							"type": "boolean"
+							"format": "double",
+							"type": "number"
 						}
 					},
 					{
 						"in": "query",
-						"name": "cyan",
+						"name": "island",
 						"required": false,
 						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "taupe",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "snowdrop",
-						"required": false,
-						"schema": {
-							"type": "boolean"
+							"type": "string"
 						}
 					},
 					{
@@ -1347,6 +1334,14 @@
 					{
 						"in": "query",
 						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lapis",
 						"required": false,
 						"schema": {
 							"type": "boolean"
@@ -1728,26 +1723,10 @@
 					},
 					{
 						"in": "query",
-						"name": "cyan",
+						"name": "island",
 						"required": false,
 						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "taupe",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "snowdrop",
-						"required": false,
-						"schema": {
-							"type": "boolean"
+							"type": "string"
 						}
 					},
 					{
@@ -1816,6 +1795,14 @@
 					{
 						"in": "query",
 						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lapis",
 						"required": false,
 						"schema": {
 							"type": "boolean"
@@ -1935,6 +1922,14 @@
 					{
 						"in": "query",
 						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lapis",
 						"required": false,
 						"schema": {
 							"type": "boolean"

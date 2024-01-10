@@ -4,15 +4,23 @@ import OptimalController from '../../controllers/optimal/optimal.controller';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProductionFilter } from '../../domain/computed/production';
 import { IngredientDrop } from '../../domain/produce/ingredient';
+import { SubskillSet } from '../../domain/stat/subskill';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import {
-  FilteredQueryParams,
-  queryAsBoolean,
-  queryParamsToString,
-  respondWithCSV,
-} from '../../utils/routing/routing-utils';
+import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
+
+export interface FilteredQueryParams {
+  level?: number;
+  island?: string;
+  e4e?: number;
+  helpingbonus?: number;
+  camp?: boolean;
+  nature?: string;
+  subskills?: SubskillSet;
+  pretty?: boolean;
+  csv?: boolean;
+}
 
 export interface OptimalTeamType {
   sumSurplus: number;

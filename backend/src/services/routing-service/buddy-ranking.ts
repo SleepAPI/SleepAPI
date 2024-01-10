@@ -14,6 +14,7 @@ export async function getBuddyFlexibleRanking(params: {
   cyan: boolean;
   taupe: boolean;
   snowdrop: boolean;
+  lapis: boolean;
   nrOfMeals?: number;
   page?: number;
 }) {
@@ -42,6 +43,7 @@ export async function getBuddyRankingFor(params: {
   cyan: boolean;
   taupe: boolean;
   snowdrop: boolean;
+  lapis: boolean;
   nrOfMeals?: number;
   page?: number;
 }) {
