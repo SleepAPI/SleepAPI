@@ -12,6 +12,7 @@ export default class PokemonController extends Controller {
       cyan: queryAsBoolean(queryParams.cyan),
       taupe: queryAsBoolean(queryParams.taupe),
       snowdrop: queryAsBoolean(queryParams.snowdrop),
+      lapis: queryAsBoolean(queryParams.lapis),
     };
     return getPokemonNames(params);
   }

@@ -19,6 +19,7 @@ export default class RankingController extends Controller {
       cyan: queryAsBoolean(queryParams.cyan),
       taupe: queryAsBoolean(queryParams.taupe),
       snowdrop: queryAsBoolean(queryParams.snowdrop),
+      lapis: queryAsBoolean(queryParams.lapis),
     };
     return getMealGeneralistRanking(params);
   }
@@ -36,6 +37,7 @@ export default class RankingController extends Controller {
       cyan: queryAsBoolean(queryParams.cyan),
       taupe: queryAsBoolean(queryParams.taupe),
       snowdrop: queryAsBoolean(queryParams.snowdrop),
+      lapis: queryAsBoolean(queryParams.lapis),
       nrOfMeals: queryAsNumber(queryParams.nrOfMeals),
     };
     return getMealFocusedRanking(params);
@@ -55,6 +57,7 @@ export default class RankingController extends Controller {
       cyan: queryAsBoolean(queryParams.cyan),
       taupe: queryAsBoolean(queryParams.taupe),
       snowdrop: queryAsBoolean(queryParams.snowdrop),
+      lapis: queryAsBoolean(queryParams.lapis),
       page: queryAsNumber(queryParams.page),
     };
     return getBuddyFlexibleRanking(params);
@@ -69,6 +72,7 @@ export default class RankingController extends Controller {
       cyan: queryAsBoolean(queryParams.cyan),
       taupe: queryAsBoolean(queryParams.taupe),
       snowdrop: queryAsBoolean(queryParams.snowdrop),
+      lapis: queryAsBoolean(queryParams.lapis),
       page: queryAsNumber(queryParams.page),
     };
     return getBuddyRankingFor(params);

@@ -10,6 +10,7 @@ export interface GetPokemonQueryParams {
   cyan?: boolean;
   taupe?: boolean;
   snowdrop?: boolean;
+  lapis?: boolean;
   csv?: boolean;
 }
 

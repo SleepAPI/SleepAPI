@@ -9,7 +9,7 @@ export function getPokemonForName(name: string): Pokemon {
   return pokemon;
 }
 
-export function getPokemonNames(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean }) {
+export function getPokemonNames(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean; lapis: boolean }) {
   const allowedBerries = getBerriesForFilter(islands);
   return OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry)).map((pokemon) => pokemon.name);
 }

@@ -6,6 +6,7 @@ describe('getPokemonNames', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -15,6 +16,7 @@ describe('getPokemonNames', () => {
       cyan: true,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     expect(getPokemonNames(params)).toMatchInlineSnapshot(`
       [
@@ -39,6 +41,7 @@ describe('getPokemonNames', () => {
       cyan: false,
       taupe: true,
       snowdrop: false,
+      lapis: false,
     };
     expect(getPokemonNames(params)).toMatchInlineSnapshot(`
       [
@@ -61,6 +64,7 @@ describe('getPokemonNames', () => {
       cyan: false,
       taupe: false,
       snowdrop: true,
+      lapis: false,
     };
     expect(getPokemonNames(params)).toMatchInlineSnapshot(`
       [
@@ -82,11 +86,34 @@ describe('getPokemonNames', () => {
     `);
   });
 
+  it('shall return all lapis pokemon', () => {
+    const params = {
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: true,
+    };
+    expect(getPokemonNames(params)).toMatchInlineSnapshot(`
+      [
+        "PRIMEAPE",
+        "MEGANIUM",
+        "VENUSAUR",
+        "VICTREEBEL",
+        "MR_MIME",
+        "ESPEON",
+        "WOBBUFFET",
+        "LUCARIO",
+        "LEAFEON",
+      ]
+    `);
+  });
+
   it('shall return all pokemon for multiple islands', () => {
     const allIslands = {
       cyan: true,
       taupe: true,
       snowdrop: true,
+      lapis: true,
     };
 
     expect(getPokemonNames(allIslands)).toMatchSnapshot();

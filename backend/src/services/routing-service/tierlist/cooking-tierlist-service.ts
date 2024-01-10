@@ -25,8 +25,9 @@ class CookingTierlistImpl {
       minRecipeBonus: 0,
       nrOfMeals: 3,
       salad: false,
-      snowdrop: false,
       taupe: false,
+      snowdrop: false,
+      lapis: false,
     };
 
     const basePath60 = 'src/data/tierlist/cooking/level60/current';

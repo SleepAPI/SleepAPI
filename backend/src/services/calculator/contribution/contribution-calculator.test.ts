@@ -27,6 +27,7 @@ describe('calculateMealContributionFor', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
       limit50: false,
       minRecipeBonus: 17,
       nrOfMeals: 3,

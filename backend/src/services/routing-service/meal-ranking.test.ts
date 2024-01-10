@@ -1,8 +1,8 @@
+import { DREAM_EATER_BUTTER_CURRY } from '@src/domain/recipe/curry';
+import { LOVELY_KISS_SMOOTHIE } from '@src/domain/recipe/dessert';
+import { NINJA_SALAD } from '@src/domain/recipe/salad';
 import { PokemonCombinationForMealDAO } from '../../database/dao/pokemon-combination-for-meal-dao';
 import { PokemonCombinationForMeal30DAO } from '../../database/dao/pokemon-combination-for-meal30-dao';
-import { DREAM_EATER_BUTTER_CURRY } from '../../domain/recipe/curry';
-import { LOVELY_KISS_SMOOTHIE } from '../../domain/recipe/dessert';
-import { NINJA_SALAD } from '../../domain/recipe/salad';
 import { DaoFixture } from '../../utils/test-utils/dao-fixture';
 import { MockService } from '../../utils/test-utils/mock-service';
 import { getMealDataAndRankingFor, getMealGeneralistRanking, getMealNamesForFilter } from './meal-ranking';
@@ -93,6 +93,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -110,6 +111,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -127,6 +129,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -144,6 +147,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -161,6 +165,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -178,6 +183,7 @@ describe('getMealGeneralistRanking', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     await getMealGeneralistRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -204,12 +210,6 @@ describe('getMealDataAndRankingFor', () => {
     const params = {
       name: LOVELY_KISS_SMOOTHIE.name,
       limit30: false,
-      advanced: false,
-      unlocked: false,
-      lategame: false,
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
     };
     await getMealDataAndRankingFor(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -219,12 +219,6 @@ describe('getMealDataAndRankingFor', () => {
     const params = {
       name: LOVELY_KISS_SMOOTHIE.name,
       limit30: true,
-      advanced: false,
-      unlocked: false,
-      lategame: false,
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
     };
     await getMealDataAndRankingFor(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -234,12 +228,6 @@ describe('getMealDataAndRankingFor', () => {
     const params = {
       name: DREAM_EATER_BUTTER_CURRY.name,
       limit30: true,
-      advanced: false,
-      unlocked: false,
-      lategame: false,
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
     };
     await getMealDataAndRankingFor(params);
     expect(MockService.recorded).toMatchSnapshot();
@@ -249,9 +237,6 @@ describe('getMealDataAndRankingFor', () => {
     const params = {
       name: NINJA_SALAD.name,
       limit30: true,
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
     };
     await getMealDataAndRankingFor(params);
     expect(MockService.recorded).toMatchSnapshot();
