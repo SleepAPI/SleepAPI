@@ -1,5 +1,6 @@
+import { CYAN, LAPIS, SNOWDROP, TAUPE } from '@src/domain/island/island';
 import { BERRIES, CYAN_BERRIES, LAPIS_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '../../domain/produce/berry';
-import { getBerriesForFilter } from './berry-utils';
+import { getBerriesForFilter, getBerriesForIsland } from './berry-utils';
 
 describe('getBerriesForFilter', () => {
   it('shall default to all berries', () => {
@@ -60,5 +61,27 @@ describe('getBerriesForFilter', () => {
       lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual([...CYAN_BERRIES, ...TAUPE_BERRIES]);
+  });
+});
+
+describe('getBerriesForIsland', () => {
+  it('shall default to all berries', () => {
+    expect(getBerriesForIsland()).toEqual(BERRIES);
+  });
+
+  it('shall return cyan berries for cyan filter', () => {
+    expect(getBerriesForIsland(CYAN)).toEqual(CYAN_BERRIES);
+  });
+
+  it('shall return taupe berries for taupe filter', () => {
+    expect(getBerriesForIsland(TAUPE)).toEqual(TAUPE_BERRIES);
+  });
+
+  it('shall return snowdrop berries for snowdrop filter', () => {
+    expect(getBerriesForIsland(SNOWDROP)).toEqual(SNOWDROP_BERRIES);
+  });
+
+  it('shall return lapis berries for lapis filter', () => {
+    expect(getBerriesForIsland(LAPIS)).toEqual(LAPIS_BERRIES);
   });
 });

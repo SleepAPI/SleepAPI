@@ -1,3 +1,4 @@
+import { Island } from '../../domain/island/island';
 import {
   BERRIES,
   Berry,
@@ -18,6 +19,10 @@ export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; sn
   return cyan || taupe || snowdrop || lapis
     ? [...cyanBerries, ...taupeBerries, ...snowdropBerries, ...lapisBerries]
     : BERRIES;
+}
+
+export function getBerriesForIsland(island?: Island): Berry[] {
+  return island?.berries ?? BERRIES;
 }
 
 export function getBerryNames(berries: Berry[]) {
