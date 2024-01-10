@@ -1,17 +1,16 @@
+import { Island } from '../../domain/island/island';
 import { Berry } from '../../domain/produce/berry';
 import { Meal, MEALS } from '../../domain/recipe/meal';
 import { Nature, NATURES, RASH } from '../../domain/stat/nature';
 import { SubskillSet } from '../../domain/stat/subskill';
-import { getBerriesForFilter } from '../../utils/berry-utils/berry-utils';
+import { getBerriesForIsland } from '../../utils/berry-utils/berry-utils';
 import { calculateSetCover } from '../calculator/set-cover/calculate-set-cover';
 import { subskillsForFilter } from '../calculator/stats/stats-calculator';
 
 export function getOptimalPokemonFor(params: {
   name: string;
-  limit50: boolean;
-  cyan: boolean;
-  taupe: boolean;
-  snowdrop: boolean;
+  level: number;
+  island?: Island;
   goodCamp: boolean;
   e4eProcs?: number;
   helpingBonus?: number;
@@ -20,26 +19,27 @@ export function getOptimalPokemonFor(params: {
 }) {
   const {
     name,
-    limit50,
+    island,
+    level,
     goodCamp,
     e4eProcs = 0,
     helpingBonus = 0,
     natureName = RASH.name,
     subskillSet = 'optimal',
   } = params;
-  const allowedBerries = getBerriesForFilter(params);
+  const allowedBerries = getBerriesForIsland(island);
 
   const nature: Nature | undefined = NATURES.find((nature) => nature.name.toUpperCase() === natureName.toUpperCase());
   if (!nature) {
     throw new Error("Couldn't find nature with name: " + natureName.toUpperCase());
   }
 
-  return customOptimalSet({ name, limit50, goodCamp, e4eProcs, helpingBonus, nature, subskillSet, allowedBerries });
+  return customOptimalSet({ name, level, goodCamp, e4eProcs, helpingBonus, nature, subskillSet, allowedBerries });
 }
 
 function customOptimalSet(params: {
   name: string;
-  limit50: boolean;
+  level: number;
   goodCamp: boolean;
   e4eProcs: number;
   helpingBonus: number;
@@ -47,14 +47,13 @@ function customOptimalSet(params: {
   subskillSet: SubskillSet;
   allowedBerries: Berry[];
 }) {
-  const { name, limit50, goodCamp, e4eProcs, helpingBonus, nature, subskillSet, allowedBerries } = params;
+  const { name, level, goodCamp, e4eProcs, helpingBonus, nature, subskillSet, allowedBerries } = params;
 
   const meal: Meal | undefined = MEALS.find((meal) => meal.name === name.toUpperCase());
   if (!meal) {
     throw new Error("Couldn't find meal with name: " + name.toUpperCase());
   }
 
-  const level = limit50 ? 50 : 60;
   const subskills = subskillsForFilter(subskillSet);
 
   const optimalCombinations = calculateSetCover({

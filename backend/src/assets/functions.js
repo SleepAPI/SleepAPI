@@ -203,7 +203,15 @@ function goToProductionCalculator() {
 }
 
 function goToOptimalRanking() {
-  var queryParams = getQueryParams();
+  var level = `level=${+document.getElementById('level').value}`;
+  var island = `island=${document.getElementById('island').value}`;
+  var nature = `nature=${document.getElementById('nature').value}`;
+  var subskills = `subskills=${document.getElementById('subskills').value}`;
+  var e4e = `e4e=${+document.getElementById('e4e').value}`;
+  var helpingBonus = `helpingbonus=${+document.getElementById('helpingbonus').value}`;
+  var camp = `camp=${document.getElementById('camp').checked}`;
+
+  var queryParams = `?pretty=true&${island}&${nature}&${subskills}&${level}&${e4e}&${helpingBonus}&${camp}`;
   var url = 'optimal/' + document.getElementById('optimalMeal').value + queryParams;
 
   makeRequest(url, 'GET', function (data) {
