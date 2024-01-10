@@ -691,7 +691,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SelectedMealQueryParams": {
+			"MealNamesQueryParams": {
 				"properties": {
 					"advanced": {
 						"type": "boolean"
@@ -830,7 +830,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"FilteredWithMealsQueryParams": {
+			"FilteredMealsQueryParams": {
 				"properties": {
 					"limit30": {
 						"type": "boolean"

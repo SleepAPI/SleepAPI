@@ -244,7 +244,8 @@ function goToTierLists(createTierListF) {
 }
 
 function goToMealRanking() {
-  var queryParams = getQueryParams();
+  var island = document.getElementById('island').value;
+  var queryParams = `?pretty=true&island=${island}`;
   var url = 'meal/' + document.getElementById('meal').value + queryParams;
 
   makeRequest(url, 'GET', function (data) {
