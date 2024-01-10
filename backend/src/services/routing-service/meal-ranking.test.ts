@@ -1,3 +1,4 @@
+import { FANCY_APPLE } from '@src/domain/produce/ingredient';
 import { DREAM_EATER_BUTTER_CURRY } from '@src/domain/recipe/curry';
 import { LOVELY_KISS_SMOOTHIE } from '@src/domain/recipe/dessert';
 import { NINJA_SALAD } from '@src/domain/recipe/salad';
@@ -5,7 +6,12 @@ import { PokemonCombinationForMealDAO } from '../../database/dao/pokemon-combina
 import { PokemonCombinationForMeal30DAO } from '../../database/dao/pokemon-combination-for-meal30-dao';
 import { DaoFixture } from '../../utils/test-utils/dao-fixture';
 import { MockService } from '../../utils/test-utils/mock-service';
-import { getMealDataAndRankingFor, getMealGeneralistRanking, getMealNamesForFilter } from './meal-ranking';
+import {
+  getMealDataAndRankingFor,
+  getMealFocusedRanking,
+  getMealGeneralistRanking,
+  getMealNamesForFilter,
+} from './meal-ranking';
 
 DaoFixture.init();
 
@@ -95,7 +101,16 @@ describe('getMealGeneralistRanking', () => {
       snowdrop: false,
       lapis: false,
     };
-    await getMealGeneralistRanking(params);
+    const ranking = await getMealGeneralistRanking(params);
+    expect(ranking).toMatchInlineSnapshot(`
+      [
+        {
+          "averagePercentage": 0,
+          "ingredientList": [],
+          "pokemon": "some-pokemon",
+        },
+      ]
+    `);
     expect(MockService.recorded).toMatchSnapshot();
   });
 
@@ -113,16 +128,25 @@ describe('getMealGeneralistRanking', () => {
       snowdrop: false,
       lapis: false,
     };
-    await getMealGeneralistRanking(params);
+    const ranking = await getMealGeneralistRanking(params);
+    expect(ranking).toMatchInlineSnapshot(`
+      [
+        {
+          "averagePercentage": 0,
+          "ingredientList": [],
+          "pokemon": "some-pokemon",
+        },
+      ]
+    `);
     expect(MockService.recorded).toMatchSnapshot();
   });
 
-  it('shall sort all pokemon - advanced=true', async () => {
+  it('shall sort all pokemon - lategame=true', async () => {
     const params = {
       limit30: false,
-      advanced: true,
+      advanced: false,
       unlocked: false,
-      lategame: false,
+      lategame: true,
       curry: false,
       salad: false,
       dessert: false,
@@ -186,6 +210,77 @@ describe('getMealGeneralistRanking', () => {
       lapis: false,
     };
     await getMealGeneralistRanking(params);
+    expect(MockService.recorded).toMatchSnapshot();
+  });
+});
+
+describe('getMealFocusedRanking', () => {
+  // Mocking the DAO methods
+  const comb = {
+    total: 10,
+    meals: 'some-meal',
+    ingredientList: [{ amount: 1, ingredient: FANCY_APPLE }],
+  };
+
+  MockService.record({ PokemonCombinationForMealDAO }).getFocusedRankingForMeals = async () => [
+    { ...comb, pokemon: 'some-pokemon' },
+  ];
+  MockService.record({ PokemonCombinationForMeal30DAO }).getFocusedRankingForMeals = async () => [
+    { ...comb, pokemon: 'some-pokemon30' },
+  ];
+
+  it('shall sort all pokemon - no filters, default nrOfMeals', async () => {
+    const params = {
+      limit30: false,
+      advanced: false,
+      unlocked: false,
+      lategame: false,
+      curry: false,
+      salad: false,
+      dessert: false,
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: false,
+    };
+    await getMealFocusedRanking(params);
+    expect(MockService.recorded).toMatchSnapshot();
+  });
+
+  it('shall sort all pokemon for limit30', async () => {
+    const params = {
+      limit30: false,
+      advanced: false,
+      unlocked: false,
+      lategame: false,
+      curry: false,
+      salad: false,
+      dessert: false,
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: false,
+    };
+    await getMealFocusedRanking(params);
+    expect(MockService.recorded).toMatchSnapshot();
+  });
+
+  it('shall sort all pokemon with explicit nrOfMeals', async () => {
+    const params = {
+      limit30: false,
+      advanced: false,
+      unlocked: false,
+      lategame: false,
+      curry: false,
+      salad: false,
+      dessert: false,
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: false,
+      nrOfMeals: 5,
+    };
+    await getMealFocusedRanking(params);
     expect(MockService.recorded).toMatchSnapshot();
   });
 });
