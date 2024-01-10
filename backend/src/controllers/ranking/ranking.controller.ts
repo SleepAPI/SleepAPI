@@ -1,13 +1,13 @@
 import { Controller, Get, Hidden, Path, Queries, Route } from 'tsoa';
-import { FilteredExtQueryParams } from '../../routes/ranking-router/ranking-router';
+import { FilteredExtQueryParams, FilteredMealsQueryParams } from '../../routes/ranking-router/ranking-router';
 import { getBuddyFlexibleRanking, getBuddyRankingFor } from '../../services/routing-service/buddy-ranking';
 import { getMealFocusedRanking, getMealGeneralistRanking } from '../../services/routing-service/meal-ranking';
-import { FilteredWithMealsQueryParams, queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
+import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 
 @Route('ranking')
 export default class RankingController extends Controller {
   @Get('/meal/flexible')
-  public async getMealGeneralistRankingRaw(@Queries() queryParams: FilteredWithMealsQueryParams) {
+  public async getMealGeneralistRankingRaw(@Queries() queryParams: FilteredMealsQueryParams) {
     const params = {
       limit30: queryAsBoolean(queryParams.limit30),
       advanced: queryAsBoolean(queryParams.advanced),
