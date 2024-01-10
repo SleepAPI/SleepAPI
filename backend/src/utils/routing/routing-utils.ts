@@ -27,7 +27,7 @@ export function queryParamsToString(params: QueryToCSVFileName): string {
   let result = '';
   const { level, advanced, unlocked, lategame, nrOfMeals } = params;
   if (queryAsNumber(level)) {
-    result += '-level';
+    result += `-level${level}`;
   }
   if (queryAsBoolean(advanced)) {
     result += '-advanced';
