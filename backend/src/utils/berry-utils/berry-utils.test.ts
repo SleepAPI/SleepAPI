@@ -1,4 +1,4 @@
-import { BERRIES, CYAN_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '../../domain/produce/berry';
+import { BERRIES, CYAN_BERRIES, LAPIS_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '../../domain/produce/berry';
 import { getBerriesForFilter } from './berry-utils';
 
 describe('getBerriesForFilter', () => {
@@ -7,6 +7,7 @@ describe('getBerriesForFilter', () => {
       cyan: false,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual(BERRIES);
   });
@@ -16,6 +17,7 @@ describe('getBerriesForFilter', () => {
       cyan: true,
       taupe: false,
       snowdrop: false,
+      lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual(CYAN_BERRIES);
   });
@@ -25,6 +27,7 @@ describe('getBerriesForFilter', () => {
       cyan: false,
       taupe: true,
       snowdrop: false,
+      lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual(TAUPE_BERRIES);
   });
@@ -34,8 +37,19 @@ describe('getBerriesForFilter', () => {
       cyan: false,
       taupe: false,
       snowdrop: true,
+      lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual(SNOWDROP_BERRIES);
+  });
+
+  it('shall return lapis berries for lapis filter', () => {
+    const islands = {
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: true,
+    };
+    expect(getBerriesForFilter(islands)).toEqual(LAPIS_BERRIES);
   });
 
   it('shall return both cyan and taupe berries if both filters are passed', () => {
@@ -43,6 +57,7 @@ describe('getBerriesForFilter', () => {
       cyan: true,
       taupe: true,
       snowdrop: false,
+      lapis: false,
     };
     expect(getBerriesForFilter(islands)).toEqual([...CYAN_BERRIES, ...TAUPE_BERRIES]);
   });

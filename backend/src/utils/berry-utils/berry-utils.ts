@@ -1,13 +1,23 @@
-import { BERRIES, Berry, CYAN_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '../../domain/produce/berry';
+import {
+  BERRIES,
+  Berry,
+  CYAN_BERRIES,
+  LAPIS_BERRIES,
+  SNOWDROP_BERRIES,
+  TAUPE_BERRIES,
+} from '../../domain/produce/berry';
 
-export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean }) {
-  const { cyan, taupe, snowdrop } = islands;
+export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean; lapis: boolean }) {
+  const { cyan, taupe, snowdrop, lapis } = islands;
 
   const cyanBerries = cyan ? CYAN_BERRIES : [];
   const taupeBerries = taupe ? TAUPE_BERRIES : [];
   const snowdropBerries = snowdrop ? SNOWDROP_BERRIES : [];
+  const lapisBerries = lapis ? LAPIS_BERRIES : [];
 
-  return cyan || taupe || snowdrop ? [...cyanBerries, ...taupeBerries, ...snowdropBerries] : BERRIES;
+  return cyan || taupe || snowdrop || lapis
+    ? [...cyanBerries, ...taupeBerries, ...snowdropBerries, ...lapisBerries]
+    : BERRIES;
 }
 
 export function getBerryNames(berries: Berry[]) {
