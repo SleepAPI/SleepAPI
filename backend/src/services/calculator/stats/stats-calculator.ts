@@ -53,18 +53,34 @@ export function invertNatureFrequecy(nature: Nature) {
   return result;
 }
 
-export function subskillsForFilter(subskillSet: SubskillSet): SubSkill[] {
+export function subskillsForFilter(subskillSet: SubskillSet, level: number): SubSkill[] {
   if (subskillSet === 'neutral') {
     return [];
-  } else {
-    return [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L];
   }
+
+  const subskills = [];
+  if (level >= 10) {
+    subskills.push(INGREDIENT_FINDER_M);
+  }
+  if (level >= 25) {
+    subskills.push(HELPING_SPEED_M);
+  }
+  if (level >= 50) {
+    subskills.push(INVENTORY_L);
+  }
+  if (level >= 75) {
+    subskills.push(INGREDIENT_FINDER_S);
+  }
+  if (level >= 100) {
+    subskills.push(INVENTORY_M);
+  }
+  return subskills;
 }
 
 export function getOptimalIngredientStats(level: number): CustomStats {
   return {
     level,
     nature: RASH,
-    subskills: subskillsForFilter('optimal'),
+    subskills: subskillsForFilter('optimal', level),
   };
 }
