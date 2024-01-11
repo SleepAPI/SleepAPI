@@ -54,7 +54,7 @@ function customOptimalSet(params: {
     throw new Error("Couldn't find meal with name: " + name.toUpperCase());
   }
 
-  const subskills = subskillsForFilter(subskillSet);
+  const subskills = subskillsForFilter(subskillSet, level);
 
   const optimalCombinations = calculateSetCover({
     recipe: meal.ingredients,
