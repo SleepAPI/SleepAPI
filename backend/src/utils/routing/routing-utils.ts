@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { RouteError } from '../../domain/error/route/route-error';
 
 interface QueryToCSVFileName {
   level?: number;
@@ -18,7 +19,7 @@ export function queryAsNumber(value: string | number | undefined): number | unde
 
 export function queryAsMandatoryNumber(key: string, value: string | number | undefined): number {
   if (!value) {
-    throw new Error(`Missing query parameter value for [${key}]`);
+    throw new RouteError(`Missing query parameter value for [${key}]`);
   }
   return +value;
 }

@@ -1,3 +1,5 @@
+import { MealError } from '../../domain/error/meal/meal-error';
+import { NatureError } from '../../domain/error/stat/stat-error';
 import { Island } from '../../domain/island/island';
 import { Berry } from '../../domain/produce/berry';
 import { Meal, MEALS } from '../../domain/recipe/meal';
@@ -31,7 +33,7 @@ export function getOptimalPokemonFor(params: {
 
   const nature: Nature | undefined = NATURES.find((nature) => nature.name.toUpperCase() === natureName.toUpperCase());
   if (!nature) {
-    throw new Error("Couldn't find nature with name: " + natureName.toUpperCase());
+    throw new NatureError("Couldn't find nature with name: " + natureName.toUpperCase());
   }
 
   return customOptimalSet({ name, level, goodCamp, e4eProcs, helpingBonus, nature, subskillSet, allowedBerries });
@@ -51,10 +53,10 @@ function customOptimalSet(params: {
 
   const meal: Meal | undefined = MEALS.find((meal) => meal.name === name.toUpperCase());
   if (!meal) {
-    throw new Error("Couldn't find meal with name: " + name.toUpperCase());
+    throw new MealError("Couldn't find meal with name: " + name.toUpperCase());
   }
 
-  const subskills = subskillsForFilter(subskillSet);
+  const subskills = subskillsForFilter(subskillSet, level);
 
   const optimalCombinations = calculateSetCover({
     recipe: meal.ingredients,

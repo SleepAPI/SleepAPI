@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { EnergyError } from '../../../domain/error/stat/stat-error';
+
 /**
  * Awake energy for 15.5 hours, formula for natural decline:
  * (20/0.45 + 20/0.52 + 20/0.62 + 20/0.71 + 13/1.00)/(15.5 * 6) = 1.681
@@ -57,7 +59,7 @@ export function calculateSpecificEnergyCoefficient(energyPercentage: number) {
   } else if (energyPercentage >= 0) {
     return 1;
   } else {
-    throw new Error(`Energy has to be between 0 and 150, but was ${energyPercentage}`);
+    throw new EnergyError(`Energy has to be between 0 and 150, but was ${energyPercentage}`);
   }
 }
 

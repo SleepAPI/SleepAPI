@@ -16,6 +16,7 @@
 
 import { DetailedOptimalCombination } from '../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
+import { ProgrammingError } from '../../domain/error/programming/programming-error';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { prettifyIngredientDrop } from '../../utils/json/json-utils';
 import {
@@ -101,7 +102,9 @@ export class SetCover {
           this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
 
           if (!subTeams) {
-            throw new Error('Should not happen since we check maxTeamSize > 1, and we return only undefined for 0');
+            throw new ProgrammingError(
+              'Should not happen since we check maxTeamSize > 1, and we return only undefined for 0'
+            );
           }
           if (subTeams.length == 0) {
             // If there are no teams that can solve the remaining ingredients

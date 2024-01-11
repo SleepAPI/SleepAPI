@@ -1,5 +1,6 @@
 import { Static, Type } from '@sinclair/typebox';
 import { BuddyForFlexibleRanking, BuddyForMeal } from '../../../domain/combination/buddy-types';
+import { MealError } from '../../../domain/error/meal/meal-error';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { MEALS, Meal } from '../../../domain/recipe/meal';
 import {
@@ -149,7 +150,7 @@ class BuddyCombinationForMeal30DAOImpl extends AbstractDAO<typeof DBBuddyCombina
 
     const meal: Meal | undefined = MEALS.find((meal) => meal.name === mealName.toUpperCase());
     if (!meal) {
-      throw new Error("Couldn't find meal with name: " + mealName.toUpperCase());
+      throw new MealError("Couldn't find meal with name: " + mealName.toUpperCase());
     }
 
     const pokemonCombinations: RawBuddyForMealType[] = await knex

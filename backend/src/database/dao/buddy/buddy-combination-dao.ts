@@ -1,4 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
+import { LevelError } from '../../../domain/error/stat/stat-error';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { generateAllBuddyCombinations } from '../../../services/calculator/buddy/buddy-calculator';
 import { combineSameIngredientsInDrop } from '../../../services/calculator/ingredient/ingredient-calculate';
@@ -67,7 +68,7 @@ class BuddyCombinationDAOImpl extends AbstractDAO<typeof DBBuddyCombinationSchem
     }
   ): IngredientDrop[] {
     if (!buddy1.ingredient60 || !buddy1.produced_amount60 || !buddy2.ingredient60 || !buddy2.produced_amount60) {
-      throw new Error('Somehow level 60 produced ingredients not populated for buddy-combination-dao');
+      throw new LevelError('Somehow level 60 produced ingredients not populated for buddy-combination-dao');
     }
 
     return [

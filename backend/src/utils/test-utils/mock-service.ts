@@ -1,3 +1,5 @@
+import { MockError } from '../../domain/error/test/mock-error';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type RecordedCall = {
   name: string;
@@ -53,7 +55,7 @@ class MockServiceImpl {
 
   public record<MOCK_TARGET extends object>(targets: Record<string, MOCK_TARGET>): MOCK_TARGET {
     if (Object.values(targets).length !== 1) {
-      throw new Error('Only one object may be mocked per invocation to mock');
+      throw new MockError('Only one object may be mocked per invocation to mock');
     }
     const [name, target] = Object.entries(targets)[0];
     // eslint-disable-next-line @typescript-eslint/no-this-alias
