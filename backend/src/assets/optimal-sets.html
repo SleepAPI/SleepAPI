@@ -34,114 +34,10 @@
       <h3>Select any filters by clicking the check boxes below. <br />Then select a recipe and click the button.</h3>
       <hr />
     </header>
-    <div style="text-align: center">
-      <h3>Choose your settings</h3>
-      <select id="island" class="btn btn-outline-dark" style="margin-bottom: 10px">
-        <option value="all" selected>All Pokémon</option>
-        <option value="cyan beach">Cyan Beach</option>
-        <option value="taupe hollow">Taupe Hollow</option>
-        <option value="snowdrop tundra">Snowdrop Tundra</option>
-        <option value="lapis lakeside">Lapis Lakeside</option>
-      </select>
-      <br />
-
-      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
-        <option value="bashful">Nature</option>
-        <option value="lonely">Lonely (+speed -energy)</option>
-        <option value="adamant">Adamant (+speed -ing)</option>
-        <option value="naughty">Naughty (+speed -skill)</option>
-        <option value="brave">Brave (+speed -exp)</option>
-
-        <option value="bold">Bold (+energy -speed)</option>
-        <option value="impish">Impish (+energy -ing)</option>
-        <option value="lax">Lax (+energy -skill)</option>
-        <option value="relaxed">Relaxed (+energy -exp)</option>
-
-        <option value="modest">Modest (+ing -speed)</option>
-        <option value="mild">Mild (+ing -energy)</option>
-        <option value="rash" selected>Rash (+ing -skill)</option>
-        <option value="quiet">Quiet (+ing -exp)</option>
-
-        <option value="calm">Calm (+skill -speed)</option>
-        <option value="gentle">Gentle (+skill -energy)</option>
-        <option value="careful">Careful (+skill -ing)</option>
-        <option value="sassy">Sassy (+skill -exp)</option>
-
-        <option value="timid">Timid (+exp -speed)</option>
-        <option value="hasty">Hasty (+exp -energy)</option>
-        <option value="jolly">Jolly (+exp -ing)</option>
-        <option value="naive">Naive (+exp -skill)</option>
-
-        <option value="bashful">Bashful</option>
-        <option value="hardy">Hardy</option>
-        <option value="docile">Docile</option>
-        <option value="quirky">Quirky</option>
-        <option value="serious">Serious</option>
-      </select>
-      <br />
-
-      <select id="subskills" class="btn btn-outline-dark">
-        <option value="optimal" selected>Optimal subskills</option>
-        <option value="neutral">No subskills</option>
-      </select>
-      <br />
-
-      <label for="level" class="form-label">Level:&nbsp;</label><span id="levelValue">60</span><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="level"
-        name="level"
-        value="60"
-        min="1"
-        max="100"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
-
-      <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="e4e"
-        name="e4e"
-        value="0"
-        min="0"
-        max="5"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
-
-      <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
-      ><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="helpingbonus"
-        name="helpingbonus"
-        value="0"
-        min="0"
-        max="5"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
-
-      <div class="d-flex justify-content-center">
-        <label class="form-check-label order-1" for="camp">Good camp:</label>
-        <div class="form-check form-switch ms-3 order-2">
-          <input class="form-check-input" type="checkbox" role="switch" id="camp" />
-        </div>
-      </div>
-    </div>
-
-    <div id="spinner-div" style="display: none"></div>
 
     <div style="text-align: center; margin-top: 20px">
       <h3>Choose Recipe</h3>
-      <select id="optimalMeal" class="btn btn-outline-dark" style="text-align: center; margin-bottom: 10px">
+      <select id="optimalMeal" class="btn btn-outline-dark" style="text-align: center; margin-bottom: 20px">
         <option value="" selected>Select your recipe</option>
         <option value="" disabled>Curries</option>
         <option value="FANCY_APPLE_CURRY">Fancy Apple Curry</option>
@@ -197,10 +93,121 @@
       </select>
     </div>
 
-    <div style="text-align: center; margin-bottom: 20px">
-      <button class="btn black-button" type="button" onclick="goToOptimalRanking()">Submit</button>
+    <div style="text-align: center">
+      <h5>Optional settings</h5>
+      <select id="island" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="all" selected>All Pokémon</option>
+        <option value="cyan beach">Cyan Beach</option>
+        <option value="taupe hollow">Taupe Hollow</option>
+        <option value="snowdrop tundra">Snowdrop Tundra</option>
+        <option value="lapis lakeside">Lapis Lakeside</option>
+      </select>
+      <br />
+
+      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="bashful">Nature</option>
+        <option value="lonely">Lonely (+speed -energy)</option>
+        <option value="adamant">Adamant (+speed -ing)</option>
+        <option value="naughty">Naughty (+speed -skill)</option>
+        <option value="brave">Brave (+speed -exp)</option>
+
+        <option value="bold">Bold (+energy -speed)</option>
+        <option value="impish">Impish (+energy -ing)</option>
+        <option value="lax">Lax (+energy -skill)</option>
+        <option value="relaxed">Relaxed (+energy -exp)</option>
+
+        <option value="modest">Modest (+ing -speed)</option>
+        <option value="mild">Mild (+ing -energy)</option>
+        <option value="rash" selected>Rash (+ing -skill)</option>
+        <option value="quiet">Quiet (+ing -exp)</option>
+
+        <option value="calm">Calm (+skill -speed)</option>
+        <option value="gentle">Gentle (+skill -energy)</option>
+        <option value="careful">Careful (+skill -ing)</option>
+        <option value="sassy">Sassy (+skill -exp)</option>
+
+        <option value="timid">Timid (+exp -speed)</option>
+        <option value="hasty">Hasty (+exp -energy)</option>
+        <option value="jolly">Jolly (+exp -ing)</option>
+        <option value="naive">Naive (+exp -skill)</option>
+
+        <option value="bashful">Bashful</option>
+        <option value="hardy">Hardy</option>
+        <option value="docile">Docile</option>
+        <option value="quirky">Quirky</option>
+        <option value="serious">Serious</option>
+      </select>
+      <br />
+
+      <select id="subskills" class="btn btn-outline-dark" style="margin-bottom: 10px">
+        <option value="optimal" selected>Optimal subskills</option>
+        <option value="neutral">No subskills</option>
+      </select>
+      <br />
+
+      <label for="level" class="form-label">Level:&nbsp;</label><span id="levelValue">60</span><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="level"
+        name="level"
+        value="60"
+        min="1"
+        max="100"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="e4e"
+        name="e4e"
+        value="0"
+        min="0"
+        max="5"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
+      ><br />
+      <input
+        type="range"
+        class="form-range"
+        autocomplete="off"
+        id="helpingbonus"
+        name="helpingbonus"
+        value="0"
+        min="0"
+        max="5"
+        style="width: 300px"
+        oninput="updateValue(this)"
+      /><br />
+
+      <div class="d-flex justify-content-center" style="margin-bottom: 20px">
+        <label class="form-check-label order-1" for="camp">Good camp:</label>
+        <div class="form-check form-switch ms-3 order-2">
+          <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+        </div>
+      </div>
     </div>
 
+    <div class="d-flex justify-content-center mt-3" style="margin-bottom: 50px">
+      <button
+        class="btn black-button btn-outline-dark text-center"
+        style="width: 300px"
+        type="button"
+        onclick="goToOptimalRanking()"
+      >
+        Submit
+      </button>
+    </div>
+
+    <div id="spinner-div" style="display: none"></div>
     <div id="rankings" class="w3-container"></div>
 
     <footer class="w3-container w3-black">
