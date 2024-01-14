@@ -1,12 +1,13 @@
-import { Controller, Get, Path, Queries, Route } from 'tsoa';
+import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { MealNamesQueryParams, MealRankingQueryParams } from '../../routes/meal-router/meal-router';
 import { getMealDataAndRankingFor, getMealNamesForFilter } from '../../services/routing-service/meal-ranking';
 import { findIslandForName } from '../../utils/island-utils/island-utils';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
 
-@Route('meal')
+@Route('api/meal')
 export default class MealController extends Controller {
   @Get('/')
+  @Tags('meal')
   public async getMeals(@Queries() queryParams: MealNamesQueryParams): Promise<string[]> {
     const params = {
       advanced: queryAsBoolean(queryParams.advanced),
@@ -19,7 +20,9 @@ export default class MealController extends Controller {
     return getMealNamesForFilter(params);
   }
 
+  // TODO: move to legacy
   @Get('{name}')
+  @Tags('legacy')
   public async getMealRankingRaw(@Path() name: string, @Queries() queryParams: MealRankingQueryParams) {
     const params = {
       name: name,

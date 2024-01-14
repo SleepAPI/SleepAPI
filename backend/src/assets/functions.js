@@ -32,17 +32,19 @@ function getQueryParams() {
 
 function makeRequest(url, method, callback, body) {
   var xmlhttp = new XMLHttpRequest();
+  var apiUrl = 'api/' + url;
+
+  // add loading indicator while waiting for response
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 1) {
       document.getElementById('spinner-div').style.display = 'block';
-    }
-    // Hide spinner when the request is done
-    else if (this.readyState == 4) {
+    } else if (this.readyState == 4) {
       document.getElementById('spinner-div').style.display = 'none';
       callback(this.responseText);
     }
   };
-  xmlhttp.open(method, url, true);
+
+  xmlhttp.open(method, apiUrl, true);
   xmlhttp.setRequestHeader('Content-Type', 'application/json');
   xmlhttp.send(JSON.stringify(body));
 }

@@ -1,9 +1,10 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import RankingController from '../../controllers/ranking/ranking.controller';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export interface FilteredMealsQueryParams {
   limit30?: boolean;
@@ -27,10 +28,8 @@ export interface FilteredExtQueryParams extends FilteredMealsQueryParams {
 }
 
 class RankingRouterImpl {
-  public router = express.Router();
-
   public async register(controller: RankingController) {
-    this.router.get(
+    BaseRouter.router.get(
       '/ranking/meal/flexible',
       async (req: Request<{ name: string }, unknown, unknown, FilteredMealsQueryParams>, res: Response) => {
         try {
@@ -55,7 +54,7 @@ class RankingRouterImpl {
       }
     );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/ranking/meal/focused',
       async (req: Request<{ name: string }, unknown, unknown, FilteredExtQueryParams>, res: Response) => {
         try {
@@ -80,7 +79,7 @@ class RankingRouterImpl {
       }
     );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/ranking/buddy/flexible',
       async (req: Request<{ name: string }, unknown, unknown, FilteredExtQueryParams>, res: Response) => {
         try {
@@ -105,7 +104,7 @@ class RankingRouterImpl {
       }
     );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/ranking/buddy/meal/:name',
       async (req: Request<{ name: string }, unknown, unknown, FilteredExtQueryParams>, res: Response) => {
         try {

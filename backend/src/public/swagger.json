@@ -1085,7 +1085,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/optimal/{name}": {
+		"/api/optimal/{name}": {
 			"get": {
 				"operationId": "GetOptimalPokemonForMealRaw",
 				"responses": {
@@ -1207,6 +1207,9 @@
 						}
 					}
 				},
+				"tags": [
+					"optimal"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1295,7 +1298,7 @@
 				]
 			}
 		},
-		"/pokemon": {
+		"/api/pokemon": {
 			"get": {
 				"operationId": "GetPokemon",
 				"responses": {
@@ -1313,6 +1316,9 @@
 						}
 					}
 				},
+				"tags": [
+					"pokemon"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1358,7 +1364,7 @@
 				]
 			}
 		},
-		"/pokemon/{name}": {
+		"/api/pokemon/{name}": {
 			"get": {
 				"operationId": "GetPokemonRankingRaw",
 				"responses": {
@@ -1374,6 +1380,9 @@
 						}
 					}
 				},
+				"tags": [
+					"legacy"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1459,7 +1468,7 @@
 				]
 			}
 		},
-		"/tierlist/cooking": {
+		"/api/tierlist/cooking": {
 			"get": {
 				"operationId": "GetCookingTierlist",
 				"responses": {
@@ -1477,6 +1486,9 @@
 						}
 					}
 				},
+				"tags": [
+					"tierlist"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1522,7 +1534,7 @@
 				]
 			}
 		},
-		"/calculator/production/{name}": {
+		"/api/calculator/production/{name}": {
 			"post": {
 				"operationId": "CalculatePokemonProduction",
 				"responses": {
@@ -1586,6 +1598,9 @@
 						}
 					}
 				},
+				"tags": [
+					"calculator"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1609,7 +1624,7 @@
 				}
 			}
 		},
-		"/meal": {
+		"/api/meal": {
 			"get": {
 				"operationId": "GetMeals",
 				"responses": {
@@ -1627,6 +1642,9 @@
 						}
 					}
 				},
+				"tags": [
+					"meal"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1688,7 +1706,7 @@
 				]
 			}
 		},
-		"/meal/{name}": {
+		"/api/meal/{name}": {
 			"get": {
 				"operationId": "GetMealRankingRaw",
 				"responses": {
@@ -1703,6 +1721,9 @@
 						}
 					}
 				},
+				"tags": [
+					"legacy"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1748,7 +1769,7 @@
 				]
 			}
 		},
-		"/ranking/meal/flexible": {
+		"/api/ranking/meal/flexible": {
 			"get": {
 				"operationId": "GetMealGeneralistRankingRaw",
 				"responses": {
@@ -1766,6 +1787,9 @@
 						}
 					}
 				},
+				"tags": [
+					"legacy"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -1875,7 +1899,7 @@
 				]
 			}
 		},
-		"/ranking/meal/focused": {
+		"/api/ranking/meal/focused": {
 			"get": {
 				"operationId": "GetMealFocusedRankingRaw",
 				"responses": {
@@ -1893,6 +1917,9 @@
 						}
 					}
 				},
+				"tags": [
+					"legacy"
+				],
 				"security": [],
 				"parameters": [
 					{

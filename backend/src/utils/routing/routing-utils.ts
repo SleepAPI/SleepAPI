@@ -16,13 +16,6 @@ export function queryAsNumber(value: string | number | undefined): number | unde
   return value ? +value : undefined;
 }
 
-export function queryAsMandatoryNumber(key: string, value: string | number | undefined): number {
-  if (!value) {
-    throw new Error(`Missing query parameter value for [${key}]`);
-  }
-  return +value;
-}
-
 export function queryParamsToString(params: QueryToCSVFileName): string {
   let result = '';
   const { level, advanced, unlocked, lategame, nrOfMeals } = params;

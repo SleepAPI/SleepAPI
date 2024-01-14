@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { config } from '../../config/config';
 import OptimalController from '../../controllers/optimal/optimal.controller';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
@@ -9,6 +9,7 @@ import { CSVConverterService } from '../../services/csv-converter/csv-converter-
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export interface FilteredQueryParams {
   level?: number;
@@ -43,10 +44,8 @@ export interface OptimalSetResult {
 }
 
 class OptimalCombinationRouterImpl {
-  public router = express.Router();
-
   public async register(controller: OptimalController) {
-    this.router.get(
+    BaseRouter.router.get(
       '/optimal/:name',
       async (req: Request<{ name: string }, unknown, unknown, FilteredQueryParams>, res: Response) => {
         try {

@@ -1,10 +1,11 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import PokemonController from '../../controllers/pokemon/pokemon.controller';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, respondWithCSV } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export interface GetPokemonQueryParams {
   cyan?: boolean;
@@ -39,10 +40,8 @@ export interface PokemonResult {
 }
 
 class PokemonRouterImpl {
-  public router = express.Router();
-
   public async register(controller: PokemonController) {
-    this.router.get(
+    BaseRouter.router.get(
       '/pokemon',
       async (req: Request<unknown, unknown, unknown, GetPokemonQueryParams>, res: Response) => {
         try {
@@ -62,7 +61,7 @@ class PokemonRouterImpl {
       }
     );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/pokemon/:name',
       async (req: Request<{ name: string }, unknown, unknown, MealsForPokemonRequestQueryParams>, res: Response) => {
         try {
