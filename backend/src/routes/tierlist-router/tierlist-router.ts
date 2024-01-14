@@ -1,10 +1,11 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { config } from '../../config/config';
 import TierlistController from '../../controllers/tierlist/tierlist.controller';
 import { PokemonCombinationContribution } from '../../domain/combination/combination-contribution';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export type TierlistType = 'overall' | 'curry' | 'salad' | 'dessert';
 export interface GetTierListQueryParams {
@@ -34,10 +35,8 @@ export interface TieredPokemonCombinationContribution {
 }
 
 class TierlistRouterImpl {
-  public router = express.Router();
-
   public async register(controller: TierlistController) {
-    this.router.post(
+    BaseRouter.router.post(
       '/tierlist/cooking/create',
       async (
         req: Request<unknown, unknown, CreateTierListRequestBody, { pretty: boolean; onlyBest: boolean }>,
@@ -66,7 +65,7 @@ class TierlistRouterImpl {
       }
     );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/tierlist/cooking',
       async (req: Request<unknown, unknown, unknown, GetTierListQueryParams>, res: Response) => {
         try {

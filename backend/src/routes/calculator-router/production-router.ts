@@ -1,8 +1,9 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import ProductionController from '../../controllers/calculator/production.controller';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
   level: number;
@@ -14,10 +15,8 @@ export interface ProductionRequest {
 }
 
 class ProductionRouterImpl {
-  public router = express.Router();
-
   public async register(controller: ProductionController) {
-    this.router.post(
+    BaseRouter.router.post(
       '/calculator/production/:name',
       async (req: Request<{ name: string }, unknown, ProductionRequest, { pretty?: boolean }>, res: Response) => {
         try {

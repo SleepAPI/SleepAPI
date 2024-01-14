@@ -15,6 +15,7 @@ import TierlistController from './controllers/tierlist/tierlist.controller';
 import DatabaseMigration from './database/migration/database-migration';
 import DataSeed from './database/seed/data-seed';
 import swaggerDocument from './public/swagger.json';
+import { BaseRouter } from './routes/base-router';
 import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
 import { MealRouter } from './routes/meal-router/meal-router';
@@ -51,6 +52,7 @@ async function main() {
   app.use(express.json());
   app.use(morgan('tiny'));
   app.use(cors(options));
+  app.use('/api', BaseRouter.router);
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customSiteTitle: 'Sleep API' }));
   app.use(express.static(path.join(__dirname, 'assets')));
   app.get('/', (req: Request, res: Response) => {
@@ -63,13 +65,6 @@ async function main() {
   });
 
   // Register routes
-  app.use(HealthRouter.router);
-  app.use(MealRouter.router);
-  app.use(RankingRouter.router);
-  app.use(PokemonRouter.router);
-  app.use(OptimalCombinationRouter.router);
-  app.use(ProductionRouter.router);
-  app.use(TierlistRouter.router);
   HealthRouter.register(new HealthController());
   MealRouter.register(new MealController());
   RankingRouter.register(new RankingController());

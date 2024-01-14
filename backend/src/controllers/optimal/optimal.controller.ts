@@ -1,16 +1,18 @@
-import { Controller, Get, Path, Queries, Route } from 'tsoa';
+import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { FilteredQueryParams } from '../../routes/optimal-router/optimal-router';
 import { getOptimalPokemonFor } from '../../services/routing-service/optimal-ranking';
 import { findIslandForName } from '../../utils/island-utils/island-utils';
-import { queryAsBoolean, queryAsMandatoryNumber, queryAsNumber } from '../../utils/routing/routing-utils';
+import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 
-@Route('optimal')
+// TODO: rename to team finder
+@Route('api/optimal')
+@Tags('optimal')
 export default class OptimalController extends Controller {
   @Get('{name}')
   public getOptimalPokemonForMealRaw(@Path() name: string, @Queries() queryParams: FilteredQueryParams) {
     const params = {
       name,
-      level: queryAsMandatoryNumber('level', queryParams.level),
+      level: queryAsNumber(queryParams.level),
       e4eProcs: queryAsNumber(queryParams.e4e),
       helpingBonus: queryAsNumber(queryParams.helpingbonus),
       goodCamp: queryAsBoolean(queryParams.camp),

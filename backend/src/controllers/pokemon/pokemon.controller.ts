@@ -1,12 +1,13 @@
-import { Controller, Get, Path, Queries, Route } from 'tsoa';
+import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { GetPokemonQueryParams, MealsForPokemonRequestQueryParams } from '../../routes/pokemon-router/pokemon-router';
 import { getPokemonCombinationData } from '../../services/routing-service/pokemon-ranking';
 import { getPokemonNames } from '../../utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
 
-@Route('pokemon')
+@Route('api/pokemon')
 export default class PokemonController extends Controller {
   @Get('/')
+  @Tags('pokemon')
   public async getPokemon(@Queries() queryParams: GetPokemonQueryParams): Promise<string[]> {
     const params = {
       cyan: queryAsBoolean(queryParams.cyan),
@@ -17,7 +18,9 @@ export default class PokemonController extends Controller {
     return getPokemonNames(params);
   }
 
+  // TODO: move to legacy
   @Get('{name}')
+  @Tags('legacy')
   public async getPokemonRankingRaw(@Path() name: string, @Queries() queryParams: MealsForPokemonRequestQueryParams) {
     const params = {
       name: name,

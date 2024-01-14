@@ -1,9 +1,10 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import MealController from '../../controllers/meal/meal.controller';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, respondWithCSV } from '../../utils/routing/routing-utils';
+import { BaseRouter } from '../base-router';
 
 export interface MealNamesQueryParams {
   advanced?: boolean;
@@ -23,27 +24,28 @@ export interface MealRankingQueryParams {
 }
 
 class MealRouterImpl {
-  public router = express.Router();
-
   public async register(controller: MealController) {
-    this.router.get('/meal', async (req: Request<unknown, unknown, unknown, MealNamesQueryParams>, res: Response) => {
-      try {
-        Logger.log('Entered /meal');
-        const meals = await controller.getMeals(req.query);
+    BaseRouter.router.get(
+      '/meal',
+      async (req: Request<unknown, unknown, unknown, MealNamesQueryParams>, res: Response) => {
+        try {
+          Logger.log('Entered /meal');
+          const meals = await controller.getMeals(req.query);
 
-        if (queryAsBoolean(req.query.csv) === true) {
-          const data = 'Name\n' + `${meals.join('\n')}`;
-          respondWithCSV(res, data, 'meals');
-        } else {
-          res.header('Content-Type', 'application/json').send(JSON.stringify(meals, null, 4));
+          if (queryAsBoolean(req.query.csv) === true) {
+            const data = 'Name\n' + `${meals.join('\n')}`;
+            respondWithCSV(res, data, 'meals');
+          } else {
+            res.header('Content-Type', 'application/json').send(JSON.stringify(meals, null, 4));
+          }
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
         }
-      } catch (err) {
-        Logger.error(err as Error);
-        res.status(500).send('Something went wrong');
       }
-    });
+    );
 
-    this.router.get(
+    BaseRouter.router.get(
       '/meal/:name',
       async (req: Request<{ name: string }, unknown, unknown, MealRankingQueryParams>, res: Response) => {
         try {

@@ -9,7 +9,7 @@ import { subskillsForFilter } from '../calculator/stats/stats-calculator';
 
 export function getOptimalPokemonFor(params: {
   name: string;
-  level: number;
+  level?: number;
   island?: Island;
   goodCamp: boolean;
   e4eProcs?: number;
@@ -20,7 +20,7 @@ export function getOptimalPokemonFor(params: {
   const {
     name,
     island,
-    level,
+    level = 60,
     goodCamp,
     e4eProcs = 0,
     helpingBonus = 0,
