@@ -1,5 +1,6 @@
 import { Kind, Static, TSchema, Type } from '@sinclair/typebox';
 import { Knex } from 'knex';
+import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error';
 import { Logger } from '../../services/logger/logger';
 import { chunkArray } from '../../utils/database-utils/array-utils';
 import { AbstractFilterOperator, Filter } from '../../utils/database-utils/find-filter';
@@ -40,7 +41,9 @@ export abstract class AbstractDAO<
   ): Promise<DBEntityType> {
     const result = await this.find(filter, options);
     if (!result) {
-      throw new Error(`Unable to find entry in ${this.tableName} with filter [${JSON.stringify(filter)}]`);
+      throw new DatabaseNotFoundError(
+        `Unable to find entry in ${this.tableName} with filter [${JSON.stringify(filter)}]`
+      );
     }
     return result;
   }
@@ -75,7 +78,7 @@ export abstract class AbstractDAO<
       .into(this.tableName);
 
     if (result.length !== 1) {
-      throw new Error(`Insert expected one element but was ${result.length}`);
+      throw new DatabaseInsertError(`Insert expected one element but was ${result.length}`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

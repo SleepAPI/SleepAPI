@@ -16,6 +16,7 @@
 
 import { PokemonCombination } from '../../../domain/combination/combination';
 import { CustomStats } from '../../../domain/combination/custom';
+import { LevelError } from '../../../domain/error/stat/stat-error';
 import { BerryDrop } from '../../../domain/produce/berry';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { DetailedProduce, Produce } from '../../../domain/produce/produce';
@@ -46,7 +47,7 @@ export function calculateProduceForSpecificTimeWindow(params: {
   } = params;
 
   if (customStats.level > 100 || customStats.level < 1) {
-    throw new Error('Only level 1-100 allowed');
+    throw new LevelError('Only level 1-100 allowed');
   }
 
   const SECONDS_IN_HOUR = 3600;

@@ -5,6 +5,7 @@ import {
   CombinationForFocusedRankingType,
   CombinationForMealType,
 } from '../../domain/combination/combination';
+import { MealError } from '../../domain/error/meal/meal-error';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { MEALS, Meal } from '../../domain/recipe/meal';
 import {
@@ -119,7 +120,7 @@ class PokemonCombinationForMeal30DAOImpl extends AbstractDAO<typeof DBPokemonCom
 
     const meal: Meal | undefined = MEALS.find((meal) => meal.name === mealName.toUpperCase());
     if (!meal) {
-      throw new Error("Couldn't find meal with name: " + mealName.toUpperCase());
+      throw new MealError("Couldn't find meal with name: " + mealName.toUpperCase());
     }
 
     const pokemonCombinations: RawCombinationForMealType[] = await knex

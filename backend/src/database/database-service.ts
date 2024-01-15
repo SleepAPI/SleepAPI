@@ -1,5 +1,6 @@
 import knex, { Knex } from 'knex';
 import { config } from '../config/config';
+import { DatabaseConnectionError } from '../domain/error/database/database-error';
 
 class DatabaseServiceImpl {
   #knex: Knex | undefined;
@@ -12,7 +13,7 @@ class DatabaseServiceImpl {
       const password = config.DB_PASS;
 
       if (!host || !port || !user || !password) {
-        throw new Error('Missing environment variables for database connection');
+        throw new DatabaseConnectionError('Missing environment variables for database connection');
       }
 
       this.#knex = knex({
