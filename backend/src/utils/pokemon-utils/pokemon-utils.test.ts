@@ -18,36 +18,7 @@ describe('getPokemonNames', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getPokemonNames(params)).toMatchInlineSnapshot(`
-      [
-        "CLEFABLE",
-        "DODRIO",
-        "FERALIGATR",
-        "CLEFAIRY",
-        "DODUO",
-        "TOTODILE",
-        "CROCONAW",
-        "CLEFFA",
-        "SWABLU",
-        "BLASTOISE",
-        "DELIBIRD",
-        "SQUIRTLE",
-        "WARTORTLE",
-        "WIGGLYTUFF",
-        "GOLDUCK",
-        "SLOWBRO",
-        "VAPOREON",
-        "SLOWKING",
-        "TOGEKISS",
-        "SYLVEON",
-        "JIGGLYPUFF",
-        "PSYDUCK",
-        "SLOWPOKE",
-        "IGGLYBUFF",
-        "TOGEPI",
-        "TOGETIC",
-      ]
-    `);
+    expect(getPokemonNames(params)).toMatchSnapshot();
   });
 
   it('shall return all taupe pokemon', () => {
@@ -57,31 +28,7 @@ describe('getPokemonNames', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getPokemonNames(params)).toMatchInlineSnapshot(`
-      [
-        "ONIX",
-        "MAROWAK",
-        "TYPHLOSION",
-        "CUBONE",
-        "CYNDAQUIL",
-        "QUILAVA",
-        "GOLEM",
-        "DUGTRIO",
-        "PUPITAR",
-        "CHARIZARD",
-        "CHARMANDER",
-        "CHARMELEON",
-        "DIGLETT",
-        "GEODUDE",
-        "GRAVELER",
-        "LARVITAR",
-        "ARCANINE",
-        "FLAREON",
-        "SUDOWOODO",
-        "GROWLITHE",
-        "BONSLY",
-      ]
-    `);
+    expect(getPokemonNames(params)).toMatchSnapshot();
   });
 
   it('shall return all snowdrop pokemon', () => {
@@ -91,32 +38,7 @@ describe('getPokemonNames', () => {
       snowdrop: true,
       lapis: false,
     };
-    expect(getPokemonNames(params)).toMatchInlineSnapshot(`
-      [
-        "RATICATE",
-        "HOUNDOOM",
-        "VIGOROTH",
-        "SLAKING",
-        "WALREIN",
-        "RATTATA",
-        "HOUNDOUR",
-        "SLAKOTH",
-        "SPHEAL",
-        "SEALEO",
-        "ABOMASNOW",
-        "ABSOL",
-        "DITTO",
-        "TYRANITAR",
-        "KANGASKHAN",
-        "SNOVER",
-        "PERSIAN",
-        "UMBREON",
-        "SABLEYE",
-        "GLACEON",
-        "MEOWTH",
-        "EEVEE",
-      ]
-    `);
+    expect(getPokemonNames(params)).toMatchSnapshot();
   });
 
   it('shall return all lapis pokemon', () => {
@@ -126,29 +48,7 @@ describe('getPokemonNames', () => {
       snowdrop: false,
       lapis: true,
     };
-    expect(getPokemonNames(params)).toMatchInlineSnapshot(`
-      [
-        "PRIMEAPE",
-        "MEGANIUM",
-        "MANKEY",
-        "CHIKORITA",
-        "BAYLEEF",
-        "VENUSAUR",
-        "VICTREEBEL",
-        "MR_MIME",
-        "BULBASAUR",
-        "IVYSAUR",
-        "BELLSPROUT",
-        "WEEPINBELL",
-        "MIME_JR",
-        "ESPEON",
-        "WOBBUFFET",
-        "LUCARIO",
-        "LEAFEON",
-        "WYNAUT",
-        "RIOLU",
-      ]
-    `);
+    expect(getPokemonNames(params)).toMatchSnapshot();
   });
 
   it('shall return all pokemon for multiple islands', () => {
