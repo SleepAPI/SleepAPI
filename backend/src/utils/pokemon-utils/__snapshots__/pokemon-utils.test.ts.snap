@@ -1,5 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`getPokemonNames shall return all cyan pokemon 1`] = `
+[
+  "CLEFABLE",
+  "DODRIO",
+  "FERALIGATR",
+  "CLEFAIRY",
+  "DODUO",
+  "TOTODILE",
+  "CROCONAW",
+  "CLEFFA",
+  "SWABLU",
+  "BLASTOISE",
+  "DELIBIRD",
+  "SQUIRTLE",
+  "WARTORTLE",
+  "WIGGLYTUFF",
+  "GOLDUCK",
+  "SLOWBRO",
+  "VAPOREON",
+  "SLOWKING",
+  "TOGEKISS",
+  "SYLVEON",
+  "JIGGLYPUFF",
+  "PSYDUCK",
+  "SLOWPOKE",
+  "IGGLYBUFF",
+  "TOGEPI",
+  "TOGETIC",
+]
+`;
+
+exports[`getPokemonNames shall return all lapis pokemon 1`] = `
+[
+  "PRIMEAPE",
+  "MEGANIUM",
+  "MANKEY",
+  "CHIKORITA",
+  "BAYLEEF",
+  "VENUSAUR",
+  "VICTREEBEL",
+  "MR_MIME",
+  "BULBASAUR",
+  "IVYSAUR",
+  "BELLSPROUT",
+  "WEEPINBELL",
+  "MIME_JR",
+  "ESPEON",
+  "WOBBUFFET",
+  "LUCARIO",
+  "LEAFEON",
+  "WYNAUT",
+  "RIOLU",
+]
+`;
+
 exports[`getPokemonNames shall return all pokemon by default 1`] = `
 [
   "BUTTERFREE",
@@ -213,5 +268,58 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
   "WYNAUT",
   "BONSLY",
   "RIOLU",
+]
+`;
+
+exports[`getPokemonNames shall return all snowdrop pokemon 1`] = `
+[
+  "RATICATE",
+  "HOUNDOOM",
+  "VIGOROTH",
+  "SLAKING",
+  "WALREIN",
+  "RATTATA",
+  "HOUNDOUR",
+  "SLAKOTH",
+  "SPHEAL",
+  "SEALEO",
+  "ABOMASNOW",
+  "ABSOL",
+  "DITTO",
+  "TYRANITAR",
+  "KANGASKHAN",
+  "SNOVER",
+  "PERSIAN",
+  "UMBREON",
+  "SABLEYE",
+  "GLACEON",
+  "MEOWTH",
+  "EEVEE",
+]
+`;
+
+exports[`getPokemonNames shall return all taupe pokemon 1`] = `
+[
+  "ONIX",
+  "MAROWAK",
+  "TYPHLOSION",
+  "CUBONE",
+  "CYNDAQUIL",
+  "QUILAVA",
+  "GOLEM",
+  "DUGTRIO",
+  "PUPITAR",
+  "CHARIZARD",
+  "CHARMANDER",
+  "CHARMELEON",
+  "DIGLETT",
+  "GEODUDE",
+  "GRAVELER",
+  "LARVITAR",
+  "ARCANINE",
+  "FLAREON",
+  "SUDOWOODO",
+  "GROWLITHE",
+  "BONSLY",
 ]
 `;
