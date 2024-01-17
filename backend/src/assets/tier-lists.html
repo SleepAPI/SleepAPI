@@ -173,36 +173,43 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+      integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+      crossorigin="anonymous"
+    ></script>
     <script>
-      var modal = document.getElementById('myModal');
+      $(document).ready(function () {
+        var modal = document.getElementById('myModal');
 
-      var container = document.querySelector('.tierlist-container');
-      var span = document.querySelector('.close');
-      var modalText = document.getElementById('modal-text');
+        var container = document.querySelector('.tierlist-container');
+        var span = document.querySelector('.close');
+        var modalText = document.getElementById('modal-text');
 
-      container.addEventListener('click', function (event) {
-        if (
-          event.target.classList.contains('modal-button') ||
-          event.target.parentElement.classList.contains('modal-button')
-        ) {
-          var text = event.target.getAttribute('data-text') ?? event.target.parentElement.getAttribute('data-text');
-          modalText.textContent = text;
-          modalText.style.whiteSpace = 'pre-line';
-          modal.style.display = 'block';
-        }
-      });
+        container.addEventListener('click', function (event) {
+          if (
+            event.target.classList.contains('modal-button') ||
+            event.target.parentElement.classList.contains('modal-button')
+          ) {
+            var text = event.target.getAttribute('data-text') ?? event.target.parentElement.getAttribute('data-text');
+            modalText.textContent = text;
+            modalText.style.whiteSpace = 'pre-line';
+            modal.style.display = 'block';
+          }
+        });
 
-      // When the user clicks on close, close the modal
-      span.onclick = function () {
-        modal.style.display = 'none';
-      };
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-        if (event.target == modal) {
+        // When the user clicks on close, close the modal
+        span.onclick = function () {
           modal.style.display = 'none';
-        }
-      };
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = 'none';
+          }
+        };
+      });
     </script>
 
     <script>
