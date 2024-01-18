@@ -1,16 +1,17 @@
-import { PokemonResult } from '@src/routes/pokemon-router/pokemon-router';
-import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/combination/buddy-types';
+import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
+import { ProductionStats } from '../../domain/computed/production';
+import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/legacy/buddy-types';
 import {
   AllCombinationsForMealType,
   CombinationForFlexibleRankingType,
   CombinationForFocusedRankingType,
-} from '../../domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { ProductionFilter } from '../../domain/computed/production';
+} from '../../domain/legacy/legacy';
 import { Nature } from '../../domain/stat/nature';
 import { SubSkill } from '../../domain/stat/subskill';
-import { OptimalSetResult, OptimalTeamType } from '../../routes/optimal-router/optimal-router';
+import { OptimalFlexibleResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router';
+import { PokemonResult } from '../../routes/pokemon-router/pokemon-router';
 import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
+import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../../services/api-service/optimal/optimal-service';
 import { roundDown } from '../../utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '../../utils/json/json-utils';
 import { combineSameIngredientsInDrop } from '../calculator/ingredient/ingredient-calculate';
@@ -69,9 +70,9 @@ class WebsiteConverterServiceImpl {
               `[${tier}] (${prettifyIngredientDrop(
                 otherPairingsEntry.pokemonCombination.ingredientList
               )})\nTotal score: ${roundDown(
-                otherPairingsEntry.combinedContribution.summedContributedPower,
+                otherPairingsEntry.combinedContribution.score,
                 0
-              )}\n${otherPairingsEntry.combinedContribution.bestMeals
+              )}\n${otherPairingsEntry.combinedContribution.contributions
                 .map(
                   (meal) =>
                     `[${roundDown(meal.contributedPower, 0)} ${roundDown(meal.percentage, 1)}%] ${meal.meal.name
@@ -106,58 +107,86 @@ class WebsiteConverterServiceImpl {
 
   public toOptimalSet(optimalCombinations: OptimalSetResult) {
     const prettifiedRecipe = prettifyIngredientDrop(optimalCombinations.recipe);
-    const prettifiedCombinations = optimalCombinations.teams.slice(0, 100).map((team) => ({
-      team: this.#prettifyTeamMembers(team),
-      details:
-        `${optimalCombinations.meal}: ${prettifiedRecipe}\nTeam: ${this.#prettifyTeamMembers(
-          team
-        )}\n\n${this.#prettifyDetails(optimalCombinations.filter)}\n\nTOTAL PRODUCED INGREDIENTS\n${
-          team.prettyCombinedProduce
-        }\n\nINDIVIDUAL PRODUCE\n${team.member1.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-          team.member1.detailedProduce.produce.ingredients
-        )}` +
-        (team.member2
-          ? `\n${team.member2!.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-              team.member2!.detailedProduce.produce.ingredients
+    const prettifiedCombinations = optimalCombinations.teams.slice(0, 500).map((solution) => ({
+      team: solution.team
+        .map(
+          (member) =>
+            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
+              member.pokemonCombination.ingredientList
+            )})`
+        )
+        .join(', '),
+      details: `${optimalCombinations.meal}: ${prettifiedRecipe}\nTeam: ${solution.team
+        .map(
+          (member) =>
+            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
+              member.pokemonCombination.ingredientList
+            )})`
+        )
+        .join(', ')}\n\n${this.#prettifyDetails(optimalCombinations.filter)}\n\nTOTAL PRODUCED INGREDIENTS\n${
+        solution.prettyCombinedProduce
+      }\n\nINDIVIDUAL PRODUCE\n${solution.team
+        .map(
+          (member) =>
+            `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
+              member.detailedProduce.produce.ingredients
             )}`
-          : '') +
-        (team.member3
-          ? `\n${team.member3!.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-              team.member3!.detailedProduce.produce.ingredients
-            )}`
-          : '') +
-        (team.member4
-          ? `\n${team.member4!.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-              team.member4!.detailedProduce.produce.ingredients
-            )}`
-          : '') +
-        (team.member5
-          ? `\n${team.member5!.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-              team.member5!.detailedProduce.produce.ingredients
-            )}`
-          : ''),
+        )
+        .join('\n')}`,
     }));
+
     return {
       meal: optimalCombinations.meal,
       info:
         optimalCombinations.teams.length > 0
-          ? `Requires ${
-              [
-                optimalCombinations.teams[0].member1,
-                optimalCombinations.teams[0].member2,
-                optimalCombinations.teams[0].member3,
-                optimalCombinations.teams[0].member4,
-                optimalCombinations.teams[0].member5,
-              ].filter((member) => member !== undefined).length
-            } Pokémon for 100% coverage, showing ${prettifiedCombinations.length} of ${
-              optimalCombinations.teams.length
-            } solutions`
+          ? `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
+              prettifiedCombinations.length
+            } of ${optimalCombinations.teams.length} solutions`
           : 'No possible team combinations for 100% coverage found, cant be made with current filter',
       recipe: prettifiedRecipe,
       bonus: optimalCombinations.bonus,
       value: optimalCombinations.value,
       teams: prettifiedCombinations,
     };
+  }
+
+  public toOptimalFlexible(pokemonCombinationCombinedContributions: OptimalFlexibleResult[]) {
+    return pokemonCombinationCombinedContributions.map((pokemonCombinationWithContribution) => {
+      // Create a map of meals with their contributedPower for quick lookup
+      const mealsMap = new Map(
+        pokemonCombinationWithContribution.scoreResult.contributions.map((contribution) => [
+          contribution.meal.name,
+          contribution.contributedPower,
+        ])
+      );
+
+      // Process meals and countedMeals
+      const meals = pokemonCombinationWithContribution.scoreResult.contributions.map(
+        (contribution) => `[${contribution.contributedPower}] ${contribution.meal.name}`
+      );
+
+      const countedMeals = pokemonCombinationWithContribution.scoreResult.countedMeals.map((contribution) => {
+        const basePower = mealsMap.get(contribution.meal.name);
+        const is20PercentHigher =
+          basePower && contribution.contributedPower === basePower * FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER;
+
+        // Modify the display format if the conditions are met
+        const powerDisplay = is20PercentHigher
+          ? `[${contribution.contributedPower} (+${FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER * 100 - 100})]`
+          : `[${contribution.contributedPower}]`;
+
+        return `${powerDisplay} ${contribution.meal.name}`;
+      });
+
+      return {
+        pokemon: `${pokemonCombinationWithContribution.pokemonCombination.pokemon.name} (${prettifyIngredientDrop(
+          pokemonCombinationWithContribution.pokemonCombination.ingredientList
+        )})`,
+        score: pokemonCombinationWithContribution.scoreResult.score,
+        meals,
+        countedMeals,
+      };
+    });
   }
 
   public toFlexibleRanking(data: CombinationForFlexibleRankingType[]) {
@@ -329,35 +358,7 @@ class WebsiteConverterServiceImpl {
     return filteredArray;
   }
 
-  #prettifyTeamMembers(team: OptimalTeamType) {
-    return (
-      `${team.member1.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-        team.member1.pokemonCombination.ingredientList
-      )})` +
-      (team.member2
-        ? `, ${team.member2!.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-            team.member2!.pokemonCombination.ingredientList
-          )})`
-        : '') +
-      (team.member3
-        ? `, ${team.member3!.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-            team.member3!.pokemonCombination.ingredientList
-          )})`
-        : '') +
-      (team.member4
-        ? `, ${team.member4!.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-            team.member4!.pokemonCombination.ingredientList
-          )})`
-        : '') +
-      (team.member5
-        ? `, ${team.member5!.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-            team.member5!.pokemonCombination.ingredientList
-          )})`
-        : '')
-    );
-  }
-
-  #prettifyDetails(details: ProductionFilter) {
+  #prettifyDetails(details: ProductionStats) {
     let prettyString = 'FILTER\n';
 
     prettyString += `Level: ${details.level}\n`;

@@ -1,37 +1,44 @@
 import { Request, Response } from 'express';
 import { config } from '../../config/config';
 import OptimalController from '../../controllers/optimal/optimal.controller';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { ProductionFilter } from '../../domain/computed/production';
+import { OptimalTeamSolution, PokemonCombination } from '../../domain/combination/combination';
+import { ProductionStats } from '../../domain/computed/production';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { SubskillSet } from '../../domain/stat/subskill';
 import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
+import { ScoreResult } from '../../utils/optimal-utils/optimal-utils';
 import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
 
-export interface FilteredQueryParams {
+// TODO: make it so frontend defaults to checked INGM+helpM+invL
+export interface InputProductionStatsRequest {
   level?: number;
+  nature?: string;
+  subskills?: string[];
   island?: string;
   e4e?: number;
   helpingbonus?: number;
   camp?: boolean;
+  optimalSetSolutionLimit?: number;
+}
+
+export interface FilteredQueryParams {
+  level?: number;
   nature?: string;
   subskills?: SubskillSet;
+  island?: string;
+  e4e?: number;
+  helpingbonus?: number;
+  camp?: boolean;
   pretty?: boolean;
   csv?: boolean;
 }
 
-export interface OptimalTeamType {
-  sumSurplus: number;
-  prettySurplus: string;
-  prettyCombinedProduce: string;
-  member1: CustomPokemonCombinationWithProduce;
-  member2?: CustomPokemonCombinationWithProduce;
-  member3?: CustomPokemonCombinationWithProduce;
-  member4?: CustomPokemonCombinationWithProduce;
-  member5?: CustomPokemonCombinationWithProduce;
+export interface OptimalFlexibleResult {
+  pokemonCombination: PokemonCombination;
+  scoreResult: ScoreResult;
 }
 
 export interface OptimalSetResult {
@@ -39,17 +46,38 @@ export interface OptimalSetResult {
   meal: string;
   recipe: IngredientDrop[];
   value: number;
-  filter: ProductionFilter;
-  teams: OptimalTeamType[];
+  filter: ProductionStats;
+  teams: OptimalTeamSolution[];
 }
 
 class OptimalCombinationRouterImpl {
   public async register(controller: OptimalController) {
+    BaseRouter.router.post(
+      '/optimal/meal/flexible',
+      async (req: Request<unknown, unknown, InputProductionStatsRequest, { pretty: boolean }>, res: Response) => {
+        try {
+          Logger.log('Entered /optimal/meal/pokemon');
+
+          const data: OptimalFlexibleResult[] = controller.getFlexiblePokemon(req.body);
+
+          if (queryAsBoolean(req.query.pretty)) {
+            const optimalData = WebsiteConverterService.toOptimalFlexible(data);
+            res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
+          } else {
+            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
+          }
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
     BaseRouter.router.get(
-      '/optimal/:name',
+      '/optimal/meal/:name',
       async (req: Request<{ name: string }, unknown, unknown, FilteredQueryParams>, res: Response) => {
         try {
-          Logger.log('Entered /optimal/:name');
+          Logger.log('Entered /optimal/meal/:name');
           const { pretty, csv } = req.query;
           const mealName = req.params.name;
 
