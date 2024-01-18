@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DetailedOptimalCombination } from '../../domain/combination/combination';
+import { OptimalTeamSolution } from '../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProgrammingError } from '../../domain/error/programming/programming-error';
 import { IngredientDrop } from '../../domain/produce/ingredient';
@@ -39,15 +39,18 @@ export class SetCover {
   #reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
   #filters: MemoizedFilters;
   #memo: Map<string, CustomPokemonCombinationWithProduce[][]>;
+  #solutionLimit?: number;
 
   constructor(
     reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>,
     filters: MemoizedFilters,
-    memo: Map<string, CustomPokemonCombinationWithProduce[][]>
+    memo: Map<string, CustomPokemonCombinationWithProduce[][]>,
+    solutionLimit?: number
   ) {
     this.#reverseIndex = reverseIndex;
     this.#filters = filters;
     this.#memo = memo;
+    this.#solutionLimit = solutionLimit;
   }
 
   public solveRecipe(params: string): CustomPokemonCombinationWithProduce[][] {
@@ -143,6 +146,11 @@ export class SetCover {
         }
       }
     }
+
+    if (this.#solutionLimit && teams.length > this.#solutionLimit) {
+      return [];
+    }
+
     this.#memo.set(params, teams);
     return teams;
   }
@@ -150,16 +158,16 @@ export class SetCover {
   public calculateDetailsAndSortBySumSurplus(
     solutions: CustomPokemonCombinationWithProduce[][],
     recipe: IngredientDrop[]
-  ): DetailedOptimalCombination[] {
+  ): OptimalTeamSolution[] {
     if (!solutions) {
       return [];
     }
 
-    const teamsWithDetails: DetailedOptimalCombination[] = [];
+    const teamsWithDetails: OptimalTeamSolution[] = [];
     for (const team of solutions) {
       const teamsProduce = team.flatMap((member) => member.detailedProduce.produce.ingredients);
       const surplus = calculateRemainingIngredients(teamsProduce, recipe);
-      const teamWithDetails: DetailedOptimalCombination = {
+      const teamWithDetails: OptimalTeamSolution = {
         team: team,
         sumSurplus: sumOfIngredients(surplus),
         prettySurplus: prettifyIngredientDrop(surplus),

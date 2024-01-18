@@ -1,31 +1,20 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
+import { InputProductionStats } from '../../../domain/computed/production';
+import { ProgrammingError } from '../../../domain/error/programming/programming-error';
 import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
-import { Berry } from '../../../domain/produce/berry';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
-import { Nature } from '../../../domain/stat/nature';
-import { createPokemonByIngredientReverseIndex } from '../../set-cover/set-cover-utils';
 
-import { SubSkill } from '../../../domain/stat/subskill';
-import { SetCover } from '../../set-cover/set-cover';
+import { MemoizedFilters, SetCover } from '../../set-cover/set-cover';
 import {
   calculateProducePerMealWindow,
   getAllIngredientCombinationsForLevel,
 } from '../ingredient/ingredient-calculate';
 
-export function calculateSetCover(params: {
-  recipe: IngredientDrop[];
-  level: number;
-  nature: Nature;
-  subskills: SubSkill[];
-  allowedBerries: Berry[];
-  goodCamp: boolean;
-  e4eProcs: number;
-  helpingBonus: number;
-}) {
-  const { recipe, level, nature, subskills, allowedBerries, goodCamp, e4eProcs, helpingBonus } = params;
+export function calculateOptimalProductionForSetCover(productionStats: InputProductionStats) {
+  const { level, nature, subskills, berries, goodCamp, e4eProcs, helpingBonus } = productionStats;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
-  const pokemonWithCorrectBerries = OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
+  const pokemonWithCorrectBerries = OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
   for (const pokemon of pokemonWithCorrectBerries) {
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const customStats: CustomStats = {
@@ -56,10 +45,23 @@ export function calculateSetCover(params: {
     }
   }
 
-  const setCover = new SetCover(
-    createPokemonByIngredientReverseIndex(pokemonProduction),
-    { limit50: level < 60, pokemon: pokemonProduction.map((pkmn) => pkmn.pokemonCombination.pokemon.name) },
-    new Map()
-  );
+  return pokemonProduction;
+}
+
+export function calculateSetCover(params: {
+  recipe: IngredientDrop[];
+  memoizedFilters: MemoizedFilters;
+  memoizedParams: Map<string, CustomPokemonCombinationWithProduce[][]>;
+  reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
+  solutionLimit?: number;
+}) {
+  const { recipe, memoizedFilters, memoizedParams, reverseIndex, solutionLimit } = params;
+
+  const firstPokemon = memoizedFilters.pokemon.at(0);
+  if (!firstPokemon) {
+    throw new ProgrammingError("Can't calculate Optimal Set without Pokémon");
+  }
+
+  const setCover = new SetCover(reverseIndex, memoizedFilters, memoizedParams, solutionLimit);
   return setCover.findOptimalCombinationFor(recipe);
 }
