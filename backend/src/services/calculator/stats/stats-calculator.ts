@@ -11,9 +11,9 @@ import {
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S,
   SubSkill,
-  SubskillSet,
 } from '../../../domain/stat/subskill';
 import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
+import { subskillsForFilter } from '../../../utils/subskill-utils/subskill-utils';
 
 export function extractIngredientSubskills(subskills: SubSkill[]) {
   const ingS = subskills.some(({ name }) => name === INGREDIENT_FINDER_S.name) ? INGREDIENT_FINDER_S.ingredient : 0;
@@ -51,30 +51,6 @@ export function invertNatureFrequecy(nature: Nature) {
     result = 0.9;
   }
   return result;
-}
-
-export function subskillsForFilter(subskillSet: SubskillSet, level: number): SubSkill[] {
-  if (subskillSet === 'neutral') {
-    return [];
-  }
-
-  const subskills = [];
-  if (level >= 10) {
-    subskills.push(INGREDIENT_FINDER_M);
-  }
-  if (level >= 25) {
-    subskills.push(HELPING_SPEED_M);
-  }
-  if (level >= 50) {
-    subskills.push(INVENTORY_L);
-  }
-  if (level >= 75) {
-    subskills.push(INGREDIENT_FINDER_S);
-  }
-  if (level >= 100) {
-    subskills.push(INVENTORY_M);
-  }
-  return subskills;
 }
 
 export function getOptimalIngredientStats(level: number): CustomStats {

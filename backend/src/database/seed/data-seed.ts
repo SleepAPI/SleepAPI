@@ -1,4 +1,4 @@
-import { CookingTierlistService } from '../../services/routing-service/tierlist/cooking-tierlist-service';
+import { CookingTierlistService } from '../../services/api-service/tierlist/cooking-tierlist-service';
 import { BuddyCombinationDAO } from '../dao/buddy/buddy-combination-dao';
 import { BuddyCombinationForMealDAO } from '../dao/buddy/buddy-combination-for-meal-dao';
 import { BuddyCombinationForMeal30DAO } from '../dao/buddy/buddy-combination-for-meal30-dao';

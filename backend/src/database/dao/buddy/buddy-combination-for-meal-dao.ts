@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox';
-import { BuddyForFlexibleRanking, BuddyForMeal } from '../../../domain/combination/buddy-types';
 import { MealError } from '../../../domain/error/meal/meal-error';
+import { BuddyForFlexibleRanking, BuddyForMeal } from '../../../domain/legacy/buddy-types';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { MEALS, Meal } from '../../../domain/recipe/meal';
 import {

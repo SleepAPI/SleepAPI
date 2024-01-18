@@ -1,11 +1,11 @@
 import { Static, Type } from '@sinclair/typebox';
+import { MealError } from '../../domain/error/meal/meal-error';
 import {
   AllCombinationsForMealType,
   CombinationForFlexibleRankingType,
   CombinationForFocusedRankingType,
   CombinationForMealType,
-} from '../../domain/combination/combination';
-import { MealError } from '../../domain/error/meal/meal-error';
+} from '../../domain/legacy/legacy';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { MEALS, Meal } from '../../domain/recipe/meal';
 import {

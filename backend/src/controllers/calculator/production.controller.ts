@@ -1,6 +1,6 @@
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { ProductionRequest } from '../../routes/calculator-router/production-router';
-import { calculatePokemonProduction } from '../../services/routing-service/production/production-service';
+import { calculatePokemonProduction } from '../../services/api-service/production/production-service';
 
 @Route('api/calculator')
 @Tags('calculator')

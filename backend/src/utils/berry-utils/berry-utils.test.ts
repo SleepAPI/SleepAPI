@@ -1,4 +1,4 @@
-import { CYAN, LAPIS, SNOWDROP, TAUPE } from '@src/domain/island/island';
+import { CYAN, LAPIS, SNOWDROP, TAUPE } from '../../domain/island/island';
 import { BERRIES, CYAN_BERRIES, LAPIS_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '../../domain/produce/berry';
 import { getBerriesForFilter, getBerriesForIsland } from './berry-utils';
 

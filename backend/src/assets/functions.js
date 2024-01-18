@@ -214,7 +214,7 @@ function goToOptimalRanking() {
   var camp = `camp=${document.getElementById('camp').checked}`;
 
   var queryParams = `?pretty=true&${island}&${nature}&${subskills}&${level}&${e4e}&${helpingBonus}&${camp}`;
-  var url = 'optimal/' + document.getElementById('optimalMeal').value + queryParams;
+  var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + queryParams;
 
   makeRequest(url, 'GET', function (data) {
     data = JSON.parse(data);

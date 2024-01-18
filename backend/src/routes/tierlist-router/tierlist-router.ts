@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { config } from '../../config/config';
 import TierlistController from '../../controllers/tierlist/tierlist.controller';
-import { PokemonCombinationContribution } from '../../domain/combination/combination-contribution';
+import { PokemonCombinationCombinedContribution } from '../../domain/combination/combination';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
@@ -31,7 +31,7 @@ export interface CreateTierListRequestBody {
 
 export interface TieredPokemonCombinationContribution {
   tier: string;
-  pokemonCombinationContribution: PokemonCombinationContribution;
+  pokemonCombinationContribution: PokemonCombinationCombinedContribution;
 }
 
 class TierlistRouterImpl {
@@ -108,7 +108,7 @@ class TierlistRouterImpl {
     return parsedInput;
   }
 
-  #assignTiers(data: PokemonCombinationContribution[]) {
+  #assignTiers(data: PokemonCombinationCombinedContribution[]) {
     const tiers: { tier: string; bucket: number }[] = [
       { tier: 'S', bucket: 0.9 },
       { tier: 'A', bucket: 0.8 },
@@ -118,13 +118,14 @@ class TierlistRouterImpl {
       { tier: 'E', bucket: 0.9 },
     ];
 
-    let threshold = data[0].combinedContribution.summedContributedPower;
+    let threshold = data[0].combinedContribution.score;
 
-    const tieredEntries: { tier: string; pokemonCombinationContribution: PokemonCombinationContribution }[] = [];
+    const tieredEntries: { tier: string; pokemonCombinationContribution: PokemonCombinationCombinedContribution }[] =
+      [];
     for (const entry of data) {
       let currentTier = tiers.at(0);
-      if (currentTier && entry.combinedContribution.summedContributedPower < currentTier.bucket * threshold) {
-        threshold = entry.combinedContribution.summedContributedPower;
+      if (currentTier && entry.combinedContribution.score < currentTier.bucket * threshold) {
+        threshold = entry.combinedContribution.score;
         tiers.shift();
         currentTier = tiers.at(0);
       }

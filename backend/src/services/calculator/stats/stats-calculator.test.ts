@@ -10,6 +10,7 @@ import {
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S,
 } from '../../../domain/stat/subskill';
+import { subskillsForFilter } from '../../../utils/subskill-utils/subskill-utils';
 import {
   calculateHelpSpeedSubskills,
   extractIngredientSubskills,
@@ -17,7 +18,6 @@ import {
   extractTriggerSubskills,
   getOptimalIngredientStats,
   invertNatureFrequecy,
-  subskillsForFilter,
 } from './stats-calculator';
 
 describe('convertNatureToNegative', () => {

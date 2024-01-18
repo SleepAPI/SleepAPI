@@ -1,10 +1,8 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { PokemonError } from '../../../domain/error/pokemon/pokemon-error';
-import { NatureError } from '../../../domain/error/stat/stat-error';
-import { COMPLETE_POKEDEX } from '../../../domain/pokemon/pokemon';
-import { NATURES, Nature } from '../../../domain/stat/nature';
 import { SUBSKILLS, SubSkill } from '../../../domain/stat/subskill';
 import { ProductionRequest } from '../../../routes/calculator-router/production-router';
+import { getNature } from '../../../utils/nature-utils/nature-utils';
+import { getPokemon } from '../../../utils/pokemon-utils/pokemon-utils';
 import {
   calculateProducePerMealWindow,
   getAllIngredientCombinationsForLevel,
@@ -19,16 +17,9 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
     helpingbonus: helpingBonus,
     camp: goodCamp,
   } = details;
-  const pokemon = COMPLETE_POKEDEX.find((pokemon) => pokemon.name.toUpperCase() === pokemonName.toUpperCase());
-  if (!pokemon) {
-    throw new PokemonError("Can't find pokemon with name: " + pokemonName.toUpperCase());
-  }
 
-  const nature: Nature | undefined = NATURES.find((nature) => nature.name.toUpperCase() === natureName.toUpperCase());
-  if (!nature) {
-    throw new NatureError("Couldn't find nature with name: " + natureName.toUpperCase());
-  }
-
+  const pokemon = getPokemon(pokemonName);
+  const nature = getNature(natureName);
   const subskills = extractSubskillsBasedOnLevel(level, subskillNames);
 
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
