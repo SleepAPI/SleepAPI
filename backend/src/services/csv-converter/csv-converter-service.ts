@@ -1,12 +1,12 @@
-import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/combination/buddy-types';
+import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/legacy/buddy-types';
 import {
   AllCombinationsForMealType,
   CombinationForFlexibleRankingType,
   CombinationForFocusedRankingType,
-} from '../../domain/combination/combination';
+} from '../../domain/legacy/legacy';
 import { OptimalSetResult } from '../../routes/optimal-router/optimal-router';
 import { PokemonResult } from '../../routes/pokemon-router/pokemon-router';
-import { prettifyIngredientDrop, prettifyIngredientDropCSV } from '../../utils/json/json-utils';
+import { prettifyIngredientDrop } from '../../utils/json/json-utils';
 import { combineSameIngredientsInDrop } from '../calculator/ingredient/ingredient-calculate';
 
 class CSVConverterServiceImpl {
@@ -15,11 +15,9 @@ class CSVConverterServiceImpl {
     const csvEntries = data.teams
       .map(
         (c, i) =>
-          `${c.sumSurplus},${c.member1.pokemonCombination.pokemon.name},${
-            c.member2?.pokemonCombination.pokemon.name ?? ''
-          },${c.member3?.pokemonCombination.pokemon.name ?? ''},${c.member4?.pokemonCombination.pokemon.name ?? ''},${
-            c.member5?.pokemonCombination.pokemon.name ?? ''
-          },${c.prettyCombinedProduce.replace(/,/g, ' ')},${c.prettySurplus.replace(/,/g, ' ')}`
+          `${c.sumSurplus},${c.team
+            .map((member) => member.pokemonCombination.pokemon.name)
+            .join(',')},${c.prettyCombinedProduce.replace(/,/g, ' ')},${c.prettySurplus.replace(/,/g, ' ')}`
       )
       .join('\n');
     return header + csvEntries;
@@ -30,8 +28,9 @@ class CSVConverterServiceImpl {
     const prettyData = data
       .map(
         (ranking, i) =>
-          `${i + 1},${ranking.pokemon},${ranking.averagePercentage},${prettifyIngredientDropCSV(
-            ranking.ingredientList
+          `${i + 1},${ranking.pokemon},${ranking.averagePercentage},${prettifyIngredientDrop(
+            ranking.ingredientList,
+            ' '
           )}`
       )
       .join('\n');
@@ -43,10 +42,10 @@ class CSVConverterServiceImpl {
     const prettyData = data
       .map(
         (ranking, i) =>
-          `${i + 1},${ranking.pokemon},${ranking.total},${ranking.meals.replace(
-            /,/g,
-            ' + '
-          )},${prettifyIngredientDropCSV(ranking.ingredientList)}`
+          `${i + 1},${ranking.pokemon},${ranking.total},${ranking.meals.replace(/,/g, ' + ')},${prettifyIngredientDrop(
+            ranking.ingredientList,
+            ' '
+          )}`
       )
       .join('\n');
     return header + '\n' + prettyData;
@@ -57,9 +56,10 @@ class CSVConverterServiceImpl {
     const csvEntries = data.combinations
       .map(
         (c, i) =>
-          `${i + 1},${c.pokemon},${c.percentage},${prettifyIngredientDropCSV(
-            c.producedIngredients
-          )},${prettifyIngredientDropCSV(c.ingredientList)}`
+          `${i + 1},${c.pokemon},${c.percentage},${prettifyIngredientDrop(
+            c.producedIngredients,
+            ' '
+          )},${prettifyIngredientDrop(c.ingredientList, ' ')}`
       )
       .join('\n');
     return prettyData + csvEntries;
@@ -73,8 +73,9 @@ class CSVConverterServiceImpl {
     const prettyData = data
       .map(
         (combination) =>
-          `${prettifyIngredientDropCSV(combination.ingredientList)},${prettifyIngredientDropCSV(
-            combination.ingredientsProduced
+          `${prettifyIngredientDrop(combination.ingredientList, ' ')},${prettifyIngredientDrop(
+            combination.ingredientsProduced,
+            ' '
           )},${combination.generalistRanking},${combination.averagePercentage},${combination.meals
             .map((meal) => meal.percentage)
             .join(',')}`
@@ -110,10 +111,14 @@ class CSVConverterServiceImpl {
     const prettyData = data.combinations
       .map(
         (c, i) =>
-          `${i + 1 + offset},${c.buddy1_pokemon}+${c.buddy2_pokemon},${c.percentage},${prettifyIngredientDropCSV(
-            combineSameIngredientsInDrop([...c.buddy1_producedIngredients, ...c.buddy2_producedIngredients])
-          )},${prettifyIngredientDropCSV(c.buddy1_ingredientList)} + ${prettifyIngredientDropCSV(
-            c.buddy2_ingredientList
+          `${i + 1 + offset},${c.buddy1_pokemon}+${c.buddy2_pokemon},${c.percentage},${
+            (prettifyIngredientDrop(
+              combineSameIngredientsInDrop([...c.buddy1_producedIngredients, ...c.buddy2_producedIngredients])
+            ),
+            ' ')
+          },${prettifyIngredientDrop(c.buddy1_ingredientList, ' ')} + ${prettifyIngredientDrop(
+            c.buddy2_ingredientList,
+            ' '
           )}`
       )
       .join('\n');

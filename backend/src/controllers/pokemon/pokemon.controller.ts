@@ -1,6 +1,6 @@
 import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { GetPokemonQueryParams, MealsForPokemonRequestQueryParams } from '../../routes/pokemon-router/pokemon-router';
-import { getPokemonCombinationData } from '../../services/routing-service/pokemon-ranking';
+import { getPokemonCombinationData } from '../../services/api-service/pokemon-ranking';
 import { getPokemonNames } from '../../utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
 

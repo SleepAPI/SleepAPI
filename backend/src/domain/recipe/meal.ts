@@ -7,11 +7,12 @@ export interface Meal {
   name: string;
   value: number;
   value50: number;
-  type: 'curry' | 'salad' | 'dessert';
+  type: MealType;
   ingredients: IngredientDrop[];
   bonus: number;
   unlockables: boolean;
 }
+export type MealType = 'curry' | 'salad' | 'dessert';
 
 export const MEALS: Meal[] = [...CURRIES, ...SALADS, ...DESSERTS];
 

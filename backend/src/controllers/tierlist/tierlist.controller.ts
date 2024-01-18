@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Hidden, Post, Queries, Route, Tags } from 'tsoa';
 import { CreateTierListRequestBody, GetTierListQueryParams } from '../../routes/tierlist-router/tierlist-router';
-import { CookingTierlistService } from '../../services/routing-service/tierlist/cooking-tierlist-service';
+import { CookingTierlistService } from '../../services/api-service/tierlist/cooking-tierlist-service';
 
 @Route('api/tierlist')
 @Tags('tierlist')

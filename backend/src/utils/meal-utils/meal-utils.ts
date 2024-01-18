@@ -1,4 +1,13 @@
-import { ADVANCED_MEALS, ADVANCED_UNLOCKED_MEALS, LATEGAME_MEALS, MEALS } from '../../domain/recipe/meal';
+import { MealError } from '../../domain/error/meal/meal-error';
+import { ADVANCED_MEALS, ADVANCED_UNLOCKED_MEALS, LATEGAME_MEALS, MEALS, Meal } from '../../domain/recipe/meal';
+
+export function getMeal(name: string) {
+  const meal: Meal | undefined = MEALS.find((meal) => meal.name === name.toUpperCase());
+  if (!meal) {
+    throw new MealError("Couldn't find meal with name: " + name.toUpperCase());
+  }
+  return meal;
+}
 
 export function getMealsForFilter(params: {
   advanced: boolean;
@@ -44,4 +53,8 @@ export function getMealsForFilterWithBonus(params: {
     );
   }
   return meals.filter((m) => m.bonus >= minRecipeBonus);
+}
+
+export function getMealsAboveBonus(minBonus: number) {
+  return MEALS.filter((m) => m.bonus >= minBonus);
 }

@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { PokemonCombinationContribution } from '../../../domain/combination/combination-contribution';
-import { CombinedContribution, Contribution } from '../../../domain/computed/coverage';
+import { PokemonCombinationCombinedContribution } from '../../../domain/combination/combination';
+import { CombinedContribution, Contribution } from '../../../domain/computed/contribution';
 import { CreateTierListRequestBody, GetTierListQueryParams } from '../../../routes/tierlist-router/tierlist-router';
 import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
 import { getMealsForFilterWithBonus } from '../../../utils/meal-utils/meal-utils';
@@ -59,9 +59,15 @@ class CookingTierlistImpl {
   }
 
   public create(details: CreateTierListRequestBody) {
-    const pokemonCombinationContribution: PokemonCombinationContribution[] = [];
+    const pokemonCombinationContribution: PokemonCombinationCombinedContribution[] = [];
 
-    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(details);
+    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(details.limit50, {
+      cyan: details.cyan,
+      taupe: details.taupe,
+      snowdrop: details.snowdrop,
+      lapis: details.lapis,
+    });
+
     const memoizedSetCover = new SetCover(
       createPokemonByIngredientReverseIndex(allPokemonWithProduce),
       {
@@ -93,9 +99,9 @@ class CookingTierlistImpl {
       const bestXMealsWithBoost = boostFirstMealWithFactor(1.5, bestXMeals);
 
       const combinedContribution: CombinedContribution = {
-        bestMeals: bestXMealsWithBoost,
+        contributions: bestXMealsWithBoost,
         averagePercentage,
-        summedContributedPower: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0),
+        score: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0),
       };
 
       pokemonCombinationContribution.push({
@@ -114,9 +120,7 @@ class CookingTierlistImpl {
       );
     }
 
-    return pokemonCombinationContribution.sort(
-      (a, b) => b.combinedContribution.summedContributedPower - a.combinedContribution.summedContributedPower
-    );
+    return pokemonCombinationContribution.sort((a, b) => b.combinedContribution.score - a.combinedContribution.score);
   }
 
   public async getTierlist(getTierListQueries: GetTierListQueryParams) {
@@ -131,15 +135,18 @@ class CookingTierlistImpl {
     );
 
     const previousFile = await readFile(previousFileName, 'utf8');
-    const previous: PokemonCombinationContribution[] = JSON.parse(previousFile);
+    const previous: PokemonCombinationCombinedContribution[] = JSON.parse(previousFile);
 
     const currentFile = await readFile(currentFileName, 'utf8');
-    const current: PokemonCombinationContribution[] = JSON.parse(currentFile);
+    const current: PokemonCombinationCombinedContribution[] = JSON.parse(currentFile);
 
     return getTierListQueries.previous ? previous : this.#diffTierlistRankings(previous, current);
   }
 
-  #diffTierlistRankings(previous: PokemonCombinationContribution[], current: PokemonCombinationContribution[]) {
+  #diffTierlistRankings(
+    previous: PokemonCombinationCombinedContribution[],
+    current: PokemonCombinationCombinedContribution[]
+  ) {
     return current; // TODO: diff rankings
   }
 }

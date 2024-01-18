@@ -1,4 +1,16 @@
-import { getPokemonNames } from './pokemon-utils';
+import { PokemonError } from '../../domain/error/pokemon/pokemon-error';
+import { PINSIR } from '../../domain/pokemon/ingredient-pokemon';
+import { getPokemon, getPokemonNames } from './pokemon-utils';
+
+describe('getPokemon', () => {
+  it('shall return PINSIR for pinSIr name', () => {
+    expect(getPokemon('pinSIr')).toBe(PINSIR);
+  });
+
+  it("shall throw if Pokémon can't be found", () => {
+    expect(() => getPokemon('missing')).toThrow(PokemonError);
+  });
+});
 
 describe('getPokemonNames', () => {
   it('shall return all pokemon by default', () => {

@@ -1,6 +1,6 @@
 import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { MealNamesQueryParams, MealRankingQueryParams } from '../../routes/meal-router/meal-router';
-import { getMealDataAndRankingFor, getMealNamesForFilter } from '../../services/routing-service/meal-ranking';
+import { getMealDataAndRankingFor, getMealNamesForFilter } from '../../services/api-service/meal-ranking';
 import { findIslandForName } from '../../utils/island-utils/island-utils';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
 

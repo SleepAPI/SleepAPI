@@ -1,7 +1,7 @@
 import { Controller, Get, Hidden, Path, Queries, Route, Tags } from 'tsoa';
 import { FilteredExtQueryParams, FilteredMealsQueryParams } from '../../routes/ranking-router/ranking-router';
-import { getBuddyFlexibleRanking, getBuddyRankingFor } from '../../services/routing-service/buddy-ranking';
-import { getMealFocusedRanking, getMealGeneralistRanking } from '../../services/routing-service/meal-ranking';
+import { getBuddyFlexibleRanking, getBuddyRankingFor } from '../../services/api-service/buddy-ranking';
+import { getMealFocusedRanking, getMealGeneralistRanking } from '../../services/api-service/meal-ranking';
 import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 
 @Route('api/ranking')

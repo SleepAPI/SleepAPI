@@ -7,7 +7,7 @@ export interface Contribution {
 }
 
 export interface CombinedContribution {
-  bestMeals: Contribution[];
+  contributions: Contribution[];
   averagePercentage: number;
-  summedContributedPower: number;
+  score: number;
 }
