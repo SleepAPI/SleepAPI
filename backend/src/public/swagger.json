@@ -494,49 +494,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SubskillSet": {
-				"type": "string",
-				"enum": [
-					"optimal",
-					"neutral"
-				]
-			},
-			"FilteredQueryParams": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"type": "string"
-					},
-					"subskills": {
-						"$ref": "#/components/schemas/SubskillSet"
-					},
-					"island": {
-						"type": "string"
-					},
-					"e4e": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingbonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					},
-					"csv": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"GetPokemonQueryParams": {
 				"properties": {
 					"cyan": {
@@ -1222,7 +1179,7 @@
 			}
 		},
 		"/api/optimal/meal/{name}": {
-			"get": {
+			"post": {
 				"operationId": "GetOptimalPokemonForMealRaw",
 				"responses": {
 					"200": {
@@ -1318,83 +1275,18 @@
 						"schema": {
 							"type": "string"
 						}
-					},
-					{
-						"in": "query",
-						"name": "level",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "nature",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "subskills",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/SubskillSet"
-						}
-					},
-					{
-						"in": "query",
-						"name": "island",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "e4e",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "helpingbonus",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "camp",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InputProductionStatsRequest"
+							}
 						}
 					}
-				]
+				}
 			}
 		},
 		"/api/pokemon": {

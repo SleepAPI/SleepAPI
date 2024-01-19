@@ -1,16 +1,14 @@
-import { Body, Controller, Get, Path, Post, Queries, Route, Tags } from 'tsoa';
+import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStats } from '../../domain/computed/production';
 import { RASH } from '../../domain/stat/nature';
 import { HELPING_SPEED_M, INGREDIENT_FINDER_M, INVENTORY_L } from '../../domain/stat/subskill';
-import { FilteredQueryParams, InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
+import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
 import { getBerriesForIsland } from '../../utils/berry-utils/berry-utils';
 import { findIslandForName } from '../../utils/island-utils/island-utils';
 import { getNature } from '../../utils/nature-utils/nature-utils';
-import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '../../utils/subskill-utils/subskill-utils';
 
-// TODO: rename to team finder
 @Route('api/optimal')
 @Tags('optimal')
 export default class OptimalController extends Controller {
@@ -20,19 +18,9 @@ export default class OptimalController extends Controller {
     return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input), solutionLimit);
   }
 
-  @Get('meal/{name}')
-  public getOptimalPokemonForMealRaw(@Path() name: string, @Queries() queryParams: FilteredQueryParams) {
-    const params = {
-      name,
-      level: queryAsNumber(queryParams.level),
-      e4eProcs: queryAsNumber(queryParams.e4e),
-      helpingBonus: queryAsNumber(queryParams.helpingbonus),
-      goodCamp: queryAsBoolean(queryParams.camp),
-      natureName: queryParams.nature,
-      subskillSet: queryParams.subskills,
-      island: findIslandForName(queryParams.island),
-    };
-    return findOptimalSetsForMeal(params);
+  @Post('meal/{name}')
+  public getOptimalPokemonForMealRaw(@Path() name: string, @Body() input: InputProductionStatsRequest) {
+    return findOptimalSetsForMeal(name, this.#parseInputProductionStatsRequest(input));
   }
 
   #parseInputProductionStatsRequest(input: InputProductionStatsRequest): InputProductionStats {
