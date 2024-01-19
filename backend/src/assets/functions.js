@@ -205,31 +205,43 @@ function goToProductionCalculator() {
 }
 
 function goToOptimalRanking() {
-  var level = `level=${+document.getElementById('level').value}`;
-  var island = `island=${document.getElementById('island').value}`;
-  var nature = `nature=${document.getElementById('nature').value}`;
-  var subskills = `subskills=${document.getElementById('subskills').value}`;
-  var e4e = `e4e=${+document.getElementById('e4e').value}`;
-  var helpingBonus = `helpingbonus=${+document.getElementById('helpingbonus').value}`;
-  var camp = `camp=${document.getElementById('camp').checked}`;
+  var checkedValues = [];
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+  for (var checkbox of checkboxes) {
+    checkedValues.push(checkbox.value);
+  }
 
-  var queryParams = `?pretty=true&${island}&${nature}&${subskills}&${level}&${e4e}&${helpingBonus}&${camp}`;
-  var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + queryParams;
+  var body = {
+    level: +document.getElementById('level').value,
+    nature: document.getElementById('nature').value,
+    subskills: checkedValues,
+    island: document.getElementById('island').value,
+    e4e: +document.getElementById('e4e').value,
+    helpingbonus: +document.getElementById('helpingbonus').value,
+    camp: document.getElementById('camp').checked,
+  };
 
-  makeRequest(url, 'GET', function (data) {
-    data = JSON.parse(data);
-    headers = [`Recipe: ${data.recipe}`, `${data.info}\n`];
-    createTable(
-      headers,
-      data.teams,
-      function (entry) {
-        return entry.team;
-      },
-      function (entry) {
-        return entry.details;
-      }
-    );
-  });
+  var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + '?pretty=true';
+
+  makeRequest(
+    url,
+    'POST',
+    function (data) {
+      data = JSON.parse(data);
+      headers = [`Recipe: ${data.recipe}`, `${data.info}\n`];
+      createTable(
+        headers,
+        data.teams,
+        function (entry) {
+          return entry.team;
+        },
+        function (entry) {
+          return entry.details;
+        }
+      );
+    },
+    body
+  );
 }
 
 function goToTierLists(createTierListF) {

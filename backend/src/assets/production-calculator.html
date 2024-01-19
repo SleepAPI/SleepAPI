@@ -86,26 +86,28 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
-      const dpBtn = document.getElementById('multiSelectDropdown');
-      let mySelectedListItems = [];
+      $(document).ready(function () {
+        const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
+        const dpBtn = document.getElementById('multiSelectDropdown');
+        let mySelectedListItems = [];
 
-      function handleCB() {
-        mySelectedListItems = [];
-        let mySelectedListItemsText = '';
+        function handleCB() {
+          mySelectedListItems = [];
+          let mySelectedListItemsText = '';
+
+          chBoxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+              mySelectedListItems.push(checkbox.value);
+              mySelectedListItemsText += checkbox.name + ', ';
+            }
+          });
+
+          dpBtn.innerText = mySelectedListItems.length > 0 ? mySelectedListItemsText.slice(0, -2) : 'Subskills';
+        }
 
         chBoxes.forEach((checkbox) => {
-          if (checkbox.checked) {
-            mySelectedListItems.push(checkbox.value);
-            mySelectedListItemsText += checkbox.name + ', ';
-          }
+          checkbox.addEventListener('change', handleCB);
         });
-
-        dpBtn.innerText = mySelectedListItems.length > 0 ? mySelectedListItemsText.slice(0, -2) : 'Subskills';
-      }
-
-      chBoxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', handleCB);
       });
     </script>
 
@@ -116,58 +118,13 @@
         output.innerHTML = slider.value;
       }
     </script>
-
-    <script>
-      window.onload = function () {
-        var selects = document.querySelectorAll("[id^='subskill']");
-
-        function removeSelectedOption() {
-          var prevValue = this.dataset.prevValue;
-          var currValue = this.value;
-
-          for (var i = 0; i < selects.length; i++) {
-            // if select same option do nothing
-            if (selects[i] == this) continue;
-
-            // iterate all options, find the current selected value and remove it
-            for (var j = 0; j < selects[i].options.length; j++) {
-              if (currValue != 'None' && selects[i].options[j].value == currValue) {
-                selects[i].remove(j);
-                break;
-              }
-            }
-            if (prevValue != 'None') {
-              var option = document.createElement('option');
-              option.value = prevValue;
-              option.text = prevValue;
-              var select = selects[i];
-              var options = Array.from(select.options);
-              options.push(option);
-              options.sort(function (a, b) {
-                return a.text.localeCompare(b.text);
-              });
-              select.innerHTML = '';
-              for (var k = 0; k < options.length; k++) {
-                select.add(options[k]);
-              }
-            }
-          }
-          this.dataset.prevValue = currValue;
-        }
-        // this triggers once on window load, then registers function
-        for (var i = 0; i < selects.length; i++) {
-          selects[i].dataset.prevValue = selects[i].value;
-          selects[i].addEventListener('change', removeSelectedOption);
-        }
-      };
-    </script>
   </head>
 
   <body>
     <div class="topnav" id="topnavId">
       <a href="index.html">Home</a>
       <a class="active" href="production-calculator.html">Production Calculator</a>
-      <a href="optimal-sets.html">Optimal Sets</a>
+      <a href="team-finder.html">Team Finder</a>
       <a href="tier-lists.html">Tier Lists</a>
       <a href="meal-rankings.html">Meal Rankings</a>
       <a href="pokemon-flexible.html">Flexible Pokémon</a>
