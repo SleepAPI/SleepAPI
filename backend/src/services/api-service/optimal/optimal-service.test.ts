@@ -1,14 +1,23 @@
 import { InputProductionStats } from '../../../domain/computed/production';
-import { LAPIS_BERRIES } from '../../../domain/produce/berry';
+import { BERRIES, LAPIS_BERRIES } from '../../../domain/produce/berry';
 import { NEROLIS_RESTORATIVE_TEA } from '../../../domain/recipe/dessert';
 import { RASH } from '../../../domain/stat/nature';
-import { HELPING_SPEED_M, INGREDIENT_FINDER_M } from '../../../domain/stat/subskill';
+import { HELPING_SPEED_M, INGREDIENT_FINDER_M, INVENTORY_L } from '../../../domain/stat/subskill';
 import { prettifyIngredientDrop } from '../../../utils/json/json-utils';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {
   it('shall find all optimal solutions for a recipe', () => {
-    const data = findOptimalSetsForMeal({ name: NEROLIS_RESTORATIVE_TEA.name });
+    const input: InputProductionStats = {
+      level: 60,
+      nature: RASH,
+      subskills: [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L],
+      berries: BERRIES,
+      e4eProcs: 0,
+      helpingBonus: 0,
+      goodCamp: false,
+    };
+    const data = findOptimalSetsForMeal(NEROLIS_RESTORATIVE_TEA.name, input);
     expect(data.teams).toHaveLength(2);
     expect(
       data.teams.map((team) => ({

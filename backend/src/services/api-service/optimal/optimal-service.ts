@@ -2,20 +2,14 @@ import { PokemonCombination, PokemonCombinationContributions } from '../../../do
 import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/contribution';
 import { InputProductionStats, TeamWithProduce, TeamsForMeal } from '../../../domain/computed/production';
-import { Island } from '../../../domain/island/island';
-import { RASH } from '../../../domain/stat/nature';
-import { SubskillSet } from '../../../domain/stat/subskill';
 import { calculateContributionForMealWithPunishment } from '../../../services/calculator/contribution/contribution-calculator';
 import { MemoizedFilters } from '../../../services/set-cover/set-cover';
 import { createPokemonByIngredientReverseIndex } from '../../../services/set-cover/set-cover-utils';
-import { getBerriesForIsland } from '../../../utils/berry-utils/berry-utils';
 import { getMeal, getMealsAboveBonus } from '../../../utils/meal-utils/meal-utils';
-import { getNature } from '../../../utils/nature-utils/nature-utils';
 import {
   calculateCombinedContributions,
   removeDuplicatePokemonCombinations,
 } from '../../../utils/optimal-utils/optimal-utils';
-import { subskillsForFilter } from '../../../utils/subskill-utils/subskill-utils';
 import {
   calculateOptimalProductionForSetCover,
   calculateSetCover,
@@ -28,32 +22,8 @@ export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
  *
  * API: /api/optimal/meal
  */
-export function findOptimalSetsForMeal(params: {
-  name: string;
-  level?: number;
-  island?: Island;
-  goodCamp?: boolean;
-  e4eProcs?: number;
-  helpingBonus?: number;
-  natureName?: string;
-  subskillSet?: SubskillSet;
-}) {
-  const {
-    name,
-    island,
-    level = 60,
-    goodCamp = false,
-    e4eProcs = 0,
-    helpingBonus = 0,
-    natureName = RASH.name,
-    subskillSet = 'optimal',
-  } = params;
-
-  const berries = getBerriesForIsland(island);
-  const nature = getNature(natureName);
-  const subskills = subskillsForFilter(subskillSet, level);
-
-  return customOptimalSet(name, { level, goodCamp, e4eProcs, helpingBonus, nature, subskills, berries });
+export function findOptimalSetsForMeal(mealName: string, input: InputProductionStats) {
+  return customOptimalSet(mealName, input);
 }
 
 /**
