@@ -189,9 +189,7 @@ export class SetCover {
       );
     });
 
-    const uniqueSolutions = this.removeDuplicateTeams(optimalTeamSolutions);
-
-    return uniqueSolutions;
+    return this.removeDuplicateTeams(optimalTeamSolutions);
   }
 
   public removeDuplicateTeams(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {

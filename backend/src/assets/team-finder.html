@@ -84,13 +84,38 @@
         output.innerHTML = slider.value;
       }
     </script>
+    <script>
+      $(document).ready(function () {
+        const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
+        const dpBtn = document.getElementById('multiSelectDropdown');
+        let mySelectedListItems = [];
+
+        function handleCB() {
+          mySelectedListItems = [];
+          let mySelectedListItemsText = '';
+
+          chBoxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+              mySelectedListItems.push(checkbox.value);
+              mySelectedListItemsText += checkbox.name + ', ';
+            }
+          });
+
+          dpBtn.innerText = mySelectedListItems.length > 0 ? mySelectedListItemsText.slice(0, -2) : 'Subskills';
+        }
+
+        chBoxes.forEach((checkbox) => {
+          checkbox.addEventListener('change', handleCB);
+        });
+      });
+    </script>
   </head>
 
   <body>
     <div class="topnav" id="topnavId">
       <a href="index.html">Home</a>
       <a href="production-calculator.html">Production Calculator</a>
-      <a class="active" href="optimal-sets.html">Optimal Sets</a>
+      <a class="active" href="team-finder.html">Team Finder</a>
       <a href="tier-lists.html">Tier Lists</a>
       <a href="meal-rankings.html">Meal Rankings</a>
       <a href="pokemon-flexible.html">Flexible Pokémon</a>
@@ -102,16 +127,58 @@
 
     <header style="text-align: center">
       <br />
-      <h1>Optimal Team Sets for recipe</h1>
-      <h3>This will calculate the smallest possible team sets to reliably make a given recipe 3x a day.</h3>
-      <h3>Select any filters by clicking the check boxes below. <br />Then select a recipe and click the button.</h3>
-      <hr />
+      <h1>Team finder for cooking recipes</h1>
+      <h3>Calculate the most optimal teams to reliably make a given recipe 3x a day.</h3>
+
+      <p>
+        <a
+          class="btn btn-outline-dark"
+          data-bs-toggle="collapse"
+          href="#collapseExample"
+          role="button"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        >
+          Show more details
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <h4>
+            <u><strong>How to Use</strong></u
+            ><br />
+            Select your recipe from the dropdown. <br />
+            Choose any optional settings. <br />
+            Hit the submit button. <br /><br />
+
+            When changing input settings you have to hit the submit button to updated the results again.
+            <br />
+          </h4>
+          <br />
+          <h4>
+            <u><strong>The Algorithm</strong></u
+            ><br />
+            Sleep API calculates the produced ingredients for every Pokémon for your given input settings.<br />
+            Then it finds and runs every team composition possible against the recipe to find the optimal solutions.<br /><br />
+
+            It skips calculating unevolved Pokémon, except for some odd cases like Pupitar which has rock berry. <br />
+            It assumes every Pokémon is evolved from base and thus has carry size from evolution included. <br />
+            <br />
+
+            The final results are sorted by consistency. <br />This means, for each team, we check the excess filler
+            ingredients against the recipe. <br />Then we check which filler ingredient is produced the least and thus
+            runs the biggest risk of underproducing.<br />
+            We then rank all teams based on least risks.
+            <br />
+          </h4>
+        </div>
+      </div>
     </header>
 
     <div style="text-align: center; margin-top: 20px">
       <h3>Choose Recipe</h3>
       <select id="optimalMeal" class="btn btn-outline-dark" style="text-align: center; margin-bottom: 20px">
-        <option value="" selected>Select your recipe</option>
+        <option value="" disabled selected>Select your recipe</option>
         <option value="" disabled>Curries</option>
         <option value="FANCY_APPLE_CURRY">Fancy Apple Curry</option>
         <option value="SIMPLE_CHOWDER">Simple Chowder</option>
@@ -212,10 +279,73 @@
       </select>
       <br />
 
-      <select id="subskills" class="btn btn-outline-dark" style="margin-bottom: 10px">
-        <option value="optimal" selected>Optimal subskills</option>
-        <option value="neutral">No subskills</option>
-      </select>
+      <div class="container" id="subskills" style="margin-bottom: 10px">
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-dark black-outline-button dropdown-toggle"
+            type="button"
+            id="multiSelectDropdown"
+            style="width: 300px"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Subskills
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="BFS" value="Berry Finding S" id="Berry_Finding_S" />
+                Berry Finding S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Help M" value="Helping Speed M" id="Helping_Speed_M" checked />
+                Helping Speed M
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Help S" value="Helping Speed S" id="Helping_Speed_S" />
+                Helping Speed S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Ing M" value="Ingredient Finder M" id="Ingredient_Finder_M" checked />
+                Ingredient Finder M
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Ing S" value="Ingredient Finder S" id="Ingredient_Finder_S" />
+                Ingredient Finder S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv L" value="Inventory Up L" id="Inventory_Up_L" checked />
+                Inventory Up L
+              </label>
+            </li>
+            <li></li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv M" value="Inventory Up M" id="Inventory_Up_M" />
+                Inventory Up M
+              </label>
+            </li>
+            <li></li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Inv S" value="Inventory Up S" id="Inventory_Up_S" />
+                Inventory Up S
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
       <br />
 
       <label for="level" class="form-label">Level:&nbsp;</label><span id="levelValue">60</span><br />
