@@ -19,9 +19,11 @@ import { CustomPokemonCombinationWithProduce } from '../../domain/combination/cu
 import { ProgrammingError } from '../../domain/error/programming/programming-error';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { prettifyIngredientDrop } from '../../utils/json/json-utils';
+import { hashPokemonCombination } from '../../utils/optimal-utils/optimal-utils';
 import {
   calculateRemainingIngredients,
   combineSameIngredientsInDrop,
+  sortByMinimumFiller,
   sumOfIngredients,
 } from '../calculator/ingredient/ingredient-calculate';
 
@@ -166,20 +168,46 @@ export class SetCover {
     const teamsWithDetails: OptimalTeamSolution[] = [];
     for (const team of solutions) {
       const teamsProduce = team.flatMap((member) => member.detailedProduce.produce.ingredients);
-      const surplus = calculateRemainingIngredients(teamsProduce, recipe);
+      const surplus = calculateRemainingIngredients(combineSameIngredientsInDrop(teamsProduce), recipe);
       const teamWithDetails: OptimalTeamSolution = {
         team: team,
-        sumSurplus: sumOfIngredients(surplus),
-        prettySurplus: prettifyIngredientDrop(surplus),
+        surplus,
         prettyCombinedProduce: prettifyIngredientDrop(combineSameIngredientsInDrop(teamsProduce)),
       };
 
       teamsWithDetails.push(teamWithDetails);
     }
-    return teamsWithDetails.sort((a, b) => b.sumSurplus - a.sumSurplus);
+
+    const sortedByFiller = sortByMinimumFiller(teamsWithDetails, recipe);
+    return this.processOptimalTeamSolutions(sortedByFiller);
   }
 
-  public findOptimalCombinationFor(recipe: IngredientDrop[]) {
+  public processOptimalTeamSolutions(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
+    optimalTeamSolutions.forEach((solution) => {
+      solution.team.sort((a, b) =>
+        hashPokemonCombination(a.pokemonCombination).localeCompare(hashPokemonCombination(b.pokemonCombination))
+      );
+    });
+
+    const uniqueSolutions = this.removeDuplicateTeams(optimalTeamSolutions);
+
+    return uniqueSolutions;
+  }
+
+  public removeDuplicateTeams(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
+    const uniqueTeamHashes = new Set<string>();
+    return optimalTeamSolutions.filter((solution) => {
+      const teamHash = solution.team.map((pc) => hashPokemonCombination(pc.pokemonCombination)).join('|');
+      if (uniqueTeamHashes.has(teamHash)) {
+        return false;
+      } else {
+        uniqueTeamHashes.add(teamHash);
+        return true;
+      }
+    });
+  }
+
+  public findOptimalCombinationFor(recipe: IngredientDrop[]): OptimalTeamSolution[] {
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
       spotsLeftInTeam: 5,

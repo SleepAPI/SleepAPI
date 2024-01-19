@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { PokemonCombination } from '../../../domain/combination/combination';
+import { OptimalTeamSolution, PokemonCombination } from '../../../domain/combination/combination';
 import { CustomStats } from '../../../domain/combination/custom';
 import { Pokemon } from '../../../domain/pokemon/pokemon';
 import { Ingredient, IngredientDrop } from '../../../domain/produce/ingredient';
@@ -100,6 +100,33 @@ export function calculateRemainingIngredients(
     }
   }
   return remainingIngredients;
+}
+
+export function sortByMinimumFiller(
+  optimalTeamSolutions: OptimalTeamSolution[],
+  requiredIngredients: IngredientDrop[]
+): OptimalTeamSolution[] {
+  return [...optimalTeamSolutions].sort((a, b) => {
+    const aSurplusList = getSurplusList(a.surplus, requiredIngredients);
+    const bSurplusList = getSurplusList(b.surplus, requiredIngredients);
+
+    for (let i = 0; i < aSurplusList.length; i++) {
+      if (bSurplusList[i] !== aSurplusList[i]) {
+        return bSurplusList[i] - aSurplusList[i];
+      }
+    }
+
+    return 0;
+  });
+}
+
+export function getSurplusList(surplus: IngredientDrop[], requiredIngredients: IngredientDrop[]): number[] {
+  return requiredIngredients
+    .map((reqIngredient) => {
+      const foundSurplus = surplus.find((surplusItem) => surplusItem.ingredient.name === reqIngredient.ingredient.name);
+      return foundSurplus ? foundSurplus.amount : 0;
+    })
+    .sort((a, b) => a - b);
 }
 
 export function calculateContributedPowerForMeal(meal: Meal, percentage: number) {

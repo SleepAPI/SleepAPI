@@ -2,6 +2,7 @@ import { PokemonCombination } from '../../../domain/combination/combination';
 import { TYPHLOSION } from '../../../domain/pokemon/berry-pokemon';
 import { ABSOL, BLASTOISE, DUGTRIO, PINSIR, TYRANITAR } from '../../../domain/pokemon/ingredient-pokemon';
 import {
+  BEAN_SAUSAGE,
   FANCY_APPLE,
   FIERY_HERB,
   GREENGRASS_SOYBEANS,
@@ -22,9 +23,11 @@ import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
   calculateProducePerMealWindow,
+  calculateRemainingIngredients,
   combineIngredientDrops,
   combineSameIngredientsInDrop,
   getAllIngredientCombinationsForLevel,
+  sortByMinimumFiller,
 } from './ingredient-calculate';
 
 describe('calculateIngredientsProducedPerMeal', () => {
@@ -845,5 +848,80 @@ describe('calculateContributedIngredientsValue', () => {
     const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
     expect(contributedValue).toBe(9047.970000000001);
     expect(fillerValue).toBe(225.83999999999997);
+  });
+});
+
+describe('calculateRemainingIngredients', () => {
+  it('shall calculate remaining ingredients', () => {
+    const recipe: IngredientDrop[] = [
+      {
+        amount: 10,
+        ingredient: FANCY_APPLE,
+      },
+      { amount: 6, ingredient: MOOMOO_MILK },
+    ];
+    const produce: IngredientDrop[] = [
+      {
+        amount: 5,
+        ingredient: FANCY_APPLE,
+      },
+      { amount: 1, ingredient: MOOMOO_MILK },
+      { amount: 2, ingredient: MOOMOO_MILK },
+    ];
+
+    const expectedRemaining: IngredientDrop[] = [
+      {
+        amount: 5,
+        ingredient: FANCY_APPLE,
+      },
+      { amount: 3, ingredient: MOOMOO_MILK },
+    ];
+
+    expect(calculateRemainingIngredients(recipe, produce)).toEqual(expectedRemaining);
+  });
+});
+
+describe('sortByMinimumFiller', () => {
+  it('shall sort OptimalTeamSolutions based on the minimum surplus of required ingredients', () => {
+    const recipe = [
+      { amount: 10, ingredient: MOOMOO_MILK },
+      { amount: 10, ingredient: FANCY_APPLE },
+    ];
+
+    const teamSolutions = [
+      {
+        team: [],
+        surplus: [
+          { amount: 2, ingredient: MOOMOO_MILK },
+          { amount: 2, ingredient: FANCY_APPLE },
+        ],
+        sumSurplus: 0,
+        prettySurplus: '',
+        prettyCombinedProduce: '',
+      },
+      {
+        team: [],
+        surplus: [
+          { amount: 2, ingredient: MOOMOO_MILK },
+          { amount: 2, ingredient: BEAN_SAUSAGE },
+          { amount: 4, ingredient: FANCY_APPLE },
+        ],
+        sumSurplus: 0,
+        prettySurplus: '',
+        prettyCombinedProduce: '',
+      },
+      {
+        team: [],
+        surplus: [{ amount: 3, ingredient: MOOMOO_MILK }],
+        sumSurplus: 0,
+        prettySurplus: '',
+        prettyCombinedProduce: '',
+      },
+    ];
+    const sortedSolutions = sortByMinimumFiller(teamSolutions, recipe);
+
+    expect(sortedSolutions[0].surplus).toEqual(teamSolutions[1].surplus);
+    expect(sortedSolutions[1].surplus).toEqual(teamSolutions[0].surplus);
+    expect(sortedSolutions[2].surplus).toEqual(teamSolutions[2].surplus);
   });
 });

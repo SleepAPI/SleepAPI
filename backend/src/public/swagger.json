@@ -476,12 +476,11 @@
 						},
 						"type": "array"
 					},
-					"sumSurplus": {
-						"type": "number",
-						"format": "double"
-					},
-					"prettySurplus": {
-						"type": "string"
+					"surplus": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
 					},
 					"prettyCombinedProduce": {
 						"type": "string"
@@ -489,8 +488,7 @@
 				},
 				"required": [
 					"team",
-					"sumSurplus",
-					"prettySurplus",
+					"surplus",
 					"prettyCombinedProduce"
 				],
 				"type": "object",

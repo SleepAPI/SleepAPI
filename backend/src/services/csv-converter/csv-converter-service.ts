@@ -11,13 +11,13 @@ import { combineSameIngredientsInDrop } from '../calculator/ingredient/ingredien
 
 class CSVConverterServiceImpl {
   public toOptimalSet(data: OptimalSetResult) {
-    const header = 'Summed Surplus,Member1,Member2,Member3,Member4,Member5,Produced Ingredients,Surplus Produce\n';
+    const header = 'Member1,Member2,Member3,Member4,Member5,Produced Ingredients\n';
     const csvEntries = data.teams
       .map(
         (c, i) =>
-          `${c.sumSurplus},${c.team
+          `${c.team
             .map((member) => member.pokemonCombination.pokemon.name)
-            .join(',')},${c.prettyCombinedProduce.replace(/,/g, ' ')},${c.prettySurplus.replace(/,/g, ' ')}`
+            .join(',')},${c.prettyCombinedProduce.replace(/,/g, ' ')}`
       )
       .join('\n');
     return header + csvEntries;
