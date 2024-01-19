@@ -56,7 +56,7 @@ class OptimalCombinationRouterImpl {
       '/optimal/meal/flexible',
       async (req: Request<unknown, unknown, InputProductionStatsRequest, { pretty: boolean }>, res: Response) => {
         try {
-          Logger.log('Entered /optimal/meal/pokemon');
+          Logger.log('Entered /optimal/meal/flexible');
 
           const data: OptimalFlexibleResult[] = controller.getFlexiblePokemon(req.body);
 
