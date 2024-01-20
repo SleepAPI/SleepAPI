@@ -213,7 +213,7 @@ export const NAIVE: Nature = {
 // --- NEUTRAL --- //
 export const BASHFUL: Nature = {
   name: 'Bashful',
-  prettyName: 'Bashful',
+  prettyName: 'Bashful (neutral)',
   frequency: 1,
   ingredient: 1,
   skill: 1,
@@ -222,7 +222,7 @@ export const BASHFUL: Nature = {
 };
 export const HARDY: Nature = {
   name: 'Hardy',
-  prettyName: 'Hardy',
+  prettyName: 'Hardy (neutral)',
   frequency: 1,
   ingredient: 1,
   skill: 1,
@@ -231,7 +231,7 @@ export const HARDY: Nature = {
 };
 export const DOCILE: Nature = {
   name: 'Docile',
-  prettyName: 'Docile',
+  prettyName: 'Docile (neutral)',
   frequency: 1,
   ingredient: 1,
   skill: 1,
@@ -240,7 +240,7 @@ export const DOCILE: Nature = {
 };
 export const QUIRKY: Nature = {
   name: 'Quirky',
-  prettyName: 'Quirky',
+  prettyName: 'Quirky (neutral)',
   frequency: 1,
   ingredient: 1,
   skill: 1,
@@ -249,7 +249,7 @@ export const QUIRKY: Nature = {
 };
 export const SERIOUS: Nature = {
   name: 'Serious',
-  prettyName: 'Serious',
+  prettyName: 'Serious (neutral)',
   frequency: 1,
   ingredient: 1,
   skill: 1,

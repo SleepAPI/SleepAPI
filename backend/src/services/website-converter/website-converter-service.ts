@@ -308,7 +308,7 @@ class WebsiteConverterServiceImpl {
 
     const e4eHbCamp: string[] = [];
     if (filters.e4eProcs > 0) {
-      e4eHbCamp.push(`Energy for everyone: ${filters.e4eProcs}`);
+      e4eHbCamp.push(`E4E: ${filters.e4eProcs} x 18 energy`);
     }
     if (filters.helpingBonus > 0) {
       e4eHbCamp.push(`Helping bonus: ${filters.helpingBonus}`);
@@ -384,7 +384,7 @@ class WebsiteConverterServiceImpl {
 
     const e4eHbCamp: string[] = [];
     if (details.e4eProcs > 0) {
-      e4eHbCamp.push(`Energy for everyone: ${details.e4eProcs}`);
+      e4eHbCamp.push(`E4E: ${details.e4eProcs} x 18 energy`);
     }
     if (details.helpingBonus > 0) {
       e4eHbCamp.push(`Helping bonus: ${details.helpingBonus}`);
