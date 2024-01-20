@@ -22,19 +22,19 @@ describe('findOptimalSetsForMeal', () => {
     expect(
       data.teams.map((team) => ({
         team: team.team.map((member) => member.pokemonCombination.pokemon.name),
-        producedIngredients: team.prettyCombinedProduce,
+        producedIngredients: prettifyIngredientDrop(team.surplus.total),
       }))
     ).toMatchInlineSnapshot(`
       [
         {
-          "producedIngredients": "3.5 Cacao, 17.1 Apple, 12.1 Mushroom, 16.4 Ginger",
+          "producedIngredients": "3.5 Cacao, 2.1 Apple, 3.1 Mushroom, 5.4 Ginger",
           "team": [
             "ABSOL",
             "RAICHU",
           ],
         },
         {
-          "producedIngredients": "3.5 Cacao, 16.4 Apple, 12.1 Mushroom, 13 Ginger",
+          "producedIngredients": "3.5 Cacao, 1.4 Apple, 3.1 Mushroom, 2 Ginger",
           "team": [
             "ABSOL",
             "PIKACHU_HALLOWEEN",

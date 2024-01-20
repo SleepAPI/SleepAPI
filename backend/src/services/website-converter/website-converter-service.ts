@@ -1,3 +1,5 @@
+import { SurplusIngredients } from '@src/domain/combination/combination';
+import { IngredientDrop } from '@src/domain/produce/ingredient';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProductionStats } from '../../domain/computed/production';
 import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/legacy/buddy-types';
@@ -116,16 +118,20 @@ class WebsiteConverterServiceImpl {
             )})`
         )
         .join(', '),
-      details: `${optimalCombinations.meal}: ${prettifiedRecipe}\nTeam: ${solution.team
+      details: `👨🏻‍🍳 Sleep API - Team finder 👨🏻‍🍳\n\nRecipe: ${
+        optimalCombinations.meal
+      } (${prettifiedRecipe})\n\nTeam\n- ${solution.team
         .map(
           (member) =>
             `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
               member.pokemonCombination.ingredientList
             )})`
         )
-        .join(', ')}\n\n${this.#prettifyDetails(optimalCombinations.filter)}\n\nTOTAL PRODUCED INGREDIENTS\n${
-        solution.prettyCombinedProduce
-      }\n\nINDIVIDUAL PRODUCE\n${solution.team
+        .join('\n- ')}\n${this.#prettifyInput(optimalCombinations.filter)}\nFiller ingredients produced\n${
+        solution.surplus.relevant.length > 0
+          ? `${this.#prettifyFillersForRecipe(optimalCombinations.recipe, solution.surplus)}`
+          : ''
+      }\n\nIndividual produce per meal window\n${solution.team
         .map(
           (member) =>
             `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
@@ -287,34 +293,46 @@ class WebsiteConverterServiceImpl {
   #prettifyProductionDetails(productionCombination: ProductionCombination) {
     const filters = productionCombination.filters;
     const pokemonCombination = productionCombination.pokemonCombination;
-    let prettyString = `👨🏻‍🍳${pokemonCombination.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-      pokemonCombination.pokemonCombination.ingredientList
-    )})👨🏻‍🍳\n`;
+    let prettyString = `👨🏻‍🍳 Sleep API - Production calculator 👨🏻‍🍳\n\n${
+      pokemonCombination.pokemonCombination.pokemon.name
+    }(${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)})\n`;
 
     prettyString += `-------------\n`;
 
-    prettyString += `Level: ${pokemonCombination.customStats.level}\n`;
-    prettyString += `Nature: ${pokemonCombination.customStats.nature.prettyName}\n`;
+    prettyString += `Level: ${pokemonCombination.customStats.level}, Nature: ${pokemonCombination.customStats.nature.prettyName}\n`;
     prettyString += `Subskills: ${
       pokemonCombination.customStats.subskills.length > 0
         ? pokemonCombination.customStats.subskills.map((s) => s.name).join(', ')
         : 'None'
     }\n`;
-    prettyString += `E4E: ${filters.e4eProcs}\n`;
-    prettyString += `Helping Bonus: ${filters.helpingBonus}\n`;
-    prettyString += `Good camp: ${filters.goodCamp}\n`;
+
+    const e4eHbCamp: string[] = [];
+    if (filters.e4eProcs > 0) {
+      e4eHbCamp.push(`Energy for everyone: ${filters.e4eProcs}`);
+    }
+    if (filters.helpingBonus > 0) {
+      e4eHbCamp.push(`Helping bonus: ${filters.helpingBonus}`);
+    }
+    if (filters.goodCamp) {
+      e4eHbCamp.push(`Good camp: ${filters.goodCamp}`);
+    }
+    prettyString += e4eHbCamp.join(', ');
+    if (e4eHbCamp.length > 0) {
+      prettyString += '\n';
+    }
 
     prettyString += `-------------\n`;
+
+    prettyString += `Total berry output per 24h: ${roundDown(
+      pokemonCombination.detailedProduce.produce.berries.amount + pokemonCombination.detailedProduce.sneakySnack.amount,
+      1
+    )} ${pokemonCombination.pokemonCombination.pokemon.berry.name}\n`;
+
     const maybeSpilledIngredients =
       pokemonCombination.detailedProduce.spilledIngredients.length > 0
         ? prettifyIngredientDrop(pokemonCombination.detailedProduce.spilledIngredients)
         : 'None';
-    prettyString += `Spilled ingredients at night\n${maybeSpilledIngredients}\n`;
-
-    prettyString += `Total berry output per 24h\n${roundDown(
-      pokemonCombination.detailedProduce.produce.berries.amount + pokemonCombination.detailedProduce.sneakySnack.amount,
-      1
-    )} ${pokemonCombination.pokemonCombination.pokemon.berry.name}\n\n`;
+    prettyString += `Spilled ingredients at night: ${maybeSpilledIngredients}\n\n`;
 
     prettyString += `Total ingredient output per meal window\n${prettifyIngredientDrop(
       pokemonCombination.detailedProduce.produce.ingredients
@@ -358,18 +376,43 @@ class WebsiteConverterServiceImpl {
     return filteredArray;
   }
 
-  #prettifyDetails(details: ProductionStats) {
-    let prettyString = 'FILTER\n';
+  #prettifyInput(details: ProductionStats) {
+    let prettyString = '\n-------------\n';
 
-    prettyString += `Level: ${details.level}\n`;
-    prettyString += `Nature: ${details.nature.prettyName}\n`;
+    prettyString += `Level: ${details.level}` + `, Nature: ${details.nature.prettyName}` + '\n';
     prettyString += `Subskills: ${details.subskills.map((s) => s.name).join(', ')}\n`;
-    prettyString += `E4E: ${details.e4eProcs}\n`;
-    prettyString += `Helping Bonus: ${details.helpingBonus}\n`;
-    prettyString += `Good camp: ${details.goodCamp}\n`;
-    prettyString += `-------------`;
+
+    const e4eHbCamp: string[] = [];
+    if (details.e4eProcs > 0) {
+      e4eHbCamp.push(`Energy for everyone: ${details.e4eProcs}`);
+    }
+    if (details.helpingBonus > 0) {
+      e4eHbCamp.push(`Helping bonus: ${details.helpingBonus}`);
+    }
+    if (details.goodCamp) {
+      e4eHbCamp.push(`Good camp: ${details.goodCamp}`);
+    }
+    prettyString += e4eHbCamp.join(', ');
+    if (e4eHbCamp.length > 0) {
+      prettyString += '\n';
+    }
+    prettyString += `-------------\n`;
 
     return prettyString;
+  }
+
+  #prettifyFillersForRecipe(recipe: IngredientDrop[], surplus: SurplusIngredients): string {
+    const fillers = surplus.relevant.map((filler) => {
+      const recipeIngredient = recipe.find((r) => r.ingredient.name === filler.ingredient.name);
+      const percentage = recipeIngredient ? (filler.amount / recipeIngredient.amount) * 100 : 0;
+      return `${roundDown(filler.amount, 1)} ${filler.ingredient.name} (${roundDown(percentage, 0)}%)`;
+    });
+
+    fillers.push(
+      `${surplus.extra.map((filler) => `${roundDown(filler.amount, 1)} ${filler.ingredient.name} (N/A)`).join(', ')}`
+    );
+
+    return fillers.join(', ');
   }
 }
 

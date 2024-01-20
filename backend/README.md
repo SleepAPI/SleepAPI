@@ -57,7 +57,7 @@ npm run test
 npm run start
 ```
 
-This is still run locally (you're safe). This is used by the final Azure deployment to start the service from the compiled javascript /dist folder. This is a good sanity-check before opening a pull request with your suggested changes
+This is still run locally (you're safe). This is used by the final environment deployment to start the service from the compiled javascript /dist folder. This is a good sanity-check before opening a pull request with your suggested changes
 
 For a complete list of available scripts, check the `package.json` file.
 
@@ -85,5 +85,5 @@ Accessing the database shell directly
 docker exec -it backend-db-1 mysql -padmin
 ```
 
-[sleepapi]: https://sleepapi.azurewebsites.net/
+[sleepapi]: https://sleepapi.net/
 [nodemon]: https://nodemon.io/

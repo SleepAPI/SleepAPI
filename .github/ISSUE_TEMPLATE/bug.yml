@@ -7,8 +7,8 @@ body:
       label: Environment
       description: Is this a production or development bug?
       options:
-        - Production (https://sleepapi.azurewebsites.net/)
-        - Development (https://dev-sleepapi.azurewebsites.net/)
+        - Production (https://sleepapi.net/)
+        - Development (https://dev.sleepapi.net/)
         - Local (https://localhost:3000/)
     validations:
       required: true
@@ -40,8 +40,8 @@ body:
     id: link
     attributes:
       label: Link
-      placeholder: https://sleepapi.azurewebsites.net/production-calculator.html/...
-      description: If on Azure, where exactly did you find the bug?
+      placeholder: https://sleepapi.net/production-calculator.html/...
+      description: If on the website, where exactly did you find the bug?
     validations:
       required: false
   - type: markdown

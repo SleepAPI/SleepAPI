@@ -468,6 +468,35 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SurplusIngredients": {
+				"properties": {
+					"total": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"relevant": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					},
+					"extra": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientDrop"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"total",
+					"relevant",
+					"extra"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OptimalTeamSolution": {
 				"properties": {
 					"team": {
@@ -477,19 +506,12 @@
 						"type": "array"
 					},
 					"surplus": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"prettyCombinedProduce": {
-						"type": "string"
+						"$ref": "#/components/schemas/SurplusIngredients"
 					}
 				},
 				"required": [
 					"team",
-					"surplus",
-					"prettyCombinedProduce"
+					"surplus"
 				],
 				"type": "object",
 				"additionalProperties": false

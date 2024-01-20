@@ -45,16 +45,22 @@ describe('processOptimalTeamSolutions', () => {
           { pokemonCombination: pc1, customStats, detailedProduce },
           { pokemonCombination: pc2, customStats, detailedProduce },
         ],
-        prettyCombinedProduce: 'pretty produce',
-        surplus: [],
+        surplus: {
+          extra: [],
+          relevant: [],
+          total: [],
+        },
       },
       {
         team: [
           { pokemonCombination: pc2, customStats, detailedProduce },
           { pokemonCombination: pc1, customStats, detailedProduce },
         ],
-        prettyCombinedProduce: 'pretty produce',
-        surplus: [],
+        surplus: {
+          extra: [],
+          relevant: [],
+          total: [],
+        },
       },
     ];
 

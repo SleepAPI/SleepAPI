@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { OptimalTeamSolution, PokemonCombination } from '../../../domain/combination/combination';
+import { OptimalTeamSolution, PokemonCombination, SurplusIngredients } from '../../../domain/combination/combination';
 import { CustomStats } from '../../../domain/combination/custom';
 import { Pokemon } from '../../../domain/pokemon/pokemon';
 import { Ingredient, IngredientDrop } from '../../../domain/produce/ingredient';
@@ -102,13 +102,26 @@ export function calculateRemainingIngredients(
   return remainingIngredients;
 }
 
+export function extractRelevantSurplus(recipe: IngredientDrop[], surplus: IngredientDrop[]): SurplusIngredients {
+  const recipeIngredientNames = new Set(recipe.map((ingredientDrop) => ingredientDrop.ingredient.name));
+
+  const relevant = surplus.filter((ingredientDrop) => recipeIngredientNames.has(ingredientDrop.ingredient.name));
+  const extra = surplus.filter((ingredientDrop) => !recipeIngredientNames.has(ingredientDrop.ingredient.name));
+
+  return {
+    total: surplus,
+    relevant,
+    extra,
+  };
+}
+
 export function sortByMinimumFiller(
   optimalTeamSolutions: OptimalTeamSolution[],
-  requiredIngredients: IngredientDrop[]
+  recipe: IngredientDrop[]
 ): OptimalTeamSolution[] {
   return [...optimalTeamSolutions].sort((a, b) => {
-    const aSurplusList = getSurplusList(a.surplus, requiredIngredients);
-    const bSurplusList = getSurplusList(b.surplus, requiredIngredients);
+    const aSurplusList = getSurplusList(a.surplus.relevant, recipe);
+    const bSurplusList = getSurplusList(b.surplus.relevant, recipe);
 
     for (let i = 0; i < aSurplusList.length; i++) {
       if (bSurplusList[i] !== aSurplusList[i]) {
