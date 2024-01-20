@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import { config } from './config/config';
 import ProductionController from './controllers/calculator/production.controller';
 import HealthController from './controllers/health/health.controller';
+import IngredientController from './controllers/ingredient/ingredient.controller';
 import MealController from './controllers/meal/meal.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
@@ -18,6 +19,7 @@ import swaggerDocument from './public/swagger.json';
 import { BaseRouter } from './routes/base-router';
 import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
+import { IngredientRouter } from './routes/ingredient-router/ingredient-router';
 import { MealRouter } from './routes/meal-router/meal-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
 import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
@@ -72,6 +74,7 @@ async function main() {
   OptimalCombinationRouter.register(new OptimalController());
   ProductionRouter.register(new ProductionController());
   TierlistRouter.register(new TierlistController());
+  IngredientRouter.register(new IngredientController());
 
   app.listen(port, async () => {
     Logger.log(`Server is running at ${port}`);

@@ -8,3 +8,7 @@ export function getIngredientForname(name: string): Ingredient {
   }
   return ingredient;
 }
+
+export function getIngredientNames(): string[] {
+  return INGREDIENTS.map((ing) => ing.name);
+}
