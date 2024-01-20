@@ -723,6 +723,12 @@
 					},
 					"camp": {
 						"type": "boolean"
+					},
+					"ingredientSet": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [

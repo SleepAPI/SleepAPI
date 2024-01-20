@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import ProductionController from '../../controllers/calculator/production.controller';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
+import { queryAsBoolean } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
@@ -12,6 +12,7 @@ export interface ProductionRequest {
   e4e: number;
   helpingbonus: number;
   camp: boolean;
+  ingredientSet?: string[];
 }
 
 class ProductionRouterImpl {
@@ -23,10 +24,9 @@ class ProductionRouterImpl {
           Logger.log('Entered /calculator/production/:name');
           const { name } = req.params;
 
-          const parsedInput = this.#parseInput(req.body);
           const pretty = queryAsBoolean(req.query.pretty);
 
-          const productionDataRaw = await controller.calculatePokemonProduction(name, parsedInput);
+          const productionDataRaw = await controller.calculatePokemonProduction(name, req.body);
           const productionData = pretty
             ? WebsiteConverterService.toProductionCalculator(productionDataRaw)
             : productionDataRaw;
@@ -37,18 +37,6 @@ class ProductionRouterImpl {
         }
       }
     );
-  }
-
-  #parseInput(input: ProductionRequest) {
-    const parsedInput: ProductionRequest = {
-      level: queryAsNumber(input.level) ?? 0,
-      nature: input.nature,
-      subskills: input.subskills,
-      e4e: queryAsNumber(input.e4e) ?? 0,
-      helpingbonus: queryAsNumber(input.helpingbonus) ?? 0,
-      camp: queryAsBoolean(input.camp),
-    };
-    return parsedInput;
   }
 }
 
