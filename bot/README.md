@@ -45,7 +45,7 @@ Currently the project is in the starting grounds still and no tests have been wr
 npm run start
 ```
 
-This is still run locally (you're safe). This is used by the final Azure deployment to start the service from the compiled javascript /dist folder. This is a good sanity-check before opening a pull request with your suggested changes
+This is still run locally (you're safe). This is used by the final environment deployment to start the service from the compiled javascript /dist folder. This is a good sanity-check before opening a pull request with your suggested changes
 
 For a complete list of available scripts, check the `package.json` file.
 

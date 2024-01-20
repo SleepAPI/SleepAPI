@@ -1,4 +1,4 @@
-import { PokemonCombination } from '../../../domain/combination/combination';
+import { OptimalTeamSolution, PokemonCombination } from '../../../domain/combination/combination';
 import { TYPHLOSION } from '../../../domain/pokemon/berry-pokemon';
 import { ABSOL, BLASTOISE, DUGTRIO, PINSIR, TYRANITAR } from '../../../domain/pokemon/ingredient-pokemon';
 import {
@@ -26,6 +26,7 @@ import {
   calculateRemainingIngredients,
   combineIngredientDrops,
   combineSameIngredientsInDrop,
+  extractRelevantSurplus,
   getAllIngredientCombinationsForLevel,
   sortByMinimumFiller,
 } from './ingredient-calculate';
@@ -888,34 +889,25 @@ describe('sortByMinimumFiller', () => {
       { amount: 10, ingredient: FANCY_APPLE },
     ];
 
-    const teamSolutions = [
+    const teamSolutions: OptimalTeamSolution[] = [
       {
         team: [],
-        surplus: [
+        surplus: extractRelevantSurplus(recipe, [
           { amount: 2, ingredient: MOOMOO_MILK },
           { amount: 2, ingredient: FANCY_APPLE },
-        ],
-        sumSurplus: 0,
-        prettySurplus: '',
-        prettyCombinedProduce: '',
+        ]),
       },
       {
         team: [],
-        surplus: [
+        surplus: extractRelevantSurplus(recipe, [
           { amount: 2, ingredient: MOOMOO_MILK },
           { amount: 2, ingredient: BEAN_SAUSAGE },
           { amount: 4, ingredient: FANCY_APPLE },
-        ],
-        sumSurplus: 0,
-        prettySurplus: '',
-        prettyCombinedProduce: '',
+        ]),
       },
       {
         team: [],
-        surplus: [{ amount: 3, ingredient: MOOMOO_MILK }],
-        sumSurplus: 0,
-        prettySurplus: '',
-        prettyCombinedProduce: '',
+        surplus: extractRelevantSurplus(recipe, [{ amount: 3, ingredient: MOOMOO_MILK }]),
       },
     ];
     const sortedSolutions = sortByMinimumFiller(teamSolutions, recipe);
@@ -923,5 +915,53 @@ describe('sortByMinimumFiller', () => {
     expect(sortedSolutions[0].surplus).toEqual(teamSolutions[1].surplus);
     expect(sortedSolutions[1].surplus).toEqual(teamSolutions[0].surplus);
     expect(sortedSolutions[2].surplus).toEqual(teamSolutions[2].surplus);
+  });
+});
+
+describe('extractRelevantSurplus', () => {
+  const MOOMOO_MILK = { name: 'MOOMOO_MILK', value: 1, taxedValue: 1, longName: 'Moomoo Milk' };
+  const FANCY_APPLE = { name: 'FANCY_APPLE', value: 1, taxedValue: 1, longName: 'Fancy Apple' };
+  const BEAN_SAUSAGE = { name: 'BEAN_SAUSAGE', value: 1, taxedValue: 1, longName: 'Bean Sausage' };
+
+  it('shall correctly categorize relevant and extra surplus ingredients', () => {
+    const recipe = [
+      { amount: 10, ingredient: MOOMOO_MILK },
+      { amount: 5, ingredient: FANCY_APPLE },
+    ];
+
+    const surplus = [
+      { amount: 2, ingredient: MOOMOO_MILK },
+      { amount: 3, ingredient: BEAN_SAUSAGE },
+      { amount: 1, ingredient: FANCY_APPLE },
+    ];
+
+    const result = extractRelevantSurplus(recipe, surplus);
+
+    expect(result.total).toEqual(surplus);
+    expect(result.relevant).toEqual([
+      { amount: 2, ingredient: MOOMOO_MILK },
+      { amount: 1, ingredient: FANCY_APPLE },
+    ]);
+    expect(result.extra).toEqual([{ amount: 3, ingredient: BEAN_SAUSAGE }]);
+  });
+
+  it('shall return an empty array for extra if all surplus ingredients are relevant', () => {
+    const recipe = [{ amount: 10, ingredient: MOOMOO_MILK }];
+    const surplus = [{ amount: 2, ingredient: MOOMOO_MILK }];
+
+    const result = extractRelevantSurplus(recipe, surplus);
+
+    expect(result.relevant).toEqual(surplus);
+    expect(result.extra).toEqual([]);
+  });
+
+  it('shall return an empty array for relevant if no surplus ingredients are in the recipe', () => {
+    const recipe = [{ amount: 10, ingredient: MOOMOO_MILK }];
+    const surplus = [{ amount: 3, ingredient: BEAN_SAUSAGE }];
+
+    const result = extractRelevantSurplus(recipe, surplus);
+
+    expect(result.relevant).toEqual([]);
+    expect(result.extra).toEqual(surplus);
   });
 });

@@ -18,11 +18,11 @@ import { OptimalTeamSolution } from '../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProgrammingError } from '../../domain/error/programming/programming-error';
 import { IngredientDrop } from '../../domain/produce/ingredient';
-import { prettifyIngredientDrop } from '../../utils/json/json-utils';
 import { hashPokemonCombination } from '../../utils/optimal-utils/optimal-utils';
 import {
   calculateRemainingIngredients,
   combineSameIngredientsInDrop,
+  extractRelevantSurplus,
   sortByMinimumFiller,
   sumOfIngredients,
 } from '../calculator/ingredient/ingredient-calculate';
@@ -168,11 +168,11 @@ export class SetCover {
     const teamsWithDetails: OptimalTeamSolution[] = [];
     for (const team of solutions) {
       const teamsProduce = team.flatMap((member) => member.detailedProduce.produce.ingredients);
-      const surplus = calculateRemainingIngredients(combineSameIngredientsInDrop(teamsProduce), recipe);
+      const totalSurplus = calculateRemainingIngredients(combineSameIngredientsInDrop(teamsProduce), recipe);
+      const surplus = extractRelevantSurplus(recipe, totalSurplus);
       const teamWithDetails: OptimalTeamSolution = {
         team: team,
         surplus,
-        prettyCombinedProduce: prettifyIngredientDrop(combineSameIngredientsInDrop(teamsProduce)),
       };
 
       teamsWithDetails.push(teamWithDetails);

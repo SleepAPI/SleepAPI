@@ -10,8 +10,13 @@ export type PokemonCombination = {
 
 export interface OptimalTeamSolution {
   team: CustomPokemonCombinationWithProduce[];
-  surplus: IngredientDrop[];
-  prettyCombinedProduce: string;
+  surplus: SurplusIngredients;
+}
+
+export interface SurplusIngredients {
+  total: IngredientDrop[];
+  relevant: IngredientDrop[];
+  extra: IngredientDrop[];
 }
 
 // --- contribution --- //
