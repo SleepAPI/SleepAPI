@@ -1,5 +1,4 @@
-import { SurplusIngredients } from '@src/domain/combination/combination';
-import { IngredientDrop } from '@src/domain/produce/ingredient';
+import { SurplusIngredients } from '../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProductionStats } from '../../domain/computed/production';
 import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/legacy/buddy-types';
@@ -8,6 +7,7 @@ import {
   CombinationForFlexibleRankingType,
   CombinationForFocusedRankingType,
 } from '../../domain/legacy/legacy';
+import { IngredientDrop } from '../../domain/produce/ingredient';
 import { Nature } from '../../domain/stat/nature';
 import { SubSkill } from '../../domain/stat/subskill';
 import { OptimalFlexibleResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router';

@@ -1,5 +1,5 @@
-import { NatureError } from '@src/domain/error/stat/stat-error';
-import { RASH } from '@src/domain/stat/nature';
+import { NatureError } from '../../domain/error/stat/stat-error';
+import { RASH } from '../../domain/stat/nature';
 import { getNature } from './nature-utils';
 
 describe('getNature', () => {

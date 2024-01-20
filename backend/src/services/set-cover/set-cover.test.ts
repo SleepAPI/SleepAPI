@@ -1,9 +1,9 @@
-import { OptimalTeamSolution, PokemonCombination } from '@src/domain/combination/combination';
-import { CustomStats } from '@src/domain/combination/custom';
-import { BLASTOISE, PINSIR } from '@src/domain/pokemon/ingredient-pokemon';
-import { LEPPA } from '@src/domain/produce/berry';
-import { DetailedProduce } from '@src/domain/produce/produce';
-import { RASH } from '@src/domain/stat/nature';
+import { OptimalTeamSolution, PokemonCombination } from '../../domain/combination/combination';
+import { CustomStats } from '../../domain/combination/custom';
+import { BLASTOISE, PINSIR } from '../../domain/pokemon/ingredient-pokemon';
+import { LEPPA } from '../../domain/produce/berry';
+import { DetailedProduce } from '../../domain/produce/produce';
+import { RASH } from '../../domain/stat/nature';
 import { MemoizedFilters, SetCover } from './set-cover';
 
 describe('processOptimalTeamSolutions', () => {
