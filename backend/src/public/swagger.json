@@ -1131,7 +1131,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "5.0.0",
+		"version": "1.0.1",
 		"contact": {}
 	},
 	"openapi": "3.0.0",
