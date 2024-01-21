@@ -56,8 +56,9 @@ export class SetCover {
   }
 
   public solveRecipe(params: string): CustomPokemonCombinationWithProduce[][] {
-    if (this.#memo.has(params)) {
-      return this.#memo.get(params)!;
+    const cachedSolution = this.#memo.get(params);
+    if (cachedSolution) {
+      return cachedSolution;
     }
 
     const memoizedParams: MemoizedParameters = JSON.parse(params);
@@ -213,8 +214,7 @@ export class SetCover {
     };
 
     const key = JSON.stringify(params);
-
-    const solutions = this.#memo.has(key) ? this.#memo.get(key)! : this.solveRecipe(key);
+    const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
 
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
   }
@@ -227,8 +227,7 @@ export class SetCover {
     };
 
     const key = JSON.stringify(params);
-
-    const solutions = this.#memo.has(key) ? this.#memo.get(key)! : this.solveRecipe(key);
+    const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
 
     // default to team size 6 if the recipe is not cookable
     return solutions.at(0) ? solutions[0].length : 6;

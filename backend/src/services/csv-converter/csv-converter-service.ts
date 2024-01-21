@@ -14,7 +14,7 @@ class CSVConverterServiceImpl {
     const header = 'Member1,Member2,Member3,Member4,Member5,Filler Ingredients\n';
     const csvEntries = data.teams
       .map(
-        (c, i) =>
+        (c) =>
           `${c.team.map((member) => member.pokemonCombination.pokemon.name).join(',')},${prettifyIngredientDrop(
             c.surplus.total
           ).replace(/,/g, ' ')}`
