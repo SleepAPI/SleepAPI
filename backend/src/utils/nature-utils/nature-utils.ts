@@ -8,3 +8,7 @@ export function getNature(name: string) {
   }
   return nature;
 }
+
+export function getNatureNames() {
+  return NATURES.map((nature) => nature.name);
+}

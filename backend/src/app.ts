@@ -9,6 +9,7 @@ import ProductionController from './controllers/calculator/production.controller
 import HealthController from './controllers/health/health.controller';
 import IngredientController from './controllers/ingredient/ingredient.controller';
 import MealController from './controllers/meal/meal.controller';
+import NatureController from './controllers/nature/nature.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
 import RankingController from './controllers/ranking/ranking.controller';
@@ -21,6 +22,7 @@ import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
 import { IngredientRouter } from './routes/ingredient-router/ingredient-router';
 import { MealRouter } from './routes/meal-router/meal-router';
+import { NatureRouter } from './routes/nature-router/nature-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
 import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
 import { RankingRouter } from './routes/ranking-router/ranking-router';
@@ -75,6 +77,7 @@ async function main() {
   ProductionRouter.register(new ProductionController());
   TierlistRouter.register(new TierlistController());
   IngredientRouter.register(new IngredientController());
+  NatureRouter.register(new NatureController());
 
   app.listen(port, async () => {
     Logger.log(`Server is running at ${port}`);
