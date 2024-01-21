@@ -9,6 +9,10 @@ import {
   SubskillSet,
 } from '../../domain/stat/subskill';
 
+export function getSubskillNames() {
+  return SUBSKILLS.map((subskill) => subskill.name);
+}
+
 export function extractSubskillsBasedOnLevel(level: number, subskills: string[]): SubSkill[] {
   const subskill10 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[0]?.toUpperCase());
   const subskill25 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[1]?.toUpperCase());
