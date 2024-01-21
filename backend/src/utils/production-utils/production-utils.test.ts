@@ -1,5 +1,5 @@
-import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { BEAN_SAUSAGE, FANCY_APPLE, IngredientDrop, MOOMOO_MILK } from '@src/domain/produce/ingredient';
+import { PokemonError } from '../../domain/error/pokemon/pokemon-error';
+import { BEAN_SAUSAGE, FANCY_APPLE, IngredientDrop, MOOMOO_MILK } from '../../domain/produce/ingredient';
 import { chooseIngredientSets } from './production-utils';
 
 describe('chooseIngredientSets', () => {

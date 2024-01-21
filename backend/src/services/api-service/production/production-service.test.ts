@@ -1,6 +1,6 @@
-import { PINSIR } from '@src/domain/pokemon/ingredient-pokemon';
-import { FANCY_APPLE, HONEY } from '@src/domain/produce/ingredient';
-import { BASHFUL } from '@src/domain/stat/nature';
+import { PINSIR } from '../../../domain/pokemon/ingredient-pokemon';
+import { FANCY_APPLE, HONEY } from '../../../domain/produce/ingredient';
+import { BASHFUL } from '../../../domain/stat/nature';
 import { calculatePokemonProduction } from './production-service';
 
 describe('calculatePokemonProduction', () => {
