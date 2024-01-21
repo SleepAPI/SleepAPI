@@ -17,10 +17,9 @@
 import { OptimalTeamSolution, PokemonCombination, SurplusIngredients } from '../../../domain/combination/combination';
 import { CustomStats } from '../../../domain/combination/custom';
 import { Pokemon } from '../../../domain/pokemon/pokemon';
-import { Ingredient, IngredientDrop } from '../../../domain/produce/ingredient';
+import { IngredientDrop } from '../../../domain/produce/ingredient';
 import { DetailedProduce } from '../../../domain/produce/produce';
 import { Meal } from '../../../domain/recipe/meal';
-import { getMap, setMap } from '../../../utils/map-utils/map-utils';
 import { calculateNrOfBerriesPerDrop } from '../berry/berry-calculator';
 import {
   calculateAverageProduce,
@@ -35,21 +34,20 @@ import { extractIngredientSubskills, extractInventorySubskills } from '../stats/
  * @returns
  */
 export function combineSameIngredientsInDrop(ingredients: IngredientDrop[]): IngredientDrop[] {
-  const map = new Map<Ingredient, number>();
-  for (const { amount, ingredient } of ingredients) {
-    const current = getMap(map, ingredient) || 0;
-    setMap(map, ingredient, Number(current) + Number(amount));
+  const combined = new Map<string, IngredientDrop>();
+
+  for (const drop of ingredients) {
+    const { name } = drop.ingredient;
+    const existingDrop = combined.get(name);
+
+    if (existingDrop) {
+      existingDrop.amount += drop.amount;
+    } else {
+      combined.set(name, { ...drop });
+    }
   }
 
-  const result: IngredientDrop[] = [];
-  for (const [ing, num] of map.entries()) {
-    result.push({
-      amount: num,
-      ingredient: ing,
-    });
-  }
-
-  return result;
+  return Array.from(combined.values());
 }
 
 /**
