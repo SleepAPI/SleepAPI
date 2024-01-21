@@ -6,7 +6,24 @@ import {
   INVENTORY_M,
   SUBSKILLS,
 } from '../../domain/stat/subskill';
-import { extractSubskillsBasedOnLevel, subskillsForFilter } from './subskill-utils';
+import { extractSubskillsBasedOnLevel, getSubskillNames, subskillsForFilter } from './subskill-utils';
+
+describe('getSubskillNames', () => {
+  it('shall get all subskill names', () => {
+    expect(getSubskillNames()).toMatchInlineSnapshot(`
+      [
+        "Berry Finding S",
+        "Helping Speed S",
+        "Helping Speed M",
+        "Ingredient Finder S",
+        "Ingredient Finder M",
+        "Inventory Up S",
+        "Inventory Up M",
+        "Inventory Up L",
+      ]
+    `);
+  });
+});
 
 describe('extractSubskillsBasedOnLevel', () => {
   it('should return the correct subskills for level 10', () => {

@@ -13,6 +13,7 @@ import NatureController from './controllers/nature/nature.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
 import RankingController from './controllers/ranking/ranking.controller';
+import SubskillController from './controllers/subskill/subskill.controller';
 import TierlistController from './controllers/tierlist/tierlist.controller';
 import DatabaseMigration from './database/migration/database-migration';
 import DataSeed from './database/seed/data-seed';
@@ -26,6 +27,7 @@ import { NatureRouter } from './routes/nature-router/nature-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
 import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
 import { RankingRouter } from './routes/ranking-router/ranking-router';
+import { SubskillRouter } from './routes/subskill-router/subskill-router';
 import { TierlistRouter } from './routes/tierlist-router/tierlist-router';
 import { Logger } from './services/logger/logger';
 
@@ -78,6 +80,7 @@ async function main() {
   TierlistRouter.register(new TierlistController());
   IngredientRouter.register(new IngredientController());
   NatureRouter.register(new NatureController());
+  SubskillRouter.register(new SubskillController());
 
   app.listen(port, async () => {
     Logger.log(`Server is running at ${port}`);

@@ -2115,6 +2115,31 @@
 					}
 				]
 			}
+		},
+		"/api/subskill": {
+			"get": {
+				"operationId": "GetSubskills",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"subskill"
+				],
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [
