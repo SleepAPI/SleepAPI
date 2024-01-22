@@ -313,7 +313,7 @@ function goToOptimalFlexible() {
           // append ingredients
           for (const ing of entry.ingredientList) {
             var ingImg = document.createElement('img');
-            ingImg.src = `./ingredient/${ing.ingredient.name}.png`;
+            ingImg.src = `./ingredient/${ing.ingredient.name.toLowerCase()}.png`;
             ingImg.className = 'ingredient-img';
             btn.appendChild(ingImg);
           }
