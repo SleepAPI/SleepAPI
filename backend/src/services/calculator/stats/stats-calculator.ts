@@ -1,4 +1,5 @@
 import { CustomStats } from '../../../domain/combination/custom';
+import { Pokemon } from '../../../domain/pokemon/pokemon';
 import { Nature, RASH } from '../../../domain/stat/nature';
 import {
   HELPING_SPEED_M,
@@ -53,10 +54,10 @@ export function invertNatureFrequecy(nature: Nature) {
   return result;
 }
 
-export function getOptimalIngredientStats(level: number): CustomStats {
+export function getOptimalIngredientStats(level: number, pokemon: Pokemon): CustomStats {
   return {
     level,
     nature: RASH,
-    subskills: subskillsForFilter('optimal', level),
+    subskills: subskillsForFilter('optimal', level, pokemon),
   };
 }

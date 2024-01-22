@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-undef */
+
+window.onload = function () {
+  var img = new Image();
+  img.src = 'spinner.gif';
+};
+
 function getQueryParams() {
   var result = '?';
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
@@ -37,7 +43,9 @@ function makeRequest(url, method, callback, body) {
   // add loading indicator while waiting for response
   xmlhttp.onreadystatechange = function () {
     if (this.readyState == 1) {
-      document.getElementById('spinner-div').style.display = 'block';
+      setTimeout(function () {
+        document.getElementById('spinner-div').style.display = 'block';
+      }, 0);
     } else if (this.readyState == 4) {
       document.getElementById('spinner-div').style.display = 'none';
       callback(this.responseText);
@@ -49,7 +57,7 @@ function makeRequest(url, method, callback, body) {
   xmlhttp.send(JSON.stringify(body));
 }
 
-function createTable(headers, entries, entryHeaderCallback, entryDetailCallback) {
+function createTable(headers, entries, entryHeaderCallback, entryDetailCallback, headerImageCallback) {
   var table = document.createElement('table');
   table.classList.add('centerTable');
 
@@ -71,6 +79,9 @@ function createTable(headers, entries, entryHeaderCallback, entryDetailCallback)
     btn.classList.add('collapsible');
     btn.textContent = entryHeaderCallback(entries[i]);
     btn.style.whiteSpace = 'pre-line';
+    if (headerImageCallback) {
+      headerImageCallback(btn, entries[i]);
+    }
 
     var contentDiv = document.createElement('div');
     contentDiv.classList.add('content');
@@ -255,6 +266,62 @@ function goToTierLists(createTierListF) {
     data = JSON.parse(data);
     createTierListF(data);
   });
+}
+
+function goToOptimalFlexible() {
+  var body = {
+    level: +document.getElementById('level').value,
+    island: document.getElementById('island').value,
+    e4e: +document.getElementById('e4e').value,
+    helpingbonus: +document.getElementById('helpingbonus').value,
+    camp: document.getElementById('camp').checked,
+    optimalSetSolutionLimit: document.getElementById('solutionLimit').checked ? undefined : 5000,
+  };
+
+  var url = 'optimal/meal/flexible?pretty=true';
+
+  makeRequest(
+    url,
+    'POST',
+    function (data) {
+      data = JSON.parse(data);
+      headers = [`Flexible cooking ranking\n`];
+      createTable(
+        headers,
+        data,
+        function (entry) {
+          return `Rank: ${entry.rank}\nScore: ${entry.score}`;
+        },
+        function (entry) {
+          let prettyString = 'Recipes\n\n';
+          for (meal of entry.countedMeals) {
+            prettyString += meal + '\n';
+          }
+          prettyString += entry.input + '\n';
+          return prettyString;
+        },
+        function (btn, entry) {
+          var img = document.createElement('img');
+          img.src = `./pokemon/${entry.pokemon.toLowerCase()}.png`;
+          img.className = 'img-fluid';
+          img.onload = function () {
+            img.style.width = img.naturalWidth * 0.5 + 'px';
+            img.style.height = img.naturalHeight * 0.5 + 'px';
+          };
+          btn.appendChild(img);
+
+          // append ingredients
+          for (const ing of entry.ingredientList) {
+            var ingImg = document.createElement('img');
+            ingImg.src = `./ingredient/${ing.ingredient.name}.png`;
+            ingImg.className = 'ingredient-img';
+            btn.appendChild(ingImg);
+          }
+        }
+      );
+    },
+    body
+  );
 }
 
 function goToMealRanking() {

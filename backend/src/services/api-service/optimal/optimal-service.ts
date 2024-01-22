@@ -1,7 +1,8 @@
-import { PokemonCombination, PokemonCombinationContributions } from '../../../domain/combination/combination';
+import { PokemonCombinationContributions } from '../../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/contribution';
 import { InputProductionStats, TeamWithProduce, TeamsForMeal } from '../../../domain/computed/production';
+import { OptimalFlexibleResult } from '../../../routes/optimal-router/optimal-router';
 import { calculateContributionForMealWithPunishment } from '../../../services/calculator/contribution/contribution-calculator';
 import { MemoizedFilters } from '../../../services/set-cover/set-cover';
 import { createPokemonByIngredientReverseIndex } from '../../../services/set-cover/set-cover-utils';
@@ -16,6 +17,7 @@ import {
 } from '../../calculator/set-cover/calculate-set-cover';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
+export const OPTIMAL_SET_MAX_TEAM_SIZE = 5;
 
 /**
  * Runs the optimal set algorithm for a specific recipe
@@ -31,7 +33,10 @@ export function findOptimalSetsForMeal(mealName: string, input: InputProductionS
  *
  * API: /api/optimal/meal/flexible
  */
-export function getOptimalFlexiblePokemon(input: InputProductionStats, solutionLimit: number) {
+export function getOptimalFlexiblePokemon(
+  input: InputProductionStats,
+  solutionLimit?: number
+): OptimalFlexibleResult[] {
   const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input, solutionLimit);
 
   const pokemonOccurenceInOptimalSolutions: Map<string, Contribution[]> = new Map();
@@ -48,7 +53,7 @@ export function getOptimalFlexiblePokemon(input: InputProductionStats, solutionL
         producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
       });
 
-      const key = JSON.stringify(pokemonWithProduce.pokemonCombination);
+      const key = JSON.stringify(pokemonWithProduce);
 
       if (!pokemonOccurenceInOptimalSolutions.has(key)) {
         pokemonOccurenceInOptimalSolutions.set(key, [contribution]);
@@ -64,14 +69,26 @@ export function getOptimalFlexiblePokemon(input: InputProductionStats, solutionL
   // convert to array
   const sortedOptimalFlexiblePokemon: PokemonCombinationContributions[] = Array.from(
     pokemonOccurenceInOptimalSolutions
-  ).map((pokemonCombinationWithContribution) => ({
-    pokemonCombination: JSON.parse(pokemonCombinationWithContribution[0]) as PokemonCombination,
-    contributions: pokemonCombinationWithContribution[1],
-  }));
+  ).map((pokemonCombinationWithContribution) => {
+    const pokemonWithProduce = JSON.parse(pokemonCombinationWithContribution[0]) as CustomPokemonCombinationWithProduce;
+    return {
+      pokemonCombination: pokemonWithProduce.pokemonCombination,
+      contributions: pokemonCombinationWithContribution[1],
+      stats: pokemonWithProduce.customStats,
+    };
+  });
 
   const pokemonCombinationsWithScore = calculateCombinedContributions(sortedOptimalFlexiblePokemon);
 
-  return pokemonCombinationsWithScore.sort((a, b) => b.scoreResult.score - a.scoreResult.score);
+  const sorted = pokemonCombinationsWithScore.sort((a, b) => b.scoreResult.score - a.scoreResult.score);
+  return sorted.map(({ pokemonCombination, scoreResult, stats }) => ({
+    pokemonCombination,
+    scoreResult,
+    input: {
+      ...input,
+      subskills: stats.subskills,
+    },
+  }));
 }
 
 /**
@@ -79,7 +96,7 @@ export function getOptimalFlexiblePokemon(input: InputProductionStats, solutionL
  *
  * @param solutionLimit If a recipe has too many optimal solutions we can use this to early exit, saving performance
  */
-function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit: number) {
+function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit?: number) {
   const pokemonProduction = calculateOptimalProductionForSetCover(input);
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 
@@ -87,7 +104,7 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
     limit50: input.level < 60,
     pokemon: pokemonProduction.map((p) => p.pokemonCombination.pokemon.name),
   };
-  const memoizedParams = new Map();
+  const cache = new Map();
 
   const optimalTeamSolutions: TeamsForMeal[] = [];
   for (const meal of getMealsAboveBonus(0)) {
@@ -95,8 +112,9 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
       recipe: meal.ingredients,
       memoizedFilters,
       reverseIndex,
-      memoizedParams,
+      cache,
       solutionLimit,
+      maxTeamSize: OPTIMAL_SET_MAX_TEAM_SIZE,
     });
 
     const allTeams: TeamWithProduce[] = teamCompositionsForMeal.map((solution) => solution.team);
@@ -132,7 +150,7 @@ function customOptimalSet(mealName: string, inputStats: InputProductionStats) {
     recipe: meal.ingredients,
     memoizedFilters,
     reverseIndex,
-    memoizedParams: new Map(),
+    cache: new Map(),
   });
 
   return {

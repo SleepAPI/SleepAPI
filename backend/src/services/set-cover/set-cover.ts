@@ -206,10 +206,11 @@ export class SetCover {
     });
   }
 
-  public findOptimalCombinationFor(recipe: IngredientDrop[]): OptimalTeamSolution[] {
+  public findOptimalCombinationFor(recipe: IngredientDrop[], maxTeamSize?: number): OptimalTeamSolution[] {
+    const spotsLeftInTeam = maxTeamSize ?? 5;
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
-      spotsLeftInTeam: 5,
+      spotsLeftInTeam,
       filters: this.#filters,
     };
 

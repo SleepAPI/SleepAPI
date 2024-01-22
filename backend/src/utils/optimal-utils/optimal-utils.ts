@@ -19,7 +19,7 @@ export interface ScoreResult {
 }
 
 export function calculateCombinedContributions(pokemonCombinationContributions: PokemonCombinationContributions[]) {
-  return pokemonCombinationContributions.map(({ pokemonCombination, contributions }) => {
+  return pokemonCombinationContributions.map(({ pokemonCombination, contributions, stats }) => {
     const score = calculateOptimalFlexibleScore(contributions);
 
     return {
@@ -29,6 +29,7 @@ export function calculateCombinedContributions(pokemonCombinationContributions: 
         contributions,
         countedMeals: score.countedMeals,
       },
+      stats,
     };
   });
 }

@@ -245,40 +245,30 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"InputProductionStatsRequest": {
+			"ScoreResult": {
 				"properties": {
-					"level": {
+					"score": {
 						"type": "number",
 						"format": "double"
 					},
-					"nature": {
-						"type": "string"
-					},
-					"subskills": {
+					"contributions": {
 						"items": {
-							"type": "string"
+							"$ref": "#/components/schemas/Contribution"
 						},
 						"type": "array"
 					},
-					"island": {
-						"type": "string"
-					},
-					"e4e": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingbonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"optimalSetSolutionLimit": {
-						"type": "number",
-						"format": "double"
+					"countedMeals": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
 					}
 				},
+				"required": [
+					"score",
+					"contributions",
+					"countedMeals"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -352,6 +342,100 @@
 					"skill",
 					"inventory"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductionStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"goodCamp": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"level",
+					"nature",
+					"e4eProcs",
+					"helpingBonus",
+					"goodCamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OptimalFlexibleResult": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonCombination"
+					},
+					"scoreResult": {
+						"$ref": "#/components/schemas/ScoreResult"
+					},
+					"input": {
+						"$ref": "#/components/schemas/ProductionStats"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"scoreResult",
+					"input"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputProductionStatsRequest": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"type": "string"
+					},
+					"subskills": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"island": {
+						"type": "string"
+					},
+					"e4e": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingbonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"optimalSetSolutionLimit": {
+						"type": "number",
+						"format": "double"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1131,7 +1215,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.0.1",
+		"version": "1.1.0",
 		"contact": {}
 	},
 	"openapi": "3.0.0",
@@ -1146,42 +1230,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"properties": {
-											"scoreResult": {
-												"properties": {
-													"countedMeals": {
-														"items": {
-															"$ref": "#/components/schemas/Contribution"
-														},
-														"type": "array"
-													},
-													"contributions": {
-														"items": {
-															"$ref": "#/components/schemas/Contribution"
-														},
-														"type": "array"
-													},
-													"score": {
-														"type": "number",
-														"format": "double"
-													}
-												},
-												"required": [
-													"countedMeals",
-													"contributions",
-													"score"
-												],
-												"type": "object"
-											},
-											"pokemonCombination": {
-												"$ref": "#/components/schemas/PokemonCombination"
-											}
-										},
-										"required": [
-											"scoreResult",
-											"pokemonCombination"
-										],
-										"type": "object"
+										"$ref": "#/components/schemas/OptimalFlexibleResult"
 									},
 									"type": "array"
 								}
