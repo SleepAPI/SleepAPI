@@ -5,7 +5,7 @@
   "main": "dist/app.js",
   "scripts": {
     "clean": "rm -rf ./dist/",
-    "prebuild": "npm run clean && npm run swagger && tsoa spec",
+    "prebuild": "npm install && npm run clean && npm run swagger && tsoa spec",
     "build": "tsc",
     "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
     "start": "npm run build && node ./dist/app.js",
