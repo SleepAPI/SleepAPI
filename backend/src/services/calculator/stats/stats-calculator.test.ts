@@ -1,3 +1,4 @@
+import { BLASTOISE, PINSIR } from '@src/domain/pokemon/ingredient-pokemon';
 import { ADAMANT, MODEST, RASH } from '../../../domain/stat/nature';
 import {
   HELPING_SPEED_M,
@@ -97,27 +98,27 @@ describe('extractInventorySubskills', () => {
 
 describe('subskillsForFilter', () => {
   it('shall return an empty array for "neutral" subskillSet', () => {
-    expect(subskillsForFilter('neutral', 10)).toEqual([]);
+    expect(subskillsForFilter('neutral', 10, PINSIR)).toEqual([]);
   });
 
   it('shall return empty subskills for level < 10', () => {
-    expect(subskillsForFilter('optimal', 5)).toEqual([]);
+    expect(subskillsForFilter('optimal', 5, PINSIR)).toEqual([]);
   });
 
   it('shall return [INGREDIENT_FINDER_M] for level >= 10', () => {
-    expect(subskillsForFilter('optimal', 10)).toEqual([INGREDIENT_FINDER_M]);
+    expect(subskillsForFilter('optimal', 10, BLASTOISE)).toEqual([INGREDIENT_FINDER_M]);
   });
 
   it('shall return [INGREDIENT_FINDER_M, HELPING_SPEED_M] for level >= 25', () => {
-    expect(subskillsForFilter('optimal', 25)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M]);
+    expect(subskillsForFilter('optimal', 25, BLASTOISE)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M]);
   });
 
   it('shall return [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L] for level >= 50', () => {
-    expect(subskillsForFilter('optimal', 50)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L]);
+    expect(subskillsForFilter('optimal', 50, BLASTOISE)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L]);
   });
 
   it('shall return [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L, INGREDIENT_FINDER_S] for level >= 75', () => {
-    expect(subskillsForFilter('optimal', 75)).toEqual([
+    expect(subskillsForFilter('optimal', 75, BLASTOISE)).toEqual([
       INGREDIENT_FINDER_M,
       HELPING_SPEED_M,
       INVENTORY_L,
@@ -125,11 +126,21 @@ describe('subskillsForFilter', () => {
     ]);
   });
 
-  it('shall return [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L, INGREDIENT_FINDER_S, INVENTORY_M] for level >= 100', () => {
-    expect(subskillsForFilter('optimal', 100)).toEqual([
+  it('shall return [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L, INGREDIENT_FINDER_S, HELPING_SPEED_S] for level >= 100', () => {
+    expect(subskillsForFilter('optimal', 100, BLASTOISE)).toEqual([
       INGREDIENT_FINDER_M,
       HELPING_SPEED_M,
       INVENTORY_L,
+      INGREDIENT_FINDER_S,
+      HELPING_SPEED_S,
+    ]);
+  });
+
+  it('shall return [INGREDIENT_FINDER_M, INVENTORY_L, HELPING_SPEED_M, INGREDIENT_FINDER_S, INVENTORY_M] for single-stage pokemon', () => {
+    expect(subskillsForFilter('optimal', 100, PINSIR)).toEqual([
+      INGREDIENT_FINDER_M,
+      INVENTORY_L,
+      HELPING_SPEED_M,
       INGREDIENT_FINDER_S,
       INVENTORY_M,
     ]);
@@ -139,7 +150,7 @@ describe('subskillsForFilter', () => {
 describe('getOptimalIngredientStats', () => {
   it('shall return CustomStats with the provided level and nature RASH', () => {
     const level = 42;
-    expect(getOptimalIngredientStats(level)).toEqual({
+    expect(getOptimalIngredientStats(level, BLASTOISE)).toEqual({
       level,
       nature: RASH,
       subskills: [INGREDIENT_FINDER_M, HELPING_SPEED_M],

@@ -31,6 +31,11 @@ describe('calculateCombinedContributions', () => {
           percentage: 100,
         },
       ],
+      stats: {
+        level: 60,
+        nature: RASH,
+        subskills: [],
+      },
     };
 
     const result = calculateCombinedContributions([pokemonCombinationContributions]);
@@ -38,6 +43,7 @@ describe('calculateCombinedContributions', () => {
     expect(result[0].scoreResult.score).toBe(120);
     expect(result[0].scoreResult.countedMeals.map((meal) => meal.meal.name)).toEqual([JIGGLYPUFFS_FRUITY_FLAN.name]);
     expect(result[0].scoreResult.contributions.map((meal) => meal.meal.name)).toEqual([JIGGLYPUFFS_FRUITY_FLAN.name]);
+    expect(result[0].stats).toEqual(pokemonCombinationContributions.stats);
   });
 });
 

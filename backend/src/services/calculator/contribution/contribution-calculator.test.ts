@@ -41,7 +41,7 @@ describe('calculateMealContributionFor', () => {
     const meal = SLOWPOKE_TAIL_PEPPER_SALAD;
     const pokemon = GENGAR;
 
-    const customStats: CustomStats = getOptimalIngredientStats(60);
+    const customStats: CustomStats = getOptimalIngredientStats(60, pokemon);
     const limit50 = false;
     const islands = {
       cyan: false,

@@ -1,5 +1,5 @@
-import SubskillController from '@src/controllers/subskill/subskill.controller';
 import { Request, Response } from 'express';
+import SubskillController from '../../controllers/subskill/subskill.controller';
 import { Logger } from '../../services/logger/logger';
 import { BaseRouter } from '../base-router';
 

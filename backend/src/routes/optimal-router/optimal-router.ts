@@ -25,6 +25,7 @@ export interface InputProductionStatsRequest {
 export interface OptimalFlexibleResult {
   pokemonCombination: PokemonCombination;
   scoreResult: ScoreResult;
+  input: ProductionStats;
 }
 
 export interface OptimalSetResult {

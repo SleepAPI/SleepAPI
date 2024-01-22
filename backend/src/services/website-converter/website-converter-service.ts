@@ -157,8 +157,7 @@ class WebsiteConverterServiceImpl {
   }
 
   public toOptimalFlexible(pokemonCombinationCombinedContributions: OptimalFlexibleResult[]) {
-    return pokemonCombinationCombinedContributions.map((pokemonCombinationWithContribution) => {
-      // Create a map of meals with their contributedPower for quick lookup
+    return pokemonCombinationCombinedContributions.map((pokemonCombinationWithContribution, i) => {
       const mealsMap = new Map(
         pokemonCombinationWithContribution.scoreResult.contributions.map((contribution) => [
           contribution.meal.name,
@@ -166,7 +165,6 @@ class WebsiteConverterServiceImpl {
         ])
       );
 
-      // Process meals and countedMeals
       const meals = pokemonCombinationWithContribution.scoreResult.contributions.map(
         (contribution) => `[${contribution.contributedPower}] ${contribution.meal.name}`
       );
@@ -176,21 +174,24 @@ class WebsiteConverterServiceImpl {
         const is20PercentHigher =
           basePower && contribution.contributedPower === basePower * FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER;
 
-        // Modify the display format if the conditions are met
         const powerDisplay = is20PercentHigher
-          ? `[${contribution.contributedPower} (+${FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER * 100 - 100})]`
-          : `[${contribution.contributedPower}]`;
+          ? `[${roundDown(
+              contribution.contributedPower / FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER,
+              0
+            )} x ${FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER})]`
+          : `[${roundDown(contribution.contributedPower, 0)}]`;
 
         return `${powerDisplay} ${contribution.meal.name}`;
       });
 
       return {
-        pokemon: `${pokemonCombinationWithContribution.pokemonCombination.pokemon.name} (${prettifyIngredientDrop(
-          pokemonCombinationWithContribution.pokemonCombination.ingredientList
-        )})`,
-        score: pokemonCombinationWithContribution.scoreResult.score,
+        pokemon: pokemonCombinationWithContribution.pokemonCombination.pokemon.name,
+        ingredientList: pokemonCombinationWithContribution.pokemonCombination.ingredientList,
+        score: roundDown(pokemonCombinationWithContribution.scoreResult.score, 0),
+        rank: i + 1,
         meals,
         countedMeals,
+        input: this.#prettifyInput(pokemonCombinationWithContribution.input),
       };
     });
   }
@@ -380,7 +381,7 @@ class WebsiteConverterServiceImpl {
     let prettyString = '\n-------------\n';
 
     prettyString += `Level: ${details.level}` + `, Nature: ${details.nature.prettyName}` + '\n';
-    prettyString += `Subskills: ${details.subskills.map((s) => s.name).join(', ')}\n`;
+    prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
 
     const e4eHbCamp: string[] = [];
     if (details.e4eProcs > 0) {

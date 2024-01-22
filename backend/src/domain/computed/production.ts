@@ -7,7 +7,7 @@ import { SubSkill } from '../stat/subskill';
 export interface ProductionStats {
   level: number;
   nature: Nature;
-  subskills: SubSkill[];
+  subskills?: SubSkill[];
   e4eProcs: number;
   helpingBonus: number;
   goodCamp: boolean;

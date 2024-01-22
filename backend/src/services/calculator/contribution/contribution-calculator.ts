@@ -29,7 +29,7 @@ export function getAllOptimalIngredientPokemonProduce(
   const pokemonForBerries = OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
 
   for (const pokemon of pokemonForBerries) {
-    const customStats = getOptimalIngredientStats(limit50 ? 50 : 60);
+    const customStats = getOptimalIngredientStats(limit50 ? 50 : 60, pokemon);
 
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, limit50 ? 50 : 60)) {
       const pokemonCombination = {

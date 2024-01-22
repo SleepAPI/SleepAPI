@@ -3,6 +3,7 @@ import { InputProductionStats } from '../../../domain/computed/production';
 import { ProgrammingError } from '../../../domain/error/programming/programming-error';
 import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
 import { IngredientDrop } from '../../../domain/produce/ingredient';
+import { subskillsForFilter } from '../../../utils/subskill-utils/subskill-utils';
 
 import { MemoizedFilters, SetCover } from '../../set-cover/set-cover';
 import {
@@ -16,11 +17,12 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
 
   const pokemonWithCorrectBerries = OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
   for (const pokemon of pokemonWithCorrectBerries) {
+    const subskillsForPokemon = subskills ?? subskillsForFilter('optimal', level, pokemon);
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const customStats: CustomStats = {
         level,
         nature,
-        subskills,
+        subskills: subskillsForPokemon,
       };
       const detailedProduce = calculateProducePerMealWindow({
         pokemonCombination: {
@@ -51,17 +53,18 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
 export function calculateSetCover(params: {
   recipe: IngredientDrop[];
   memoizedFilters: MemoizedFilters;
-  memoizedParams: Map<string, CustomPokemonCombinationWithProduce[][]>;
+  cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
   solutionLimit?: number;
+  maxTeamSize?: number;
 }) {
-  const { recipe, memoizedFilters, memoizedParams, reverseIndex, solutionLimit } = params;
+  const { recipe, memoizedFilters, cache, reverseIndex, solutionLimit, maxTeamSize } = params;
 
   const firstPokemon = memoizedFilters.pokemon.at(0);
   if (!firstPokemon) {
     throw new ProgrammingError("Can't calculate Optimal Set without Pokémon");
   }
 
-  const setCover = new SetCover(reverseIndex, memoizedFilters, memoizedParams, solutionLimit);
-  return setCover.findOptimalCombinationFor(recipe);
+  const setCover = new SetCover(reverseIndex, memoizedFilters, cache, solutionLimit);
+  return setCover.findOptimalCombinationFor(recipe, maxTeamSize);
 }
