@@ -695,6 +695,27 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"TieredPokemonCombinationContribution": {
+				"properties": {
+					"tier": {
+						"type": "string"
+					},
+					"diff": {
+						"type": "number",
+						"format": "double"
+					},
+					"pokemonCombinationContribution": {
+						"$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
+					}
+				},
+				"required": [
+					"tier",
+					"diff",
+					"pokemonCombinationContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateTierListRequestBody": {
 				"properties": {
 					"limit50": {
@@ -1546,7 +1567,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
+										"$ref": "#/components/schemas/TieredPokemonCombinationContribution"
 									},
 									"type": "array"
 								}

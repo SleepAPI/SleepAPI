@@ -31,6 +31,7 @@ export interface CreateTierListRequestBody {
 
 export interface TieredPokemonCombinationContribution {
   tier: string;
+  diff: number;
   pokemonCombinationContribution: PokemonCombinationCombinedContribution;
 }
 
@@ -51,8 +52,7 @@ class TierlistRouterImpl {
           }
 
           const parsedInput = this.#parseInput(req.body);
-          const data = controller.createCookingTierlist(parsedInput);
-          const tieredData = this.#assignTiers(data);
+          const tieredData: TieredPokemonCombinationContribution[] = controller.createCookingTierlist(parsedInput);
           const cookingTierlist = queryAsBoolean(req.query.pretty)
             ? WebsiteConverterService.toTierList(tieredData)
             : tieredData;
@@ -78,8 +78,7 @@ class TierlistRouterImpl {
             previous: queryAsBoolean(req.query.previous),
           };
 
-          const data = await controller.getCookingTierlist(params);
-          const tieredData = this.#assignTiers(data);
+          const tieredData: TieredPokemonCombinationContribution[] = await controller.getCookingTierlist(params);
           const cookingTierlist = queryAsBoolean(req.query.pretty)
             ? WebsiteConverterService.toTierList(tieredData)
             : tieredData;
@@ -106,33 +105,6 @@ class TierlistRouterImpl {
       dessert: queryAsBoolean(input.dessert),
     };
     return parsedInput;
-  }
-
-  #assignTiers(data: PokemonCombinationCombinedContribution[]) {
-    const tiers: { tier: string; bucket: number }[] = [
-      { tier: 'S', bucket: 0.9 },
-      { tier: 'A', bucket: 0.8 },
-      { tier: 'B', bucket: 0.8 },
-      { tier: 'C', bucket: 0.85 },
-      { tier: 'D', bucket: 0.85 },
-      { tier: 'E', bucket: 0.9 },
-    ];
-
-    let threshold = data[0].combinedContribution.score;
-
-    const tieredEntries: { tier: string; pokemonCombinationContribution: PokemonCombinationCombinedContribution }[] =
-      [];
-    for (const entry of data) {
-      let currentTier = tiers.at(0);
-      if (currentTier && entry.combinedContribution.score < currentTier.bucket * threshold) {
-        threshold = entry.combinedContribution.score;
-        tiers.shift();
-        currentTier = tiers.at(0);
-      }
-
-      tieredEntries.push({ tier: currentTier?.tier ?? 'F', pokemonCombinationContribution: entry });
-    }
-    return tieredEntries;
   }
 }
 

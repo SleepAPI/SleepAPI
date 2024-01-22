@@ -1,4 +1,4 @@
-import { CookingTierlistService } from '../../services/api-service/tierlist/cooking-tierlist-service';
+import { TierlistService } from '../../services/api-service/tierlist/tierlist-service';
 import { BuddyCombinationDAO } from '../dao/buddy/buddy-combination-dao';
 import { BuddyCombinationForMealDAO } from '../dao/buddy/buddy-combination-for-meal-dao';
 import { BuddyCombinationForMeal30DAO } from '../dao/buddy/buddy-combination-for-meal30-dao';
@@ -16,7 +16,7 @@ const DataSeed = new (class {
     await PokemonCombinationForMeal30DAO.seed(enableLogging);
 
     if (!skipLongSeedJobs) {
-      await CookingTierlistService.seed();
+      await TierlistService.seed();
 
       await BuddyCombinationDAO.seed();
       await BuddyCombination30DAO.seed();
