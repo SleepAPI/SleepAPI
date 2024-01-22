@@ -191,6 +191,9 @@ class WebsiteConverterServiceImpl {
         rank: i + 1,
         meals,
         countedMeals,
+        prettyPokemonCombination: `${
+          pokemonCombinationWithContribution.pokemonCombination.pokemon.name
+        } (${prettifyIngredientDrop(pokemonCombinationWithContribution.pokemonCombination.ingredientList)})`,
         input: this.#prettifyInput(pokemonCombinationWithContribution.input),
       };
     });

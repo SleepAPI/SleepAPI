@@ -290,14 +290,19 @@ function goToOptimalFlexible() {
         headers,
         data,
         function (entry) {
-          return `Rank: ${entry.rank}\nScore: ${entry.score}`;
+          return `[#${entry.rank}]`;
         },
         function (entry) {
-          let prettyString = 'Recipes\n\n';
+          let prettyString = '👨🏻‍🍳 Sleep API - Flexibility Ranking 👨🏻‍🍳\n\n';
+          prettyString += `${entry.prettyPokemonCombination}\n`;
+          prettyString += `Rank: ${entry.rank}\n`;
+          prettyString += `Score: ${entry.score}`;
+          prettyString += entry.input;
+
           for (meal of entry.countedMeals) {
             prettyString += meal + '\n';
           }
-          prettyString += entry.input + '\n';
+
           return prettyString;
         },
         function (btn, entry) {
@@ -305,8 +310,8 @@ function goToOptimalFlexible() {
           img.src = `./pokemon/${entry.pokemon.toLowerCase()}.png`;
           img.className = 'img-fluid';
           img.onload = function () {
-            img.style.width = img.naturalWidth * 0.5 + 'px';
-            img.style.height = img.naturalHeight * 0.5 + 'px';
+            img.style.width = img.naturalWidth * 0.3 + 'px';
+            img.style.height = img.naturalHeight * 0.3 + 'px';
           };
           btn.appendChild(img);
 
