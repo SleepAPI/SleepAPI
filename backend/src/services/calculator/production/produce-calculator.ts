@@ -32,7 +32,6 @@ export function calculateProduceForSpecificTimeWindow(params: {
   goodCamp?: boolean;
   helpingBonus?: number;
   e4eProcs?: number;
-  customEnergyFactor?: number;
 }): Produce {
   const {
     averagedPokemonCombination,
@@ -43,7 +42,6 @@ export function calculateProduceForSpecificTimeWindow(params: {
     goodCamp = false,
     helpingBonus = 0,
     e4eProcs = 0,
-    customEnergyFactor,
   } = params;
 
   if (customStats.level > 100 || customStats.level < 1) {
@@ -59,7 +57,6 @@ export function calculateProduceForSpecificTimeWindow(params: {
     customStats,
     nrOfHelpingBonus: helpingBonus,
     e4eProcs,
-    customEnergyFactor,
   });
   const helpsPerTimeWindow = (SECONDS_IN_HOUR / calculatedfrequency) * timeWindow;
 

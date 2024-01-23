@@ -45,7 +45,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage,
       customStats: { level: 30, nature: RASH, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow: 6,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
@@ -88,7 +88,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage,
       customStats: { level: 30, nature: RASH, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow: 6,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
@@ -131,7 +131,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage: ingredientPercentage,
       customStats: { level: 30, nature: RASH, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow: 6,
     });
     expect(combineSameIngredientsInDrop(calculatedIngredients.ingredients)).toMatchInlineSnapshot(`
@@ -174,7 +174,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage,
       customStats: { level: 30, nature: RASH, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow: 6,
     });
     expect(combineSameIngredientsInDrop(calculatedIngredients.ingredients)).toMatchInlineSnapshot(`
@@ -215,7 +215,7 @@ describe('calculateProduceInTimeWindow', () => {
       customStats: { subskills, nature, level },
       timeWindow,
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
@@ -264,7 +264,7 @@ describe('calculateProduceInTimeWindow', () => {
       customStats: { subskills, nature, level },
       timeWindow,
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
@@ -313,7 +313,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage,
       customStats: { level, nature, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
@@ -362,7 +362,7 @@ describe('calculateProduceInTimeWindow', () => {
       ingredientPercentage,
       customStats: { level, nature, subskills },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
+      e4eProcs: 10,
       timeWindow,
     });
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
