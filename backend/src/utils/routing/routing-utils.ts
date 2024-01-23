@@ -1,13 +1,5 @@
 import { Response } from 'express';
 
-interface QueryToCSVFileName {
-  level?: number;
-  advanced?: boolean;
-  unlocked?: boolean;
-  lategame?: boolean;
-  nrOfMeals?: number;
-}
-
 export function queryAsBoolean(value: string | boolean | undefined): boolean {
   return (value + '').toLowerCase() === 'true';
 }
@@ -16,24 +8,12 @@ export function queryAsNumber(value: string | number | undefined): number | unde
   return value ? +value : undefined;
 }
 
-export function queryParamsToString(params: QueryToCSVFileName): string {
+export function queryParamsToString(level: number): string {
   let result = '';
-  const { level, advanced, unlocked, lategame, nrOfMeals } = params;
   if (queryAsNumber(level)) {
     result += `-level${level}`;
   }
-  if (queryAsBoolean(advanced)) {
-    result += '-advanced';
-  }
-  if (queryAsBoolean(unlocked)) {
-    result += '-unlocked';
-  }
-  if (queryAsBoolean(lategame)) {
-    result += '-lategame';
-  }
-  if (queryAsNumber(nrOfMeals)) {
-    result += '-nrOfMeals';
-  }
+
   return result;
 }
 

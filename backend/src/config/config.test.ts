@@ -12,9 +12,9 @@ describe('config', () => {
         "DB_PASS": undefined,
         "DB_PORT": undefined,
         "DB_USER": undefined,
+        "GENERATE_TIERLIST": false,
         "NODE_ENV": "DEV",
         "PORT": 3000,
-        "SECRET": undefined,
       }
     `);
   });

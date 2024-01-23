@@ -600,60 +600,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetPokemonQueryParams": {
-				"properties": {
-					"cyan": {
-						"type": "boolean"
-					},
-					"taupe": {
-						"type": "boolean"
-					},
-					"snowdrop": {
-						"type": "boolean"
-					},
-					"lapis": {
-						"type": "boolean"
-					},
-					"csv": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MealsForPokemonRequestQueryParams": {
-				"properties": {
-					"limit30": {
-						"type": "boolean"
-					},
-					"advanced": {
-						"type": "boolean"
-					},
-					"unlocked": {
-						"type": "boolean"
-					},
-					"lategame": {
-						"type": "boolean"
-					},
-					"curry": {
-						"type": "boolean"
-					},
-					"salad": {
-						"type": "boolean"
-					},
-					"dessert": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					},
-					"csv": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"CombinedContribution": {
 				"properties": {
 					"contributions": {
@@ -849,15 +795,6 @@
 			},
 			"MealNamesQueryParams": {
 				"properties": {
-					"advanced": {
-						"type": "boolean"
-					},
-					"unlocked": {
-						"type": "boolean"
-					},
-					"lategame": {
-						"type": "boolean"
-					},
 					"curry": {
 						"type": "boolean"
 					},
@@ -874,123 +811,8 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CombinationForMealType": {
+			"GetPokemonQueryParams": {
 				"properties": {
-					"pokemon": {
-						"type": "string"
-					},
-					"percentage": {
-						"type": "string"
-					},
-					"contributedPower": {
-						"type": "string"
-					},
-					"ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"producedIngredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"pokemon",
-					"percentage",
-					"contributedPower",
-					"ingredientList",
-					"producedIngredients"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AllCombinationsForMealType": {
-				"properties": {
-					"meal": {
-						"type": "string"
-					},
-					"bonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"recipe": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"combinations": {
-						"items": {
-							"$ref": "#/components/schemas/CombinationForMealType"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"meal",
-					"bonus",
-					"value",
-					"recipe",
-					"combinations"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MealRankingQueryParams": {
-				"properties": {
-					"limit30": {
-						"type": "boolean"
-					},
-					"island": {
-						"type": "string"
-					},
-					"csv": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CombinationForFlexibleRankingType": {
-				"properties": {
-					"pokemon": {
-						"type": "string"
-					},
-					"averagePercentage": {
-						"type": "number",
-						"format": "double"
-					},
-					"ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"pokemon",
-					"averagePercentage",
-					"ingredientList"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"FilteredMealsQueryParams": {
-				"properties": {
-					"limit30": {
-						"type": "boolean"
-					},
 					"cyan": {
 						"type": "boolean"
 					},
@@ -1003,233 +825,12 @@
 					"lapis": {
 						"type": "boolean"
 					},
-					"advanced": {
-						"type": "boolean"
-					},
-					"unlocked": {
-						"type": "boolean"
-					},
-					"lategame": {
-						"type": "boolean"
-					},
-					"curry": {
-						"type": "boolean"
-					},
-					"salad": {
-						"type": "boolean"
-					},
-					"dessert": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					},
 					"csv": {
 						"type": "boolean"
 					}
 				},
 				"type": "object",
 				"additionalProperties": false
-			},
-			"CombinationForFocusedRankingType": {
-				"properties": {
-					"pokemon": {
-						"type": "string"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"meals": {
-						"type": "string"
-					},
-					"ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"pokemon",
-					"total",
-					"meals",
-					"ingredientList"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"FilteredExtQueryParams": {
-				"properties": {
-					"limit30": {
-						"type": "boolean"
-					},
-					"cyan": {
-						"type": "boolean"
-					},
-					"taupe": {
-						"type": "boolean"
-					},
-					"snowdrop": {
-						"type": "boolean"
-					},
-					"lapis": {
-						"type": "boolean"
-					},
-					"advanced": {
-						"type": "boolean"
-					},
-					"unlocked": {
-						"type": "boolean"
-					},
-					"lategame": {
-						"type": "boolean"
-					},
-					"curry": {
-						"type": "boolean"
-					},
-					"salad": {
-						"type": "boolean"
-					},
-					"dessert": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					},
-					"csv": {
-						"type": "boolean"
-					},
-					"nrOfMeals": {
-						"type": "number",
-						"format": "double"
-					},
-					"page": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"BuddyForFlexibleRanking": {
-				"properties": {
-					"buddy2_ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"buddy2_pokemon": {
-						"type": "string"
-					},
-					"buddy1_ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"buddy1_pokemon": {
-						"type": "string"
-					},
-					"average_percentage": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"buddy2_ingredientList",
-					"buddy2_pokemon",
-					"buddy1_ingredientList",
-					"buddy1_pokemon",
-					"average_percentage"
-				],
-				"type": "object"
-			},
-			"BuddyForMeal": {
-				"properties": {
-					"combinations": {
-						"items": {
-							"properties": {
-								"buddy2_producedIngredients": {
-									"items": {
-										"$ref": "#/components/schemas/IngredientDrop"
-									},
-									"type": "array"
-								},
-								"buddy2_ingredientList": {
-									"items": {
-										"$ref": "#/components/schemas/IngredientDrop"
-									},
-									"type": "array"
-								},
-								"buddy2_pokemon": {
-									"type": "string"
-								},
-								"buddy1_producedIngredients": {
-									"items": {
-										"$ref": "#/components/schemas/IngredientDrop"
-									},
-									"type": "array"
-								},
-								"buddy1_ingredientList": {
-									"items": {
-										"$ref": "#/components/schemas/IngredientDrop"
-									},
-									"type": "array"
-								},
-								"buddy1_pokemon": {
-									"type": "string"
-								},
-								"contributed_power": {
-									"type": "number",
-									"format": "double"
-								},
-								"percentage": {
-									"type": "number",
-									"format": "double"
-								}
-							},
-							"required": [
-								"buddy2_producedIngredients",
-								"buddy2_ingredientList",
-								"buddy2_pokemon",
-								"buddy1_producedIngredients",
-								"buddy1_ingredientList",
-								"buddy1_pokemon",
-								"contributed_power",
-								"percentage"
-							],
-							"type": "object"
-						},
-						"type": "array"
-					},
-					"recipe": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
-						},
-						"type": "array"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"bonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"meal": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"combinations",
-					"recipe",
-					"value",
-					"bonus",
-					"meal"
-				],
-				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -1385,176 +986,6 @@
 						}
 					}
 				}
-			}
-		},
-		"/api/pokemon": {
-			"get": {
-				"operationId": "GetPokemon",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"pokemon"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "cyan",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "taupe",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "snowdrop",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lapis",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					}
-				]
-			}
-		},
-		"/api/pokemon/{name}": {
-			"get": {
-				"operationId": "GetPokemonRankingRaw",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"legacy"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit30",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "advanced",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "unlocked",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lategame",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "curry",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "salad",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "dessert",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					}
-				]
 			}
 		},
 		"/api/tierlist/cooking": {
@@ -1763,30 +1194,6 @@
 				"parameters": [
 					{
 						"in": "query",
-						"name": "advanced",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "unlocked",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lategame",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
 						"name": "curry",
 						"required": false,
 						"schema": {
@@ -1812,69 +1219,6 @@
 					{
 						"in": "query",
 						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					}
-				]
-			}
-		},
-		"/api/meal/{name}": {
-			"get": {
-				"operationId": "GetMealRankingRaw",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AllCombinationsForMealType"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"legacy"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit30",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "island",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
 						"required": false,
 						"schema": {
 							"type": "boolean"
@@ -1908,9 +1252,9 @@
 				"parameters": []
 			}
 		},
-		"/api/ranking/meal/flexible": {
+		"/api/pokemon": {
 			"get": {
-				"operationId": "GetMealGeneralistRankingRaw",
+				"operationId": "GetPokemon",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -1918,7 +1262,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/CombinationForFlexibleRankingType"
+										"type": "string"
 									},
 									"type": "array"
 								}
@@ -1927,18 +1271,10 @@
 					}
 				},
 				"tags": [
-					"legacy"
+					"pokemon"
 				],
 				"security": [],
 				"parameters": [
-					{
-						"in": "query",
-						"name": "limit30",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
 					{
 						"in": "query",
 						"name": "cyan",
@@ -1973,214 +1309,10 @@
 					},
 					{
 						"in": "query",
-						"name": "advanced",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "unlocked",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lategame",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "curry",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "salad",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "dessert",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
 						"name": "csv",
 						"required": false,
 						"schema": {
 							"type": "boolean"
-						}
-					}
-				]
-			}
-		},
-		"/api/ranking/meal/focused": {
-			"get": {
-				"operationId": "GetMealFocusedRankingRaw",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/CombinationForFocusedRankingType"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"legacy"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "limit30",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "cyan",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "taupe",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "snowdrop",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lapis",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "advanced",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "unlocked",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "lategame",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "curry",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "salad",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "dessert",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "nrOfMeals",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
 						}
 					}
 				]

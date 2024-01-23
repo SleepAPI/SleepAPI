@@ -78,7 +78,7 @@ class OptimalCombinationRouterImpl {
               return res.status(500).send('CSV inaccessible for quota reasons, contact admin if you need access');
             }
             const optimalData = CSVConverterService.toOptimalSet(data);
-            respondWithCSV(res, optimalData, `optimal-${mealName}${queryParamsToString(req.body)}`);
+            respondWithCSV(res, optimalData, `optimal-${mealName}${queryParamsToString(req.body.level ?? 60)}`);
           } else if (queryAsBoolean(pretty)) {
             const optimalData = WebsiteConverterService.toOptimalSet(data);
             res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
