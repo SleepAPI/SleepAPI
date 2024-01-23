@@ -223,8 +223,8 @@ export const DREAM_EATER_BUTTER_CURRY: Meal = {
 
 export const INFERNO_CORN_KEEMA_CURRY: Meal = {
   name: 'INFERNO_CORN_KEEMA_CURRY',
-  value: 12488,
-  value50: 30970,
+  value: 13690,
+  value50: 33951,
   type: 'curry',
   ingredients: [
     { amount: 27, ingredient: FIERY_HERB },
@@ -232,7 +232,7 @@ export const INFERNO_CORN_KEEMA_CURRY: Meal = {
     { amount: 14, ingredient: GREENGRASS_CORN },
     { amount: 12, ingredient: WARMING_GINGER },
   ],
-  bonus: 35,
+  bonus: 48,
 };
 
 export const CURRIES: Meal[] = [
@@ -248,10 +248,10 @@ export const CURRIES: Meal[] = [
   BULK_UP_BEAN_CURRY,
   SPORE_MUSHROOM_CURRY,
   EGG_BOMB_CURRY,
-  LIMBER_CORN_STEW,
+  // LIMBER_CORN_STEW,
   SPICY_LEEK_CURRY,
   NINJA_CURRY,
   GRILLED_TAIL_CURRY,
   DREAM_EATER_BUTTER_CURRY,
-  INFERNO_CORN_KEEMA_CURRY,
+  // INFERNO_CORN_KEEMA_CURRY,
 ];

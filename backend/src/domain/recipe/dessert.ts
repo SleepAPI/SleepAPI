@@ -195,15 +195,15 @@ export const NEROLIS_RESTORATIVE_TEA: Meal = {
 
 export const EXPLOSION_POPCORN: Meal = {
   name: 'EXPLOSION_POPCORN',
-  value: 5600,
-  value50: 13888,
+  value: 6048,
+  value50: 14999,
   type: 'dessert',
   ingredients: [
     { amount: 15, ingredient: GREENGRASS_CORN },
     { amount: 14, ingredient: PURE_OIL },
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
-  bonus: 25,
+  bonus: 35,
 };
 
 export const JIGGLYPUFFS_FRUITY_FLAN: Meal = {
@@ -222,8 +222,8 @@ export const JIGGLYPUFFS_FRUITY_FLAN: Meal = {
 
 export const TEATIME_CORN_SCONES: Meal = {
   name: 'TEATIME_CORN_SCONES',
-  value: 9966,
-  value50: 24716,
+  value: 10925,
+  value50: 27094,
   type: 'dessert',
   ingredients: [
     { amount: 20, ingredient: FANCY_APPLE },
@@ -231,7 +231,7 @@ export const TEATIME_CORN_SCONES: Meal = {
     { amount: 18, ingredient: GREENGRASS_CORN },
     { amount: 9, ingredient: MOOMOO_MILK },
   ],
-  bonus: 35,
+  bonus: 48,
 };
 
 export const DESSERTS: Meal[] = [
@@ -250,7 +250,7 @@ export const DESSERTS: Meal[] = [
   LOVELY_KISS_SMOOTHIE,
   STEADFAST_GINGER_COOKIES,
   NEROLIS_RESTORATIVE_TEA,
-  EXPLOSION_POPCORN,
+  // EXPLOSION_POPCORN,
   JIGGLYPUFFS_FRUITY_FLAN,
-  TEATIME_CORN_SCONES,
+  // TEATIME_CORN_SCONES,
 ];
