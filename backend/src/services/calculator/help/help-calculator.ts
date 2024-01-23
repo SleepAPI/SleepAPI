@@ -30,7 +30,6 @@ export function calculateHelpSpeed(stats: {
   nrOfHelpingBonus: number;
   goodCamp: boolean;
   e4eProcs: number;
-  customEnergyFactor?: number;
 }): number {
   const {
     pokemon,
@@ -39,7 +38,6 @@ export function calculateHelpSpeed(stats: {
     nrOfHelpingBonus,
     goodCamp: goodCampActive,
     e4eProcs,
-    customEnergyFactor,
   } = stats;
 
   const helpSpeedSubskills = calculateHelpSpeedSubskills(customStats.subskills, nrOfHelpingBonus);
@@ -47,14 +45,10 @@ export function calculateHelpSpeed(stats: {
   const natureFreq = invertNatureFrequecy(customStats.nature);
   const campBonus = goodCampActive ? 1.2 : 1;
 
-  const energyFactor = customEnergyFactor
-    ? customEnergyFactor
-    : dayOrNight === 'DAY'
-    ? calculateAwakeAverageEnergyCoefficient(e4eProcs)
-    : calculateAsleepAverageEnergyCoefficient(
-        Math.floor(roundDown(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency) / campBonus,
-        e4eProcs
-      );
+  const energyFactor =
+    dayOrNight === 'DAY'
+      ? calculateAwakeAverageEnergyCoefficient(e4eProcs)
+      : calculateAsleepAverageEnergyCoefficient(e4eProcs);
 
   return Math.floor(
     (roundDown(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency * energyFactor) / campBonus

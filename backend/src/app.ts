@@ -46,7 +46,7 @@ async function main() {
 
   // Tierlist
   if (config.GENERATE_TIERLIST) {
-    TierlistService.seed();
+    await TierlistService.seed();
   }
 
   // Router

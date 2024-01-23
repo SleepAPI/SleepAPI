@@ -206,9 +206,6 @@
 					"bonus": {
 						"type": "number",
 						"format": "double"
-					},
-					"unlockables": {
-						"type": "boolean"
 					}
 				},
 				"required": [
@@ -217,8 +214,7 @@
 					"value50",
 					"type",
 					"ingredients",
-					"bonus",
-					"unlockables"
+					"bonus"
 				],
 				"type": "object",
 				"additionalProperties": false

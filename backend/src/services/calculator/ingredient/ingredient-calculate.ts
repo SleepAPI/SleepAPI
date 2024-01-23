@@ -206,6 +206,7 @@ export function calculateProducePerMealWindow(params: {
     e4eProcs,
   });
 
+  // TODO: we still need to split day and night since we need to clamp night to inventory, but night will be much lower
   const nighttimeProduce = calculateProduceForSpecificTimeWindow({
     averagedPokemonCombination,
     ingredientPercentage,

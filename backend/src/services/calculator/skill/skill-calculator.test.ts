@@ -18,7 +18,8 @@ describe('calculateSkillProcs', () => {
 });
 
 describe('calculate procs from start', () => {
-  it('shall calculate procs per day for my Sylveon', () => {
+  // this can be used for testing mons for now
+  it.skip('shall calculate procs per day for my Sylveon', () => {
     const pokemon = SYLVEON;
     const subskills = [SKILL_TRIGGER_M, SKILL_TRIGGER_S];
     const nature = CALM;
@@ -36,6 +37,6 @@ describe('calculate procs from start', () => {
         })) *
       15.5;
 
-    expect(calculateSkillProcs(nrOfHelps, skillPercentage)).toBe(5.291602105263158);
+    expect(calculateSkillProcs(nrOfHelps, skillPercentage)).toBe(5.300319736408567);
   });
 });

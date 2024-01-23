@@ -9,10 +9,9 @@ describe('calculateHelpSpeed', () => {
       pokemon: VICTREEBEL,
       customStats: { level: 30, nature: RASH, subskills: [HELPING_SPEED_M] },
       energyPeriod: 'CUSTOM',
-      customEnergyFactor: 0.45,
       goodCamp: false,
       nrOfHelpingBonus: 0,
-      e4eProcs: 0,
+      e4eProcs: 10,
     });
 
     expect(result).toBe(1020);
