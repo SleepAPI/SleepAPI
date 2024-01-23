@@ -19,7 +19,6 @@ export interface SurplusIngredients {
   extra: IngredientDrop[];
 }
 
-// --- contribution --- //
 export interface PokemonCombinationContributions {
   pokemonCombination: PokemonCombination;
   contributions: Contribution[];

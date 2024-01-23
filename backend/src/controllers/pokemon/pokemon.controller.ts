@@ -1,6 +1,5 @@
-import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
-import { GetPokemonQueryParams, MealsForPokemonRequestQueryParams } from '../../routes/pokemon-router/pokemon-router';
-import { getPokemonCombinationData } from '../../services/api-service/pokemon-ranking';
+import { Controller, Get, Queries, Route, Tags } from 'tsoa';
+import { GetPokemonQueryParams } from '../../routes/pokemon-router/pokemon-router';
 import { getPokemonNames } from '../../utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
 
@@ -16,22 +15,5 @@ export default class PokemonController extends Controller {
       lapis: queryAsBoolean(queryParams.lapis),
     };
     return getPokemonNames(params);
-  }
-
-  // TODO: move to legacy
-  @Get('{name}')
-  @Tags('legacy')
-  public async getPokemonRankingRaw(@Path() name: string, @Queries() queryParams: MealsForPokemonRequestQueryParams) {
-    const params = {
-      name: name,
-      limit30: queryAsBoolean(queryParams.limit30),
-      advanced: queryAsBoolean(queryParams.advanced),
-      unlocked: queryAsBoolean(queryParams.unlocked),
-      lategame: queryAsBoolean(queryParams.lategame),
-      curry: queryAsBoolean(queryParams.curry),
-      salad: queryAsBoolean(queryParams.salad),
-      dessert: queryAsBoolean(queryParams.dessert),
-    };
-    return getPokemonCombinationData(params);
   }
 }

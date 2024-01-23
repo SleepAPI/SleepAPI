@@ -1,22 +1,14 @@
 import { SurplusIngredients } from '../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { ProductionStats } from '../../domain/computed/production';
-import { BuddyForFlexibleRanking, BuddyForMeal } from '../../domain/legacy/buddy-types';
-import {
-  AllCombinationsForMealType,
-  CombinationForFlexibleRankingType,
-  CombinationForFocusedRankingType,
-} from '../../domain/legacy/legacy';
 import { IngredientDrop } from '../../domain/produce/ingredient';
 import { Nature } from '../../domain/stat/nature';
 import { SubSkill } from '../../domain/stat/subskill';
 import { OptimalFlexibleResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router';
-import { PokemonResult } from '../../routes/pokemon-router/pokemon-router';
 import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../../services/api-service/optimal/optimal-service';
 import { roundDown } from '../../utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '../../utils/json/json-utils';
-import { combineSameIngredientsInDrop } from '../calculator/ingredient/ingredient-calculate';
 
 // --- production calculator
 interface ProductionFilters {
@@ -197,101 +189,6 @@ class WebsiteConverterServiceImpl {
         input: this.#prettifyInput(pokemonCombinationWithContribution.input),
       };
     });
-  }
-
-  public toFlexibleRanking(data: CombinationForFlexibleRankingType[]) {
-    const prettifiedCombinations = data.map((combination, i) => {
-      return `#${i + 1}: ${combination.pokemon} - AVG%(${roundDown(
-        combination.averagePercentage,
-        1
-      )}%) - ${prettifyIngredientDrop(combination.ingredientList)}`;
-    });
-    return prettifiedCombinations;
-  }
-
-  public toFocusedRanking(data: CombinationForFocusedRankingType[]) {
-    const prettifiedCombinations = data.map((combination, i) => {
-      return `#${i + 1}: ${combination.pokemon} ${combination.total} - (${
-        combination.meals
-      }) - ${prettifyIngredientDrop(combination.ingredientList)}`;
-    });
-    return prettifiedCombinations;
-  }
-
-  public toFlexibleBuddyRanking(data: BuddyForFlexibleRanking[], queryPage?: number) {
-    const page = queryPage ?? 1;
-    const offset = page * 10 - 10;
-
-    const prettifiedCombinations = data.map((combination, i) => {
-      return `#${i + 1 + offset} [${combination.buddy1_pokemon}+${combination.buddy2_pokemon}] - AVG%(${roundDown(
-        combination.average_percentage,
-        1
-      )}%) - [${prettifyIngredientDrop(combination.buddy1_ingredientList)} + ${prettifyIngredientDrop(
-        combination.buddy2_ingredientList
-      )}]`;
-    });
-    return prettifiedCombinations;
-  }
-
-  public toMealRanking(data: AllCombinationsForMealType) {
-    const prettifiedRecipe = prettifyIngredientDrop(data.recipe);
-    const prettifiedCombinations = data.combinations.map((combination, i) => {
-      return `#${i + 1}: ${combination.pokemon} ${combination.percentage}% (${prettifyIngredientDrop(
-        combination.producedIngredients.map((ing) => ({
-          amount: roundDown(ing.amount, 1),
-          ingredient: ing.ingredient,
-        }))
-      )}) - (${prettifyIngredientDrop(combination.ingredientList)})`;
-    });
-    return {
-      meal: data.meal,
-      recipe: prettifiedRecipe,
-      bonus: data.bonus,
-      value: data.value,
-      combinations: prettifiedCombinations,
-    };
-  }
-
-  public toPokemonRanking(data: PokemonResult[]) {
-    return data.map((pokemonCombination) => {
-      return {
-        pokemon: pokemonCombination.pokemon,
-        ingredientList: prettifyIngredientDrop(pokemonCombination.ingredientList),
-        ingredientsProduced: prettifyIngredientDrop(
-          pokemonCombination.ingredientsProduced.map((ing) => ({
-            amount: roundDown(ing.amount, 1),
-            ingredient: ing.ingredient,
-          }))
-        ),
-        generalist_ranking: pokemonCombination.generalistRanking,
-        average_percentage: `${pokemonCombination.averagePercentage}%`,
-        meals: pokemonCombination.meals.map((meal) => `${meal.percentage}% ${meal.meal}`),
-      };
-    });
-  }
-
-  public toBuddyForMealRanking(data: BuddyForMeal, queryPage?: number) {
-    const page = queryPage ?? 1;
-    const offset = page * 100 - 100;
-
-    return {
-      meal: data.meal,
-      recipe: prettifyIngredientDrop(data.recipe),
-      bonus: data.bonus,
-      value: data.value,
-      buddies: data.combinations.map((combination, i) => {
-        return `#${i + 1 + offset} [${combination.buddy1_pokemon}+${combination.buddy2_pokemon}] ${
-          combination.percentage
-        }% (${prettifyIngredientDrop(
-          combineSameIngredientsInDrop([
-            ...combination.buddy1_producedIngredients,
-            ...combination.buddy2_producedIngredients,
-          ])
-        )}) - [${prettifyIngredientDrop(combination.buddy1_ingredientList)} + ${prettifyIngredientDrop(
-          combination.buddy2_ingredientList
-        )}]`;
-      }),
-    };
   }
 
   #prettifyProductionDetails(productionCombination: ProductionCombination) {

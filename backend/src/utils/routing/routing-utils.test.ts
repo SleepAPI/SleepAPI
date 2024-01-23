@@ -37,18 +37,7 @@ describe('queryAsNumber', () => {
 });
 
 describe('queryParamsToString', () => {
-  it('shall handle empty params', () => {
-    expect(queryParamsToString({})).toBe('');
-  });
-
-  it('shall handle all params', () => {
-    const params = {
-      level: 5,
-      advanced: true,
-      unlocked: false,
-      lategame: true,
-      nrOfMeals: 3,
-    };
-    expect(queryParamsToString(params)).toBe('-level5-advanced-lategame-nrOfMeals');
+  it('shall append level', () => {
+    expect(queryParamsToString(30)).toBe('-level30');
   });
 });

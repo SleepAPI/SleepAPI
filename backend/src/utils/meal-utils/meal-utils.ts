@@ -1,5 +1,5 @@
 import { MealError } from '../../domain/error/meal/meal-error';
-import { ADVANCED_MEALS, ADVANCED_UNLOCKED_MEALS, LATEGAME_MEALS, MEALS, Meal } from '../../domain/recipe/meal';
+import { MEALS, Meal } from '../../domain/recipe/meal';
 
 export function getMeal(name: string) {
   const meal: Meal | undefined = MEALS.find((meal) => meal.name === name.toUpperCase());
@@ -9,31 +9,16 @@ export function getMeal(name: string) {
   return meal;
 }
 
-export function getMealsForFilter(params: {
-  advanced: boolean;
-  unlocked: boolean;
-  lategame: boolean;
-  curry: boolean;
-  salad: boolean;
-  dessert: boolean;
-}) {
-  const { advanced, unlocked, lategame, curry, salad, dessert } = params;
-  let meals = MEALS;
-  if (lategame) {
-    meals = LATEGAME_MEALS;
-  } else if (unlocked) {
-    meals = ADVANCED_UNLOCKED_MEALS;
-  } else if (advanced) {
-    meals = ADVANCED_MEALS;
-  }
+export function getMealsForFilter(params: { curry: boolean; salad: boolean; dessert: boolean }) {
+  const { curry, salad, dessert } = params;
 
   if (curry || salad || dessert) {
-    return meals.filter(
+    return MEALS.filter(
       (meal) =>
         (meal.type === 'curry' && curry) || (meal.type === 'salad' && salad) || (meal.type === 'dessert' && dessert)
     );
   } else {
-    return meals;
+    return MEALS;
   }
 }
 

@@ -12,7 +12,6 @@ import MealController from './controllers/meal/meal.controller';
 import NatureController from './controllers/nature/nature.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
-import RankingController from './controllers/ranking/ranking.controller';
 import SubskillController from './controllers/subskill/subskill.controller';
 import TierlistController from './controllers/tierlist/tierlist.controller';
 import DatabaseMigration from './database/migration/database-migration';
@@ -26,9 +25,9 @@ import { MealRouter } from './routes/meal-router/meal-router';
 import { NatureRouter } from './routes/nature-router/nature-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
 import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
-import { RankingRouter } from './routes/ranking-router/ranking-router';
 import { SubskillRouter } from './routes/subskill-router/subskill-router';
 import { TierlistRouter } from './routes/tierlist-router/tierlist-router';
+import { TierlistService } from './services/api-service/tierlist/tierlist-service';
 import { Logger } from './services/logger/logger';
 
 async function main() {
@@ -38,11 +37,16 @@ async function main() {
   const migration = config.DATABASE_MIGRATION;
   if (migration === 'UP') {
     await DatabaseMigration.migrate();
-    await DataSeed.seed(true);
+    await DataSeed.seed();
   } else if (migration === 'DOWN') {
     await DatabaseMigration.downgrade();
   } else {
     Logger.info('Skipping database migration, set DATABASE_MIGRATION env to UP/DOWN');
+  }
+
+  // Tierlist
+  if (config.GENERATE_TIERLIST) {
+    TierlistService.seed();
   }
 
   // Router
@@ -73,7 +77,6 @@ async function main() {
   // Register routes
   HealthRouter.register(new HealthController());
   MealRouter.register(new MealController());
-  RankingRouter.register(new RankingController());
   PokemonRouter.register(new PokemonController());
   OptimalCombinationRouter.register(new OptimalController());
   ProductionRouter.register(new ProductionController());

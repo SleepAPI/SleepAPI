@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import PokemonController from '../../controllers/pokemon/pokemon.controller';
 import { IngredientDrop } from '../../domain/produce/ingredient';
-import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
 import { Logger } from '../../services/logger/logger';
-import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean, respondWithCSV } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
 
@@ -17,9 +15,6 @@ export interface GetPokemonQueryParams {
 
 export interface MealsForPokemonRequestQueryParams {
   limit30?: boolean;
-  advanced?: boolean;
-  unlocked?: boolean;
-  lategame?: boolean;
   curry?: boolean;
   salad?: boolean;
   dessert?: boolean;
@@ -53,32 +48,6 @@ class PokemonRouterImpl {
             respondWithCSV(res, data, 'pokemon');
           } else {
             res.header('Content-Type', 'application/json').send(JSON.stringify(pokemonData, null, 4));
-          }
-        } catch (err) {
-          Logger.error(err as Error);
-          res.status(500).send('Something went wrong');
-        }
-      }
-    );
-
-    BaseRouter.router.get(
-      '/pokemon/:name',
-      async (req: Request<{ name: string }, unknown, unknown, MealsForPokemonRequestQueryParams>, res: Response) => {
-        try {
-          Logger.log('Entered /pokemon/:name');
-          const { pretty, csv } = req.query;
-          const { name } = req.params;
-
-          const data: PokemonResult[] = await controller.getPokemonRankingRaw(name, req.query);
-
-          if (queryAsBoolean(csv)) {
-            const pokemonData = CSVConverterService.toPokemonRanking(data);
-            respondWithCSV(res, pokemonData, name);
-          } else if (queryAsBoolean(pretty)) {
-            const pokemonData = WebsiteConverterService.toPokemonRanking(data);
-            res.header('Content-Type', 'application/json').send(JSON.stringify(pokemonData, null, 4));
-          } else {
-            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
           }
         } catch (err) {
           Logger.error(err as Error);
