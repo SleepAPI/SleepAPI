@@ -499,6 +499,49 @@ export const HERACROSS: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
+export const RALTS: Pokemon = {
+  name: 'RALTS',
+  specialty: 'skill',
+  frequency: toSeconds(1, 20, 0),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  berry: MAGO,
+  carrySize: 9,
+  maxCarrySize: 9,
+  // TODO: add ing list
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  ingredient60: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  skill: ENERGY_FOR_EVERYONE,
+};
+
+export const KIRLIA: Pokemon = {
+  ...RALTS,
+  name: 'KIRLIA',
+  frequency: toSeconds(0, 58, 20),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 13,
+  maxCarrySize: 18,
+};
+
+export const GARDEVOIR: Pokemon = {
+  ...RALTS,
+  name: 'GARDEVOIR',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 18,
+  maxCarrySize: 28,
+};
+
 export const SABLEYE: Pokemon = {
   name: 'SABLEYE',
   specialty: 'skill',
@@ -649,6 +692,18 @@ export const GLACEON: Pokemon = {
   skill: COOKING_POWER_UP_S,
 };
 
+export const GALLADE: Pokemon = {
+  ...RALTS,
+  name: 'GALLADE',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 19,
+  maxCarrySize: 29,
+  berry: CHERI,
+  skill: EXTRA_HELPFUL_S,
+};
+
 export const SYLVEON: Pokemon = {
   ...EEVEE,
   name: 'SYLVEON',
@@ -678,6 +733,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   SLOWKING,
   WOBBUFFET,
   HERACROSS,
+  GARDEVOIR,
   SABLEYE,
   SWALOT,
   LUCARIO,
@@ -685,6 +741,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   TOGEKISS,
   LEAFEON,
   GLACEON,
+  GALLADE,
   SYLVEON,
 ];
 
@@ -702,6 +759,8 @@ export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [
   TOGETIC,
   MAREEP,
   FLAAFFY,
+  RALTS,
+  KIRLIA,
   GULPIN,
   WYNAUT,
   BONSLY,

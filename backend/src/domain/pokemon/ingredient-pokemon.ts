@@ -1,6 +1,7 @@
 import { toSeconds } from '../../utils/time-utils/time-utils';
 import {
   BLUK,
+  CHERI,
   CHESTO,
   DURIN,
   FIGY,
@@ -13,6 +14,7 @@ import {
   RAWST,
   SITRUS,
   WIKI,
+  YACHE,
 } from '../produce/berry';
 import {
   BEAN_SAUSAGE,
@@ -405,6 +407,48 @@ export const DITTO: Pokemon = {
   ],
   skill: CHARGE_STRENGTH_S_RANGE,
 };
+export const DRATINI: Pokemon = {
+  name: 'DRATINI',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 23, 20),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  berry: YACHE,
+  carrySize: 9,
+  maxCarrySize: 9,
+  // TODO: add ing list
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  ingredient60: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  skill: CHARGE_STRENGTH_S,
+};
+
+export const DRAGONAIR: Pokemon = {
+  ...DRATINI,
+  name: 'DRAGONAIR',
+  frequency: toSeconds(1, 3, 20),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 12,
+  maxCarrySize: 17,
+};
+
+export const DRAGONITE: Pokemon = {
+  ...DRATINI,
+  name: 'DRAGONITE',
+  frequency: toSeconds(0, 43, 20),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 20,
+  maxCarrySize: 30,
+};
 
 export const DELIBIRD: Pokemon = {
   name: 'DELIBIRD',
@@ -566,6 +610,40 @@ export const ABOMASNOW: Pokemon = {
   maxCarrySize: 26,
 };
 
+export const STUFFUL: Pokemon = {
+  name: 'STUFFUL',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 8, 20),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 0, // TODO: missing
+  berry: CHERI,
+  carrySize: 13,
+  maxCarrySize: 13,
+  // TODO: add ing list
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  ingredient60: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  skill: CHARGE_STRENGTH_S_RANGE,
+};
+
+export const BEWEAR: Pokemon = {
+  ...STUFFUL,
+  name: 'BEWEAR',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 20, // TODO: missing
+  skillPercentage: 2, // TODO: missing
+  carrySize: 20,
+  maxCarrySize: 25,
+};
+
+// TODO: re-order
 export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   ABOMASNOW,
   VENUSAUR,
@@ -584,6 +662,8 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   PINSIR,
   TOXICROAK,
   MR_MIME,
+  DRAGONITE,
+  BEWEAR,
 ];
 
 export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
@@ -600,10 +680,13 @@ export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
   GRAVELER,
   GASTLY,
   HAUNTER,
+  DRATINI,
+  DRAGONAIR,
   LARVITAR,
   MIME_JR,
   CROAGUNK,
   SNOVER,
+  STUFFUL,
 ];
 
 export const ALL_INGREDIENT_SPECIALISTS: Pokemon[] = [
