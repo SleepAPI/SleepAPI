@@ -24,6 +24,10 @@ describe('calculateAwakeAverageEnergyCoefficient', () => {
   it('shall calculate average awake energy coeff 5 e4e', () => {
     expect(calculateAwakeAverageEnergyCoefficient(5)).toBe(0.44999999999999996);
   });
+
+  it('shall fallback average awake energy to 100% if >5 e4e', () => {
+    expect(calculateAwakeAverageEnergyCoefficient(6)).toBe(0.45);
+  });
 });
 
 describe('calculateAsleepAverageEnergyCoefficient', () => {
@@ -49,5 +53,9 @@ describe('calculateAsleepAverageEnergyCoefficient', () => {
 
   it('shall calculate sleep coefficient 5 e4e ', () => {
     expect(calculateAsleepAverageEnergyCoefficient(5)).toBe(0.5129273770900924);
+  });
+
+  it('shall fallback average nightly energy to 100% if >5 e4e', () => {
+    expect(calculateAsleepAverageEnergyCoefficient(6)).toBe(0.44999999999999996);
   });
 });
