@@ -45,7 +45,8 @@ class WebsiteConverterServiceImpl {
   }
 
   public toTierList(tieredData: TieredPokemonCombinationContribution[]) {
-    const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; details: string }[]> = new Map();
+    const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; diff: number; details: string }[]> =
+      new Map();
     for (const tieredEntry of tieredData) {
       const allEntriesOfPokemon = tieredData.filter(
         (allPokemon) =>
@@ -58,6 +59,7 @@ class WebsiteConverterServiceImpl {
         ingredientList: prettifyIngredientDrop(
           tieredEntry.pokemonCombinationContribution.pokemonCombination.ingredientList
         ),
+        diff: tieredEntry.diff,
         details: allEntriesOfPokemon
           .map(
             ({ tier, pokemonCombinationContribution: otherPairingsEntry }) =>
@@ -90,7 +92,7 @@ class WebsiteConverterServiceImpl {
 
     const tiersWithPokemonDetails: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
     }[] = [];
     for (const [tier, pokemonWithDetails] of mapWithTiering) {
       tiersWithPokemonDetails.push({ tier, pokemonWithDetails });
@@ -245,11 +247,12 @@ class WebsiteConverterServiceImpl {
   #filterOnlyBest(
     tiersWithPokemonDetails: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
     }[]
   ) {
     const seen = new Set<string>();
-    const filtered: Map<string, { pokemon: string; ingredientList: string; details: string }[]> = new Map();
+    const filtered: Map<string, { pokemon: string; ingredientList: string; diff: number; details: string }[]> =
+      new Map();
     for (const tier of tiersWithPokemonDetails) {
       for (const pokemon of tier.pokemonWithDetails) {
         if (!seen.has(pokemon.pokemon)) {
@@ -268,7 +271,7 @@ class WebsiteConverterServiceImpl {
     }
     const filteredArray: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
     }[] = [];
     for (const [tier, pokemonWithDetails] of filtered) {
       filteredArray.push({ tier, pokemonWithDetails });

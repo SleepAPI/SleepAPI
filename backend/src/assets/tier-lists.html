@@ -165,6 +165,11 @@
       .tierlist-container .btn-f {
         background-color: green;
       }
+
+      .no-padding-btn {
+        --bs-btn-padding-x: 0rem !important;
+        --bs-btn-padding-y: 0rem !important;
+      }
     </style>
 
     <script src="functions.1.1.1.js"></script>
@@ -248,7 +253,7 @@
               var pokemonWithDetails = row[i];
               var modalButton = document.createElement('button');
               modalButton.type = 'button';
-              modalButton.className = 'btn btn-secondary modal-button';
+              modalButton.className = 'btn btn-secondary modal-button no-padding-btn';
               modalButton.dataset.text =
                 `${pokemonWithDetails.pokemon} - INGREDIENT LISTS\n\n` + pokemonWithDetails.details;
               modalButton.style.overflow = 'hidden';
@@ -257,10 +262,30 @@
               img.src = `./pokemon/${pokemonWithDetails.pokemon.toLowerCase()}.png`;
               img.className = 'img-fluid';
               img.style.transform = 'scale(1.5)';
-
               img.alt = pokemonWithDetails.pokemon;
 
+              var diffValue = document.createElement('span');
+              diffValue.style.position = 'absolute';
+              diffValue.style.top = '0';
+              diffValue.style.left = '0';
+              diffValue.style.padding = '0px';
+              diffValue.style.backgroundColor = 'rgba(0, 0, 0, 1)';
+              diffValue.style.padding = '2px 4px';
+              diffValue.style.borderRadius = '0px';
+              diffValue.style.fontSize = '12px';
+
+              if (pokemonWithDetails.diff > 0) {
+                diffValue.innerHTML = `<i class="fa fa-arrow-up" style="color: green;"></i> ${pokemonWithDetails.diff}`;
+              } else if (pokemonWithDetails.diff < 0) {
+                diffValue.innerHTML = `<i class="fa fa-arrow-down" style="color: red;"></i> ${Math.abs(
+                  pokemonWithDetails.diff
+                )}`;
+              } else {
+                diffValue.innerHTML = `<i class="fa fa-minus" style="color: white;"></i> 0`;
+              }
+
               modalButton.appendChild(img);
+              modalButton.appendChild(diffValue);
               btnGroup.appendChild(modalButton);
             }
 
@@ -360,7 +385,13 @@
             <br />
             The tier lists are produced using simulation-based data.<br />
             The underlying algorithms are written by the Sleep API authors, the results are thus not hand-picked. The
-            placements are simply what the data shows.
+            placements are simply what the data shows.<br />
+            <br />
+            The delta rank showing for each Pokémon considers all ingredient lists for all Pokémon. <br />
+            For example let's say previously Golem held rank 3 and 4 and Gengar held rank 5.<br />
+            In the next version Golem holds rank 3 and 5 and Gengar goes up to rank 4.<br />
+            Golem will show no rank change, since its best set was and still is rank 3, but Gengar will show +1 since it
+            now beats one more ingredient set.
           </h4>
           <br />
           <h4>
