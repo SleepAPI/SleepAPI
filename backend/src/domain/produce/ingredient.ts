@@ -87,6 +87,13 @@ export const FIERY_HERB: Ingredient = {
   longName: 'Fiery Herb',
 };
 
+export const GREENGRASS_CORN: Ingredient = {
+  name: 'Corn',
+  value: 140,
+  taxedValue: 57.3,
+  longName: 'Greengrass Corn',
+};
+
 export const SOOTHING_CACAO: Ingredient = {
   name: 'Cacao',
   value: 151,
