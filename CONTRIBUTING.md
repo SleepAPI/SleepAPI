@@ -30,7 +30,7 @@ git commit -m "feat: short description of your task"
 
 ## Pull requests
 
-Please open your pull requests to the develop branch. Please squash and merge your commits to the develop branch. The develop branch requires linear history (no merge commits). You can do this directly from your PR on Github.
+Please open your pull requests to the develop branch. Please rebase merge your commits to the develop branch. The develop branch requires linear history (no merge commits). You can do this directly from your PR on Github.
 
 ## Contributing outside code
 
