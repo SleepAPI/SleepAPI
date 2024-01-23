@@ -3,6 +3,7 @@ import {
   FANCY_APPLE,
   FANCY_EGG,
   FIERY_HERB,
+  GREENGRASS_CORN,
   GREENGRASS_SOYBEANS,
   HONEY,
   LARGE_LEEK,
@@ -24,7 +25,6 @@ export const FANCY_APPLE_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: FANCY_APPLE }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const SIMPLE_CHOWDER: Meal = {
@@ -34,7 +34,6 @@ export const SIMPLE_CHOWDER: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const MILD_HONEY_CURRY: Meal = {
@@ -44,7 +43,6 @@ export const MILD_HONEY_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: HONEY }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const BEANBURGER_CURRY: Meal = {
@@ -54,7 +52,6 @@ export const BEANBURGER_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: BEAN_SAUSAGE }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const HEARTY_CHEESEBURGER_CURRY: Meal = {
@@ -67,7 +64,6 @@ export const HEARTY_CHEESEBURGER_CURRY: Meal = {
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const DROUGHT_KATSU_CURRY: Meal = {
@@ -80,7 +76,6 @@ export const DROUGHT_KATSU_CURRY: Meal = {
     { amount: 5, ingredient: PURE_OIL },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const SOLAR_POWER_TOMATO_CURRY: Meal = {
@@ -93,7 +88,6 @@ export const SOLAR_POWER_TOMATO_CURRY: Meal = {
     { amount: 5, ingredient: FIERY_HERB },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const MELTY_OMELETTE_CURRY: Meal = {
@@ -106,7 +100,6 @@ export const MELTY_OMELETTE_CURRY: Meal = {
     { amount: 6, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const SOFT_POTATO_CHOWDER: Meal = {
@@ -120,7 +113,6 @@ export const SOFT_POTATO_CHOWDER: Meal = {
     { amount: 4, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 17,
-  unlockables: true,
 };
 
 export const BULK_UP_BEAN_CURRY: Meal = {
@@ -135,7 +127,6 @@ export const BULK_UP_BEAN_CURRY: Meal = {
     { amount: 4, ingredient: FANCY_EGG },
   ],
   bonus: 17,
-  unlockables: false,
 };
 
 export const SPORE_MUSHROOM_CURRY: Meal = {
@@ -148,7 +139,6 @@ export const SPORE_MUSHROOM_CURRY: Meal = {
     { amount: 9, ingredient: SOFT_POTATO },
   ],
   bonus: 17,
-  unlockables: true,
 };
 
 export const EGG_BOMB_CURRY: Meal = {
@@ -163,7 +153,19 @@ export const EGG_BOMB_CURRY: Meal = {
     { amount: 4, ingredient: SOFT_POTATO },
   ],
   bonus: 25,
-  unlockables: true,
+};
+
+export const LIMBER_CORN_STEW: Meal = {
+  name: 'LIMBER_CORN_STEW',
+  value: 4670,
+  value50: 11582,
+  type: 'curry',
+  ingredients: [
+    { amount: 14, ingredient: GREENGRASS_CORN },
+    { amount: 8, ingredient: MOOMOO_MILK },
+    { amount: 8, ingredient: SOFT_POTATO },
+  ],
+  bonus: 25,
 };
 
 export const SPICY_LEEK_CURRY: Meal = {
@@ -177,7 +179,6 @@ export const SPICY_LEEK_CURRY: Meal = {
     { amount: 8, ingredient: FIERY_HERB },
   ],
   bonus: 25,
-  unlockables: true,
 };
 
 export const NINJA_CURRY: Meal = {
@@ -192,7 +193,6 @@ export const NINJA_CURRY: Meal = {
     { amount: 5, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 25,
-  unlockables: true,
 };
 
 export const GRILLED_TAIL_CURRY: Meal = {
@@ -205,7 +205,6 @@ export const GRILLED_TAIL_CURRY: Meal = {
     { amount: 25, ingredient: FIERY_HERB },
   ],
   bonus: 25,
-  unlockables: true,
 };
 
 export const DREAM_EATER_BUTTER_CURRY: Meal = {
@@ -220,7 +219,20 @@ export const DREAM_EATER_BUTTER_CURRY: Meal = {
     { amount: 10, ingredient: MOOMOO_MILK },
   ],
   bonus: 35,
-  unlockables: true,
+};
+
+export const INFERNO_CORN_KEEMA_CURRY: Meal = {
+  name: 'INFERNO_CORN_KEEMA_CURRY',
+  value: 12488,
+  value50: 30970,
+  type: 'curry',
+  ingredients: [
+    { amount: 27, ingredient: FIERY_HERB },
+    { amount: 24, ingredient: BEAN_SAUSAGE },
+    { amount: 14, ingredient: GREENGRASS_CORN },
+    { amount: 12, ingredient: WARMING_GINGER },
+  ],
+  bonus: 35,
 };
 
 export const CURRIES: Meal[] = [
@@ -236,8 +248,10 @@ export const CURRIES: Meal[] = [
   BULK_UP_BEAN_CURRY,
   SPORE_MUSHROOM_CURRY,
   EGG_BOMB_CURRY,
+  LIMBER_CORN_STEW,
   SPICY_LEEK_CURRY,
   NINJA_CURRY,
   GRILLED_TAIL_CURRY,
   DREAM_EATER_BUTTER_CURRY,
+  INFERNO_CORN_KEEMA_CURRY,
 ];

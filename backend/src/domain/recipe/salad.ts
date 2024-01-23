@@ -3,7 +3,9 @@ import {
   FANCY_APPLE,
   FANCY_EGG,
   FIERY_HERB,
+  GREENGRASS_CORN,
   GREENGRASS_SOYBEANS,
+  HONEY,
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
@@ -23,7 +25,6 @@ export const FANCY_APPLE_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const BEAN_HAM_SALAD: Meal = {
@@ -33,7 +34,6 @@ export const BEAN_HAM_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: BEAN_SAUSAGE }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const SNOOZY_TOMATO_SALAD: Meal = {
@@ -43,7 +43,6 @@ export const SNOOZY_TOMATO_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: SNOOZY_TOMATO }],
   bonus: 6,
-  unlockables: false,
 };
 
 export const SNOW_CLOAK_CAESAR_SALAD: Meal = {
@@ -56,7 +55,6 @@ export const SNOW_CLOAK_CAESAR_SALAD: Meal = {
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const WATER_VEIL_TOFU_SALAD: Meal = {
@@ -69,7 +67,6 @@ export const WATER_VEIL_TOFU_SALAD: Meal = {
     { amount: 6, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 11,
-  unlockables: false,
 };
 
 export const HEAT_WAVE_TOFU_SALAD: Meal = {
@@ -82,7 +79,18 @@ export const HEAT_WAVE_TOFU_SALAD: Meal = {
     { amount: 6, ingredient: FIERY_HERB },
   ],
   bonus: 11,
-  unlockables: false,
+};
+
+export const FURY_ATTACK_CORN_SALAD: Meal = {
+  name: 'FURY_ATTACK_CORN_SALAD',
+  value: 2473,
+  value50: 6133,
+  type: 'salad',
+  ingredients: [
+    { amount: 9, ingredient: GREENGRASS_CORN },
+    { amount: 8, ingredient: PURE_OIL },
+  ],
+  bonus: 11,
 };
 
 export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
@@ -96,7 +104,6 @@ export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
     { amount: 3, ingredient: PURE_OIL },
   ],
   bonus: 17,
-  unlockables: false,
 };
 
 export const MOOMOO_CAPRESE_SALAD: Meal = {
@@ -110,7 +117,6 @@ export const MOOMOO_CAPRESE_SALAD: Meal = {
     { amount: 5, ingredient: PURE_OIL },
   ],
   bonus: 17,
-  unlockables: false,
 };
 
 export const IMMUNITY_LEEK_SALAD: Meal = {
@@ -123,7 +129,6 @@ export const IMMUNITY_LEEK_SALAD: Meal = {
     { amount: 5, ingredient: WARMING_GINGER },
   ],
   bonus: 11,
-  unlockables: true,
 };
 
 export const SUPERPOWER_EXTREME_SALAD: Meal = {
@@ -138,7 +143,6 @@ export const SUPERPOWER_EXTREME_SALAD: Meal = {
     { amount: 3, ingredient: SOFT_POTATO },
   ],
   bonus: 17,
-  unlockables: true,
 };
 
 export const CONTRARY_CHOCOLATE_MEAT_SALAD: Meal = {
@@ -151,7 +155,6 @@ export const CONTRARY_CHOCOLATE_MEAT_SALAD: Meal = {
     { amount: 9, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 17,
-  unlockables: false,
 };
 
 export const GLUTTONY_POTATO_SALAD: Meal = {
@@ -166,7 +169,6 @@ export const GLUTTONY_POTATO_SALAD: Meal = {
     { amount: 6, ingredient: FANCY_APPLE },
   ],
   bonus: 25,
-  unlockables: true,
 };
 
 export const OVERHEAT_GINGER_SALAD: Meal = {
@@ -180,7 +182,6 @@ export const OVERHEAT_GINGER_SALAD: Meal = {
     { amount: 8, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 25,
-  unlockables: false,
 };
 
 export const SPORE_MUSHROOM_SALAD: Meal = {
@@ -194,7 +195,19 @@ export const SPORE_MUSHROOM_SALAD: Meal = {
     { amount: 8, ingredient: PURE_OIL },
   ],
   bonus: 25,
-  unlockables: true,
+};
+
+export const CALM_MIND_FRUIT_SALAD: Meal = {
+  name: 'CALM_MIND_FRUIT_SALAD',
+  value: 7001,
+  value50: 17362,
+  type: 'salad',
+  ingredients: [
+    { amount: 21, ingredient: FANCY_APPLE },
+    { amount: 16, ingredient: HONEY },
+    { amount: 12, ingredient: GREENGRASS_CORN },
+  ],
+  bonus: 35,
 };
 
 export const SLOWPOKE_TAIL_PEPPER_SALAD: Meal = {
@@ -208,7 +221,6 @@ export const SLOWPOKE_TAIL_PEPPER_SALAD: Meal = {
     { amount: 15, ingredient: PURE_OIL },
   ],
   bonus: 25,
-  unlockables: true,
 };
 
 export const NINJA_SALAD: Meal = {
@@ -223,7 +235,20 @@ export const NINJA_SALAD: Meal = {
     { amount: 11, ingredient: WARMING_GINGER },
   ],
   bonus: 35,
-  unlockables: true,
+};
+
+export const GREENGRASS_SALAD: Meal = {
+  name: 'GREENGRASS_SALAD',
+  value: 10392,
+  value50: 25772,
+  type: 'salad',
+  ingredients: [
+    { amount: 22, ingredient: PURE_OIL },
+    { amount: 17, ingredient: GREENGRASS_CORN },
+    { amount: 14, ingredient: SNOOZY_TOMATO },
+    { amount: 9, ingredient: SOFT_POTATO },
+  ],
+  bonus: 35,
 };
 
 export const SALADS: Meal[] = [
@@ -233,6 +258,7 @@ export const SALADS: Meal[] = [
   SNOW_CLOAK_CAESAR_SALAD,
   WATER_VEIL_TOFU_SALAD,
   HEAT_WAVE_TOFU_SALAD,
+  FURY_ATTACK_CORN_SALAD,
   DAZZLING_APPLE_CHEESE_SALAD,
   MOOMOO_CAPRESE_SALAD,
   IMMUNITY_LEEK_SALAD,
@@ -241,6 +267,8 @@ export const SALADS: Meal[] = [
   GLUTTONY_POTATO_SALAD,
   OVERHEAT_GINGER_SALAD,
   SPORE_MUSHROOM_SALAD,
+  CALM_MIND_FRUIT_SALAD,
   SLOWPOKE_TAIL_PEPPER_SALAD,
   NINJA_SALAD,
+  GREENGRASS_SALAD,
 ];

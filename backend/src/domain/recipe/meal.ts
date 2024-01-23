@@ -10,7 +10,6 @@ export interface Meal {
   type: MealType;
   ingredients: IngredientDrop[];
   bonus: number;
-  unlockables: boolean;
 }
 export type MealType = 'curry' | 'salad' | 'dessert';
 
