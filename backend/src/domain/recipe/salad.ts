@@ -81,18 +81,6 @@ export const HEAT_WAVE_TOFU_SALAD: Meal = {
   bonus: 11,
 };
 
-export const FURY_ATTACK_CORN_SALAD: Meal = {
-  name: 'FURY_ATTACK_CORN_SALAD',
-  value: 2473,
-  value50: 6133,
-  type: 'salad',
-  ingredients: [
-    { amount: 9, ingredient: GREENGRASS_CORN },
-    { amount: 8, ingredient: PURE_OIL },
-  ],
-  bonus: 11,
-};
-
 export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
   name: 'DAZZLING_APPLE_CHEESE_SALAD',
   value: 2578,
@@ -104,6 +92,18 @@ export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
     { amount: 3, ingredient: PURE_OIL },
   ],
   bonus: 17,
+};
+
+export const FURY_ATTACK_CORN_SALAD: Meal = {
+  name: 'FURY_ATTACK_CORN_SALAD',
+  value: 2785,
+  value50: 6907,
+  type: 'salad',
+  ingredients: [
+    { amount: 9, ingredient: GREENGRASS_CORN },
+    { amount: 8, ingredient: PURE_OIL },
+  ],
+  bonus: 25,
 };
 
 export const MOOMOO_CAPRESE_SALAD: Meal = {
@@ -199,15 +199,15 @@ export const SPORE_MUSHROOM_SALAD: Meal = {
 
 export const CALM_MIND_FRUIT_SALAD: Meal = {
   name: 'CALM_MIND_FRUIT_SALAD',
-  value: 7001,
-  value50: 17362,
+  value: 7675,
+  value50: 19034,
   type: 'salad',
   ingredients: [
     { amount: 21, ingredient: FANCY_APPLE },
     { amount: 16, ingredient: HONEY },
     { amount: 12, ingredient: GREENGRASS_CORN },
   ],
-  bonus: 35,
+  bonus: 48,
 };
 
 export const SLOWPOKE_TAIL_PEPPER_SALAD: Meal = {
@@ -239,8 +239,8 @@ export const NINJA_SALAD: Meal = {
 
 export const GREENGRASS_SALAD: Meal = {
   name: 'GREENGRASS_SALAD',
-  value: 10392,
-  value50: 25772,
+  value: 11393,
+  value50: 28255,
   type: 'salad',
   ingredients: [
     { amount: 22, ingredient: PURE_OIL },
@@ -248,7 +248,7 @@ export const GREENGRASS_SALAD: Meal = {
     { amount: 14, ingredient: SNOOZY_TOMATO },
     { amount: 9, ingredient: SOFT_POTATO },
   ],
-  bonus: 35,
+  bonus: 48,
 };
 
 export const SALADS: Meal[] = [
@@ -258,7 +258,7 @@ export const SALADS: Meal[] = [
   SNOW_CLOAK_CAESAR_SALAD,
   WATER_VEIL_TOFU_SALAD,
   HEAT_WAVE_TOFU_SALAD,
-  FURY_ATTACK_CORN_SALAD,
+  // FURY_ATTACK_CORN_SALAD,
   DAZZLING_APPLE_CHEESE_SALAD,
   MOOMOO_CAPRESE_SALAD,
   IMMUNITY_LEEK_SALAD,
@@ -267,8 +267,8 @@ export const SALADS: Meal[] = [
   GLUTTONY_POTATO_SALAD,
   OVERHEAT_GINGER_SALAD,
   SPORE_MUSHROOM_SALAD,
-  CALM_MIND_FRUIT_SALAD,
+  // CALM_MIND_FRUIT_SALAD,
   SLOWPOKE_TAIL_PEPPER_SALAD,
   NINJA_SALAD,
-  GREENGRASS_SALAD,
+  // GREENGRASS_SALAD,
 ];
