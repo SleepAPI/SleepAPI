@@ -46,8 +46,7 @@ class TierlistRouterImpl {
         try {
           Logger.log('Entered /tierlist/cooking/create');
 
-          const secretHeader = req.get('secret');
-          if (!config.SECRET || !secretHeader || config.SECRET !== secretHeader) {
+          if (config.NODE_ENV !== 'DEV') {
             return res.status(401).send('Unauthorized');
           }
 
