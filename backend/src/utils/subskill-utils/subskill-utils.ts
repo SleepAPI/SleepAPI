@@ -45,11 +45,17 @@ export function subskillsForFilter(subskillSet: SubskillSet, level: number, poke
     return [];
   }
 
-  const singleStageSubskillsLevel50 = [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L];
+  const singleStageSubskillsLevel60 = [
+    INGREDIENT_FINDER_M,
+    HELPING_SPEED_M,
+    INVENTORY_L,
+    INGREDIENT_FINDER_S,
+    HELPING_SPEED_S,
+  ];
   const optimalSubskills = [INGREDIENT_FINDER_M, HELPING_SPEED_M, INGREDIENT_FINDER_S, INVENTORY_L, HELPING_SPEED_S];
 
-  const singleStageAndBetween50And59 = pokemon.carrySize === pokemon.maxCarrySize && level >= 50 && level < 60;
-  const subskills = singleStageAndBetween50And59 ? singleStageSubskillsLevel50 : optimalSubskills;
+  const singleStageLevel60 = pokemon.carrySize === pokemon.maxCarrySize && level >= 60;
+  const subskills = singleStageLevel60 ? singleStageSubskillsLevel60 : optimalSubskills;
 
   let numberOfElements;
   if (level < 10) {
