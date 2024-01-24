@@ -128,8 +128,8 @@ describe('subskillsForFilter', () => {
     expect(subskillsForFilter('optimal', 100, PINSIR)).toEqual([
       INGREDIENT_FINDER_M,
       HELPING_SPEED_M,
-      INGREDIENT_FINDER_S,
       INVENTORY_L,
+      INGREDIENT_FINDER_S,
       HELPING_SPEED_S,
     ]);
   });
