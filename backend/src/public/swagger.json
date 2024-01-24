@@ -652,7 +652,6 @@
 				},
 				"required": [
 					"tier",
-					"diff",
 					"pokemonCombinationContribution"
 				],
 				"type": "object",

@@ -280,8 +280,10 @@
                 diffValue.innerHTML = `<i class="fa fa-arrow-down" style="color: red;"></i> ${Math.abs(
                   pokemonWithDetails.diff
                 )}`;
-              } else {
+              } else if (pokemonWithDetails.diff === 0) {
                 diffValue.innerHTML = `<i class="fa fa-minus" style="color: white;"></i> 0`;
+              } else {
+                diffValue.innerHTML = `<i class="fa fa-plus" style="color: yellow;"></i>`;
               }
 
               modalButton.appendChild(img);
