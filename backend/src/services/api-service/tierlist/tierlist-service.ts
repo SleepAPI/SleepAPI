@@ -217,7 +217,7 @@ class TierlistImpl {
         currentTier = tiers.at(0);
       }
 
-      tieredEntries.push({ tier: currentTier?.tier ?? 'F', diff: 0, pokemonCombinationContribution: entry });
+      tieredEntries.push({ tier: currentTier?.tier ?? 'F', pokemonCombinationContribution: entry });
     }
 
     return diffTierlistRankings(tieredEntries, previous);

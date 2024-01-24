@@ -31,7 +31,7 @@ export interface CreateTierListRequestBody {
 
 export interface TieredPokemonCombinationContribution {
   tier: string;
-  diff: number;
+  diff?: number;
   pokemonCombinationContribution: PokemonCombinationCombinedContribution;
 }
 

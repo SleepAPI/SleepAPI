@@ -146,7 +146,7 @@ describe('diffTierlistRankings', () => {
     ).toBeTruthy();
   });
 
-  it('shall set diff to 0 if not found in previous', () => {
+  it('shall, for new mons, set diff to undefined if not found in previous', () => {
     const current: TieredPokemonCombinationContribution[] = [
       {
         diff: 0,
@@ -168,7 +168,7 @@ describe('diffTierlistRankings', () => {
 
     const result = diffTierlistRankings(current, previous);
     expect(result).toHaveLength(1);
-    expect(result[0].diff).toBe(0);
+    expect(result[0].diff).toBeUndefined;
   });
 });
 
@@ -234,7 +234,7 @@ describe('calculateDiffForEntry', () => {
     expect(result.diff).toBe(expectedDiff);
   });
 
-  it('should set diff to 0 when pokemon is not found in previous', () => {
+  it('shall, for new mons, set diff to undefined when pokemon is not found in previous', () => {
     const currentEntry: TieredPokemonCombinationContribution = {
       pokemonCombinationContribution: {
         pokemonCombination: { pokemon: BLASTOISE, ingredientList: [{ amount: 2, ingredient: MOOMOO_MILK }] },
@@ -252,6 +252,6 @@ describe('calculateDiffForEntry', () => {
 
     const result = calculateDiffForEntry(currentEntry, currentIndex, previousIndexMap);
 
-    expect(result.diff).toBe(0);
+    expect(result.diff).toBeUndefined;
   });
 });

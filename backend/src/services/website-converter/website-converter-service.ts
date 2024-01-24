@@ -45,7 +45,7 @@ class WebsiteConverterServiceImpl {
   }
 
   public toTierList(tieredData: TieredPokemonCombinationContribution[]) {
-    const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; diff: number; details: string }[]> =
+    const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; diff?: number; details: string }[]> =
       new Map();
     for (const tieredEntry of tieredData) {
       const allEntriesOfPokemon = tieredData.filter(
@@ -92,7 +92,7 @@ class WebsiteConverterServiceImpl {
 
     const tiersWithPokemonDetails: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff?: number; details: string }[];
     }[] = [];
     for (const [tier, pokemonWithDetails] of mapWithTiering) {
       tiersWithPokemonDetails.push({ tier, pokemonWithDetails });
@@ -247,11 +247,11 @@ class WebsiteConverterServiceImpl {
   #filterOnlyBest(
     tiersWithPokemonDetails: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff?: number; details: string }[];
     }[]
   ) {
     const seen = new Set<string>();
-    const filtered: Map<string, { pokemon: string; ingredientList: string; diff: number; details: string }[]> =
+    const filtered: Map<string, { pokemon: string; ingredientList: string; diff?: number; details: string }[]> =
       new Map();
     for (const tier of tiersWithPokemonDetails) {
       for (const pokemon of tier.pokemonWithDetails) {
@@ -271,7 +271,7 @@ class WebsiteConverterServiceImpl {
     }
     const filteredArray: {
       tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; diff: number; details: string }[];
+      pokemonWithDetails: { pokemon: string; ingredientList: string; diff?: number; details: string }[];
     }[] = [];
     for (const [tier, pokemonWithDetails] of filtered) {
       filteredArray.push({ tier, pokemonWithDetails });
