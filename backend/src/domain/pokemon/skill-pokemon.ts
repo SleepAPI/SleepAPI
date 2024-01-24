@@ -20,8 +20,10 @@ import {
   FANCY_APPLE,
   FANCY_EGG,
   FIERY_HERB,
+  GREENGRASS_CORN,
   GREENGRASS_SOYBEANS,
   HONEY,
+  LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
   SLOWPOKE_TAIL,
@@ -508,16 +510,15 @@ export const RALTS: Pokemon = {
   berry: MAGO,
   carrySize: 9,
   maxCarrySize: 9,
-  // TODO: add ing list
-  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 2, ingredient: FANCY_APPLE },
+    { amount: 1, ingredient: GREENGRASS_CORN },
   ],
   ingredient60: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: GREENGRASS_CORN },
+    { amount: 2, ingredient: LARGE_LEEK },
   ],
   skill: ENERGY_FOR_EVERYONE,
 };
