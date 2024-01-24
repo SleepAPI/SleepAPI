@@ -84,12 +84,12 @@ describe('getOptimalFlexiblePokemon', () => {
         "LUCARIO(1 Oil, 2 Oil)",
         "PRIMEAPE(1 Sausage, 2 Sausage)",
         "LEAFEON(1 Milk, 1 Cacao)",
-        "GALLADE(1 Apple, 1 Corn)",
-        "GARDEVOIR(1 Apple, 1 Corn)",
         "ESPEON(1 Milk, 1 Cacao)",
         "LUCARIO(1 Oil, 2 Potato)",
         "WOBBUFFET(1 Apple, 1 Mushroom)",
         "PRIMEAPE(1 Sausage, 1 Mushroom)",
+        "GALLADE(1 Apple, 1 Corn)",
+        "GARDEVOIR(1 Apple, 1 Corn)",
       ]
     `);
   });

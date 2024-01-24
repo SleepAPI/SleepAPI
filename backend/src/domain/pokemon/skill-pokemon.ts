@@ -505,7 +505,7 @@ export const RALTS: Pokemon = {
   name: 'RALTS',
   specialty: 'skill',
   frequency: toSeconds(1, 20, 0),
-  ingredientPercentage: 20, // TODO: missing
+  ingredientPercentage: 18, // TODO: missing
   skillPercentage: 2, // TODO: missing
   berry: MAGO,
   carrySize: 9,
@@ -527,7 +527,7 @@ export const KIRLIA: Pokemon = {
   ...RALTS,
   name: 'KIRLIA',
   frequency: toSeconds(0, 58, 20),
-  ingredientPercentage: 20, // TODO: missing
+  ingredientPercentage: 18, // TODO: missing
   skillPercentage: 2, // TODO: missing
   carrySize: 13,
   maxCarrySize: 18,
@@ -537,7 +537,7 @@ export const GARDEVOIR: Pokemon = {
   ...RALTS,
   name: 'GARDEVOIR',
   frequency: toSeconds(0, 40, 0),
-  ingredientPercentage: 20, // TODO: missing
+  ingredientPercentage: 18, // TODO: missing
   skillPercentage: 2, // TODO: missing
   carrySize: 18,
   maxCarrySize: 28,
@@ -697,7 +697,7 @@ export const GALLADE: Pokemon = {
   ...RALTS,
   name: 'GALLADE',
   frequency: toSeconds(0, 40, 0),
-  ingredientPercentage: 20, // TODO: missing
+  ingredientPercentage: 18, // TODO: missing
   skillPercentage: 2, // TODO: missing
   carrySize: 19,
   maxCarrySize: 29,
