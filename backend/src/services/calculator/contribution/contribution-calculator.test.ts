@@ -84,7 +84,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
-    expect(contribution.contributedPower).toBe(6181.09428527736);
+    expect(contribution.contributedPower).toBe(6256.1847008205195);
   });
 });
 

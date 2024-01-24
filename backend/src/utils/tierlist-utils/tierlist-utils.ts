@@ -35,7 +35,11 @@ export function calculateDiffForEntry(
   const currentHash = hashPokemonCombination(currentEntry.pokemonCombinationContribution.pokemonCombination);
   const previousIndex = previousIndexMap.get(currentHash);
 
-  currentEntry.diff = previousIndex !== undefined ? previousIndex - currentIndex : 0;
+  if (previousIndex === undefined) {
+    currentEntry.diff = undefined;
+  } else {
+    currentEntry.diff = previousIndex - currentIndex;
+  }
 
   return currentEntry;
 }

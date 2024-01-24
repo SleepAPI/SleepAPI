@@ -98,15 +98,19 @@ describe('subskillsForFilter', () => {
   });
 
   it('should return the correct subskills for level 50 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 50, BLASTOISE)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L]);
+    expect(subskillsForFilter('optimal', 50, BLASTOISE)).toEqual([
+      INGREDIENT_FINDER_M,
+      HELPING_SPEED_M,
+      INGREDIENT_FINDER_S,
+    ]);
   });
 
   it('should return the correct subskills for level 75 and optimal set', () => {
     expect(subskillsForFilter('optimal', 75, BLASTOISE)).toEqual([
       INGREDIENT_FINDER_M,
       HELPING_SPEED_M,
-      INVENTORY_L,
       INGREDIENT_FINDER_S,
+      INVENTORY_L,
     ]);
   });
 
@@ -114,8 +118,8 @@ describe('subskillsForFilter', () => {
     expect(subskillsForFilter('optimal', 100, BLASTOISE)).toEqual([
       INGREDIENT_FINDER_M,
       HELPING_SPEED_M,
-      INVENTORY_L,
       INGREDIENT_FINDER_S,
+      INVENTORY_L,
       HELPING_SPEED_S,
     ]);
   });
@@ -123,10 +127,10 @@ describe('subskillsForFilter', () => {
   it('should return the correct subskills for level 100, single-stage pokemon, and optimal set', () => {
     expect(subskillsForFilter('optimal', 100, PINSIR)).toEqual([
       INGREDIENT_FINDER_M,
-      INVENTORY_L,
       HELPING_SPEED_M,
       INGREDIENT_FINDER_S,
-      INVENTORY_M,
+      INVENTORY_L,
+      HELPING_SPEED_S,
     ]);
   });
 

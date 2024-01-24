@@ -5,7 +5,6 @@ import {
   INGREDIENT_FINDER_M,
   INGREDIENT_FINDER_S,
   INVENTORY_L,
-  INVENTORY_M,
   SubSkill,
   SUBSKILLS,
   SubskillSet,
@@ -46,23 +45,11 @@ export function subskillsForFilter(subskillSet: SubskillSet, level: number, poke
     return [];
   }
 
-  const optimalSubskillsForSingleStage = [
-    INGREDIENT_FINDER_M,
-    INVENTORY_L,
-    HELPING_SPEED_M,
-    INGREDIENT_FINDER_S,
-    INVENTORY_M,
-  ];
-  const optimalSubskillsForMultiStage = [
-    INGREDIENT_FINDER_M,
-    HELPING_SPEED_M,
-    INVENTORY_L,
-    INGREDIENT_FINDER_S,
-    HELPING_SPEED_S,
-  ];
+  const singleStageSubskillsLevel50 = [INGREDIENT_FINDER_M, HELPING_SPEED_M, INVENTORY_L];
+  const optimalSubskills = [INGREDIENT_FINDER_M, HELPING_SPEED_M, INGREDIENT_FINDER_S, INVENTORY_L, HELPING_SPEED_S];
 
-  const optimalSubskills =
-    pokemon.carrySize === pokemon.maxCarrySize ? optimalSubskillsForSingleStage : optimalSubskillsForMultiStage;
+  const singleStageAndBetween50And59 = pokemon.carrySize === pokemon.maxCarrySize && level >= 50 && level < 60;
+  const subskills = singleStageAndBetween50And59 ? singleStageSubskillsLevel50 : optimalSubskills;
 
   let numberOfElements;
   if (level < 10) {
@@ -76,8 +63,8 @@ export function subskillsForFilter(subskillSet: SubskillSet, level: number, poke
   } else if (level < 100) {
     numberOfElements = 4;
   } else {
-    numberOfElements = optimalSubskills.length;
+    numberOfElements = subskills.length;
   }
 
-  return optimalSubskills.slice(0, numberOfElements);
+  return subskills.slice(0, numberOfElements);
 }
