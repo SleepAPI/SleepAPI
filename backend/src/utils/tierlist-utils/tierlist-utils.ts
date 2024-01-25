@@ -1,4 +1,4 @@
-import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
 import { hashPokemonCombination } from '../optimal-utils/optimal-utils';
 
 export function diffTierlistRankings(

@@ -11,6 +11,7 @@ export interface ProductionStats {
   e4eProcs: number;
   helpingBonus: number;
   goodCamp: boolean;
+  maxPotSize?: number;
 }
 
 export interface InputProductionStats extends ProductionStats {

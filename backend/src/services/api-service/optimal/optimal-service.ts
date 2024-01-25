@@ -6,7 +6,7 @@ import { OptimalFlexibleResult } from '../../../routes/optimal-router/optimal-ro
 import { calculateContributionForMealWithPunishment } from '../../../services/calculator/contribution/contribution-calculator';
 import { MemoizedFilters } from '../../../services/set-cover/set-cover';
 import { createPokemonByIngredientReverseIndex } from '../../../services/set-cover/set-cover-utils';
-import { getMeal, getMealsAboveBonus } from '../../../utils/meal-utils/meal-utils';
+import { getMeal, getMealsForFilter } from '../../../utils/meal-utils/meal-utils';
 import {
   calculateCombinedContributions,
   removeDuplicatePokemonCombinations,
@@ -107,7 +107,7 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
   const cache = new Map();
 
   const optimalTeamSolutions: TeamsForMeal[] = [];
-  for (const meal of getMealsAboveBonus(0)) {
+  for (const meal of getMealsForFilter({ maxPotSize: input.maxPotSize })) {
     const teamCompositionsForMeal = calculateSetCover({
       recipe: meal.ingredients,
       memoizedFilters,
@@ -126,19 +126,11 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
 }
 
 function customOptimalSet(mealName: string, inputStats: InputProductionStats) {
-  const { level, goodCamp, e4eProcs, helpingBonus, nature, subskills, berries } = inputStats;
+  const { level, goodCamp, e4eProcs, helpingBonus, nature, subskills } = inputStats;
 
   const meal = getMeal(mealName);
 
-  const pokemonProduction = calculateOptimalProductionForSetCover({
-    level,
-    nature,
-    subskills,
-    berries,
-    goodCamp,
-    e4eProcs,
-    helpingBonus,
-  });
+  const pokemonProduction = calculateOptimalProductionForSetCover(inputStats);
 
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
   const memoizedFilters: MemoizedFilters = {

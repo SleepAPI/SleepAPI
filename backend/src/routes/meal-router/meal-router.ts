@@ -8,6 +8,8 @@ export interface MealNamesQueryParams {
   curry?: boolean;
   salad?: boolean;
   dessert?: boolean;
+  minRecipeBonus?: number;
+  maxPotSize?: number;
   csv?: boolean;
 }
 

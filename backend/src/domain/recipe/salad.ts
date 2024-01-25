@@ -25,6 +25,7 @@ export const FANCY_APPLE_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
   bonus: 6,
+  nrOfIngredients: 8,
 };
 
 export const BEAN_HAM_SALAD: Meal = {
@@ -34,6 +35,7 @@ export const BEAN_HAM_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: BEAN_SAUSAGE }],
   bonus: 6,
+  nrOfIngredients: 8,
 };
 
 export const SNOOZY_TOMATO_SALAD: Meal = {
@@ -43,6 +45,7 @@ export const SNOOZY_TOMATO_SALAD: Meal = {
   type: 'salad',
   ingredients: [{ amount: 8, ingredient: SNOOZY_TOMATO }],
   bonus: 6,
+  nrOfIngredients: 8,
 };
 
 export const SNOW_CLOAK_CAESAR_SALAD: Meal = {
@@ -55,6 +58,7 @@ export const SNOW_CLOAK_CAESAR_SALAD: Meal = {
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const WATER_VEIL_TOFU_SALAD: Meal = {
@@ -67,6 +71,7 @@ export const WATER_VEIL_TOFU_SALAD: Meal = {
     { amount: 6, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const HEAT_WAVE_TOFU_SALAD: Meal = {
@@ -79,6 +84,7 @@ export const HEAT_WAVE_TOFU_SALAD: Meal = {
     { amount: 6, ingredient: FIERY_HERB },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
@@ -92,6 +98,7 @@ export const DAZZLING_APPLE_CHEESE_SALAD: Meal = {
     { amount: 3, ingredient: PURE_OIL },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const FURY_ATTACK_CORN_SALAD: Meal = {
@@ -104,6 +111,7 @@ export const FURY_ATTACK_CORN_SALAD: Meal = {
     { amount: 8, ingredient: PURE_OIL },
   ],
   bonus: 25,
+  nrOfIngredients: 17,
 };
 
 export const MOOMOO_CAPRESE_SALAD: Meal = {
@@ -117,6 +125,7 @@ export const MOOMOO_CAPRESE_SALAD: Meal = {
     { amount: 5, ingredient: PURE_OIL },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const IMMUNITY_LEEK_SALAD: Meal = {
@@ -129,6 +138,7 @@ export const IMMUNITY_LEEK_SALAD: Meal = {
     { amount: 5, ingredient: WARMING_GINGER },
   ],
   bonus: 11,
+  nrOfIngredients: 15,
 };
 
 export const SUPERPOWER_EXTREME_SALAD: Meal = {
@@ -143,6 +153,7 @@ export const SUPERPOWER_EXTREME_SALAD: Meal = {
     { amount: 3, ingredient: SOFT_POTATO },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const CONTRARY_CHOCOLATE_MEAT_SALAD: Meal = {
@@ -155,6 +166,7 @@ export const CONTRARY_CHOCOLATE_MEAT_SALAD: Meal = {
     { amount: 9, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const GLUTTONY_POTATO_SALAD: Meal = {
@@ -169,6 +181,7 @@ export const GLUTTONY_POTATO_SALAD: Meal = {
     { amount: 6, ingredient: FANCY_APPLE },
   ],
   bonus: 25,
+  nrOfIngredients: 36,
 };
 
 export const OVERHEAT_GINGER_SALAD: Meal = {
@@ -182,6 +195,7 @@ export const OVERHEAT_GINGER_SALAD: Meal = {
     { amount: 8, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const SPORE_MUSHROOM_SALAD: Meal = {
@@ -195,6 +209,7 @@ export const SPORE_MUSHROOM_SALAD: Meal = {
     { amount: 8, ingredient: PURE_OIL },
   ],
   bonus: 25,
+  nrOfIngredients: 33,
 };
 
 export const CALM_MIND_FRUIT_SALAD: Meal = {
@@ -208,6 +223,7 @@ export const CALM_MIND_FRUIT_SALAD: Meal = {
     { amount: 12, ingredient: GREENGRASS_CORN },
   ],
   bonus: 48,
+  nrOfIngredients: 49,
 };
 
 export const SLOWPOKE_TAIL_PEPPER_SALAD: Meal = {
@@ -221,6 +237,7 @@ export const SLOWPOKE_TAIL_PEPPER_SALAD: Meal = {
     { amount: 15, ingredient: PURE_OIL },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const NINJA_SALAD: Meal = {
@@ -235,6 +252,7 @@ export const NINJA_SALAD: Meal = {
     { amount: 11, ingredient: WARMING_GINGER },
   ],
   bonus: 35,
+  nrOfIngredients: 53,
 };
 
 export const GREENGRASS_SALAD: Meal = {
@@ -249,6 +267,7 @@ export const GREENGRASS_SALAD: Meal = {
     { amount: 9, ingredient: SOFT_POTATO },
   ],
   bonus: 48,
+  nrOfIngredients: 62,
 };
 
 export const SALADS: Meal[] = [

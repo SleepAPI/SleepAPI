@@ -21,6 +21,7 @@ export const WARM_MOOMOO_MILK: Meal = {
   type: 'dessert',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
   bonus: 6,
+  nrOfIngredients: 7,
 };
 
 export const FANCY_APPLE_JUICE: Meal = {
@@ -30,6 +31,7 @@ export const FANCY_APPLE_JUICE: Meal = {
   type: 'dessert',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
   bonus: 6,
+  nrOfIngredients: 8,
 };
 
 export const CRAFT_SODA_POP: Meal = {
@@ -39,6 +41,7 @@ export const CRAFT_SODA_POP: Meal = {
   type: 'dessert',
   ingredients: [{ amount: 9, ingredient: HONEY }],
   bonus: 6,
+  nrOfIngredients: 9,
 };
 
 export const LUCKY_CHANT_APPLE_PIE: Meal = {
@@ -51,6 +54,7 @@ export const LUCKY_CHANT_APPLE_PIE: Meal = {
     { amount: 4, ingredient: MOOMOO_MILK },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const FLUFFY_SWEET_POTATOES: Meal = {
@@ -63,6 +67,7 @@ export const FLUFFY_SWEET_POTATOES: Meal = {
     { amount: 5, ingredient: MOOMOO_MILK },
   ],
   bonus: 11,
+  nrOfIngredients: 14,
 };
 
 export const EMBER_GINGER_TEA: Meal = {
@@ -75,6 +80,7 @@ export const EMBER_GINGER_TEA: Meal = {
     { amount: 7, ingredient: FANCY_APPLE },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const CLOUD_NINE_SOY_CAKE: Meal = {
@@ -87,6 +93,7 @@ export const CLOUD_NINE_SOY_CAKE: Meal = {
     { amount: 7, ingredient: GREENGRASS_SOYBEANS },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const STALWART_VEGETABLE_JUICE: Meal = {
@@ -99,6 +106,7 @@ export const STALWART_VEGETABLE_JUICE: Meal = {
     { amount: 7, ingredient: FANCY_APPLE },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const BIG_MALASADA: Meal = {
@@ -112,6 +120,7 @@ export const BIG_MALASADA: Meal = {
     { amount: 6, ingredient: HONEY },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const HUSTLE_PROTEIN_SMOOTHIE: Meal = {
@@ -124,6 +133,7 @@ export const HUSTLE_PROTEIN_SMOOTHIE: Meal = {
     { amount: 8, ingredient: SOOTHING_CACAO },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const HUGE_POWER_SOY_DONUTS: Meal = {
@@ -137,6 +147,7 @@ export const HUGE_POWER_SOY_DONUTS: Meal = {
     { amount: 7, ingredient: SOOTHING_CACAO },
   ],
   bonus: 17,
+  nrOfIngredients: 22,
 };
 
 export const SWEET_SCENT_CHOCOLATE_CAKE: Meal = {
@@ -150,6 +161,7 @@ export const SWEET_SCENT_CHOCOLATE_CAKE: Meal = {
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
   bonus: 17,
+  nrOfIngredients: 24,
 };
 
 export const LOVELY_KISS_SMOOTHIE: Meal = {
@@ -164,6 +176,7 @@ export const LOVELY_KISS_SMOOTHIE: Meal = {
     { amount: 8, ingredient: SOOTHING_CACAO },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const STEADFAST_GINGER_COOKIES: Meal = {
@@ -178,6 +191,7 @@ export const STEADFAST_GINGER_COOKIES: Meal = {
     { amount: 4, ingredient: FANCY_EGG },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const NEROLIS_RESTORATIVE_TEA: Meal = {
@@ -191,6 +205,7 @@ export const NEROLIS_RESTORATIVE_TEA: Meal = {
     { amount: 9, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const EXPLOSION_POPCORN: Meal = {
@@ -204,6 +219,7 @@ export const EXPLOSION_POPCORN: Meal = {
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
   bonus: 35,
+  nrOfIngredients: 36,
 };
 
 export const JIGGLYPUFFS_FRUITY_FLAN: Meal = {
@@ -218,6 +234,7 @@ export const JIGGLYPUFFS_FRUITY_FLAN: Meal = {
     { amount: 10, ingredient: FANCY_APPLE },
   ],
   bonus: 35,
+  nrOfIngredients: 55,
 };
 
 export const TEATIME_CORN_SCONES: Meal = {
@@ -232,6 +249,7 @@ export const TEATIME_CORN_SCONES: Meal = {
     { amount: 9, ingredient: MOOMOO_MILK },
   ],
   bonus: 48,
+  nrOfIngredients: 67,
 };
 
 export const DESSERTS: Meal[] = [

@@ -9,26 +9,14 @@ export function getMeal(name: string) {
   return meal;
 }
 
-export function getMealsForFilter(params: { curry: boolean; salad: boolean; dessert: boolean }) {
-  const { curry, salad, dessert } = params;
-
-  if (curry || salad || dessert) {
-    return MEALS.filter(
-      (meal) =>
-        (meal.type === 'curry' && curry) || (meal.type === 'salad' && salad) || (meal.type === 'dessert' && dessert)
-    );
-  } else {
-    return MEALS;
-  }
-}
-
-export function getMealsForFilterWithBonus(params: {
-  minRecipeBonus: number;
-  curry: boolean;
-  salad: boolean;
-  dessert: boolean;
+export function getMealsForFilter(params: {
+  curry?: boolean;
+  salad?: boolean;
+  dessert?: boolean;
+  minRecipeBonus?: number;
+  maxPotSize?: number;
 }) {
-  const { minRecipeBonus, curry, salad, dessert } = params;
+  const { curry = false, salad = false, dessert = false, minRecipeBonus = 0, maxPotSize } = params;
   let meals = MEALS;
 
   if (curry || salad || dessert) {
@@ -37,9 +25,7 @@ export function getMealsForFilterWithBonus(params: {
         (meal.type === 'curry' && curry) || (meal.type === 'salad' && salad) || (meal.type === 'dessert' && dessert)
     );
   }
-  return meals.filter((m) => m.bonus >= minRecipeBonus);
-}
+  const recipesWithBonus = meals.filter((m) => m.bonus >= minRecipeBonus);
 
-export function getMealsAboveBonus(minBonus: number) {
-  return MEALS.filter((m) => m.bonus >= minBonus);
+  return maxPotSize ? recipesWithBonus.filter((m) => m.nrOfIngredients <= maxPotSize) : recipesWithBonus;
 }

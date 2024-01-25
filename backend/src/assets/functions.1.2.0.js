@@ -275,6 +275,7 @@ function goToOptimalFlexible() {
     e4e: +document.getElementById('e4e').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
+    maxPotSize: +document.getElementById('maxPotSize').value,
     optimalSetSolutionLimit: document.getElementById('solutionLimit').checked ? undefined : 5000,
   };
 

@@ -10,7 +10,10 @@ export interface Meal {
   type: MealType;
   ingredients: IngredientDrop[];
   bonus: number;
+  nrOfIngredients: number;
 }
 export type MealType = 'curry' | 'salad' | 'dessert';
+
+export const MAX_POT_SIZE = 57;
 
 export const MEALS: Meal[] = [...CURRIES, ...SALADS, ...DESSERTS];

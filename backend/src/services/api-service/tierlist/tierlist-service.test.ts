@@ -1,11 +1,11 @@
-import { BLASTOISE, PINSIR } from '@src/domain/pokemon/ingredient-pokemon';
-import { HONEY, MOOMOO_MILK } from '@src/domain/produce/ingredient';
-import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import { BLASTOISE, PINSIR } from '../../../domain/pokemon/ingredient-pokemon';
+import { HONEY, MOOMOO_MILK } from '../../../domain/produce/ingredient';
+import { TieredPokemonCombinationContribution } from '../../../routes/tierlist-router/tierlist-router';
 import {
   calculateDiffForEntry,
   createPreviousIndexMap,
   diffTierlistRankings,
-} from '@src/utils/tierlist-utils/tierlist-utils';
+} from '../../../utils/tierlist-utils/tierlist-utils';
 
 describe('diffTierlistRankings', () => {
   it('shall return current unchanged if previous is undefined', () => {

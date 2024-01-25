@@ -8,7 +8,7 @@ import {
   TieredPokemonCombinationContribution,
 } from '../../../routes/tierlist-router/tierlist-router';
 import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
-import { getMealsForFilterWithBonus } from '../../../utils/meal-utils/meal-utils';
+import { getMealsForFilter } from '../../../utils/meal-utils/meal-utils';
 import { diffTierlistRankings } from '../../../utils/tierlist-utils/tierlist-utils';
 import {
   boostFirstMealWithFactor,
@@ -107,7 +107,7 @@ class TierlistImpl {
       memo
     );
 
-    const mealsForFilter = getMealsForFilterWithBonus(details);
+    const mealsForFilter = getMealsForFilter(details);
     let counter = allPokemonWithProduce.length;
     for (const pokemonWithProduce of allPokemonWithProduce) {
       const contributions: Contribution[] = [];

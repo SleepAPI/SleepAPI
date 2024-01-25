@@ -25,6 +25,7 @@ export const FANCY_APPLE_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: FANCY_APPLE }],
   bonus: 6,
+  nrOfIngredients: 7,
 };
 
 export const SIMPLE_CHOWDER: Meal = {
@@ -34,6 +35,7 @@ export const SIMPLE_CHOWDER: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
   bonus: 6,
+  nrOfIngredients: 7,
 };
 
 export const MILD_HONEY_CURRY: Meal = {
@@ -43,6 +45,7 @@ export const MILD_HONEY_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: HONEY }],
   bonus: 6,
+  nrOfIngredients: 7,
 };
 
 export const BEANBURGER_CURRY: Meal = {
@@ -52,6 +55,7 @@ export const BEANBURGER_CURRY: Meal = {
   type: 'curry',
   ingredients: [{ amount: 7, ingredient: BEAN_SAUSAGE }],
   bonus: 6,
+  nrOfIngredients: 7,
 };
 
 export const HEARTY_CHEESEBURGER_CURRY: Meal = {
@@ -64,6 +68,7 @@ export const HEARTY_CHEESEBURGER_CURRY: Meal = {
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
   bonus: 11,
+  nrOfIngredients: 14,
 };
 
 export const DROUGHT_KATSU_CURRY: Meal = {
@@ -76,6 +81,7 @@ export const DROUGHT_KATSU_CURRY: Meal = {
     { amount: 5, ingredient: PURE_OIL },
   ],
   bonus: 11,
+  nrOfIngredients: 15,
 };
 
 export const SOLAR_POWER_TOMATO_CURRY: Meal = {
@@ -88,6 +94,7 @@ export const SOLAR_POWER_TOMATO_CURRY: Meal = {
     { amount: 5, ingredient: FIERY_HERB },
   ],
   bonus: 11,
+  nrOfIngredients: 15,
 };
 
 export const MELTY_OMELETTE_CURRY: Meal = {
@@ -100,6 +107,7 @@ export const MELTY_OMELETTE_CURRY: Meal = {
     { amount: 6, ingredient: SNOOZY_TOMATO },
   ],
   bonus: 11,
+  nrOfIngredients: 16,
 };
 
 export const SOFT_POTATO_CHOWDER: Meal = {
@@ -113,6 +121,7 @@ export const SOFT_POTATO_CHOWDER: Meal = {
     { amount: 4, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 17,
+  nrOfIngredients: 22,
 };
 
 export const BULK_UP_BEAN_CURRY: Meal = {
@@ -127,6 +136,7 @@ export const BULK_UP_BEAN_CURRY: Meal = {
     { amount: 4, ingredient: FANCY_EGG },
   ],
   bonus: 17,
+  nrOfIngredients: 26,
 };
 
 export const SPORE_MUSHROOM_CURRY: Meal = {
@@ -139,6 +149,7 @@ export const SPORE_MUSHROOM_CURRY: Meal = {
     { amount: 9, ingredient: SOFT_POTATO },
   ],
   bonus: 17,
+  nrOfIngredients: 23,
 };
 
 export const EGG_BOMB_CURRY: Meal = {
@@ -153,6 +164,7 @@ export const EGG_BOMB_CURRY: Meal = {
     { amount: 4, ingredient: SOFT_POTATO },
   ],
   bonus: 25,
+  nrOfIngredients: 35,
 };
 
 export const LIMBER_CORN_STEW: Meal = {
@@ -166,6 +178,7 @@ export const LIMBER_CORN_STEW: Meal = {
     { amount: 8, ingredient: SOFT_POTATO },
   ],
   bonus: 25,
+  nrOfIngredients: 30,
 };
 
 export const SPICY_LEEK_CURRY: Meal = {
@@ -179,6 +192,7 @@ export const SPICY_LEEK_CURRY: Meal = {
     { amount: 8, ingredient: FIERY_HERB },
   ],
   bonus: 25,
+  nrOfIngredients: 32,
 };
 
 export const NINJA_CURRY: Meal = {
@@ -193,6 +207,7 @@ export const NINJA_CURRY: Meal = {
     { amount: 5, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 25,
+  nrOfIngredients: 38,
 };
 
 export const GRILLED_TAIL_CURRY: Meal = {
@@ -205,6 +220,7 @@ export const GRILLED_TAIL_CURRY: Meal = {
     { amount: 25, ingredient: FIERY_HERB },
   ],
   bonus: 25,
+  nrOfIngredients: 33,
 };
 
 export const DREAM_EATER_BUTTER_CURRY: Meal = {
@@ -219,6 +235,7 @@ export const DREAM_EATER_BUTTER_CURRY: Meal = {
     { amount: 10, ingredient: MOOMOO_MILK },
   ],
   bonus: 35,
+  nrOfIngredients: 55,
 };
 
 export const INFERNO_CORN_KEEMA_CURRY: Meal = {
@@ -233,6 +250,7 @@ export const INFERNO_CORN_KEEMA_CURRY: Meal = {
     { amount: 12, ingredient: WARMING_GINGER },
   ],
   bonus: 48,
+  nrOfIngredients: 77,
 };
 
 export const CURRIES: Meal[] = [

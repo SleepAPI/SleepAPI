@@ -1,4 +1,4 @@
-import { BLASTOISE } from '@src/domain/pokemon/ingredient-pokemon';
+import { BLASTOISE } from '../../../domain/pokemon/ingredient-pokemon';
 import { ADAMANT, MODEST, RASH } from '../../../domain/stat/nature';
 import {
   HELPING_SPEED_M,
