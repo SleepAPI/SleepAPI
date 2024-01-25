@@ -1,4 +1,4 @@
-import { INFERNO_CORN_KEEMA_CURRY } from '@src/domain/recipe/curry';
+import { INFERNO_CORN_KEEMA_CURRY } from '../../domain/recipe/curry';
 
 it('shall calc recipe bonus for given recipe', () => {
   const recipe = INFERNO_CORN_KEEMA_CURRY;

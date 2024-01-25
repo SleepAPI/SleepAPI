@@ -32,6 +32,7 @@ export default class OptimalController extends Controller {
       e4eProcs: input.e4e ?? 0,
       helpingBonus: input.helpingbonus ?? 0,
       goodCamp: input.camp ?? false,
+      maxPotSize: input.maxPotSize,
     };
   }
 }

@@ -19,6 +19,7 @@ export interface InputProductionStatsRequest {
   e4e?: number;
   helpingbonus?: number;
   camp?: boolean;
+  maxPotSize?: number;
   optimalSetSolutionLimit?: number;
 }
 

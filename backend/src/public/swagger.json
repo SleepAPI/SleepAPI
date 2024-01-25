@@ -206,6 +206,10 @@
 					"bonus": {
 						"type": "number",
 						"format": "double"
+					},
+					"nrOfIngredients": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -214,7 +218,8 @@
 					"value50",
 					"type",
 					"ingredients",
-					"bonus"
+					"bonus",
+					"nrOfIngredients"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -366,6 +371,10 @@
 					},
 					"goodCamp": {
 						"type": "boolean"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -426,6 +435,10 @@
 					},
 					"camp": {
 						"type": "boolean"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
 					},
 					"optimalSetSolutionLimit": {
 						"type": "number",
@@ -687,6 +700,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
 					"nrOfMeals": {
 						"type": "number",
 						"format": "double"
@@ -701,7 +718,6 @@
 					"curry",
 					"salad",
 					"dessert",
-					"minRecipeBonus",
 					"nrOfMeals"
 				],
 				"type": "object",
@@ -799,6 +815,14 @@
 					"dessert": {
 						"type": "boolean"
 					},
+					"minRecipeBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
 					"csv": {
 						"type": "boolean"
 					}
@@ -832,7 +856,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.1.1",
+		"version": "1.2.0",
 		"contact": {}
 	},
 	"openapi": "3.0.0",
@@ -1209,6 +1233,24 @@
 						"required": false,
 						"schema": {
 							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minRecipeBonus",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxPotSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					},
 					{

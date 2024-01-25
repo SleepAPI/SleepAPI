@@ -1,4 +1,4 @@
-import { BLASTOISE, PINSIR } from '@src/domain/pokemon/ingredient-pokemon';
+import { BLASTOISE, PINSIR } from '../../domain/pokemon/ingredient-pokemon';
 import {
   HELPING_SPEED_M,
   HELPING_SPEED_S,

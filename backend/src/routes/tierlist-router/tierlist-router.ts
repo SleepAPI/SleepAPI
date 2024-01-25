@@ -25,7 +25,8 @@ export interface CreateTierListRequestBody {
   curry: boolean;
   salad: boolean;
   dessert: boolean;
-  minRecipeBonus: number;
+  minRecipeBonus?: number;
+  maxPotSize?: number;
   nrOfMeals: number;
 }
 
