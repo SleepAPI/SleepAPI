@@ -37,6 +37,21 @@ export interface PokemonResult {
 class PokemonRouterImpl {
   public async register(controller: PokemonController) {
     BaseRouter.router.get(
+      '/pokemon/:name',
+      async (req: Request<{ name: string }, unknown, unknown, unknown>, res: Response) => {
+        try {
+          Logger.log('Entered /pokemon/:name');
+          const pokemonData = await controller.getPokemonWithName(req.params.name);
+
+          res.header('Content-Type', 'application/json').send(JSON.stringify(pokemonData, null, 4));
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
+    BaseRouter.router.get(
       '/pokemon',
       async (req: Request<unknown, unknown, unknown, GetPokemonQueryParams>, res: Response) => {
         try {

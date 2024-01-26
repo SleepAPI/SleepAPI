@@ -1289,6 +1289,37 @@
 				"parameters": []
 			}
 		},
+		"/api/pokemon/{name}": {
+			"get": {
+				"operationId": "GetPokemonWithName",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Pokemon"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"pokemon"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/pokemon": {
 			"get": {
 				"operationId": "GetPokemon",
