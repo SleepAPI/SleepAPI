@@ -11,6 +11,7 @@ export type TierlistType = 'overall' | 'curry' | 'salad' | 'dessert';
 export interface GetTierListQueryParams {
   tierlistType: TierlistType;
   limit50: boolean;
+  potLimit: boolean;
   pretty: boolean;
   onlyBest: boolean;
   previous: boolean;
@@ -39,13 +40,13 @@ export interface TieredPokemonCombinationContribution {
 class TierlistRouterImpl {
   public async register(controller: TierlistController) {
     BaseRouter.router.post(
-      '/tierlist/cooking/create',
+      '/tierlist/create',
       async (
         req: Request<unknown, unknown, CreateTierListRequestBody, { pretty: boolean; onlyBest: boolean }>,
         res: Response
       ) => {
         try {
-          Logger.log('Entered /tierlist/cooking/create');
+          Logger.log('Entered /tierlist/create');
 
           if (config.NODE_ENV !== 'DEV') {
             return res.status(401).send('Unauthorized');
@@ -66,13 +67,14 @@ class TierlistRouterImpl {
     );
 
     BaseRouter.router.get(
-      '/tierlist/cooking',
+      '/tierlist',
       async (req: Request<unknown, unknown, unknown, GetTierListQueryParams>, res: Response) => {
         try {
-          Logger.log('Entered /tierlist/cooking');
+          Logger.log('Entered /tierlist');
           const params: GetTierListQueryParams = {
             tierlistType: req.query.tierlistType,
             limit50: queryAsBoolean(req.query.limit50),
+            potLimit: queryAsBoolean(req.query.potLimit),
             onlyBest: queryAsBoolean(req.query.onlyBest),
             pretty: queryAsBoolean(req.query.pretty),
             previous: queryAsBoolean(req.query.previous),

@@ -257,10 +257,11 @@ function goToOptimalRanking() {
 
 function goToTierLists(createTierListF) {
   var levelVersion = document.getElementById('mode').checked;
+  var potLimit = document.getElementById('potLimit').checked;
   var tierlistType = document.getElementById('tierlistType').value;
 
-  const queryParams = '?tierlistType=' + tierlistType + '&limit50=' + !levelVersion + '&pretty=true';
-  var url = 'tierlist/cooking' + queryParams;
+  const queryParams = `?tierlistType=${tierlistType}&limit50=${!levelVersion}&potLimit=${!potLimit}&pretty=true`;
+  var url = 'tierlist' + queryParams;
 
   makeRequest(url, 'GET', function (data) {
     data = JSON.parse(data);

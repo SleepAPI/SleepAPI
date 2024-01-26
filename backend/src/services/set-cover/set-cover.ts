@@ -220,17 +220,17 @@ export class SetCover {
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
   }
 
-  public calculateMinTeamSizeFor(recipe: IngredientSet[]) {
+  public calculateMinTeamSizeFor(recipe: IngredientSet[], maxTeamSize?: number) {
+    const spotsLeftInTeam = maxTeamSize ?? 5;
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
-      spotsLeftInTeam: 5,
+      spotsLeftInTeam: spotsLeftInTeam,
       filters: this.#filters,
     };
 
     const key = JSON.stringify(params);
     const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
 
-    // default to team size 6 if the recipe is not cookable
-    return solutions.at(0) ? solutions[0].length : 6;
+    return solutions.at(0) ? solutions[0].length : spotsLeftInTeam + 1;
   }
 }
