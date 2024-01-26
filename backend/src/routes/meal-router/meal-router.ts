@@ -41,6 +41,20 @@ class MealRouterImpl {
         }
       }
     );
+    BaseRouter.router.get(
+      '/meal/:name',
+      async (req: Request<{ name: string }, unknown, unknown, unknown>, res: Response) => {
+        try {
+          Logger.log('Entered /meal/:name');
+          const meals = await controller.getMealWithName(req.params.name);
+
+          res.header('Content-Type', 'application/json').send(JSON.stringify(meals, null, 4));
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
   }
 }
 
