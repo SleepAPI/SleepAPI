@@ -432,7 +432,7 @@ export const DRATINI: Pokemon = {
     { amount: 7, ingredient: GREENGRASS_CORN },
     { amount: 8, ingredient: PURE_OIL },
   ],
-  skill: CHARGE_STRENGTH_S,
+  skill: CHARGE_ENERGY_S,
 };
 
 export const DRAGONAIR: Pokemon = {

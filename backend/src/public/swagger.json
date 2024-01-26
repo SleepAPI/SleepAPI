@@ -741,6 +741,9 @@
 					"limit50": {
 						"type": "boolean"
 					},
+					"potLimit": {
+						"type": "boolean"
+					},
 					"pretty": {
 						"type": "boolean"
 					},
@@ -754,6 +757,7 @@
 				"required": [
 					"tierlistType",
 					"limit50",
+					"potLimit",
 					"pretty",
 					"onlyBest",
 					"previous"
@@ -857,7 +861,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.2.0",
+		"version": "1.3.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1041,6 +1045,14 @@
 					{
 						"in": "query",
 						"name": "limit50",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "potLimit",
 						"required": true,
 						"schema": {
 							"type": "boolean"

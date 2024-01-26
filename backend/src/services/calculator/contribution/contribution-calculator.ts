@@ -64,7 +64,7 @@ export function calculateMealContributionFor(params: {
 
   // check if this mon solves recipe alone, if so no need to call optimal set
   const minAdditionalMonsNeeded =
-    remainderOfRecipe.length > 0 ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe) : 0;
+    remainderOfRecipe.length > 0 ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4) : 0;
 
   return calculateContributionForMealWithPunishment({
     meal,

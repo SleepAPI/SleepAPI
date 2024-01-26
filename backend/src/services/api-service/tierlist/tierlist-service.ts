@@ -1,23 +1,24 @@
-import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
-import { PokemonCombinationCombinedContribution } from '../../../domain/combination/combination';
-import { CombinedContribution, Contribution } from '../../../domain/computed/contribution';
+import { PokemonCombinationCombinedContribution } from '@src/domain/combination/combination';
+import { CombinedContribution, Contribution } from '@src/domain/computed/contribution';
 import {
   CreateTierListRequestBody,
   GetTierListQueryParams,
   TieredPokemonCombinationContribution,
-} from '../../../routes/tierlist-router/tierlist-router';
-import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
-import { getMealsForFilter } from '../../../utils/meal-utils/meal-utils';
-import { diffTierlistRankings } from '../../../utils/tierlist-utils/tierlist-utils';
+} from '@src/routes/tierlist-router/tierlist-router';
 import {
   boostFirstMealWithFactor,
   calculateMealContributionFor,
   getAllOptimalIngredientPokemonProduce,
-} from '../../calculator/contribution/contribution-calculator';
-import { Logger } from '../../logger/logger';
-import { SetCover } from '../../set-cover/set-cover';
-import { createPokemonByIngredientReverseIndex, memo } from '../../set-cover/set-cover-utils';
+} from '@src/services/calculator/contribution/contribution-calculator';
+import { Logger } from '@src/services/logger/logger';
+import { SetCover } from '@src/services/set-cover/set-cover';
+import { createPokemonByIngredientReverseIndex, memo } from '@src/services/set-cover/set-cover-utils';
+import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
+import { getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
+import { diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
+import { readFile, writeFile } from 'fs/promises';
+import path from 'path';
+import { recipe } from 'sleepapi-common';
 
 class TierlistImpl {
   public async seed() {
@@ -28,6 +29,7 @@ class TierlistImpl {
       dessert: false,
       limit50: false,
       minRecipeBonus: 0,
+      maxPotSize: undefined,
       nrOfMeals: 3,
       salad: false,
       taupe: false,
@@ -35,51 +37,95 @@ class TierlistImpl {
       lapis: false,
     };
 
-    const basePath60 = 'src/data/tierlist/cooking/level60';
-    const basePath50 = 'src/data/tierlist/cooking/level50';
+    const basePathCurrent = 'src/data/tierlist/current';
+    const basePathPrevious = 'src/data/tierlist/previous';
 
-    // level 60
+    // level 60 - Pot unlimited
     await this.#createTierListAndStore({
       details,
-      writePath: `${basePath60}/current/overall.json`,
-      previousPath: `${basePath60}/previous/overall.json`,
+      writePath: `${basePathCurrent}/level60/pot-unlimited/overall.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/overall.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, curry: true, nrOfMeals: 2 },
-      writePath: `${basePath60}/current/curry.json`,
-      previousPath: `${basePath60}/previous/curry.json`,
+      writePath: `${basePathCurrent}/level60/pot-unlimited/curry.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/curry.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, salad: true, nrOfMeals: 2 },
-      writePath: `${basePath60}/current/salad.json`,
-      previousPath: `${basePath60}/previous/salad.json`,
+      writePath: `${basePathCurrent}/level60/pot-unlimited/salad.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/salad.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, dessert: true, nrOfMeals: 2 },
-      writePath: `${basePath60}/current/dessert.json`,
-      previousPath: `${basePath60}/previous/dessert.json`,
+      writePath: `${basePathCurrent}/level60/pot-unlimited/dessert.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/dessert.json`,
     });
 
-    // level 50
+    // level 60 - pot limited
+    await this.#createTierListAndStore({
+      details: { ...details, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level60/pot-limited/overall.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/overall.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, curry: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level60/pot-limited/curry.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/curry.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, salad: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level60/pot-limited/salad.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/salad.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, dessert: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level60/pot-limited/dessert.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`,
+    });
+
+    // level 50 - Pot unlimited
     await this.#createTierListAndStore({
       details: { ...details, limit50: true },
-      writePath: `${basePath50}/current/overall.json`,
-      previousPath: `${basePath50}/previous/overall.json`,
+      writePath: `${basePathCurrent}/level50/pot-unlimited/overall.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/overall.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, curry: true, nrOfMeals: 2 },
-      writePath: `${basePath50}/current/curry.json`,
-      previousPath: `${basePath50}/previous/curry.json`,
+      writePath: `${basePathCurrent}/level50/pot-unlimited/curry.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/curry.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, salad: true, nrOfMeals: 2 },
-      writePath: `${basePath50}/current/salad.json`,
-      previousPath: `${basePath50}/previous/salad.json`,
+      writePath: `${basePathCurrent}/level50/pot-unlimited/salad.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/salad.json`,
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, dessert: true, nrOfMeals: 2 },
-      writePath: `${basePath50}/current/dessert.json`,
-      previousPath: `${basePath50}/previous/dessert.json`,
+      writePath: `${basePathCurrent}/level50/pot-unlimited/dessert.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/dessert.json`,
+    });
+
+    // level 50 - Pot limited
+    await this.#createTierListAndStore({
+      details: { ...details, limit50: true, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level50/pot-limited/overall.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/overall.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, limit50: true, curry: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level50/pot-limited/curry.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/curry.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, limit50: true, salad: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level50/pot-limited/salad.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/salad.json`,
+    });
+    await this.#createTierListAndStore({
+      details: { ...details, limit50: true, dessert: true, nrOfMeals: 2, maxPotSize: recipe.MAX_POT_SIZE },
+      writePath: `${basePathCurrent}/level50/pot-limited/dessert.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/dessert.json`,
     });
 
     Logger.info('Finished generating cooking tier lists');
@@ -160,13 +206,14 @@ class TierlistImpl {
     getTierListQueries: GetTierListQueryParams
   ): Promise<TieredPokemonCombinationContribution[]> {
     const levelVersion = getTierListQueries.limit50 ? '50' : '60';
+    const potLimitVersion = getTierListQueries.potLimit ? 'pot-limited' : 'pot-unlimited';
     const previousFileName = path.join(
       __dirname,
-      `../../../data/tierlist/cooking/level${levelVersion}/previous/${getTierListQueries.tierlistType}.json`
+      `../../../data/tierlist/previous/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
     );
     const currentFileName = path.join(
       __dirname,
-      `../../../data/tierlist/cooking/level${levelVersion}/current/${getTierListQueries.tierlistType}.json`
+      `../../../data/tierlist/current/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
     );
 
     const previousFile = await readFile(previousFileName, 'utf8');
