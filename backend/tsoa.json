@@ -4,5 +4,11 @@
   "spec": {
     "outputDirectory": "src/public",
     "specVersion": 3
+  },
+  "compilerOptions": {
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@test/*": ["./test/*"]
+    }
   }
 }
