@@ -1,5 +1,5 @@
+import { DatabaseMigrationError } from '@src/domain/error/database/database-error';
 import dotenv from 'dotenv';
-import { DatabaseMigrationError } from '../domain/error/database/database-error';
 
 export class BackendConfig {
   constructor() {

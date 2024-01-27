@@ -1,8 +1,8 @@
+import ProductionController from '@src/controllers/calculator/production.controller';
+import { Logger } from '@src/services/logger/logger';
+import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
-import ProductionController from '../../controllers/calculator/production.controller';
-import { Logger } from '../../services/logger/logger';
-import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import { queryAsBoolean } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
