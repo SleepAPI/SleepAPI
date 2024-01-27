@@ -1,5 +1,5 @@
-import HealthController from '../../controllers/health/health.controller';
-import { Logger } from '../../services/logger/logger';
+import HealthController from '@src/controllers/health/health.controller';
+import { Logger } from '@src/services/logger/logger';
 import { BaseRouter } from '../base-router';
 
 class HealthRouterImpl {

@@ -1,6 +1,6 @@
+import { DatabaseService } from '@src/database/database-service';
+import { Logger } from '@src/services/logger/logger';
 import { Controller, Get, Hidden, Route, Tags } from 'tsoa';
-import { DatabaseService } from '../../database/database-service';
-import { Logger } from '../../services/logger/logger';
 
 @Route('health')
 @Tags('system')

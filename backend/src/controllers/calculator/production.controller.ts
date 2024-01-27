@@ -1,7 +1,7 @@
+import { ProductionRequest } from '@src/routes/calculator-router/production-router';
+import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
+import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
-import { ProductionRequest } from '../../routes/calculator-router/production-router';
-import { calculatePokemonProduction } from '../../services/api-service/production/production-service';
-import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils';
 
 @Route('api/calculator')
 @Tags('calculator')

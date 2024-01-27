@@ -1,4 +1,4 @@
-import { Island } from '../../domain/island/island';
+import { Island } from '@src/domain/island/island';
 import {
   BERRIES,
   Berry,
@@ -6,7 +6,7 @@ import {
   LAPIS_BERRIES,
   SNOWDROP_BERRIES,
   TAUPE_BERRIES,
-} from '../../domain/produce/berry';
+} from '@src/domain/produce/berry';
 
 export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean; lapis: boolean }) {
   const { cyan, taupe, snowdrop, lapis } = islands;
