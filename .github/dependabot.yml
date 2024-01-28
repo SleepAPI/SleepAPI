@@ -1,6 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
+    directory: "/common"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "weekly"
