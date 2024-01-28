@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-import { PokemonCombination } from '../../../domain/combination/combination';
-import { CustomStats } from '../../../domain/combination/custom';
-import { LevelError } from '../../../domain/error/stat/stat-error';
-import { BerryDrop } from '../../../domain/produce/berry';
-import { IngredientDrop } from '../../../domain/produce/ingredient';
-import { DetailedProduce, Produce } from '../../../domain/produce/produce';
+import { CustomStats } from '@src/domain/combination/custom';
+import { DetailedProduce, Produce } from '@src/domain/combination/produce';
+import { LevelError } from '@src/domain/error/stat/stat-error';
+import { BerrySet, IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../berry/berry-calculator';
 import { calculateHelpSpeed } from '../help/help-calculator';
 
 export function calculateProduceForSpecificTimeWindow(params: {
-  averagedPokemonCombination: PokemonCombination;
+  averagedPokemonCombination: PokemonIngredientSet;
   ingredientPercentage: number;
   customStats: CustomStats;
   energyPeriod: 'CUSTOM' | 'DAY' | 'NIGHT';
@@ -64,7 +62,7 @@ export function calculateProduceForSpecificTimeWindow(params: {
 
   const berryDropsPerTimeWindow = helpsPerTimeWindow - ingredientDropsPerTimeWindow;
 
-  const producedIngredients: IngredientDrop[] = averagedPokemonCombination.ingredientList.map(
+  const producedIngredients: IngredientSet[] = averagedPokemonCombination.ingredientList.map(
     ({ amount, ingredient }) => {
       return { amount: amount * ingredientDropsPerTimeWindow, ingredient };
     }
@@ -97,7 +95,7 @@ export function calculateNightlyProduce(
 
   // check if we hit cap
   if (produceAmount <= limit) {
-    const emptySneakySnack: BerryDrop = {
+    const emptySneakySnack: BerrySet = {
       amount: 0,
       berry: totalProduce.berries.berry,
     };
@@ -124,12 +122,12 @@ export function calculateNightlyProduce(
     })),
   };
 
-  const spilledIngredients: IngredientDrop[] = averageProduce.ingredients.map(({ amount, ingredient }) => ({
+  const spilledIngredients: IngredientSet[] = averageProduce.ingredients.map(({ amount, ingredient }) => ({
     amount: amount * helpsAfterSS,
     ingredient: ingredient,
   }));
 
-  const sneakySnack: BerryDrop = { amount: helpsAfterSS * berriesPerDrop, berry: averageProduce.berries.berry };
+  const sneakySnack: BerrySet = { amount: helpsAfterSS * berriesPerDrop, berry: averageProduce.berries.berry };
 
   return {
     produce: clampedProduce,
@@ -141,7 +139,7 @@ export function calculateNightlyProduce(
 }
 
 export function calculateAverageProduce(
-  averagePokemonCombination: PokemonCombination,
+  averagePokemonCombination: PokemonIngredientSet,
   ingredientPercentage: number,
   berriesPerDrop: number
 ): Produce {

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import { OptimalTeamSolution, PokemonCombination, SurplusIngredients } from '../../../domain/combination/combination';
-import { CustomStats } from '../../../domain/combination/custom';
-import { Pokemon } from '../../../domain/pokemon/pokemon';
-import { IngredientDrop } from '../../../domain/produce/ingredient';
-import { DetailedProduce } from '../../../domain/produce/produce';
-import { Meal } from '../../../domain/recipe/meal';
+import { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
+import { CustomStats } from '@src/domain/combination/custom';
+import { DetailedProduce } from '@src/domain/combination/produce';
+import { IngredientSet, PokemonIngredientSet, pokemon, recipe } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../berry/berry-calculator';
 import {
   calculateAverageProduce,
@@ -33,8 +31,8 @@ import { extractIngredientSubskills, extractInventorySubskills } from '../stats/
  * @param ingredients
  * @returns
  */
-export function combineSameIngredientsInDrop(ingredients: IngredientDrop[]): IngredientDrop[] {
-  const combined = new Map<string, IngredientDrop>();
+export function combineSameIngredientsInDrop(ingredients: IngredientSet[]): IngredientSet[] {
+  const combined = new Map<string, IngredientSet>();
 
   for (const drop of ingredients) {
     const { name } = drop.ingredient;
@@ -57,7 +55,7 @@ export function combineSameIngredientsInDrop(ingredients: IngredientDrop[]): Ing
  * @returns
  */
 export function calculatePercentageCoveredByCombination(
-  meal: Meal,
+  meal: recipe.Recipe,
   combination: { amount: number; ingredient: { name: string; value?: number } }[]
 ): number {
   let totalCovered = 0;
@@ -84,10 +82,10 @@ export function calculatePercentageCoveredByCombination(
 }
 
 export function calculateRemainingIngredients(
-  requiredIngredients: IngredientDrop[],
-  producedIngredients: IngredientDrop[]
-): IngredientDrop[] {
-  const remainingIngredients: IngredientDrop[] = JSON.parse(JSON.stringify(requiredIngredients));
+  requiredIngredients: IngredientSet[],
+  producedIngredients: IngredientSet[]
+): IngredientSet[] {
+  const remainingIngredients: IngredientSet[] = JSON.parse(JSON.stringify(requiredIngredients));
   for (const produced of producedIngredients) {
     const index = remainingIngredients.findIndex((required) => required.ingredient.name === produced.ingredient.name);
     if (index !== -1) {
@@ -100,7 +98,7 @@ export function calculateRemainingIngredients(
   return remainingIngredients;
 }
 
-export function extractRelevantSurplus(recipe: IngredientDrop[], surplus: IngredientDrop[]): SurplusIngredients {
+export function extractRelevantSurplus(recipe: IngredientSet[], surplus: IngredientSet[]): SurplusIngredients {
   const recipeIngredientNames = new Set(recipe.map((ingredientDrop) => ingredientDrop.ingredient.name));
 
   const relevant = surplus.filter((ingredientDrop) => recipeIngredientNames.has(ingredientDrop.ingredient.name));
@@ -115,7 +113,7 @@ export function extractRelevantSurplus(recipe: IngredientDrop[], surplus: Ingred
 
 export function sortByMinimumFiller(
   optimalTeamSolutions: OptimalTeamSolution[],
-  recipe: IngredientDrop[]
+  recipe: IngredientSet[]
 ): OptimalTeamSolution[] {
   return [...optimalTeamSolutions].sort((a, b) => {
     const aSurplusList = getSurplusList(a.surplus.relevant, recipe);
@@ -131,7 +129,7 @@ export function sortByMinimumFiller(
   });
 }
 
-export function getSurplusList(surplus: IngredientDrop[], requiredIngredients: IngredientDrop[]): number[] {
+export function getSurplusList(surplus: IngredientSet[], requiredIngredients: IngredientSet[]): number[] {
   return requiredIngredients
     .map((reqIngredient) => {
       const foundSurplus = surplus.find((surplusItem) => surplusItem.ingredient.name === reqIngredient.ingredient.name);
@@ -140,12 +138,12 @@ export function getSurplusList(surplus: IngredientDrop[], requiredIngredients: I
     .sort((a, b) => a - b);
 }
 
-export function calculateContributedPowerForMeal(meal: Meal, percentage: number) {
+export function calculateContributedPowerForMeal(meal: recipe.Recipe, percentage: number) {
   return meal.value * (percentage / 100);
 }
 
-export function getAllIngredientCombinationsForLevel(pokemon: Pokemon, level: number): IngredientDrop[][] {
-  const result: Array<Array<IngredientDrop>> = [];
+export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, level: number): IngredientSet[][] {
+  const result: Array<Array<IngredientSet>> = [];
 
   const ing0 = pokemon.ingredient0;
   if (level < 30) {
@@ -170,7 +168,7 @@ export function getAllIngredientCombinationsForLevel(pokemon: Pokemon, level: nu
  * Calculate average nightly produce and subtracts overflow ingredients
  */
 export function calculateProducePerMealWindow(params: {
-  pokemonCombination: PokemonCombination;
+  pokemonCombination: PokemonIngredientSet;
   customStats: CustomStats;
   goodCamp?: boolean;
   helpingBonus?: number;
@@ -182,7 +180,7 @@ export function calculateProducePerMealWindow(params: {
   const MEALS_IN_DAY = 3;
 
   const averageIngredientDrop = calculateAverageIngredientDrop(customStats.level, pokemonCombination);
-  const averagedPokemonCombination: PokemonCombination = {
+  const averagedPokemonCombination: PokemonIngredientSet = {
     pokemon: pokemonCombination.pokemon,
     ingredientList: averageIngredientDrop,
   };
@@ -206,7 +204,6 @@ export function calculateProducePerMealWindow(params: {
     e4eProcs,
   });
 
-  // TODO: we still need to split day and night since we need to clamp night to inventory, but night will be much lower
   const nighttimeProduce = calculateProduceForSpecificTimeWindow({
     averagedPokemonCombination,
     ingredientPercentage,
@@ -254,9 +251,9 @@ export function calculateProducePerMealWindow(params: {
   };
 }
 
-export function combineIngredientDrops(array1: IngredientDrop[], array2: IngredientDrop[]): IngredientDrop[] {
-  return array1.reduce((acc: IngredientDrop[], curr: IngredientDrop, index: number) => {
-    const other: IngredientDrop = array2[index];
+export function combineIngredientDrops(array1: IngredientSet[], array2: IngredientSet[]): IngredientSet[] {
+  return array1.reduce((acc: IngredientSet[], curr: IngredientSet, index: number) => {
+    const other: IngredientSet = array2[index];
     if (curr.ingredient.name === other.ingredient.name) {
       acc.push({
         amount: curr.amount + other.amount,
@@ -269,7 +266,7 @@ export function combineIngredientDrops(array1: IngredientDrop[], array2: Ingredi
   }, []);
 }
 
-export function calculateAverageIngredientDrop(level: number, pokemonCombination: PokemonCombination) {
+export function calculateAverageIngredientDrop(level: number, pokemonCombination: PokemonIngredientSet) {
   const combinationWithoutLockedIngredients =
     level >= 60 ? pokemonCombination.ingredientList : pokemonCombination.ingredientList.slice(0, 2);
   return combinationWithoutLockedIngredients.map((comb) => {
@@ -280,13 +277,13 @@ export function calculateAverageIngredientDrop(level: number, pokemonCombination
   });
 }
 
-export function sumOfIngredients(ingredients: IngredientDrop[]) {
+export function sumOfIngredients(ingredients: IngredientSet[]) {
   return ingredients.map((ing) => ing.amount).reduce((sum, amount) => sum + amount, 0);
 }
 
 export function calculateContributedIngredientsValue(
-  meal: Meal,
-  producedIngredients: IngredientDrop[]
+  meal: recipe.Recipe,
+  producedIngredients: IngredientSet[]
 ): { contributedValue: number; fillerValue: number } {
   const recipeIngredients: Map<string, number> = new Map<string, number>();
   for (const { amount, ingredient } of meal.ingredients) {

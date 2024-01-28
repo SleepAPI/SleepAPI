@@ -1,9 +1,11 @@
-import { Pokemon } from '../../../domain/pokemon/pokemon';
-import { Nature } from '../../../domain/stat/nature';
-import { SubSkill } from '../../../domain/stat/subskill';
+import { nature, pokemon, subskill } from 'sleepapi-common';
 import { extractTriggerSubskills } from '../stats/stats-calculator';
 
-export function calculateSkillPercentage(pokemon: Pokemon, subskills: SubSkill[], nature: Nature) {
+export function calculateSkillPercentage(
+  pokemon: pokemon.Pokemon,
+  subskills: subskill.SubSkill[],
+  nature: nature.Nature
+) {
   const triggerSubskills = extractTriggerSubskills(subskills);
   return (pokemon.skillPercentage / 100) * triggerSubskills * nature.skill;
 }

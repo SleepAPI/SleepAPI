@@ -1,8 +1,8 @@
+import { recipe } from 'sleepapi-common';
 import { MealError } from '../../domain/error/meal/meal-error';
-import { MEALS, Meal } from '../../domain/recipe/meal';
 
 export function getMeal(name: string) {
-  const meal: Meal | undefined = MEALS.find((meal) => meal.name === name.toUpperCase());
+  const meal: recipe.Recipe | undefined = recipe.RECIPES.find((meal) => meal.name === name.toUpperCase());
   if (!meal) {
     throw new MealError("Couldn't find meal with name: " + name.toUpperCase());
   }
@@ -17,15 +17,15 @@ export function getMealsForFilter(params: {
   maxPotSize?: number;
 }) {
   const { curry = false, salad = false, dessert = false, minRecipeBonus = 0, maxPotSize } = params;
-  let meals = MEALS;
+  let recipes = recipe.RECIPES;
 
   if (curry || salad || dessert) {
-    meals = meals.filter(
+    recipes = recipes.filter(
       (meal) =>
         (meal.type === 'curry' && curry) || (meal.type === 'salad' && salad) || (meal.type === 'dessert' && dessert)
     );
   }
-  const recipesWithBonus = meals.filter((m) => m.bonus >= minRecipeBonus);
+  const recipesWithBonus = recipes.filter((m) => m.bonus >= minRecipeBonus);
 
   return maxPotSize ? recipesWithBonus.filter((m) => m.nrOfIngredients <= maxPotSize) : recipesWithBonus;
 }

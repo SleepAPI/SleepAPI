@@ -1,7 +1,7 @@
-import { Meal } from '../recipe/meal';
+import { recipe } from 'sleepapi-common';
 
 export interface Contribution {
-  meal: Meal;
+  meal: recipe.Recipe;
   percentage: number;
   contributedPower: number;
 }

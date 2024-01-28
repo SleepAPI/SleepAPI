@@ -1,16 +1,16 @@
-import { PokemonError } from '../../domain/error/pokemon/pokemon-error';
-import { BEAN_SAUSAGE, FANCY_APPLE, IngredientDrop, MOOMOO_MILK } from '../../domain/produce/ingredient';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
+import { ingredient, IngredientSet } from 'sleepapi-common';
 import { chooseIngredientSets } from './production-utils';
 
 describe('chooseIngredientSets', () => {
-  const validSets: IngredientDrop[][] = [
+  const validSets: IngredientSet[][] = [
     [
-      { amount: 1, ingredient: MOOMOO_MILK },
-      { amount: 1, ingredient: FANCY_APPLE },
+      { amount: 1, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 1, ingredient: ingredient.FANCY_APPLE },
     ],
     [
-      { amount: 2, ingredient: BEAN_SAUSAGE },
-      { amount: 3, ingredient: MOOMOO_MILK },
+      { amount: 2, ingredient: ingredient.BEAN_SAUSAGE },
+      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
     ],
   ];
 
@@ -19,11 +19,11 @@ describe('chooseIngredientSets', () => {
   });
 
   it('shall return the matching set for a valid ingredientSet', () => {
-    const ingredientSet = [MOOMOO_MILK.name, FANCY_APPLE.name];
+    const ingredientSet = [ingredient.MOOMOO_MILK.name, ingredient.FANCY_APPLE.name];
     const expectedSet = [
       [
-        { amount: 1, ingredient: MOOMOO_MILK },
-        { amount: 1, ingredient: FANCY_APPLE },
+        { amount: 1, ingredient: ingredient.MOOMOO_MILK },
+        { amount: 1, ingredient: ingredient.FANCY_APPLE },
       ],
     ];
 

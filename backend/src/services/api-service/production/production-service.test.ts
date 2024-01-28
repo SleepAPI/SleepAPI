@@ -1,20 +1,18 @@
-import { PINSIR } from '../../../domain/pokemon/ingredient-pokemon';
-import { FANCY_APPLE, HONEY } from '../../../domain/produce/ingredient';
-import { BASHFUL } from '../../../domain/stat/nature';
+import { ingredient, nature, pokemon } from 'sleepapi-common';
 import { calculatePokemonProduction } from './production-service';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
     const details = {
       level: 60,
-      nature: BASHFUL.name,
+      nature: nature.BASHFUL.name,
       subskills: [],
       e4e: 0,
       helpingbonus: 0,
       camp: false,
     };
 
-    const result = calculatePokemonProduction(PINSIR.name, details);
+    const result = calculatePokemonProduction(pokemon.PINSIR.name, details);
 
     expect(result).toHaveProperty('filters');
     expect(result).toHaveProperty('pokemonCombinations');
@@ -22,7 +20,7 @@ describe('calculatePokemonProduction', () => {
     expect(result.filters).toEqual(
       expect.objectContaining({
         level: details.level,
-        nature: BASHFUL,
+        nature: nature.BASHFUL,
         subskills: expect.arrayContaining(details.subskills),
         e4eProcs: details.e4e,
         helpingBonus: details.helpingbonus,
@@ -40,15 +38,15 @@ describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with a specific ingredient set', () => {
     const details = {
       level: 30,
-      nature: BASHFUL.name,
+      nature: nature.BASHFUL.name,
       subskills: [],
       e4e: 0,
       helpingbonus: 0,
       camp: false,
-      ingredientSet: [HONEY.name, FANCY_APPLE.name],
+      ingredientSet: [ingredient.HONEY.name, ingredient.FANCY_APPLE.name],
     };
 
-    const result = calculatePokemonProduction(PINSIR.name, details);
+    const result = calculatePokemonProduction(pokemon.PINSIR.name, details);
 
     expect(result).toHaveProperty('filters');
     expect(result).toHaveProperty('pokemonCombinations');
@@ -56,7 +54,7 @@ describe('calculatePokemonProduction', () => {
     expect(result.filters).toEqual(
       expect.objectContaining({
         level: details.level,
-        nature: BASHFUL,
+        nature: nature.BASHFUL,
         subskills: expect.arrayContaining(details.subskills),
         e4eProcs: details.e4e,
         helpingBonus: details.helpingbonus,

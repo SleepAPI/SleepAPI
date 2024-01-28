@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { CustomStats } from '../../../domain/combination/custom';
-import { Pokemon } from '../../../domain/pokemon/pokemon';
-import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
+import { CustomStats } from '@src/domain/combination/custom';
+import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
+import { pokemon } from 'sleepapi-common';
 import {
   calculateAsleepAverageEnergyCoefficient,
   calculateAwakeAverageEnergyCoefficient,
@@ -24,7 +24,7 @@ import {
 import { calculateHelpSpeedSubskills, invertNatureFrequecy } from '../stats/stats-calculator';
 
 export function calculateHelpSpeed(stats: {
-  pokemon: Pokemon;
+  pokemon: pokemon.Pokemon;
   customStats: CustomStats;
   energyPeriod: 'CUSTOM' | 'DAY' | 'NIGHT';
   nrOfHelpingBonus: number;

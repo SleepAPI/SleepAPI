@@ -1,5 +1,5 @@
-import { ISLANDS, Island } from '../../domain/island/island';
+import { island } from 'sleepapi-common';
 
-export function findIslandForName(islandName?: string): Island | undefined {
-  return ISLANDS.find((island) => island.name.toLowerCase() === islandName?.toLowerCase());
+export function findIslandForName(islandName?: string): island.Island | undefined {
+  return island.ISLANDS.find((island) => island.name.toLowerCase() === islandName?.toLowerCase());
 }

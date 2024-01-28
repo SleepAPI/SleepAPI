@@ -1,7 +1,7 @@
-import { PokemonError } from '../../domain/error/pokemon/pokemon-error';
-import { IngredientDrop } from '../../domain/produce/ingredient';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
+import { IngredientSet } from 'sleepapi-common';
 
-export function chooseIngredientSets(validSets: IngredientDrop[][], ingredientSet?: string[]): IngredientDrop[][] {
+export function chooseIngredientSets(validSets: IngredientSet[][], ingredientSet?: string[]): IngredientSet[][] {
   if (!ingredientSet) {
     return validSets;
   }

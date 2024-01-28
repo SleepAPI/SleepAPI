@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "paths": {
+      "src/*": ["./src/*"],
+      "test/*": ["./test/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist/"]
+}

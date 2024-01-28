@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { OptimalTeamSolution } from '../../domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { ProgrammingError } from '../../domain/error/programming/programming-error';
-import { IngredientDrop } from '../../domain/produce/ingredient';
-import { hashPokemonCombination } from '../../utils/optimal-utils/optimal-utils';
+import { OptimalTeamSolution } from '@src/domain/combination/combination';
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
+import { IngredientSet } from 'sleepapi-common';
 import {
   calculateRemainingIngredients,
   combineSameIngredientsInDrop,
@@ -32,7 +32,7 @@ export interface MemoizedFilters {
   pokemon: string[];
 }
 export interface MemoizedParameters {
-  remainingIngredients: IngredientDrop[];
+  remainingIngredients: IngredientSet[];
   spotsLeftInTeam: number;
   filters: MemoizedFilters;
 }
@@ -76,10 +76,10 @@ export class SetCover {
     // For each pokemon that produces the ingredient, go through and
     // determine how many ingredients remain in the recipe if we add
     // that pokemon to our team
-    const remainders: [number, IngredientDrop[], CustomPokemonCombinationWithProduce][] = [];
+    const remainders: [number, IngredientSet[], CustomPokemonCombinationWithProduce][] = [];
     const pokemonWithIngredient = this.#reverseIndex.get(firstIngredient.ingredient.name) ?? [];
     for (let i = 0, len = pokemonWithIngredient.length; i < len; i++) {
-      const remainder: IngredientDrop[] = calculateRemainingIngredients(
+      const remainder: IngredientSet[] = calculateRemainingIngredients(
         mealIngredients,
         pokemonWithIngredient[i].detailedProduce.produce.ingredients
       );
@@ -160,7 +160,7 @@ export class SetCover {
 
   public calculateDetailsAndSortBySumSurplus(
     solutions: CustomPokemonCombinationWithProduce[][],
-    recipe: IngredientDrop[]
+    recipe: IngredientSet[]
   ): OptimalTeamSolution[] {
     if (!solutions) {
       return [];
@@ -206,7 +206,7 @@ export class SetCover {
     });
   }
 
-  public findOptimalCombinationFor(recipe: IngredientDrop[], maxTeamSize?: number): OptimalTeamSolution[] {
+  public findOptimalCombinationFor(recipe: IngredientSet[], maxTeamSize?: number): OptimalTeamSolution[] {
     const spotsLeftInTeam = maxTeamSize ?? 5;
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
@@ -220,7 +220,7 @@ export class SetCover {
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
   }
 
-  public calculateMinTeamSizeFor(recipe: IngredientDrop[]) {
+  public calculateMinTeamSizeFor(recipe: IngredientSet[]) {
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
       spotsLeftInTeam: 5,

@@ -1,10 +1,9 @@
-import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
-import { Contribution } from '../../../domain/computed/contribution';
-import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
-import { IngredientDrop } from '../../../domain/produce/ingredient';
-import { Meal, MealType } from '../../../domain/recipe/meal';
-import { getBerriesForFilter } from '../../../utils/berry-utils/berry-utils';
-import { SetCover } from '../../set-cover/set-cover';
+import { IngredientSet, pokemon, recipe } from 'sleepapi-common';
+
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { Contribution } from '@src/domain/computed/contribution';
+import { SetCover } from '@src/services/set-cover/set-cover';
+import { getBerriesForFilter } from '@src/utils/berry-utils/berry-utils';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
@@ -26,7 +25,7 @@ export function getAllOptimalIngredientPokemonProduce(
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
 
   const allowedBerries = getBerriesForFilter(islands);
-  const pokemonForBerries = OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
+  const pokemonForBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
 
   for (const pokemon of pokemonForBerries) {
     const customStats = getOptimalIngredientStats(limit50 ? 50 : 60, pokemon);
@@ -54,8 +53,8 @@ export function getAllOptimalIngredientPokemonProduce(
  * Calculates contribution including checking with Optimal Set
  */
 export function calculateMealContributionFor(params: {
-  meal: Meal;
-  producedIngredients: IngredientDrop[];
+  meal: recipe.Recipe;
+  producedIngredients: IngredientSet[];
   memoizedSetCover: SetCover;
 }): Contribution {
   const { meal, producedIngredients, memoizedSetCover } = params;
@@ -76,10 +75,10 @@ export function calculateMealContributionFor(params: {
 }
 
 export function calculateContributionForMealWithPunishment(params: {
-  meal: Meal;
+  meal: recipe.Recipe;
   teamSize: number;
   percentage: number;
-  producedIngredients: IngredientDrop[];
+  producedIngredients: IngredientSet[];
 }): Contribution {
   const { meal, teamSize, percentage, producedIngredients } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
@@ -102,8 +101,8 @@ export function boostFirstMealWithFactor(factor: number, contribution: Contribut
   return [firstMealWithExtraWeight, ...contribution.slice(1, contribution.length)];
 }
 
-export function groupContributionsByType(contributions: Contribution[]): Record<MealType, Contribution[]> {
-  const contributionsByType: Record<MealType, Contribution[]> = {
+export function groupContributionsByType(contributions: Contribution[]): Record<recipe.RecipeType, Contribution[]> {
+  const contributionsByType: Record<recipe.RecipeType, Contribution[]> = {
     curry: [],
     salad: [],
     dessert: [],

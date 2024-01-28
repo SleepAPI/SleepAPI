@@ -1,13 +1,12 @@
-import { VENUSAUR } from '../../../domain/pokemon/ingredient-pokemon';
-import { SYLVEON } from '../../../domain/pokemon/skill-pokemon';
-import { CALM, SASSY } from '../../../domain/stat/nature';
-import { SKILL_TRIGGER_M, SKILL_TRIGGER_S } from '../../../domain/stat/subskill';
+import { nature, pokemon, subskill } from 'sleepapi-common';
 import { calculateHelpSpeed } from '../help/help-calculator';
 import { calculateSkillPercentage, calculateSkillProcs } from './skill-calculator';
 
 describe('calculateSkillPercentage', () => {
   it('shall calculate skill percentage for Venusaur', () => {
-    expect(calculateSkillPercentage(VENUSAUR, [SKILL_TRIGGER_M, SKILL_TRIGGER_S], SASSY)).toBe(0.04158);
+    expect(
+      calculateSkillPercentage(pokemon.VENUSAUR, [subskill.SKILL_TRIGGER_M, subskill.SKILL_TRIGGER_S], nature.SASSY)
+    ).toBe(0.04158);
   });
 });
 
@@ -20,16 +19,16 @@ describe('calculateSkillProcs', () => {
 describe('calculate procs from start', () => {
   // this can be used for testing mons for now
   it.skip('shall calculate procs per day for my Sylveon', () => {
-    const pokemon = SYLVEON;
-    const subskills = [SKILL_TRIGGER_M, SKILL_TRIGGER_S];
-    const nature = CALM;
+    const pkmn = pokemon.SYLVEON;
+    const subskills = [subskill.SKILL_TRIGGER_M, subskill.SKILL_TRIGGER_S];
+    const nat = nature.CALM;
 
-    const skillPercentage = calculateSkillPercentage(pokemon, subskills, nature);
+    const skillPercentage = calculateSkillPercentage(pkmn, subskills, nat);
     const nrOfHelps =
       (3600 /
         calculateHelpSpeed({
-          pokemon,
-          customStats: { level: 29, nature, subskills },
+          pokemon: pkmn,
+          customStats: { level: 29, nature: nat, subskills },
           energyPeriod: 'DAY',
           goodCamp: false,
           nrOfHelpingBonus: 0,

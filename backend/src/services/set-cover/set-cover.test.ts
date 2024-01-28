@@ -1,41 +1,39 @@
-import { OptimalTeamSolution, PokemonCombination } from '../../domain/combination/combination';
-import { CustomStats } from '../../domain/combination/custom';
-import { BLASTOISE, PINSIR } from '../../domain/pokemon/ingredient-pokemon';
-import { LEPPA } from '../../domain/produce/berry';
-import { DetailedProduce } from '../../domain/produce/produce';
-import { RASH } from '../../domain/stat/nature';
+import { OptimalTeamSolution } from '@src/domain/combination/combination';
+import { CustomStats } from '@src/domain/combination/custom';
+import { DetailedProduce } from '@src/domain/combination/produce';
+import { PokemonIngredientSet, berry, nature, pokemon } from 'sleepapi-common';
 import { MemoizedFilters, SetCover } from './set-cover';
 
 describe('processOptimalTeamSolutions', () => {
   const filters: MemoizedFilters = {
     limit50: false,
-    pokemon: [PINSIR.name],
+    pokemon: [pokemon.PINSIR.name],
   };
 
   const setCover = new SetCover(new Map(), filters, new Map());
 
   it('shall sort teams in each solution and remove duplicates', () => {
-    const pc1: PokemonCombination = {
-      pokemon: PINSIR,
+    const pc1: PokemonIngredientSet = {
+      pokemon: pokemon.PINSIR,
       ingredientList: [],
     };
 
-    const pc2: PokemonCombination = {
-      pokemon: BLASTOISE,
+    const pc2: PokemonIngredientSet = {
+      pokemon: pokemon.BLASTOISE,
       ingredientList: [],
     };
 
     const customStats: CustomStats = {
       level: 60,
-      nature: RASH,
+      nature: nature.RASH,
       subskills: [],
     };
 
     const detailedProduce: DetailedProduce = {
       helpsAfterSS: 0,
       helpsBeforeSS: 0,
-      produce: { berries: { amount: 0, berry: LEPPA }, ingredients: [] },
-      sneakySnack: { amount: 0, berry: LEPPA },
+      produce: { berries: { amount: 0, berry: berry.LEPPA }, ingredients: [] },
+      sneakySnack: { amount: 0, berry: berry.LEPPA },
       spilledIngredients: [],
     };
 

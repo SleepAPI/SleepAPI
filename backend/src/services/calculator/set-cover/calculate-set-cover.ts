@@ -1,11 +1,9 @@
-import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { InputProductionStats } from '../../../domain/computed/production';
-import { ProgrammingError } from '../../../domain/error/programming/programming-error';
-import { OPTIMAL_POKEDEX } from '../../../domain/pokemon/pokemon';
-import { IngredientDrop } from '../../../domain/produce/ingredient';
-import { subskillsForFilter } from '../../../utils/subskill-utils/subskill-utils';
-
-import { MemoizedFilters, SetCover } from '../../set-cover/set-cover';
+import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
+import { InputProductionStats } from '@src/domain/computed/production';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error';
+import { MemoizedFilters, SetCover } from '@src/services/set-cover/set-cover';
+import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
+import { IngredientSet, pokemon } from 'sleepapi-common';
 import {
   calculateProducePerMealWindow,
   getAllIngredientCombinationsForLevel,
@@ -15,7 +13,7 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
   const { level, nature, subskills, berries, goodCamp, e4eProcs, helpingBonus } = productionStats;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
-  const pokemonWithCorrectBerries = OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
+  const pokemonWithCorrectBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
   for (const pokemon of pokemonWithCorrectBerries) {
     const subskillsForPokemon = subskills ?? subskillsForFilter('optimal', level, pokemon);
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
@@ -51,7 +49,7 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
 }
 
 export function calculateSetCover(params: {
-  recipe: IngredientDrop[];
+  recipe: IngredientSet[];
   memoizedFilters: MemoizedFilters;
   cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;

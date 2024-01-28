@@ -1,20 +1,18 @@
-import { SurplusIngredients } from '../../domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { ProductionStats } from '../../domain/computed/production';
-import { IngredientDrop } from '../../domain/produce/ingredient';
-import { Nature } from '../../domain/stat/nature';
-import { SubSkill } from '../../domain/stat/subskill';
-import { OptimalFlexibleResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router';
-import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
-import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../../services/api-service/optimal/optimal-service';
-import { roundDown } from '../../utils/calculator-utils/calculator-utils';
-import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '../../utils/json/json-utils';
+import { SurplusIngredients } from '@src/domain/combination/combination';
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { ProductionStats } from '@src/domain/computed/production';
+import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
+import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
+import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
+import { IngredientSet, nature, subskill } from 'sleepapi-common';
+import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
 
 // --- production calculator
 interface ProductionFilters {
   level: number;
-  nature: Nature;
-  subskills: SubSkill[];
+  nature: nature.Nature;
+  subskills: subskill.SubSkill[];
   e4eProcs: number;
   helpingBonus: number;
   goodCamp: boolean;
@@ -305,7 +303,7 @@ class WebsiteConverterServiceImpl {
     return prettyString;
   }
 
-  #prettifyFillersForRecipe(recipe: IngredientDrop[], surplus: SurplusIngredients): string {
+  #prettifyFillersForRecipe(recipe: IngredientSet[], surplus: SurplusIngredients): string {
     const fillers = surplus.relevant.map((filler) => {
       const recipeIngredient = recipe.find((r) => r.ingredient.name === filler.ingredient.name);
       const percentage = recipeIngredient ? (filler.amount / recipeIngredient.amount) * 100 : 0;

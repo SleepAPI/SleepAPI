@@ -1,10 +1,10 @@
-import { NatureError } from '../../domain/error/stat/stat-error';
-import { RASH } from '../../domain/stat/nature';
+import { NatureError } from '@src/domain/error/stat/stat-error';
+import { nature } from 'sleepapi-common';
 import { getNature, getNatureNames } from './nature-utils';
 
 describe('getNature', () => {
   it('shall return RASH for RaSh name', () => {
-    expect(getNature('RaSh')).toBe(RASH);
+    expect(getNature('RaSh')).toBe(nature.RASH);
   });
 
   it("shall throw if Nature can't be found", () => {

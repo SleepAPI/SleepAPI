@@ -1,5 +1,4 @@
-import { CYAN, LAPIS, SNOWDROP, TAUPE } from '@src/domain/island/island';
-import { BERRIES, CYAN_BERRIES, LAPIS_BERRIES, SNOWDROP_BERRIES, TAUPE_BERRIES } from '@src/domain/produce/berry';
+import { berry, island } from 'sleepapi-common';
 import { getBerriesForFilter, getBerriesForIsland } from './berry-utils';
 
 describe('getBerriesForFilter', () => {
@@ -10,7 +9,7 @@ describe('getBerriesForFilter', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getBerriesForFilter(islands)).toEqual(BERRIES);
+    expect(getBerriesForFilter(islands)).toEqual(berry.BERRIES);
   });
 
   it('shall return cyan berries for cyan filter', () => {
@@ -20,7 +19,7 @@ describe('getBerriesForFilter', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getBerriesForFilter(islands)).toEqual(CYAN_BERRIES);
+    expect(getBerriesForFilter(islands)).toEqual(berry.CYAN_BERRIES);
   });
 
   it('shall return taupe berries for taupe filter', () => {
@@ -30,7 +29,7 @@ describe('getBerriesForFilter', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getBerriesForFilter(islands)).toEqual(TAUPE_BERRIES);
+    expect(getBerriesForFilter(islands)).toEqual(berry.TAUPE_BERRIES);
   });
 
   it('shall return snowdrop berries for snowdrop filter', () => {
@@ -40,7 +39,7 @@ describe('getBerriesForFilter', () => {
       snowdrop: true,
       lapis: false,
     };
-    expect(getBerriesForFilter(islands)).toEqual(SNOWDROP_BERRIES);
+    expect(getBerriesForFilter(islands)).toEqual(berry.SNOWDROP_BERRIES);
   });
 
   it('shall return lapis berries for lapis filter', () => {
@@ -50,7 +49,7 @@ describe('getBerriesForFilter', () => {
       snowdrop: false,
       lapis: true,
     };
-    expect(getBerriesForFilter(islands)).toEqual(LAPIS_BERRIES);
+    expect(getBerriesForFilter(islands)).toEqual(berry.LAPIS_BERRIES);
   });
 
   it('shall return both cyan and taupe berries if both filters are passed', () => {
@@ -60,28 +59,28 @@ describe('getBerriesForFilter', () => {
       snowdrop: false,
       lapis: false,
     };
-    expect(getBerriesForFilter(islands)).toEqual([...CYAN_BERRIES, ...TAUPE_BERRIES]);
+    expect(getBerriesForFilter(islands)).toEqual([...berry.CYAN_BERRIES, ...berry.TAUPE_BERRIES]);
   });
 });
 
 describe('getBerriesForIsland', () => {
   it('shall default to all berries', () => {
-    expect(getBerriesForIsland()).toEqual(BERRIES);
+    expect(getBerriesForIsland()).toEqual(berry.BERRIES);
   });
 
   it('shall return cyan berries for cyan filter', () => {
-    expect(getBerriesForIsland(CYAN)).toEqual(CYAN_BERRIES);
+    expect(getBerriesForIsland(island.CYAN)).toEqual(berry.CYAN_BERRIES);
   });
 
   it('shall return taupe berries for taupe filter', () => {
-    expect(getBerriesForIsland(TAUPE)).toEqual(TAUPE_BERRIES);
+    expect(getBerriesForIsland(island.TAUPE)).toEqual(berry.TAUPE_BERRIES);
   });
 
   it('shall return snowdrop berries for snowdrop filter', () => {
-    expect(getBerriesForIsland(SNOWDROP)).toEqual(SNOWDROP_BERRIES);
+    expect(getBerriesForIsland(island.SNOWDROP)).toEqual(berry.SNOWDROP_BERRIES);
   });
 
   it('shall return lapis berries for lapis filter', () => {
-    expect(getBerriesForIsland(LAPIS)).toEqual(LAPIS_BERRIES);
+    expect(getBerriesForIsland(island.LAPIS)).toEqual(berry.LAPIS_BERRIES);
   });
 });

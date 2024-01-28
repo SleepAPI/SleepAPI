@@ -1,14 +1,14 @@
-import { IngredientError } from '../../domain/error/ingredient/ingredient-error';
-import { INGREDIENTS, Ingredient } from '../../domain/produce/ingredient';
+import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
+import { ingredient } from 'sleepapi-common';
 
-export function getIngredientForname(name: string): Ingredient {
-  const ingredient = INGREDIENTS.find((ing) => ing.name.toLowerCase() === name.toLowerCase());
-  if (!ingredient) {
+export function getIngredientForname(name: string): ingredient.Ingredient {
+  const ing = ingredient.INGREDIENTS.find((ing) => ing.name.toLowerCase() === name.toLowerCase());
+  if (!ing) {
     throw new IngredientError(`Ingredient with name [${name}] does not exist`);
   }
-  return ingredient;
+  return ing;
 }
 
 export function getIngredientNames(): string[] {
-  return INGREDIENTS.map((ing) => ing.name);
+  return ingredient.INGREDIENTS.map((ing) => ing.name);
 }
