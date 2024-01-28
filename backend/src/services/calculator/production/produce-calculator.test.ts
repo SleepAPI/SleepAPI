@@ -1,25 +1,6 @@
-import { PokemonCombination } from '../../../domain/combination/combination';
-import { RAICHU, TYPHLOSION } from '../../../domain/pokemon/berry-pokemon';
-import { BLASTOISE, GOLEM, PINSIR, VICTREEBEL } from '../../../domain/pokemon/ingredient-pokemon';
-import { AMPHAROS, GOLDUCK } from '../../../domain/pokemon/skill-pokemon';
-import { BerryDrop } from '../../../domain/produce/berry';
-import {
-  FANCY_APPLE,
-  FANCY_EGG,
-  FIERY_HERB,
-  GREENGRASS_SOYBEANS,
-  HONEY,
-  IngredientDrop,
-  MOOMOO_MILK,
-  SNOOZY_TOMATO,
-  SOFT_POTATO,
-  SOOTHING_CACAO,
-  WARMING_GINGER,
-} from '../../../domain/produce/ingredient';
-import { Produce } from '../../../domain/produce/produce';
-import { BASHFUL, JOLLY, RASH } from '../../../domain/stat/nature';
-import { HELPING_SPEED_M, INGREDIENT_FINDER_M } from '../../../domain/stat/subskill';
-import { roundDown } from '../../../utils/calculator-utils/calculator-utils';
+import { Produce } from '@src/domain/combination/produce';
+import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
+import { BerrySet, IngredientSet, PokemonIngredientSet, ingredient, nature, pokemon, subskill } from 'sleepapi-common';
 import { combineSameIngredientsInDrop } from '../ingredient/ingredient-calculate';
 import { extractIngredientSubskills } from '../stats/stats-calculator';
 import {
@@ -30,20 +11,20 @@ import {
 
 describe('calculateProduceInTimeWindow', () => {
   it('shall calculate level 30 combination for ingredient specialist', () => {
-    const combination: IngredientDrop[] = [];
-    combination.push({ amount: 2 / 2, ingredient: MOOMOO_MILK });
-    combination.push({ amount: 3 / 2, ingredient: SOOTHING_CACAO });
+    const combination: IngredientSet[] = [];
+    combination.push({ amount: 2 / 2, ingredient: ingredient.MOOMOO_MILK });
+    combination.push({ amount: 3 / 2, ingredient: ingredient.SOOTHING_CACAO });
 
-    const pokemon = BLASTOISE;
-    const subskills = [HELPING_SPEED_M, INGREDIENT_FINDER_M];
+    const pkmn = pokemon.BLASTOISE;
+    const subskills = [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M];
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * RASH.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nature.RASH.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
-      averagedPokemonCombination: { ingredientList: combination, pokemon },
+      averagedPokemonCombination: { ingredientList: combination, pokemon: pkmn },
       ingredientPercentage,
-      customStats: { level: 30, nature: RASH, subskills },
+      customStats: { level: 30, nature: nature.RASH, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow: 6,
@@ -73,20 +54,20 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate level 30 combination for berry specialist', () => {
-    const combination: IngredientDrop[] = [];
-    combination.push({ amount: 1 / 2, ingredient: FANCY_APPLE });
-    combination.push({ amount: 2 / 2, ingredient: FANCY_APPLE });
+    const combination: IngredientSet[] = [];
+    combination.push({ amount: 1 / 2, ingredient: ingredient.FANCY_APPLE });
+    combination.push({ amount: 2 / 2, ingredient: ingredient.FANCY_APPLE });
 
-    const pokemon = RAICHU;
-    const subskills = [HELPING_SPEED_M, INGREDIENT_FINDER_M];
+    const pkmn = pokemon.RAICHU;
+    const subskills = [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M];
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * RASH.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nature.RASH.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
-      averagedPokemonCombination: { ingredientList: combination, pokemon },
+      averagedPokemonCombination: { ingredientList: combination, pokemon: pkmn },
       ingredientPercentage,
-      customStats: { level: 30, nature: RASH, subskills },
+      customStats: { level: 30, nature: nature.RASH, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow: 6,
@@ -116,20 +97,20 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate level 30 combination for skill specialist', () => {
-    const combination: IngredientDrop[] = [];
-    combination.push({ amount: 1 / 2, ingredient: SOOTHING_CACAO });
-    combination.push({ amount: 2 / 2, ingredient: FANCY_APPLE });
+    const combination: IngredientSet[] = [];
+    combination.push({ amount: 1 / 2, ingredient: ingredient.SOOTHING_CACAO });
+    combination.push({ amount: 2 / 2, ingredient: ingredient.FANCY_APPLE });
 
-    const pokemon = GOLDUCK;
-    const subskills = [HELPING_SPEED_M, INGREDIENT_FINDER_M];
+    const pkmn = pokemon.GOLDUCK;
+    const subskills = [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M];
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * RASH.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nature.RASH.ingredient * ingredientSubskills;
 
     const calculatedIngredients = calculateProduceForSpecificTimeWindow({
-      averagedPokemonCombination: { ingredientList: combination, pokemon },
+      averagedPokemonCombination: { ingredientList: combination, pokemon: pkmn },
       ingredientPercentage: ingredientPercentage,
-      customStats: { level: 30, nature: RASH, subskills },
+      customStats: { level: 30, nature: nature.RASH, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow: 6,
@@ -159,20 +140,20 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate level 60 golem with triple same roll', () => {
-    const combination: IngredientDrop[] = [];
-    combination.push({ amount: 2 / 3, ingredient: GREENGRASS_SOYBEANS });
-    combination.push({ amount: 5 / 3, ingredient: GREENGRASS_SOYBEANS });
-    combination.push({ amount: 7 / 3, ingredient: GREENGRASS_SOYBEANS });
+    const combination: IngredientSet[] = [];
+    combination.push({ amount: 2 / 3, ingredient: ingredient.GREENGRASS_SOYBEANS });
+    combination.push({ amount: 5 / 3, ingredient: ingredient.GREENGRASS_SOYBEANS });
+    combination.push({ amount: 7 / 3, ingredient: ingredient.GREENGRASS_SOYBEANS });
 
-    const pokemon = GOLEM;
-    const subskills = [HELPING_SPEED_M, INGREDIENT_FINDER_M];
+    const pkmn = pokemon.GOLEM;
+    const subskills = [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M];
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * RASH.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nature.RASH.ingredient * ingredientSubskills;
     const calculatedIngredients = calculateProduceForSpecificTimeWindow({
-      averagedPokemonCombination: { ingredientList: combination, pokemon },
+      averagedPokemonCombination: { ingredientList: combination, pokemon: pkmn },
       ingredientPercentage,
-      customStats: { level: 30, nature: RASH, subskills },
+      customStats: { level: 30, nature: nature.RASH, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow: 6,
@@ -193,26 +174,26 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate realistic Pinsir at 30', () => {
-    const pokemon = PINSIR;
-    const pokemonCombination: PokemonCombination = {
-      pokemon,
+    const pkmn = pokemon.PINSIR;
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pkmn,
       ingredientList: [
-        { amount: 2 / 2, ingredient: HONEY },
-        { amount: 5 / 2, ingredient: FANCY_APPLE },
+        { amount: 2 / 2, ingredient: ingredient.HONEY },
+        { amount: 5 / 2, ingredient: ingredient.FANCY_APPLE },
       ],
     };
-    const nature = BASHFUL;
+    const nat = nature.BASHFUL;
     const level = 30;
-    const subskills = [HELPING_SPEED_M];
+    const subskills = [subskill.HELPING_SPEED_M];
     const timeWindow = 6;
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nat.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
       averagedPokemonCombination: pokemonCombination,
       ingredientPercentage,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       timeWindow,
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
@@ -242,26 +223,26 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate wa3vs Typhlosion', () => {
-    const pokemon = TYPHLOSION;
-    const pokemonCombination: PokemonCombination = {
-      pokemon,
+    const pkmn = pokemon.TYPHLOSION;
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pkmn,
       ingredientList: [
-        { amount: 1 / 2, ingredient: WARMING_GINGER },
-        { amount: 2 / 2, ingredient: FIERY_HERB },
+        { amount: 1 / 2, ingredient: ingredient.WARMING_GINGER },
+        { amount: 2 / 2, ingredient: ingredient.FIERY_HERB },
       ],
     };
     const level = 35;
-    const subskills = [HELPING_SPEED_M];
+    const subskills = [subskill.HELPING_SPEED_M];
     const timeWindow = 6;
-    const nature = JOLLY;
+    const nat = nature.JOLLY;
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nat.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
       averagedPokemonCombination: pokemonCombination,
       ingredientPercentage,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       timeWindow,
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
@@ -291,27 +272,27 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate wa3vs Lemon', () => {
-    const pokemon = AMPHAROS;
-    const pokemonCombination: PokemonCombination = {
-      pokemon,
+    const pkmn = pokemon.AMPHAROS;
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pkmn,
       ingredientList: [
-        { amount: 1 / 2, ingredient: FIERY_HERB },
-        { amount: 3 / 2, ingredient: FANCY_EGG },
+        { amount: 1 / 2, ingredient: ingredient.FIERY_HERB },
+        { amount: 3 / 2, ingredient: ingredient.FANCY_EGG },
       ],
     };
 
     const level = 30;
-    const subskills = [HELPING_SPEED_M];
+    const subskills = [subskill.HELPING_SPEED_M];
     const timeWindow = 6;
-    const nature = BASHFUL;
+    const nat = nature.BASHFUL;
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nat.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
       averagedPokemonCombination: pokemonCombination,
       ingredientPercentage,
-      customStats: { level, nature, subskills },
+      customStats: { level, nature: nat, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow,
@@ -341,26 +322,26 @@ describe('calculateProduceInTimeWindow', () => {
   });
 
   it('shall calculate Wallowers Victreebel', () => {
-    const pokemon = VICTREEBEL;
-    const pokemonCombination: PokemonCombination = {
-      pokemon,
+    const pkmn = pokemon.VICTREEBEL;
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pkmn,
       ingredientList: [
-        { amount: 2 / 2, ingredient: SNOOZY_TOMATO },
-        { amount: 4 / 2, ingredient: SOFT_POTATO },
+        { amount: 2 / 2, ingredient: ingredient.SNOOZY_TOMATO },
+        { amount: 4 / 2, ingredient: ingredient.SOFT_POTATO },
       ],
     };
     const level = 30;
-    const subskills = [HELPING_SPEED_M];
+    const subskills = [subskill.HELPING_SPEED_M];
     const timeWindow = 6;
-    const nature = BASHFUL;
+    const nat = nature.BASHFUL;
 
     const ingredientSubskills = extractIngredientSubskills(subskills);
-    const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
+    const ingredientPercentage = (pkmn.ingredientPercentage / 100) * nat.ingredient * ingredientSubskills;
 
     const calculatedProduce = calculateProduceForSpecificTimeWindow({
       averagedPokemonCombination: pokemonCombination,
       ingredientPercentage,
-      customStats: { level, nature, subskills },
+      customStats: { level, nature: nat, subskills },
       energyPeriod: 'CUSTOM',
       e4eProcs: 10,
       timeWindow,
@@ -392,40 +373,40 @@ describe('calculateProduceInTimeWindow', () => {
 
 describe('calculateNightlyProduce', () => {
   it('shall correctly clamp produce to carry size', () => {
-    const pokemon = VICTREEBEL;
-    const ingredients: IngredientDrop[] = [
-      { amount: 6, ingredient: SNOOZY_TOMATO },
-      { amount: 15.2, ingredient: SNOOZY_TOMATO },
-      { amount: 18.9, ingredient: SOFT_POTATO },
+    const pkmn = pokemon.VICTREEBEL;
+    const ingredients: IngredientSet[] = [
+      { amount: 6, ingredient: ingredient.SNOOZY_TOMATO },
+      { amount: 15.2, ingredient: ingredient.SNOOZY_TOMATO },
+      { amount: 18.9, ingredient: ingredient.SOFT_POTATO },
     ];
-    const berries: BerryDrop = {
+    const berries: BerrySet = {
       amount: 8,
-      berry: pokemon.berry,
+      berry: pkmn.berry,
     };
     const produce: Produce = {
       berries,
       ingredients,
     };
 
-    const averageIngredientDrop: IngredientDrop[] = [
-      { amount: 2 / 3, ingredient: SNOOZY_TOMATO },
-      { amount: 5 / 3, ingredient: SNOOZY_TOMATO },
-      { amount: 6 / 3, ingredient: SOFT_POTATO },
+    const averageIngredientDrop: IngredientSet[] = [
+      { amount: 2 / 3, ingredient: ingredient.SNOOZY_TOMATO },
+      { amount: 5 / 3, ingredient: ingredient.SNOOZY_TOMATO },
+      { amount: 6 / 3, ingredient: ingredient.SOFT_POTATO },
     ];
-    const averagePokemonCombination: PokemonCombination = {
-      pokemon,
+    const averagePokemonCombination: PokemonIngredientSet = {
+      pokemon: pkmn,
       ingredientList: averageIngredientDrop,
     };
 
     const averageProduce = calculateAverageProduce(averagePokemonCombination, 0.4, 1);
 
-    const result = calculateNightlyProduce(pokemon.maxCarrySize, averageProduce, produce, 1);
+    const result = calculateNightlyProduce(pkmn.maxCarrySize, averageProduce, produce, 1);
     expect(
       roundDown(
         result.produce.ingredients.reduce((sum, { amount }) => sum + amount, 0) + result.produce.berries.amount,
         1
       )
-    ).toBe(pokemon.maxCarrySize);
+    ).toBe(pkmn.maxCarrySize);
     expect(result).toMatchInlineSnapshot(`
       {
         "helpsAfterSS": 9.04285714285714,

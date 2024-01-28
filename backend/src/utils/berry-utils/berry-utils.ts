@@ -1,30 +1,22 @@
-import { Island } from '@src/domain/island/island';
-import {
-  BERRIES,
-  Berry,
-  CYAN_BERRIES,
-  LAPIS_BERRIES,
-  SNOWDROP_BERRIES,
-  TAUPE_BERRIES,
-} from '@src/domain/produce/berry';
+import { berry, island } from 'sleepapi-common';
 
 export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; snowdrop: boolean; lapis: boolean }) {
   const { cyan, taupe, snowdrop, lapis } = islands;
 
-  const cyanBerries = cyan ? CYAN_BERRIES : [];
-  const taupeBerries = taupe ? TAUPE_BERRIES : [];
-  const snowdropBerries = snowdrop ? SNOWDROP_BERRIES : [];
-  const lapisBerries = lapis ? LAPIS_BERRIES : [];
+  const cyanBerries = cyan ? berry.CYAN_BERRIES : [];
+  const taupeBerries = taupe ? berry.TAUPE_BERRIES : [];
+  const snowdropBerries = snowdrop ? berry.SNOWDROP_BERRIES : [];
+  const lapisBerries = lapis ? berry.LAPIS_BERRIES : [];
 
   return cyan || taupe || snowdrop || lapis
     ? [...cyanBerries, ...taupeBerries, ...snowdropBerries, ...lapisBerries]
-    : BERRIES;
+    : berry.BERRIES;
 }
 
-export function getBerriesForIsland(island?: Island): Berry[] {
-  return island?.berries ?? BERRIES;
+export function getBerriesForIsland(island?: island.Island): berry.Berry[] {
+  return island?.berries ?? berry.BERRIES;
 }
 
-export function getBerryNames(berries: Berry[]) {
+export function getBerryNames(berries: berry.Berry[]) {
   return berries.map((berry) => berry.name);
 }

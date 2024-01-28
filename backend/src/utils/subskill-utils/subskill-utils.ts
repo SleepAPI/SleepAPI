@@ -1,27 +1,19 @@
-import { Pokemon } from '../../domain/pokemon/pokemon';
-import {
-  HELPING_SPEED_M,
-  HELPING_SPEED_S,
-  INGREDIENT_FINDER_M,
-  INGREDIENT_FINDER_S,
-  INVENTORY_L,
-  SubSkill,
-  SUBSKILLS,
-  SubskillSet,
-} from '../../domain/stat/subskill';
+import { pokemon, subskill } from 'sleepapi-common';
 
 export function getSubskillNames() {
-  return SUBSKILLS.map((subskill) => subskill.name);
+  return subskill.SUBSKILLS.map((subskill) => subskill.name);
 }
 
-export function extractSubskillsBasedOnLevel(level: number, subskills: string[]): SubSkill[] {
-  const subskill10 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[0]?.toUpperCase());
-  const subskill25 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[1]?.toUpperCase());
-  const subskill50 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[2]?.toUpperCase());
-  const subskill75 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[3]?.toUpperCase());
-  const subskill100 = SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[4]?.toUpperCase());
+export function extractSubskillsBasedOnLevel(level: number, subskills: string[]): subskill.SubSkill[] {
+  const subskill10 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[0]?.toUpperCase());
+  const subskill25 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[1]?.toUpperCase());
+  const subskill50 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[2]?.toUpperCase());
+  const subskill75 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[3]?.toUpperCase());
+  const subskill100 = subskill.SUBSKILLS.find(
+    (subskill) => subskill.name.toUpperCase() === subskills[4]?.toUpperCase()
+  );
 
-  const result: SubSkill[] = [];
+  const result: subskill.SubSkill[] = [];
   if (level >= 10 && subskill10) {
     result.push(subskill10);
   }
@@ -40,19 +32,29 @@ export function extractSubskillsBasedOnLevel(level: number, subskills: string[])
   return result;
 }
 
-export function subskillsForFilter(subskillSet: SubskillSet, level: number, pokemon: Pokemon): SubSkill[] {
+export function subskillsForFilter(
+  subskillSet: subskill.SubskillSet,
+  level: number,
+  pokemon: pokemon.Pokemon
+): subskill.SubSkill[] {
   if (subskillSet === 'neutral') {
     return [];
   }
 
   const singleStageSubskillsLevel60 = [
-    INGREDIENT_FINDER_M,
-    HELPING_SPEED_M,
-    INVENTORY_L,
-    INGREDIENT_FINDER_S,
-    HELPING_SPEED_S,
+    subskill.INGREDIENT_FINDER_M,
+    subskill.HELPING_SPEED_M,
+    subskill.INVENTORY_L,
+    subskill.INGREDIENT_FINDER_S,
+    subskill.HELPING_SPEED_S,
   ];
-  const optimalSubskills = [INGREDIENT_FINDER_M, HELPING_SPEED_M, INGREDIENT_FINDER_S, INVENTORY_L, HELPING_SPEED_S];
+  const optimalSubskills = [
+    subskill.INGREDIENT_FINDER_M,
+    subskill.HELPING_SPEED_M,
+    subskill.INGREDIENT_FINDER_S,
+    subskill.INVENTORY_L,
+    subskill.HELPING_SPEED_S,
+  ];
 
   const singleStageLevel60 = pokemon.carrySize === pokemon.maxCarrySize && level >= 60;
   const subskills = singleStageLevel60 ? singleStageSubskillsLevel60 : optimalSubskills;

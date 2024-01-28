@@ -1,12 +1,6 @@
+import { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 import { CombinedContribution, Contribution } from '../computed/contribution';
-import { Pokemon } from '../pokemon/pokemon';
-import { IngredientDrop } from '../produce/ingredient';
 import { CustomPokemonCombinationWithProduce, CustomStats } from './custom';
-
-export type PokemonCombination = {
-  pokemon: Pokemon;
-  ingredientList: IngredientDrop[];
-};
 
 export interface OptimalTeamSolution {
   team: CustomPokemonCombinationWithProduce[];
@@ -14,18 +8,18 @@ export interface OptimalTeamSolution {
 }
 
 export interface SurplusIngredients {
-  total: IngredientDrop[];
-  relevant: IngredientDrop[];
-  extra: IngredientDrop[];
+  total: IngredientSet[];
+  relevant: IngredientSet[];
+  extra: IngredientSet[];
 }
 
 export interface PokemonCombinationContributions {
-  pokemonCombination: PokemonCombination;
+  pokemonCombination: PokemonIngredientSet;
   contributions: Contribution[];
   stats: CustomStats;
 }
 
 export interface PokemonCombinationCombinedContribution {
-  pokemonCombination: PokemonCombination;
+  pokemonCombination: PokemonIngredientSet;
   combinedContribution: CombinedContribution;
 }

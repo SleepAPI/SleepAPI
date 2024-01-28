@@ -1,7 +1,7 @@
+import MealController from '@src/controllers/meal/meal.controller';
+import { Logger } from '@src/services/logger/logger';
+import { queryAsBoolean, respondWithCSV } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
-import MealController from '../../controllers/meal/meal.controller';
-import { Logger } from '../../services/logger/logger';
-import { queryAsBoolean, respondWithCSV } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
 
 export interface MealNamesQueryParams {

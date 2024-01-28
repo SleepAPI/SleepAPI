@@ -1,16 +1,14 @@
-import { DetailedProduce } from '../produce/produce';
-import { Nature } from '../stat/nature';
-import { SubSkill } from '../stat/subskill';
-import { PokemonCombination } from './combination';
+import { nature, PokemonIngredientSet, subskill } from 'sleepapi-common';
+import { DetailedProduce } from './produce';
 
 export interface CustomStats {
   level: number;
-  nature: Nature;
-  subskills: SubSkill[];
+  nature: nature.Nature;
+  subskills: subskill.SubSkill[];
 }
 
 export interface CustomPokemonCombinationWithProduce {
-  pokemonCombination: PokemonCombination;
+  pokemonCombination: PokemonIngredientSet;
   detailedProduce: DetailedProduce;
   customStats: CustomStats;
 }

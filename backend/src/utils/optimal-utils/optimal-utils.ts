@@ -1,8 +1,7 @@
-import { PokemonCombination, PokemonCombinationContributions } from '../../domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { Contribution } from '../../domain/computed/contribution';
-import { MealType } from '../../domain/recipe/meal';
-import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../../services/api-service/optimal/optimal-service';
+import { PokemonCombinationContributions } from '@src/domain/combination/combination';
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { Contribution } from '@src/domain/computed/contribution';
+import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '@src/services/api-service/optimal/optimal-service';
 import {
   excludeContributions,
   findBestContribution,
@@ -10,7 +9,8 @@ import {
   selectTopNContributions,
   sortByContributedPowerDesc,
   sumContributedPower,
-} from '../../services/calculator/contribution/contribution-calculator';
+} from '@src/services/calculator/contribution/contribution-calculator';
+import { PokemonIngredientSet, recipe } from 'sleepapi-common';
 
 export interface ScoreResult {
   score: number;
@@ -53,7 +53,7 @@ export function calculateOptimalFlexibleScore(contributions: Contribution[]): Sc
 }
 
 export function selectBestContributionsWithMultiplier(
-  contributionsByType: Record<MealType, Contribution[]>,
+  contributionsByType: Record<recipe.RecipeType, Contribution[]>,
   multiplier: number
 ): Contribution[] {
   return Object.values(contributionsByType).flatMap((typeContributions) => {
@@ -78,6 +78,6 @@ export function removeDuplicatePokemonCombinations(
   return result;
 }
 
-export function hashPokemonCombination(pc: PokemonCombination): string {
+export function hashPokemonCombination(pc: PokemonIngredientSet): string {
   return pc.pokemon.name + ':' + pc.ingredientList.map((i) => i.ingredient.name).join(',');
 }

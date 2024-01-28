@@ -1,6 +1,6 @@
+import { nature } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStats } from '../../domain/computed/production';
-import { RASH } from '../../domain/stat/nature';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
 import { getBerriesForIsland } from '../../utils/berry-utils/berry-utils';
@@ -26,7 +26,7 @@ export default class OptimalController extends Controller {
 
     return {
       level,
-      nature: getNature(input.nature ?? RASH.name),
+      nature: getNature(input.nature ?? nature.RASH.name),
       subskills: input.subskills ? extractSubskillsBasedOnLevel(level, input.subskills) : undefined,
       berries: getBerriesForIsland(findIslandForName(input.island)),
       e4eProcs: input.e4e ?? 0,

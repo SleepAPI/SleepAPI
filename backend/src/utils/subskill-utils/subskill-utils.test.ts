@@ -1,13 +1,4 @@
-import { BLASTOISE, PINSIR } from '../../domain/pokemon/ingredient-pokemon';
-import {
-  HELPING_SPEED_M,
-  HELPING_SPEED_S,
-  INGREDIENT_FINDER_M,
-  INGREDIENT_FINDER_S,
-  INVENTORY_L,
-  INVENTORY_M,
-  SUBSKILLS,
-} from '../../domain/stat/subskill';
+import { pokemon, subskill } from 'sleepapi-common';
 import { extractSubskillsBasedOnLevel, getSubskillNames, subskillsForFilter } from './subskill-utils';
 
 describe('getSubskillNames', () => {
@@ -29,24 +20,26 @@ describe('getSubskillNames', () => {
 
 describe('extractSubskillsBasedOnLevel', () => {
   it('should return the correct subskills for level 10', () => {
-    const subskills = [INGREDIENT_FINDER_M.name];
+    const subskills = [subskill.INGREDIENT_FINDER_M.name];
     expect(extractSubskillsBasedOnLevel(10, subskills)).toContain(
-      SUBSKILLS.find((s) => s.name.toUpperCase() === INGREDIENT_FINDER_M.name.toUpperCase())
+      subskill.SUBSKILLS.find((s) => s.name.toUpperCase() === subskill.INGREDIENT_FINDER_M.name.toUpperCase())
     );
   });
 
   it('should return the correct subskills for level 25', () => {
-    const subskills = [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name];
-    const expectedSubskills = SUBSKILLS.filter((s) =>
-      [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name].map((name) => name.toUpperCase()).includes(s.name.toUpperCase())
+    const subskills = [subskill.INGREDIENT_FINDER_M.name, subskill.HELPING_SPEED_M.name];
+    const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
+      [subskill.INGREDIENT_FINDER_M.name, subskill.HELPING_SPEED_M.name]
+        .map((name) => name.toUpperCase())
+        .includes(s.name.toUpperCase())
     );
     expect(extractSubskillsBasedOnLevel(25, subskills)).toEqual(expect.arrayContaining(expectedSubskills));
   });
 
   it('should return the correct subskills for level 50', () => {
-    const subskills = [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name, INVENTORY_L.name];
-    const expectedSubskills = SUBSKILLS.filter((s) =>
-      [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name, INVENTORY_L.name]
+    const subskills = [subskill.INGREDIENT_FINDER_M.name, subskill.HELPING_SPEED_M.name, subskill.INVENTORY_L.name];
+    const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
+      [subskill.INGREDIENT_FINDER_M.name, subskill.HELPING_SPEED_M.name, subskill.INVENTORY_L.name]
         .map((name) => name.toUpperCase())
         .includes(s.name.toUpperCase())
     );
@@ -54,9 +47,19 @@ describe('extractSubskillsBasedOnLevel', () => {
   });
 
   it('should return the correct subskills for level 75', () => {
-    const subskills = [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name, INVENTORY_L.name, INGREDIENT_FINDER_S.name];
-    const expectedSubskills = SUBSKILLS.filter((s) =>
-      [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name, INVENTORY_L.name, INGREDIENT_FINDER_S.name]
+    const subskills = [
+      subskill.INGREDIENT_FINDER_M.name,
+      subskill.HELPING_SPEED_M.name,
+      subskill.INVENTORY_L.name,
+      subskill.INGREDIENT_FINDER_S.name,
+    ];
+    const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
+      [
+        subskill.INGREDIENT_FINDER_M.name,
+        subskill.HELPING_SPEED_M.name,
+        subskill.INVENTORY_L.name,
+        subskill.INGREDIENT_FINDER_S.name,
+      ]
         .map((name) => name.toUpperCase())
         .includes(s.name.toUpperCase())
     );
@@ -65,14 +68,20 @@ describe('extractSubskillsBasedOnLevel', () => {
 
   it('should return the correct subskills for level 100', () => {
     const subskills = [
-      INGREDIENT_FINDER_M.name,
-      HELPING_SPEED_M.name,
-      INVENTORY_L.name,
-      INGREDIENT_FINDER_S.name,
-      INVENTORY_M.name,
+      subskill.INGREDIENT_FINDER_M.name,
+      subskill.HELPING_SPEED_M.name,
+      subskill.INVENTORY_L.name,
+      subskill.INGREDIENT_FINDER_S.name,
+      subskill.INVENTORY_M.name,
     ];
-    const expectedSubskills = SUBSKILLS.filter((s) =>
-      [INGREDIENT_FINDER_M.name, HELPING_SPEED_M.name, INVENTORY_L.name, INGREDIENT_FINDER_S.name, INVENTORY_M.name]
+    const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
+      [
+        subskill.INGREDIENT_FINDER_M.name,
+        subskill.HELPING_SPEED_M.name,
+        subskill.INVENTORY_L.name,
+        subskill.INGREDIENT_FINDER_S.name,
+        subskill.INVENTORY_M.name,
+      ]
         .map((name) => name.toUpperCase())
         .includes(s.name.toUpperCase())
     );
@@ -80,61 +89,64 @@ describe('extractSubskillsBasedOnLevel', () => {
   });
 
   it('should return an empty array if level is below 10', () => {
-    expect(extractSubskillsBasedOnLevel(5, [INGREDIENT_FINDER_M.name])).toEqual([]);
+    expect(extractSubskillsBasedOnLevel(5, [subskill.INGREDIENT_FINDER_M.name])).toEqual([]);
   });
 });
 
 describe('subskillsForFilter', () => {
   it('should return an empty array for neutral subskill set', () => {
-    expect(subskillsForFilter('neutral', 50, PINSIR)).toEqual([]);
+    expect(subskillsForFilter('neutral', 50, pokemon.PINSIR)).toEqual([]);
   });
 
   it('should return the correct subskills for level 10 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 10, BLASTOISE)).toEqual([INGREDIENT_FINDER_M]);
+    expect(subskillsForFilter('optimal', 10, pokemon.BLASTOISE)).toEqual([subskill.INGREDIENT_FINDER_M]);
   });
 
   it('should return the correct subskills for level 25 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 25, BLASTOISE)).toEqual([INGREDIENT_FINDER_M, HELPING_SPEED_M]);
+    expect(subskillsForFilter('optimal', 25, pokemon.BLASTOISE)).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+    ]);
   });
 
   it('should return the correct subskills for level 50 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 50, BLASTOISE)).toEqual([
-      INGREDIENT_FINDER_M,
-      HELPING_SPEED_M,
-      INGREDIENT_FINDER_S,
+    expect(subskillsForFilter('optimal', 50, pokemon.BLASTOISE)).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.INGREDIENT_FINDER_S,
     ]);
   });
 
   it('should return the correct subskills for level 75 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 75, BLASTOISE)).toEqual([
-      INGREDIENT_FINDER_M,
-      HELPING_SPEED_M,
-      INGREDIENT_FINDER_S,
-      INVENTORY_L,
+    expect(subskillsForFilter('optimal', 75, pokemon.BLASTOISE)).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.INGREDIENT_FINDER_S,
+      subskill.INVENTORY_L,
     ]);
   });
 
   it('should return the correct subskills for level 100 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 100, BLASTOISE)).toEqual([
-      INGREDIENT_FINDER_M,
-      HELPING_SPEED_M,
-      INGREDIENT_FINDER_S,
-      INVENTORY_L,
-      HELPING_SPEED_S,
+    expect(subskillsForFilter('optimal', 100, pokemon.BLASTOISE)).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.INGREDIENT_FINDER_S,
+      subskill.INVENTORY_L,
+      subskill.HELPING_SPEED_S,
     ]);
   });
 
   it('should return the correct subskills for level 100, single-stage pokemon, and optimal set', () => {
-    expect(subskillsForFilter('optimal', 100, PINSIR)).toEqual([
-      INGREDIENT_FINDER_M,
-      HELPING_SPEED_M,
-      INVENTORY_L,
-      INGREDIENT_FINDER_S,
-      HELPING_SPEED_S,
+    expect(subskillsForFilter('optimal', 100, pokemon.PINSIR)).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.INVENTORY_L,
+      subskill.INGREDIENT_FINDER_S,
+      subskill.HELPING_SPEED_S,
     ]);
   });
 
   it('should return an empty array for level below 10', () => {
-    expect(subskillsForFilter('optimal', 5, BLASTOISE)).toEqual([]);
+    expect(subskillsForFilter('optimal', 5, pokemon.BLASTOISE)).toEqual([]);
   });
 });

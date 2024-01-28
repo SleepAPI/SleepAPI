@@ -50,7 +50,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IngredientDrop": {
+			"IngredientSet": {
 				"properties": {
 					"amount": {
 						"type": "number",
@@ -121,17 +121,17 @@
 						"format": "double"
 					},
 					"ingredient0": {
-						"$ref": "#/components/schemas/IngredientDrop"
+						"$ref": "#/components/schemas/IngredientSet"
 					},
 					"ingredient30": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
 					"ingredient60": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
@@ -156,11 +156,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PokemonCombination": {
+			"PokemonIngredientSet": {
 				"properties": {
 					"ingredientList": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
@@ -174,7 +174,7 @@
 				],
 				"type": "object"
 			},
-			"MealType": {
+			"RecipeType": {
 				"type": "string",
 				"enum": [
 					"curry",
@@ -182,7 +182,7 @@
 					"dessert"
 				]
 			},
-			"Meal": {
+			"Recipe": {
 				"properties": {
 					"name": {
 						"type": "string"
@@ -196,11 +196,11 @@
 						"format": "double"
 					},
 					"type": {
-						"$ref": "#/components/schemas/MealType"
+						"$ref": "#/components/schemas/RecipeType"
 					},
 					"ingredients": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
@@ -228,7 +228,7 @@
 			"Contribution": {
 				"properties": {
 					"meal": {
-						"$ref": "#/components/schemas/Meal"
+						"$ref": "#/components/schemas/Recipe"
 					},
 					"percentage": {
 						"type": "number",
@@ -391,7 +391,7 @@
 			"OptimalFlexibleResult": {
 				"properties": {
 					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonCombination"
+						"$ref": "#/components/schemas/PokemonIngredientSet"
 					},
 					"scoreResult": {
 						"$ref": "#/components/schemas/ScoreResult"
@@ -449,7 +449,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BerryDrop": {
+			"BerrySet": {
 				"properties": {
 					"amount": {
 						"type": "number",
@@ -469,11 +469,11 @@
 			"Produce": {
 				"properties": {
 					"berries": {
-						"$ref": "#/components/schemas/BerryDrop"
+						"$ref": "#/components/schemas/BerrySet"
 					},
 					"ingredients": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					}
@@ -492,12 +492,12 @@
 					},
 					"spilledIngredients": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
 					"sneakySnack": {
-						"$ref": "#/components/schemas/BerryDrop"
+						"$ref": "#/components/schemas/BerrySet"
 					},
 					"helpsBeforeSS": {
 						"type": "number",
@@ -545,7 +545,7 @@
 			"CustomPokemonCombinationWithProduce": {
 				"properties": {
 					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonCombination"
+						"$ref": "#/components/schemas/PokemonIngredientSet"
 					},
 					"detailedProduce": {
 						"$ref": "#/components/schemas/DetailedProduce"
@@ -566,19 +566,19 @@
 				"properties": {
 					"total": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
 					"relevant": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					},
 					"extra": {
 						"items": {
-							"$ref": "#/components/schemas/IngredientDrop"
+							"$ref": "#/components/schemas/IngredientSet"
 						},
 						"type": "array"
 					}
@@ -638,7 +638,7 @@
 			"PokemonCombinationCombinedContribution": {
 				"properties": {
 					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonCombination"
+						"$ref": "#/components/schemas/PokemonIngredientSet"
 					},
 					"combinedContribution": {
 						"$ref": "#/components/schemas/CombinedContribution"
@@ -955,7 +955,7 @@
 										},
 										"recipe": {
 											"items": {
-												"$ref": "#/components/schemas/IngredientDrop"
+												"$ref": "#/components/schemas/IngredientSet"
 											},
 											"type": "array"
 										},
@@ -1197,7 +1197,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Meal"
+									"$ref": "#/components/schemas/Recipe"
 								}
 							}
 						}

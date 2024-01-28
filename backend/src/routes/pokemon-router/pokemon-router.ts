@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
+import { IngredientSet } from 'sleepapi-common';
 import PokemonController from '../../controllers/pokemon/pokemon.controller';
-import { IngredientDrop } from '../../domain/produce/ingredient';
 import { Logger } from '../../services/logger/logger';
 import { queryAsBoolean, respondWithCSV } from '../../utils/routing/routing-utils';
 import { BaseRouter } from '../base-router';
@@ -24,8 +24,8 @@ export interface MealsForPokemonRequestQueryParams {
 
 export interface PokemonResult {
   pokemon: string;
-  ingredientList: IngredientDrop[];
-  ingredientsProduced: IngredientDrop[];
+  ingredientList: IngredientSet[];
+  ingredientsProduced: IngredientSet[];
   averagePercentage: number;
   generalistRanking: number;
   meals: {

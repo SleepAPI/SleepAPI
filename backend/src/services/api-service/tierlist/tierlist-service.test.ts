@@ -1,5 +1,4 @@
-import { BLASTOISE, PINSIR } from '../../../domain/pokemon/ingredient-pokemon';
-import { HONEY, MOOMOO_MILK } from '../../../domain/produce/ingredient';
+import { ingredient, pokemon } from 'sleepapi-common';
 import { TieredPokemonCombinationContribution } from '../../../routes/tierlist-router/tierlist-router';
 import {
   calculateDiffForEntry,
@@ -21,7 +20,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -43,7 +42,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -60,7 +59,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: BLASTOISE,
+            pokemon: pokemon.BLASTOISE,
           },
         },
       },
@@ -75,7 +74,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -99,7 +98,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: BLASTOISE,
+            pokemon: pokemon.BLASTOISE,
           },
         },
       },
@@ -114,7 +113,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -131,7 +130,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -141,7 +140,7 @@ describe('diffTierlistRankings', () => {
     expect(result).toHaveLength(2);
     expect(
       result.some(
-        (item) => item.pokemonCombinationContribution.pokemonCombination.pokemon === PINSIR && item.diff === -1
+        (item) => item.pokemonCombinationContribution.pokemonCombination.pokemon === pokemon.PINSIR && item.diff === -1
       )
     ).toBeTruthy();
   });
@@ -159,7 +158,7 @@ describe('diffTierlistRankings', () => {
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: PINSIR,
+            pokemon: pokemon.PINSIR,
           },
         },
       },
@@ -177,7 +176,10 @@ describe('createPreviousIndexMap', () => {
     const previous: TieredPokemonCombinationContribution[] = [
       {
         pokemonCombinationContribution: {
-          pokemonCombination: { pokemon: BLASTOISE, ingredientList: [{ amount: 2, ingredient: MOOMOO_MILK }] },
+          pokemonCombination: {
+            pokemon: pokemon.BLASTOISE,
+            ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+          },
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
@@ -189,7 +191,10 @@ describe('createPreviousIndexMap', () => {
       },
       {
         pokemonCombinationContribution: {
-          pokemonCombination: { pokemon: PINSIR, ingredientList: [{ amount: 2, ingredient: HONEY }] },
+          pokemonCombination: {
+            pokemon: pokemon.PINSIR,
+            ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }],
+          },
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
@@ -214,7 +219,10 @@ describe('calculateDiffForEntry', () => {
   it('should calculate correct diff when pokemon is found in previous', () => {
     const currentEntry: TieredPokemonCombinationContribution = {
       pokemonCombinationContribution: {
-        pokemonCombination: { pokemon: BLASTOISE, ingredientList: [{ amount: 2, ingredient: MOOMOO_MILK }] },
+        pokemonCombination: {
+          pokemon: pokemon.BLASTOISE,
+          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+        },
         combinedContribution: {
           averagePercentage: 100,
           contributions: [],
@@ -237,7 +245,10 @@ describe('calculateDiffForEntry', () => {
   it('shall, for new mons, set diff to undefined when pokemon is not found in previous', () => {
     const currentEntry: TieredPokemonCombinationContribution = {
       pokemonCombinationContribution: {
-        pokemonCombination: { pokemon: BLASTOISE, ingredientList: [{ amount: 2, ingredient: MOOMOO_MILK }] },
+        pokemonCombination: {
+          pokemon: pokemon.BLASTOISE,
+          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+        },
         combinedContribution: {
           averagePercentage: 100,
           contributions: [],

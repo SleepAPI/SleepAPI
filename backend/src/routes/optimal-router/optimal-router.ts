@@ -1,14 +1,14 @@
+import { config } from '@src/config/config';
+import OptimalController from '@src/controllers/optimal/optimal.controller';
+import { OptimalTeamSolution } from '@src/domain/combination/combination';
+import { ProductionStats } from '@src/domain/computed/production';
+import { CSVConverterService } from '@src/services/csv-converter/csv-converter-service';
+import { Logger } from '@src/services/logger/logger';
+import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
+import { ScoreResult } from '@src/utils/optimal-utils/optimal-utils';
+import { queryAsBoolean, queryParamsToString, respondWithCSV } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
-import { config } from '../../config/config';
-import OptimalController from '../../controllers/optimal/optimal.controller';
-import { OptimalTeamSolution, PokemonCombination } from '../../domain/combination/combination';
-import { ProductionStats } from '../../domain/computed/production';
-import { IngredientDrop } from '../../domain/produce/ingredient';
-import { CSVConverterService } from '../../services/csv-converter/csv-converter-service';
-import { Logger } from '../../services/logger/logger';
-import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import { ScoreResult } from '../../utils/optimal-utils/optimal-utils';
-import { queryAsBoolean, queryParamsToString, respondWithCSV } from '../../utils/routing/routing-utils';
+import { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
 export interface InputProductionStatsRequest {
@@ -24,7 +24,7 @@ export interface InputProductionStatsRequest {
 }
 
 export interface OptimalFlexibleResult {
-  pokemonCombination: PokemonCombination;
+  pokemonCombination: PokemonIngredientSet;
   scoreResult: ScoreResult;
   input: ProductionStats;
 }
@@ -32,7 +32,7 @@ export interface OptimalFlexibleResult {
 export interface OptimalSetResult {
   bonus: number;
   meal: string;
-  recipe: IngredientDrop[];
+  recipe: IngredientSet[];
   value: number;
   filter: ProductionStats;
   teams: OptimalTeamSolution[];

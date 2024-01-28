@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "common",
+      "path": "common"
+    },
+    {
       "name": "backend",
       "path": "backend"
     },
@@ -29,6 +33,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "eslint.validate": ["javascript", "typescript"],
     "files.exclude": {
+      "common": true,
       "backend": true,
       "frontend": true,
       "bot": true,

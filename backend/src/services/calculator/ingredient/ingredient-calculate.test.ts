@@ -1,24 +1,5 @@
-import { OptimalTeamSolution, PokemonCombination } from '../../../domain/combination/combination';
-import { TYPHLOSION } from '../../../domain/pokemon/berry-pokemon';
-import { ABSOL, BLASTOISE, DUGTRIO, PINSIR, TYRANITAR } from '../../../domain/pokemon/ingredient-pokemon';
-import {
-  BEAN_SAUSAGE,
-  FANCY_APPLE,
-  FIERY_HERB,
-  GREENGRASS_SOYBEANS,
-  HONEY,
-  IngredientDrop,
-  LARGE_LEEK,
-  MOOMOO_MILK,
-  SNOOZY_TOMATO,
-  SOOTHING_CACAO,
-  WARMING_GINGER,
-} from '../../../domain/produce/ingredient';
-import { FANCY_APPLE_CURRY } from '../../../domain/recipe/curry';
-import { LOVELY_KISS_SMOOTHIE } from '../../../domain/recipe/dessert';
-import { NINJA_SALAD } from '../../../domain/recipe/salad';
-import { BASHFUL, RASH } from '../../../domain/stat/nature';
-import { HELPING_SPEED_M, INGREDIENT_FINDER_M, INVENTORY_L, SubSkill } from '../../../domain/stat/subskill';
+import { OptimalTeamSolution } from '@src/domain/combination/combination';
+import { IngredientSet, PokemonIngredientSet, ingredient, nature, pokemon, recipe, subskill } from 'sleepapi-common';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
@@ -32,21 +13,21 @@ import {
 } from './ingredient-calculate';
 
 describe('calculateIngredientsProducedPerMeal', () => {
-  it('shall calculate realistic Pinsir at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: PINSIR,
+  it('shall calculate realistic pokemon.PINSIR at 30', () => {
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.PINSIR,
       ingredientList: [
-        { amount: 2, ingredient: HONEY },
-        { amount: 5, ingredient: FANCY_APPLE },
+        { amount: 2, ingredient: ingredient.HONEY },
+        { amount: 5, ingredient: ingredient.FANCY_APPLE },
       ],
     };
-    const nature = BASHFUL;
+    const nat = nature.BASHFUL;
     const level = 30;
-    const subskills: SubSkill[] = [HELPING_SPEED_M];
+    const subskills: subskill.SubSkill[] = [subskill.HELPING_SPEED_M];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
       {
@@ -113,20 +94,20 @@ describe('calculateIngredientsProducedPerMeal', () => {
   });
 
   it('shall calculate optimal pokemon with small carry size at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: ABSOL,
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.ABSOL,
       ingredientList: [
-        { amount: 2, ingredient: SOOTHING_CACAO },
-        { amount: 8, ingredient: FANCY_APPLE },
+        { amount: 2, ingredient: ingredient.SOOTHING_CACAO },
+        { amount: 8, ingredient: ingredient.FANCY_APPLE },
       ],
     };
-    const nature = RASH;
+    const nat = nature.RASH;
     const level = 30;
-    const subskills: SubSkill[] = [INGREDIENT_FINDER_M, INVENTORY_L];
+    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       helpingBonus: 0,
       e4eProcs: 0,
     });
@@ -176,20 +157,20 @@ describe('calculateIngredientsProducedPerMeal', () => {
   });
 
   it('shall calculate optimal berry specialist at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: TYPHLOSION,
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.TYPHLOSION,
       ingredientList: [
-        { amount: 1, ingredient: WARMING_GINGER },
-        { amount: 2, ingredient: FIERY_HERB },
+        { amount: 1, ingredient: ingredient.WARMING_GINGER },
+        { amount: 2, ingredient: ingredient.FIERY_HERB },
       ],
     };
-    const nature = RASH;
+    const nat = nature.RASH;
     const level = 30;
-    const subskills: SubSkill[] = [INGREDIENT_FINDER_M, INVENTORY_L];
+    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       helpingBonus: 0,
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
@@ -238,20 +219,20 @@ describe('calculateIngredientsProducedPerMeal', () => {
   });
 
   it('shall calculate optimal pokemon with large carry size at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: TYRANITAR,
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.TYRANITAR,
       ingredientList: [
-        { amount: 2, ingredient: WARMING_GINGER },
-        { amount: 5, ingredient: GREENGRASS_SOYBEANS },
+        { amount: 2, ingredient: ingredient.WARMING_GINGER },
+        { amount: 5, ingredient: ingredient.GREENGRASS_SOYBEANS },
       ],
     };
-    const nature = RASH;
+    const nat = nature.RASH;
     const level = 30;
-    const subskills: SubSkill[] = [INGREDIENT_FINDER_M, INVENTORY_L];
+    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       e4eProcs: 0,
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
@@ -300,20 +281,20 @@ describe('calculateIngredientsProducedPerMeal', () => {
   });
 
   it('shall calculate optimal pokemon with large carry size and small drops at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: BLASTOISE,
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.BLASTOISE,
       ingredientList: [
-        { amount: 2, ingredient: MOOMOO_MILK },
-        { amount: 3, ingredient: SOOTHING_CACAO },
+        { amount: 2, ingredient: ingredient.MOOMOO_MILK },
+        { amount: 3, ingredient: ingredient.SOOTHING_CACAO },
       ],
     };
-    const nature = RASH;
+    const nat = nature.RASH;
     const level = 30;
-    const subskills: SubSkill[] = [INGREDIENT_FINDER_M, INVENTORY_L];
+    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
       {
@@ -361,20 +342,20 @@ describe('calculateIngredientsProducedPerMeal', () => {
   });
 
   it('shall calculate optimal pokemon with medium carry size and medium drops at 30', () => {
-    const pokemonCombination: PokemonCombination = {
-      pokemon: DUGTRIO,
+    const pokemonCombination: PokemonIngredientSet = {
+      pokemon: pokemon.DUGTRIO,
       ingredientList: [
-        { amount: 2, ingredient: SNOOZY_TOMATO },
-        { amount: 3, ingredient: LARGE_LEEK },
+        { amount: 2, ingredient: ingredient.SNOOZY_TOMATO },
+        { amount: 3, ingredient: ingredient.LARGE_LEEK },
       ],
     };
-    const nature = RASH;
+    const nat = nature.RASH;
     const level = 30;
-    const subskills: SubSkill[] = [INGREDIENT_FINDER_M, INVENTORY_L];
+    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
 
     const ingredientsDropped = calculateProducePerMealWindow({
       pokemonCombination,
-      customStats: { subskills, nature, level },
+      customStats: { subskills, nature: nat, level },
       e4eProcs: 0,
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
@@ -425,19 +406,19 @@ describe('calculateIngredientsProducedPerMeal', () => {
 
 describe('combineSameIngredientsInDrop', () => {
   it('shall combine ingredients and leave unique ingredients as is', () => {
-    const pinsir: IngredientDrop[] = [
+    const pinsir: IngredientSet[] = [
       {
         amount: 2,
-        ingredient: HONEY,
+        ingredient: ingredient.HONEY,
       },
-      { amount: 5, ingredient: FANCY_APPLE },
+      { amount: 5, ingredient: ingredient.FANCY_APPLE },
     ];
-    const absol: IngredientDrop[] = [
+    const absol: IngredientSet[] = [
       {
         amount: 2,
-        ingredient: SOOTHING_CACAO,
+        ingredient: ingredient.SOOTHING_CACAO,
       },
-      { amount: 8, ingredient: FANCY_APPLE },
+      { amount: 8, ingredient: ingredient.FANCY_APPLE },
     ];
 
     expect(combineSameIngredientsInDrop([...pinsir, ...absol])).toMatchInlineSnapshot(`
@@ -476,26 +457,32 @@ describe('combineSameIngredientsInDrop', () => {
 
 describe('calculatePercentageCoveredByCombination', () => {
   it('shall successfully calculate expected percentage', () => {
-    const combination: IngredientDrop[] = [
-      { amount: 4, ingredient: HONEY },
-      { amount: 10, ingredient: FANCY_APPLE },
+    const combination: IngredientSet[] = [
+      { amount: 4, ingredient: ingredient.HONEY },
+      { amount: 10, ingredient: ingredient.FANCY_APPLE },
     ];
-    expect(calculatePercentageCoveredByCombination(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`40`);
+    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+      `40`
+    );
   });
 
   it('shall count no matching ingredients as zero percentage', () => {
-    const combination: IngredientDrop[] = [];
-    expect(calculatePercentageCoveredByCombination(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`0`);
+    const combination: IngredientSet[] = [];
+    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+      `0`
+    );
   });
 
   it('shall limit overflow of ingredients at 100%', () => {
-    const combination: IngredientDrop[] = [
-      { amount: 100, ingredient: HONEY },
-      { amount: 100, ingredient: FANCY_APPLE },
-      { amount: 100, ingredient: SOOTHING_CACAO },
-      { amount: 100, ingredient: MOOMOO_MILK },
+    const combination: IngredientSet[] = [
+      { amount: 100, ingredient: ingredient.HONEY },
+      { amount: 100, ingredient: ingredient.FANCY_APPLE },
+      { amount: 100, ingredient: ingredient.SOOTHING_CACAO },
+      { amount: 100, ingredient: ingredient.MOOMOO_MILK },
     ];
-    expect(calculatePercentageCoveredByCombination(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`100`);
+    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+      `100`
+    );
   });
 
   it('shall handle combinations with same ingredient twice', () => {
@@ -503,14 +490,14 @@ describe('calculatePercentageCoveredByCombination', () => {
       { amount: 2.79, ingredient: { name: 'Apple', value: '90.00' } },
       { amount: 5.57, ingredient: { name: 'Apple', value: '90.00' } },
       { amount: 8.36, ingredient: { name: 'Soybeans', value: '100.00' } },
-    ] as unknown as IngredientDrop[];
-    expect(calculatePercentageCoveredByCombination(FANCY_APPLE_CURRY, raw)).toBe(100);
+    ] as unknown as IngredientSet[];
+    expect(calculatePercentageCoveredByCombination(recipe.FANCY_APPLE_CURRY, raw)).toBe(100);
   });
 });
 
 describe('getAllIngredientCombinationsFor', () => {
   it('shall find all combinations for given pokemon at level 60', () => {
-    expect(getAllIngredientCombinationsForLevel(PINSIR, 60)).toMatchInlineSnapshot(`
+    expect(getAllIngredientCombinationsForLevel(pokemon.PINSIR, 60)).toMatchInlineSnapshot(`
       [
         [
           {
@@ -691,7 +678,7 @@ describe('getAllIngredientCombinationsFor', () => {
   });
 
   it('shall find all combinations for given pokemon at level 30', () => {
-    expect(getAllIngredientCombinationsForLevel(PINSIR, 30)).toMatchInlineSnapshot(`
+    expect(getAllIngredientCombinationsForLevel(pokemon.PINSIR, 30)).toMatchInlineSnapshot(`
       [
         [
           {
@@ -740,21 +727,21 @@ describe('getAllIngredientCombinationsFor', () => {
 
 describe('comineIngredientDrops', () => {
   it('shall combine two ingredient drop arrays', () => {
-    const arr1: IngredientDrop[] = [
+    const arr1: IngredientSet[] = [
       {
         amount: 1.1,
-        ingredient: HONEY,
+        ingredient: ingredient.HONEY,
       },
-      { amount: 5, ingredient: FANCY_APPLE },
-      { amount: 5, ingredient: HONEY },
+      { amount: 5, ingredient: ingredient.FANCY_APPLE },
+      { amount: 5, ingredient: ingredient.HONEY },
     ];
-    const arr2: IngredientDrop[] = [
+    const arr2: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: HONEY,
+        ingredient: ingredient.HONEY,
       },
-      { amount: 2.27, ingredient: FANCY_APPLE },
-      { amount: 4, ingredient: HONEY },
+      { amount: 2.27, ingredient: ingredient.FANCY_APPLE },
+      { amount: 4, ingredient: ingredient.HONEY },
     ];
 
     expect(combineIngredientDrops(arr1, arr2)).toMatchInlineSnapshot(`
@@ -793,15 +780,15 @@ describe('comineIngredientDrops', () => {
 
 describe('calculateContributedIngredientsValue', () => {
   it('shall calculate contributed ingredient value correctly for 2x leek Dugtrio', () => {
-    const meal = NINJA_SALAD;
-    const producedIngredients: IngredientDrop[] = [
+    const meal = recipe.NINJA_SALAD;
+    const producedIngredients: IngredientSet[] = [
       {
         amount: 4.7,
-        ingredient: SNOOZY_TOMATO,
+        ingredient: ingredient.SNOOZY_TOMATO,
       },
       {
         amount: 16.4,
-        ingredient: LARGE_LEEK,
+        ingredient: ingredient.LARGE_LEEK,
       },
     ];
 
@@ -811,19 +798,19 @@ describe('calculateContributedIngredientsValue', () => {
   });
 
   it('shall calculate contributed ingredient value correctly for leek/soy Dugtrio', () => {
-    const meal = NINJA_SALAD;
-    const producedIngredients: IngredientDrop[] = [
+    const meal = recipe.NINJA_SALAD;
+    const producedIngredients: IngredientSet[] = [
       {
         amount: 4.4,
-        ingredient: SNOOZY_TOMATO,
+        ingredient: ingredient.SNOOZY_TOMATO,
       },
       {
         amount: 6.5,
-        ingredient: LARGE_LEEK,
+        ingredient: ingredient.LARGE_LEEK,
       },
       {
         amount: 17.4,
-        ingredient: GREENGRASS_SOYBEANS,
+        ingredient: ingredient.GREENGRASS_SOYBEANS,
       },
     ];
 
@@ -835,28 +822,28 @@ describe('calculateContributedIngredientsValue', () => {
 
 describe('calculateRemainingIngredients', () => {
   it('shall calculate remaining ingredients', () => {
-    const recipe: IngredientDrop[] = [
+    const recipe: IngredientSet[] = [
       {
         amount: 10,
-        ingredient: FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE,
       },
-      { amount: 6, ingredient: MOOMOO_MILK },
+      { amount: 6, ingredient: ingredient.MOOMOO_MILK },
     ];
-    const produce: IngredientDrop[] = [
+    const produce: IngredientSet[] = [
       {
         amount: 5,
-        ingredient: FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE,
       },
-      { amount: 1, ingredient: MOOMOO_MILK },
-      { amount: 2, ingredient: MOOMOO_MILK },
+      { amount: 1, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 2, ingredient: ingredient.MOOMOO_MILK },
     ];
 
-    const expectedRemaining: IngredientDrop[] = [
+    const expectedRemaining: IngredientSet[] = [
       {
         amount: 5,
-        ingredient: FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE,
       },
-      { amount: 3, ingredient: MOOMOO_MILK },
+      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
     ];
 
     expect(calculateRemainingIngredients(recipe, produce)).toEqual(expectedRemaining);
@@ -866,29 +853,29 @@ describe('calculateRemainingIngredients', () => {
 describe('sortByMinimumFiller', () => {
   it('shall sort OptimalTeamSolutions based on the minimum surplus of required ingredients', () => {
     const recipe = [
-      { amount: 10, ingredient: MOOMOO_MILK },
-      { amount: 10, ingredient: FANCY_APPLE },
+      { amount: 10, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 10, ingredient: ingredient.FANCY_APPLE },
     ];
 
     const teamSolutions: OptimalTeamSolution[] = [
       {
         team: [],
         surplus: extractRelevantSurplus(recipe, [
-          { amount: 2, ingredient: MOOMOO_MILK },
-          { amount: 2, ingredient: FANCY_APPLE },
+          { amount: 2, ingredient: ingredient.MOOMOO_MILK },
+          { amount: 2, ingredient: ingredient.FANCY_APPLE },
         ]),
       },
       {
         team: [],
         surplus: extractRelevantSurplus(recipe, [
-          { amount: 2, ingredient: MOOMOO_MILK },
-          { amount: 2, ingredient: BEAN_SAUSAGE },
-          { amount: 4, ingredient: FANCY_APPLE },
+          { amount: 2, ingredient: ingredient.MOOMOO_MILK },
+          { amount: 2, ingredient: ingredient.BEAN_SAUSAGE },
+          { amount: 4, ingredient: ingredient.FANCY_APPLE },
         ]),
       },
       {
         team: [],
-        surplus: extractRelevantSurplus(recipe, [{ amount: 3, ingredient: MOOMOO_MILK }]),
+        surplus: extractRelevantSurplus(recipe, [{ amount: 3, ingredient: ingredient.MOOMOO_MILK }]),
       },
     ];
     const sortedSolutions = sortByMinimumFiller(teamSolutions, recipe);
