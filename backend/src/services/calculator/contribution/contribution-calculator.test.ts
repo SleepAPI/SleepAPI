@@ -6,6 +6,7 @@ import { createPokemonByIngredientReverseIndex, memo } from '../../set-cover/set
 import { calculateProducePerMealWindow } from '../ingredient/ingredient-calculate';
 import { getOptimalIngredientStats } from '../stats/stats-calculator';
 import {
+  boostFirstMealWithFactor,
   calculateContributionForMealWithPunishment,
   calculateMealContributionFor,
   excludeContributions,
@@ -272,5 +273,27 @@ describe('excludeContributions', () => {
     expect(excludeContributions([contribution, contributionToExclude], [contributionToExclude])).toEqual([
       contribution,
     ]);
+  });
+});
+
+describe('boostFirstMealWithFactor', () => {
+  it('shall boost first meal with 1.5x factor', () => {
+    const cont1: Contribution = {
+      contributedPower: 200,
+      meal: recipe.EXPLOSION_POPCORN,
+      percentage: 100,
+    };
+
+    const cont2: Contribution = {
+      contributedPower: 100,
+      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      percentage: 100,
+    };
+    const resultWithBoost = boostFirstMealWithFactor(1.5, [cont1, cont2]);
+    const prettifiedResult = resultWithBoost.map(
+      (contribution) => `${contribution.meal.name}: ${contribution.contributedPower}`
+    );
+
+    expect(prettifiedResult).toEqual(['EXPLOSION_POPCORN: 300', 'LOVELY_KISS_SMOOTHIE: 100']);
   });
 });

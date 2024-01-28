@@ -16,7 +16,3 @@ export function getBerriesForFilter(islands: { cyan: boolean; taupe: boolean; sn
 export function getBerriesForIsland(island?: island.Island): berry.Berry[] {
   return island?.berries ?? berry.BERRIES;
 }
-
-export function getBerryNames(berries: berry.Berry[]) {
-  return berries.map((berry) => berry.name);
-}
