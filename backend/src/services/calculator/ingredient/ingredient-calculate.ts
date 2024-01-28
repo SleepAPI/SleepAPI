@@ -138,10 +138,6 @@ export function getSurplusList(surplus: IngredientSet[], requiredIngredients: In
     .sort((a, b) => a - b);
 }
 
-export function calculateContributedPowerForMeal(meal: recipe.Recipe, percentage: number) {
-  return meal.value * (percentage / 100);
-}
-
 export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, level: number): IngredientSet[][] {
   const result: Array<Array<IngredientSet>> = [];
 
