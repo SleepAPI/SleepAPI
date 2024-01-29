@@ -7,15 +7,18 @@
     "clean": "rimraf dist",
     "prebuild": "npm install && npm run clean",
     "build": "tsc && tsc-alias && tsoa spec",
+    "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
+    
     "prebuild-watch": "npm run build",
     "build-watch": "concurrently \"tsc -w\" \"tsc-alias -w\"",
-    "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
     "start": "npm run build && node ./dist/app.js",
     
     "predev": "npm run build",
     "dev": "concurrently -k -n \"Build,Backend\" -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
     "dev-start": "nodemon --delay 3 --watch dist dist/app.js -- -P -l debug --debug --debug-port=9230",
     
+    "quick-start": "npm run postbuild && node dist/app.js",
+
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "lint": "npm run eslint-check && npm run prettier-check",
