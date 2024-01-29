@@ -417,8 +417,8 @@ export const DRATINI: Pokemon = {
   name: 'DRATINI',
   specialty: 'ingredient',
   frequency: toSeconds(1, 23, 20),
-  ingredientPercentage: 22, // TODO: missing
-  skillPercentage: 2, // TODO: missing
+  ingredientPercentage: 24.99,
+  skillPercentage: 2,
   berry: YACHE,
   carrySize: 9,
   maxCarrySize: 9,
@@ -439,8 +439,8 @@ export const DRAGONAIR: Pokemon = {
   ...DRATINI,
   name: 'DRAGONAIR',
   frequency: toSeconds(1, 3, 20),
-  ingredientPercentage: 22, // TODO: missing
-  skillPercentage: 2, // TODO: missing
+  ingredientPercentage: 26.19,
+  skillPercentage: 2,
   carrySize: 12,
   maxCarrySize: 17,
 };
@@ -449,8 +449,8 @@ export const DRAGONITE: Pokemon = {
   ...DRATINI,
   name: 'DRAGONITE',
   frequency: toSeconds(0, 43, 20),
-  ingredientPercentage: 22, // TODO: missing
-  skillPercentage: 2, // TODO: missing
+  ingredientPercentage: 26.4,
+  skillPercentage: 2,
   carrySize: 20,
   maxCarrySize: 30,
 };
@@ -619,8 +619,8 @@ export const STUFFUL: Pokemon = {
   name: 'STUFFUL',
   specialty: 'ingredient',
   frequency: toSeconds(1, 8, 20),
-  ingredientPercentage: 22, // TODO: missing
-  skillPercentage: 0, // TODO: missing
+  ingredientPercentage: 22.49,
+  skillPercentage: 2,
   berry: CHERI,
   carrySize: 13,
   maxCarrySize: 13,
@@ -641,13 +641,12 @@ export const BEWEAR: Pokemon = {
   ...STUFFUL,
   name: 'BEWEAR',
   frequency: toSeconds(0, 46, 40),
-  ingredientPercentage: 22, // TODO: missing
-  skillPercentage: 2, // TODO: missing
+  ingredientPercentage: 22.89,
+  skillPercentage: 2,
   carrySize: 20,
   maxCarrySize: 25,
 };
 
-// TODO: re-order
 export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   VENUSAUR,
   CHARIZARD,

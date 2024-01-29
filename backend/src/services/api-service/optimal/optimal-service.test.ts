@@ -68,14 +68,14 @@ describe('getOptimalFlexiblePokemon', () => {
         "MR_MIME(2 Tomato, 4 Potato)",
         "VENUSAUR(2 Honey, 4 Tomato)",
         "VENUSAUR(2 Honey, 5 Honey)",
-        "VICTREEBEL(2 Tomato, 5 Tomato)",
         "BEWEAR(2 Corn, 6 Sausage)",
+        "VICTREEBEL(2 Tomato, 5 Tomato)",
         "MR_MIME(2 Tomato, 5 Tomato)",
         "MEGANIUM(1 Cacao, 2 Cacao)",
         "GALLADE(1 Apple, 2 Apple)",
-        "GARDEVOIR(1 Apple, 2 Apple)",
         "LEAFEON(1 Milk, 2 Milk)",
         "ESPEON(1 Milk, 2 Milk)",
+        "GARDEVOIR(1 Apple, 2 Apple)",
         "WOBBUFFET(1 Apple, 2 Apple)",
         "MEGANIUM(1 Cacao, 3 Honey)",
         "LUCARIO(1 Oil, 2 Oil)",
@@ -83,10 +83,8 @@ describe('getOptimalFlexiblePokemon', () => {
         "LEAFEON(1 Milk, 1 Cacao)",
         "ESPEON(1 Milk, 1 Cacao)",
         "LUCARIO(1 Oil, 2 Potato)",
-        "WOBBUFFET(1 Apple, 1 Mushroom)",
         "PRIMEAPE(1 Sausage, 1 Mushroom)",
-        "GALLADE(1 Apple, 1 Corn)",
-        "GARDEVOIR(1 Apple, 1 Corn)",
+        "WOBBUFFET(1 Apple, 1 Mushroom)",
       ]
     `);
   });
