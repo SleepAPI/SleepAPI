@@ -31,11 +31,11 @@ describe('calculateIngredientsProducedPerMeal', () => {
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
       {
-        "helpsAfterSS": 3.197416759885814,
-        "helpsBeforeSS": 12.543323980854927,
+        "helpsAfterSS": 1.8770668671642428,
+        "helpsBeforeSS": 13.863673873576497,
         "produce": {
           "berries": {
-            "amount": 49.13906206126056,
+            "amount": 50.187551911070756,
             "berry": {
               "name": "LUM",
               "value": 24,
@@ -43,7 +43,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 4.247043982039855,
+              "amount": 4.337663996343646,
               "ingredient": {
                 "longName": "Honey",
                 "name": "Honey",
@@ -52,7 +52,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 10.617609955099638,
+              "amount": 10.844159990859117,
               "ingredient": {
                 "longName": "Fancy Apple",
                 "name": "Apple",
@@ -63,7 +63,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           ],
         },
         "sneakySnack": {
-          "amount": 3.197416759885814,
+          "amount": 1.8770668671642428,
           "berry": {
             "name": "LUM",
             "value": 24,
@@ -71,7 +71,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
         },
         "spilledIngredients": [
           {
-            "amount": 0.658348110860489,
+            "amount": 0.3864880679491176,
             "ingredient": {
               "longName": "Honey",
               "name": "Honey",
@@ -80,7 +80,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
             },
           },
           {
-            "amount": 1.6458702771512228,
+            "amount": 0.966220169872794,
             "ingredient": {
               "longName": "Fancy Apple",
               "name": "Apple",

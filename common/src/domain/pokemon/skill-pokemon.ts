@@ -486,8 +486,8 @@ export const HERACROSS: Pokemon = {
   ingredientPercentage: 15.8,
   skillPercentage: 4.818,
   berry: LUM,
-  carrySize: 15,
-  maxCarrySize: 15,
+  carrySize: 18,
+  maxCarrySize: 18,
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
     { amount: 2, ingredient: HONEY },
@@ -550,8 +550,8 @@ export const SABLEYE: Pokemon = {
   ingredientPercentage: 17.06,
   skillPercentage: 7.38,
   berry: WIKI,
-  carrySize: 10,
-  maxCarrySize: 10,
+  carrySize: 16,
+  maxCarrySize: 16,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 2, ingredient: PURE_OIL },
