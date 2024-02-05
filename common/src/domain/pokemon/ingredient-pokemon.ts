@@ -333,8 +333,8 @@ export const KANGASKHAN: Pokemon = {
   ingredientPercentage: 22.21,
   skillPercentage: 1.818,
   berry: PERSIM,
-  carrySize: 16,
-  maxCarrySize: 16,
+  carrySize: 18,
+  maxCarrySize: 18,
   ingredient0: { amount: 2, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 5, ingredient: WARMING_GINGER },
@@ -377,8 +377,8 @@ export const PINSIR: Pokemon = {
   ingredientPercentage: 20.59,
   skillPercentage: 3.101,
   berry: LUM,
-  carrySize: 19,
-  maxCarrySize: 19,
+  carrySize: 21,
+  maxCarrySize: 21,
   ingredient0: { amount: 2, ingredient: HONEY },
   ingredient30: [
     { amount: 5, ingredient: HONEY },
@@ -399,8 +399,8 @@ export const DITTO: Pokemon = {
   ingredientPercentage: 20.07,
   skillPercentage: 2.073,
   berry: PERSIM,
-  carrySize: 13,
-  maxCarrySize: 13,
+  carrySize: 17,
+  maxCarrySize: 17,
   ingredient0: { amount: 2, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 5, ingredient: PURE_OIL },
@@ -527,8 +527,8 @@ export const ABSOL: Pokemon = {
   ingredientPercentage: 17.78,
   skillPercentage: 3.803,
   berry: WIKI,
-  carrySize: 14,
-  maxCarrySize: 14,
+  carrySize: 18,
+  maxCarrySize: 18,
   ingredient0: { amount: 2, ingredient: SOOTHING_CACAO },
   ingredient30: [
     { amount: 5, ingredient: SOOTHING_CACAO },
