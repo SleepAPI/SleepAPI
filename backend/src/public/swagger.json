@@ -671,59 +671,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CreateTierListRequestBody": {
-				"properties": {
-					"limit50": {
-						"type": "boolean"
-					},
-					"cyan": {
-						"type": "boolean"
-					},
-					"taupe": {
-						"type": "boolean"
-					},
-					"snowdrop": {
-						"type": "boolean"
-					},
-					"lapis": {
-						"type": "boolean"
-					},
-					"curry": {
-						"type": "boolean"
-					},
-					"salad": {
-						"type": "boolean"
-					},
-					"dessert": {
-						"type": "boolean"
-					},
-					"minRecipeBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"nrOfMeals": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"limit50",
-					"cyan",
-					"taupe",
-					"snowdrop",
-					"lapis",
-					"curry",
-					"salad",
-					"dessert",
-					"nrOfMeals"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"TierlistType": {
 				"type": "string",
 				"enum": [
@@ -861,7 +808,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.3.0",
+		"version": "1.4.0",
 		"contact": {}
 	},
 	"paths": {

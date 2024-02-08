@@ -63,8 +63,7 @@ export class SetCover {
 
     const memoizedParams: MemoizedParameters = JSON.parse(params);
     const { spotsLeftInTeam, remainingIngredients: mealIngredients, filters } = memoizedParams;
-
-    if (spotsLeftInTeam === 0) {
+    if (spotsLeftInTeam === 0 || mealIngredients.length === 0) {
       return [];
     }
 

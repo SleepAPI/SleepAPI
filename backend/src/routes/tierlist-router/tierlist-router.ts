@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { config } from '../../config/config';
 import TierlistController from '../../controllers/tierlist/tierlist.controller';
 import { PokemonCombinationCombinedContribution } from '../../domain/combination/combination';
 import { Logger } from '../../services/logger/logger';
@@ -39,33 +38,6 @@ export interface TieredPokemonCombinationContribution {
 
 class TierlistRouterImpl {
   public async register(controller: TierlistController) {
-    BaseRouter.router.post(
-      '/tierlist/create',
-      async (
-        req: Request<unknown, unknown, CreateTierListRequestBody, { pretty: boolean; onlyBest: boolean }>,
-        res: Response
-      ) => {
-        try {
-          Logger.log('Entered /tierlist/create');
-
-          if (config.NODE_ENV !== 'DEV') {
-            return res.status(401).send('Unauthorized');
-          }
-
-          const parsedInput = this.#parseInput(req.body);
-          const tieredData: TieredPokemonCombinationContribution[] = controller.createCookingTierlist(parsedInput);
-          const cookingTierlist = queryAsBoolean(req.query.pretty)
-            ? WebsiteConverterService.toTierList(tieredData)
-            : tieredData;
-
-          res.header('Content-Type', 'application/json').send(JSON.stringify(cookingTierlist, null, 4));
-        } catch (err) {
-          Logger.error(err as Error);
-          res.status(500).send('Something went wrong');
-        }
-      }
-    );
-
     BaseRouter.router.get(
       '/tierlist',
       async (req: Request<unknown, unknown, unknown, GetTierListQueryParams>, res: Response) => {
