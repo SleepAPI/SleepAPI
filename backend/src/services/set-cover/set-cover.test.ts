@@ -48,6 +48,7 @@ describe('processOptimalTeamSolutions', () => {
           relevant: [],
           total: [],
         },
+        exhaustive: true,
       },
       {
         team: [
@@ -59,6 +60,7 @@ describe('processOptimalTeamSolutions', () => {
           relevant: [],
           total: [],
         },
+        exhaustive: true,
       },
     ];
 

@@ -137,9 +137,13 @@ class WebsiteConverterServiceImpl {
       meal: optimalCombinations.meal,
       info:
         optimalCombinations.teams.length > 0
-          ? `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
-              prettifiedCombinations.length
-            } of ${optimalCombinations.teams.length} solutions`
+          ? !optimalCombinations.teams.at(0)?.exhaustive
+            ? `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
+                prettifiedCombinations.length
+              } of ${optimalCombinations.teams.length} solutions.\nResults may not be exhaustive`
+            : `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
+                prettifiedCombinations.length
+              } of ${optimalCombinations.teams.length} solutions`
           : 'No possible team combinations for 100% coverage found, cant be made with current filter',
       recipe: prettifiedRecipe,
       bonus: optimalCombinations.bonus,

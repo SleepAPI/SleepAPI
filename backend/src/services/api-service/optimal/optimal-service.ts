@@ -1,4 +1,3 @@
-import { recipe } from 'sleepapi-common';
 import { PokemonCombinationContributions } from '../../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/contribution';
@@ -18,7 +17,8 @@ import {
 } from '../../calculator/set-cover/calculate-set-cover';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
-export const OPTIMAL_SET_MAX_TEAM_SIZE = 5;
+const TEAMFINDER_SET_COVER_TIMEOUT = 5000;
+const FLEXIBLE_SET_COVER_TIMEOUT = 3000;
 
 /**
  * Runs the optimal set algorithm for a specific recipe
@@ -26,7 +26,7 @@ export const OPTIMAL_SET_MAX_TEAM_SIZE = 5;
  * API: /api/optimal/meal
  */
 export function findOptimalSetsForMeal(mealName: string, input: InputProductionStats) {
-  return customOptimalSet(mealName, input);
+  return customOptimalSet(mealName, input, TEAMFINDER_SET_COVER_TIMEOUT);
 }
 
 /**
@@ -34,11 +34,8 @@ export function findOptimalSetsForMeal(mealName: string, input: InputProductionS
  *
  * API: /api/optimal/meal/flexible
  */
-export function getOptimalFlexiblePokemon(
-  input: InputProductionStats,
-  solutionLimit?: number
-): OptimalFlexibleResult[] {
-  const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input, solutionLimit);
+export function getOptimalFlexiblePokemon(input: InputProductionStats): OptimalFlexibleResult[] {
+  const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input);
 
   const pokemonOccurenceInOptimalSolutions: Map<string, Contribution[]> = new Map();
   for (const { meal, teams } of flexiblePokemonCombinations) {
@@ -94,10 +91,8 @@ export function getOptimalFlexiblePokemon(
 
 /**
  * Finds all optimal team solutions for all recipes for given input production stats
- *
- * @param solutionLimit If a recipe has too many optimal solutions we can use this to early exit, saving performance
  */
-function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit?: number) {
+function generateOptimalTeamSolutions(input: InputProductionStats) {
   const pokemonProduction = calculateOptimalProductionForSetCover(input);
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 
@@ -108,17 +103,14 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
   const cache = new Map();
 
   const optimalTeamSolutions: TeamsForMeal[] = [];
-  const mealsForFilter = getMealsForFilter({ maxPotSize: input.maxPotSize }).filter(
-    (meal) => input.level < 60 || meal !== recipe.FLOWER_GIFT_MACARONS // TODO: remove this exclusion, replace with timeout
-  );
+  const mealsForFilter = getMealsForFilter({ maxPotSize: input.maxPotSize });
   for (const meal of mealsForFilter) {
     const teamCompositionsForMeal = calculateSetCover({
       recipe: meal.ingredients,
       memoizedFilters,
       reverseIndex,
       cache,
-      solutionLimit,
-      maxTeamSize: OPTIMAL_SET_MAX_TEAM_SIZE,
+      timeout: FLEXIBLE_SET_COVER_TIMEOUT,
     });
 
     const allTeams: TeamWithProduce[] = teamCompositionsForMeal.map((solution) => solution.team);
@@ -129,7 +121,7 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
   return optimalTeamSolutions;
 }
 
-function customOptimalSet(mealName: string, inputStats: InputProductionStats) {
+function customOptimalSet(mealName: string, inputStats: InputProductionStats, timeout: number) {
   const { level, goodCamp, e4eProcs, helpingBonus, nature, subskills } = inputStats;
 
   const meal = getMeal(mealName);
@@ -147,6 +139,7 @@ function customOptimalSet(mealName: string, inputStats: InputProductionStats) {
     memoizedFilters,
     reverseIndex,
     cache: new Map(),
+    timeout,
   });
 
   return {

@@ -440,10 +440,6 @@
 					"maxPotSize": {
 						"type": "number",
 						"format": "double"
-					},
-					"optimalSetSolutionLimit": {
-						"type": "number",
-						"format": "double"
 					}
 				},
 				"type": "object",
@@ -601,11 +597,15 @@
 					},
 					"surplus": {
 						"$ref": "#/components/schemas/SurplusIngredients"
+					},
+					"exhaustive": {
+						"type": "boolean"
 					}
 				},
 				"required": [
 					"team",
-					"surplus"
+					"surplus",
+					"exhaustive"
 				],
 				"type": "object",
 				"additionalProperties": false

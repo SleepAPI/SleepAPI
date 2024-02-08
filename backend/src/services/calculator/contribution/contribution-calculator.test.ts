@@ -78,6 +78,7 @@ describe('calculateMealContributionFor', () => {
       meal,
       producedIngredients: detailedProduce.produce.ingredients,
       memoizedSetCover,
+      timeout: 1000,
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);

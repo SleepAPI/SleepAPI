@@ -864,6 +864,7 @@ describe('sortByMinimumFiller', () => {
           { amount: 2, ingredient: ingredient.MOOMOO_MILK },
           { amount: 2, ingredient: ingredient.FANCY_APPLE },
         ]),
+        exhaustive: true,
       },
       {
         team: [],
@@ -872,10 +873,12 @@ describe('sortByMinimumFiller', () => {
           { amount: 2, ingredient: ingredient.BEAN_SAUSAGE },
           { amount: 4, ingredient: ingredient.FANCY_APPLE },
         ]),
+        exhaustive: true,
       },
       {
         team: [],
         surplus: extractRelevantSurplus(recipe, [{ amount: 3, ingredient: ingredient.MOOMOO_MILK }]),
+        exhaustive: true,
       },
     ];
     const sortedSolutions = sortByMinimumFiller(teamSolutions, recipe);

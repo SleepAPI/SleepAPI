@@ -5,6 +5,7 @@ import { CustomPokemonCombinationWithProduce, CustomStats } from './custom';
 export interface OptimalTeamSolution {
   team: CustomPokemonCombinationWithProduce[];
   surplus: SurplusIngredients;
+  exhaustive: boolean;
 }
 
 export interface SurplusIngredients {

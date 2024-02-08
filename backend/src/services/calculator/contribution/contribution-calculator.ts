@@ -56,8 +56,9 @@ export function calculateMealContributionFor(params: {
   meal: recipe.Recipe;
   producedIngredients: IngredientSet[];
   memoizedSetCover: SetCover;
+  timeout: number;
 }): Contribution {
-  const { meal, producedIngredients, memoizedSetCover } = params;
+  const { meal, producedIngredients, memoizedSetCover, timeout } = params;
 
   const percentage = calculatePercentageCoveredByCombination(meal, producedIngredients);
   const remainderOfRecipe = calculateRemainingIngredients(meal.ingredients, producedIngredients);
@@ -66,7 +67,7 @@ export function calculateMealContributionFor(params: {
   const minAdditionalMonsNeeded =
     percentage > 0
       ? remainderOfRecipe.length > 0
-        ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4)
+        ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4, timeout)
         : 0
       : 6;
 
