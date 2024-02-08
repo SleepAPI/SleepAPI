@@ -41,21 +41,24 @@ export class SetCover {
   #reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
   #filters: MemoizedFilters;
   #memo: Map<string, CustomPokemonCombinationWithProduce[][]>;
-  #solutionLimit?: number;
+  #startTime: number = Date.now();
+  #timeout = 10000;
 
   constructor(
     reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>,
     filters: MemoizedFilters,
-    memo: Map<string, CustomPokemonCombinationWithProduce[][]>,
-    solutionLimit?: number
+    memo: Map<string, CustomPokemonCombinationWithProduce[][]>
   ) {
     this.#reverseIndex = reverseIndex;
     this.#filters = filters;
     this.#memo = memo;
-    this.#solutionLimit = solutionLimit;
   }
 
   public solveRecipe(params: string): CustomPokemonCombinationWithProduce[][] {
+    if (this.checkTimeout()) {
+      return [];
+    }
+
     const cachedSolution = this.#memo.get(params);
     if (cachedSolution) {
       return cachedSolution;
@@ -149,12 +152,15 @@ export class SetCover {
       }
     }
 
-    if (this.#solutionLimit && teams.length > this.#solutionLimit) {
-      return [];
-    }
-
     this.#memo.set(params, teams);
     return teams;
+  }
+
+  private checkTimeout() {
+    if (Date.now() - this.#startTime > this.#timeout) {
+      return true;
+    }
+    return false;
   }
 
   public calculateDetailsAndSortBySumSurplus(
@@ -165,6 +171,8 @@ export class SetCover {
       return [];
     }
 
+    const exhaustive = !this.checkTimeout();
+
     const teamsWithDetails: OptimalTeamSolution[] = [];
     for (const team of solutions) {
       const teamsProduce = team.flatMap((member) => member.detailedProduce.produce.ingredients);
@@ -173,6 +181,7 @@ export class SetCover {
       const teamWithDetails: OptimalTeamSolution = {
         team: team,
         surplus,
+        exhaustive,
       };
 
       teamsWithDetails.push(teamWithDetails);
@@ -205,8 +214,16 @@ export class SetCover {
     });
   }
 
-  public findOptimalCombinationFor(recipe: IngredientSet[], maxTeamSize?: number): OptimalTeamSolution[] {
+  public findOptimalCombinationFor(
+    recipe: IngredientSet[],
+    maxTeamSize?: number,
+    timeout?: number
+  ): OptimalTeamSolution[] {
+    this.#startTime = Date.now();
+    this.#timeout = timeout ?? this.#timeout;
+
     const spotsLeftInTeam = maxTeamSize ?? 5;
+
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
       spotsLeftInTeam,
@@ -219,8 +236,12 @@ export class SetCover {
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
   }
 
-  public calculateMinTeamSizeFor(recipe: IngredientSet[], maxTeamSize?: number) {
+  public calculateMinTeamSizeFor(recipe: IngredientSet[], maxTeamSize?: number, timeout?: number) {
+    this.#startTime = Date.now();
+    this.#timeout = timeout ?? this.#timeout;
+
     const spotsLeftInTeam = maxTeamSize ?? 5;
+
     const params: MemoizedParameters = {
       remainingIngredients: recipe,
       spotsLeftInTeam: spotsLeftInTeam,

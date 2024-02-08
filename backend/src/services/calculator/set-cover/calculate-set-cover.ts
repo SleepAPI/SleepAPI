@@ -53,16 +53,16 @@ export function calculateSetCover(params: {
   memoizedFilters: MemoizedFilters;
   cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
-  solutionLimit?: number;
   maxTeamSize?: number;
+  timeout?: number;
 }) {
-  const { recipe, memoizedFilters, cache, reverseIndex, solutionLimit, maxTeamSize } = params;
+  const { recipe, memoizedFilters, cache, reverseIndex, maxTeamSize, timeout } = params;
 
   const firstPokemon = memoizedFilters.pokemon.at(0);
   if (!firstPokemon) {
     throw new ProgrammingError("Can't calculate Optimal Set without Pokémon");
   }
 
-  const setCover = new SetCover(reverseIndex, memoizedFilters, cache, solutionLimit);
-  return setCover.findOptimalCombinationFor(recipe, maxTeamSize);
+  const setCover = new SetCover(reverseIndex, memoizedFilters, cache);
+  return setCover.findOptimalCombinationFor(recipe, maxTeamSize, timeout);
 }

@@ -23,6 +23,8 @@ import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import { recipe } from 'sleepapi-common';
 
+const TIERLIST_SET_COVER_TIMEOUT = 1000;
+
 class TierlistImpl {
   public async seed() {
     Logger.info('Generating cooking tier lists');
@@ -170,7 +172,7 @@ class TierlistImpl {
       const currentMemoryUsage = process.memoryUsage().heapUsed;
       const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-      console.log('Current memory usage: ' + currentMemoryUsageGigabytes);
+      Logger.info('Current memory usage: ' + currentMemoryUsageGigabytes);
       const pokemonCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map(firstRunCache);
       const cache = currentMemoryUsageGigabytes > 15 ? pokemonCache : firstRunCache;
       ++counter;
@@ -193,6 +195,7 @@ class TierlistImpl {
           meal,
           producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
           memoizedSetCover,
+          timeout: TIERLIST_SET_COVER_TIMEOUT,
         });
         contributions.push(contributionForMeal);
       }

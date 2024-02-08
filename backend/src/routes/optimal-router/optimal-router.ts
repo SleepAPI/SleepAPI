@@ -20,7 +20,6 @@ export interface InputProductionStatsRequest {
   helpingbonus?: number;
   camp?: boolean;
   maxPotSize?: number;
-  optimalSetSolutionLimit?: number;
 }
 
 export interface OptimalFlexibleResult {

@@ -277,7 +277,6 @@ function goToOptimalFlexible() {
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
     maxPotSize: +document.getElementById('maxPotSize').value,
-    optimalSetSolutionLimit: document.getElementById('solutionLimit').checked ? undefined : 5000,
   };
 
   var url = 'optimal/meal/flexible?pretty=true';

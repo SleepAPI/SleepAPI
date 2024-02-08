@@ -54,7 +54,7 @@ describe('getOptimalFlexiblePokemon', () => {
       nature: nature.RASH,
     };
 
-    const data = getOptimalFlexiblePokemon(input, 5000);
+    const data = getOptimalFlexiblePokemon(input);
 
     expect(
       data.map(

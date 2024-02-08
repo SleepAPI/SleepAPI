@@ -13,7 +13,7 @@ import { extractSubskillsBasedOnLevel } from '../../utils/subskill-utils/subskil
 export default class OptimalController extends Controller {
   @Post('meal/flexible')
   public getFlexiblePokemon(@Body() input: InputProductionStatsRequest) {
-    return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input), input.optimalSetSolutionLimit);
+    return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input));
   }
 
   @Post('meal/{name}')
