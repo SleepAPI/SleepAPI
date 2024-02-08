@@ -17,7 +17,7 @@ import {
 } from '../../calculator/set-cover/calculate-set-cover';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
-const TEAMFINDER_SET_COVER_TIMEOUT = 5000;
+const TEAMFINDER_SET_COVER_TIMEOUT = 10000;
 const FLEXIBLE_SET_COVER_TIMEOUT = 3000;
 
 /**
