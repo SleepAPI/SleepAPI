@@ -140,7 +140,9 @@ class WebsiteConverterServiceImpl {
           ? !optimalCombinations.teams.at(0)?.exhaustive
             ? `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
                 prettifiedCombinations.length
-              } of ${optimalCombinations.teams.length} solutions.\nResults may not be exhaustive`
+              } of ${
+                optimalCombinations.teams.length
+              } solutions.\nTimeout of 10 seconds reached, results may not be exhaustive`
             : `Requires ${optimalCombinations.teams.at(0)?.team.length} Pokémon for 100% coverage, showing ${
                 prettifiedCombinations.length
               } of ${optimalCombinations.teams.length} solutions`
