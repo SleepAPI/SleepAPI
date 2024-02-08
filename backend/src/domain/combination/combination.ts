@@ -23,3 +23,8 @@ export interface PokemonCombinationCombinedContribution {
   pokemonCombination: PokemonIngredientSet;
   combinedContribution: CombinedContribution;
 }
+
+export interface PokemonIngredientSetContribution {
+  pokemonIngredientSet: PokemonIngredientSet;
+  contributions: Contribution[];
+}
