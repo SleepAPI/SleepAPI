@@ -1,3 +1,4 @@
+import { recipe } from 'sleepapi-common';
 import { PokemonCombinationContributions } from '../../../domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/contribution';
@@ -107,7 +108,10 @@ function generateOptimalTeamSolutions(input: InputProductionStats, solutionLimit
   const cache = new Map();
 
   const optimalTeamSolutions: TeamsForMeal[] = [];
-  for (const meal of getMealsForFilter({ maxPotSize: input.maxPotSize })) {
+  const mealsForFilter = getMealsForFilter({ maxPotSize: input.maxPotSize }).filter(
+    (meal) => input.level < 60 || meal !== recipe.FLOWER_GIFT_MACARONS // TODO: remove this exclusion, replace with timeout
+  );
+  for (const meal of mealsForFilter) {
     const teamCompositionsForMeal = calculateSetCover({
       recipe: meal.ingredients,
       memoizedFilters,
