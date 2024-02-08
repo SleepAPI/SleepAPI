@@ -71,6 +71,7 @@ describe('getMealsForFilter', () => {
         "EXPLOSION_POPCORN",
         "JIGGLYPUFFS_FRUITY_FLAN",
         "TEATIME_CORN_SCONES",
+        "FLOWER_GIFT_MACARONS",
       ]
     `);
   });
@@ -132,6 +133,7 @@ describe('getMealsForFilter', () => {
         "HUSTLE_PROTEIN_SMOOTHIE",
         "HUGE_POWER_SOY_DONUTS",
         "SWEET_SCENT_CHOCOLATE_CAKE",
+        "PETAL_DANCE_CHOCOLATE_TART",
         "LOVELY_KISS_SMOOTHIE",
         "STEADFAST_GINGER_COOKIES",
         "NEROLIS_RESTORATIVE_TEA",

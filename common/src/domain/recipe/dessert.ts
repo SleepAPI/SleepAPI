@@ -164,6 +164,19 @@ export const SWEET_SCENT_CHOCOLATE_CAKE: Recipe = {
   nrOfIngredients: 24,
 };
 
+export const PETAL_DANCE_CHOCOLATE_TART: Recipe = {
+  name: 'PETAL_DANCE_CHOCOLATE_TART',
+  value: 3314,
+  value50: 8219,
+  type: 'dessert',
+  ingredients: [
+    { amount: 11, ingredient: FANCY_APPLE },
+    { amount: 11, ingredient: SOOTHING_CACAO },
+  ],
+  bonus: 25,
+  nrOfIngredients: 22,
+};
+
 export const LOVELY_KISS_SMOOTHIE: Recipe = {
   name: 'LOVELY_KISS_SMOOTHIE',
   value: 4734,
@@ -252,6 +265,21 @@ export const TEATIME_CORN_SCONES: Recipe = {
   nrOfIngredients: 67,
 };
 
+export const FLOWER_GIFT_MACARONS: Recipe = {
+  name: 'FLOWER_GIFT_MACARONS',
+  value: 13834,
+  value50: 34308,
+  type: 'dessert',
+  ingredients: [
+    { amount: 25, ingredient: SOOTHING_CACAO },
+    { amount: 25, ingredient: FANCY_EGG },
+    { amount: 17, ingredient: HONEY },
+    { amount: 10, ingredient: MOOMOO_MILK },
+  ],
+  bonus: 48,
+  nrOfIngredients: 77,
+};
+
 export const DESSERTS: Recipe[] = [
   WARM_MOOMOO_MILK,
   FANCY_APPLE_JUICE,
@@ -265,10 +293,12 @@ export const DESSERTS: Recipe[] = [
   HUSTLE_PROTEIN_SMOOTHIE,
   HUGE_POWER_SOY_DONUTS,
   SWEET_SCENT_CHOCOLATE_CAKE,
+  PETAL_DANCE_CHOCOLATE_TART,
   LOVELY_KISS_SMOOTHIE,
   STEADFAST_GINGER_COOKIES,
   NEROLIS_RESTORATIVE_TEA,
   EXPLOSION_POPCORN,
   JIGGLYPUFFS_FRUITY_FLAN,
   TEATIME_CORN_SCONES,
+  FLOWER_GIFT_MACARONS,
 ];
