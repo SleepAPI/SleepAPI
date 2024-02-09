@@ -17,7 +17,7 @@
     "dev": "concurrently -k -n \"Build,Backend\" -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
     "dev-start": "nodemon --delay 3 --watch dist dist/app.js -- -P -l debug --debug --debug-port=9230",
     
-    "quick-start": "npm run postbuild && node dist/app.js",
+    "frontend": "npm run postbuild && node dist/app.js",
 
     "test": "jest --coverage",
     "test-watch": "jest --watch",

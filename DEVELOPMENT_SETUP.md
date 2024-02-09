@@ -2,11 +2,12 @@
 
 The project acts as a monorepo where each module is individually deployed. It's written in Node.js with Typescript.
 
-| Application | Description                                                                                                                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| backend     | This deployment exposes the public API: [Sleep API][sleepapi]. This is where the simulations, number-crunching and rankings happen. Currently this also exposes a basic html/js/css website, but this is due for replacement. |
-| frontend    | A work-in-progress website. The idea is to deploy a full-fledged proper website as a static web app.                                                                                                                          |
-| bot         | A work-in-progress Discord bot. Currently this just sets up a basic ping command, but it is deployed and hosted 24/7. There are plans to expand this with functionality from Sleep API.                                       |
+| Application | Description                                                                                                                                                                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common      | A shared module between backend and frontend. This exists so we may share entities like API types without the need of re-implementing them in both backend/frontend                                                                                                                       |
+| backend     | This deployment exposes the public API: [api.sleepapi][api.sleepapi] and currently also the website [Sleep API][sleepapi]. This is where the simulations, number-crunching and rankings happen. Currently this also exposes a basic html/js/css website, but this is due for replacement. |
+| frontend    | A work-in-progress website. The idea is to deploy a full-fledged proper website as a static web app.                                                                                                                                                                                      |
+| bot         | A work-in-progress Discord bot. Currently this just sets up a basic ping command, but it is deployed and hosted 24/7. There are plans to expand this with functionality from Sleep API.                                                                                                   |
 
 |
 
@@ -38,10 +39,21 @@ nvm use
 
 The workspace is defined in the file `sleepapi.code-workspace`. Install the recommended extensions when prompted.
 
-### 3. See other READMEs for instructions for that package
+### 3. Install and build common module
+
+Both the backend and frontend modules use the common module to share entities. Before you start you should install and build the common module.
+
+```
+cd common && npm install && npm run build
+```
+
+If you add any new entities to the common module you'll need to re-build it before the backend/frontend have access to it.
+
+### 4. See other READMEs for instructions for that package
 
 - [backend](./backend/README.md)
 - [frontend](./frontend/README.md)
 - [bot](./my-gaim/README.md)
 
+[api.sleepapi]: https://api.sleepapi.net/
 [sleepapi]: https://sleepapi.net/
