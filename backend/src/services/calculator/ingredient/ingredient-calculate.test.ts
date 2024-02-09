@@ -834,8 +834,7 @@ describe('calculateRemainingIngredients', () => {
         amount: 5,
         ingredient: ingredient.FANCY_APPLE,
       },
-      { amount: 1, ingredient: ingredient.MOOMOO_MILK },
-      { amount: 2, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
     ];
 
     const expectedRemaining: IngredientSet[] = [
