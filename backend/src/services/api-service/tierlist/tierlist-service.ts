@@ -16,9 +16,9 @@ import {
 } from '@src/services/calculator/contribution/contribution-calculator';
 import { Logger } from '@src/services/logger/logger';
 import { SetCover } from '@src/services/set-cover/set-cover';
-import { createPokemonByIngredientReverseIndex } from '@src/services/set-cover/set-cover-utils';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
+import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 import { diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
@@ -164,9 +164,11 @@ class TierlistImpl {
       lapis: details.lapis,
     });
 
-    const firstRunCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
     const mealsForFilter = getMealsForFilter(details);
     const allPokemonWithContributions: PokemonIngredientSetContribution[] = [];
+
+    const cache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
+    const memoizedSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonWithProduce), cache);
 
     let counter = 0;
     for (const pokemonWithProduce of allPokemonWithProduce) {
@@ -174,19 +176,9 @@ class TierlistImpl {
       const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
       Logger.info('Current memory usage: ' + roundDown(currentMemoryUsageGigabytes, 3) + ' GB');
-      const pokemonCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map(firstRunCache);
-      const cache = currentMemoryUsageGigabytes > 15 ? pokemonCache : firstRunCache;
       ++counter;
       console.time(
         `[${counter}/${allPokemonWithProduce.length}] ${pokemonWithProduce.pokemonCombination.pokemon.name}`
-      );
-      const memoizedSetCover = new SetCover(
-        createPokemonByIngredientReverseIndex(allPokemonWithProduce),
-        {
-          limit50: details.limit50,
-          pokemon: allPokemonWithProduce.map((p) => p.pokemonCombination.pokemon.name),
-        },
-        cache
       );
 
       const contributions: Contribution[] = [];

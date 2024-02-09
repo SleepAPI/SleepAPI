@@ -1,8 +1,8 @@
 import { IngredientSet, ingredient, pokemon, recipe } from 'sleepapi-common';
 import { CustomStats } from '../../../domain/combination/custom';
 import { Contribution } from '../../../domain/computed/contribution';
+import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
 import { SetCover } from '../../set-cover/set-cover';
-import { createPokemonByIngredientReverseIndex, memo } from '../../set-cover/set-cover-utils';
 import { calculateProducePerMealWindow } from '../ingredient/ingredient-calculate';
 import { getOptimalIngredientStats } from '../stats/stats-calculator';
 import {
@@ -66,14 +66,7 @@ describe('calculateMealContributionFor', () => {
     const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(limit50, islands);
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
 
-    const memoizedSetCover: SetCover = new SetCover(
-      reverseIndex,
-      {
-        limit50,
-        pokemon: allPokemonWithProduce.map((p) => p.pokemonCombination.pokemon.name),
-      },
-      memo
-    );
+    const memoizedSetCover: SetCover = new SetCover(reverseIndex, memo);
     const contribution = calculateMealContributionFor({
       meal,
       producedIngredients: detailedProduce.produce.ingredients,

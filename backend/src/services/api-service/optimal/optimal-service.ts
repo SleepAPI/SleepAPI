@@ -4,13 +4,12 @@ import { Contribution } from '../../../domain/computed/contribution';
 import { InputProductionStats, TeamWithProduce, TeamsForMeal } from '../../../domain/computed/production';
 import { OptimalFlexibleResult } from '../../../routes/optimal-router/optimal-router';
 import { calculateContributionForMealWithPunishment } from '../../../services/calculator/contribution/contribution-calculator';
-import { MemoizedFilters } from '../../../services/set-cover/set-cover';
-import { createPokemonByIngredientReverseIndex } from '../../../services/set-cover/set-cover-utils';
 import { getMeal, getMealsForFilter } from '../../../utils/meal-utils/meal-utils';
 import {
   calculateCombinedContributions,
   removeDuplicatePokemonCombinations,
 } from '../../../utils/optimal-utils/optimal-utils';
+import { createPokemonByIngredientReverseIndex } from '../../../utils/set-cover-utils/set-cover-utils';
 import {
   calculateOptimalProductionForSetCover,
   calculateSetCover,
@@ -96,10 +95,6 @@ function generateOptimalTeamSolutions(input: InputProductionStats) {
   const pokemonProduction = calculateOptimalProductionForSetCover(input);
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 
-  const memoizedFilters: MemoizedFilters = {
-    limit50: input.level < 60,
-    pokemon: pokemonProduction.map((p) => p.pokemonCombination.pokemon.name),
-  };
   const cache = new Map();
 
   const optimalTeamSolutions: TeamsForMeal[] = [];
@@ -107,7 +102,6 @@ function generateOptimalTeamSolutions(input: InputProductionStats) {
   for (const meal of mealsForFilter) {
     const teamCompositionsForMeal = calculateSetCover({
       recipe: meal.ingredients,
-      memoizedFilters,
       reverseIndex,
       cache,
       timeout: FLEXIBLE_SET_COVER_TIMEOUT,
@@ -129,14 +123,9 @@ function customOptimalSet(mealName: string, inputStats: InputProductionStats, ti
   const pokemonProduction = calculateOptimalProductionForSetCover(inputStats);
 
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
-  const memoizedFilters: MemoizedFilters = {
-    limit50: level < 60,
-    pokemon: pokemonProduction.map((p) => p.pokemonCombination.pokemon.name),
-  };
 
   const optimalCombinations = calculateSetCover({
     recipe: meal.ingredients,
-    memoizedFilters,
     reverseIndex,
     cache: new Map(),
     timeout,
