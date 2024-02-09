@@ -2,15 +2,10 @@ import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomStats } from '@src/domain/combination/custom';
 import { DetailedProduce } from '@src/domain/combination/produce';
 import { PokemonIngredientSet, berry, nature, pokemon } from 'sleepapi-common';
-import { MemoizedFilters, SetCover } from './set-cover';
+import { SetCover } from './set-cover';
 
 describe('processOptimalTeamSolutions', () => {
-  const filters: MemoizedFilters = {
-    limit50: false,
-    pokemon: [pokemon.PINSIR.name],
-  };
-
-  const setCover = new SetCover(new Map(), filters, new Map());
+  const setCover = new SetCover(new Map(), new Map());
 
   it('shall sort teams in each solution and remove duplicates', () => {
     const pc1: PokemonIngredientSet = {

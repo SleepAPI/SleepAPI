@@ -20,37 +20,38 @@ import { ProgrammingError } from '@src/domain/error/programming/programming-erro
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import { IngredientSet } from 'sleepapi-common';
 import {
+  calculateRemainingSimplifiedIngredients,
+  createMemoKey,
+  parseMemoKey,
+  sumOfSimplifiedIngredients,
+} from '../../utils/set-cover-utils/set-cover-utils';
+import {
   calculateRemainingIngredients,
   combineSameIngredientsInDrop,
   extractRelevantSurplus,
   sortByMinimumFiller,
-  sumOfIngredients,
 } from '../calculator/ingredient/ingredient-calculate';
 
-export interface MemoizedFilters {
-  limit50: boolean;
-  pokemon: string[];
+export interface SimplifiedIngredientSet {
+  amount: number;
+  ingredient: string;
 }
 export interface MemoizedParameters {
-  remainingIngredients: IngredientSet[];
+  remainingIngredients: SimplifiedIngredientSet[];
   spotsLeftInTeam: number;
-  filters: MemoizedFilters;
 }
 
 export class SetCover {
   #reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
-  #filters: MemoizedFilters;
   #memo: Map<string, CustomPokemonCombinationWithProduce[][]>;
   #startTime: number = Date.now();
   #timeout = 10000;
 
   constructor(
     reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>,
-    filters: MemoizedFilters,
     memo: Map<string, CustomPokemonCombinationWithProduce[][]>
   ) {
     this.#reverseIndex = reverseIndex;
-    this.#filters = filters;
     this.#memo = memo;
   }
 
@@ -64,8 +65,8 @@ export class SetCover {
       return cachedSolution;
     }
 
-    const memoizedParams: MemoizedParameters = JSON.parse(params);
-    const { spotsLeftInTeam, remainingIngredients: mealIngredients, filters } = memoizedParams;
+    const memoizedParams: MemoizedParameters = parseMemoKey(params);
+    const { spotsLeftInTeam, remainingIngredients: mealIngredients } = memoizedParams;
     if (spotsLeftInTeam === 0 || mealIngredients.length === 0) {
       return [];
     }
@@ -78,14 +79,15 @@ export class SetCover {
     // For each pokemon that produces the ingredient, go through and
     // determine how many ingredients remain in the recipe if we add
     // that pokemon to our team
-    const remainders: [number, IngredientSet[], CustomPokemonCombinationWithProduce][] = [];
-    const pokemonWithIngredient = this.#reverseIndex.get(firstIngredient.ingredient.name) ?? [];
+    const remainders: [number, SimplifiedIngredientSet[], CustomPokemonCombinationWithProduce][] = [];
+    const pokemonWithIngredient = this.#reverseIndex.get(firstIngredient.ingredient) ?? [];
     for (let i = 0, len = pokemonWithIngredient.length; i < len; i++) {
-      const remainder: IngredientSet[] = calculateRemainingIngredients(
+      const remainder: SimplifiedIngredientSet[] = calculateRemainingSimplifiedIngredients(
         mealIngredients,
-        pokemonWithIngredient[i].detailedProduce.produce.ingredients
+        pokemonWithIngredient[i].detailedProduce.produce.ingredients,
+        true
       );
-      const sum = sumOfIngredients(remainder);
+      const sum = sumOfSimplifiedIngredients(remainder);
       remainders.push([sum, remainder, pokemonWithIngredient[i]]);
     }
     // Sort the possible teams by quantity of remaining ingredients
@@ -102,9 +104,8 @@ export class SetCover {
           const updatedParams: MemoizedParameters = {
             remainingIngredients: remainder,
             spotsLeftInTeam: maxTeamSize - 1,
-            filters,
           };
-          const key = JSON.stringify(updatedParams);
+          const key = createMemoKey(updatedParams);
 
           const subTeams: CustomPokemonCombinationWithProduce[][] = this.solveRecipe(key);
           this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
@@ -225,12 +226,14 @@ export class SetCover {
     const spotsLeftInTeam = maxTeamSize ?? 5;
 
     const params: MemoizedParameters = {
-      remainingIngredients: recipe,
+      remainingIngredients: recipe.map((ing) => ({
+        amount: ing.amount,
+        ingredient: ing.ingredient.name,
+      })),
       spotsLeftInTeam,
-      filters: this.#filters,
     };
 
-    const key = JSON.stringify(params);
+    const key = createMemoKey(params);
     const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
 
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
@@ -243,12 +246,14 @@ export class SetCover {
     const spotsLeftInTeam = maxTeamSize ?? 5;
 
     const params: MemoizedParameters = {
-      remainingIngredients: recipe,
+      remainingIngredients: recipe.map((ing) => ({
+        amount: ing.amount,
+        ingredient: ing.ingredient.name,
+      })),
       spotsLeftInTeam: spotsLeftInTeam,
-      filters: this.#filters,
     };
 
-    const key = JSON.stringify(params);
+    const key = createMemoKey(params);
     const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
 
     return solutions.at(0) ? solutions[0].length : spotsLeftInTeam + 1;

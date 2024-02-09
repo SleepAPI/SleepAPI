@@ -1,7 +1,6 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { InputProductionStats } from '@src/domain/computed/production';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { MemoizedFilters, SetCover } from '@src/services/set-cover/set-cover';
+import { SetCover } from '@src/services/set-cover/set-cover';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
 import { IngredientSet, pokemon } from 'sleepapi-common';
 import {
@@ -50,19 +49,13 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
 
 export function calculateSetCover(params: {
   recipe: IngredientSet[];
-  memoizedFilters: MemoizedFilters;
   cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
   maxTeamSize?: number;
   timeout?: number;
 }) {
-  const { recipe, memoizedFilters, cache, reverseIndex, maxTeamSize, timeout } = params;
+  const { recipe, cache, reverseIndex, maxTeamSize, timeout } = params;
 
-  const firstPokemon = memoizedFilters.pokemon.at(0);
-  if (!firstPokemon) {
-    throw new ProgrammingError("Can't calculate Optimal Set without Pokémon");
-  }
-
-  const setCover = new SetCover(reverseIndex, memoizedFilters, cache);
+  const setCover = new SetCover(reverseIndex, cache);
   return setCover.findOptimalCombinationFor(recipe, maxTeamSize, timeout);
 }
