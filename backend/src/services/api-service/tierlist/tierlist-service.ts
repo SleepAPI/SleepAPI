@@ -17,6 +17,7 @@ import {
 import { Logger } from '@src/services/logger/logger';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { createPokemonByIngredientReverseIndex } from '@src/services/set-cover/set-cover-utils';
+import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import { diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
@@ -172,7 +173,7 @@ class TierlistImpl {
       const currentMemoryUsage = process.memoryUsage().heapUsed;
       const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-      Logger.info('Current memory usage: ' + currentMemoryUsageGigabytes);
+      Logger.info('Current memory usage: ' + roundDown(currentMemoryUsageGigabytes, 3) + ' GB');
       const pokemonCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map(firstRunCache);
       const cache = currentMemoryUsageGigabytes > 15 ? pokemonCache : firstRunCache;
       ++counter;

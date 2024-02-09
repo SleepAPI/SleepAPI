@@ -85,17 +85,22 @@ export function calculateRemainingIngredients(
   requiredIngredients: IngredientSet[],
   producedIngredients: IngredientSet[]
 ): IngredientSet[] {
-  const remainingIngredients: IngredientSet[] = JSON.parse(JSON.stringify(requiredIngredients));
-  for (const produced of producedIngredients) {
-    const index = remainingIngredients.findIndex((required) => required.ingredient.name === produced.ingredient.name);
-    if (index !== -1) {
-      remainingIngredients[index].amount -= produced.amount;
-      if (remainingIngredients[index].amount <= 0) {
-        remainingIngredients.splice(index, 1);
+  const result: IngredientSet[] = [];
+  for (const req of requiredIngredients) {
+    let amountNeeded = req.amount;
+    for (const prod of producedIngredients) {
+      if (prod.ingredient.name === req.ingredient.name) {
+        amountNeeded -= prod.amount;
+        break;
       }
     }
+
+    if (amountNeeded > 0) {
+      result.push({ ingredient: req.ingredient, amount: amountNeeded });
+    }
   }
-  return remainingIngredients;
+
+  return result;
 }
 
 export function extractRelevantSurplus(recipe: IngredientSet[], surplus: IngredientSet[]): SurplusIngredients {
