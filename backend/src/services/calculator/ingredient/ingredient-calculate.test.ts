@@ -31,11 +31,11 @@ describe('calculateIngredientsProducedPerMeal', () => {
     });
     expect(ingredientsDropped).toMatchInlineSnapshot(`
       {
-        "helpsAfterSS": 1.8770668671642428,
-        "helpsBeforeSS": 13.863673873576497,
+        "helpsAfterSS": 1.8793546021268788,
+        "helpsBeforeSS": 13.86138613861386,
         "produce": {
           "berries": {
-            "amount": 50.187551911070756,
+            "amount": 50.17941539512041,
             "berry": {
               "name": "LUM",
               "value": 24,
@@ -43,7 +43,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 4.337663996343646,
+              "amount": 4.339613590006215,
               "ingredient": {
                 "longName": "Honey",
                 "name": "Honey",
@@ -52,7 +52,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 10.844159990859117,
+              "amount": 10.849033975015539,
               "ingredient": {
                 "longName": "Fancy Apple",
                 "name": "Apple",
@@ -63,7 +63,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           ],
         },
         "sneakySnack": {
-          "amount": 1.8770668671642428,
+          "amount": 1.8793546021268788,
           "berry": {
             "name": "LUM",
             "value": 24,
@@ -71,7 +71,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
         },
         "spilledIngredients": [
           {
-            "amount": 0.3864880679491176,
+            "amount": 0.38714704803813704,
             "ingredient": {
               "longName": "Honey",
               "name": "Honey",
@@ -80,7 +80,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
             },
           },
           {
-            "amount": 0.966220169872794,
+            "amount": 0.9678676200953426,
             "ingredient": {
               "longName": "Fancy Apple",
               "name": "Apple",
@@ -117,7 +117,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
         "helpsBeforeSS": 10.47945205479452,
         "produce": {
           "berries": {
-            "amount": 30.751486098220546,
+            "amount": 30.7373456992429,
             "berry": {
               "name": "WIKI",
               "value": 31,
@@ -125,7 +125,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 4.190271563707903,
+              "amount": 4.194985030033783,
               "ingredient": {
                 "longName": "Soothing Cacao",
                 "name": "Cacao",
@@ -134,7 +134,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 16.76108625483161,
+              "amount": 16.779940120135134,
               "ingredient": {
                 "longName": "Fancy Apple",
                 "name": "Apple",
@@ -179,7 +179,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
         "helpsBeforeSS": 13.539823008849558,
         "produce": {
           "berries": {
-            "amount": 74.34756555523403,
+            "amount": 73.945632604058,
             "berry": {
               "name": "LEPPA",
               "value": 27,
@@ -187,7 +187,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 3.133250051213029,
+              "amount": 3.16674446381103,
               "ingredient": {
                 "longName": "Warming Ginger",
                 "name": "Ginger",
@@ -196,7 +196,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 6.266500102426058,
+              "amount": 6.33348892762206,
               "ingredient": {
                 "longName": "Fiery Herb",
                 "name": "Herb",
@@ -302,7 +302,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
         "helpsBeforeSS": 11.604095563139932,
         "produce": {
           "berries": {
-            "amount": 26.47766803867735,
+            "amount": 26.446346965928154,
             "berry": {
               "name": "ORAN",
               "value": 31,
@@ -310,7 +310,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 7.167305480774793,
+              "amount": 7.17774583835786,
               "ingredient": {
                 "longName": "Moomoo Milk",
                 "name": "Milk",
@@ -319,7 +319,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 10.750958221162191,
+              "amount": 10.76661875753679,
               "ingredient": {
                 "longName": "Soothing Cacao",
                 "name": "Cacao",
@@ -361,10 +361,10 @@ describe('calculateIngredientsProducedPerMeal', () => {
     expect(ingredientsDropped).toMatchInlineSnapshot(`
       {
         "helpsAfterSS": 0,
-        "helpsBeforeSS": 11.604095563139934,
+        "helpsBeforeSS": 11.60409556313993,
         "produce": {
           "berries": {
-            "amount": 33.13339599788191,
+            "amount": 33.10207492513271,
             "berry": {
               "name": "FIGY",
               "value": 29,
@@ -372,7 +372,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
           },
           "ingredients": [
             {
-              "amount": 4.948729494373274,
+              "amount": 4.959169851956339,
               "ingredient": {
                 "longName": "Snoozy Tomato",
                 "name": "Tomato",
@@ -381,7 +381,7 @@ describe('calculateIngredientsProducedPerMeal', () => {
               },
             },
             {
-              "amount": 7.4230942415599115,
+              "amount": 7.438754777934509,
               "ingredient": {
                 "longName": "Large Leek",
                 "name": "Leek",

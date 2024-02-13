@@ -32,7 +32,7 @@ describe('calculateProduceInTimeWindow', () => {
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
         {
-          "amount": 9.490176,
+          "amount": 9.504,
           "ingredient": {
             "longName": "Moomoo Milk",
             "name": "Milk",
@@ -41,7 +41,7 @@ describe('calculateProduceInTimeWindow', () => {
           },
         },
         {
-          "amount": 14.235264,
+          "amount": 14.256,
           "ingredient": {
             "longName": "Soothing Cacao",
             "name": "Cacao",
@@ -75,7 +75,7 @@ describe('calculateProduceInTimeWindow', () => {
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
         {
-          "amount": 14.800222921348315,
+          "amount": 14.787020224719104,
           "ingredient": {
             "longName": "Fancy Apple",
             "name": "Apple",
@@ -87,7 +87,7 @@ describe('calculateProduceInTimeWindow', () => {
     `);
     expect(calculatedProduce.berries).toMatchInlineSnapshot(`
       {
-        "amount": 34.19895370786517,
+        "amount": 34.21655730337079,
         "berry": {
           "name": "GREPA",
           "value": 25,
@@ -118,7 +118,7 @@ describe('calculateProduceInTimeWindow', () => {
     expect(combineSameIngredientsInDrop(calculatedIngredients.ingredients)).toMatchInlineSnapshot(`
       [
         {
-          "amount": 1.904816658595642,
+          "amount": 1.9204648910411624,
           "ingredient": {
             "longName": "Soothing Cacao",
             "name": "Cacao",
@@ -127,7 +127,7 @@ describe('calculateProduceInTimeWindow', () => {
           },
         },
         {
-          "amount": 3.809633317191284,
+          "amount": 3.8409297820823247,
           "ingredient": {
             "longName": "Fancy Apple",
             "name": "Apple",
@@ -201,7 +201,7 @@ describe('calculateProduceInTimeWindow', () => {
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
         {
-          "amount": 5.0886041189931355,
+          "amount": 5.0910755148741424,
           "ingredient": {
             "longName": "Honey",
             "name": "Honey",
@@ -210,7 +210,7 @@ describe('calculateProduceInTimeWindow', () => {
           },
         },
         {
-          "amount": 12.721510297482839,
+          "amount": 12.727688787185356,
           "ingredient": {
             "longName": "Fancy Apple",
             "name": "Apple",
@@ -250,7 +250,7 @@ describe('calculateProduceInTimeWindow', () => {
     expect(combineSameIngredientsInDrop(calculatedProduce.ingredients)).toMatchInlineSnapshot(`
       [
         {
-          "amount": 2.055620809248555,
+          "amount": 2.0775953757225434,
           "ingredient": {
             "longName": "Warming Ginger",
             "name": "Ginger",
@@ -259,7 +259,7 @@ describe('calculateProduceInTimeWindow', () => {
           },
         },
         {
-          "amount": 4.11124161849711,
+          "amount": 4.155190751445087,
           "ingredient": {
             "longName": "Fiery Herb",
             "name": "Herb",
