@@ -6,7 +6,7 @@ describe('calculateSkillPercentage', () => {
   it('shall calculate skill percentage for Venusaur', () => {
     expect(
       calculateSkillPercentage(pokemon.VENUSAUR, [subskill.SKILL_TRIGGER_M, subskill.SKILL_TRIGGER_S], nature.SASSY)
-    ).toBe(0.04158);
+    ).toBe(0.038808);
   });
 });
 
