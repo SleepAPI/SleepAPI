@@ -1,3 +1,4 @@
+import { parseTime } from '@src/utils/time-utils/time-utils';
 import { nature } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStats } from '../../domain/computed/production';
@@ -29,9 +30,13 @@ export default class OptimalController extends Controller {
       nature: getNature(input.nature ?? nature.RASH.name),
       subskills: input.subskills ? extractSubskillsBasedOnLevel(level, input.subskills) : undefined,
       berries: getBerriesForIsland(findIslandForName(input.island)),
-      e4eProcs: input.e4e ?? 0,
+      e4e: input.e4e ?? 0,
       helpingBonus: input.helpingbonus ?? 0,
-      goodCamp: input.camp ?? false,
+      camp: input.camp ?? false,
+      erb: input.erb ?? 0,
+      incense: input.recoveryIncense ?? false,
+      mainBedtime: parseTime(input.mainBedtime ?? '21:30'),
+      mainWakeup: parseTime(input.mainWakeup ?? '06:00'),
       maxPotSize: input.maxPotSize,
     };
   }

@@ -1,15 +1,13 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { InputProductionStats } from '@src/domain/computed/production';
 import { SetCover } from '@src/services/set-cover/set-cover';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
 import { IngredientSet, pokemon } from 'sleepapi-common';
-import {
-  calculateProducePerMealWindow,
-  getAllIngredientCombinationsForLevel,
-} from '../ingredient/ingredient-calculate';
+import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
 
 export function calculateOptimalProductionForSetCover(productionStats: InputProductionStats) {
-  const { level, nature, subskills, berries, goodCamp, e4eProcs, helpingBonus } = productionStats;
+  const { level, nature, subskills, berries } = productionStats;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
   const pokemonWithCorrectBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
@@ -21,16 +19,15 @@ export function calculateOptimalProductionForSetCover(productionStats: InputProd
         nature,
         subskills: subskillsForPokemon,
       };
-      const detailedProduce = calculateProducePerMealWindow({
+      const { detailedProduce } = setupAndRunProductionSimulation({
         pokemonCombination: {
           pokemon: pokemon,
           ingredientList,
         },
-        customStats,
-        e4eProcs,
-        goodCamp,
-        helpingBonus,
-        combineIngredients: true,
+        input: {
+          ...productionStats,
+          subskills: subskillsForPokemon,
+        },
       });
 
       pokemonProduction.push({

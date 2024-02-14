@@ -6,6 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/cook.ico" type="image/x-icon" />
+    <!-- TODO: app.css is mostly for topnav at this point -->
     <link rel="stylesheet" href="/app.css" />
     <link
       rel="stylesheet"
@@ -19,12 +20,8 @@
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/global.css" />
     <style>
-      .black-button {
-        background-color: #555;
-        color: #ffffff;
-      }
-
       .dropdown-toggle {
         white-space: normal;
       }
@@ -32,11 +29,6 @@
       .dropdown-label {
         background: none;
         padding: 0;
-      }
-
-      .btn-outline-dark {
-        --bs-btn-hover-bg: #fff;
-        --bs-btn-hover-color: #000;
       }
 
       select,
@@ -62,9 +54,31 @@
         border-color: #f04545;
         border: none;
       }
+      .dropdown-item img {
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      @media (min-width: 1000px) {
+        .max-width-custom {
+          max-width: 900px;
+        }
+      }
+
+      #chartContainer {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      #chartContainer.show {
+        visibility: visible;
+        opacity: 1;
+      }
     </style>
 
-    <script src="functions.1.4.1.js"></script>
+    <script src="functions.1.5.0.js"></script>
+    <script src="charts.1.5.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -85,6 +99,7 @@
       integrity="sha384-29LyJx1+1j98d6pqDn6FDyw3dBUacW3vjeiwEXWZMj/fdulg6SuF4vLtBilbjY+c"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       $(document).ready(function () {
         const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
@@ -117,6 +132,68 @@
         var output = document.getElementById(slider.id + 'Value');
         output.innerHTML = slider.value;
       }
+    </script>
+    <script>
+      // calls /api/pokemon when a pokemon is selected, so we may act on its ing list
+      $(document).ready(function () {
+        document.getElementById('pokemon').addEventListener('change', function () {
+          var selectedPokemon = this.value;
+          if (selectedPokemon !== 'Pokémon') {
+            getPokemonIngredients(selectedPokemon);
+          }
+        });
+      });
+    </script>
+    <script>
+      function populateIngredientOptions(ingredients) {
+        const $dropdownMenu = $('#ingredientOptions');
+        const $dropdownButton = $('#ingredientDropdown');
+        $dropdownMenu.empty();
+
+        ingredients.forEach((combination, index) => {
+          const listItem = $('<li><button class="dropdown-item" type="button"></button></li>');
+          const button = listItem.find('button');
+
+          combination.split('/').forEach((ingredient) => {
+            const imageUrl = `ingredient/${ingredient}.png`;
+            button.append(`<img src="${imageUrl}" alt="${ingredient}" style="width:30px; height:30px;">`);
+          });
+
+          button.attr('data-combination', combination);
+
+          listItem.on('click', function () {
+            $dropdownButton.html(button.html());
+            $dropdownButton.attr('data-combination', combination);
+            $dropdownButton.append('<span class="caret"></span>');
+          });
+
+          $dropdownMenu.append(listItem);
+
+          if (index < ingredients.length - 1) {
+            $dropdownMenu.append('<li><hr class="dropdown-divider"></li>');
+          }
+
+          if (index === 0) {
+            $dropdownButton.html(button.html());
+            $dropdownButton.attr('data-combination', combination);
+            $dropdownButton.append('<span class="caret"></span>');
+          }
+        });
+      }
+    </script>
+    <script>
+      $(document).ready(function () {
+        document.getElementById('pokemon').addEventListener('change', function () {
+          var selectedPokemon = this.value;
+          if (selectedPokemon !== 'Pokémon') {
+            document.getElementById('ingredientDropdown').removeAttribute('disabled');
+            document.getElementById('submitButton').removeAttribute('disabled');
+          } else {
+            document.getElementById('ingredientDropdown').setAttribute('disabled', true);
+            document.getElementById('submitButton').setAttribute('disabled', true);
+          }
+        });
+      });
     </script>
   </head>
 
@@ -305,6 +382,23 @@
       </select>
       <br />
 
+      <div class="dropdown">
+        <button
+          class="btn btn-outline-dark dropdown-toggle"
+          type="button"
+          id="ingredientDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          style="width: 300px; height: 40px; margin-bottom: 10px"
+          disabled
+        >
+          Ingredients
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="ingredientDropdown" id="ingredientOptions">
+          <!-- Dynamic content will be added here -->
+        </ul>
+      </div>
+
       <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
         <option value="bashful" selected>Nature</option>
         <option value="lonely">Lonely (+speed -energy)</option>
@@ -342,7 +436,7 @@
       <div class="container" id="subskills" style="margin-bottom: 10px">
         <div class="dropdown">
           <button
-            class="btn btn-outline-dark black-outline-button dropdown-toggle"
+            class="btn btn-outline-dark dropdown-toggle"
             type="button"
             id="multiSelectDropdown"
             style="width: 300px"
@@ -421,49 +515,94 @@
         oninput="updateValue(this)"
       /><br />
 
-      <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="e4e"
-        name="e4e"
-        value="0"
-        min="0"
-        max="5"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
+      <p>
+        <a
+          class="btn btn-outline-dark"
+          data-bs-toggle="collapse"
+          href="#advancedSettings"
+          role="button"
+          aria-expanded="false"
+          aria-controls="advancedSettings"
+        >
+          Advanced settings
+        </a>
+      </p>
+      <div class="collapse" id="advancedSettings">
+        <div class="card card-body" style="display: block; text-align: center">
+          <h5>All advanced settings are optional</h5>
 
-      <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
-      ><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="helpingbonus"
-        name="helpingbonus"
-        value="0"
-        min="0"
-        max="5"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
+          <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="e4e"
+            name="e4e"
+            value="0"
+            min="0"
+            max="5"
+            style="width: 300px; margin: auto; display: block"
+            oninput="updateValue(this)"
+          />
 
-      <div class="d-flex justify-content-center">
-        <label class="form-check-label order-1" for="camp">Good camp:</label>
-        <div class="form-check form-switch ms-3 order-2">
-          <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+          <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
+          ><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="helpingbonus"
+            name="helpingbonus"
+            value="0"
+            min="0"
+            max="5"
+            style="width: 300px"
+            oninput="updateValue(this)"
+          /><br />
+
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="form-check-label order-1" for="camp">Good camp:</label>
+            <div class="form-check form-switch ms-3 order-2">
+              <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+            </div>
+          </div>
+          <br />
+
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="form-check-label order-1" for="mainBedtime">Bedtime:</label>
+            <input
+              type="time"
+              id="mainBedtime"
+              name="mainBedtime"
+              class="form-control ms-3 order-2"
+              value="21:30"
+              style="width: 200px"
+            />
+          </div>
+
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="form-check-label order-1" for="mainWakeup">Wake up:</label>
+            <input
+              type="time"
+              id="mainWakeup"
+              name="mainWakeup"
+              class="form-control ms-3 order-2"
+              value="06:00"
+              style="width: 200px"
+            />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-3" style="margin-bottom: 50px">
+    <div class="d-flex justify-content-center align-items-center mt-3" style="margin-bottom: 50px">
       <button
-        class="btn black-button btn-outline-dark text-center"
+        class="btn btn-outline-dark text-center"
+        id="submitButton"
         style="width: 300px"
         type="button"
         onclick="goToProductionCalculator()"
+        disabled
       >
         Submit
       </button>
@@ -471,7 +610,39 @@
 
     <div id="spinner-div" style="display: none"></div>
 
-    <div id="rankings" class="w3-container"></div>
+    <div id="rankings" class="container col-lg-8 mx-auto max-width-custom"></div>
+
+    <div class="container" id="chartContainer" style="margin-bottom: 50px">
+      <div class="row">
+        <div class="col-lg-8 mx-auto max-width-custom">
+          <div class="card mb-2">
+            <div class="card-header text-center" id="placeholderHeaderId"></div>
+            <div class="card-body text-center" id="productionOutputId"></div>
+          </div>
+          <div class="card mb-2">
+            <div class="card-header text-center" id="allIngredientSetsHeaderId"></div>
+            <div class="card-body text-center" id="allIngredientSetsOutputId"></div>
+          </div>
+          <div class="card mb-2">
+            <div class="card-header text-center">Energy Chart</div>
+            <div class="card-body">
+              <canvas id="energyChart"></canvas>
+            </div>
+          </div>
+          <div class="card mb-2">
+            <div class="card-header text-center">Inventory Chart</div>
+            <div class="card-body">
+              <canvas id="inventoryChart"></canvas>
+            </div>
+          </div>
+          <div class="card mb-2">
+            <div class="card-body d-flex justify-content-center">
+              <button class="btn btn-outline-dark" id="downloadButton">Download Event Log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer class="w3-container w3-black">
       <a href="https://discord.gg/w97qFff8n4">Sleep API on Discord</a> |

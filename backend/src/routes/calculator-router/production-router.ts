@@ -12,7 +12,11 @@ export interface ProductionRequest {
   e4e: number;
   helpingbonus: number;
   camp: boolean;
-  ingredientSet?: string[];
+  erb: number;
+  recoveryIncense: boolean;
+  mainBedtime: string;
+  mainWakeup: string;
+  ingredientSet: string[];
 }
 
 class ProductionRouterImpl {

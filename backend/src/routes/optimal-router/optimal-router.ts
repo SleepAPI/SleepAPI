@@ -19,6 +19,10 @@ export interface InputProductionStatsRequest {
   e4e?: number;
   helpingbonus?: number;
   camp?: boolean;
+  erb?: number;
+  recoveryIncense?: boolean;
+  mainBedtime?: string;
+  mainWakeup?: string;
   maxPotSize?: number;
 }
 

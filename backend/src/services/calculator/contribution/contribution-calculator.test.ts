@@ -1,10 +1,8 @@
-import { IngredientSet, ingredient, pokemon, recipe } from 'sleepapi-common';
-import { CustomStats } from '../../../domain/combination/custom';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import { IngredientSet, ingredient, nature, pokemon, recipe, subskill } from 'sleepapi-common';
 import { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
 import { SetCover } from '../../set-cover/set-cover';
-import { calculateProducePerMealWindow } from '../ingredient/ingredient-calculate';
-import { getOptimalIngredientStats } from '../stats/stats-calculator';
 import {
   boostFirstMealWithFactor,
   calculateContributionForMealWithPunishment,
@@ -38,7 +36,6 @@ describe('calculateMealContributionFor', () => {
     const meal = recipe.SLOWPOKE_TAIL_PEPPER_SALAD;
     const pkmn = pokemon.GENGAR;
 
-    const customStats: CustomStats = getOptimalIngredientStats(60, pkmn);
     const limit50 = false;
     const islands = {
       cyan: false,
@@ -47,7 +44,7 @@ describe('calculateMealContributionFor', () => {
       lapis: false,
     };
 
-    const detailedProduce = calculateProducePerMealWindow({
+    const { detailedProduce } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pkmn,
         ingredientList: [
@@ -56,11 +53,18 @@ describe('calculateMealContributionFor', () => {
           { amount: 8, ingredient: ingredient.PURE_OIL },
         ],
       },
-      customStats,
-      e4eProcs: 0,
-      helpingBonus: 0,
-      goodCamp: false,
-      combineIngredients: true,
+      input: {
+        level: 60,
+        nature: nature.RASH,
+        subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+        e4e: 0,
+        erb: 0,
+        camp: false,
+        helpingBonus: 0,
+        incense: false,
+        mainBedtime: { hour: 21, minute: 30, second: 0 },
+        mainWakeup: { hour: 6, minute: 0, second: 0 },
+      },
     });
 
     const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(limit50, islands);
@@ -75,7 +79,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
-    expect(contribution.contributedPower).toBe(6256.1847008205195);
+    expect(contribution.contributedPower).toBe(6291.072652294875);
   });
 });
 

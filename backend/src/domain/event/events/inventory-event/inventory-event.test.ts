@@ -1,0 +1,15 @@
+import { parseTime } from '@src/utils/time-utils/time-utils';
+import { InventoryEvent } from './inventory-event';
+
+describe('InventoryEvent', () => {
+  it('inventory event shall format correctly', () => {
+    const event = new InventoryEvent({
+      time: parseTime('06:00'),
+      description: 'test',
+      before: 1,
+      delta: 1,
+      max: 3,
+    });
+    expect(event.format()).toMatchInlineSnapshot(`"[06:00:00][Inventory] (test): 1 -> 2 (+1), filled: 2/3 (66.67%)"`);
+  });
+});

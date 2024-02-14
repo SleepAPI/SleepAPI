@@ -14,129 +14,8 @@
  * limitations under the License.
  */
 
-import { CustomStats } from '@src/domain/combination/custom';
-import { DetailedProduce, Produce } from '@src/domain/combination/produce';
-import { LevelError } from '@src/domain/error/stat/stat-error';
-import { BerrySet, IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
-import { calculateNrOfBerriesPerDrop } from '../berry/berry-calculator';
-import { calculateHelpSpeed } from '../help/help-calculator';
-
-export function calculateProduceForSpecificTimeWindow(params: {
-  averagedPokemonCombination: PokemonIngredientSet;
-  ingredientPercentage: number;
-  customStats: CustomStats;
-  energyPeriod: 'CUSTOM' | 'DAY' | 'NIGHT';
-  timeWindow: number;
-  goodCamp?: boolean;
-  helpingBonus?: number;
-  e4eProcs?: number;
-}): Produce {
-  const {
-    averagedPokemonCombination,
-    ingredientPercentage,
-    customStats,
-    energyPeriod: dayOrNight,
-    timeWindow,
-    goodCamp = false,
-    helpingBonus = 0,
-    e4eProcs = 0,
-  } = params;
-
-  if (customStats.level > 100 || customStats.level < 1) {
-    throw new LevelError('Only level 1-100 allowed');
-  }
-
-  const SECONDS_IN_HOUR = 3600;
-
-  const calculatedfrequency = calculateHelpSpeed({
-    pokemon: averagedPokemonCombination.pokemon,
-    energyPeriod: dayOrNight,
-    goodCamp,
-    customStats,
-    nrOfHelpingBonus: helpingBonus,
-    e4eProcs,
-  });
-  const helpsPerTimeWindow = (SECONDS_IN_HOUR / calculatedfrequency) * timeWindow;
-
-  const ingredientDropsPerTimeWindow = helpsPerTimeWindow * ingredientPercentage;
-
-  const berryDropsPerTimeWindow = helpsPerTimeWindow - ingredientDropsPerTimeWindow;
-
-  const producedIngredients: IngredientSet[] = averagedPokemonCombination.ingredientList.map(
-    ({ amount, ingredient }) => {
-      return { amount: amount * ingredientDropsPerTimeWindow, ingredient };
-    }
-  );
-
-  return {
-    berries: {
-      amount:
-        berryDropsPerTimeWindow *
-        calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, customStats.subskills),
-      berry: averagedPokemonCombination.pokemon.berry,
-    },
-    ingredients: producedIngredients,
-  };
-}
-
-export function calculateNightlyProduce(
-  limit: number,
-  averageProduce: Produce,
-  totalProduce: Produce,
-  berriesPerDrop: number
-): DetailedProduce {
-  const produceAmount =
-    totalProduce.ingredients.reduce((sum, { amount }) => sum + amount, 0) + totalProduce.berries.amount;
-
-  const averageProduceAmount =
-    averageProduce.ingredients.reduce((sum, { amount }) => sum + amount, 0) + averageProduce.berries.amount;
-
-  const helpsBeforeSS = produceAmount <= limit ? produceAmount / averageProduceAmount : limit / averageProduceAmount;
-
-  // check if we hit cap
-  if (produceAmount <= limit) {
-    const emptySneakySnack: BerrySet = {
-      amount: 0,
-      berry: totalProduce.berries.berry,
-    };
-    return {
-      produce: totalProduce,
-      spilledIngredients: [],
-      sneakySnack: emptySneakySnack,
-      helpsBeforeSS,
-      helpsAfterSS: 0,
-    };
-  }
-
-  const helpsAfterSS = (produceAmount - limit) / averageProduceAmount;
-
-  const clampFactor = produceAmount / limit;
-  const clampedProduce: Produce = {
-    berries: {
-      amount: totalProduce.berries.amount / clampFactor,
-      berry: totalProduce.berries.berry,
-    },
-    ingredients: totalProduce.ingredients.map(({ amount, ingredient }) => ({
-      amount: amount / clampFactor,
-      ingredient: ingredient,
-    })),
-  };
-
-  const spilledIngredients: IngredientSet[] = averageProduce.ingredients.map(({ amount, ingredient }) => ({
-    amount: amount * helpsAfterSS,
-    ingredient: ingredient,
-  }));
-
-  const sneakySnack: BerrySet = { amount: helpsAfterSS * berriesPerDrop, berry: averageProduce.berries.berry };
-
-  return {
-    produce: clampedProduce,
-    spilledIngredients,
-    sneakySnack,
-    helpsBeforeSS,
-    helpsAfterSS,
-  };
-}
+import { Produce } from '@src/domain/combination/produce';
+import { PokemonIngredientSet } from 'sleepapi-common';
 
 export function calculateAverageProduce(
   averagePokemonCombination: PokemonIngredientSet,
@@ -154,4 +33,21 @@ export function calculateAverageProduce(
     })),
   };
   return result;
+}
+
+export function clampHelp(params: { inventorySpace: number; averageProduce: Produce; amount: number }) {
+  const { inventorySpace, averageProduce, amount } = params;
+
+  const spillFactor = inventorySpace / amount;
+  const clampedProduce: Produce = {
+    berries: {
+      amount: averageProduce.berries.amount * spillFactor,
+      berry: averageProduce.berries.berry,
+    },
+    ingredients: averageProduce.ingredients.map(({ amount, ingredient }) => ({
+      amount: amount * spillFactor,
+      ingredient,
+    })),
+  };
+  return clampedProduce;
 }

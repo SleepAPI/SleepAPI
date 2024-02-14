@@ -3,11 +3,11 @@ import { IngredientSet, pokemon, recipe } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
 import { SetCover } from '@src/services/set-cover/set-cover';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { getBerriesForFilter } from '@src/utils/berry-utils/berry-utils';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
-  calculateProducePerMealWindow,
   calculateRemainingIngredients,
   getAllIngredientCombinationsForLevel,
 } from '../ingredient/ingredient-calculate';
@@ -25,21 +25,31 @@ export function getAllOptimalIngredientPokemonProduce(
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
 
   const allowedBerries = getBerriesForFilter(islands);
+  const level = limit50 ? 50 : 60;
   const pokemonForBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
 
-  for (const pokemon of pokemonForBerries) {
-    const customStats = getOptimalIngredientStats(limit50 ? 50 : 60, pokemon);
+  const teamStats = {
+    e4e: 0,
+    erb: 0,
+    camp: false,
+    helpingBonus: 0,
+    incense: false,
+    mainBedtime: { hour: 21, minute: 30, second: 0 },
+    mainWakeup: { hour: 6, minute: 0, second: 0 },
+  };
 
-    for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, limit50 ? 50 : 60)) {
+  for (const pokemon of pokemonForBerries) {
+    const customStats = getOptimalIngredientStats(level, pokemon);
+
+    for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const pokemonCombination = {
         pokemon: pokemon,
         ingredientList,
       };
 
-      const detailedProduce = calculateProducePerMealWindow({
+      const { detailedProduce } = setupAndRunProductionSimulation({
         pokemonCombination,
-        customStats,
-        combineIngredients: true,
+        input: { ...customStats, ...teamStats },
       });
 
       allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, customStats });

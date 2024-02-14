@@ -1,61 +1,68 @@
+import { ProductionStats } from '@src/domain/computed/production';
+import { ScheduledEvent } from '@src/domain/event/event';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { ProductionRequest } from '../../../routes/calculator-router/production-router';
-import { getNature } from '../../../utils/nature-utils/nature-utils';
 import { getPokemon } from '../../../utils/pokemon-utils/pokemon-utils';
-import { chooseIngredientSets } from '../../../utils/production-utils/production-utils';
-import { extractSubskillsBasedOnLevel } from '../../../utils/subskill-utils/subskill-utils';
-import {
-  calculateProducePerMealWindow,
-  getAllIngredientCombinationsForLevel,
-} from '../../calculator/ingredient/ingredient-calculate';
+import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
-export function calculatePokemonProduction(pokemonName: string, details: ProductionRequest) {
+export function calculatePokemonProduction(pokemonName: string, details: ProductionStats, ingredientSet: string[]) {
   const {
     level,
-    nature: natureName,
-    subskills: subskillNames,
-    e4e: e4eProcs,
-    helpingbonus: helpingBonus,
-    camp: goodCamp,
-    ingredientSet,
+    nature,
+    subskills: maybeSubskills,
+    e4e,
+    helpingBonus,
+    camp,
+    erb,
+    incense,
+    mainBedtime,
+    mainWakeup,
   } = details;
 
+  const subskills = maybeSubskills ?? [];
   const pokemon = getPokemon(pokemonName);
-  const nature = getNature(natureName);
-  const subskills = extractSubskillsBasedOnLevel(level, subskillNames);
-  const ingredientSets = chooseIngredientSets(getAllIngredientCombinationsForLevel(pokemon, level), ingredientSet);
 
-  const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
-  for (const ingredientList of ingredientSets) {
+  const pokemonProductionWithLogs: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[] =
+    [];
+  for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
     const customStats: CustomStats = {
       level,
       nature,
       subskills,
     };
 
-    const detailedProduce = calculateProducePerMealWindow({
+    const { detailedProduce, log } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pokemon,
         ingredientList,
       },
-      customStats,
-      e4eProcs,
-      goodCamp,
-      helpingBonus,
-      combineIngredients: true,
+      input: {
+        ...customStats,
+        e4e,
+        camp,
+        helpingBonus,
+        erb,
+        incense,
+        mainBedtime,
+        mainWakeup,
+      },
     });
 
-    pokemonProduction.push({ pokemonCombination: { pokemon, ingredientList }, detailedProduce, customStats });
+    pokemonProductionWithLogs.push({
+      pokemonProduction: { pokemonCombination: { pokemon, ingredientList }, detailedProduce, customStats },
+      log,
+    });
   }
+
+  const productionForChosenIngSet = chooseIngredientSet(pokemonProductionWithLogs, ingredientSet);
+
   return {
     filters: {
-      level,
-      nature,
+      ...details,
       subskills,
-      e4eProcs,
-      helpingBonus,
-      goodCamp,
     },
-    pokemonCombinations: pokemonProduction,
+    production: productionForChosenIngSet,
+    allIngredientSets: pokemonProductionWithLogs,
   };
 }

@@ -1,9 +1,9 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { IngredientSet, PokemonIngredientSet, ingredient, nature, pokemon, recipe, subskill } from 'sleepapi-common';
+import { IngredientSet, PokemonIngredientSet, ingredient, pokemon, recipe } from 'sleepapi-common';
 import {
+  calculateAveragePokemonIngredientSet,
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
-  calculateProducePerMealWindow,
   calculateRemainingIngredients,
   combineIngredientDrops,
   combineSameIngredientsInDrop,
@@ -11,398 +11,6 @@ import {
   getAllIngredientCombinationsForLevel,
   sortByMinimumFiller,
 } from './ingredient-calculate';
-
-describe('calculateIngredientsProducedPerMeal', () => {
-  it('shall calculate realistic pokemon.PINSIR at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.PINSIR,
-      ingredientList: [
-        { amount: 2, ingredient: ingredient.HONEY },
-        { amount: 5, ingredient: ingredient.FANCY_APPLE },
-      ],
-    };
-    const nat = nature.BASHFUL;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.HELPING_SPEED_M];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 1.8793546021268788,
-        "helpsBeforeSS": 13.86138613861386,
-        "produce": {
-          "berries": {
-            "amount": 50.17941539512041,
-            "berry": {
-              "name": "LUM",
-              "value": 24,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 4.339613590006215,
-              "ingredient": {
-                "longName": "Honey",
-                "name": "Honey",
-                "taxedValue": 29.8,
-                "value": 101,
-              },
-            },
-            {
-              "amount": 10.849033975015539,
-              "ingredient": {
-                "longName": "Fancy Apple",
-                "name": "Apple",
-                "taxedValue": 23.7,
-                "value": 90,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 1.8793546021268788,
-          "berry": {
-            "name": "LUM",
-            "value": 24,
-          },
-        },
-        "spilledIngredients": [
-          {
-            "amount": 0.38714704803813704,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 0.9678676200953426,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-        ],
-      }
-    `);
-  });
-
-  it('shall calculate optimal pokemon with small carry size at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.ABSOL,
-      ingredientList: [
-        { amount: 2, ingredient: ingredient.SOOTHING_CACAO },
-        { amount: 8, ingredient: ingredient.FANCY_APPLE },
-      ],
-    };
-    const nat = nature.RASH;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-      helpingBonus: 0,
-      e4eProcs: 0,
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 0,
-        "helpsBeforeSS": 10.47945205479452,
-        "produce": {
-          "berries": {
-            "amount": 30.7373456992429,
-            "berry": {
-              "name": "WIKI",
-              "value": 31,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 4.194985030033783,
-              "ingredient": {
-                "longName": "Soothing Cacao",
-                "name": "Cacao",
-                "taxedValue": 66.7,
-                "value": 151,
-              },
-            },
-            {
-              "amount": 16.779940120135134,
-              "ingredient": {
-                "longName": "Fancy Apple",
-                "name": "Apple",
-                "taxedValue": 23.7,
-                "value": 90,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "WIKI",
-            "value": 31,
-          },
-        },
-        "spilledIngredients": [],
-      }
-    `);
-  });
-
-  it('shall calculate optimal berry specialist at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.TYPHLOSION,
-      ingredientList: [
-        { amount: 1, ingredient: ingredient.WARMING_GINGER },
-        { amount: 2, ingredient: ingredient.FIERY_HERB },
-      ],
-    };
-    const nat = nature.RASH;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-      helpingBonus: 0,
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 0,
-        "helpsBeforeSS": 13.539823008849558,
-        "produce": {
-          "berries": {
-            "amount": 73.945632604058,
-            "berry": {
-              "name": "LEPPA",
-              "value": 27,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 3.16674446381103,
-              "ingredient": {
-                "longName": "Warming Ginger",
-                "name": "Ginger",
-                "taxedValue": 34.7,
-                "value": 109,
-              },
-            },
-            {
-              "amount": 6.33348892762206,
-              "ingredient": {
-                "longName": "Fiery Herb",
-                "name": "Herb",
-                "taxedValue": 49.4,
-                "value": 130,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "LEPPA",
-            "value": 27,
-          },
-        },
-        "spilledIngredients": [],
-      }
-    `);
-  });
-
-  it('shall calculate optimal pokemon with large carry size at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.TYRANITAR,
-      ingredientList: [
-        { amount: 2, ingredient: ingredient.WARMING_GINGER },
-        { amount: 5, ingredient: ingredient.GREENGRASS_SOYBEANS },
-      ],
-    };
-    const nat = nature.RASH;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-      e4eProcs: 0,
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 0,
-        "helpsBeforeSS": 12.033031852143138,
-        "produce": {
-          "berries": {
-            "amount": 28.144855355772602,
-            "berry": {
-              "name": "WIKI",
-              "value": 31,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 7.1969597330244115,
-              "ingredient": {
-                "longName": "Warming Ginger",
-                "name": "Ginger",
-                "taxedValue": 34.7,
-                "value": 109,
-              },
-            },
-            {
-              "amount": 17.992399332561032,
-              "ingredient": {
-                "longName": "Greengrass Soybeans",
-                "name": "Soybean",
-                "taxedValue": 29.2,
-                "value": 100,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "WIKI",
-            "value": 31,
-          },
-        },
-        "spilledIngredients": [],
-      }
-    `);
-  });
-
-  it('shall calculate optimal pokemon with large carry size and small drops at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.BLASTOISE,
-      ingredientList: [
-        { amount: 2, ingredient: ingredient.MOOMOO_MILK },
-        { amount: 3, ingredient: ingredient.SOOTHING_CACAO },
-      ],
-    };
-    const nat = nature.RASH;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 0,
-        "helpsBeforeSS": 11.604095563139932,
-        "produce": {
-          "berries": {
-            "amount": 26.446346965928154,
-            "berry": {
-              "name": "ORAN",
-              "value": 31,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 7.17774583835786,
-              "ingredient": {
-                "longName": "Moomoo Milk",
-                "name": "Milk",
-                "taxedValue": 28.1,
-                "value": 98,
-              },
-            },
-            {
-              "amount": 10.76661875753679,
-              "ingredient": {
-                "longName": "Soothing Cacao",
-                "name": "Cacao",
-                "taxedValue": 66.7,
-                "value": 151,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "ORAN",
-            "value": 31,
-          },
-        },
-        "spilledIngredients": [],
-      }
-    `);
-  });
-
-  it('shall calculate optimal pokemon with medium carry size and medium drops at 30', () => {
-    const pokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.DUGTRIO,
-      ingredientList: [
-        { amount: 2, ingredient: ingredient.SNOOZY_TOMATO },
-        { amount: 3, ingredient: ingredient.LARGE_LEEK },
-      ],
-    };
-    const nat = nature.RASH;
-    const level = 30;
-    const subskills: subskill.SubSkill[] = [subskill.INGREDIENT_FINDER_M, subskill.INVENTORY_L];
-
-    const ingredientsDropped = calculateProducePerMealWindow({
-      pokemonCombination,
-      customStats: { subskills, nature: nat, level },
-      e4eProcs: 0,
-    });
-    expect(ingredientsDropped).toMatchInlineSnapshot(`
-      {
-        "helpsAfterSS": 0,
-        "helpsBeforeSS": 11.60409556313993,
-        "produce": {
-          "berries": {
-            "amount": 33.10207492513271,
-            "berry": {
-              "name": "FIGY",
-              "value": 29,
-            },
-          },
-          "ingredients": [
-            {
-              "amount": 4.959169851956339,
-              "ingredient": {
-                "longName": "Snoozy Tomato",
-                "name": "Tomato",
-                "taxedValue": 35.4,
-                "value": 110,
-              },
-            },
-            {
-              "amount": 7.438754777934509,
-              "ingredient": {
-                "longName": "Large Leek",
-                "name": "Leek",
-                "taxedValue": 100.1,
-                "value": 185,
-              },
-            },
-          ],
-        },
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "FIGY",
-            "value": 29,
-          },
-        },
-        "spilledIngredients": [],
-      }
-    `);
-  });
-});
 
 describe('combineSameIngredientsInDrop', () => {
   it('shall combine ingredients and leave unique ingredients as is', () => {
@@ -933,5 +541,101 @@ describe('extractRelevantSurplus', () => {
 
     expect(result.relevant).toEqual([]);
     expect(result.extra).toEqual(surplus);
+  });
+});
+
+describe('calculateAverageIngredientDrop', () => {
+  it('shall average an ingredient set for level 60', () => {
+    const pokemonSet: PokemonIngredientSet = {
+      pokemon: pokemon.PINSIR,
+      ingredientList: [
+        {
+          amount: 3,
+          ingredient: ingredient.FANCY_APPLE,
+        },
+        {
+          amount: 3,
+          ingredient: ingredient.FANCY_EGG,
+        },
+        {
+          amount: 3,
+          ingredient: ingredient.MOOMOO_MILK,
+        },
+      ],
+    };
+    const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
+    expect(averagedResult.pokemon).toBe(pokemon.PINSIR);
+    expect(averagedResult.ingredientList).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 1,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+        {
+          "amount": 1,
+          "ingredient": {
+            "longName": "Fancy Egg",
+            "name": "Egg",
+            "taxedValue": 38.7,
+            "value": 115,
+          },
+        },
+        {
+          "amount": 1,
+          "ingredient": {
+            "longName": "Moomoo Milk",
+            "name": "Milk",
+            "taxedValue": 28.1,
+            "value": 98,
+          },
+        },
+      ]
+    `);
+  });
+
+  it('shall average an ingredient set for level 30', () => {
+    const pokemonSet: PokemonIngredientSet = {
+      pokemon: pokemon.PINSIR,
+      ingredientList: [
+        {
+          amount: 4,
+          ingredient: ingredient.FANCY_APPLE,
+        },
+        {
+          amount: 4,
+          ingredient: ingredient.FANCY_EGG,
+        },
+      ],
+    };
+
+    const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
+    expect(averagedResult.pokemon).toBe(pokemon.PINSIR);
+    expect(averagedResult.ingredientList).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 2,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+        {
+          "amount": 2,
+          "ingredient": {
+            "longName": "Fancy Egg",
+            "name": "Egg",
+            "taxedValue": 38.7,
+            "value": 115,
+          },
+        },
+      ]
+    `);
   });
 });

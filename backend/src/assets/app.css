@@ -1625,6 +1625,7 @@ a {
 .topnav {
   background-color: #333;
   overflow: hidden;
+  border-bottom: 2px solid #555;
 }
 
 /* Style the links inside the navigation bar */

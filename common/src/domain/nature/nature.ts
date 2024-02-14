@@ -15,7 +15,7 @@ export const LONELY: Nature = {
   frequency: 1.1,
   ingredient: 1,
   skill: 1,
-  energy: 0.8,
+  energy: 0.88,
   exp: 1,
 };
 
@@ -106,7 +106,7 @@ export const MILD: Nature = {
   frequency: 1,
   ingredient: 1.2,
   skill: 1,
-  energy: 0.8,
+  energy: 0.88,
   exp: 1,
 };
 
@@ -146,7 +146,7 @@ export const GENTLE: Nature = {
   frequency: 1,
   ingredient: 1,
   skill: 1,
-  energy: 0.8,
+  energy: 0.88,
   exp: 1,
 };
 
@@ -187,7 +187,7 @@ export const HASTY: Nature = {
   frequency: 1,
   ingredient: 1,
   skill: 1,
-  energy: 0.8,
+  energy: 0.88,
   exp: 1.2,
 };
 

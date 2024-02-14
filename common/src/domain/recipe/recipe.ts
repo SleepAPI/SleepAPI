@@ -15,5 +15,6 @@ export interface Recipe {
 export type RecipeType = 'curry' | 'salad' | 'dessert';
 
 export const MAX_POT_SIZE = 57;
+export const MEALS_IN_DAY = 3;
 
 export const RECIPES: Recipe[] = [...CURRIES, ...SALADS, ...DESSERTS];

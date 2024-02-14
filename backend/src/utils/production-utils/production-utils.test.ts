@@ -1,39 +1,54 @@
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { ingredient, IngredientSet } from 'sleepapi-common';
-import { chooseIngredientSets } from './production-utils';
+import { ScheduledEvent } from '@src/domain/event/event';
+import { berry, ingredient, nature, pokemon } from 'sleepapi-common';
+import { chooseIngredientSet } from './production-utils';
 
 describe('chooseIngredientSets', () => {
-  const validSets: IngredientSet[][] = [
-    [
-      { amount: 1, ingredient: ingredient.MOOMOO_MILK },
-      { amount: 1, ingredient: ingredient.FANCY_APPLE },
-    ],
-    [
-      { amount: 2, ingredient: ingredient.BEAN_SAUSAGE },
-      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
-    ],
+  const productionData: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[] = [
+    {
+      log: [],
+      pokemonProduction: {
+        customStats: {
+          level: 60,
+          nature: nature.RASH,
+          subskills: [],
+        },
+        detailedProduce: {
+          produce: {
+            berries: {
+              amount: 0,
+              berry: berry.BELUE,
+            },
+            ingredients: [],
+          },
+          sneakySnack: {
+            amount: 0,
+            berry: berry.BELUE,
+          },
+          spilledIngredients: [],
+        },
+        pokemonCombination: {
+          pokemon: pokemon.PINSIR,
+          ingredientList: [
+            { amount: 1, ingredient: ingredient.MOOMOO_MILK },
+            { amount: 1, ingredient: ingredient.FANCY_APPLE },
+          ],
+        },
+      },
+    },
   ];
-
-  it('shall return the entire validSets array when ingredientSet is undefined', () => {
-    expect(chooseIngredientSets(validSets)).toEqual(validSets);
-  });
 
   it('shall return the matching set for a valid ingredientSet', () => {
     const ingredientSet = [ingredient.MOOMOO_MILK.name, ingredient.FANCY_APPLE.name];
-    const expectedSet = [
-      [
-        { amount: 1, ingredient: ingredient.MOOMOO_MILK },
-        { amount: 1, ingredient: ingredient.FANCY_APPLE },
-      ],
-    ];
 
-    expect(chooseIngredientSets(validSets, ingredientSet)).toEqual(expectedSet);
+    expect(chooseIngredientSet(productionData, ingredientSet)).toEqual(productionData[0]);
   });
 
   it('shall throw an error when the ingredientSet does not match any valid sets', () => {
     const ingredientSet = ['missing ingredient'];
 
-    expect(() => chooseIngredientSets(validSets, ingredientSet)).toThrow(
+    expect(() => chooseIngredientSet(productionData, ingredientSet)).toThrow(
       new PokemonError(`Ingredient set [${ingredientSet.join(', ')}] was not valid`)
     );
   });
