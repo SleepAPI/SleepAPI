@@ -203,8 +203,6 @@ describe('removeDuplicatePokemonCombinations', () => {
         subskills: [],
       },
       detailedProduce: {
-        helpsAfterSS: 1,
-        helpsBeforeSS: 1,
         produce: {
           berries: { amount: 2, berry: berry.LEPPA },
           ingredients: [],

@@ -15,16 +15,8 @@
  */
 
 import { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
-import { CustomStats } from '@src/domain/combination/custom';
-import { DetailedProduce } from '@src/domain/combination/produce';
-import { IngredientSet, PokemonIngredientSet, pokemon, recipe } from 'sleepapi-common';
-import { calculateNrOfBerriesPerDrop } from '../berry/berry-calculator';
-import {
-  calculateAverageProduce,
-  calculateNightlyProduce,
-  calculateProduceForSpecificTimeWindow,
-} from '../production/produce-calculator';
-import { extractIngredientSubskills, extractInventorySubskills } from '../stats/stats-calculator';
+import { IngredientSet, PokemonIngredientSet, nature, pokemon, recipe, subskill } from 'sleepapi-common';
+import { extractIngredientSubskills } from '../stats/stats-calculator';
 
 /**
  * Combines same ingredients in drop, for example [2 honey, 4 honey, 5 milk] becomes [6 honey, 5 milk]
@@ -164,94 +156,6 @@ export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, l
   return result;
 }
 
-/**
- * Calculates average ingredients produced per meal with natural declining energy
- * Calculate average nightly produce and subtracts overflow ingredients
- */
-export function calculateProducePerMealWindow(params: {
-  pokemonCombination: PokemonIngredientSet;
-  customStats: CustomStats;
-  goodCamp?: boolean;
-  helpingBonus?: number;
-  e4eProcs?: number;
-  combineIngredients?: boolean;
-}): DetailedProduce {
-  const { pokemonCombination, customStats, goodCamp, helpingBonus, e4eProcs, combineIngredients = false } = params;
-
-  const MEALS_IN_DAY = 3;
-
-  const averageIngredientDrop = calculateAverageIngredientDrop(customStats.level, pokemonCombination);
-  const averagedPokemonCombination: PokemonIngredientSet = {
-    pokemon: pokemonCombination.pokemon,
-    ingredientList: averageIngredientDrop,
-  };
-
-  const ingredientSubskills = extractIngredientSubskills(customStats.subskills);
-  const ingredientPercentage =
-    (averagedPokemonCombination.pokemon.ingredientPercentage / 100) *
-    customStats.nature.ingredient *
-    ingredientSubskills;
-
-  const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, customStats.subskills);
-
-  const daytimeProduce = calculateProduceForSpecificTimeWindow({
-    averagedPokemonCombination,
-    ingredientPercentage,
-    customStats,
-    energyPeriod: 'DAY',
-    timeWindow: 15.5,
-    goodCamp,
-    helpingBonus,
-    e4eProcs,
-  });
-
-  const nighttimeProduce = calculateProduceForSpecificTimeWindow({
-    averagedPokemonCombination,
-    ingredientPercentage,
-    customStats,
-    energyPeriod: 'NIGHT',
-    timeWindow: 8.5,
-    goodCamp,
-    helpingBonus,
-    e4eProcs,
-  });
-
-  const averageProduce = calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop);
-
-  const maxCarrySize = pokemonCombination.pokemon.maxCarrySize + extractInventorySubskills(customStats.subskills);
-
-  const detailedNightlyProduce = calculateNightlyProduce(
-    maxCarrySize,
-    averageProduce,
-    nighttimeProduce,
-    berriesPerDrop
-  );
-
-  const producedIngredients = combineIngredientDrops(
-    daytimeProduce.ingredients,
-    detailedNightlyProduce.produce.ingredients
-  ).map(({ amount, ingredient }) => ({
-    amount: amount / MEALS_IN_DAY,
-    ingredient: ingredient,
-  }));
-
-  return {
-    produce: {
-      berries: {
-        berry: daytimeProduce.berries.berry,
-        amount: daytimeProduce.berries.amount + detailedNightlyProduce.produce.berries.amount,
-      },
-      ingredients: combineIngredients ? combineSameIngredientsInDrop(producedIngredients) : producedIngredients,
-    },
-    sneakySnack: detailedNightlyProduce.sneakySnack,
-    spilledIngredients: combineIngredients
-      ? combineSameIngredientsInDrop(detailedNightlyProduce.spilledIngredients)
-      : detailedNightlyProduce.spilledIngredients,
-    helpsBeforeSS: detailedNightlyProduce.helpsBeforeSS,
-    helpsAfterSS: detailedNightlyProduce.helpsAfterSS,
-  };
-}
-
 export function combineIngredientDrops(array1: IngredientSet[], array2: IngredientSet[]): IngredientSet[] {
   return array1.reduce((acc: IngredientSet[], curr: IngredientSet, index: number) => {
     const other: IngredientSet = array2[index];
@@ -267,15 +171,14 @@ export function combineIngredientDrops(array1: IngredientSet[], array2: Ingredie
   }, []);
 }
 
-export function calculateAverageIngredientDrop(level: number, pokemonCombination: PokemonIngredientSet) {
-  const combinationWithoutLockedIngredients =
-    level >= 60 ? pokemonCombination.ingredientList : pokemonCombination.ingredientList.slice(0, 2);
-  return combinationWithoutLockedIngredients.map((comb) => {
-    return {
-      amount: comb.amount / combinationWithoutLockedIngredients.length,
-      ingredient: comb.ingredient,
-    };
-  });
+export function calculateAveragePokemonIngredientSet(pokemonCombination: PokemonIngredientSet): PokemonIngredientSet {
+  return {
+    pokemon: pokemonCombination.pokemon,
+    ingredientList: pokemonCombination.ingredientList.map(({ ingredient, amount }) => ({
+      ingredient,
+      amount: amount / pokemonCombination.ingredientList.length,
+    })),
+  };
 }
 
 export function sumOfIngredients(ingredients: IngredientSet[]) {
@@ -316,4 +219,15 @@ export function calculateContributedIngredientsValue(
     contributedValue: contributedValue * mealBonus * level50RecipeBonus,
     fillerValue,
   };
+}
+
+export function calculateIngredientPercentage(params: {
+  pokemon: pokemon.Pokemon;
+  nature: nature.Nature;
+  subskills: subskill.SubSkill[];
+}) {
+  const { pokemon, nature, subskills } = params;
+  const ingredientSubskills = extractIngredientSubskills(subskills);
+  const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
+  return ingredientPercentage;
 }

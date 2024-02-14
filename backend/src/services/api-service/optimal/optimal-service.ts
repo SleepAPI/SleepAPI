@@ -116,8 +116,6 @@ function generateOptimalTeamSolutions(input: InputProductionStats) {
 }
 
 function customOptimalSet(mealName: string, inputStats: InputProductionStats, timeout: number) {
-  const { level, goodCamp, e4eProcs, helpingBonus, nature, subskills } = inputStats;
-
   const meal = getMeal(mealName);
 
   const pokemonProduction = calculateOptimalProductionForSetCover(inputStats);
@@ -136,14 +134,7 @@ function customOptimalSet(mealName: string, inputStats: InputProductionStats, ti
     meal: meal.name,
     recipe: meal.ingredients,
     value: meal.value,
-    filter: {
-      level,
-      nature,
-      subskills,
-      e4eProcs,
-      helpingBonus,
-      goodCamp,
-    },
+    filter: inputStats,
     teams: optimalCombinations,
   };
 }

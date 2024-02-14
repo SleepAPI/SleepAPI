@@ -14,43 +14,29 @@
  * limitations under the License.
  */
 
-import { CustomStats } from '@src/domain/combination/custom';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { pokemon } from 'sleepapi-common';
-import {
-  calculateAsleepAverageEnergyCoefficient,
-  calculateAwakeAverageEnergyCoefficient,
-} from '../energy/energy-calculator';
+import { nature, pokemon, subskill } from 'sleepapi-common';
+import { energyFactorFromEnergy } from '../energy/energy-calculator';
 import { calculateHelpSpeedSubskills, invertNatureFrequecy } from '../stats/stats-calculator';
 
-export function calculateHelpSpeed(stats: {
+export function calculateHelpSpeedBeforeEnergy(stats: {
   pokemon: pokemon.Pokemon;
-  customStats: CustomStats;
-  energyPeriod: 'CUSTOM' | 'DAY' | 'NIGHT';
-  nrOfHelpingBonus: number;
-  goodCamp: boolean;
-  e4eProcs: number;
+  level: number;
+  nature: nature.Nature;
+  subskills: subskill.SubSkill[];
+  helpingBonus: number;
+  camp: boolean;
 }): number {
-  const {
-    pokemon,
-    customStats,
-    energyPeriod: dayOrNight,
-    nrOfHelpingBonus,
-    goodCamp: goodCampActive,
-    e4eProcs,
-  } = stats;
+  const { pokemon, level, nature, subskills, helpingBonus, camp } = stats;
 
-  const helpSpeedSubskills = calculateHelpSpeedSubskills(customStats.subskills, nrOfHelpingBonus);
-  const levelFactor = 1 - 0.002 * (customStats.level - 1);
-  const natureFreq = invertNatureFrequecy(customStats.nature);
-  const campBonus = goodCampActive ? 1.2 : 1;
+  const helpSpeedSubskills = calculateHelpSpeedSubskills(subskills, helpingBonus);
+  const levelFactor = 1 - 0.002 * (level - 1);
+  const natureFreq = invertNatureFrequecy(nature);
+  const campBonus = camp ? 1.2 : 1;
 
-  const energyFactor =
-    dayOrNight === 'DAY'
-      ? calculateAwakeAverageEnergyCoefficient(e4eProcs)
-      : calculateAsleepAverageEnergyCoefficient(e4eProcs);
+  return Math.floor((roundDown(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency) / campBonus);
+}
 
-  return Math.floor(
-    (roundDown(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency * energyFactor) / campBonus
-  );
+export function calculateFrequencyWithEnergy(helpSpeedInSeconds: number, energy: number) {
+  return helpSpeedInSeconds * energyFactorFromEnergy(energy);
 }

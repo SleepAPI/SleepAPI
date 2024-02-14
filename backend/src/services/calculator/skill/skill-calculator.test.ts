@@ -1,5 +1,5 @@
 import { nature, pokemon, subskill } from 'sleepapi-common';
-import { calculateHelpSpeed } from '../help/help-calculator';
+import { calculateHelpSpeedBeforeEnergy } from '../help/help-calculator';
 import { calculateSkillPercentage, calculateSkillProcs } from './skill-calculator';
 
 describe('calculateSkillPercentage', () => {
@@ -26,13 +26,13 @@ describe('calculate procs from start', () => {
     const skillPercentage = calculateSkillPercentage(pkmn, subskills, nat);
     const nrOfHelps =
       (3600 /
-        calculateHelpSpeed({
+        calculateHelpSpeedBeforeEnergy({
           pokemon: pkmn,
-          customStats: { level: 29, nature: nat, subskills },
-          energyPeriod: 'DAY',
-          goodCamp: false,
-          nrOfHelpingBonus: 0,
-          e4eProcs: 4,
+          level: 29,
+          nature: nat,
+          subskills,
+          camp: false,
+          helpingBonus: 0,
         })) *
       15.5;
 

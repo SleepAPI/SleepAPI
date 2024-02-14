@@ -25,8 +25,6 @@ describe('processOptimalTeamSolutions', () => {
     };
 
     const detailedProduce: DetailedProduce = {
-      helpsAfterSS: 0,
-      helpsBeforeSS: 0,
       produce: { berries: { amount: 0, berry: berry.LEPPA }, ingredients: [] },
       sneakySnack: { amount: 0, berry: berry.LEPPA },
       spilledIngredients: [],

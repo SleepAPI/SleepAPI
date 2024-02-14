@@ -1,4 +1,4 @@
-import { toSeconds } from 'src/utils/time-utils/time-utils';
+import { toSeconds } from 'src/utils/time-utils/frequency-utils';
 import {
   BELUE,
   CHERI,

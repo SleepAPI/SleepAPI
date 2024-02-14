@@ -1,6 +1,7 @@
 import { SurplusIngredients } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ProductionStats } from '@src/domain/computed/production';
+import { ScheduledEvent } from '@src/domain/event/event';
 import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
@@ -13,32 +14,49 @@ interface ProductionFilters {
   level: number;
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
-  e4eProcs: number;
+  e4e: number;
   helpingBonus: number;
-  goodCamp: boolean;
+  camp: boolean;
 }
 interface ProductionCombination {
   filters: ProductionFilters;
-  pokemonCombination: CustomPokemonCombinationWithProduce;
+  pokemonProduction: CustomPokemonCombinationWithProduce;
 }
 interface ProductionCombinations {
   filters: ProductionFilters;
-  pokemonCombinations: CustomPokemonCombinationWithProduce[];
+  production: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] };
+  allIngredientSets: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[];
 }
 
 class WebsiteConverterServiceImpl {
-  public toProductionCalculator(pokemonProduction: ProductionCombinations) {
+  public toProductionCalculator(pokemonProductions: ProductionCombinations) {
     return {
-      details: pokemonProduction.filters,
-      combinations: pokemonProduction.pokemonCombinations.map((pokemonCombination) => ({
+      details: pokemonProductions.filters,
+      production: {
         details: this.#prettifyProductionDetails({
-          pokemonCombination: pokemonCombination,
-          filters: pokemonProduction.filters,
+          pokemonProduction: pokemonProductions.production.pokemonProduction,
+          filters: pokemonProductions.filters,
         }),
-        pokemon: `${pokemonCombination.pokemonCombination.pokemon.name}
-        ${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)}
-        ${prettifyIngredientDrop(pokemonCombination.detailedProduce.produce.ingredients)}`,
-      })),
+        pokemon: `${
+          pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name
+        }(${shortPrettifyIngredientDrop(
+          pokemonProductions.production.pokemonProduction.pokemonCombination.ingredientList
+        )})\n${prettifyIngredientDrop(
+          pokemonProductions.production.pokemonProduction.detailedProduce.produce.ingredients
+        )}`,
+        log: pokemonProductions.production.log,
+        prettyLog: pokemonProductions.production.log.map((event) => event.format()).join('\n'),
+      },
+      allIngredientSets: {
+        pokemon: 'All ingredient sets',
+        details: pokemonProductions.allIngredientSets
+          .map(
+            ({ pokemonProduction }) =>
+              `${shortPrettifyIngredientDrop(pokemonProduction.pokemonCombination.ingredientList)}\n` +
+              `${prettifyIngredientDrop(pokemonProduction.detailedProduce.produce.ingredients)}`
+          )
+          .join('\n\n'),
+      },
     };
   }
 
@@ -199,7 +217,7 @@ class WebsiteConverterServiceImpl {
 
   #prettifyProductionDetails(productionCombination: ProductionCombination) {
     const filters = productionCombination.filters;
-    const pokemonCombination = productionCombination.pokemonCombination;
+    const pokemonCombination = productionCombination.pokemonProduction;
     let prettyString = `👨🏻‍🍳 Sleep API - Production calculator 👨🏻‍🍳\n\n${
       pokemonCombination.pokemonCombination.pokemon.name
     }(${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)})\n`;
@@ -214,14 +232,14 @@ class WebsiteConverterServiceImpl {
     }\n`;
 
     const e4eHbCamp: string[] = [];
-    if (filters.e4eProcs > 0) {
-      e4eHbCamp.push(`E4E: ${filters.e4eProcs} x 18 energy`);
+    if (filters.e4e > 0) {
+      e4eHbCamp.push(`E4E: ${filters.e4e} x 18 energy`);
     }
     if (filters.helpingBonus > 0) {
       e4eHbCamp.push(`Helping bonus: ${filters.helpingBonus}`);
     }
-    if (filters.goodCamp) {
-      e4eHbCamp.push(`Good camp: ${filters.goodCamp}`);
+    if (filters.camp) {
+      e4eHbCamp.push(`Good camp: ${filters.camp}`);
     }
     prettyString += e4eHbCamp.join(', ');
     if (e4eHbCamp.length > 0) {
@@ -231,7 +249,7 @@ class WebsiteConverterServiceImpl {
     prettyString += `-------------\n`;
 
     prettyString += `Total berry output per 24h: ${roundDown(
-      pokemonCombination.detailedProduce.produce.berries.amount + pokemonCombination.detailedProduce.sneakySnack.amount,
+      pokemonCombination.detailedProduce.produce.berries.amount,
       1
     )} ${pokemonCombination.pokemonCombination.pokemon.berry.name}\n`;
 
@@ -291,14 +309,14 @@ class WebsiteConverterServiceImpl {
     prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
 
     const e4eHbCamp: string[] = [];
-    if (details.e4eProcs > 0) {
-      e4eHbCamp.push(`E4E: ${details.e4eProcs} x 18 energy`);
+    if (details.e4e > 0) {
+      e4eHbCamp.push(`E4E: ${details.e4e} x 18 energy`);
     }
     if (details.helpingBonus > 0) {
       e4eHbCamp.push(`Helping bonus: ${details.helpingBonus}`);
     }
-    if (details.goodCamp) {
-      e4eHbCamp.push(`Good camp: ${details.goodCamp}`);
+    if (details.camp) {
+      e4eHbCamp.push(`Good camp: ${details.camp}`);
     }
     prettyString += e4eHbCamp.join(', ');
     if (e4eHbCamp.length > 0) {

@@ -1,4 +1,4 @@
-import { toSeconds } from './time-utils';
+import { toSeconds } from './frequency-utils';
 
 describe('toSeconds', () => {
   it('shall convert 0:00:00 to 0', () => {

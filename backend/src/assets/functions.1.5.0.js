@@ -6,36 +6,6 @@ window.onload = function () {
   img.src = 'spinner.gif';
 };
 
-function getQueryParams() {
-  var result = '?';
-  var checkboxes = document.querySelectorAll('input[type=checkbox]');
-  checkboxes.forEach(function (checkbox) {
-    result += checkbox.name + '=' + checkbox.checked + '&';
-  });
-
-  var e4e = document.getElementById('e4e');
-  if (e4e) {
-    result += 'e4e=' + +document.getElementById('e4e').value + '&';
-  }
-  var helpingbonus = document.getElementById('helpingbonus');
-  if (helpingbonus) {
-    result += 'helpingbonus=' + +document.getElementById('helpingbonus').value + '&';
-  }
-  var nature = document.getElementById('nature');
-  if (nature) {
-    result += 'nature=' + document.getElementById('nature').value + '&';
-  }
-  var subskills = document.getElementById('subskills');
-  if (subskills) {
-    result += 'subskills=' + document.getElementById('subskills').value + '&';
-  }
-
-  result += 'pretty=true&';
-
-  result = result.slice(0, -1);
-  return result;
-}
-
 function makeRequest(url, method, callback, body) {
   var xmlhttp = new XMLHttpRequest();
   var apiUrl = 'api/' + url;
@@ -87,6 +57,8 @@ function createTable(headers, entries, entryHeaderCallback, entryDetailCallback,
     contentDiv.classList.add('content');
     contentDiv.style.whiteSpace = 'pre-line';
     contentDiv.style.position = 'relative';
+    contentDiv.style.backgroundColor = '#555';
+    contentDiv.style.color = '#f5f5f5';
 
     // add the copy button to the content div element
     var copyBtn = createCopyButton(contentDiv, i);
@@ -148,9 +120,10 @@ function createCopyButton(contentDiv, index) {
   var icon = document.createElement('i');
   icon.classList.add('fa', 'fa-copy');
   copyBtn.appendChild(icon);
+  copyBtn.style.color = '#f5f5f5';
 
   copyBtn.addEventListener('click', function () {
-    var text = contentDiv.textContent;
+    var text = contentDiv.innerText;
 
     navigator.clipboard.writeText(text).then(
       function () {
@@ -176,6 +149,29 @@ function createCopyButton(contentDiv, index) {
   return copyBtn;
 }
 
+function downloadTextFile(text, filename) {
+  const blob = new Blob([text], { type: 'text/plain' });
+
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = window.URL.createObjectURL(blob);
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function showMenu() {
+  var x = document.getElementById('topnavId');
+  if (x.className === 'topnav') {
+    x.className += ' responsive';
+  } else {
+    x.className = 'topnav';
+  }
+}
+
+// --- API CALLS ---
+
 function goToProductionCalculator() {
   var checkedValues = [];
   var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -190,6 +186,11 @@ function goToProductionCalculator() {
     e4e: +document.getElementById('e4e').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
+    erb: 0, // TODO: hard-coded
+    recoveryincense: false, // TODO: hard-coded
+    mainBedtime: document.getElementById('mainBedtime').value,
+    mainWakeup: document.getElementById('mainWakeup').value,
+    ingredientSet: document.getElementById('ingredientDropdown').getAttribute('data-combination').split('/'),
   };
 
   var pokemon = document.getElementById('pokemon').value;
@@ -200,19 +201,84 @@ function goToProductionCalculator() {
     'POST',
     function (data) {
       data = JSON.parse(data);
-      createTable(
-        [`Production for: ${pokemon}`],
-        data.combinations,
-        function (entry) {
-          return entry.pokemon;
-        },
-        function (entry) {
-          return entry.details;
-        }
-      );
+
+      // draw charts
+      const container = document.getElementById('chartContainer');
+      container.classList.add('show');
+
+      // add production output
+      const headerText = data.production.pokemon;
+      document.getElementById('placeholderHeaderId').innerText = headerText;
+      const productionOutputText = data.production.details;
+      const productionDiv = document.getElementById('productionOutputId');
+      productionDiv.innerText = productionOutputText;
+
+      // add allIngredientSets
+      const allIngSetsHeaderText = data.allIngredientSets.pokemon;
+      document.getElementById('allIngredientSetsHeaderId').innerText = allIngSetsHeaderText;
+      const allIngredientSetsText = data.allIngredientSets.details;
+      const allIngredientSetsDiv = document.getElementById('allIngredientSetsOutputId');
+      allIngredientSetsDiv.innerText = allIngredientSetsText;
+
+      // ---- add copy buttons
+      // add the copy button to the content div element
+      var copyBtn = createCopyButton(productionDiv, 0);
+      copyBtn.style.position = 'absolute';
+      copyBtn.style.right = '0px';
+      copyBtn.querySelector('.fa').style.fontSize = '150%';
+      copyBtn.style.border = 'none';
+      copyBtn.style.background = 'none';
+      copyBtn.style.cursor = 'pointer';
+      copyBtn.style.outline = 'none';
+      productionDiv.appendChild(copyBtn);
+      var copyBtn2 = createCopyButton(allIngredientSetsDiv, 1);
+      copyBtn2.style.position = 'absolute';
+      copyBtn2.style.right = '0px';
+      copyBtn2.querySelector('.fa').style.fontSize = '150%';
+      copyBtn2.style.border = 'none';
+      copyBtn2.style.background = 'none';
+      copyBtn2.style.cursor = 'pointer';
+      copyBtn2.style.outline = 'none';
+      allIngredientSetsDiv.appendChild(copyBtn2);
+      // ----
+
+      energyChart(data.production.log);
+      inventoryChart(data.production.log);
+
+      // add download event log content
+      document.getElementById('downloadButton').addEventListener('click', function () {
+        downloadTextFile(data.production.prettyLog, 'log.txt');
+      });
+
+      container.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     },
     body
   );
+}
+
+function getPokemonIngredients(pokemonName) {
+  var url = 'pokemon/' + pokemonName;
+  makeRequest(url, 'GET', function (data) {
+    var pokemonInfo = JSON.parse(data);
+
+    // parse ingredients
+    var ing0 = pokemonInfo.ingredient0.ingredient.name;
+    var [ing30_1, ing30_2] = pokemonInfo.ingredient30.map((ing) => ing.ingredient.name);
+    var [ing60_1, ing60_2, ing60_3] = pokemonInfo.ingredient60.map((ing) => ing.ingredient.name);
+
+    var ingredients = [];
+    ingredients.push(`${ing0}/${ing30_1}/${ing60_1}`); // AAA
+    ingredients.push(`${ing0}/${ing30_2}/${ing60_1}`); // ABA
+    ingredients.push(`${ing0}/${ing30_1}/${ing60_2}`); // AAB
+    ingredients.push(`${ing0}/${ing30_2}/${ing60_2}`); // ABB
+
+    if (ing60_3) {
+      ingredients.push(`${ing0}/${ing30_1}/${ing60_3}`); // AAC
+      ingredients.push(`${ing0}/${ing30_2}/${ing60_3}`); // ABC
+    }
+
+    populateIngredientOptions(ingredients);
+  });
 }
 
 function goToOptimalRanking() {
@@ -328,71 +394,4 @@ function goToOptimalFlexible() {
     },
     body
   );
-}
-
-function goToMealRanking() {
-  var island = document.getElementById('island').value;
-  var queryParams = `?pretty=true&island=${island}`;
-  var url = 'meal/' + document.getElementById('meal').value + queryParams;
-
-  makeRequest(url, 'GET', function (data) {
-    data = JSON.parse(data);
-    createTable(
-      [`Recipe: ${data.recipe}`],
-      data.combinations,
-      function (entry) {
-        return entry;
-      },
-      function () {
-        return 'No details for this ranking yet';
-      }
-    );
-  });
-}
-
-function goToFlexibleRanking() {
-  var queryParams = getQueryParams();
-  var url = 'ranking/meal/flexible' + queryParams;
-
-  makeRequest(url, 'GET', function (data) {
-    data = JSON.parse(data);
-    createTable(
-      ['Ranking'],
-      data,
-      function (entry) {
-        return entry;
-      },
-      function () {
-        return 'No details for this ranking yet';
-      }
-    );
-  });
-}
-
-function goToFocusedRanking() {
-  var queryParams = getQueryParams();
-  var url = 'ranking/meal/focused' + queryParams;
-
-  makeRequest(url, 'GET', function (data) {
-    data = JSON.parse(data);
-    createTable(
-      ['Ranking'],
-      data,
-      function (entry) {
-        return entry;
-      },
-      function () {
-        return 'No details for this ranking yet';
-      }
-    );
-  });
-}
-
-function showMenu() {
-  var x = document.getElementById('topnavId');
-  if (x.className === 'topnav') {
-    x.className += ' responsive';
-  } else {
-    x.className = 'topnav';
-  }
 }

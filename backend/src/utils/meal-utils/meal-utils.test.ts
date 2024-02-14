@@ -1,6 +1,8 @@
 import { MealError } from '@src/domain/error/meal/meal-error';
 import { recipe } from 'sleepapi-common';
-import { getMeal, getMealsForFilter } from './meal-utils';
+import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
+import { parseTime, prettifyTime } from '../time-utils/time-utils';
+import { getDefaultMealTimes, getMeal, getMealRecoveryAmount, getMealsForFilter } from './meal-utils';
 
 describe('getMeal', () => {
   it('shall return Lovely Kiss for lovely_kIsS_smOOthie name', () => {
@@ -141,5 +143,80 @@ describe('getMealsForFilter', () => {
         "JIGGLYPUFFS_FRUITY_FLAN",
       ]
     `);
+  });
+});
+
+describe('getDefaultMealTimes', () => {
+  it('shall return default meal times late in each window', () => {
+    const mealTimes = getDefaultMealTimes(MOCKED_MAIN_SLEEP);
+    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    expect(prettifiedTimes).toMatchInlineSnapshot(`
+      [
+        "11:59:00",
+        "17:59:00",
+        "21:30:00",
+      ]
+    `);
+  });
+
+  it('shall skip dinner if we are sleeping', () => {
+    const mealTimes = getDefaultMealTimes({
+      start: parseTime('06:00'),
+      end: parseTime('17:00'),
+    });
+    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    expect(prettifiedTimes).toMatchInlineSnapshot(`
+      [
+        "11:59:00",
+        "17:00:00",
+      ]
+    `);
+  });
+
+  it('shall work with night schedule', () => {
+    const mealTimes = getDefaultMealTimes({
+      start: parseTime('17:00'),
+      end: parseTime('07:00'),
+    });
+    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    expect(prettifiedTimes).toMatchInlineSnapshot(`
+      [
+        "17:59:00",
+        "05:59:00",
+        "07:00:00",
+      ]
+    `);
+  });
+});
+
+describe('getMealRecoveryAmount', () => {
+  it('shall return 0 for currentEnergy >= 100', () => {
+    expect(getMealRecoveryAmount(100)).toBe(0);
+    expect(getMealRecoveryAmount(150)).toBe(0);
+  });
+
+  it('shall return 1 for 80 <= currentEnergy < 100', () => {
+    expect(getMealRecoveryAmount(80)).toBe(1);
+    expect(getMealRecoveryAmount(99)).toBe(1);
+  });
+
+  it('shall return 2 for 60 <= currentEnergy < 80', () => {
+    expect(getMealRecoveryAmount(60)).toBe(2);
+    expect(getMealRecoveryAmount(79)).toBe(2);
+  });
+
+  it('shall return 3 for 40 <= currentEnergy < 60', () => {
+    expect(getMealRecoveryAmount(40)).toBe(3);
+    expect(getMealRecoveryAmount(59)).toBe(3);
+  });
+
+  it('shall return 4 for 20 <= currentEnergy < 40', () => {
+    expect(getMealRecoveryAmount(20)).toBe(4);
+    expect(getMealRecoveryAmount(39)).toBe(4);
+  });
+
+  it('shall return 5 for currentEnergy < 20', () => {
+    expect(getMealRecoveryAmount(19)).toBe(5);
+    expect(getMealRecoveryAmount(0)).toBe(5);
   });
 });

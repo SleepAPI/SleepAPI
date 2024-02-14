@@ -320,29 +320,37 @@
 					"name": {
 						"type": "string"
 					},
-					"frequency": {
-						"type": "number",
-						"format": "double"
-					},
-					"ingredient": {
-						"type": "number",
-						"format": "double"
-					},
-					"skill": {
-						"type": "number",
-						"format": "double"
-					},
-					"inventory": {
+					"amount": {
 						"type": "number",
 						"format": "double"
 					}
 				},
 				"required": [
 					"name",
-					"frequency",
-					"ingredient",
-					"skill",
-					"inventory"
+					"amount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Time": {
+				"properties": {
+					"hour": {
+						"type": "number",
+						"format": "double"
+					},
+					"minute": {
+						"type": "number",
+						"format": "double"
+					},
+					"second": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"hour",
+					"minute",
+					"second"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -362,7 +370,7 @@
 						},
 						"type": "array"
 					},
-					"e4eProcs": {
+					"e4e": {
 						"type": "number",
 						"format": "double"
 					},
@@ -370,8 +378,21 @@
 						"type": "number",
 						"format": "double"
 					},
-					"goodCamp": {
+					"camp": {
 						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"incense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"mainWakeup": {
+						"$ref": "#/components/schemas/Time"
 					},
 					"maxPotSize": {
 						"type": "number",
@@ -381,9 +402,13 @@
 				"required": [
 					"level",
 					"nature",
-					"e4eProcs",
+					"e4e",
 					"helpingBonus",
-					"goodCamp"
+					"camp",
+					"erb",
+					"incense",
+					"mainBedtime",
+					"mainWakeup"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -437,11 +462,89 @@
 					"camp": {
 						"type": "boolean"
 					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"recoveryIncense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"type": "string"
+					},
+					"mainWakeup": {
+						"type": "string"
+					},
 					"maxPotSize": {
 						"type": "number",
 						"format": "double"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputProductionStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"e4e": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"incense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"mainWakeup": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"berries": {
+						"items": {
+							"$ref": "#/components/schemas/Berry"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"level",
+					"nature",
+					"e4e",
+					"helpingBonus",
+					"camp",
+					"erb",
+					"incense",
+					"mainBedtime",
+					"mainWakeup",
+					"berries"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -494,22 +597,12 @@
 					},
 					"sneakySnack": {
 						"$ref": "#/components/schemas/BerrySet"
-					},
-					"helpsBeforeSS": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpsAfterSS": {
-						"type": "number",
-						"format": "double"
 					}
 				},
 				"required": [
 					"produce",
 					"spilledIngredients",
-					"sneakySnack",
-					"helpsBeforeSS",
-					"helpsAfterSS"
+					"sneakySnack"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -712,6 +805,36 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"EventType": {
+				"type": "string",
+				"enum": [
+					"sleep",
+					"energy",
+					"help",
+					"inventory",
+					"info"
+				]
+			},
+			"ScheduledEvent": {
+				"properties": {
+					"time": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"type": {
+						"$ref": "#/components/schemas/EventType"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"time",
+					"type",
+					"description"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ProductionRequest": {
 				"properties": {
 					"level": {
@@ -738,6 +861,19 @@
 					"camp": {
 						"type": "boolean"
 					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"recoveryIncense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"type": "string"
+					},
+					"mainWakeup": {
+						"type": "string"
+					},
 					"ingredientSet": {
 						"items": {
 							"type": "string"
@@ -751,7 +887,12 @@
 					"subskills",
 					"e4e",
 					"helpingbonus",
-					"camp"
+					"camp",
+					"erb",
+					"recoveryIncense",
+					"mainBedtime",
+					"mainWakeup",
+					"ingredientSet"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -864,41 +1005,7 @@
 											"type": "array"
 										},
 										"filter": {
-											"properties": {
-												"goodCamp": {
-													"type": "boolean"
-												},
-												"helpingBonus": {
-													"type": "number",
-													"format": "double"
-												},
-												"e4eProcs": {
-													"type": "number",
-													"format": "double"
-												},
-												"subskills": {
-													"items": {
-														"$ref": "#/components/schemas/SubSkill"
-													},
-													"type": "array"
-												},
-												"nature": {
-													"$ref": "#/components/schemas/Nature"
-												},
-												"level": {
-													"type": "number",
-													"format": "double"
-												}
-											},
-											"required": [
-												"goodCamp",
-												"helpingBonus",
-												"e4eProcs",
-												"subskills",
-												"nature",
-												"level"
-											],
-											"type": "object"
+											"$ref": "#/components/schemas/InputProductionStats"
 										},
 										"value": {
 											"type": "number",
@@ -1042,22 +1149,79 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"pokemonCombinations": {
+										"allIngredientSets": {
 											"items": {
-												"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+												"properties": {
+													"log": {
+														"items": {
+															"$ref": "#/components/schemas/ScheduledEvent"
+														},
+														"type": "array"
+													},
+													"pokemonProduction": {
+														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													}
+												},
+												"required": [
+													"log",
+													"pokemonProduction"
+												],
+												"type": "object"
 											},
 											"type": "array"
 										},
+										"production": {
+											"properties": {
+												"log": {
+													"items": {
+														"$ref": "#/components/schemas/ScheduledEvent"
+													},
+													"type": "array"
+												},
+												"pokemonProduction": {
+													"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+												}
+											},
+											"required": [
+												"log",
+												"pokemonProduction"
+											],
+											"type": "object"
+										},
 										"filters": {
 											"properties": {
-												"goodCamp": {
+												"maxPotSize": {
+													"type": "number",
+													"format": "double"
+												},
+												"mainWakeup": {
+													"$ref": "#/components/schemas/Time"
+												},
+												"mainBedtime": {
+													"$ref": "#/components/schemas/Time"
+												},
+												"incense": {
+													"type": "boolean"
+												},
+												"erb": {
+													"type": "number",
+													"format": "double"
+												},
+												"camp": {
 													"type": "boolean"
 												},
 												"helpingBonus": {
 													"type": "number",
 													"format": "double"
 												},
-												"e4eProcs": {
+												"e4e": {
+													"type": "number",
+													"format": "double"
+												},
+												"nature": {
+													"$ref": "#/components/schemas/Nature"
+												},
+												"level": {
 													"type": "number",
 													"format": "double"
 												},
@@ -1066,28 +1230,26 @@
 														"$ref": "#/components/schemas/SubSkill"
 													},
 													"type": "array"
-												},
-												"nature": {
-													"$ref": "#/components/schemas/Nature"
-												},
-												"level": {
-													"type": "number",
-													"format": "double"
 												}
 											},
 											"required": [
-												"goodCamp",
+												"mainWakeup",
+												"mainBedtime",
+												"incense",
+												"erb",
+												"camp",
 												"helpingBonus",
-												"e4eProcs",
-												"subskills",
+												"e4e",
 												"nature",
-												"level"
+												"level",
+												"subskills"
 											],
 											"type": "object"
 										}
 									},
 									"required": [
-										"pokemonCombinations",
+										"allIngredientSets",
+										"production",
 										"filters"
 									],
 									"type": "object"

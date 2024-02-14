@@ -8,30 +8,34 @@ describe('findOptimalSetsForMeal', () => {
     const input: InputProductionStats = {
       level: 60,
       nature: nature.RASH,
-      subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INVENTORY_L],
+      subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
       berries: berry.BERRIES,
-      e4eProcs: 0,
+      e4e: 0,
       helpingBonus: 0,
-      goodCamp: false,
+      camp: false,
+      erb: 0,
+      incense: false,
+      mainBedtime: { hour: 21, minute: 30, second: 0 },
+      mainWakeup: { hour: 6, minute: 0, second: 0 },
     };
     const data = findOptimalSetsForMeal(recipe.NEROLIS_RESTORATIVE_TEA.name, input);
     expect(data.teams).toHaveLength(2);
     expect(
       data.teams.map((team) => ({
         team: team.team.map((member) => member.pokemonCombination.pokemon.name),
-        producedIngredients: prettifyIngredientDrop(team.surplus.total),
+        surplus: prettifyIngredientDrop(team.surplus.total),
       }))
     ).toMatchInlineSnapshot(`
       [
         {
-          "producedIngredients": "3.5 Cacao, 2 Apple, 3.2 Mushroom, 4.4 Ginger",
+          "surplus": "3.6 Cacao, 2.8 Apple, 3.6 Mushroom, 6.1 Ginger",
           "team": [
             "ABSOL",
             "RAICHU",
           ],
         },
         {
-          "producedIngredients": "3.5 Cacao, 1.4 Apple, 3.2 Mushroom, 1.7 Ginger",
+          "surplus": "3.6 Cacao, 2 Apple, 3.6 Mushroom, 2.2 Ginger",
           "team": [
             "ABSOL",
             "PIKACHU_HALLOWEEN",
@@ -48,10 +52,14 @@ describe('getOptimalFlexiblePokemon', () => {
       level: 30,
       berries: berry.LAPIS_BERRIES,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
-      e4eProcs: 5,
-      goodCamp: true,
+      e4e: 5,
+      camp: true,
       helpingBonus: 5,
       nature: nature.RASH,
+      erb: 0,
+      incense: false,
+      mainBedtime: { hour: 21, minute: 30, second: 0 },
+      mainWakeup: { hour: 6, minute: 0, second: 0 },
     };
 
     const data = getOptimalFlexiblePokemon(input);

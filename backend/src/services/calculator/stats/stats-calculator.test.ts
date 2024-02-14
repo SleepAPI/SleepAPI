@@ -1,8 +1,8 @@
 import { nature, pokemon, subskill } from 'sleepapi-common';
 import {
   calculateHelpSpeedSubskills,
+  calculateSubskillCarrySize,
   extractIngredientSubskills,
-  extractInventorySubskills,
   extractTriggerSubskills,
   getOptimalIngredientStats,
   invertNatureFrequecy,
@@ -70,16 +70,16 @@ describe('extractTriggerSubskills', () => {
 
 describe('extractInventorySubskills', () => {
   it('shall calculate default inventory factor from subskills', () => {
-    expect(extractInventorySubskills([])).toBe(0);
+    expect(calculateSubskillCarrySize([])).toBe(0);
   });
   it('shall calculate invS+invM+invL inventory factor from subskills', () => {
-    expect(extractInventorySubskills([subskill.INVENTORY_S, subskill.INVENTORY_M, subskill.INVENTORY_L])).toBe(36);
+    expect(calculateSubskillCarrySize([subskill.INVENTORY_S, subskill.INVENTORY_M, subskill.INVENTORY_L])).toBe(36);
   });
   it('shall calculate invM+invL inventory factor from subskills', () => {
-    expect(extractInventorySubskills([subskill.INVENTORY_M, subskill.INVENTORY_L])).toBe(30);
+    expect(calculateSubskillCarrySize([subskill.INVENTORY_M, subskill.INVENTORY_L])).toBe(30);
   });
   it('shall calculate invS inventory factor from subskills', () => {
-    expect(extractInventorySubskills([subskill.INVENTORY_S])).toBe(6);
+    expect(calculateSubskillCarrySize([subskill.INVENTORY_S])).toBe(6);
   });
 });
 

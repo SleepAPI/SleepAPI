@@ -13,6 +13,7 @@ describe('getSubskillNames', () => {
         "Inventory Up S",
         "Inventory Up M",
         "Inventory Up L",
+        "Energy Recovery Bonus",
       ]
     `);
   });
