@@ -155,7 +155,7 @@
           const button = listItem.find('button');
 
           combination.split('/').forEach((ingredient) => {
-            const imageUrl = `ingredient/${ingredient}.png`;
+            const imageUrl = `ingredient/${ingredient.toLowerCase()}.png`;
             button.append(`<img src="${imageUrl}" alt="${ingredient}" style="width:30px; height:30px;">`);
           });
 
