@@ -37,25 +37,39 @@ class WebsiteConverterServiceImpl {
           pokemonProduction: pokemonProductions.production.pokemonProduction,
           filters: pokemonProductions.filters,
         }),
-        pokemon: `${
-          pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name
-        }(${shortPrettifyIngredientDrop(
-          pokemonProductions.production.pokemonProduction.pokemonCombination.ingredientList
-        )})\n${prettifyIngredientDrop(
-          pokemonProductions.production.pokemonProduction.detailedProduce.produce.ingredients
-        )}`,
+        pokemon: pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name,
+        ingredients: pokemonProductions.production.pokemonProduction.pokemonCombination.ingredientList.map(
+          (ing) => ing.ingredient.name
+        ),
         log: pokemonProductions.production.log,
+        logName: `eventlog-${pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name}${
+          pokemonProductions.filters.level
+        }-${Date.now()}.txt`,
         prettyLog: pokemonProductions.production.log.map((event) => event.format()).join('\n'),
       },
+
       allIngredientSets: {
-        pokemon: 'All ingredient sets',
-        details: pokemonProductions.allIngredientSets
-          .map(
-            ({ pokemonProduction }) =>
-              `${shortPrettifyIngredientDrop(pokemonProduction.pokemonCombination.ingredientList)}\n` +
-              `${prettifyIngredientDrop(pokemonProduction.detailedProduce.produce.ingredients)}`
-          )
-          .join('\n\n'),
+        pokemon: 'Production comparison',
+        details:
+          `👨🏻‍🍳 Production Comparison - https://sleepapi.net 👨🏻‍🍳\n\n${
+            pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name
+          }\n${this.#prettifyFiltersDetails({
+            pokemonProduction: pokemonProductions.production.pokemonProduction,
+            filters: pokemonProductions.filters,
+          })}` +
+          pokemonProductions.allIngredientSets
+            .map(
+              ({ pokemonProduction }) =>
+                `${shortPrettifyIngredientDrop(pokemonProduction.pokemonCombination.ingredientList)}\n` +
+                `Ingredients per meal window: ${prettifyIngredientDrop(
+                  pokemonProduction.detailedProduce.produce.ingredients
+                )}\n` +
+                `Total berry output per 24h: ${roundDown(
+                  pokemonProductions.production.pokemonProduction.detailedProduce.produce.berries.amount,
+                  1
+                )} ${pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.berry.name}`
+            )
+            .join('\n\n'),
       },
     };
   }
@@ -128,7 +142,7 @@ class WebsiteConverterServiceImpl {
             )})`
         )
         .join(', '),
-      details: `👨🏻‍🍳 Sleep API - Team finder 👨🏻‍🍳\n\nRecipe: ${
+      details: `👨🏻‍🍳 Team finder - https://sleepapi.net 👨🏻‍🍳\n\nRecipe: ${
         optimalCombinations.meal
       } (${prettifiedRecipe})\n\nTeam\n- ${solution.team
         .map(
@@ -215,14 +229,11 @@ class WebsiteConverterServiceImpl {
     });
   }
 
-  #prettifyProductionDetails(productionCombination: ProductionCombination) {
+  #prettifyFiltersDetails(productionCombination: ProductionCombination) {
     const filters = productionCombination.filters;
     const pokemonCombination = productionCombination.pokemonProduction;
-    let prettyString = `👨🏻‍🍳 Sleep API - Production calculator 👨🏻‍🍳\n\n${
-      pokemonCombination.pokemonCombination.pokemon.name
-    }(${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)})\n`;
 
-    prettyString += `-------------\n`;
+    let prettyString = `-------------\n`;
 
     prettyString += `Level: ${pokemonCombination.customStats.level}, Nature: ${pokemonCombination.customStats.nature.prettyName}\n`;
     prettyString += `Subskills: ${
@@ -247,6 +258,17 @@ class WebsiteConverterServiceImpl {
     }
 
     prettyString += `-------------\n`;
+    return prettyString;
+  }
+
+  #prettifyProductionDetails(productionCombination: ProductionCombination) {
+    const pokemonCombination = productionCombination.pokemonProduction;
+
+    let prettyString = `👨🏻‍🍳 Production Calculator - https://sleepapi.net 👨🏻‍🍳\n\n${
+      pokemonCombination.pokemonCombination.pokemon.name
+    }(${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)})\n`;
+
+    prettyString += this.#prettifyFiltersDetails(productionCombination);
 
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,

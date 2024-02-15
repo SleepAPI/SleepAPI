@@ -27,7 +27,10 @@ function energyChart(log) {
   pointHoverRadii[0] = 5;
 
   for (let i = 1; i < energyLogs.length; i++) {
-    if (energyLogs[i].delta >= 0 && energyLogs[i].after !== 0) {
+    if (
+      (energyLogs[i].delta >= 0 && energyLogs[i].after !== 0) ||
+      (energyLogs[i].after === 0 && energyLogs[i].before > 0)
+    ) {
       pointRadii[i] = 3;
       pointHoverRadii[i] = 5;
     }
@@ -151,8 +154,8 @@ function inventoryChart(log) {
           borderWidth: 1,
           borderColor: '#f04545',
           tension: 0.1,
-          pointRadius: 2,
-          pointHoverRadius: 7,
+          pointRadius: 3,
+          pointHoverRadius: 5,
           pointBackgroundColor: '#f04545',
           fill: true,
         },
