@@ -51,7 +51,7 @@ class WebsiteConverterServiceImpl {
       allIngredientSets: {
         pokemon: 'Production comparison',
         details:
-          `👨🏻‍🍳 Production Comparison - https://sleepapi.net 👨🏻‍🍳\n\n${
+          `👨🏻‍🍳 Production Comparison 👨🏻‍🍳\nhttps://sleepapi.net\n\n${
             pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name
           }\n${this.#prettifyFiltersDetails({
             pokemonProduction: pokemonProductions.production.pokemonProduction,
@@ -264,7 +264,7 @@ class WebsiteConverterServiceImpl {
   #prettifyProductionDetails(productionCombination: ProductionCombination) {
     const pokemonCombination = productionCombination.pokemonProduction;
 
-    let prettyString = `👨🏻‍🍳 Production Calculator - https://sleepapi.net 👨🏻‍🍳\n\n${
+    let prettyString = `👨🏻‍🍳 Production Calculator 👨🏻‍🍳\nhttps://sleepapi.net\n\n${
       pokemonCombination.pokemonCombination.pokemon.name
     }(${shortPrettifyIngredientDrop(pokemonCombination.pokemonCombination.ingredientList)})\n`;
 
