@@ -33,13 +33,60 @@
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/global.css" />
+    <style>
+      #bannerImage {
+        max-width: 90%;
+        height: auto;
+        margin-left: 5%;
+        margin-right: 5%;
+      }
+
+      .btn-bottom-right {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+      }
+
+      .card {
+        height: 100%;
+      }
+
+      .btn-danger {
+        background-color: #f04545;
+        max-height: 60px;
+      }
+    </style>
     <script src="functions.1.6.1.js"></script>
+    <script src="charts.1.6.1.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="/global.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+      integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"
+      integrity="sha384-OkuKCCwNNAv3fnqHH7lwPY3m5kkvCIUnsHbjdU7sN022wAYaQUfXkqyIZLlL0xQ/"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      $(document).ready(function () {
+        fetch('./log.json')
+          .then((response) => response.json())
+          .then((data) => {
+            energyChart(data);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          });
+      });
+    </script>
   </head>
 
   <body>
@@ -54,15 +101,123 @@
       </a>
     </div>
 
-    <header style="text-align: center">
+    <header class="d-flex justify-content-center mb-2 mt-2">
       <br />
-      <h1>Welcome, let's cook</h1>
-      <h3>You'll find all available tools in the menu above</h3>
+      <img
+        id="bannerImage"
+        src="sleepapi-banner.png"
+        alt="Sleep API Cooking Simulator Logo"
+        title="Pokémon Sleep Cooking Simulator"
+      />
     </header>
 
-    <p style="text-align: center">
-      <img src="/cook.gif" alt="He who cooks" title="Who let bro cook" />
-    </p>
+    <div class="container" style="margin-bottom: 50px">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- Row 1 -->
+          <div class="row g-2 mb-4">
+            <div class="col-xl-6">
+              <div class="card h-100 position-relative" style="background-color: transparent; border: none">
+                <div
+                  class="card-body d-flex flex-column justify-content-center"
+                  style="background-color: transparent; border: none"
+                >
+                  <h5>Production Simulator</h5>
+                  <h6>Simulate your Pokémon's production and strategize with the provided in-depth data analysis.</h6>
+                  <a
+                    href="./production-calculator.html"
+                    class="btn btn-danger btn-bottom-right"
+                    style="max-width: 200px"
+                  >
+                    <span>Try it <i class="fa fa-caret-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="card h-100" style="background-color: transparent; border: none">
+                <div class="card-body" style="background-color: transparent">
+                  <canvas id="energyChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="row g-2 mb-4">
+            <div class="col-xl-6">
+              <div class="card h-100" style="background-color: transparent; border: none">
+                <div class="card-img-container" style="padding: 10px; background-color: transparent">
+                  <img
+                    src="./tierlist_preview.png"
+                    class="card-img-top"
+                    alt="Tier List Preview"
+                    style="border-radius: 10px"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="card h-100 position-relative" style="background-color: transparent; border: none">
+                <div
+                  class="card-body d-flex flex-column justify-content-center"
+                  style="background-color: transparent; border: none"
+                >
+                  <h5>Cooking Tier Lists</h5>
+                  <h6>Cooking tier lists based on millions of simulated recipe solutions.</h6>
+                  <h6>
+                    Simulates every Pokémon in every possible team composition for every recipe to determine their
+                    cooking power.
+                  </h6>
+                  <a href="./tier-lists.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
+                    <span>Try it <i class="fa fa-caret-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="row g-2 mb-4">
+            <div class="col-xl-6">
+              <div class="card h-100 position-relative" style="background-color: transparent; border: none">
+                <div
+                  class="card-body d-flex flex-column justify-content-center"
+                  style="background-color: transparent; border: none"
+                >
+                  <h5>Team Finder</h5>
+                  <h6>Find the most optimal teams for any given recipe.</h6>
+                  <h6>
+                    Simulates solving the recipe with your input settings and testing every possible team composition.
+                  </h6>
+                  <a href="./team-finder.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
+                    <span>Try it <i class="fa fa-caret-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="card h-100 position-relative" style="background-color: transparent; border: none">
+                <div
+                  class="card-body d-flex flex-column justify-content-center"
+                  style="background-color: transparent; border: none"
+                >
+                  <h5>Flexibility Ranking</h5>
+                  <h6>Ranks the most flexible cooking Pokémon.</h6>
+                  <h6>
+                    Simulates every recipe's most optimal solutions and ranks each Pokémon according to their ability to
+                    contribute to high level recipes for multiple recipe types.
+                  </h6>
+                  <a href="./flexible.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
+                    <span>Try it <i class="fa fa-caret-right"></i></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <footer class="w3-container w3-black">
       <a href="https://discord.gg/w97qFff8n4">Sleep API on Discord</a> |

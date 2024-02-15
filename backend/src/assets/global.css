@@ -22,6 +22,8 @@ body {
 
 .card {
   border-color: #555;
+  background-color: #555;
+  color: var(--main-text);
 }
 .card-body {
   background-color: #555;
