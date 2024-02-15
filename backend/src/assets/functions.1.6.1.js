@@ -212,18 +212,31 @@ function goToProductionCalculator() {
       const productionDiv = document.getElementById('productionOutputId');
       productionDiv.innerText = productionOutputText;
 
+      // Remove existing pokemon images
+      const pokemonImages = productionHeaderDiv.getElementsByClassName('pokemon-img');
+      while (pokemonImages.length > 0) {
+        productionHeaderDiv.removeChild(pokemonImages[0]);
+      }
+      // Remove existing images
+      const ingImages = productionHeaderDiv.getElementsByClassName('ingredient-img');
+      while (ingImages.length > 0) {
+        productionHeaderDiv.removeChild(ingImages[0]);
+      }
+
+      // Add new Pokemon image
       var img = document.createElement('img');
       img.src = `./pokemon/${data.production.pokemon.toLowerCase()}.png`;
       img.className = 'pokemon-img';
       productionHeaderDiv.appendChild(img);
 
-      // append ingredients
+      // Append ingredients
       for (const ing of data.production.ingredients) {
         var ingImg = document.createElement('img');
         ingImg.src = `./ingredient/${ing.toLowerCase()}.png`;
         ingImg.className = 'ingredient-img';
         productionHeaderDiv.appendChild(ingImg);
       }
+
       appendCaretIcon('placeholderHeaderId');
 
       // add allIngredientSets
@@ -236,6 +249,12 @@ function goToProductionCalculator() {
 
       function appendCaretIcon(headerId) {
         const header = document.getElementById(headerId);
+        // Remove existing caret icons
+        const existingCarets = header.getElementsByClassName('fa-caret-down');
+        while (existingCarets.length > 0) {
+          existingCarets[0].parentNode.removeChild(existingCarets[0]);
+        }
+        // Append new caret icon
         header.innerHTML += ' <i class="fa fa-caret-down"></i>';
       }
 
@@ -378,7 +397,7 @@ function goToOptimalFlexible() {
           return `[#${entry.rank}]`;
         },
         function (entry) {
-          let prettyString = '👨🏻‍🍳 Flexibility Ranking - https://sleepapi.net 👨🏻‍🍳\n\n';
+          let prettyString = '👨🏻‍🍳 Flexibility Ranking 👨🏻‍🍳\nhttps://sleepapi.net\n\n';
           prettyString += `${entry.prettyPokemonCombination}\n`;
           prettyString += `Rank: ${entry.rank}\n`;
           prettyString += `Score: ${entry.score}`;
