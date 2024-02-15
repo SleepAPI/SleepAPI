@@ -207,11 +207,24 @@ function goToProductionCalculator() {
       container.classList.add('show');
 
       // add production output
-      const headerText = data.production.pokemon;
-      document.getElementById('placeholderHeaderId').innerText = headerText;
+      const productionHeaderDiv = document.getElementById('placeholderHeaderId');
       const productionOutputText = data.production.details;
       const productionDiv = document.getElementById('productionOutputId');
       productionDiv.innerText = productionOutputText;
+
+      var img = document.createElement('img');
+      img.src = `./pokemon/${data.production.pokemon.toLowerCase()}.png`;
+      img.className = 'pokemon-img';
+      productionHeaderDiv.appendChild(img);
+
+      // append ingredients
+      for (const ing of data.production.ingredients) {
+        var ingImg = document.createElement('img');
+        ingImg.src = `./ingredient/${ing.toLowerCase()}.png`;
+        ingImg.className = 'ingredient-img';
+        productionHeaderDiv.appendChild(ingImg);
+      }
+      appendCaretIcon('placeholderHeaderId');
 
       // add allIngredientSets
       const allIngSetsHeaderText = data.allIngredientSets.pokemon;
@@ -219,9 +232,14 @@ function goToProductionCalculator() {
       const allIngredientSetsText = data.allIngredientSets.details;
       const allIngredientSetsDiv = document.getElementById('allIngredientSetsOutputId');
       allIngredientSetsDiv.innerText = allIngredientSetsText;
+      appendCaretIcon('allIngredientSetsHeaderId');
+
+      function appendCaretIcon(headerId) {
+        const header = document.getElementById(headerId);
+        header.innerHTML += ' <i class="fa fa-caret-down"></i>';
+      }
 
       // ---- add copy buttons
-      // add the copy button to the content div element
       var copyBtn = createCopyButton(productionDiv, 0);
       copyBtn.style.position = 'absolute';
       copyBtn.style.right = '0px';
@@ -247,7 +265,7 @@ function goToProductionCalculator() {
 
       // add download event log content
       document.getElementById('downloadButton').addEventListener('click', function () {
-        downloadTextFile(data.production.prettyLog, 'log.txt');
+        downloadTextFile(data.production.prettyLog, `${data.production.logName}`);
       });
 
       container.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
@@ -360,7 +378,7 @@ function goToOptimalFlexible() {
           return `[#${entry.rank}]`;
         },
         function (entry) {
-          let prettyString = '👨🏻‍🍳 Sleep API - Flexibility Ranking 👨🏻‍🍳\n\n';
+          let prettyString = '👨🏻‍🍳 Flexibility Ranking - https://sleepapi.net 👨🏻‍🍳\n\n';
           prettyString += `${entry.prettyPokemonCombination}\n`;
           prettyString += `Rank: ${entry.rank}\n`;
           prettyString += `Score: ${entry.score}`;
