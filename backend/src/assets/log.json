@@ -1,0 +1,6594 @@
+[
+  {
+    "type": "sleep",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Day start",
+    "period": {
+      "start": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "end": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    },
+    "sleepState": "end"
+  },
+  {
+    "type": "info",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Input",
+    "input": {
+      "level": 60,
+      "nature": {
+        "name": "Brave",
+        "prettyName": "Brave (+speed -exp)",
+        "frequency": 1.1,
+        "ingredient": 1,
+        "skill": 1,
+        "energy": 1,
+        "exp": 0.8
+      },
+      "subskills": [
+        {
+          "name": "Helping Speed M",
+          "amount": 0.14
+        },
+        {
+          "name": "Ingredient Finder M",
+          "amount": 0.36
+        }
+      ],
+      "e4e": 1,
+      "camp": false,
+      "helpingBonus": 0,
+      "erb": 0,
+      "incense": false,
+      "mainBedtime": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "mainWakeup": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    },
+    "pokemon": {
+      "name": "ABSOL",
+      "specialty": "ingredient",
+      "frequency": 3100,
+      "ingredientPercentage": 17.8,
+      "skillPercentage": 3.8,
+      "berry": {
+        "name": "WIKI",
+        "value": 31
+      },
+      "carrySize": 18,
+      "maxCarrySize": 18,
+      "ingredient0": {
+        "amount": 2,
+        "ingredient": {
+          "name": "Cacao",
+          "value": 151,
+          "taxedValue": 66.7,
+          "longName": "Soothing Cacao"
+        }
+      },
+      "ingredient30": [
+        {
+          "amount": 5,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 8,
+          "ingredient": {
+            "name": "Apple",
+            "value": 90,
+            "taxedValue": 23.7,
+            "longName": "Fancy Apple"
+          }
+        }
+      ],
+      "ingredient60": [
+        {
+          "amount": 7,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 12,
+          "ingredient": {
+            "name": "Apple",
+            "value": 90,
+            "taxedValue": 23.7,
+            "longName": "Fancy Apple"
+          }
+        },
+        {
+          "amount": 7,
+          "ingredient": {
+            "name": "Mushroom",
+            "value": 167,
+            "taxedValue": 81.5,
+            "longName": "Tasty Mushroom"
+          }
+        }
+      ],
+      "skill": {
+        "name": "Charge Strength S",
+        "amount": 2066
+      }
+    }
+  },
+  {
+    "type": "info",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Input",
+    "input": {
+      "level": 60,
+      "nature": {
+        "name": "Brave",
+        "prettyName": "Brave (+speed -exp)",
+        "frequency": 1.1,
+        "ingredient": 1,
+        "skill": 1,
+        "energy": 1,
+        "exp": 0.8
+      },
+      "subskills": [
+        {
+          "name": "Helping Speed M",
+          "amount": 0.14
+        },
+        {
+          "name": "Ingredient Finder M",
+          "amount": 0.36
+        }
+      ],
+      "e4e": 1,
+      "camp": false,
+      "helpingBonus": 0,
+      "erb": 0,
+      "incense": false,
+      "mainBedtime": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "mainWakeup": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    }
+  },
+  {
+    "type": "info",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Input",
+    "input": {
+      "level": 60,
+      "nature": {
+        "name": "Brave",
+        "prettyName": "Brave (+speed -exp)",
+        "frequency": 1.1,
+        "ingredient": 1,
+        "skill": 1,
+        "energy": 1,
+        "exp": 0.8
+      },
+      "subskills": [
+        {
+          "name": "Helping Speed M",
+          "amount": 0.14
+        },
+        {
+          "name": "Ingredient Finder M",
+          "amount": 0.36
+        }
+      ],
+      "e4e": 1,
+      "camp": false,
+      "helpingBonus": 0,
+      "erb": 0,
+      "incense": false,
+      "mainBedtime": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "mainWakeup": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    }
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sleep",
+    "delta": 100,
+    "before": 0,
+    "after": 100
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "E4E",
+    "delta": 18,
+    "before": 100,
+    "after": 118
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 6,
+      "minute": 15,
+      "second": 52.200000000000045
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 118,
+    "after": 117
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 6,
+      "minute": 15,
+      "second": 52.200000000000045
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 6,
+      "minute": 31,
+      "second": 44.40000000000009
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 15,
+      "second": 52.200000000000045
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 117,
+    "after": 116
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 116,
+    "after": 115
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 6,
+      "minute": 31,
+      "second": 44.40000000000009
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 6,
+      "minute": 47,
+      "second": 36.600000000000136
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 31,
+      "second": 44.40000000000009
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 115,
+    "after": 114
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 6,
+      "minute": 47,
+      "second": 36.600000000000136
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 7,
+      "minute": 3,
+      "second": 28.800000000000182
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 47,
+      "second": 36.600000000000136
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 114,
+    "after": 113
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 113,
+    "after": 112
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 7,
+      "minute": 3,
+      "second": 28.800000000000182
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 7,
+      "minute": 19,
+      "second": 21.000000000000227
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 7,
+      "minute": 3,
+      "second": 28.800000000000182
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 112,
+    "after": 111
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 7,
+      "minute": 19,
+      "second": 21.000000000000227
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 7,
+      "minute": 35,
+      "second": 13.200000000000273
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 7,
+      "minute": 19,
+      "second": 21.000000000000227
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 111,
+    "after": 110
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 110,
+    "after": 109
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 7,
+      "minute": 35,
+      "second": 13.200000000000273
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 7,
+      "minute": 51,
+      "second": 5.400000000000318
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 7,
+      "minute": 35,
+      "second": 13.200000000000273
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 109,
+    "after": 108
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 7,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 108,
+    "after": 107
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 7,
+      "minute": 51,
+      "second": 5.400000000000318
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 8,
+      "minute": 6,
+      "second": 57.600000000000364
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 7,
+      "minute": 51,
+      "second": 5.400000000000318
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 107,
+    "after": 106
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 8,
+      "minute": 6,
+      "second": 57.600000000000364
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 8,
+      "minute": 22,
+      "second": 49.80000000000041
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 8,
+      "minute": 6,
+      "second": 57.600000000000364
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 106,
+    "after": 105
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 105,
+    "after": 104
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 8,
+      "minute": 25,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -16.99,
+    "before": 16.99,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 8,
+      "minute": 22,
+      "second": 49.80000000000041
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 8,
+      "minute": 38,
+      "second": 42.000000000000455
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 8,
+      "minute": 22,
+      "second": 49.80000000000041
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 104,
+    "after": 103
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 8,
+      "minute": 38,
+      "second": 42.000000000000455
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 8,
+      "minute": 54,
+      "second": 34.2000000000005
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 8,
+      "minute": 38,
+      "second": 42.000000000000455
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 103,
+    "after": 102
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 8,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 102,
+    "after": 101
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 8,
+      "minute": 54,
+      "second": 34.2000000000005
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 9,
+      "minute": 10,
+      "second": 26.400000000000546
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 8,
+      "minute": 54,
+      "second": 34.2000000000005
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 101,
+    "after": 100
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 9,
+      "minute": 10,
+      "second": 26.400000000000546
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 9,
+      "minute": 26,
+      "second": 18.60000000000059
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 9,
+      "minute": 10,
+      "second": 26.400000000000546
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 100,
+    "after": 99
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 99,
+    "after": 98
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 9,
+      "minute": 26,
+      "second": 18.60000000000059
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 9,
+      "minute": 42,
+      "second": 10.800000000000637
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 9,
+      "minute": 26,
+      "second": 18.60000000000059
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 98,
+    "after": 97
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 97,
+    "after": 96
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 9,
+      "minute": 42,
+      "second": 10.800000000000637
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 9,
+      "minute": 58,
+      "second": 3.000000000000682
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 9,
+      "minute": 42,
+      "second": 10.800000000000637
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 9,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 96,
+    "after": 95
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 9,
+      "minute": 58,
+      "second": 3.000000000000682
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 10,
+      "minute": 13,
+      "second": 55.20000000000073
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 9,
+      "minute": 58,
+      "second": 3.000000000000682
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 95,
+    "after": 94
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 94,
+    "after": 93
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 10,
+      "minute": 13,
+      "second": 55.20000000000073
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 10,
+      "minute": 29,
+      "second": 47.40000000000077
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 10,
+      "minute": 13,
+      "second": 55.20000000000073
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 93,
+    "after": 92
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 10,
+      "minute": 29,
+      "second": 47.40000000000077
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 10,
+      "minute": 45,
+      "second": 39.60000000000082
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 10,
+      "minute": 29,
+      "second": 47.40000000000077
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 92,
+    "after": 91
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 91,
+    "after": 90
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 10,
+      "minute": 45,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -16.99,
+    "before": 16.99,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 10,
+      "minute": 45,
+      "second": 39.60000000000082
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 11,
+      "minute": 1,
+      "second": 31.800000000000864
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 10,
+      "minute": 45,
+      "second": 39.60000000000082
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 10,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 90,
+    "after": 89
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 89,
+    "after": 88
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 11,
+      "minute": 1,
+      "second": 31.800000000000864
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 11,
+      "minute": 17,
+      "second": 24.00000000000091
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 11,
+      "minute": 1,
+      "second": 31.800000000000864
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 88,
+    "after": 87
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 11,
+      "minute": 17,
+      "second": 24.00000000000091
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 11,
+      "minute": 33,
+      "second": 16.200000000000955
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 11,
+      "minute": 17,
+      "second": 24.00000000000091
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 87,
+    "after": 86
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 86,
+    "after": 85
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 11,
+      "minute": 33,
+      "second": 16.200000000000955
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 11,
+      "minute": 49,
+      "second": 8.400000000001
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 11,
+      "minute": 33,
+      "second": 16.200000000000955
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 85,
+    "after": 84
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 11,
+      "minute": 49,
+      "second": 8.400000000001
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 12,
+      "minute": 5,
+      "second": 0.6000000000010459
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 11,
+      "minute": 49,
+      "second": 8.400000000001
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 84,
+    "after": 83
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 11,
+      "minute": 59,
+      "second": 0
+    },
+    "description": "Meal",
+    "delta": 1,
+    "before": 83,
+    "after": 84
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 84,
+    "after": 83
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 12,
+      "minute": 5,
+      "second": 0.6000000000010459
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 12,
+      "minute": 20,
+      "second": 52.80000000000109
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 12,
+      "minute": 5,
+      "second": 0.6000000000010459
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 83,
+    "after": 82
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 12,
+      "minute": 20,
+      "second": 52.80000000000109
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 12,
+      "minute": 36,
+      "second": 45.00000000000114
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 12,
+      "minute": 20,
+      "second": 52.80000000000109
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 82,
+    "after": 81
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 81,
+    "after": 80
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 12,
+      "minute": 36,
+      "second": 45.00000000000114
+    },
+    "description": "Help",
+    "frequency": 952.2,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 12,
+      "minute": 52,
+      "second": 37.20000000000118
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 12,
+      "minute": 36,
+      "second": 45.00000000000114
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 80,
+    "after": 79
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 12,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 79,
+    "after": 78
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 12,
+      "minute": 52,
+      "second": 37.20000000000118
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 13,
+      "minute": 10,
+      "second": 57.52000000000112
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 12,
+      "minute": 52,
+      "second": 37.20000000000118
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 78,
+    "after": 77
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 13,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -16.99,
+    "before": 16.99,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 13,
+      "minute": 10,
+      "second": 57.52000000000112
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 13,
+      "minute": 29,
+      "second": 17.840000000001055
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 13,
+      "minute": 10,
+      "second": 57.52000000000112
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 77,
+    "after": 76
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 76,
+    "after": 75
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 13,
+      "minute": 29,
+      "second": 17.840000000001055
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 13,
+      "minute": 47,
+      "second": 38.16000000000099
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 13,
+      "minute": 29,
+      "second": 17.840000000001055
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 75,
+    "after": 74
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 74,
+    "after": 73
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 13,
+      "minute": 47,
+      "second": 38.16000000000099
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 14,
+      "minute": 5,
+      "second": 58.48000000000093
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 13,
+      "minute": 47,
+      "second": 38.16000000000099
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 13,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 73,
+    "after": 72
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 72,
+    "after": 71
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 14,
+      "minute": 5,
+      "second": 58.48000000000093
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 14,
+      "minute": 24,
+      "second": 18.800000000000864
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 14,
+      "minute": 5,
+      "second": 58.48000000000093
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 71,
+    "after": 70
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 70,
+    "after": 69
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 14,
+      "minute": 24,
+      "second": 18.800000000000864
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 14,
+      "minute": 42,
+      "second": 39.1200000000008
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 14,
+      "minute": 24,
+      "second": 18.800000000000864
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 69,
+    "after": 68
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 68,
+    "after": 67
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 14,
+      "minute": 42,
+      "second": 39.1200000000008
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 15,
+      "minute": 0,
+      "second": 59.44000000000074
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 14,
+      "minute": 42,
+      "second": 39.1200000000008
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 14,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 67,
+    "after": 66
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 15,
+      "minute": 0,
+      "second": 59.44000000000074
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 15,
+      "minute": 19,
+      "second": 19.760000000000673
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 15,
+      "minute": 0,
+      "second": 59.44000000000074
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 66,
+    "after": 65
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 65,
+    "after": 64
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 15,
+      "minute": 19,
+      "second": 19.760000000000673
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 15,
+      "minute": 37,
+      "second": 40.08000000000061
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 15,
+      "minute": 19,
+      "second": 19.760000000000673
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 64,
+    "after": 63
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 63,
+    "after": 62
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 15,
+      "minute": 37,
+      "second": 40.08000000000061
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 15,
+      "minute": 56,
+      "second": 0.4000000000005457
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 15,
+      "minute": 37,
+      "second": 40.08000000000061
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 62,
+    "after": 61
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 15,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 61,
+    "after": 60
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 16,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -16.99,
+    "before": 16.99,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 15,
+      "minute": 56,
+      "second": 0.4000000000005457
+    },
+    "description": "Help",
+    "frequency": 1100.32,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 16,
+      "minute": 14,
+      "second": 20.720000000000482
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 15,
+      "minute": 56,
+      "second": 0.4000000000005457
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 60,
+    "after": 59
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 59,
+    "after": 58
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 16,
+      "minute": 14,
+      "second": 20.720000000000482
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 16,
+      "minute": 36,
+      "second": 12.640000000000555
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 16,
+      "minute": 14,
+      "second": 20.720000000000482
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 58,
+    "after": 57
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 57,
+    "after": 56
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 16,
+      "minute": 36,
+      "second": 12.640000000000555
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 16,
+      "minute": 58,
+      "second": 4.5600000000006276
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 16,
+      "minute": 36,
+      "second": 12.640000000000555
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 56,
+    "after": 55
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 16,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 55,
+    "after": 54
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 16,
+      "minute": 58,
+      "second": 4.5600000000006276
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 17,
+      "minute": 19,
+      "second": 56.4800000000007
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 16,
+      "minute": 58,
+      "second": 4.5600000000006276
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 54,
+    "after": 53
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 53,
+    "after": 52
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 17,
+      "minute": 19,
+      "second": 56.4800000000007
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 17,
+      "minute": 41,
+      "second": 48.40000000000077
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 17,
+      "minute": 19,
+      "second": 56.4800000000007
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 52,
+    "after": 51
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 51,
+    "after": 50
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 50,
+    "after": 49
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 17,
+      "minute": 41,
+      "second": 48.40000000000077
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 18,
+      "minute": 3,
+      "second": 40.320000000000846
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 17,
+      "minute": 41,
+      "second": 48.40000000000077
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 49,
+    "after": 48
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 17,
+      "minute": 59,
+      "second": 0
+    },
+    "description": "Meal",
+    "delta": 3,
+    "before": 48,
+    "after": 51
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 51,
+    "after": 50
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 18,
+      "minute": 3,
+      "second": 40.320000000000846
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 18,
+      "minute": 25,
+      "second": 32.24000000000092
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 18,
+      "minute": 3,
+      "second": 40.320000000000846
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 50,
+    "after": 49
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 49,
+    "after": 48
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 18,
+      "minute": 25,
+      "second": 32.24000000000092
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 18,
+      "minute": 47,
+      "second": 24.16000000000099
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 18,
+      "minute": 25,
+      "second": 32.24000000000092
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 48,
+    "after": 47
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 47,
+    "after": 46
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 18,
+      "minute": 47,
+      "second": 24.16000000000099
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 19,
+      "minute": 9,
+      "second": 16.080000000001064
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 18,
+      "minute": 47,
+      "second": 24.16000000000099
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 18,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 46,
+    "after": 45
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 45,
+    "after": 44
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 19,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -16.99,
+    "before": 16.99,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 19,
+      "minute": 9,
+      "second": 16.080000000001064
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 19,
+      "minute": 31,
+      "second": 8.000000000001137
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 19,
+      "minute": 9,
+      "second": 16.080000000001064
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 44,
+    "after": 43
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 43,
+    "after": 42
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 42,
+    "after": 41
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 19,
+      "minute": 31,
+      "second": 8.000000000001137
+    },
+    "description": "Help",
+    "frequency": 1311.92,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 19,
+      "minute": 52,
+      "second": 59.92000000000121
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 19,
+      "minute": 31,
+      "second": 8.000000000001137
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 41,
+    "after": 40
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 19,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 40,
+    "after": 39
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 19,
+      "minute": 52,
+      "second": 59.92000000000121
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 20,
+      "minute": 18,
+      "second": 2.2800000000011096
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 19,
+      "minute": 52,
+      "second": 59.92000000000121
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 39,
+    "after": 38
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 38,
+    "after": 37
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 20,
+      "minute": 18,
+      "second": 2.2800000000011096
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 20,
+      "minute": 43,
+      "second": 4.6400000000010095
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 20,
+      "minute": 18,
+      "second": 2.2800000000011096
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 37,
+    "after": 36
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 36,
+    "after": 35
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 35,
+    "after": 34
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 20,
+      "minute": 43,
+      "second": 4.6400000000010095
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 21,
+      "minute": 8,
+      "second": 7.0000000000009095
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 20,
+      "minute": 43,
+      "second": 4.6400000000010095
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 20,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 34,
+    "after": 33
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 33,
+    "after": 32
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 21,
+      "minute": 8,
+      "second": 7.0000000000009095
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 21,
+      "minute": 33,
+      "second": 9.36000000000081
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 21,
+      "minute": 8,
+      "second": 7.0000000000009095
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 32,
+    "after": 31
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 31,
+    "after": 30
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Meal",
+    "delta": 4,
+    "before": 30,
+    "after": 34
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 34,
+    "after": 33
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 21,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -11.33,
+    "before": 11.33,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "sleep",
+    "time": {
+      "hour": 21,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Day end",
+    "period": {
+      "end": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "start": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    },
+    "sleepState": "start"
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 21,
+      "minute": 33,
+      "second": 9.36000000000081
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 21,
+      "minute": 58,
+      "second": 11.72000000000071
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 21,
+      "minute": 33,
+      "second": 9.36000000000081
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 0,
+    "after": 1.89,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 33,
+    "after": 32
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 21,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 32,
+    "after": 31
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 21,
+      "minute": 58,
+      "second": 11.72000000000071
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 22,
+      "minute": 23,
+      "second": 14.08000000000061
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 21,
+      "minute": 58,
+      "second": 11.72000000000071
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 1.89,
+    "after": 3.78,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 31,
+    "after": 30
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 30,
+    "after": 29
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 29,
+    "after": 28
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 22,
+      "minute": 23,
+      "second": 14.08000000000061
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 22,
+      "minute": 48,
+      "second": 16.44000000000051
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 22,
+      "minute": 23,
+      "second": 14.08000000000061
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 3.78,
+    "after": 5.67,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 28,
+    "after": 27
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 27,
+    "after": 26
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 22,
+      "minute": 48,
+      "second": 16.44000000000051
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 23,
+      "minute": 13,
+      "second": 18.80000000000041
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 22,
+      "minute": 48,
+      "second": 16.44000000000051
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 5.66,
+    "after": 7.55,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 22,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 26,
+    "after": 25
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 25,
+    "after": 24
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 24,
+    "after": 23
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 23,
+      "minute": 13,
+      "second": 18.80000000000041
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 23,
+      "minute": 38,
+      "second": 21.16000000000031
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 23,
+      "minute": 13,
+      "second": 18.80000000000041
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 7.55,
+    "after": 9.44,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 23,
+    "after": 22
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 22,
+    "after": 21
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 23,
+      "minute": 38,
+      "second": 21.16000000000031
+    },
+    "description": "Help",
+    "frequency": 1502.36,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 0,
+      "minute": 3,
+      "second": 23.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 23,
+      "minute": 38,
+      "second": 21.16000000000031
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 9.44,
+    "after": 11.33,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 21,
+    "after": 20
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 23,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 20,
+    "after": 19
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 19,
+    "after": 18
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 0,
+      "minute": 3,
+      "second": 23.52000000000021
+    },
+    "description": "Help",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 0,
+      "minute": 38,
+      "second": 39.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 0,
+      "minute": 3,
+      "second": 23.52000000000021
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 11.33,
+    "after": 13.22,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 18,
+    "after": 17
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 17,
+    "after": 16
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 16,
+    "after": 15
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 0,
+      "minute": 38,
+      "second": 39.52000000000021
+    },
+    "description": "Help",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 1,
+      "minute": 13,
+      "second": 55.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 0,
+      "minute": 38,
+      "second": 39.52000000000021
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 13.21,
+    "after": 15.1,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 15,
+    "after": 14
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 0,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 14,
+    "after": 13
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 13,
+    "after": 12
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 12,
+    "after": 11
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 1,
+      "minute": 13,
+      "second": 55.52000000000021
+    },
+    "description": "Help",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 0.7579199999999999,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.16138666666666668,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.40346666666666675,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.5648533333333334,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 1,
+      "minute": 49,
+      "second": 11.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 1,
+      "minute": 13,
+      "second": 55.52000000000021
+    },
+    "description": "Add",
+    "delta": 1.89,
+    "before": 15.1,
+    "after": 16.99,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 11,
+    "after": 10
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 10,
+    "after": 9
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 9,
+    "after": 8
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 1,
+      "minute": 49,
+      "second": 11.52000000000021
+    },
+    "description": "Help",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 0.40608134263837325,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": [
+        {
+          "amount": 0.086468379623089,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.21617094905772252,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        },
+        {
+          "amount": 0.3026393286808115,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ]
+    },
+    "nextHelp": {
+      "hour": 2,
+      "minute": 24,
+      "second": 27.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 1,
+      "minute": 49,
+      "second": 11.52000000000021
+    },
+    "description": "Add",
+    "delta": 1.01,
+    "before": 16.99,
+    "after": 18,
+    "max": 18
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 1,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 8,
+    "after": 7
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 7,
+    "after": 6
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 6,
+    "after": 5
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 5,
+    "after": 4
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 2,
+      "minute": 25,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 2,
+      "minute": 59,
+      "second": 43.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 2,
+      "minute": 25,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 0,
+    "after": 1
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 2,
+      "minute": 25,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 0.88,
+    "after": 2.01
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 4,
+    "after": 3
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 3,
+    "after": 2
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 2,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 2,
+    "after": 1
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 3,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 3,
+      "minute": 34,
+      "second": 59.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 3,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 1,
+    "after": 2
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 3,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 2.76,
+    "after": 3.89
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": -1,
+    "before": 1,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 3,
+      "minute": 35,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 4,
+      "minute": 10,
+      "second": 15.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 3,
+      "minute": 35,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 2,
+    "after": 3
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 3,
+      "minute": 35,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 4.65,
+    "after": 5.78
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 3,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 4,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 4,
+      "minute": 45,
+      "second": 31.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 4,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 3,
+    "after": 4
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 4,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 6.54,
+    "after": 7.67
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 4,
+      "minute": 45,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 5,
+      "minute": 20,
+      "second": 47.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 4,
+      "minute": 45,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 4,
+    "after": 5
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 4,
+      "minute": 45,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 8.43,
+    "after": 9.56
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 4,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 10,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 5,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 5,
+      "minute": 56,
+      "second": 3.520000000000209
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 5,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 5,
+    "after": 6
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 5,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 10.31,
+    "after": 11.44
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 20,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 30,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 40,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 5,
+      "minute": 50,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "help",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "frequency": 2116,
+    "produce": {
+      "berries": {
+        "amount": 1,
+        "berry": {
+          "name": "WIKI",
+          "value": 31
+        }
+      },
+      "ingredients": []
+    },
+    "nextHelp": {
+      "hour": 6,
+      "minute": 31,
+      "second": 19.52000000000021
+    }
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sneaky snack",
+    "delta": 1,
+    "before": 6,
+    "after": 7
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Spilled ingredients",
+    "delta": 1.13,
+    "before": 12.2,
+    "after": 13.33
+  },
+  {
+    "type": "energy",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Degrade",
+    "delta": 0,
+    "before": 0,
+    "after": 0
+  },
+  {
+    "type": "sleep",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Night ended",
+    "period": {
+      "start": {
+        "hour": 21,
+        "minute": 30,
+        "second": 0
+      },
+      "end": {
+        "hour": 6,
+        "minute": 0,
+        "second": 0
+      }
+    },
+    "sleepState": "end"
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Sneaky snack claim",
+    "delta": -7,
+    "before": 7,
+    "after": 0
+  },
+  {
+    "type": "inventory",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Empty",
+    "delta": -18,
+    "before": 18,
+    "after": 0,
+    "max": 18
+  },
+  {
+    "type": "info",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0
+    },
+    "description": "Summary",
+    "summary": {
+      "nrOfHelps": 68,
+      "helpsBeforeSS": 61,
+      "helpsAfterSS": 7,
+      "totalProduce": {
+        "berries": {
+          "amount": 52.881281342638374,
+          "berry": {
+            "name": "WIKI",
+            "value": 31
+          }
+        },
+        "ingredients": [
+          {
+            "amount": 68.38767865736165,
+            "ingredient": {
+              "name": "Cacao",
+              "value": 151,
+              "taxedValue": 66.7,
+              "longName": "Soothing Cacao"
+            }
+          }
+        ]
+      },
+      "averageEnergy": 51.05190311418685,
+      "averageFrequency": 1298.2282352941174,
+      "spilledIngredients": [
+        {
+          "amount": 8.432374675971714,
+          "ingredient": {
+            "name": "Cacao",
+            "value": 151,
+            "taxedValue": 66.7,
+            "longName": "Soothing Cacao"
+          }
+        }
+      ],
+      "collectFrequency": {
+        "hour": 2,
+        "minute": 22,
+        "second": 49.80000000000041
+      },
+      "totalRecovery": 26
+    }
+  }
+]
