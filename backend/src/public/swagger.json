@@ -812,8 +812,7 @@
 					"energy",
 					"help",
 					"inventory",
-					"info",
-					"skill"
+					"info"
 				]
 			},
 			"ScheduledEvent": {
