@@ -149,11 +149,15 @@ function createCopyButton(contentDiv, index) {
   return copyBtn;
 }
 
-function downloadTextFile(text, filename) {
-  const blob = new Blob([text], { type: 'text/plain' });
+let downloadData = {
+  text: '',
+  filename: '',
+};
+function downloadTextFile() {
+  const blob = new Blob([downloadData.text], { type: 'text/plain' });
 
   const link = document.createElement('a');
-  link.download = filename;
+  link.download = downloadData.filename;
   link.href = window.URL.createObjectURL(blob);
 
   document.body.appendChild(link);
@@ -283,9 +287,8 @@ function goToProductionCalculator() {
       inventoryChart(data.production.log);
 
       // add download event log content
-      document.getElementById('downloadButton').addEventListener('click', function () {
-        downloadTextFile(data.production.prettyLog, `${data.production.logName}`);
-      });
+      downloadData.text = data.production.prettyLog;
+      downloadData.filename = data.production.logName;
 
       container.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     },
