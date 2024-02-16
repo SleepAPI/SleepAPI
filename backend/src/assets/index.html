@@ -52,6 +52,7 @@
         max-height: 60px;
       }
 
+      /* on desktop */
       @media (min-width: 1000px) {
         .mobile-hr {
           display: none;
@@ -65,15 +66,41 @@
           width: 150px;
         }
 
-        .desktop-spacing {
+        .navigation-spacing {
           margin: 0 20px;
+          padding: 0 5px;
         }
       }
 
+      /* on mobile */
       @media (max-width: 1000px) {
+        .navigation-spacing {
+          margin: 0 0px;
+          padding: 0 1px;
+        }
+
         .btn-navigation {
           width: 100%;
-          font-size: 0.7rem;
+          font-size: 0.6rem;
+        }
+
+        .btn-bottom-right {
+          position: absolute;
+          right: 5px;
+          bottom: 5px;
+        }
+      }
+
+      /* very thin phones */
+      @media (max-width: 370px) {
+        .navigation-spacing {
+          margin: 0 0px;
+          padding: 0 1px;
+        }
+
+        .btn-navigation {
+          width: 100%;
+          font-size: 0.4rem;
         }
 
         .btn-bottom-right {
@@ -136,22 +163,22 @@
         <div class="card" style="margin: auto">
           <div class="card-body">
             <div class="row justify-content-center mb-2">
-              <div class="col-3 col-md-2 desktop-spacing" style="padding: 0 5px">
+              <div class="col-3 col-md-2 navigation-spacing">
                 <div class="d-flex justify-content-center">
                   <a href="./production-calculator.html" class="btn btn-danger btn-navigation">Calculator</a>
                 </div>
               </div>
-              <div class="col-3 col-md-2 desktop-spacing" style="padding: 0 5px">
+              <div class="col-3 col-md-2 navigation-spacing">
                 <div class="d-flex justify-content-center">
                   <a href="./team-finder.html" class="btn btn-danger btn-navigation">Team finder</a>
                 </div>
               </div>
-              <div class="col-3 col-md-2 desktop-spacing" style="padding: 0 5px">
+              <div class="col-3 col-md-2 navigation-spacing">
                 <div class="d-flex justify-content-center">
                   <a href="./tier-lists.html" class="btn btn-danger btn-navigation">Tier lists</a>
                 </div>
               </div>
-              <div class="col-3 col-md-2 desktop-spacing" style="padding: 0 5px">
+              <div class="col-3 col-md-2 navigation-spacing">
                 <div class="d-flex justify-content-center">
                   <a href="./flexible.html" class="btn btn-danger btn-navigation">Flexibility</a>
                 </div>
