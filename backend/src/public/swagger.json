@@ -812,7 +812,8 @@
 					"energy",
 					"help",
 					"inventory",
-					"info"
+					"info",
+					"skill"
 				]
 			},
 			"ScheduledEvent": {
@@ -949,7 +950,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.6.1",
+		"version": "1.6.2",
 		"contact": {}
 	},
 	"paths": {
