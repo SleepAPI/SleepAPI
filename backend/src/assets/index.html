@@ -32,6 +32,12 @@
     />
     <link rel="stylesheet" href="/global.css" />
     <style>
+      .card-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
       #bannerImage {
         max-width: 90%;
         height: auto;
@@ -54,6 +60,13 @@
 
       /* on desktop */
       @media (min-width: 1000px) {
+        body {
+          background-color: #555;
+          background-repeat: no-repeat;
+          background-image: linear-gradient(to bottom, #333 300px, #555 300px);
+          background-size: 100% 300px;
+        }
+
         .mobile-hr {
           display: none;
         }
@@ -74,46 +87,46 @@
 
       /* on mobile */
       @media (max-width: 1000px) {
+        body {
+          background-color: #555;
+          background-repeat: no-repeat;
+          background-image: linear-gradient(to bottom, #333 200px, #555 200px);
+          background-size: 100% 200px;
+        }
+
         .navigation-spacing {
           margin: 0 0px;
-          padding: 0 1px;
+          padding: 0 2px;
         }
 
         .btn-navigation {
+          padding: 0.5rem 0rem;
+          white-space: nowrap;
           width: 100%;
-          font-size: 0.6rem;
-        }
-
-        .btn-bottom-right {
-          position: absolute;
-          right: 5px;
-          bottom: 5px;
+          font-size: 0.8rem;
         }
       }
 
       /* very thin phones */
       @media (max-width: 370px) {
+        body {
+          background-color: #555;
+          background-repeat: no-repeat;
+          background-image: linear-gradient(to bottom, #333 150px, #555 150px);
+          background-size: 100% 150px;
+        }
+
         .navigation-spacing {
           margin: 0 0px;
           padding: 0 1px;
         }
 
         .btn-navigation {
+          padding: 0.5rem 0rem;
+          white-space: nowrap;
           width: 100%;
-          font-size: 0.4rem;
+          font-size: 0.7rem;
         }
-
-        .btn-bottom-right {
-          position: absolute;
-          right: 5px;
-          bottom: 5px;
-        }
-      }
-
-      .card-container {
-        display: flex;
-        justify-content: center;
-        width: 100%;
       }
     </style>
     <script src="functions.1.6.2.js"></script>
@@ -160,8 +173,11 @@
         />
       </header>
       <div class="card-container">
-        <div class="card" style="margin: auto">
-          <div class="card-body">
+        <div
+          class="card"
+          style="margin: auto; border-radius: 10px; border-color: #333; border-style: solid; border-width: 4px"
+        >
+          <div class="card-body" style="border-radius: 5px; border-color: #333; border-style: solid; border-width: 4px">
             <div class="row justify-content-center mb-2">
               <div class="col-3 col-md-2 navigation-spacing">
                 <div class="d-flex justify-content-center">
@@ -203,12 +219,8 @@
                         <h6 style="margin-right: auto">
                           Simulate your Pokémon's production and strategize with the provided in-depth data analysis.
                         </h6>
-                        <a
-                          href="./production-calculator.html"
-                          class="btn btn-danger btn-bottom-right"
-                          style="max-width: 200px"
-                        >
-                          <span>Try it <i class="fa fa-caret-right"></i></span>
+                        <a href="./production-calculator.html" class="btn btn-danger" style="max-width: 200px">
+                          <span>Production calculator <i class="fa fa-caret-right"></i></span>
                         </a>
                       </div>
                     </div>
@@ -239,8 +251,8 @@
                           Simulates every Pokémon in every possible team composition for every recipe to determine their
                           cooking power.
                         </h6>
-                        <a href="./tier-lists.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
-                          <span>Try it <i class="fa fa-caret-right"></i></span>
+                        <a href="./tier-lists.html" class="btn btn-danger" style="max-width: 200px">
+                          <span>Tier lists <i class="fa fa-caret-right"></i></span>
                         </a>
                       </div>
                     </div>
@@ -274,8 +286,8 @@
                           Simulates solving the recipe with your input settings and testing every possible team
                           composition.
                         </h6>
-                        <a href="./team-finder.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
-                          <span>Try it <i class="fa fa-caret-right"></i></span>
+                        <a href="./team-finder.html" class="btn btn-danger" style="max-width: 200px">
+                          <span>Team finder <i class="fa fa-caret-right"></i></span>
                         </a>
                       </div>
                     </div>
@@ -294,8 +306,8 @@
                           Simulates every recipe's most optimal solutions and ranks each Pokémon according to their
                           ability to contribute to high level recipes for multiple recipe types.
                         </h6>
-                        <a href="./flexible.html" class="btn btn-danger btn-bottom-right" style="max-width: 200px">
-                          <span>Try it <i class="fa fa-caret-right"></i></span>
+                        <a href="./flexible.html" class="btn btn-danger" style="max-width: 200px">
+                          <span>Flexibility ranking <i class="fa fa-caret-right"></i></span>
                         </a>
                       </div>
                     </div>
@@ -308,7 +320,7 @@
       </div>
     </div>
 
-    <footer class="text-center py-2" style="background-color: #555; color: #ddd">
+    <footer class="text-center py-2" style="background-color: #333; color: #ddd; font-size: 0.8rem">
       <div class="container">
         <a href="https://discord.gg/w97qFff8n4" class="text-decoration-none" style="color: #f04545"
           >Sleep API on Discord</a
