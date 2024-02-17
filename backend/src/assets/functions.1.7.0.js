@@ -190,7 +190,7 @@ function goToProductionCalculator() {
     e4e: +document.getElementById('e4e').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
-    erb: 0, // TODO: hard-coded
+    erb: +document.getElementById('erb').value, // TODO: hard-coded
     recoveryincense: false, // TODO: hard-coded
     mainBedtime: document.getElementById('mainBedtime').value,
     mainWakeup: document.getElementById('mainWakeup').value,
