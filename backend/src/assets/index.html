@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Sleep API</title>
-
+    <title>Pokémon Sleep Cooking Simulator & Tier List | Sleep API</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sleep API - Pokémon Sleep Cooking Simulator</title>
     <meta
       name="description"
-      content="Simulate your Pokémon's production, view the generated cooking tier lists, or use the tools to find optimal teams for your Pokémon Sleep cooking strategy."
+      content="Optimize your Pokémon Sleep cooking with Sleep API's simulator. Explore the in-depth cooking tier list and find the best teams for your cooking strategy."
     />
-    <meta property="og:title" content="Sleep API - Pokémon Sleep Cooking Simulator" />
+    <meta property="og:title" content="Pokémon Sleep Cooking Simulator & Tier List | Sleep API" />
     <meta
       property="og:description"
-      content="Simulate your Pokémon's production, view the generated cooking tier lists, or use the tools to find optimal teams for your Pokémon Sleep cooking strategy."
+      content="Optimize your Pokémon Sleep cooking with Sleep API's simulator. Explore the in-depth cooking tier list and find the best teams for your cooking strategy."
     />
     <meta property="og:image" content="https://api.sleepapi.net/sleepapi-banner.png" />
     <meta property="og:url" content="https://sleepapi.net" />
@@ -35,7 +33,6 @@
       .card-container {
         display: flex;
         justify-content: center;
-        width: 100%;
       }
 
       #bannerImage {
@@ -45,17 +42,26 @@
         margin-right: 5%;
       }
 
-      .card {
-        height: 100%;
-      }
-
-      .card-body {
-        padding-bottom: 20px;
+      .custom-card-style {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
       }
 
       .btn-danger {
         background-color: #f04545;
         max-height: 60px;
+      }
+
+      .navigation-spacing {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        padding: 0 5px;
+      }
+
+      .btn-navigation {
+        width: auto;
+        padding: 0.5rem 1rem;
       }
 
       /* on desktop */
@@ -75,13 +81,12 @@
           width: 80%;
         }
 
-        .btn-navigation {
-          width: 150px;
-        }
-
         .navigation-spacing {
           margin: 0 20px;
-          padding: 0 5px;
+        }
+
+        .btn-navigation {
+          width: 150px;
         }
       }
 
@@ -95,7 +100,7 @@
         }
 
         .navigation-spacing {
-          margin: 0 0px;
+          margin: 0;
           padding: 0 2px;
         }
 
@@ -117,14 +122,10 @@
         }
 
         .navigation-spacing {
-          margin: 0 0px;
           padding: 0 1px;
         }
 
         .btn-navigation {
-          padding: 0.5rem 0rem;
-          white-space: nowrap;
-          width: 100%;
           font-size: 0.7rem;
         }
       }
@@ -164,164 +165,118 @@
   <body>
     <div class="container" style="margin-bottom: 50px">
       <header class="d-flex justify-content-center mb-2 mt-2">
-        <br />
         <img
           id="bannerImage"
           src="sleepapi-banner.png"
-          alt="Sleep API Cooking Simulator Logo"
+          alt="Sleep API Cooking Simulator"
           title="Pokémon Sleep Cooking Simulator"
         />
       </header>
-      <div class="card-container">
-        <div
-          class="card"
-          style="margin: auto; border-radius: 10px; border-color: #333; border-style: solid; border-width: 4px"
-        >
-          <div class="card-body" style="border-radius: 5px; border-color: #333; border-style: solid; border-width: 4px">
-            <div class="row justify-content-center mb-2">
-              <div class="col-3 col-md-2 navigation-spacing">
-                <div class="d-flex justify-content-center">
-                  <a href="./production-calculator.html" class="btn btn-danger btn-navigation">Calculator</a>
-                </div>
-              </div>
-              <div class="col-3 col-md-2 navigation-spacing">
-                <div class="d-flex justify-content-center">
-                  <a href="./team-finder.html" class="btn btn-danger btn-navigation">Team finder</a>
-                </div>
-              </div>
-              <div class="col-3 col-md-2 navigation-spacing">
-                <div class="d-flex justify-content-center">
-                  <a href="./tier-lists.html" class="btn btn-danger btn-navigation">Tier lists</a>
-                </div>
-              </div>
-              <div class="col-3 col-md-2 navigation-spacing">
-                <div class="d-flex justify-content-center">
-                  <a href="./flexible.html" class="btn btn-danger btn-navigation">Flexibility</a>
-                </div>
-              </div>
-            </div>
 
-            <div class="d-flex justify-content-center">
-              <hr class="mb-2 col-10" />
-            </div>
+      <nav class="row justify-content-center mb-2">
+        <div class="col-3 col-md-2 navigation-spacing">
+          <a
+            href="./production-calculator.html"
+            class="btn btn-danger btn-navigation"
+            aria-label="Production Calculator"
+            >Calculator</a
+          >
+        </div>
+        <div class="col-3 col-md-2 navigation-spacing">
+          <a href="./team-finder.html" class="btn btn-danger btn-navigation" aria-label="Team Finder">Team Finder</a>
+        </div>
+        <div class="col-3 col-md-2 navigation-spacing">
+          <a href="./tier-lists.html" class="btn btn-danger btn-navigation" aria-label="Tier Lists">Tier Lists</a>
+        </div>
+        <div class="col-3 col-md-2 navigation-spacing">
+          <a href="./flexible.html" class="btn btn-danger btn-navigation" aria-label="Flexibility Ranking"
+            >Flexibility</a
+          >
+        </div>
+      </nav>
 
-            <div class="row">
-              <div class="col-lg-11 mx-auto">
-                <!-- Row 1 -->
-                <div class="row g-2 mb-4">
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100 position-relative" style="background-color: transparent; border: none">
-                      <div
-                        class="card-body d-flex flex-column justify-content-center"
-                        style="background-color: transparent; border: none"
-                      >
-                        <h5>Production Simulator</h5>
-                        <h6 style="margin-right: auto">
-                          Simulate your Pokémon's production and strategize with the provided in-depth data analysis.
-                        </h6>
-                        <a href="./production-calculator.html" class="btn btn-danger" style="max-width: 200px">
-                          <span>Production calculator <i class="fa fa-caret-right"></i></span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100" style="background-color: transparent; border: none">
-                      <div class="card-body" style="background-color: transparent">
-                        <canvas id="energyChart"></canvas>
-                      </div>
-                    </div>
+      <main>
+        <div class="card-container">
+          <div class="card custom-card-style">
+            <div class="card-body">
+              <section class="row g-2 mb-4" style="justify-content: center; align-items: center">
+                <div class="col-xl-6">
+                  <div class="card-body" style="text-align: center">
+                    <h2>Production Simulator</h2>
+                    <p>Simulate your Pokémon's production and strategize with the provided in-depth data analysis.</p>
+                    <a href="./production-calculator.html" class="btn btn-danger"
+                      >Production Calculator <i class="fa fa-caret-right"></i
+                    ></a>
                   </div>
                 </div>
+                <div class="col-xl-6">
+                  <canvas id="energyChart"></canvas>
+                </div>
+              </section>
 
-                <!-- Row 2 -->
-                <hr class="mb-2" />
-                <div class="row g-2 mb-4">
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100 position-relative" style="background-color: transparent; border: none">
-                      <div
-                        class="card-body d-flex flex-column justify-content-center"
-                        style="background-color: transparent; border: none"
-                      >
-                        <h5>Cooking Tier Lists</h5>
-                        <h6 style="margin-right: auto">
-                          Cooking tier lists based on millions of simulated recipe solutions.
-                        </h6>
-                        <h6 style="margin-right: auto">
-                          Simulates every Pokémon in every possible team composition for every recipe to determine their
-                          cooking power.
-                        </h6>
-                        <a href="./tier-lists.html" class="btn btn-danger" style="max-width: 200px">
-                          <span>Tier lists <i class="fa fa-caret-right"></i></span>
-                        </a>
-                      </div>
-                    </div>
+              <hr class="mb-2" />
+
+              <section class="row g-2 mb-4" style="justify-content: center; align-items: center">
+                <div class="col-xl-6">
+                  <div class="card-body" style="text-align: center">
+                    <h2>Cooking Tier Lists</h2>
+                    <p>
+                      Cooking tier lists based on millions of simulated recipe solutions. Explore every Pokémon in every
+                      possible team composition for every recipe to determine their cooking power.
+                    </p>
+                    <a href="./tier-lists.html" class="btn btn-danger">Tier Lists <i class="fa fa-caret-right"></i></a>
                   </div>
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100" style="background-color: transparent; border: none">
-                      <div class="card-img-container" style="padding: 10px; background-color: transparent">
-                        <img
-                          src="./tierlist_preview.png"
-                          class="card-img-top"
-                          alt="Tier List Preview"
-                          style="border-radius: 10px"
-                        />
-                      </div>
-                    </div>
+                </div>
+                <div class="col-xl-6">
+                  <img
+                    src="./tierlist_preview.png"
+                    alt="Pokemon Sleep Tier List"
+                    class="card-img-top"
+                    style="border-radius: 10px"
+                  />
+                </div>
+              </section>
+
+              <hr class="mb-2" />
+
+              <section class="row g-2 mb-4" style="justify-content: center; align-items: center">
+                <div class="col-xl-6">
+                  <div class="card-body" style="text-align: center">
+                    <h2>Team Finder</h2>
+                    <p>
+                      Find the most optimal teams for any given recipe. Simulates solving the recipe with your input
+                      settings and testing every possible team composition.
+                    </p>
+                    <a href="./team-finder.html" class="btn btn-danger"
+                      >Team Finder <i class="fa fa-caret-right"></i
+                    ></a>
                   </div>
                 </div>
 
-                <!-- Row 3 -->
-                <hr class="mb-2" />
-                <div class="row g-2 mb-4">
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100 position-relative" style="background-color: transparent; border: none">
-                      <div
-                        class="card-body d-flex flex-column justify-content-center"
-                        style="background-color: transparent; border: none"
-                      >
-                        <h5>Team Finder</h5>
-                        <h6 style="margin-right: auto">Find the most optimal teams for any given recipe.</h6>
-                        <h6 style="margin-right: auto">
-                          Simulates solving the recipe with your input settings and testing every possible team
-                          composition.
-                        </h6>
-                        <a href="./team-finder.html" class="btn btn-danger" style="max-width: 200px">
-                          <span>Team finder <i class="fa fa-caret-right"></i></span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                <hr class="mobile-hr mb-2" />
 
-                  <hr class="mobile-hr mb-2" />
-                  <div class="col-xl-6">
-                    <div class="card h-100 w-100 position-relative" style="background-color: transparent; border: none">
-                      <div
-                        class="card-body d-flex flex-column justify-content-center"
-                        style="background-color: transparent; border: none"
-                      >
-                        <h5>Flexibility Ranking</h5>
-                        <h6 style="margin-right: auto">Ranks the most flexible cooking Pokémon.</h6>
-                        <h6 style="margin-right: auto">
-                          Simulates every recipe's most optimal solutions and ranks each Pokémon according to their
-                          ability to contribute to high level recipes for multiple recipe types.
-                        </h6>
-                        <a href="./flexible.html" class="btn btn-danger" style="max-width: 200px">
-                          <span>Flexibility ranking <i class="fa fa-caret-right"></i></span>
-                        </a>
-                      </div>
-                    </div>
+                <div class="col-xl-6">
+                  <div class="card-body" style="text-align: center">
+                    <h2>Flexibility Ranking</h2>
+                    <p>
+                      Ranks the most flexible cooking Pokémon. Evaluates each Pokémon's ability to contribute to
+                      high-level recipes across multiple recipe types.
+                    </p>
+                    <a href="./flexible.html" class="btn btn-danger"
+                      >Flexibility Ranking <i class="fa fa-caret-right"></i
+                    ></a>
                   </div>
                 </div>
-              </div>
+              </section>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </main>
 
-    <footer class="text-center py-2" style="background-color: #333; color: #ddd; font-size: 0.8rem">
-      <div class="container">
+      <footer
+        class="text-center py-2"
+        style="background-color: #333; color: #ddd; font-size: 0.8rem; width: 80%; margin: auto"
+      >
         <a href="https://discord.gg/w97qFff8n4" class="text-decoration-none" style="color: #f04545"
           >Sleep API on Discord</a
         >
@@ -329,7 +284,7 @@
         <a href="https://github.com/SleepAPI/SleepAPI" class="text-decoration-none" style="color: #f04545"
           >Contribute to Sleep API</a
         >
-      </div>
-    </footer>
+      </footer>
+    </div>
   </body>
 </html>
