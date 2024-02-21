@@ -4,11 +4,12 @@ import { calculatePokemonProduction } from './production-service';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
-    const result = calculatePokemonProduction(pokemon.PINSIR.name, MOCKED_OPTIMAL_PRODUCTION_STATS, [
-      ingredient.HONEY.name,
-      ingredient.FANCY_APPLE.name,
-      ingredient.BEAN_SAUSAGE.name,
-    ]);
+    const result = calculatePokemonProduction(
+      pokemon.PINSIR.name,
+      MOCKED_OPTIMAL_PRODUCTION_STATS,
+      [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
+      1
+    );
 
     expect(result).toHaveProperty('filters');
     expect(result).toHaveProperty('production');

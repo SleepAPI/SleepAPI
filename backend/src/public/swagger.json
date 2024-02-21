@@ -75,11 +75,23 @@
 					"amount": {
 						"type": "number",
 						"format": "double"
+					},
+					"unit": {
+						"type": "string",
+						"enum": [
+							"energy",
+							"ingredients",
+							"helps",
+							"dream shards",
+							"strength",
+							"pot size"
+						]
 					}
 				},
 				"required": [
 					"name",
-					"amount"
+					"amount",
+					"unit"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -374,6 +386,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingBonus": {
 						"type": "number",
 						"format": "double"
@@ -403,6 +419,7 @@
 					"level",
 					"nature",
 					"e4e",
+					"cheer",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -455,6 +472,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingbonus": {
 						"type": "number",
 						"format": "double"
@@ -502,6 +523,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingBonus": {
 						"type": "number",
 						"format": "double"
@@ -537,6 +562,7 @@
 					"level",
 					"nature",
 					"e4e",
+					"cheer",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -597,12 +623,27 @@
 					},
 					"sneakySnack": {
 						"$ref": "#/components/schemas/BerrySet"
+					},
+					"dayHelps": {
+						"type": "number",
+						"format": "double"
+					},
+					"nightHelps": {
+						"type": "number",
+						"format": "double"
+					},
+					"averageTotalSkillProcs": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"produce",
 					"spilledIngredients",
-					"sneakySnack"
+					"sneakySnack",
+					"dayHelps",
+					"nightHelps",
+					"averageTotalSkillProcs"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -812,7 +853,8 @@
 					"energy",
 					"help",
 					"inventory",
-					"info"
+					"info",
+					"skill"
 				]
 			},
 			"ScheduledEvent": {
@@ -854,6 +896,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingbonus": {
 						"type": "number",
 						"format": "double"
@@ -886,6 +932,7 @@
 					"nature",
 					"subskills",
 					"e4e",
+					"cheer",
 					"helpingbonus",
 					"camp",
 					"erb",
@@ -915,9 +962,6 @@
 					"maxPotSize": {
 						"type": "number",
 						"format": "double"
-					},
-					"csv": {
-						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -936,9 +980,6 @@
 					},
 					"lapis": {
 						"type": "boolean"
-					},
-					"csv": {
-						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -949,7 +990,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.7.0",
+		"version": "1.8.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1214,6 +1255,10 @@
 													"type": "number",
 													"format": "double"
 												},
+												"cheer": {
+													"type": "number",
+													"format": "double"
+												},
 												"e4e": {
 													"type": "number",
 													"format": "double"
@@ -1239,6 +1284,7 @@
 												"erb",
 												"camp",
 												"helpingBonus",
+												"cheer",
 												"e4e",
 												"nature",
 												"level",
@@ -1405,14 +1451,6 @@
 							"format": "double",
 							"type": "number"
 						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
 					}
 				]
 			}
@@ -1523,14 +1561,6 @@
 					{
 						"in": "query",
 						"name": "lapis",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "csv",
 						"required": false,
 						"schema": {
 							"type": "boolean"

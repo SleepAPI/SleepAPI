@@ -18,10 +18,6 @@ export interface GetTierListQueryParams {
 
 export interface CreateTierListRequestBody {
   limit50: boolean;
-  cyan: boolean;
-  taupe: boolean;
-  snowdrop: boolean;
-  lapis: boolean;
   curry: boolean;
   salad: boolean;
   dessert: boolean;
@@ -63,22 +59,6 @@ class TierlistRouterImpl {
         }
       }
     );
-  }
-
-  #parseInput(input: CreateTierListRequestBody) {
-    const parsedInput: CreateTierListRequestBody = {
-      limit50: queryAsBoolean(input.limit50),
-      minRecipeBonus: input.minRecipeBonus,
-      nrOfMeals: input.nrOfMeals,
-      cyan: queryAsBoolean(input.cyan),
-      taupe: queryAsBoolean(input.taupe),
-      snowdrop: queryAsBoolean(input.snowdrop),
-      lapis: queryAsBoolean(input.lapis),
-      curry: queryAsBoolean(input.curry),
-      salad: queryAsBoolean(input.salad),
-      dessert: queryAsBoolean(input.dessert),
-    };
-    return parsedInput;
   }
 }
 

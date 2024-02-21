@@ -67,7 +67,7 @@
         border: none;
       }
     </style>
-    <script src="functions.1.7.0.js"></script>
+    <script src="functions.1.8.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -278,8 +278,8 @@
 
         <option value="modest">Modest (+ing -speed)</option>
         <option value="mild">Mild (+ing -energy)</option>
-        <option value="rash" selected>Rash (+ing -skill)</option>
-        <option value="quiet">Quiet (+ing -exp)</option>
+        <option value="rash">Rash (+ing -skill)</option>
+        <option value="quiet" selected>Quiet (+ing -exp)</option>
 
         <option value="calm">Calm (+skill -speed)</option>
         <option value="gentle">Gentle (+skill -energy)</option>
@@ -349,18 +349,28 @@
                 Inventory Up L
               </label>
             </li>
-            <li></li>
             <li>
               <label class="dropdown-label">
                 <input type="checkbox" name="Inv M" value="Inventory Up M" id="Inventory_Up_M" />
                 Inventory Up M
               </label>
             </li>
-            <li></li>
             <li>
               <label class="dropdown-label">
                 <input type="checkbox" name="Inv S" value="Inventory Up S" id="Inventory_Up_S" />
                 Inventory Up S
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Skill M" value="Skill Trigger M" id="Skill_Trigger_M" />
+                Skill Trigger M
+              </label>
+            </li>
+            <li>
+              <label class="dropdown-label">
+                <input type="checkbox" name="Skill S" value="Skill Trigger S" id="Skill_Trigger_S" />
+                Skill Trigger S
               </label>
             </li>
           </ul>

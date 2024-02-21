@@ -4,6 +4,7 @@ import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from '@src/domain/event/events/input-event/input-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepEvent } from '@src/domain/event/events/sleep-event/sleep-event';
 import { Summary, SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
@@ -17,11 +18,13 @@ export function startDayAndEnergy(
   pokemon: pokemon.Pokemon,
   input: ProductionStats,
   recoveryEvents: EnergyEvent[],
+  skillActivations: SkillActivation[],
   eventLog: ScheduledEvent[]
 ) {
   const { startingEnergy, energyLeftInMorning, energyRecovered } = calculateStartingEnergy({
     dayPeriod: dayInfo,
     recoveryEvents,
+    skillActivations,
   });
   const startingDayEvent: SleepEvent = new SleepEvent({
     time: dayInfo.period.start,
@@ -54,11 +57,19 @@ export function startDayAndEnergy(
     before: energyLeftInMorning,
   });
 
+  const inventoryEvent: InventoryEvent = new InventoryEvent({
+    time: dayInfo.period.start,
+    description: 'Start inventory',
+    before: 0,
+    delta: 0,
+  });
+
   eventLog.push(startingDayEvent);
   eventLog.push(inputPokemon);
   eventLog.push(inputTeam);
   eventLog.push(inputPlayer);
   eventLog.push(energyEvent);
+  eventLog.push(inventoryEvent);
 
   return startingEnergy;
 }

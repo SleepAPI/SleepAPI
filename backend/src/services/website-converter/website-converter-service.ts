@@ -270,6 +270,10 @@ class WebsiteConverterServiceImpl {
 
     prettyString += this.#prettifyFiltersDetails(productionCombination);
 
+    prettyString += `Estimated skill procs: ${roundDown(
+      pokemonCombination.detailedProduce.averageTotalSkillProcs,
+      1
+    )}\n`;
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,
       1

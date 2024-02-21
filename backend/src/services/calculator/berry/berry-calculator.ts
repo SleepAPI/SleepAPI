@@ -1,4 +1,4 @@
-import { pokemon, subskill } from 'sleepapi-common';
+import { BerrySet, berry, pokemon, subskill } from 'sleepapi-common';
 
 export function calculateNrOfBerriesPerDrop(pokemon: pokemon.Pokemon, subskills: subskill.SubSkill[]) {
   let base = 1;
@@ -9,4 +9,11 @@ export function calculateNrOfBerriesPerDrop(pokemon: pokemon.Pokemon, subskills:
     base += 1;
   }
   return base;
+}
+
+export function emptyBerrySet(berry: berry.Berry): BerrySet {
+  return {
+    amount: 0,
+    berry,
+  };
 }

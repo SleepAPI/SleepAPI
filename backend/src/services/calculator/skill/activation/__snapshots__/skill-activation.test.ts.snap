@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`activateMetronome shall use the correct metronomeFactor for each skill activation 1`] = `
+[
+  {
+    "adjustedAmount": 3.127272727272727,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 43,
+      "name": "Charge Energy S",
+      "unit": "energy",
+    },
+  },
+  {
+    "adjustedAmount": 330.6181818181818,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 4546,
+      "name": "Charge Strength M",
+      "unit": "strength",
+    },
+  },
+  {
+    "adjustedAmount": 150.25454545454548,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 2066,
+      "name": "Charge Strength S",
+      "unit": "strength",
+    },
+  },
+  {
+    "adjustedAmount": 187.8181818181818,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 2582.5,
+      "name": "Charge Strength S Range",
+      "unit": "strength",
+    },
+  },
+  {
+    "adjustedAmount": 1.9636363636363638,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 27,
+      "name": "Cooking Power-up S",
+      "unit": "pot size",
+    },
+  },
+  {
+    "adjustedAmount": 91.63636363636364,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 1260,
+      "name": "Dream Shard Magnet S",
+      "unit": "dream shards",
+    },
+  },
+  {
+    "adjustedAmount": 114.54545454545455,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 1575,
+      "name": "Dream Shard Magnet S Range",
+      "unit": "dream shards",
+    },
+  },
+  {
+    "adjustedAmount": 0.7272727272727273,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 50,
+      "name": "Energizing Cheer S",
+      "unit": "energy",
+    },
+  },
+  {
+    "adjustedAmount": 1.309090909090909,
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 18,
+      "name": "Energy For Everyone",
+      "unit": "energy",
+    },
+  },
+  {
+    "adjustedAmount": 4.363636363636363,
+    "adjustedProduce": {
+      "berries": {
+        "amount": 1.4545454545454546,
+        "berry": {
+          "name": "BELUE",
+          "value": 33,
+        },
+      },
+      "ingredients": [
+        {
+          "amount": 2.909090909090909,
+          "ingredient": {
+            "longName": "Bean Sausage",
+            "name": "Sausage",
+            "taxedValue": 31,
+            "value": 103,
+          },
+        },
+      ],
+    },
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 10,
+      "name": "Extra Helpful S",
+      "unit": "helps",
+    },
+  },
+  {
+    "adjustedAmount": 1.5272727272727273,
+    "adjustedProduce": {
+      "berries": {
+        "amount": 0,
+        "berry": {
+          "name": "LUM",
+          "value": 24,
+        },
+      },
+      "ingredients": [
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Moomoo Milk",
+            "name": "Milk",
+            "taxedValue": 28.1,
+            "value": 98,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Greengrass Soybeans",
+            "name": "Soybean",
+            "taxedValue": 29.2,
+            "value": 100,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Honey",
+            "name": "Honey",
+            "taxedValue": 29.8,
+            "value": 101,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Bean Sausage",
+            "name": "Sausage",
+            "taxedValue": 31,
+            "value": 103,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Warming Ginger",
+            "name": "Ginger",
+            "taxedValue": 34.7,
+            "value": 109,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Snoozy Tomato",
+            "name": "Tomato",
+            "taxedValue": 35.4,
+            "value": 110,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Fancy Egg",
+            "name": "Egg",
+            "taxedValue": 38.7,
+            "value": 115,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Pure Oil",
+            "name": "Oil",
+            "taxedValue": 42.8,
+            "value": 121,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Soft Potato",
+            "name": "Potato",
+            "taxedValue": 45,
+            "value": 124,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Fiery Herb",
+            "name": "Herb",
+            "taxedValue": 49.4,
+            "value": 130,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Greengrass Corn",
+            "name": "Corn",
+            "taxedValue": 57.3,
+            "value": 140,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Soothing Cacao",
+            "name": "Cacao",
+            "taxedValue": 66.7,
+            "value": 151,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Tasty Mushroom",
+            "name": "Mushroom",
+            "taxedValue": 81.5,
+            "value": 167,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Large Leek",
+            "name": "Leek",
+            "taxedValue": 100.1,
+            "value": 185,
+          },
+        },
+        {
+          "amount": 0.09545454545454546,
+          "ingredient": {
+            "longName": "Slowpoke Tail",
+            "name": "Tail",
+            "taxedValue": 342,
+            "value": 342,
+          },
+        },
+      ],
+    },
+    "fractionOfProc": 0.8,
+    "nrOfHelpsToActivate": 2,
+    "skill": {
+      "amount": 21,
+      "name": "Ingredient Magnet S",
+      "unit": "ingredients",
+    },
+  },
+]
+`;

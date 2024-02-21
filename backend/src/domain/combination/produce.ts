@@ -14,4 +14,7 @@ export interface DetailedProduce {
   produce: Produce;
   spilledIngredients: IngredientSet[];
   sneakySnack: BerrySet;
+  dayHelps: number;
+  nightHelps: number;
+  averageTotalSkillProcs: number;
 }

@@ -11,6 +11,7 @@ describe('findOptimalSetsForMeal', () => {
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
       berries: berry.BERRIES,
       e4e: 0,
+      cheer: 0,
       helpingBonus: 0,
       camp: false,
       erb: 0,
@@ -18,7 +19,7 @@ describe('findOptimalSetsForMeal', () => {
       mainBedtime: { hour: 21, minute: 30, second: 0 },
       mainWakeup: { hour: 6, minute: 0, second: 0 },
     };
-    const data = findOptimalSetsForMeal(recipe.NEROLIS_RESTORATIVE_TEA.name, input);
+    const data = findOptimalSetsForMeal(recipe.NEROLIS_RESTORATIVE_TEA.name, input, 1);
     expect(data.teams).toHaveLength(2);
     expect(
       data.teams.map((team) => ({
@@ -53,6 +54,7 @@ describe('getOptimalFlexiblePokemon', () => {
       berries: berry.LAPIS_BERRIES,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       e4e: 5,
+      cheer: 0,
       camp: true,
       helpingBonus: 5,
       nature: nature.RASH,
@@ -62,7 +64,7 @@ describe('getOptimalFlexiblePokemon', () => {
       mainWakeup: { hour: 6, minute: 0, second: 0 },
     };
 
-    const data = getOptimalFlexiblePokemon(input);
+    const data = getOptimalFlexiblePokemon(input, 0);
 
     expect(
       data.map(
@@ -72,11 +74,11 @@ describe('getOptimalFlexiblePokemon', () => {
     ).toMatchInlineSnapshot(`
       [
         "BEWEAR(2 Corn, 5 Corn)",
+        "VENUSAUR(2 Honey, 4 Tomato)",
+        "VENUSAUR(2 Honey, 5 Honey)",
         "VICTREEBEL(2 Tomato, 4 Potato)",
         "MR_MIME(2 Tomato, 4 Potato)",
         "MEGANIUM(1 Cacao, 2 Cacao)",
-        "VENUSAUR(2 Honey, 4 Tomato)",
-        "VENUSAUR(2 Honey, 5 Honey)",
         "BEWEAR(2 Corn, 6 Sausage)",
         "VICTREEBEL(2 Tomato, 5 Tomato)",
         "MR_MIME(2 Tomato, 5 Tomato)",
@@ -93,6 +95,8 @@ describe('getOptimalFlexiblePokemon', () => {
         "LUCARIO(1 Oil, 2 Potato)",
         "PRIMEAPE(1 Sausage, 1 Mushroom)",
         "WOBBUFFET(1 Apple, 1 Mushroom)",
+        "GALLADE(1 Apple, 1 Corn)",
+        "GARDEVOIR(1 Apple, 1 Corn)",
       ]
     `);
   });

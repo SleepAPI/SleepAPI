@@ -45,6 +45,7 @@ describe('getIngredientNames', () => {
         "Oil",
         "Potato",
         "Herb",
+        "Corn",
         "Cacao",
         "Mushroom",
         "Leek",

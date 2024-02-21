@@ -28,6 +28,9 @@ describe('processOptimalTeamSolutions', () => {
       produce: { berries: { amount: 0, berry: berry.LEPPA }, ingredients: [] },
       sneakySnack: { amount: 0, berry: berry.LEPPA },
       spilledIngredients: [],
+      dayHelps: 0,
+      nightHelps: 0,
+      averageTotalSkillProcs: 0,
     };
 
     const optimalTeamSolutions: OptimalTeamSolution[] = [

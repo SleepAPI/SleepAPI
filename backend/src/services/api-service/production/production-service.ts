@@ -1,12 +1,18 @@
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
 import { getPokemon } from '../../../utils/pokemon-utils/pokemon-utils';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
-export function calculatePokemonProduction(pokemonName: string, details: ProductionStats, ingredientSet: string[]) {
+export function calculatePokemonProduction(
+  pokemonName: string,
+  details: ProductionStats,
+  ingredientSet: string[],
+  monteCarloIterations: number
+) {
   const {
     level,
     nature,
@@ -15,6 +21,7 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
     helpingBonus,
     camp,
     erb,
+    cheer,
     incense,
     mainBedtime,
     mainWakeup,
@@ -25,6 +32,8 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
 
   const pokemonProductionWithLogs: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[] =
     [];
+
+  let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
   for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
     const customStats: CustomStats = {
       level,
@@ -32,7 +41,7 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
       subskills,
     };
 
-    const { detailedProduce, log } = setupAndRunProductionSimulation({
+    const { detailedProduce, log, skillActivations } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pokemon,
         ingredientList,
@@ -43,11 +52,17 @@ export function calculatePokemonProduction(pokemonName: string, details: Product
         camp,
         helpingBonus,
         erb,
+        cheer,
         incense,
         mainBedtime,
         mainWakeup,
       },
+      monteCarloIterations,
+      // TODO: can probably optimize by not shifting in simulator
+      preGeneratedSkillActivations:
+        preGeneratedSkillActivations && JSON.parse(JSON.stringify(preGeneratedSkillActivations)),
     });
+    preGeneratedSkillActivations = skillActivations;
 
     pokemonProductionWithLogs.push({
       pokemonProduction: { pokemonCombination: { pokemon, ingredientList }, detailedProduce, customStats },

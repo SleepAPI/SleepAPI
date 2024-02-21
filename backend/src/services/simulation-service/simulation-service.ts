@@ -1,15 +1,29 @@
 /**
- * Calculates average ingredients produced per meal with natural declining energy
- * Calculate average nightly produce and subtracts overflow ingredients
+ * Copyright 2024 Sleep API Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import { DetailedProduce, PokemonProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import { Time } from '@src/domain/time/time';
 import { getDefaultRecoveryEvents } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { BerrySet, PokemonIngredientSet, recipe } from 'sleepapi-common';
+import { BerrySet, PokemonIngredientSet, mainskill, recipe } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
 import {
@@ -17,7 +31,14 @@ import {
   calculateIngredientPercentage,
 } from '../calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '../calculator/production/produce-calculator';
-import { simulation } from './simulator';
+import {
+  calculateOddsAtLeastOneSkillProc,
+  calculateSkillPercentage,
+  calculateSkillProcs,
+  scheduleSkillEvents,
+} from '../calculator/skill/skill-calculator';
+import { monteCarlo } from './monte-carlo/monte-carlo';
+import { simulation } from './simulator/simulator';
 
 /**
  * Sets up all the simulation input and runs the simulated production window
@@ -25,9 +46,23 @@ import { simulation } from './simulator';
 export function setupAndRunProductionSimulation(params: {
   pokemonCombination: PokemonIngredientSet;
   input: ProductionStats;
-}): { detailedProduce: DetailedProduce; log: ScheduledEvent[] } {
-  const { pokemonCombination, input } = params;
-  const { level, nature, subskills = [], e4e, helpingBonus, camp, erb, incense, mainBedtime, mainWakeup } = input;
+  monteCarloIterations: number;
+  preGeneratedSkillActivations?: SkillActivation[];
+}): { detailedProduce: DetailedProduce; skillActivations: SkillActivation[]; log: ScheduledEvent[] } {
+  const { pokemonCombination, input, monteCarloIterations, preGeneratedSkillActivations } = params;
+  const {
+    level,
+    nature,
+    subskills = [],
+    e4e,
+    cheer,
+    helpingBonus,
+    camp,
+    erb,
+    incense,
+    mainBedtime,
+    mainWakeup,
+  } = input;
 
   const averagedPokemonCombination = calculateAveragePokemonIngredientSet(pokemonCombination);
 
@@ -36,6 +71,7 @@ export function setupAndRunProductionSimulation(params: {
     nature,
     subskills,
   });
+  const skillPercentage = calculateSkillPercentage(pokemonCombination.pokemon, subskills, input.nature);
 
   const daySleepInfo: SleepInfo = {
     period: { end: mainBedtime, start: mainWakeup },
@@ -44,16 +80,11 @@ export function setupAndRunProductionSimulation(params: {
     erb,
   };
 
-  const recoveryEvents = getDefaultRecoveryEvents(
-    { start: daySleepInfo.period.start, end: daySleepInfo.period.end },
-    nature,
-    e4e
-  );
+  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, nature, e4e, cheer);
 
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
   const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, subskills);
-
   const sneakySnackBerries: BerrySet = {
     amount: berriesPerDrop,
     berry: averagedPokemonCombination.pokemon.berry,
@@ -73,13 +104,28 @@ export function setupAndRunProductionSimulation(params: {
     helpingBonus,
   });
 
+  const skillActivations = preGeneratedSkillActivations
+    ? preGeneratedSkillActivations
+    : generateSkillActivations({
+        dayInfo: daySleepInfo,
+        helpFrequency,
+        skillPercentage,
+        input,
+        pokemonWithAverageProduce,
+        sneakySnackBerries,
+        recoveryEvents,
+        mealTimes,
+        monteCarloIterations,
+      });
+
   const { detailedProduce, log } = simulation({
     dayInfo: daySleepInfo,
     input,
     helpFrequency,
     pokemonWithAverageProduce,
     sneakySnackBerries,
-    recoveryEvents,
+    recoveryEvents, // TODO: I think we json deep copy this somewhere too, maybe we can avoid the shift
+    skillActivations: JSON.parse(JSON.stringify(skillActivations)), // TODO: optimize by not shifting in simulation
     mealTimes,
   });
 
@@ -97,6 +143,76 @@ export function setupAndRunProductionSimulation(params: {
         })),
       },
     },
+    skillActivations,
     log,
   };
+}
+
+export function generateSkillActivations(params: {
+  dayInfo: SleepInfo;
+  helpFrequency: number;
+  skillPercentage: number;
+  recoveryEvents: EnergyEvent[];
+  mealTimes: Time[];
+  input: ProductionStats;
+  pokemonWithAverageProduce: PokemonProduce;
+  sneakySnackBerries: BerrySet;
+  monteCarloIterations: number;
+}) {
+  const {
+    dayInfo,
+    helpFrequency,
+    skillPercentage,
+    recoveryEvents,
+    mealTimes,
+    input,
+    pokemonWithAverageProduce,
+    sneakySnackBerries,
+    monteCarloIterations,
+  } = params;
+
+  let oddsOfNightSkillProc = 0;
+  let nrOfDaySkillProcs = 0;
+  let nrOfDayHelps = 0;
+
+  // run Monte Carlo simulation to estimate skill activations
+  if (
+    pokemonWithAverageProduce.pokemon.skill.unit === 'energy' ||
+    pokemonWithAverageProduce.pokemon.skill === mainskill.METRONOME
+  ) {
+    const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps } = monteCarlo({
+      dayInfo,
+      helpFrequency,
+      skillPercentage,
+      pokemon: pokemonWithAverageProduce.pokemon,
+      recoveryEvents,
+      mealTimes,
+      monteCarloIterations,
+    });
+    nrOfDaySkillProcs = averageDailySkillProcs;
+    oddsOfNightSkillProc = averageNightlySkillProcOdds;
+    nrOfDayHelps = dayHelps;
+  } else {
+    const { detailedProduce } = simulation({
+      dayInfo,
+      input,
+      helpFrequency,
+      pokemonWithAverageProduce,
+      sneakySnackBerries,
+      recoveryEvents: JSON.parse(JSON.stringify(recoveryEvents)),
+      skillActivations: [],
+      mealTimes: JSON.parse(JSON.stringify(mealTimes)),
+    });
+    const { dayHelps, nightHelps } = detailedProduce;
+    nrOfDaySkillProcs = calculateSkillProcs(dayHelps ?? 0, skillPercentage);
+    oddsOfNightSkillProc = calculateOddsAtLeastOneSkillProc({ skillPercentage, helps: nightHelps });
+    nrOfDayHelps = dayHelps;
+  }
+
+  return scheduleSkillEvents({
+    pokemonWithAverageProduce,
+    oddsOfNightSkillProc,
+    nrOfDaySkillProcs,
+    nrOfDayHelps,
+  });
 }

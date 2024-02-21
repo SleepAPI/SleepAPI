@@ -27,6 +27,9 @@ describe('chooseIngredientSets', () => {
             berry: berry.BELUE,
           },
           spilledIngredients: [],
+          dayHelps: 0,
+          nightHelps: 0,
+          averageTotalSkillProcs: 0,
         },
         pokemonCombination: {
           pokemon: pokemon.PINSIR,

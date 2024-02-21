@@ -18,14 +18,7 @@ import {
 
 describe('getAllOptimalIngredientPokemonProduce', () => {
   it('shall calculate optimal produce for all optimal pokemon', () => {
-    const islands = {
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
-      lapis: false,
-    };
-
-    const data = getAllOptimalIngredientPokemonProduce(false, islands);
+    const data = getAllOptimalIngredientPokemonProduce({ limit50: false, cheer: 0, e4e: 0, monteCarloIterations: 1 });
     const pinsirData = data.filter((entry) => entry.pokemonCombination.pokemon === pokemon.PINSIR);
     expect(pinsirData).toHaveLength(6);
   });
@@ -37,12 +30,6 @@ describe('calculateMealContributionFor', () => {
     const pkmn = pokemon.GENGAR;
 
     const limit50 = false;
-    const islands = {
-      cyan: false,
-      taupe: false,
-      snowdrop: false,
-      lapis: false,
-    };
 
     const { detailedProduce } = setupAndRunProductionSimulation({
       pokemonCombination: {
@@ -58,6 +45,7 @@ describe('calculateMealContributionFor', () => {
         nature: nature.RASH,
         subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
         e4e: 0,
+        cheer: 0,
         erb: 0,
         camp: false,
         helpingBonus: 0,
@@ -65,9 +53,15 @@ describe('calculateMealContributionFor', () => {
         mainBedtime: { hour: 21, minute: 30, second: 0 },
         mainWakeup: { hour: 6, minute: 0, second: 0 },
       },
+      monteCarloIterations: 1,
     });
 
-    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(limit50, islands);
+    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce({
+      limit50,
+      cheer: 0,
+      e4e: 0,
+      monteCarloIterations: 1,
+    });
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
 
     const memoizedSetCover: SetCover = new SetCover(reverseIndex, memo);

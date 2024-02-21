@@ -10,6 +10,7 @@ export interface ProductionRequest {
   nature: string;
   subskills: string[];
   e4e: number;
+  cheer: number;
   helpingbonus: number;
   camp: boolean;
   erb: number;
