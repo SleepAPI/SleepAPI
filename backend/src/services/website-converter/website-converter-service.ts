@@ -160,7 +160,7 @@ class WebsiteConverterServiceImpl {
           (member) =>
             `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
               member.detailedProduce.produce.ingredients
-            )}`
+            )} (${roundDown(member.detailedProduce.averageTotalSkillProcs, 1)} skill procs)`
         )
         .join('\n')}`,
     }));
