@@ -188,9 +188,10 @@ function goToProductionCalculator() {
     nature: document.getElementById('nature').value,
     subskills: checkedValues,
     e4e: +document.getElementById('e4e').value,
+    cheer: 0, // TODO: hard-coded
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
-    erb: +document.getElementById('erb').value, // TODO: hard-coded
+    erb: +document.getElementById('erb').value,
     recoveryincense: false, // TODO: hard-coded
     mainBedtime: document.getElementById('mainBedtime').value,
     mainWakeup: document.getElementById('mainWakeup').value,

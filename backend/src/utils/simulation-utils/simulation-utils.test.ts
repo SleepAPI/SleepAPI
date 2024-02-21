@@ -1,9 +1,10 @@
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { nature, pokemon } from 'sleepapi-common';
+import { mainskill, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_PRODUCE } from '../test-utils/defaults';
 import { finishSimulation, startDayAndEnergy, startNight } from './simulation-utils';
 
@@ -19,9 +20,10 @@ describe('startDayAndEnergy', () => {
     const pkmn = pokemon.PINSIR;
     const input: ProductionStats = MOCKED_OPTIMAL_PRODUCTION_STATS;
     const recoveryEvents: EnergyEvent[] = [];
+    const skillActivations: SkillActivation[] = [];
 
-    expect(startDayAndEnergy(dayInfo, pkmn, input, recoveryEvents, eventLog)).toBe(100);
-    expect(eventLog).toHaveLength(5);
+    expect(startDayAndEnergy(dayInfo, pkmn, input, recoveryEvents, skillActivations, eventLog)).toBe(100);
+    expect(eventLog).toHaveLength(6);
   });
 });
 
@@ -38,6 +40,13 @@ describe('finishSimulation', () => {
   it('shall push simulation end events', () => {
     const eventLog: ScheduledEvent[] = [];
     const summary: Summary = {
+      skill: mainskill.CHARGE_STRENGTH_S,
+      skillProcs: 11,
+      skillEnergyValue: 11,
+      skillProduceValue: MOCKED_PRODUCE,
+      skillStrengthValue: 11,
+      skillDreamShardValue: 11,
+      skillPotSizeValue: 11,
       averageEnergy: 0,
       averageFrequency: 0,
       helpsAfterSS: 0,

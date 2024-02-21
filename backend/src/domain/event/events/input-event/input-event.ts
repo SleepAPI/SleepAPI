@@ -9,9 +9,8 @@ export abstract class InputEvent extends ScheduledEvent {
   abstract input: ProductionStats;
 }
 
-export class PokemonInputEvent extends ScheduledEvent {
+export class PokemonInputEvent extends InputEvent {
   time: Time;
-  type: EventType = 'info';
   description: string;
 
   input: ProductionStats;
@@ -40,9 +39,8 @@ export class PokemonInputEvent extends ScheduledEvent {
   }
 }
 
-export class TeamInputEvent extends ScheduledEvent {
+export class TeamInputEvent extends InputEvent {
   time: Time;
-  type: EventType = 'info';
   description: string;
 
   input: ProductionStats;
@@ -68,9 +66,8 @@ export class TeamInputEvent extends ScheduledEvent {
   }
 }
 
-export class PlayerInputEvent extends ScheduledEvent {
+export class PlayerInputEvent extends InputEvent {
   time: Time;
-  type: EventType = 'info';
   description: string;
 
   input: ProductionStats;

@@ -14,12 +14,12 @@ import { extractSubskillsBasedOnLevel } from '../../utils/subskill-utils/subskil
 export default class OptimalController extends Controller {
   @Post('meal/flexible')
   public getFlexiblePokemon(@Body() input: InputProductionStatsRequest) {
-    return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input));
+    return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input), 500);
   }
 
   @Post('meal/{name}')
   public getOptimalPokemonForMealRaw(@Path() name: string, @Body() input: InputProductionStatsRequest) {
-    return findOptimalSetsForMeal(name, this.#parseInputProductionStatsRequest(input));
+    return findOptimalSetsForMeal(name, this.#parseInputProductionStatsRequest(input), 500);
   }
 
   #parseInputProductionStatsRequest(input: InputProductionStatsRequest): InputProductionStats {
@@ -27,10 +27,11 @@ export default class OptimalController extends Controller {
 
     return {
       level,
-      nature: getNature(input.nature ?? nature.RASH.name),
+      nature: getNature(input.nature ?? nature.QUIET.name),
       subskills: input.subskills ? extractSubskillsBasedOnLevel(level, input.subskills) : undefined,
       berries: getBerriesForIsland(findIslandForName(input.island)),
       e4e: input.e4e ?? 0,
+      cheer: input.cheer ?? 0,
       helpingBonus: input.helpingbonus ?? 0,
       camp: input.camp ?? false,
       erb: input.erb ?? 0,

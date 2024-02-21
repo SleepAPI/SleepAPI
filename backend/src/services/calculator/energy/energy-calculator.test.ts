@@ -29,6 +29,7 @@ describe('calculateStartingEnergy', () => {
     const { energyLeftInMorning, energyRecovered, startingEnergy } = calculateStartingEnergy({
       dayPeriod: mainSleep,
       recoveryEvents: [],
+      skillActivations: [],
     });
     expect(startingEnergy).toBe(88);
     expect(energyLeftInMorning).toBe(0);
@@ -57,6 +58,7 @@ describe('calculateStartingEnergy', () => {
     const { energyLeftInMorning, energyRecovered, startingEnergy } = calculateStartingEnergy({
       dayPeriod: mainSleep,
       recoveryEvents: [],
+      skillActivations: [],
     });
     expect(startingEnergy).toBe(100);
     expect(energyLeftInMorning).toBe(0);
@@ -96,6 +98,7 @@ describe('calculateStartingEnergy', () => {
     const { energyLeftInMorning, energyRecovered, startingEnergy } = calculateStartingEnergy({
       dayPeriod: mainSleep,
       recoveryEvents: e4e,
+      skillActivations: [],
     });
     expect(startingEnergy).toBe(88);
     expect(energyRecovered).toBe(88);
@@ -154,6 +157,7 @@ describe('calculateStartingEnergy', () => {
     const { energyLeftInMorning, energyRecovered, startingEnergy } = calculateStartingEnergy({
       dayPeriod: mainSleep,
       recoveryEvents: e4e,
+      skillActivations: [],
     });
     expect(startingEnergy).toBe(100);
     expect(energyLeftInMorning).toBe(10);
@@ -182,6 +186,7 @@ describe('calculateStartingEnergy', () => {
     const { startingEnergy, energyLeftInMorning, energyRecovered } = calculateStartingEnergy({
       dayPeriod: mainSleep,
       recoveryEvents: [],
+      skillActivations: [],
     });
     expect(startingEnergy).toBe(100);
     expect(energyLeftInMorning).toBe(0);

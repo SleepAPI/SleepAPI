@@ -1,5 +1,5 @@
-import { pokemon, subskill } from 'sleepapi-common';
-import { calculateNrOfBerriesPerDrop } from './berry-calculator';
+import { berry, pokemon, subskill } from 'sleepapi-common';
+import { calculateNrOfBerriesPerDrop, emptyBerrySet } from './berry-calculator';
 
 describe('calculateNrOfBerriesPerDrop', () => {
   it('shall give 2 berries for berry specialty', () => {
@@ -16,5 +16,19 @@ describe('calculateNrOfBerriesPerDrop', () => {
 
   it('shall give 2 berries for skill specialty with BFS', () => {
     expect(calculateNrOfBerriesPerDrop(pokemon.GALLADE, [subskill.BERRY_FINDING_S])).toBe(2);
+  });
+});
+
+describe('emptyBerrySet', () => {
+  it('shall give empty berries', () => {
+    expect(emptyBerrySet(berry.BELUE)).toMatchInlineSnapshot(`
+      {
+        "amount": 0,
+        "berry": {
+          "name": "BELUE",
+          "value": 33,
+        },
+      }
+    `);
   });
 });

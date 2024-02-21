@@ -88,7 +88,7 @@ describe('getOptimalIngredientStats', () => {
     const level = 42;
     expect(getOptimalIngredientStats(level, pokemon.BLASTOISE)).toEqual({
       level,
-      nature: nature.RASH,
+      nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
     });
   });

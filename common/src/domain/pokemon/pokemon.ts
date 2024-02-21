@@ -19,7 +19,7 @@ export interface Pokemon {
   frequency: number;
   ingredientPercentage: number;
   skillPercentage: number;
-  berry: Berry; // TODO: should be BerrySet
+  berry: Berry;
   carrySize: number;
   maxCarrySize: number;
   ingredient0: IngredientSet;

@@ -1,10 +1,18 @@
 import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
 import { parseTime } from '@src/utils/time-utils/time-utils';
+import { mainskill } from 'sleepapi-common';
 import { Summary, SummaryEvent } from './summary-event';
 
 describe('SummaryEvent', () => {
   it('summary event shall format correctly', () => {
     const summary: Summary = {
+      skill: mainskill.CHARGE_STRENGTH_S,
+      skillProcs: 11,
+      skillEnergyValue: 11,
+      skillProduceValue: MOCKED_PRODUCE,
+      skillStrengthValue: 11,
+      skillDreamShardValue: 11,
+      skillPotSizeValue: 11,
       averageEnergy: 0,
       averageFrequency: 1,
       helpsAfterSS: 2,
@@ -25,6 +33,12 @@ describe('SummaryEvent', () => {
       [06:00:00][pokemon]
       Total produce: 2 GREPA + 1 Apple
       Spilled produce: 1 Apple
+      Charge Strength S activations: 11
+      Energy skill value: 11 energy
+      Produce skill value: 2 GREPA + 1 Apple
+      Strength skill value: 11 strength
+      Dream shards skill value: 11 shards
+      Pot size skill value: 11 pot size
       Total helps: 5
       Helps before sneaky snacking: 3
       Helps spent sneaky snacking: 2

@@ -16,6 +16,7 @@
 
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import { calculateDuration } from '@src/utils/time-utils/time-utils';
@@ -24,15 +25,19 @@ import { subskill } from 'sleepapi-common';
 /**
  * Calculates a delta left at the end of the day and how that translates into tomorrow's starting energy
  */
-export function calculateStartingEnergy(params: { dayPeriod: SleepInfo; recoveryEvents: EnergyEvent[] }) {
-  const { dayPeriod, recoveryEvents } = params;
+export function calculateStartingEnergy(params: {
+  dayPeriod: SleepInfo;
+  recoveryEvents: EnergyEvent[];
+  skillActivations: SkillActivation[];
+}) {
+  const { dayPeriod, recoveryEvents, skillActivations } = params;
 
   const sleepPeriod: TimePeriod = { start: dayPeriod.period.end, end: dayPeriod.period.start };
   const recoveryMainSleep = calculateSleepEnergyRecovery({ ...dayPeriod, period: sleepPeriod });
 
-  const delta = calculateEnergyLeftInMorning(recoveryMainSleep, recoveryEvents);
+  const delta = calculateEnergyLeftInMorning(recoveryMainSleep, recoveryEvents, skillActivations);
   if (delta > 0) {
-    const updatedDelta = calculateEnergyLeftInMorning(100, recoveryEvents);
+    const updatedDelta = calculateEnergyLeftInMorning(100, recoveryEvents, skillActivations);
 
     const energyLeftToRecover = 100 - updatedDelta;
     const energyRecovered = Math.min(energyLeftToRecover, recoveryMainSleep);
@@ -47,10 +52,18 @@ export function calculateStartingEnergy(params: { dayPeriod: SleepInfo; recovery
   }
 }
 
-export function calculateEnergyLeftInMorning(sleepRecovery: number, recoveryEvents: EnergyEvent[]): number {
+export function calculateEnergyLeftInMorning(
+  sleepRecovery: number,
+  recoveryEvents: EnergyEvent[],
+  skillActivations: SkillActivation[]
+): number {
   const energyFromRecoveryEvents = recoveryEvents.reduce((sum, proc) => sum + proc.delta, 0);
+  const energyFromSkillProcs = skillActivations.reduce(
+    (sum, cur) => (sum + cur.skill.unit === 'energy' ? cur.adjustedAmount : 0),
+    0
+  );
 
-  const totalDayRecovery = energyFromRecoveryEvents;
+  const totalDayRecovery = energyFromRecoveryEvents + energyFromSkillProcs;
 
   const totalEnergyLoss = 24 * 6; // 24 hours, 6% lost per hour
 

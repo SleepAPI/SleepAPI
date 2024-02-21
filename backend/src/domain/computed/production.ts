@@ -7,6 +7,7 @@ export interface ProductionStats {
   nature: nature.Nature;
   subskills?: subskill.SubSkill[];
   e4e: number;
+  cheer: number;
   helpingBonus: number;
   camp: boolean;
   erb: number;

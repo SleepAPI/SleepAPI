@@ -167,7 +167,7 @@ export const PIKACHU: Pokemon = {
     { amount: 3, ingredient: FANCY_EGG },
     { amount: 3, ingredient: WARMING_GINGER },
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_STRENGTH_S,
 };
 
 export const PIKACHU_HALLOWEEN: Pokemon = {

@@ -2,9 +2,9 @@ import { IngredientSet, pokemon, recipe } from 'sleepapi-common';
 
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { getBerriesForFilter } from '@src/utils/berry-utils/berry-utils';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
@@ -13,23 +13,20 @@ import {
 } from '../ingredient/ingredient-calculate';
 import { getOptimalIngredientStats } from '../stats/stats-calculator';
 
-export function getAllOptimalIngredientPokemonProduce(
-  limit50: boolean,
-  islands: {
-    cyan: boolean;
-    taupe: boolean;
-    snowdrop: boolean;
-    lapis: boolean;
-  }
-): CustomPokemonCombinationWithProduce[] {
+export function getAllOptimalIngredientPokemonProduce(params: {
+  limit50: boolean;
+  e4e: number;
+  cheer: number;
+  monteCarloIterations: number;
+}): CustomPokemonCombinationWithProduce[] {
+  const { limit50, e4e, cheer, monteCarloIterations } = params;
+  const level = limit50 ? 50 : 60;
+
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
 
-  const allowedBerries = getBerriesForFilter(islands);
-  const level = limit50 ? 50 : 60;
-  const pokemonForBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => allowedBerries.includes(pokemon.berry));
-
   const teamStats = {
-    e4e: 0,
+    e4e,
+    cheer,
     erb: 0,
     camp: false,
     helpingBonus: 0,
@@ -38,20 +35,27 @@ export function getAllOptimalIngredientPokemonProduce(
     mainWakeup: { hour: 6, minute: 0, second: 0 },
   };
 
-  for (const pokemon of pokemonForBerries) {
+  const allPokemon = pokemon.OPTIMAL_POKEDEX;
+  for (const pokemon of allPokemon) {
     const customStats = getOptimalIngredientStats(level, pokemon);
 
+    let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const pokemonCombination = {
         pokemon: pokemon,
         ingredientList,
       };
 
-      const { detailedProduce } = setupAndRunProductionSimulation({
+      const { detailedProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination,
         input: { ...customStats, ...teamStats },
+        monteCarloIterations,
+        // TODO: can probably optimize by not shifting in simulator
+        preGeneratedSkillActivations:
+          preGeneratedSkillActivations && JSON.parse(JSON.stringify(preGeneratedSkillActivations)),
       });
 
+      preGeneratedSkillActivations = skillActivations;
       allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, customStats });
     }
   }

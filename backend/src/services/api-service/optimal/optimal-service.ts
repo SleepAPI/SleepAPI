@@ -24,8 +24,8 @@ const FLEXIBLE_SET_COVER_TIMEOUT = 3000;
  *
  * API: /api/optimal/meal
  */
-export function findOptimalSetsForMeal(mealName: string, input: InputProductionStats) {
-  return customOptimalSet(mealName, input, TEAMFINDER_SET_COVER_TIMEOUT);
+export function findOptimalSetsForMeal(mealName: string, input: InputProductionStats, monteCarloIterations: number) {
+  return customOptimalSet(mealName, input, TEAMFINDER_SET_COVER_TIMEOUT, monteCarloIterations);
 }
 
 /**
@@ -33,8 +33,11 @@ export function findOptimalSetsForMeal(mealName: string, input: InputProductionS
  *
  * API: /api/optimal/meal/flexible
  */
-export function getOptimalFlexiblePokemon(input: InputProductionStats): OptimalFlexibleResult[] {
-  const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input);
+export function getOptimalFlexiblePokemon(
+  input: InputProductionStats,
+  monteCarloIterations: number
+): OptimalFlexibleResult[] {
+  const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input, monteCarloIterations);
 
   const pokemonOccurenceInOptimalSolutions: Map<string, Contribution[]> = new Map();
   for (const { meal, teams } of flexiblePokemonCombinations) {
@@ -91,8 +94,8 @@ export function getOptimalFlexiblePokemon(input: InputProductionStats): OptimalF
 /**
  * Finds all optimal team solutions for all recipes for given input production stats
  */
-function generateOptimalTeamSolutions(input: InputProductionStats) {
-  const pokemonProduction = calculateOptimalProductionForSetCover(input);
+function generateOptimalTeamSolutions(input: InputProductionStats, monteCarloIterations: number) {
+  const pokemonProduction = calculateOptimalProductionForSetCover(input, monteCarloIterations);
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 
   const cache = new Map();
@@ -115,10 +118,15 @@ function generateOptimalTeamSolutions(input: InputProductionStats) {
   return optimalTeamSolutions;
 }
 
-function customOptimalSet(mealName: string, inputStats: InputProductionStats, timeout: number) {
+function customOptimalSet(
+  mealName: string,
+  inputStats: InputProductionStats,
+  timeout: number,
+  monteCarloIterations: number
+) {
   const meal = getMeal(mealName);
 
-  const pokemonProduction = calculateOptimalProductionForSetCover(inputStats);
+  const pokemonProduction = calculateOptimalProductionForSetCover(inputStats, monteCarloIterations);
 
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 

@@ -56,7 +56,7 @@ export function invertNatureFrequecy(nature: nature.Nature) {
 export function getOptimalIngredientStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
   return {
     level,
-    nature: nature.RASH,
+    nature: nature.QUIET,
     subskills: subskillsForFilter('optimal', level, pokemon),
   };
 }

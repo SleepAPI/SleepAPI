@@ -15,32 +15,44 @@ export function getDefaultRecoveryEvents(
   period: TimePeriod,
   nature: nature.Nature,
   e4eProcs: number,
+  cheerProcs: number,
   nap?: SleepInfo
 ): EnergyEvent[] {
   const recoveryEvents: EnergyEvent[] = [];
 
   scheduleNapEvent(recoveryEvents, nap);
-  scheduleEnergyForEveryoneEvents(recoveryEvents, period, e4eProcs, nature);
+  scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, cheerProcs, nature);
 
   return recoveryEvents;
 }
 
-export function scheduleEnergyForEveryoneEvents(
+export function scheduleTeamEnergyEvents(
   recoveryEvents: ScheduledEvent[],
   period: TimePeriod,
   e4eProcs: number,
+  cheerProcs: number,
   nature: nature.Nature
 ): ScheduledEvent[] {
   if (e4eProcs === 0) {
     return recoveryEvents;
   }
 
-  const e4ePeriods: TimePeriod[] = divideTimePeriod(period, e4eProcs);
+  const e4ePeriods: TimePeriod[] = divideTimePeriod(period, Math.floor(e4eProcs));
   for (const period of e4ePeriods) {
     const event: EnergyEvent = new EnergyEvent({
       time: period.start,
       description: 'E4E',
       delta: mainskill.ENERGY_FOR_EVERYONE.amount * nature.energy,
+    });
+    recoveryEvents.push(event);
+  }
+
+  const cheerPeriods: TimePeriod[] = divideTimePeriod(period, Math.floor(cheerProcs));
+  for (const period of cheerPeriods) {
+    const event: EnergyEvent = new EnergyEvent({
+      time: period.start,
+      description: 'Energizing Cheer',
+      delta: (mainskill.ENERGIZING_CHEER_S.amount * nature.energy) / 5,
     });
     recoveryEvents.push(event);
   }

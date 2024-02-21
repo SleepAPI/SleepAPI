@@ -3,10 +3,18 @@ import { Time } from '@src/domain/time/time';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { prettifyTime } from '@src/utils/time-utils/time-utils';
-import { IngredientSet } from 'sleepapi-common';
+import { IngredientSet, mainskill } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export interface Summary {
+  skill: mainskill.MainSkill;
+  skillProcs: number;
+  skillEnergyValue: number;
+  skillProduceValue: Produce;
+  skillStrengthValue: number;
+  skillDreamShardValue: number;
+  skillPotSizeValue: number;
+
   nrOfHelps: number;
   helpsBeforeSS: number;
   helpsAfterSS: number;
@@ -42,6 +50,13 @@ export class SummaryEvent extends ScheduledEvent {
 
   format(): string {
     const {
+      skill,
+      skillProcs,
+      skillEnergyValue,
+      skillProduceValue,
+      skillStrengthValue,
+      skillDreamShardValue,
+      skillPotSizeValue,
       nrOfHelps,
       helpsBeforeSS,
       helpsAfterSS,
@@ -56,13 +71,36 @@ export class SummaryEvent extends ScheduledEvent {
       totalProduce.ingredients.length > 0 ? `+ ${prettifyIngredientDrop(totalProduce.ingredients)}` : ''
     }`;
 
-    const spilledProduce = `${spilledIngredients.length > 0 ? `${prettifyIngredientDrop(spilledIngredients)}` : ''}`;
+    const prettifiedSkillProduce: string[] = [];
+    if (skillProduceValue.berries.amount > 0) {
+      prettifiedSkillProduce.push(
+        `${roundDown(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
+      );
+    }
+    if (skillProduceValue.ingredients.length > 0) {
+      prettifiedSkillProduce.push(
+        `${prettifyIngredientDrop(
+          skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
+            amount: roundDown(amount, 1),
+            ingredient,
+          }))
+        )}`
+      );
+    }
+
+    const spilledProduce = `${spilledIngredients.length > 0 ? `${prettifyIngredientDrop(spilledIngredients)}` : '-'}`;
 
     return (
       `-----\n` +
       `[${prettifyTime(this.time)}][${this.description}]\n` +
       `Total produce: ${prettifiedProduce}\n` +
       `Spilled produce: ${spilledProduce}\n` +
+      `${skill.name} activations: ${roundDown(skillProcs, 2)}\n` +
+      (skillEnergyValue > 0 ? `Energy skill value: ${roundDown(skillEnergyValue, 1)} energy\n` : '') +
+      (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
+      (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
+      (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
       `Total helps: ${nrOfHelps}\n` +
       `Helps before sneaky snacking: ${helpsBeforeSS}\n` +
       `Helps spent sneaky snacking: ${helpsAfterSS}\n` +
@@ -71,7 +109,7 @@ export class SummaryEvent extends ScheduledEvent {
       }\n` +
       `Average energy: ${roundDown(averageEnergy, 1)}%\n` +
       `Average frequency: ${Math.floor(averageFrequency)}\n` +
-      `Total recovery: ${totalRecovery}\n`
+      `Total recovery: ${roundDown(totalRecovery, 1)}\n`
     );
   }
 }

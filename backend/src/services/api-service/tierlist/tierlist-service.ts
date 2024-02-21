@@ -31,16 +31,12 @@ class TierlistImpl {
     Logger.info('Generating cooking tier lists');
     const details: CreateTierListRequestBody = {
       curry: false,
-      cyan: false,
       dessert: false,
       limit50: false,
       minRecipeBonus: 0,
       maxPotSize: undefined,
       nrOfMeals: 3,
       salad: false,
-      taupe: false,
-      snowdrop: false,
-      lapis: false,
     };
 
     const basePathCurrent = 'src/data/tierlist/current';
@@ -157,11 +153,18 @@ class TierlistImpl {
   }
 
   public generateTierListData(details: CreateTierListRequestBody) {
-    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce(details.limit50, {
-      cyan: details.cyan,
-      taupe: details.taupe,
-      snowdrop: details.snowdrop,
-      lapis: details.lapis,
+    // TODO: we can calculate this once and use it for 90% of pokemon, but for any pokemon that affects team mates (e4e, cheer, xtra helpful, metronome, more?)
+    // TODO: we have to calculate their skill procs and then re-calculate all other mons, simulation-service takes e4e and cheer as input now
+
+    // TODO: for xtra helpful we can probably just take procs x averageProduce and add it
+    // TODO: for e4e/cheer we have to rerun all sims
+
+    // TODO: for both these cases we have to send in a different reverse index and cache
+    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce({
+      limit50: details.limit50,
+      e4e: 0,
+      cheer: 0,
+      monteCarloIterations: 500,
     });
 
     const mealsForFilter = getMealsForFilter(details);

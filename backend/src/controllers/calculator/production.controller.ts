@@ -12,7 +12,7 @@ import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 export default class ProductionController extends Controller {
   @Post('production/{name}')
   public async calculatePokemonProduction(@Path() name: string, @Body() body: ProductionRequest) {
-    return calculatePokemonProduction(name, this.#parseInput(body), body.ingredientSet);
+    return calculatePokemonProduction(name, this.#parseInput(body), body.ingredientSet, 5000);
   }
 
   #parseInput(input: ProductionRequest): ProductionStats {
@@ -22,6 +22,7 @@ export default class ProductionController extends Controller {
       nature: getNature(input.nature),
       subskills: extractSubskillsBasedOnLevel(level, input.subskills),
       e4e: queryAsNumber(input.e4e) ?? 0,
+      cheer: queryAsNumber(input.cheer) ?? 0,
       helpingBonus: queryAsNumber(input.helpingbonus) ?? 0,
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,

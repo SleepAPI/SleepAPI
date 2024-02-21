@@ -13,8 +13,8 @@ import {
   inventoryFull,
   recoverEnergyEvents,
   recoverFromMeal,
-  scheduleEnergyForEveryoneEvents,
   scheduleNapEvent,
+  scheduleTeamEnergyEvents,
 } from './event-utils';
 
 describe('scheduleNapEvent', () => {
@@ -59,7 +59,7 @@ describe('scheduleEnergyForEveryoneEvents', () => {
   it('does not add events when e4eProcs is 0', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
-    const updatedRecoveryEvents = scheduleEnergyForEveryoneEvents(recoveryEvents, period, 0, nature.BASHFUL);
+    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, 0, 0, nature.BASHFUL);
 
     expect(updatedRecoveryEvents.length).toBe(0);
   });
@@ -68,7 +68,7 @@ describe('scheduleEnergyForEveryoneEvents', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 4;
-    const updatedRecoveryEvents = scheduleEnergyForEveryoneEvents(recoveryEvents, period, e4eProcs, nature.RELAXED);
+    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, 0, nature.RELAXED);
 
     expect(updatedRecoveryEvents.length).toBe(e4eProcs);
     updatedRecoveryEvents.forEach((event) => {
@@ -76,6 +76,25 @@ describe('scheduleEnergyForEveryoneEvents', () => {
       const energyEvent = event as EnergyEvent;
       expect(energyEvent.description).toEqual('E4E');
       expect(energyEvent.delta).toEqual(21.6);
+    });
+  });
+
+  it('adds correct number of events based on e4eProcs and cheerProcs', () => {
+    const recoveryEvents: EnergyEvent[] = [];
+    const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
+    const e4eProcs = 4;
+    const cheerProcs = 4;
+    const updatedRecoveryEvents = scheduleTeamEnergyEvents(
+      recoveryEvents,
+      period,
+      e4eProcs,
+      cheerProcs,
+      nature.RELAXED
+    );
+
+    expect(updatedRecoveryEvents.length).toBe(e4eProcs + cheerProcs);
+    updatedRecoveryEvents.forEach((event) => {
+      expect(event).toBeInstanceOf(EnergyEvent);
     });
   });
 });
@@ -91,7 +110,7 @@ describe('getDefaultRecoveryEvents', () => {
       erb: 0,
     };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, nap);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0, nap);
 
     expect(recoveryEvents.length).toBe(3);
   });
@@ -100,7 +119,7 @@ describe('getDefaultRecoveryEvents', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 2;
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0);
 
     expect(recoveryEvents.length).toBe(2);
   });
@@ -114,7 +133,7 @@ describe('getDefaultRecoveryEvents', () => {
       erb: 0,
     };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nap.nature, 0, nap);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nap.nature, 0, 0, nap);
 
     expect(recoveryEvents.length).toBe(1);
   });
@@ -122,7 +141,7 @@ describe('getDefaultRecoveryEvents', () => {
   it('returns an empty array when neither nap nor e4eProcs are provided', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, 0);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, 0, 0);
 
     expect(recoveryEvents.length).toBe(0);
   });

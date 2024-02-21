@@ -123,16 +123,18 @@ function energyChart(log) {
 }
 
 let inventoryChartInstance = null;
-let inventoryTimeHour = null;
 function inventoryChart(log) {
   // skip sneaky snack inventory and spilled ingredients
   const inventoryLogs = log.filter(
-    (entry) => entry.type === 'inventory' && (entry.description === 'Add' || entry.description === 'Empty')
+    (entry) =>
+      entry.type === 'inventory' &&
+      entry.description !== 'Sneaky snack' &&
+      entry.description !== 'Sneaky snack claim' &&
+      entry.description !== 'Spilled ingredients'
   );
   const labels = inventoryLogs.map((entry) => entry.time).map(prettifyTime);
   const data = inventoryLogs.map((entry) => entry.after);
-  const max = inventoryLogs[0].max;
-  inventoryTimeHour = inventoryLogs[0].time.hour;
+  const max = inventoryLogs.reduce((max, cur) => (cur.after > max ? cur.after : max), inventoryLogs[0].after);
 
   const ctx = document.getElementById('inventoryChart').getContext('2d');
   if (inventoryChartInstance) {
