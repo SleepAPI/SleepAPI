@@ -58,7 +58,7 @@ export function activateEnergizingCheer(params: {
     skill,
     adjustedAmount: (skill.amount * adjustedAmount) / divideByRandomAndMetronome,
     nrOfHelpsToActivate,
-    fractionOfProc: adjustedAmount,
+    fractionOfProc: adjustedAmount / metronomeFactor,
   };
 }
 
@@ -86,7 +86,7 @@ export function activateIngredientMagnet(params: {
       berries,
       ingredients: magnetIngredients,
     },
-    fractionOfProc: adjustedAmount,
+    fractionOfProc: adjustedAmount / metronomeFactor,
   };
 }
 
@@ -118,21 +118,8 @@ export function activateExtraHelpful(params: {
     adjustedAmount: countInventory(extraHelpfulProduce),
     nrOfHelpsToActivate,
     adjustedProduce: extraHelpfulProduce,
-    fractionOfProc: adjustedAmount,
+    fractionOfProc: adjustedAmount / metronomeFactor,
   };
-}
-
-export function activateMetronome(params: {
-  nrOfHelpsToActivate: number;
-  adjustedAmount: number;
-  pokemonWithAverageProduce: PokemonProduce;
-  skillActivations: SkillActivation[];
-}) {
-  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
-
-  for (const skillToActivate of skillsToActivate) {
-    createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);
-  }
 }
 
 export function activateNonProduceSkills(params: {
@@ -147,6 +134,19 @@ export function activateNonProduceSkills(params: {
     skill,
     adjustedAmount: (skill.amount * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
-    fractionOfProc: adjustedAmount,
+    fractionOfProc: adjustedAmount / metronomeFactor,
   };
+}
+
+export function activateMetronome(params: {
+  nrOfHelpsToActivate: number;
+  adjustedAmount: number;
+  pokemonWithAverageProduce: PokemonProduce;
+  skillActivations: SkillActivation[];
+}) {
+  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
+
+  for (const skillToActivate of skillsToActivate) {
+    createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);
+  }
 }

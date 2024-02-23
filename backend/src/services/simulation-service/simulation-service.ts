@@ -124,8 +124,8 @@ export function setupAndRunProductionSimulation(params: {
     helpFrequency,
     pokemonWithAverageProduce,
     sneakySnackBerries,
-    recoveryEvents, // TODO: I think we json deep copy this somewhere too, maybe we can avoid the shift
-    skillActivations: JSON.parse(JSON.stringify(skillActivations)), // TODO: optimize by not shifting in simulation
+    recoveryEvents,
+    skillActivations,
     mealTimes,
   });
 
@@ -199,9 +199,9 @@ export function generateSkillActivations(params: {
       helpFrequency,
       pokemonWithAverageProduce,
       sneakySnackBerries,
-      recoveryEvents: JSON.parse(JSON.stringify(recoveryEvents)),
+      recoveryEvents,
       skillActivations: [],
-      mealTimes: JSON.parse(JSON.stringify(mealTimes)),
+      mealTimes,
     });
     const { dayHelps, nightHelps } = detailedProduce;
     nrOfDaySkillProcs = calculateSkillProcs(dayHelps ?? 0, skillPercentage);

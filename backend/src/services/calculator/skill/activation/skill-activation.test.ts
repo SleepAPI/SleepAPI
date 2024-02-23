@@ -108,11 +108,12 @@ describe('activateNonProduceSkills', () => {
       metronomeFactor: mainskill.MAINSKILLS.length - 1,
     };
     const result = activateNonProduceSkills(params);
+    const metronomeFactor = mainskill.MAINSKILLS.length - 1;
     expect(result).toEqual({
       skill: mainskill.INGREDIENT_MAGNET_S,
-      adjustedAmount: mainskill.INGREDIENT_MAGNET_S.amount / (mainskill.MAINSKILLS.length - 1),
+      adjustedAmount: mainskill.INGREDIENT_MAGNET_S.amount / metronomeFactor,
       nrOfHelpsToActivate: 1,
-      fractionOfProc: 1,
+      fractionOfProc: 1 / metronomeFactor,
     });
   });
 
@@ -225,9 +226,13 @@ describe('activateExtraHelpful', () => {
       metronomeFactor: 10,
     };
     const result = activateExtraHelpful(params);
+    const metronomeFactor = 10;
     const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount * 1) / (5 * 10);
     const expectedIngredientsAmount = [
-      { ingredient: ingredient.BEAN_SAUSAGE, amount: (20 * mainskill.EXTRA_HELPFUL_S.amount * 1) / (5 * 10) },
+      {
+        ingredient: ingredient.BEAN_SAUSAGE,
+        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount * 1) / (5 * metronomeFactor),
+      },
     ];
     const expectedAdjustedAmount =
       expectedBerriesAmount + expectedIngredientsAmount.reduce((sum, item) => sum + item.amount, 0);
@@ -240,7 +245,7 @@ describe('activateExtraHelpful', () => {
         berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
         ingredients: expectedIngredientsAmount,
       },
-      fractionOfProc: 1,
+      fractionOfProc: 1 / metronomeFactor,
     });
   });
 });
@@ -255,7 +260,9 @@ describe('activateIngredientMagnet', () => {
       metronomeFactor: 2,
     };
     const result = activateIngredientMagnet(params);
-    const expectedAmount = (mainskill.INGREDIENT_MAGNET_S.amount * 0.5) / (ingredient.INGREDIENTS.length * 2);
+    const metronomeFactor = 2;
+    const expectedAmount =
+      (mainskill.INGREDIENT_MAGNET_S.amount * 0.5) / (ingredient.INGREDIENTS.length * metronomeFactor);
     const expectedIngredients = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
       amount: expectedAmount,
@@ -269,7 +276,7 @@ describe('activateIngredientMagnet', () => {
         berries: berries,
         ingredients: expectedIngredients,
       },
-      fractionOfProc: 0.5,
+      fractionOfProc: 0.5 / metronomeFactor,
     });
   });
 
@@ -308,7 +315,9 @@ describe('activateIngredientMagnet', () => {
       metronomeFactor: 10,
     };
     const result = activateIngredientMagnet(params);
-    const expectedAmount = (mainskill.INGREDIENT_MAGNET_S.amount * 1) / (ingredient.INGREDIENTS.length * 10);
+    const metronomeFactor = 10;
+    const expectedAmount =
+      (mainskill.INGREDIENT_MAGNET_S.amount * 1) / (ingredient.INGREDIENTS.length * metronomeFactor);
     const expectedIngredients = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
       amount: expectedAmount,
@@ -322,7 +331,7 @@ describe('activateIngredientMagnet', () => {
         berries: berries,
         ingredients: expectedIngredients,
       },
-      fractionOfProc: 1,
+      fractionOfProc: 1 / metronomeFactor,
     });
   });
 });
@@ -335,13 +344,14 @@ describe('activateEnergizingCheer', () => {
       metronomeFactor: 2,
     };
     const result = activateEnergizingCheer(params);
-    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount * 0.6) / (5 * 2);
+    const metronomeFactor = 2;
+    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount * 0.6) / (5 * metronomeFactor);
 
     expect(result).toEqual({
       skill: mainskill.ENERGIZING_CHEER_S,
       adjustedAmount: expectedAdjustedAmount,
       nrOfHelpsToActivate: 3,
-      fractionOfProc: 0.6,
+      fractionOfProc: 0.6 / metronomeFactor,
     });
   });
 
@@ -368,13 +378,14 @@ describe('activateEnergizingCheer', () => {
       metronomeFactor: 8,
     };
     const result = activateEnergizingCheer(params);
-    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount * 1) / (5 * 8);
+    const metronomeFactor = 8;
+    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount * 1) / (5 * metronomeFactor);
 
     expect(result).toEqual({
       skill: mainskill.ENERGIZING_CHEER_S,
       adjustedAmount: expectedAdjustedAmount,
       nrOfHelpsToActivate: 2,
-      fractionOfProc: 1,
+      fractionOfProc: 1 / metronomeFactor,
     });
   });
 });

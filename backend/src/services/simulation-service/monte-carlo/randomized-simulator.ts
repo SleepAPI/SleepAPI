@@ -41,7 +41,7 @@ export function randomizedSimulation(params: {
   skillPercentage: number;
   pokemon: pokemon.Pokemon;
   recoveryEvents: EnergyEvent[];
-  mealTimes?: Time[];
+  mealTimes: Time[];
   energyFromYesterday: number;
   nightHelpsFromYesterday: number;
 }): MonteCarloResult {
@@ -66,6 +66,10 @@ export function randomizedSimulation(params: {
   let skillProcsNight = 0;
   let dayHelps = 0;
   let nightHelps = 0;
+
+  // event array indices
+  let energyIndex = 0;
+  let mealIndex = 0;
 
   // Set up start values
   let currentEnergy = Math.min(
@@ -96,8 +100,25 @@ export function randomizedSimulation(params: {
   // --- DAY ---
   let period = dayInfo.period;
   while (timeWithinPeriod(currentTime, period)) {
-    const mealRecovery = recoverFromMeal({ currentEnergy, currentTime, period, eventLog, mealTimes });
-    const eventRecovery = recoverEnergyEvents({ energyEvents, currentTime, currentEnergy, period, eventLog });
+    const { recoveredAmount: mealRecovery, mealsProcessed } = recoverFromMeal({
+      currentEnergy,
+      currentTime,
+      period,
+      eventLog,
+      mealTimes,
+      mealIndex,
+    });
+    const { recoveredEnergy: eventRecovery, energyEventsProcessed } = recoverEnergyEvents({
+      energyEvents,
+      energyIndex,
+      currentTime,
+      currentEnergy,
+      period,
+      eventLog,
+    });
+
+    mealIndex = mealsProcessed;
+    energyIndex = energyEventsProcessed;
 
     // check if help has occured
     if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {

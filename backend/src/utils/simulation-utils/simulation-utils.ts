@@ -17,6 +17,7 @@ export function startDayAndEnergy(
   dayInfo: SleepInfo,
   pokemon: pokemon.Pokemon,
   input: ProductionStats,
+  inventoryLimit: number,
   recoveryEvents: EnergyEvent[],
   skillActivations: SkillActivation[],
   eventLog: ScheduledEvent[]
@@ -62,6 +63,7 @@ export function startDayAndEnergy(
     description: 'Start inventory',
     before: 0,
     delta: 0,
+    max: inventoryLimit,
   });
 
   eventLog.push(startingDayEvent);
@@ -118,6 +120,14 @@ export function finishSimulation(params: {
     sleepState: 'end',
   });
 
+  const addInventoryEvent: InventoryEvent = new InventoryEvent({
+    time: period.end,
+    description: 'Status',
+    delta: 0,
+    before: countInventory(currentInventory),
+    max: inventoryLimit,
+  });
+
   const sneakySnackClaim: InventoryEvent = new InventoryEvent({
     time: period.end,
     description: 'Sneaky snack claim',
@@ -140,6 +150,7 @@ export function finishSimulation(params: {
   });
 
   eventLog.push(endingDay);
+  eventLog.push(addInventoryEvent);
   eventLog.push(sneakySnackClaim);
   eventLog.push(morningEmptyInventoryEvent);
   eventLog.push(summaryEvent);

@@ -19,6 +19,7 @@ describe('simulator', () => {
         { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 },
       ],
       sneakySnackBerries: emptyBerrySet(berry.BELUE),
+      mealTimes: [],
     });
     expect(log.length).toBeGreaterThan(0);
     const summaryLog = log.at(-1) as SummaryEvent;

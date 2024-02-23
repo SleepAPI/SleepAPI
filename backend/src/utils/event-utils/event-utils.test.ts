@@ -158,11 +158,19 @@ describe('recoverEnergyEvents', () => {
     ];
     const eventLog: EnergyEvent[] = [];
 
-    const recoveredEnergy = recoverEnergyEvents({ energyEvents, currentTime, currentEnergy, period, eventLog });
+    const { recoveredEnergy, energyEventsProcessed } = recoverEnergyEvents({
+      energyEvents,
+      currentTime,
+      currentEnergy,
+      period,
+      eventLog,
+      energyIndex: 0,
+    });
 
+    expect(energyEventsProcessed).toBe(2);
     expect(recoveredEnergy).toBe(50);
     expect(eventLog.length).toBe(2);
-    expect(energyEvents.length).toBe(0);
+    expect(energyEvents.length).toBe(2);
   });
 
   it('does not recover energy for events outside the period', () => {
@@ -174,28 +182,43 @@ describe('recoverEnergyEvents', () => {
     ];
     const eventLog: EnergyEvent[] = [];
 
-    const recoveredEnergy = recoverEnergyEvents({ energyEvents, currentTime, currentEnergy, period, eventLog });
+    const { recoveredEnergy, energyEventsProcessed } = recoverEnergyEvents({
+      energyEvents,
+      currentTime,
+      currentEnergy,
+      period,
+      eventLog,
+      energyIndex: 0,
+    });
 
+    expect(energyEventsProcessed).toBe(0);
     expect(recoveredEnergy).toBe(0);
     expect(eventLog.length).toBe(0);
     expect(energyEvents.length).toBe(1);
   });
 
   it('correctly processes multiple events without exceeding energy cap', () => {
-    const currentTime = { hour: 10, minute: 0, second: 0 };
+    const currentTime = { hour: 10, minute: 30, second: 0 };
     const currentEnergy = 140;
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 11, minute: 0, second: 0 } };
     const energyEvents = [
       new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Morning Recovery', delta: 10 }),
-      new EnergyEvent({ time: { hour: 10, minute: 30, second: 0 }, description: 'Mid-Morning Boost', delta: 20 }),
+      new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Mid-Morning Boost', delta: 20 }),
     ];
     const eventLog: EnergyEvent[] = [];
 
-    const recoveredEnergy = recoverEnergyEvents({ energyEvents, currentTime, currentEnergy, period, eventLog });
+    const { recoveredEnergy, energyEventsProcessed } = recoverEnergyEvents({
+      energyEvents,
+      currentTime,
+      currentEnergy,
+      period,
+      eventLog,
+      energyIndex: 0,
+    });
 
-    expect(recoveredEnergy).toBe(10);
-    expect(eventLog.length).toBe(1);
-    expect(energyEvents.length).toBe(1);
+    expect(energyEventsProcessed).toBe(2);
+    expect(recoveredEnergy).toBe(10); // 20 wasted since 150 cap
+    expect(eventLog.length).toBe(2);
   });
 });
 
@@ -207,10 +230,18 @@ describe('recoverFromMeal', () => {
     const mealEvents = [{ hour: 12, minute: 0, second: 0 }];
     const eventLog: EnergyEvent[] = [];
 
-    const recoveredAmount = recoverFromMeal({ currentEnergy, currentTime, period, eventLog, mealTimes: mealEvents });
+    const { recoveredAmount, mealsProcessed } = recoverFromMeal({
+      currentEnergy,
+      currentTime,
+      period,
+      eventLog,
+      mealTimes: mealEvents,
+      mealIndex: 0,
+    });
 
+    expect(mealsProcessed).toBe(1);
     expect(recoveredAmount).toBeGreaterThan(0);
-    expect(mealEvents.length).toBe(0);
+    expect(mealEvents.length).toBe(1);
     expect(eventLog.length).toBe(1);
     expect(eventLog[0].description).toBe('Meal');
   });
@@ -222,9 +253,17 @@ describe('recoverFromMeal', () => {
     const mealEvents = [{ hour: 11, minute: 50, second: 0 }];
     const eventLog: EnergyEvent[] = [];
 
-    const recoveredAmount = recoverFromMeal({ currentEnergy, currentTime, period, eventLog, mealTimes: mealEvents });
+    const { recoveredAmount, mealsProcessed } = recoverFromMeal({
+      currentEnergy,
+      currentTime,
+      period,
+      eventLog,
+      mealTimes: mealEvents,
+      mealIndex: 0,
+    });
 
     expect(recoveredAmount).toBe(0);
+    expect(mealsProcessed).toBe(0);
     expect(mealEvents.length).toBe(1);
     expect(eventLog.length).toBe(0);
   });

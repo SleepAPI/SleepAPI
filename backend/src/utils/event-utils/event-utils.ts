@@ -75,32 +75,37 @@ export function scheduleNapEvent(recoveryEvents: EnergyEvent[], nap?: SleepInfo)
 
 export function recoverEnergyEvents(params: {
   energyEvents: EnergyEvent[];
+  energyIndex: number;
   currentTime: Time;
   currentEnergy: number;
   period: TimePeriod;
   eventLog: ScheduledEvent[];
 }) {
   const { energyEvents, currentTime, currentEnergy, period, eventLog } = params;
+  let { energyIndex } = params;
 
   let recoveredEnergy = 0;
-  while (energyEvents.at(0) && isAfterOrEqualWithinPeriod({ currentTime, eventTime: energyEvents[0].time, period })) {
-    const { delta, description } = energyEvents[0];
+  for (; energyIndex < energyEvents.length; energyIndex++) {
+    const energyEvent = energyEvents[energyIndex];
+    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: energyEvent.time, period })) {
+      const { delta, description } = energyEvent;
 
-    const clampedDelta = currentEnergy + recoveredEnergy + delta > 150 ? 150 - currentEnergy - recoveredEnergy : delta;
+      const clampedDelta =
+        currentEnergy + recoveredEnergy + delta > 150 ? 150 - currentEnergy - recoveredEnergy : delta;
 
-    const energyEvent: EnergyEvent = new EnergyEvent({
-      time: currentTime,
-      description,
-      delta: clampedDelta,
-      before: currentEnergy + recoveredEnergy,
-    });
+      const event: EnergyEvent = new EnergyEvent({
+        time: currentTime,
+        description,
+        delta: clampedDelta,
+        before: currentEnergy + recoveredEnergy,
+      });
 
-    recoveredEnergy += clampedDelta;
-    eventLog.push(energyEvent);
-
-    energyEvents.shift();
+      recoveredEnergy += clampedDelta;
+      eventLog.push(event);
+    } else break;
   }
-  return recoveredEnergy;
+
+  return { recoveredEnergy, energyEventsProcessed: energyIndex };
 }
 
 export function recoverFromMeal(params: {
@@ -108,27 +113,30 @@ export function recoverFromMeal(params: {
   currentTime: Time;
   period: TimePeriod;
   eventLog: ScheduledEvent[];
-  mealTimes?: Time[];
+  mealTimes: Time[];
+  mealIndex: number;
 }) {
   const { currentEnergy, currentTime, period, eventLog, mealTimes } = params;
+  let { mealIndex } = params;
 
   let recoveredAmount = 0;
-  const mealTime = mealTimes?.at(0);
-  if (mealTime && isAfterOrEqualWithinPeriod({ currentTime, eventTime: mealTime, period })) {
-    recoveredAmount = getMealRecoveryAmount(currentEnergy);
+  for (; mealIndex < mealTimes.length; mealIndex++) {
+    const mealTime = mealTimes[mealIndex];
+    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: mealTime, period })) {
+      recoveredAmount = getMealRecoveryAmount(currentEnergy);
 
-    const mealEvent: EnergyEvent = new EnergyEvent({
-      time: mealTime,
-      description: 'Meal',
-      delta: recoveredAmount,
-      before: currentEnergy,
-    });
+      const mealEvent: EnergyEvent = new EnergyEvent({
+        time: mealTime,
+        description: 'Meal',
+        delta: recoveredAmount,
+        before: currentEnergy,
+      });
 
-    mealTimes?.shift(); // Remove the cooked meal
-    eventLog.push(mealEvent);
+      eventLog.push(mealEvent);
+    } else break;
   }
 
-  return recoveredAmount;
+  return { recoveredAmount, mealsProcessed: mealIndex };
 }
 
 export function inventoryFull(params: {

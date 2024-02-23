@@ -4,7 +4,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
 [
   {
     "adjustedAmount": 3.127272727272727,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 43,
@@ -14,7 +14,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 330.6181818181818,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 4546,
@@ -24,7 +24,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 150.25454545454548,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 2066,
@@ -34,7 +34,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 187.8181818181818,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 2582.5,
@@ -44,7 +44,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 1.9636363636363638,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 27,
@@ -54,7 +54,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 91.63636363636364,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 1260,
@@ -64,7 +64,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 114.54545454545455,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 1575,
@@ -74,7 +74,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 0.7272727272727273,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 50,
@@ -84,7 +84,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   },
   {
     "adjustedAmount": 1.309090909090909,
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 18,
@@ -114,7 +114,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
         },
       ],
     },
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 10,
@@ -279,7 +279,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
         },
       ],
     },
-    "fractionOfProc": 0.8,
+    "fractionOfProc": 0.07272727272727274,
     "nrOfHelpsToActivate": 2,
     "skill": {
       "amount": 21,
