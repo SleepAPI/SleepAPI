@@ -18,7 +18,6 @@ import { DetailedProduce, PokemonProduce, Produce } from '@src/domain/combinatio
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
 import { SkillActivation, SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
@@ -60,7 +59,7 @@ export function simulation(params: {
   sneakySnackBerries: BerrySet;
   recoveryEvents: EnergyEvent[];
   skillActivations: SkillActivation[];
-  mealTimes?: Time[];
+  mealTimes: Time[];
 }): { detailedProduce: DetailedProduce; log: ScheduledEvent[] } {
   // Set up input
   const {
@@ -71,7 +70,6 @@ export function simulation(params: {
     sneakySnackBerries,
     recoveryEvents,
     skillActivations,
-
     mealTimes,
   } = params;
   const sneakySnackProduce: Produce = { berries: sneakySnackBerries, ingredients: [] };
@@ -80,7 +78,7 @@ export function simulation(params: {
   const inventoryLimit = pokemon.maxCarrySize + calculateSubskillCarrySize(input.subskills ?? []);
 
   // summary values
-  const skillProcs = skillActivations.reduce((sum, cur) => sum + cur.fractionOfProc, 0);
+  let skillProcs = 0;
   let skillEnergyValue = 0;
   let skillProduceValue: Produce = getEmptyProduce(pokemon.berry);
   let skillStrengthValue = 0;
@@ -95,9 +93,22 @@ export function simulation(params: {
   const energyIntervals: number[] = [];
   const frequencyIntervals: number[] = [];
 
+  // event array indices
+  let skillIndex = 0;
+  let energyIndex = 0;
+  let mealIndex = 0;
+
   // Set up start values
   const eventLog: ScheduledEvent[] = [];
-  const startingEnergy = startDayAndEnergy(dayInfo, pokemon, input, recoveryEvents, skillActivations, eventLog);
+  const startingEnergy = startDayAndEnergy(
+    dayInfo,
+    pokemon,
+    input,
+    inventoryLimit,
+    recoveryEvents,
+    skillActivations,
+    eventLog
+  );
 
   let totalProduce: Produce = getEmptyProduce(pokemon.berry);
   let spilledIngredients: Produce = getEmptyProduce(pokemon.berry);
@@ -116,23 +127,30 @@ export function simulation(params: {
   // --- DAY ---
   let period = dayInfo.period;
   while (timeWithinPeriod(currentTime, period)) {
-    const mealRecovery = recoverFromMeal({ currentEnergy, currentTime, period, eventLog, mealTimes });
-    const eventRecovery = recoverEnergyEvents({ energyEvents, currentTime, currentEnergy, period, eventLog });
+    const { recoveredAmount: mealRecovery, mealsProcessed } = recoverFromMeal({
+      currentEnergy,
+      currentTime,
+      period,
+      eventLog,
+      mealTimes,
+      mealIndex,
+    });
+    const { recoveredEnergy: eventRecovery, energyEventsProcessed } = recoverEnergyEvents({
+      energyEvents,
+      energyIndex,
+      currentTime,
+      currentEnergy,
+      period,
+      eventLog,
+    });
 
-    // currentInventory = addToInventory(currentInventory, addedProduce);
+    mealIndex = mealsProcessed;
+    energyIndex = energyEventsProcessed;
     currentEnergy += mealRecovery + eventRecovery;
     totalRecovery += mealRecovery + eventRecovery;
 
     // check if help has occured
     if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
-      if (inventoryFull({ currentInventory, averageProduceAmount, inventoryLimit, currentTime, eventLog })) {
-        if (!collectFrequency) {
-          collectFrequency = calculateDuration({ start: period.start, end: nextHelpEvent });
-        }
-        totalProduce = addToInventory(totalProduce, currentInventory);
-        currentInventory = emptyInventory(currentInventory);
-      }
-
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
       const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
       helpEvent({
@@ -148,62 +166,66 @@ export function simulation(params: {
       ++helpsBeforeSS;
       ++dayHelps;
       frequencyIntervals.push(frequency);
-
       currentInventory = addToInventory(currentInventory, averageProduce);
+
+      // check if next help scheduled help would hit inventory limit
+      if (
+        inventoryFull({ currentInventory, averageProduceAmount, inventoryLimit, currentTime: nextHelpEvent, eventLog })
+      ) {
+        if (!collectFrequency) {
+          collectFrequency = calculateDuration({ start: period.start, end: nextHelpEvent });
+        }
+        totalProduce = addToInventory(totalProduce, currentInventory);
+        currentInventory = emptyInventory(currentInventory);
+      }
+
       nextHelpEvent = nextHelp;
     }
 
-    // if we have reached helps required or we are at the last help of the day
-    if (
-      skillActivations.at(0) &&
-      (dayHelps >= skillActivations[0].nrOfHelpsToActivate ||
-        !timeWithinPeriod(addTime(currentTime, { hour: 0, minute: 5, second: 0 }), period))
-    ) {
-      // while because metronome will trigger many skills in a row (on averaged metronome)
-      while (skillActivations.at(0) && dayHelps >= skillActivations[0].nrOfHelpsToActivate) {
-        const skillTriggered = skillActivations[0];
-        const description = `${skillTriggered.skill.name} activation`;
+    for (; skillIndex < skillActivations.length; skillIndex++) {
+      const skillActivation = skillActivations[skillIndex];
+
+      // if we have reached helps required or we are at the last help of the day
+      if (
+        dayHelps >= skillActivation.nrOfHelpsToActivate ||
+        !timeWithinPeriod(addTime(currentTime, { hour: 0, minute: 5, second: 0 }), period)
+      ) {
+        skillProcs += skillActivation.fractionOfProc;
+        const description = `${skillActivation.skill.name} activation`;
+
         eventLog.push(
           new SkillEvent({
             time: currentTime,
             description,
-            skillActivation: skillTriggered,
+            skillActivation: skillActivation,
           })
         );
 
-        if (skillTriggered.skill.unit === 'energy') {
+        if (skillActivation.skill.unit === 'energy') {
+          const clampedDelta =
+            currentEnergy + skillActivation.adjustedAmount > 150 ? 150 - currentEnergy : skillActivation.adjustedAmount;
+
           eventLog.push(
             new EnergyEvent({
               time: currentTime,
-              delta: skillTriggered.adjustedAmount,
+              delta: clampedDelta,
               description,
               before: currentEnergy,
             })
           );
-          currentEnergy += skillTriggered.adjustedAmount;
-          totalRecovery += skillTriggered.adjustedAmount;
-          skillEnergyValue += skillTriggered.adjustedAmount;
-        } else if (skillTriggered.adjustedProduce) {
-          eventLog.push(
-            new InventoryEvent({
-              time: currentTime,
-              description,
-              before: countInventory(currentInventory),
-              delta: skillTriggered.adjustedAmount,
-            })
-          );
-          currentInventory = addToInventory(currentInventory, skillTriggered.adjustedProduce);
-          skillProduceValue = addToInventory(skillProduceValue, skillTriggered.adjustedProduce);
-        } else if (skillTriggered.skill.unit === 'strength') {
-          skillStrengthValue += skillTriggered.adjustedAmount;
-        } else if (skillTriggered.skill.unit === 'dream shards') {
-          skillDreamShardValue += skillTriggered.adjustedAmount;
-        } else if (skillTriggered.skill.unit === 'pot size') {
-          skillPotSizeValue += skillTriggered.adjustedAmount;
+          currentEnergy += clampedDelta;
+          totalRecovery += clampedDelta;
+          skillEnergyValue += clampedDelta;
+        } else if (skillActivation.adjustedProduce) {
+          skillProduceValue = addToInventory(skillProduceValue, skillActivation.adjustedProduce);
+        } else if (skillActivation.skill.unit === 'strength') {
+          skillStrengthValue += skillActivation.adjustedAmount;
+        } else if (skillActivation.skill.unit === 'dream shards') {
+          skillDreamShardValue += skillActivation.adjustedAmount;
+        } else if (skillActivation.skill.unit === 'pot size') {
+          skillPotSizeValue += skillActivation.adjustedAmount;
         }
-
-        skillActivations.shift();
-      }
+      } else break;
     }
 
     currentEnergy = roundDown(

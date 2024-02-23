@@ -22,7 +22,9 @@ describe('startDayAndEnergy', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const skillActivations: SkillActivation[] = [];
 
-    expect(startDayAndEnergy(dayInfo, pkmn, input, recoveryEvents, skillActivations, eventLog)).toBe(100);
+    expect(startDayAndEnergy(dayInfo, pkmn, input, pkmn.maxCarrySize, recoveryEvents, skillActivations, eventLog)).toBe(
+      100
+    );
     expect(eventLog).toHaveLength(6);
   });
 });
@@ -66,6 +68,6 @@ describe('finishSimulation', () => {
       summary,
       eventLog,
     });
-    expect(eventLog).toHaveLength(4);
+    expect(eventLog).toHaveLength(5);
   });
 });

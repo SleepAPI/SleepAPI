@@ -58,9 +58,7 @@ export function calculatePokemonProduction(
         mainWakeup,
       },
       monteCarloIterations,
-      // TODO: can probably optimize by not shifting in simulator
-      preGeneratedSkillActivations:
-        preGeneratedSkillActivations && JSON.parse(JSON.stringify(preGeneratedSkillActivations)),
+      preGeneratedSkillActivations,
     });
     preGeneratedSkillActivations = skillActivations;
 

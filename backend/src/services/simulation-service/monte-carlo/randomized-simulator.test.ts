@@ -11,6 +11,7 @@ describe('randomizedSimulation', () => {
       nightHelpsFromYesterday: 0,
       pokemon: MOCKED_POKEMON,
       recoveryEvents: [],
+      mealTimes: [],
       skillPercentage: 0.2,
     });
 

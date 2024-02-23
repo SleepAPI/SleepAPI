@@ -50,9 +50,7 @@ export function getAllOptimalIngredientPokemonProduce(params: {
         pokemonCombination,
         input: { ...customStats, ...teamStats },
         monteCarloIterations,
-        // TODO: can probably optimize by not shifting in simulator
-        preGeneratedSkillActivations:
-          preGeneratedSkillActivations && JSON.parse(JSON.stringify(preGeneratedSkillActivations)),
+        preGeneratedSkillActivations,
       });
 
       preGeneratedSkillActivations = skillActivations;

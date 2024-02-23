@@ -24,7 +24,9 @@ function energyChart(log) {
   let pointHoverRadii = new Array(energyLogs.length).fill(0);
 
   pointRadii[0] = 3;
+  pointRadii[pointRadii.length - 1] = 3;
   pointHoverRadii[0] = 5;
+  pointHoverRadii[pointHoverRadii.length - 1] = 5;
 
   for (let i = 1; i < energyLogs.length; i++) {
     if (
@@ -64,7 +66,6 @@ function energyChart(log) {
           ticks: {
             maxRotation: 0,
             autoSkip: true,
-            // maxTicksLimit: 8,
             color: 'white',
             callback: function (value, index, values) {
               const { hour: currH, minute: currM } = energyLogs[index].time;
@@ -124,7 +125,7 @@ function energyChart(log) {
 
 let inventoryChartInstance = null;
 function inventoryChart(log) {
-  // skip sneaky snack inventory and spilled ingredients
+  // Skip unwanted inventory logs and prepare data
   const inventoryLogs = log.filter(
     (entry) =>
       entry.type === 'inventory' &&
@@ -132,30 +133,44 @@ function inventoryChart(log) {
       entry.description !== 'Sneaky snack claim' &&
       entry.description !== 'Spilled ingredients'
   );
-  const labels = inventoryLogs.map((entry) => entry.time).map(prettifyTime);
-  const data = inventoryLogs.map((entry) => entry.after);
-  const max = inventoryLogs.reduce((max, cur) => (cur.after > max ? cur.after : max), inventoryLogs[0].after);
+
+  let previousTimeMinutes = 0;
+  let additionalDays = 0;
+  const scatterData = inventoryLogs.map((entry, index) => {
+    const [hours, minutes] = prettifyTime(entry.time).split(':').map(Number);
+    const currentTimeMinutes = hours * 60 + minutes;
+    if (index > 0 && currentTimeMinutes < previousTimeMinutes) {
+      additionalDays += 1440;
+    }
+    previousTimeMinutes = currentTimeMinutes;
+    return {
+      x: currentTimeMinutes + additionalDays,
+      y: entry.after,
+      originalTime: entry.time,
+    };
+  });
+
+  const X_RANGE_OFFSET = 30;
+  const xAxisStart = scatterData[0].x - X_RANGE_OFFSET;
+  const xAxisEnd = scatterData[scatterData.length - 1].x + X_RANGE_OFFSET;
+
+  const max = inventoryLogs[0].max + 1;
 
   const ctx = document.getElementById('inventoryChart').getContext('2d');
   if (inventoryChartInstance) {
     inventoryChartInstance.destroy();
   }
 
-  if (ctx.chart && typeof ctx.chart.destroy === 'function') {
-    ctx.chart.destroy();
-  }
-
   const config = {
     type: 'line',
     data: {
-      labels,
       datasets: [
         {
           label: 'Inventory',
-          data,
+          data: scatterData,
           borderWidth: 1,
           borderColor: '#f04545',
-          tension: 0.1,
+          tension: 0,
           pointRadius: 3,
           pointHoverRadius: 5,
           pointBackgroundColor: '#f04545',
@@ -166,10 +181,23 @@ function inventoryChart(log) {
     options: {
       scales: {
         x: {
+          type: 'linear',
+          min: xAxisStart,
+          max: xAxisEnd,
+          afterBuildTicks: (scale) => {
+            const ticks = [];
+            for (let i = scale.min + X_RANGE_OFFSET; i <= scale.max; i += 180) {
+              ticks.push({ value: i });
+            }
+            scale.ticks = ticks;
+          },
           ticks: {
-            maxRotation: 0,
-            autoSkip: true,
-            maxTicksLimit: 8,
+            callback: (value) => {
+              const totalMinutes = value % 1440;
+              const hours = Math.floor(totalMinutes / 60);
+              const minutes = totalMinutes % 60;
+              return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            },
             color: 'white',
           },
           grid: {
@@ -190,6 +218,12 @@ function inventoryChart(log) {
       plugins: {
         tooltip: {
           callbacks: {
+            title: function (tooltipItems) {
+              const tooltipItem = tooltipItems[0];
+              const dataIndex = tooltipItem.dataIndex;
+              const inventoryLog = inventoryLogs[dataIndex];
+              return prettifyTime(inventoryLog.time);
+            },
             label: function (context) {
               const index = context.dataIndex;
               const inventoryLog = inventoryLogs[index];
@@ -206,7 +240,7 @@ function inventoryChart(log) {
         legend: {
           display: false,
           labels: {
-            color: 'white', // if we want to show legend again, we want white
+            color: 'white',
           },
         },
       },
