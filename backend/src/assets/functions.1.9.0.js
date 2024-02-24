@@ -286,6 +286,7 @@ function goToProductionCalculator() {
 
       energyChart(data.production.log);
       inventoryChart(data.production.log);
+      skillChart(data.production.log);
 
       // add download event log content
       downloadData.text = data.production.prettyLog;

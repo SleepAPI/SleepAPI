@@ -71,10 +71,15 @@ function energyChart(log) {
               const { hour: currH, minute: currM } = energyLogs[index].time;
               const { hour: firstH, minute: firstM } = energyLogs[0].time;
               const hourDiff = currH < firstH ? currH + 24 - firstH : currH - firstH;
+
+              const isDuplicate =
+                index !==
+                energyLogs.map((e) => e.time).findIndex(({ hour, minute }) => hour === currH && minute === currM);
+
               if (index === 0) {
                 // always add first label
                 return labels[index];
-              } else if (!(currH === firstH && currM === firstM) && firstM === currM && hourDiff % 3 === 0) {
+              } else if (!isDuplicate && firstM === currM && hourDiff % 3 === 0) {
                 // don't add duplicate labels
                 // add label every 3 hours
                 return labels[index];
@@ -248,4 +253,154 @@ function inventoryChart(log) {
   };
 
   inventoryChartInstance = new Chart(ctx, config);
+}
+
+let skillChartInstance = null;
+function skillChart(log) {
+  const skillLogs = log.filter((entry) => entry.type === 'skill');
+
+  // set x, y values for input data
+  let previousTimeMinutes = 0;
+  let additionalDays = 0;
+  const scatterData = skillLogs.map((entry, index) => {
+    const [hours, minutes] = prettifyTime(entry.time).split(':').map(Number);
+    const currentTimeMinutes = hours * 60 + minutes;
+    if (index > 0 && currentTimeMinutes < previousTimeMinutes) {
+      additionalDays += 1440;
+    }
+    previousTimeMinutes = currentTimeMinutes;
+    return {
+      x: currentTimeMinutes + additionalDays,
+      y: entry.skillActivation.fractionOfProc * 100,
+      originalTime: entry.time,
+    };
+  });
+
+  // set radius, remove last
+  let pointRadii = new Array(skillLogs.length).fill(0);
+  let pointHoverRadii = new Array(skillLogs.length).fill(0);
+
+  for (let i = 0; i < skillLogs.length - 1; i++) {
+    pointRadii[i] = 9;
+    pointHoverRadii[i] = 11;
+  }
+
+  const X_RANGE_OFFSET = 30;
+  const xAxisStart = scatterData[0].x - X_RANGE_OFFSET;
+  const xAxisEnd = scatterData[scatterData.length - 1].x + X_RANGE_OFFSET;
+
+  const Y_RANGE_OFFSET = 10;
+  const max = 100 + Y_RANGE_OFFSET;
+
+  const ctx = document.getElementById('skillChart').getContext('2d');
+  if (skillChartInstance) {
+    skillChartInstance.destroy();
+  }
+
+  const config = {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Skill',
+          data: scatterData,
+          borderWidth: 1,
+          borderColor: '#f04545',
+          tension: 0,
+          pointRadius: pointRadii,
+          pointHoverRadius: pointHoverRadii,
+          pointBackgroundColor: '#f04545',
+        },
+      ],
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'linear',
+          categoryPercentage: 0.1,
+          barPercentage: 0.1,
+          min: xAxisStart,
+          max: xAxisEnd,
+          afterBuildTicks: (scale) => {
+            const ticks = [];
+            for (let i = scale.min + X_RANGE_OFFSET; i <= scale.max; i += 180) {
+              ticks.push({ value: i });
+            }
+            scale.ticks = ticks;
+          },
+          ticks: {
+            callback: (value) => {
+              const totalMinutes = value % 1440;
+              const hours = Math.floor(totalMinutes / 60);
+              const minutes = totalMinutes % 60;
+              return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            },
+            color: 'white',
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)',
+          },
+        },
+        y: {
+          categoryPercentage: 0.1,
+          barPercentage: 0.1,
+          beginAtZero: true,
+          max,
+          afterBuildTicks: (scale) => {
+            const ticks = [];
+            for (let i = 0; i <= scale.max - Y_RANGE_OFFSET; i += 20) {
+              ticks.push({ value: i });
+            }
+            scale.ticks = ticks;
+          },
+          ticks: {
+            callback: function (value) {
+              return value + '%';
+            },
+            color: 'white',
+          },
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)',
+          },
+          title: {
+            display: true,
+            text: 'Fraction of power',
+            color: 'white',
+            font: {
+              size: 12,
+            },
+          },
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: function (tooltipItems) {
+              const tooltipItem = tooltipItems[0];
+              const dataIndex = tooltipItem.dataIndex;
+              const inventoryLog = skillLogs[dataIndex];
+              return prettifyTime(inventoryLog.time);
+            },
+            label: function (context) {
+              const index = context.dataIndex;
+              const skillEvent = skillLogs[index];
+              return `${skillEvent.description}: ${roundDown(
+                skillEvent.skillActivation.adjustedAmount,
+                1
+              )} (${roundDown(skillEvent.skillActivation.fractionOfProc * 100, 1)}%)`;
+            },
+          },
+        },
+        legend: {
+          display: false,
+          labels: {
+            color: 'white',
+          },
+        },
+      },
+      responsive: true,
+    },
+  };
+
+  skillChartInstance = new Chart(ctx, config);
 }

@@ -4,7 +4,7 @@ import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from '@src/domain/event/events/input-event/input-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
+import { SkillActivation, SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepEvent } from '@src/domain/event/events/sleep-event/sleep-event';
 import { Summary, SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
@@ -143,6 +143,17 @@ export function finishSimulation(params: {
     max: inventoryLimit,
   });
 
+  const skillStatusEvent: SkillEvent = new SkillEvent({
+    time: period.end,
+    description: 'Status',
+    skillActivation: {
+      adjustedAmount: 0,
+      fractionOfProc: 0,
+      nrOfHelpsToActivate: summary.nrOfHelps,
+      skill: summary.skill,
+    },
+  });
+
   const summaryEvent: SummaryEvent = new SummaryEvent({
     time: period.end,
     description: 'Summary',
@@ -153,5 +164,6 @@ export function finishSimulation(params: {
   eventLog.push(addInventoryEvent);
   eventLog.push(sneakySnackClaim);
   eventLog.push(morningEmptyInventoryEvent);
+  eventLog.push(skillStatusEvent);
   eventLog.push(summaryEvent);
 }

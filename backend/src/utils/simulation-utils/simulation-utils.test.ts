@@ -68,6 +68,6 @@ describe('finishSimulation', () => {
       summary,
       eventLog,
     });
-    expect(eventLog).toHaveLength(5);
+    expect(eventLog).toHaveLength(6);
   });
 });
