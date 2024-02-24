@@ -339,6 +339,7 @@ export function simulation(params: {
   }
 
   totalProduce = addToInventory(totalProduce, currentInventory);
+  totalProduce = addToInventory(totalProduce, skillProduceValue);
   totalProduce = addToInventory(totalProduce, totalSneakySnack);
   const summary: Summary = {
     skill: pokemon.skill,

@@ -74,11 +74,11 @@ describe('getOptimalFlexiblePokemon', () => {
     ).toMatchInlineSnapshot(`
       [
         "BEWEAR(2 Corn, 5 Corn)",
+        "VENUSAUR(2 Honey, 4 Tomato)",
+        "VENUSAUR(2 Honey, 5 Honey)",
         "VICTREEBEL(2 Tomato, 4 Potato)",
         "MR_MIME(2 Tomato, 4 Potato)",
         "MEGANIUM(1 Cacao, 2 Cacao)",
-        "VENUSAUR(2 Honey, 4 Tomato)",
-        "VENUSAUR(2 Honey, 5 Honey)",
         "BEWEAR(2 Corn, 6 Sausage)",
         "VICTREEBEL(2 Tomato, 5 Tomato)",
         "MR_MIME(2 Tomato, 5 Tomato)",
@@ -95,6 +95,8 @@ describe('getOptimalFlexiblePokemon', () => {
         "LUCARIO(1 Oil, 2 Potato)",
         "PRIMEAPE(1 Sausage, 1 Mushroom)",
         "WOBBUFFET(1 Apple, 1 Mushroom)",
+        "GALLADE(1 Apple, 1 Corn)",
+        "GARDEVOIR(1 Apple, 1 Corn)",
       ]
     `);
   });
