@@ -13,11 +13,17 @@ export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], provided
       ingredientDrop[0].amount
     );
 
-    let prettyString = ingredientDrop
-      .filter((ing) => ing.amount !== ingMagnetAmount)
+    const nonIngMagnetIngs = ingredientDrop.filter((ing) => ing.amount !== ingMagnetAmount);
+
+    let prettyString = nonIngMagnetIngs
       .map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`)
       .join(separator);
-    return (prettyString += ` and ${roundDown(ingMagnetAmount, 2)} of all other ingredients`);
+
+    if (nonIngMagnetIngs.length > 0) {
+      return (prettyString += ` and ${roundDown(ingMagnetAmount, 2)} of all other ingredients`);
+    } else {
+      return `${roundDown(ingMagnetAmount, 2)} of all ingredients`;
+    }
   } else {
     return ingredientDrop.map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`).join(separator);
   }
