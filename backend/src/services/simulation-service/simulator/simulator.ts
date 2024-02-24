@@ -41,7 +41,7 @@ import {
   secondsToTime,
   timeWithinPeriod,
 } from '@src/utils/time-utils/time-utils';
-import { BerrySet } from 'sleepapi-common';
+import { BerrySet, mainskill } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { combineSameIngredientsInDrop } from '../../calculator/ingredient/ingredient-calculate';
@@ -79,11 +79,13 @@ export function simulation(params: {
 
   // summary values
   let skillProcs = 0;
-  let skillEnergyValue = 0;
+  let skillEnergySelfValue = 0;
+  let skillEnergyOthersValue = 0;
   let skillProduceValue: Produce = getEmptyProduce(pokemon.berry);
   let skillStrengthValue = 0;
   let skillDreamShardValue = 0;
   let skillPotSizeValue = 0;
+  let skillHelpsValue = 0;
   let dayHelps = 0;
   let nightHelps = 0;
   let helpsBeforeSS = 0;
@@ -215,8 +217,15 @@ export function simulation(params: {
           );
           currentEnergy += clampedDelta;
           totalRecovery += clampedDelta;
-          skillEnergyValue += clampedDelta;
+          if (skillActivation.skill === mainskill.CHARGE_ENERGY_S) {
+            skillEnergySelfValue += clampedDelta;
+          } else {
+            skillEnergyOthersValue += clampedDelta;
+          }
         } else if (skillActivation.adjustedProduce) {
+          if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S) {
+            skillHelpsValue += skillActivation.adjustedAmount;
+          }
           skillProduceValue = addToInventory(skillProduceValue, skillActivation.adjustedProduce);
         } else if (skillActivation.skill.unit === 'strength') {
           skillStrengthValue += skillActivation.adjustedAmount;
@@ -344,11 +353,13 @@ export function simulation(params: {
   const summary: Summary = {
     skill: pokemon.skill,
     skillProcs,
-    skillEnergyValue,
+    skillEnergySelfValue,
+    skillEnergyOthersValue,
     skillProduceValue,
     skillStrengthValue,
     skillDreamShardValue,
     skillPotSizeValue,
+    skillHelpsValue,
     nrOfHelps: helpsBeforeSS + helpsAfterSS,
     helpsBeforeSS,
     helpsAfterSS,
