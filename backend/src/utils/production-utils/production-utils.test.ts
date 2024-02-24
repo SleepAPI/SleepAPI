@@ -1,11 +1,18 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { ScheduledEvent } from '@src/domain/event/event';
-import { berry, ingredient, nature, pokemon } from 'sleepapi-common';
+import { Summary } from '@src/domain/event/events/summary-event/summary-event';
+import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
+import { MOCKED_PRODUCE } from '../test-utils/defaults';
+import { parseTime } from '../time-utils/time-utils';
 import { chooseIngredientSet } from './production-utils';
 
 describe('chooseIngredientSets', () => {
-  const productionData: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[] = [
+  const productionData: {
+    pokemonProduction: CustomPokemonCombinationWithProduce;
+    log: ScheduledEvent[];
+    summary: Summary;
+  }[] = [
     {
       log: [],
       pokemonProduction: {
@@ -38,6 +45,24 @@ describe('chooseIngredientSets', () => {
             { amount: 1, ingredient: ingredient.FANCY_APPLE },
           ],
         },
+      },
+      summary: {
+        skill: mainskill.CHARGE_STRENGTH_S,
+        skillProcs: 11,
+        skillEnergyValue: 11,
+        skillProduceValue: MOCKED_PRODUCE,
+        skillStrengthValue: 11,
+        skillDreamShardValue: 11,
+        skillPotSizeValue: 11,
+        averageEnergy: 0,
+        averageFrequency: 1,
+        helpsAfterSS: 2,
+        helpsBeforeSS: 3,
+        nrOfHelps: 5,
+        spilledIngredients: MOCKED_PRODUCE.ingredients,
+        totalProduce: MOCKED_PRODUCE,
+        totalRecovery: 6,
+        collectFrequency: parseTime('00:10'),
       },
     },
   ];

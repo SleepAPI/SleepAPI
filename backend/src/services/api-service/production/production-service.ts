@@ -1,6 +1,7 @@
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
+import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
@@ -30,8 +31,11 @@ export function calculatePokemonProduction(
   const subskills = maybeSubskills ?? [];
   const pokemon = getPokemon(pokemonName);
 
-  const pokemonProductionWithLogs: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[] =
-    [];
+  const pokemonProductionWithLogs: {
+    pokemonProduction: CustomPokemonCombinationWithProduce;
+    log: ScheduledEvent[];
+    summary: Summary;
+  }[] = [];
 
   let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
   for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
@@ -41,7 +45,7 @@ export function calculatePokemonProduction(
       subskills,
     };
 
-    const { detailedProduce, log, skillActivations } = setupAndRunProductionSimulation({
+    const { detailedProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pokemon,
         ingredientList,
@@ -65,6 +69,7 @@ export function calculatePokemonProduction(
     pokemonProductionWithLogs.push({
       pokemonProduction: { pokemonCombination: { pokemon, ingredientList }, detailedProduce, customStats },
       log,
+      summary,
     });
   }
 

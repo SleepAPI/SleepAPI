@@ -877,6 +877,91 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Summary": {
+				"properties": {
+					"skill": {
+						"$ref": "#/components/schemas/MainSkill"
+					},
+					"skillProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillEnergyValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillProduceValue": {
+						"$ref": "#/components/schemas/Produce"
+					},
+					"skillStrengthValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillDreamShardValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillPotSizeValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"nrOfHelps": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpsBeforeSS": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpsAfterSS": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalProduce": {
+						"$ref": "#/components/schemas/Produce"
+					},
+					"averageEnergy": {
+						"type": "number",
+						"format": "double"
+					},
+					"averageFrequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"spilledIngredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"collectFrequency": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"totalRecovery": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"skill",
+					"skillProcs",
+					"skillEnergyValue",
+					"skillProduceValue",
+					"skillStrengthValue",
+					"skillDreamShardValue",
+					"skillPotSizeValue",
+					"nrOfHelps",
+					"helpsBeforeSS",
+					"helpsAfterSS",
+					"totalProduce",
+					"averageEnergy",
+					"averageFrequency",
+					"spilledIngredients",
+					"totalRecovery"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ProductionRequest": {
 				"properties": {
 					"level": {
@@ -1193,6 +1278,9 @@
 										"allIngredientSets": {
 											"items": {
 												"properties": {
+													"summary": {
+														"$ref": "#/components/schemas/Summary"
+													},
 													"log": {
 														"items": {
 															"$ref": "#/components/schemas/ScheduledEvent"
@@ -1204,6 +1292,7 @@
 													}
 												},
 												"required": [
+													"summary",
 													"log",
 													"pokemonProduction"
 												],
@@ -1213,6 +1302,9 @@
 										},
 										"production": {
 											"properties": {
+												"summary": {
+													"$ref": "#/components/schemas/Summary"
+												},
 												"log": {
 													"items": {
 														"$ref": "#/components/schemas/ScheduledEvent"
@@ -1224,6 +1316,7 @@
 												}
 											},
 											"required": [
+												"summary",
 												"log",
 												"pokemonProduction"
 											],

@@ -19,6 +19,7 @@ import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
+import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { getDefaultRecoveryEvents } from '@src/utils/event-utils/event-utils';
@@ -48,7 +49,7 @@ export function setupAndRunProductionSimulation(params: {
   input: ProductionStats;
   monteCarloIterations: number;
   preGeneratedSkillActivations?: SkillActivation[];
-}): { detailedProduce: DetailedProduce; skillActivations: SkillActivation[]; log: ScheduledEvent[] } {
+}): { detailedProduce: DetailedProduce; skillActivations: SkillActivation[]; log: ScheduledEvent[]; summary: Summary } {
   const { pokemonCombination, input, monteCarloIterations, preGeneratedSkillActivations } = params;
   const {
     level,
@@ -118,7 +119,7 @@ export function setupAndRunProductionSimulation(params: {
         monteCarloIterations,
       });
 
-  const { detailedProduce, log } = simulation({
+  const { detailedProduce, log, summary } = simulation({
     dayInfo: daySleepInfo,
     input,
     helpFrequency,
@@ -145,6 +146,7 @@ export function setupAndRunProductionSimulation(params: {
     },
     skillActivations,
     log,
+    summary,
   };
 }
 

@@ -2,6 +2,7 @@ import { SurplusIngredients } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
+import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
@@ -21,11 +22,16 @@ interface ProductionFilters {
 interface ProductionCombination {
   filters: ProductionFilters;
   pokemonProduction: CustomPokemonCombinationWithProduce;
+  summary: Summary;
 }
 interface ProductionCombinations {
   filters: ProductionFilters;
-  production: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] };
-  allIngredientSets: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[];
+  production: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[]; summary: Summary };
+  allIngredientSets: {
+    pokemonProduction: CustomPokemonCombinationWithProduce;
+    log: ScheduledEvent[];
+    summary: Summary;
+  }[];
 }
 
 class WebsiteConverterServiceImpl {
@@ -36,6 +42,7 @@ class WebsiteConverterServiceImpl {
         details: this.#prettifyProductionDetails({
           pokemonProduction: pokemonProductions.production.pokemonProduction,
           filters: pokemonProductions.filters,
+          summary: pokemonProductions.production.summary,
         }),
         pokemon: pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name,
         ingredients: pokemonProductions.production.pokemonProduction.pokemonCombination.ingredientList.map(
@@ -47,7 +54,6 @@ class WebsiteConverterServiceImpl {
         }-${Date.now()}.txt`,
         prettyLog: pokemonProductions.production.log.map((event) => event.format()).join('\n'),
       },
-
       allIngredientSets: {
         pokemon: 'Production comparison',
         details:
@@ -56,6 +62,7 @@ class WebsiteConverterServiceImpl {
           }\n${this.#prettifyFiltersDetails({
             pokemonProduction: pokemonProductions.production.pokemonProduction,
             filters: pokemonProductions.filters,
+            summary: pokemonProductions.production.summary,
           })}` +
           pokemonProductions.allIngredientSets
             .map(
@@ -263,6 +270,7 @@ class WebsiteConverterServiceImpl {
 
   #prettifyProductionDetails(productionCombination: ProductionCombination) {
     const pokemonCombination = productionCombination.pokemonProduction;
+    const summary = productionCombination.summary;
 
     let prettyString = `👨🏻‍🍳 Production Calculator 👨🏻‍🍳\nhttps://sleepapi.net\n\n${
       pokemonCombination.pokemonCombination.pokemon.name
@@ -274,6 +282,33 @@ class WebsiteConverterServiceImpl {
       pokemonCombination.detailedProduce.averageTotalSkillProcs,
       1
     )}\n`;
+
+    // skill values
+    const { skillEnergyValue, skillProduceValue, skillStrengthValue, skillDreamShardValue, skillPotSizeValue } =
+      summary;
+    const prettifiedSkillProduce: string[] = [];
+    if (skillProduceValue.berries.amount > 0) {
+      prettifiedSkillProduce.push(
+        `${roundDown(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
+      );
+    }
+    if (skillProduceValue.ingredients.length > 0) {
+      prettifiedSkillProduce.push(
+        `${prettifyIngredientDrop(
+          skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
+            amount: roundDown(amount, 1),
+            ingredient,
+          }))
+        )}`
+      );
+    }
+    prettyString +=
+      (skillEnergyValue > 0 ? `Skill value: ${roundDown(skillEnergyValue, 1)} energy\n` : '') +
+      (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
+      (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
+      (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '');
+
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,
       1
