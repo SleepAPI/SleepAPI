@@ -284,8 +284,15 @@ class WebsiteConverterServiceImpl {
     )}\n`;
 
     // skill values
-    const { skillEnergyValue, skillProduceValue, skillStrengthValue, skillDreamShardValue, skillPotSizeValue } =
-      summary;
+    const {
+      skillEnergySelfValue,
+      skillEnergyOthersValue,
+      skillProduceValue,
+      skillStrengthValue,
+      skillDreamShardValue,
+      skillPotSizeValue,
+      skillHelpsValue,
+    } = summary;
     const prettifiedSkillProduce: string[] = [];
     if (skillProduceValue.berries.amount > 0) {
       prettifiedSkillProduce.push(
@@ -303,11 +310,13 @@ class WebsiteConverterServiceImpl {
       );
     }
     prettyString +=
-      (skillEnergyValue > 0 ? `Skill value: ${roundDown(skillEnergyValue, 1)} energy\n` : '') +
+      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 1)} energy\n` : '') +
+      (skillEnergyOthersValue > 0 ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 1)} energy\n` : '') +
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
       (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
-      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '');
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
+      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '');
 
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,

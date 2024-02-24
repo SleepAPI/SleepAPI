@@ -9,11 +9,13 @@ import { EventType, ScheduledEvent } from '../../event';
 export interface Summary {
   skill: mainskill.MainSkill;
   skillProcs: number;
-  skillEnergyValue: number;
+  skillEnergySelfValue: number;
+  skillEnergyOthersValue: number;
   skillProduceValue: Produce;
   skillStrengthValue: number;
   skillDreamShardValue: number;
   skillPotSizeValue: number;
+  skillHelpsValue: number;
 
   nrOfHelps: number;
   helpsBeforeSS: number;
@@ -52,11 +54,13 @@ export class SummaryEvent extends ScheduledEvent {
     const {
       skill,
       skillProcs,
-      skillEnergyValue,
+      skillEnergySelfValue,
+      skillEnergyOthersValue,
       skillProduceValue,
       skillStrengthValue,
       skillDreamShardValue,
       skillPotSizeValue,
+      skillHelpsValue,
       nrOfHelps,
       helpsBeforeSS,
       helpsAfterSS,
@@ -96,11 +100,13 @@ export class SummaryEvent extends ScheduledEvent {
       `Total produce: ${prettifiedProduce}\n` +
       `Spilled produce: ${spilledProduce}\n` +
       `${skill.name} activations: ${roundDown(skillProcs, 2)}\n` +
-      (skillEnergyValue > 0 ? `Energy skill value: ${roundDown(skillEnergyValue, 1)} energy\n` : '') +
+      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 1)} energy\n` : '') +
+      (skillEnergyOthersValue > 0 ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 1)} energy\n` : '') +
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
       (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
       (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
+      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '') +
       `Total helps: ${nrOfHelps}\n` +
       `Helps before sneaky snacking: ${helpsBeforeSS}\n` +
       `Helps spent sneaky snacking: ${helpsAfterSS}\n` +
