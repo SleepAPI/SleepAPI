@@ -60,7 +60,7 @@ export function simulation(params: {
   recoveryEvents: EnergyEvent[];
   skillActivations: SkillActivation[];
   mealTimes: Time[];
-}): { detailedProduce: DetailedProduce; log: ScheduledEvent[] } {
+}): { detailedProduce: DetailedProduce; log: ScheduledEvent[]; summary: Summary } {
   // Set up input
   const {
     dayInfo,
@@ -374,5 +374,6 @@ export function simulation(params: {
       averageTotalSkillProcs: skillProcs,
     },
     log: eventLog,
+    summary,
   };
 }

@@ -1,10 +1,11 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { ScheduledEvent } from '@src/domain/event/event';
+import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { berry } from 'sleepapi-common';
 
 export function chooseIngredientSet(
-  validSets: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[] }[],
+  validSets: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[]; summary: Summary }[],
   ingredientSet: string[]
 ) {
   const lowercaseIngredientSet = ingredientSet.map((ing) => ing.toLowerCase());
