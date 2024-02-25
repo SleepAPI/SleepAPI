@@ -30,12 +30,21 @@ describe('prettifyIngredientDrop', () => {
     ];
     ingredient.INGREDIENTS.map((ingredient) => rawCombination.push({ amount: 0.83761, ingredient }));
     expect(prettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(
-      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all other ingredients"`
+      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 14 other ingredients"`
     );
   });
 
   it('shall prettify an isolated ingredient magnet proc', () => {
     const ings = ingredient.INGREDIENTS.map((ingredient) => ({ amount: 0.83761, ingredient }));
-    expect(prettifyIngredientDrop(ings)).toMatchInlineSnapshot(`"0.84 of all ingredients"`);
+    expect(prettifyIngredientDrop(ings)).toMatchInlineSnapshot(`"0.84 of all 16 ingredients"`);
+  });
+
+  it('shall support custom separator', () => {
+    const rawCombination = [
+      { amount: 2, ingredient: ingredient.HONEY },
+      { amount: 5, ingredient: ingredient.FANCY_APPLE },
+      { amount: 7, ingredient: ingredient.HONEY },
+    ];
+    expect(prettifyIngredientDrop(rawCombination, '/')).toMatchInlineSnapshot(`"2 Honey/5 Apple/7 Honey"`);
   });
 });

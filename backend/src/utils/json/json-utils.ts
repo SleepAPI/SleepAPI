@@ -20,9 +20,11 @@ export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], provided
       .join(separator);
 
     if (nonIngMagnetIngs.length > 0) {
-      return (prettyString += ` and ${roundDown(ingMagnetAmount, 2)} of all other ingredients`);
+      return (prettyString += ` and ${roundDown(ingMagnetAmount, 2)} of all ${
+        ingredient.INGREDIENTS.length - new Set(nonIngMagnetIngs.map((ing) => ing.ingredient.name)).size
+      } other ingredients`);
     } else {
-      return `${roundDown(ingMagnetAmount, 2)} of all ingredients`;
+      return `${roundDown(ingMagnetAmount, 2)} of all ${ingredient.INGREDIENTS.length} ingredients`;
     }
   } else {
     return ingredientDrop.map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`).join(separator);
