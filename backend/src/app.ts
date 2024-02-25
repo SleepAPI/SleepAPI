@@ -12,6 +12,7 @@ import MealController from './controllers/meal/meal.controller';
 import NatureController from './controllers/nature/nature.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
+import ShareController from './controllers/share/share.controller';
 import SubskillController from './controllers/subskill/subskill.controller';
 import TierlistController from './controllers/tierlist/tierlist.controller';
 import DatabaseMigration from './database/migration/database-migration';
@@ -25,6 +26,7 @@ import { MealRouter } from './routes/meal-router/meal-router';
 import { NatureRouter } from './routes/nature-router/nature-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
 import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
+import { ShareRouter } from './routes/share-router/share-router';
 import { SubskillRouter } from './routes/subskill-router/subskill-router';
 import { TierlistRouter } from './routes/tierlist-router/tierlist-router';
 import { TierlistService } from './services/api-service/tierlist/tierlist-service';
@@ -84,6 +86,7 @@ async function main() {
   IngredientRouter.register(new IngredientController());
   NatureRouter.register(new NatureController());
   SubskillRouter.register(new SubskillController());
+  ShareRouter.register(new ShareController());
 
   app.listen(port, async () => {
     Logger.log(`Server is running at ${port}`);

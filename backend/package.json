@@ -8,17 +8,13 @@
     "prebuild": "npm install && npm run clean",
     "build": "tsc && tsc-alias && tsoa spec",
     "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
-    
     "prebuild-watch": "npm run build",
     "build-watch": "concurrently \"tsc -w\" \"tsc-alias -w\"",
     "start": "npm run build && node ./dist/app.js",
-    
     "predev": "npm run build",
     "dev": "concurrently -k -n \"Build,Backend\" -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
     "dev-start": "nodemon --delay 3 --watch dist dist/app.js -- -P -l debug --debug --debug-port=9230",
-    
     "frontend": "npm run postbuild && node dist/app.js",
-
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "lint": "npm run eslint-check && npm run prettier-check",
@@ -28,7 +24,9 @@
     "prettier-check": "prettier --check .",
     "prettier-fix": "prettier --write ."
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/cors": "^2.8.15",
     "@types/express": "^4.17.20",
@@ -62,6 +60,7 @@
     "knex": "^3.0.1",
     "morgan": "~1.9.1",
     "mysql2": "^3.6.2",
+    "sharp": "^0.33.2",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.0.1"
   },
