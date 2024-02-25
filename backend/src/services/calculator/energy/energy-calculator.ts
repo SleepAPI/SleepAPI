@@ -59,7 +59,7 @@ export function calculateEnergyLeftInMorning(
 ): number {
   const energyFromRecoveryEvents = recoveryEvents.reduce((sum, proc) => sum + proc.delta, 0);
   const energyFromSkillProcs = skillActivations.reduce(
-    (sum, cur) => (sum + cur.skill.unit === 'energy' ? cur.adjustedAmount : 0),
+    (sum, cur) => sum + (cur.skill.unit === 'energy' ? cur.adjustedAmount : 0),
     0
   );
 
