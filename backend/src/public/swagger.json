@@ -73,8 +73,11 @@
 						"type": "string"
 					},
 					"amount": {
-						"type": "number",
-						"format": "double"
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
 					},
 					"unit": {
 						"type": "string",
@@ -404,6 +407,10 @@
 					"incense": {
 						"type": "boolean"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"mainBedtime": {
 						"$ref": "#/components/schemas/Time"
 					},
@@ -424,6 +431,7 @@
 					"camp",
 					"erb",
 					"incense",
+					"skillLevel",
 					"mainBedtime",
 					"mainWakeup"
 				],
@@ -490,6 +498,10 @@
 					"recoveryIncense": {
 						"type": "boolean"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"mainBedtime": {
 						"type": "string"
 					},
@@ -541,6 +553,10 @@
 					"incense": {
 						"type": "boolean"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"mainBedtime": {
 						"$ref": "#/components/schemas/Time"
 					},
@@ -567,6 +583,7 @@
 					"camp",
 					"erb",
 					"incense",
+					"skillLevel",
 					"mainBedtime",
 					"mainWakeup",
 					"berries"
@@ -662,12 +679,17 @@
 							"$ref": "#/components/schemas/SubSkill"
 						},
 						"type": "array"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"level",
 					"nature",
-					"subskills"
+					"subskills",
+					"skillLevel"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1009,6 +1031,10 @@
 					"recoveryIncense": {
 						"type": "boolean"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"mainBedtime": {
 						"type": "string"
 					},
@@ -1032,6 +1058,7 @@
 					"camp",
 					"erb",
 					"recoveryIncense",
+					"skillLevel",
 					"mainBedtime",
 					"mainWakeup",
 					"ingredientSet"
@@ -1085,7 +1112,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.9.0",
+		"version": "1.10.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1344,6 +1371,10 @@
 												"mainBedtime": {
 													"$ref": "#/components/schemas/Time"
 												},
+												"skillLevel": {
+													"type": "number",
+													"format": "double"
+												},
 												"incense": {
 													"type": "boolean"
 												},
@@ -1383,6 +1414,7 @@
 											"required": [
 												"mainWakeup",
 												"mainBedtime",
+												"skillLevel",
 												"incense",
 												"erb",
 												"camp",

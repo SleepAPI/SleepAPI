@@ -12,6 +12,7 @@ export interface ProductionStats {
   camp: boolean;
   erb: number;
   incense: boolean;
+  skillLevel: number;
   mainBedtime: Time;
   mainWakeup: Time;
   maxPotSize?: number;

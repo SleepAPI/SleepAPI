@@ -17,6 +17,8 @@
     />
     <meta property="og:image" content="https://api.sleepapi.net/sleepapi-banner.png" />
     <meta property="og:url" content="https://sleepapi.net" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://api.sleepapi.net/sleepapi-banner.png" />
     <link rel="icon" href="/cook.ico" type="image/x-icon" />
     <!-- TODO: app.css is mostly for topnav at this point -->
     <link rel="stylesheet" href="/app.css" />
@@ -105,8 +107,8 @@
       }
     </style>
 
-    <script src="functions.1.9.0.js"></script>
-    <script src="charts.1.9.0.js"></script>
+    <script src="functions.1.10.0.js"></script>
+    <script src="charts.1.10.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -661,9 +663,24 @@
             value="0"
             min="0"
             max="10"
-            style="width: 300px; margin: auto; display: block"
+            style="width: 300px"
             oninput="updateValue(this)"
-          />
+          /><br />
+
+          <label for="skilllevel" class="form-label">Main skill level:&nbsp;</label><span id="skilllevelValue">6</span
+          ><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="skilllevel"
+            name="skilllevel"
+            value="6"
+            min="1"
+            max="6"
+            style="width: 300px"
+            oninput="updateValue(this)"
+          /><br />
 
           <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
           ><br />

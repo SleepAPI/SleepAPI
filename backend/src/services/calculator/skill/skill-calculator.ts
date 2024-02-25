@@ -26,12 +26,13 @@ export function calculateOddsAtLeastOneSkillProc(params: { skillPercentage: numb
 }
 
 export function scheduleSkillEvents(params: {
+  skillLevel: number;
   pokemonWithAverageProduce: PokemonProduce;
   oddsOfNightSkillProc: number;
   nrOfDaySkillProcs: number;
   nrOfDayHelps: number;
 }) {
-  const { pokemonWithAverageProduce, oddsOfNightSkillProc, nrOfDaySkillProcs, nrOfDayHelps } = params;
+  const { skillLevel, pokemonWithAverageProduce, oddsOfNightSkillProc, nrOfDaySkillProcs, nrOfDayHelps } = params;
   const skill = pokemonWithAverageProduce.pokemon.skill;
 
   const nrOfHelpsBeforeSkillActivates = Math.floor(nrOfDayHelps / nrOfDaySkillProcs);
@@ -58,6 +59,7 @@ export function scheduleSkillEvents(params: {
   activationsWithAdjustedAmount.forEach(({ nrOfHelpsToActivate, adjustedAmount }) =>
     createSkillEvent({
       skill,
+      skillLevel,
       nrOfHelpsToActivate,
       adjustedAmount,
       pokemonWithAverageProduce,

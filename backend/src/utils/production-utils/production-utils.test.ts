@@ -20,6 +20,7 @@ describe('chooseIngredientSets', () => {
           level: 60,
           nature: nature.RASH,
           subskills: [],
+          skillLevel: 6,
         },
         detailedProduce: {
           produce: {

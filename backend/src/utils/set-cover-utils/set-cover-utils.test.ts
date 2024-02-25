@@ -40,7 +40,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           averageTotalSkillProcs: 0,
         },
-        customStats: { level: 30, nature: nature.RASH, subskills: [] },
+        customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
       },
       {
         pokemonCombination: {
@@ -74,6 +74,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           level: 30,
           nature: nature.RASH,
           subskills: [],
+          skillLevel: 6,
         },
       },
     ];
@@ -103,7 +104,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           averageTotalSkillProcs: 0,
         },
-        customStats: { level: 30, nature: nature.RASH, subskills: [] },
+        customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
       },
       {
         pokemonCombination: {
@@ -121,7 +122,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           averageTotalSkillProcs: 0,
         },
-        customStats: { level: 30, nature: nature.RASH, subskills: [] },
+        customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
       },
     ];
 
@@ -159,6 +160,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           level: 30,
           nature: nature.RASH,
           subskills: [],
+          skillLevel: 6,
         },
       },
     ];

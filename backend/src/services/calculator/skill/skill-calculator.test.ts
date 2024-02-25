@@ -66,6 +66,7 @@ describe('calculateOddsAtLeastOneSkillProc', () => {
 describe('scheduleSkillEvents', () => {
   it('shall schedule skill events correctly for typical values', () => {
     const params = {
+      skillLevel: 6,
       pokemonWithAverageProduce,
       oddsOfNightSkillProc: 0.5,
       nrOfDaySkillProcs: 3.1,
@@ -87,6 +88,7 @@ describe('scheduleSkillEvents', () => {
 
   it('shall handle zero day helps correctly', () => {
     const params = {
+      skillLevel: 6,
       pokemonWithAverageProduce,
       oddsOfNightSkillProc: 0.3,
       nrOfDaySkillProcs: 0,
@@ -101,7 +103,14 @@ describe('scheduleSkillEvents', () => {
         "fractionOfProc": 0.3,
         "nrOfHelpsToActivate": 0,
         "skill": {
-          "amount": 2066,
+          "amount": [
+            400,
+            569,
+            785,
+            1083,
+            1496,
+            2066,
+          ],
           "name": "Charge Strength S",
           "unit": "strength",
         },
@@ -113,7 +122,14 @@ describe('scheduleSkillEvents', () => {
         "fractionOfProc": 0,
         "nrOfHelpsToActivate": 0,
         "skill": {
-          "amount": 2066,
+          "amount": [
+            400,
+            569,
+            785,
+            1083,
+            1496,
+            2066,
+          ],
           "name": "Charge Strength S",
           "unit": "strength",
         },
@@ -123,6 +139,7 @@ describe('scheduleSkillEvents', () => {
 
   it('shall handle more helps than procs', () => {
     const params = {
+      skillLevel: 6,
       pokemonWithAverageProduce,
       oddsOfNightSkillProc: 0.4,
       nrOfDaySkillProcs: 2,

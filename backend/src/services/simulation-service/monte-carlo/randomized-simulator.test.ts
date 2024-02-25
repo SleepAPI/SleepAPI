@@ -13,6 +13,7 @@ describe('randomizedSimulation', () => {
       recoveryEvents: [],
       mealTimes: [],
       skillPercentage: 0.2,
+      skillLevel: 6,
     });
 
     expect(result.dayHelps).toBe(95);

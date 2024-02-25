@@ -193,6 +193,7 @@ function goToProductionCalculator() {
     camp: document.getElementById('camp').checked,
     erb: +document.getElementById('erb').value,
     recoveryincense: false, // TODO: hard-coded
+    skillLevel: +document.getElementById('skilllevel').value,
     mainBedtime: document.getElementById('mainBedtime').value,
     mainWakeup: document.getElementById('mainWakeup').value,
     ingredientSet: document.getElementById('ingredientDropdown').getAttribute('data-combination').split('/'),

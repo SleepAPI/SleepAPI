@@ -36,6 +36,7 @@ export default class OptimalController extends Controller {
       camp: input.camp ?? false,
       erb: input.erb ?? 0,
       incense: input.recoveryIncense ?? false,
+      skillLevel: input.skillLevel ?? 6,
       mainBedtime: parseTime(input.mainBedtime ?? '21:30'),
       mainWakeup: parseTime(input.mainWakeup ?? '06:00'),
       maxPotSize: input.maxPotSize,

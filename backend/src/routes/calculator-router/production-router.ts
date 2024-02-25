@@ -15,6 +15,7 @@ export interface ProductionRequest {
   camp: boolean;
   erb: number;
   recoveryIncense: boolean;
+  skillLevel: number;
   mainBedtime: string;
   mainWakeup: string;
   ingredientSet: string[];

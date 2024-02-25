@@ -11,6 +11,7 @@ describe('monteCarlo', () => {
       pokemon: MOCKED_POKEMON,
       recoveryEvents: [],
       skillPercentage: MOCKED_POKEMON.skillPercentage / 100,
+      skillLevel: 6,
       monteCarloIterations: 50,
     });
 

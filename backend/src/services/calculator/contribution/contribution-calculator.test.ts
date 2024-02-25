@@ -50,6 +50,7 @@ describe('calculateMealContributionFor', () => {
         camp: false,
         helpingBonus: 0,
         incense: false,
+        skillLevel: 6,
         mainBedtime: { hour: 21, minute: 30, second: 0 },
         mainWakeup: { hour: 6, minute: 0, second: 0 },
       },

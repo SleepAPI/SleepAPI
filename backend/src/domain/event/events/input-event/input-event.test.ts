@@ -12,7 +12,7 @@ describe('InputEvent', () => {
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
     });
     expect(event.format()).toMatchInlineSnapshot(
-      `"[06:00:00][Input] (PINSIR): Level: 60, Nature: Quiet (+ing -exp), Sub-skills: [Helping Speed M, Ingredient Finder M, Ingredient Finder S]"`
+      `"[06:00:00][Input] (PINSIR): Level: 60, Nature: Quiet (+ing -exp), Main skill level: 6, Sub-skills: [Helping Speed M, Ingredient Finder M, Ingredient Finder S]"`
     );
   });
 

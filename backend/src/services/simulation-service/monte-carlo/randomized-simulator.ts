@@ -39,6 +39,7 @@ export function randomizedSimulation(params: {
   dayInfo: SleepInfo;
   helpFrequency: number;
   skillPercentage: number;
+  skillLevel: number;
   pokemon: pokemon.Pokemon;
   recoveryEvents: EnergyEvent[];
   mealTimes: Time[];
@@ -50,6 +51,7 @@ export function randomizedSimulation(params: {
     dayInfo,
     helpFrequency,
     skillPercentage,
+    skillLevel,
     pokemon,
     recoveryEvents,
     mealTimes,
@@ -90,7 +92,7 @@ export function randomizedSimulation(params: {
     const skillActivated = rollForSkillProc(skillPercentage);
     if (skillActivated) {
       if (pokemon.skill.unit === 'energy') {
-        currentEnergy += pokemon.skill.amount * nature.energy;
+        currentEnergy += pokemon.skill.amount[skillLevel - 1] * nature.energy;
       }
       skillProcsNight += 1;
       break;
@@ -129,7 +131,7 @@ export function randomizedSimulation(params: {
       if (rollForSkillProc(skillPercentage)) {
         skillProcsDay += 1;
         if (pokemon.skill.unit === 'energy') {
-          skillRecovery = pokemon.skill.amount * nature.energy;
+          skillRecovery = pokemon.skill.amount[skillLevel - 1] * nature.energy;
         }
       }
 

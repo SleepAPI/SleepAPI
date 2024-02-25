@@ -24,6 +24,7 @@ export function calculatePokemonProduction(
     erb,
     cheer,
     incense,
+    skillLevel,
     mainBedtime,
     mainWakeup,
   } = details;
@@ -43,6 +44,7 @@ export function calculatePokemonProduction(
       level,
       nature,
       subskills,
+      skillLevel,
     };
 
     const { detailedProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({

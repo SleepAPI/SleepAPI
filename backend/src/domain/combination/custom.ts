@@ -5,6 +5,7 @@ export interface CustomStats {
   level: number;
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
+  skillLevel: number;
 }
 
 export interface CustomPokemonCombinationWithProduce {
