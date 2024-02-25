@@ -12,16 +12,14 @@ export default class ShareController extends Controller {
     @Request() request: Protocol<unknown, unknown, unknown, ShareParams>
   ) {
     const pkmn = queryParams.pokemon;
-    const title = pkmn;
-    const description = pkmn;
+    const title = `See my ${pkmn} calculation on Sleep API!`;
+    // const description = pkmn; // TODO: maybe not use?
 
     const protocol = request.protocol;
     const host = request.get('host');
     const baseUrl = `${protocol}://${host}`;
-    const imageUrl =
-      'https://opengraph.githubassets.com/abbf54f2df2c3b5af8b115f4fd9a68625abfe429514d9e86f80c06e34707b4cf/SleepAPI/SleepAPI/issues/190';
-    // const imageUrl = `${baseUrl}/github_test.png`; // static doesn't work, small image
-    // const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`; // auto-generated doesn't work, small image
+
+    const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`;
     const prodCalcUrl = `${baseUrl}/production-calculator.html`;
 
     const htmlContent = `
@@ -29,13 +27,14 @@ export default class ShareController extends Controller {
     <html>
     <head>
         <title>See my ${pkmn} calculation on Sleep API!</title>
-        <meta property="og:title" content="${title || 'Default Title'}">
-        <meta property="og:description" content="${description || 'Default Description'}">
-        <meta property="og:image" content="${imageUrl || 'Default Image URL'}">
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="600" />
-        <meta property="og:url" content="${this.#getFullUrl(request)}" />
-        <!-- other HTML head elements -->
+        <meta property="og:title" content="${title}">
+        <meta property="og:image" content="${imageUrl}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="600">
+        <meta property="og:url" content="${this.#getFullUrl(request)}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:image" content="${imageUrl}">
     </head>
     <body>
       <div>
