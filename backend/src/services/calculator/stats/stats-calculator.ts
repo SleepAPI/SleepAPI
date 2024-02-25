@@ -58,5 +58,6 @@ export function getOptimalIngredientStats(level: number, pokemon: pokemon.Pokemo
     level,
     nature: nature.QUIET,
     subskills: subskillsForFilter('optimal', level, pokemon),
+    skillLevel: 6,
   };
 }

@@ -90,6 +90,7 @@ describe('getOptimalIngredientStats', () => {
       level,
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
+      skillLevel: 6,
     });
   });
 });

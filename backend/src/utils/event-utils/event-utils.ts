@@ -26,6 +26,7 @@ export function getDefaultRecoveryEvents(
   return recoveryEvents;
 }
 
+// currently schedules level 6 procs
 export function scheduleTeamEnergyEvents(
   recoveryEvents: ScheduledEvent[],
   period: TimePeriod,
@@ -42,7 +43,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: period.start,
       description: 'E4E',
-      delta: mainskill.ENERGY_FOR_EVERYONE.amount * nature.energy,
+      delta: mainskill.ENERGY_FOR_EVERYONE.amount[5] * nature.energy,
     });
     recoveryEvents.push(event);
   }
@@ -52,7 +53,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: period.start,
       description: 'Energizing Cheer',
-      delta: (mainskill.ENERGIZING_CHEER_S.amount * nature.energy) / 5,
+      delta: (mainskill.ENERGIZING_CHEER_S.amount[5] * nature.energy) / 5,
     });
     recoveryEvents.push(event);
   }

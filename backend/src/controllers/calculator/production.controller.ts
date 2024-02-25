@@ -27,6 +27,7 @@ export default class ProductionController extends Controller {
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,
       incense: queryAsBoolean(input.recoveryIncense),
+      skillLevel: queryAsNumber(input.skillLevel) ?? 6,
       mainBedtime: parseTime(input.mainBedtime),
       mainWakeup: parseTime(input.mainWakeup),
     };

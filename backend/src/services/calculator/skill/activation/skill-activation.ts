@@ -7,6 +7,7 @@ import { emptyBerrySet } from '../../berry/berry-calculator';
 export function createSkillEvent(
   params: {
     skill: mainskill.MainSkill;
+    skillLevel: number;
     nrOfHelpsToActivate: number;
     adjustedAmount: number;
     pokemonWithAverageProduce: PokemonProduce;
@@ -14,22 +15,31 @@ export function createSkillEvent(
   },
   metronomeFactor = 1
 ) {
-  const { skill, nrOfHelpsToActivate, adjustedAmount, pokemonWithAverageProduce, skillActivations } = params;
+  const { skill, skillLevel, nrOfHelpsToActivate, adjustedAmount, pokemonWithAverageProduce, skillActivations } =
+    params;
   switch (skill) {
     case mainskill.ENERGIZING_CHEER_S: {
-      skillActivations.push(activateEnergizingCheer({ nrOfHelpsToActivate, adjustedAmount, metronomeFactor }));
+      skillActivations.push(
+        activateEnergizingCheer({ skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor })
+      );
       break;
     }
     case mainskill.INGREDIENT_MAGNET_S: {
       const berries = emptyBerrySet(pokemonWithAverageProduce.pokemon.berry);
       skillActivations.push(
-        activateIngredientMagnet({ nrOfHelpsToActivate, adjustedAmount, berries, metronomeFactor })
+        activateIngredientMagnet({ skillLevel, nrOfHelpsToActivate, adjustedAmount, berries, metronomeFactor })
       );
       break;
     }
     case mainskill.EXTRA_HELPFUL_S: {
       skillActivations.push(
-        activateExtraHelpful({ nrOfHelpsToActivate, adjustedAmount, pokemonWithAverageProduce, metronomeFactor })
+        activateExtraHelpful({
+          skillLevel,
+          nrOfHelpsToActivate,
+          adjustedAmount,
+          pokemonWithAverageProduce,
+          metronomeFactor,
+        })
       );
       break;
     }
@@ -38,49 +48,53 @@ export function createSkillEvent(
       break;
     }
     default: {
-      skillActivations.push(activateNonProduceSkills({ skill, nrOfHelpsToActivate, adjustedAmount, metronomeFactor }));
+      skillActivations.push(
+        activateNonProduceSkills({ skill, skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor })
+      );
       break;
     }
   }
 }
 
 export function activateEnergizingCheer(params: {
+  skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
 
   const skill = mainskill.ENERGIZING_CHEER_S;
   const divideByRandomAndMetronome = 5 * metronomeFactor;
 
   return {
     skill,
-    adjustedAmount: (skill.amount * adjustedAmount) / divideByRandomAndMetronome,
+    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
 }
 
 export function activateIngredientMagnet(params: {
+  skillLevel: number;
   berries: BerrySet;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { berries, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skillLevel, berries, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
   const skill = mainskill.INGREDIENT_MAGNET_S;
 
   const divideByAverageIngredientAndMetronome = ingredient.INGREDIENTS.length * metronomeFactor;
 
   const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
     ingredient: ing,
-    amount: (skill.amount * adjustedAmount) / divideByAverageIngredientAndMetronome,
+    amount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByAverageIngredientAndMetronome,
   }));
 
   return {
     skill,
-    adjustedAmount: (skill.amount * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     adjustedProduce: {
       berries,
@@ -91,12 +105,13 @@ export function activateIngredientMagnet(params: {
 }
 
 export function activateExtraHelpful(params: {
+  skillLevel: number;
   pokemonWithAverageProduce: PokemonProduce;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { pokemonWithAverageProduce, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skillLevel, pokemonWithAverageProduce, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
   const skill = mainskill.EXTRA_HELPFUL_S;
 
   const divideByRandomAndMetronome = 5 * metronomeFactor;
@@ -105,11 +120,12 @@ export function activateExtraHelpful(params: {
     berries: {
       berry: pokemonWithAverageProduce.produce.berries.berry,
       amount:
-        (pokemonWithAverageProduce.produce.berries.amount * skill.amount * adjustedAmount) / divideByRandomAndMetronome,
+        (pokemonWithAverageProduce.produce.berries.amount * skill.amount[skillLevel - 1] * adjustedAmount) /
+        divideByRandomAndMetronome,
     },
     ingredients: pokemonWithAverageProduce.produce.ingredients.map(({ amount, ingredient }) => ({
       ingredient,
-      amount: (amount * skill.amount * adjustedAmount) / divideByRandomAndMetronome,
+      amount: (amount * skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
     })),
   };
 
@@ -124,21 +140,23 @@ export function activateExtraHelpful(params: {
 
 export function activateNonProduceSkills(params: {
   skill: mainskill.MainSkill;
+  skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { skill, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skill, skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
 
   return {
     skill,
-    adjustedAmount: (skill.amount * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
 }
 
 export function activateMetronome(params: {
+  skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   pokemonWithAverageProduce: PokemonProduce;

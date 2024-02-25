@@ -22,6 +22,7 @@ describe('processOptimalTeamSolutions', () => {
       level: 60,
       nature: nature.RASH,
       subskills: [],
+      skillLevel: 6,
     };
 
     const detailedProduce: DetailedProduce = {

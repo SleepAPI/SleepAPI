@@ -242,12 +242,14 @@ class WebsiteConverterServiceImpl {
 
     let prettyString = `-------------\n`;
 
-    prettyString += `Level: ${pokemonCombination.customStats.level}, Nature: ${pokemonCombination.customStats.nature.prettyName}\n`;
-    prettyString += `Subskills: ${
-      pokemonCombination.customStats.subskills.length > 0
-        ? pokemonCombination.customStats.subskills.map((s) => s.name).join(', ')
-        : 'None'
-    }\n`;
+    prettyString +=
+      `Level: ${pokemonCombination.customStats.level}, Nature: ${pokemonCombination.customStats.nature.prettyName}\n` +
+      `Main skill level: ${pokemonCombination.customStats.skillLevel}\n` +
+      `Subskills: ${
+        pokemonCombination.customStats.subskills.length > 0
+          ? pokemonCombination.customStats.subskills.map((s) => s.name).join(', ')
+          : 'None'
+      }\n`;
 
     const e4eHbCamp: string[] = [];
     if (filters.e4e > 0) {

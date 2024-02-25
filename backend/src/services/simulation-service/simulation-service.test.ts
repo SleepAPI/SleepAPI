@@ -18,7 +18,14 @@ describe('setupAndRunProductionSimulation', () => {
           "fractionOfProc": 0.2762022794075043,
           "nrOfHelpsToActivate": 0,
           "skill": {
-            "amount": 4546,
+            "amount": [
+              880,
+              1251,
+              1726,
+              2383,
+              3290,
+              4546,
+            ],
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -28,7 +35,14 @@ describe('setupAndRunProductionSimulation', () => {
           "fractionOfProc": 1,
           "nrOfHelpsToActivate": 50,
           "skill": {
-            "amount": 4546,
+            "amount": [
+              880,
+              1251,
+              1726,
+              2383,
+              3290,
+              4546,
+            ],
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -38,7 +52,14 @@ describe('setupAndRunProductionSimulation', () => {
           "fractionOfProc": 0.040000000000000036,
           "nrOfHelpsToActivate": 52,
           "skill": {
-            "amount": 4546,
+            "amount": [
+              880,
+              1251,
+              1726,
+              2383,
+              3290,
+              4546,
+            ],
             "name": "Charge Strength M",
             "unit": "strength",
           },

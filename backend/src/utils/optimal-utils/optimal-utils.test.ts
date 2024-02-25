@@ -28,6 +28,7 @@ describe('calculateCombinedContributions', () => {
         level: 60,
         nature: nature.RASH,
         subskills: [],
+        skillLevel: 6,
       },
     };
 
@@ -201,6 +202,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         level: 0,
         nature: nature.RASH,
         subskills: [],
+        skillLevel: 6,
       },
       detailedProduce: {
         produce: {

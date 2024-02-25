@@ -11,7 +11,7 @@ export function calculateOptimalProductionForSetCover(
   productionStats: InputProductionStats,
   monteCarloIterations: number
 ) {
-  const { level, nature, subskills, berries } = productionStats;
+  const { level, nature, subskills, berries, skillLevel } = productionStats;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
   const pokemonWithCorrectBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
@@ -24,6 +24,7 @@ export function calculateOptimalProductionForSetCover(
         level,
         nature,
         subskills: subskillsForPokemon,
+        skillLevel,
       };
       const { detailedProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination: {

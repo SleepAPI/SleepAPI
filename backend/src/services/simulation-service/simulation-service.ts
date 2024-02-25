@@ -186,6 +186,7 @@ export function generateSkillActivations(params: {
       dayInfo,
       helpFrequency,
       skillPercentage,
+      skillLevel: input.skillLevel,
       pokemon: pokemonWithAverageProduce.pokemon,
       recoveryEvents,
       mealTimes,
@@ -212,6 +213,7 @@ export function generateSkillActivations(params: {
   }
 
   return scheduleSkillEvents({
+    skillLevel: input.skillLevel,
     pokemonWithAverageProduce,
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,

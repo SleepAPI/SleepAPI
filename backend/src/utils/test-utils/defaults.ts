@@ -26,6 +26,7 @@ export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
   camp: false,
   erb: 0,
   incense: false,
+  skillLevel: 6,
   mainBedtime: MOCKED_MAIN_SLEEP.end,
   mainWakeup: MOCKED_MAIN_SLEEP.start,
 };

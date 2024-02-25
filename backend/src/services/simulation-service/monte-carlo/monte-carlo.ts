@@ -32,12 +32,22 @@ export function monteCarlo(params: {
   dayInfo: SleepInfo;
   helpFrequency: number;
   skillPercentage: number;
+  skillLevel: number;
   pokemon: pokemon.Pokemon;
   recoveryEvents: EnergyEvent[];
   mealTimes: Time[];
   monteCarloIterations: number;
 }) {
-  const { dayInfo, helpFrequency, skillPercentage, pokemon, recoveryEvents, mealTimes, monteCarloIterations } = params;
+  const {
+    dayInfo,
+    helpFrequency,
+    skillPercentage,
+    skillLevel,
+    pokemon,
+    recoveryEvents,
+    mealTimes,
+    monteCarloIterations,
+  } = params;
 
   const results: MonteCarloResult[] = [];
   let energyFromYesterday = 0;
@@ -47,6 +57,7 @@ export function monteCarlo(params: {
       dayInfo,
       helpFrequency,
       skillPercentage,
+      skillLevel,
       pokemon,
       recoveryEvents,
       mealTimes,
