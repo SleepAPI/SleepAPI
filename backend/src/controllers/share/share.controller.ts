@@ -18,8 +18,10 @@ export default class ShareController extends Controller {
     const protocol = request.protocol;
     const host = request.get('host');
     const baseUrl = `${protocol}://${host}`;
-    const imageUrl = `${baseUrl}/github_test.png`;
-    // const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`;
+    const imageUrl =
+      'https://opengraph.githubassets.com/abbf54f2df2c3b5af8b115f4fd9a68625abfe429514d9e86f80c06e34707b4cf/SleepAPI/SleepAPI/issues/190';
+    // const imageUrl = `${baseUrl}/github_test.png`; // static doesn't work, small image
+    // const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`; // auto-generated doesn't work, small image
     const prodCalcUrl = `${baseUrl}/production-calculator.html`;
 
     const htmlContent = `
