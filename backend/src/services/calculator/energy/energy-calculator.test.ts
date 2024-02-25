@@ -1,9 +1,10 @@
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults';
-import { nature } from 'sleepapi-common';
+import { mainskill, nature } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, calculateStartingEnergy, maybeDegradeEnergy } from './energy-calculator';
 
 describe('calculateStartingEnergy', () => {
@@ -191,6 +192,45 @@ describe('calculateStartingEnergy', () => {
     expect(startingEnergy).toBe(100);
     expect(energyLeftInMorning).toBe(0);
     expect(energyRecovered).toBe(100);
+  });
+
+  it('self charge skill activation shall let us start at full despite low sleep score', () => {
+    // 2 hour sleep
+    const mainSleep: SleepInfo = {
+      period: {
+        end: {
+          hour: 4,
+          minute: 0,
+          second: 0,
+        },
+        start: {
+          hour: 6,
+          minute: 0,
+          second: 0,
+        },
+      },
+      incense: false,
+      nature: nature.BASHFUL,
+      erb: 0,
+    };
+    const skillActivations: SkillActivation[] = [];
+    for (let i = 0; i < 15; i++) {
+      skillActivations.push({
+        adjustedAmount: mainskill.CHARGE_ENERGY_S.amount[5],
+        fractionOfProc: 1,
+        nrOfHelpsToActivate: 0,
+        skill: mainskill.CHARGE_ENERGY_S,
+      });
+    }
+
+    const { startingEnergy, energyLeftInMorning, energyRecovered } = calculateStartingEnergy({
+      dayPeriod: mainSleep,
+      recoveryEvents: [],
+      skillActivations,
+    });
+    expect(startingEnergy).toBe(100);
+    expect(energyLeftInMorning).toBe(150);
+    expect(energyRecovered).toBe(-50);
   });
 });
 

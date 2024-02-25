@@ -1,10 +1,11 @@
 import { ProductionStats } from '@src/domain/computed/production';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
 import { getNature } from '@src/utils/nature-utils/nature-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')
@@ -17,6 +18,12 @@ export default class ProductionController extends Controller {
 
   #parseInput(input: ProductionRequest): ProductionStats {
     const level = queryAsNumber(input.level) ?? 60;
+    const mainBedtime = parseTime(input.mainBedtime);
+    const mainWakeup = parseTime(input.mainWakeup);
+    const duration = calculateDuration({ start: mainBedtime, end: mainWakeup });
+    if (duration.hour < 1) {
+      throw new SleepAPIError('Minimum sleep of 1 hour required');
+    }
     const parsedInput: ProductionStats = {
       level,
       nature: getNature(input.nature),
@@ -28,8 +35,8 @@ export default class ProductionController extends Controller {
       erb: queryAsNumber(input.erb) ?? 0,
       incense: queryAsBoolean(input.recoveryIncense),
       skillLevel: queryAsNumber(input.skillLevel) ?? 6,
-      mainBedtime: parseTime(input.mainBedtime),
-      mainWakeup: parseTime(input.mainWakeup),
+      mainBedtime,
+      mainWakeup,
     };
     return parsedInput;
   }
