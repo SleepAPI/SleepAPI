@@ -18,7 +18,8 @@ export default class ShareController extends Controller {
     const protocol = request.protocol;
     const host = request.get('host');
     const baseUrl = `${protocol}://${host}`;
-    const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`;
+    const imageUrl = `${baseUrl}/github_test.png`;
+    // const imageUrl = `${baseUrl}/api/image?pokemon=${encodeURIComponent(pkmn)}`;
     const prodCalcUrl = `${baseUrl}/production-calculator.html`;
 
     const htmlContent = `
@@ -53,7 +54,7 @@ export default class ShareController extends Controller {
     const { pokemon } = queryParams;
 
     const width = 1200;
-    const height = 630;
+    const height = 600;
     const svgImage = `
     <svg width="${width}" height="${height}">
         <style>
