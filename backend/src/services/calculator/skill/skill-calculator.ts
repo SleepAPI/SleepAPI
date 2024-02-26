@@ -35,23 +35,10 @@ export function scheduleSkillEvents(params: {
   const { skillLevel, pokemonWithAverageProduce, oddsOfNightSkillProc, nrOfDaySkillProcs, nrOfDayHelps } = params;
   const skill = pokemonWithAverageProduce.pokemon.skill;
 
-  const nrOfHelpsBeforeSkillActivates = Math.floor(nrOfDayHelps / nrOfDaySkillProcs);
-  const fullDayHelps = Math.floor(nrOfDaySkillProcs);
-
-  // add nightly partial activation at 0 helps
-  const activationsWithAdjustedAmount: { nrOfHelpsToActivate: number; adjustedAmount: number }[] = [
-    {
-      nrOfHelpsToActivate: 0,
-      adjustedAmount: oddsOfNightSkillProc,
-    },
-  ];
-  for (let i = 1; i <= fullDayHelps; i++) {
-    activationsWithAdjustedAmount.push({ adjustedAmount: 1, nrOfHelpsToActivate: nrOfHelpsBeforeSkillActivates * i });
-  }
-  // final partial proc
-  activationsWithAdjustedAmount.push({
-    adjustedAmount: nrOfDaySkillProcs - fullDayHelps,
-    nrOfHelpsToActivate: Math.floor(nrOfDayHelps),
+  const activationsWithAdjustedAmount = calculateHelpsToProcSchedule({
+    oddsOfNightSkillProc,
+    nrOfDaySkillProcs,
+    nrOfDayHelps,
   });
 
   const skillActivations: SkillActivation[] = [];
@@ -68,4 +55,43 @@ export function scheduleSkillEvents(params: {
   );
 
   return skillActivations;
+}
+
+export function calculateHelpsToProcSchedule(params: {
+  oddsOfNightSkillProc: number;
+  nrOfDaySkillProcs: number;
+  nrOfDayHelps: number;
+}): { nrOfHelpsToActivate: number; adjustedAmount: number }[] {
+  const { oddsOfNightSkillProc, nrOfDaySkillProcs, nrOfDayHelps } = params;
+
+  const nrOfHelpsBeforeSkillActivates = nrOfDayHelps / nrOfDaySkillProcs;
+  const nrOfFullSkillProcs = Math.floor(nrOfDaySkillProcs);
+
+  // add nightly partial activation at 0 helps
+  const activationsWithAdjustedAmount: { nrOfHelpsToActivate: number; adjustedAmount: number }[] = [
+    {
+      nrOfHelpsToActivate: 0,
+      adjustedAmount: oddsOfNightSkillProc,
+    },
+  ];
+
+  let currentHelps = 0;
+  let remainingDecimal = 0;
+  for (let i = 1; i <= nrOfFullSkillProcs; i++) {
+    const avgHelpsPerSkillProc = nrOfHelpsBeforeSkillActivates;
+    const avgHelpsWithStoredDecimal = avgHelpsPerSkillProc + remainingDecimal;
+
+    const roundedHelps = Math.floor(avgHelpsWithStoredDecimal);
+    const stored = avgHelpsWithStoredDecimal - roundedHelps;
+    remainingDecimal = stored;
+    currentHelps += roundedHelps;
+
+    activationsWithAdjustedAmount.push({ adjustedAmount: 1, nrOfHelpsToActivate: currentHelps });
+  }
+  // final partial proc
+  activationsWithAdjustedAmount.push({
+    adjustedAmount: nrOfDaySkillProcs - nrOfFullSkillProcs,
+    nrOfHelpsToActivate: Math.floor(nrOfDayHelps),
+  });
+  return activationsWithAdjustedAmount;
 }
