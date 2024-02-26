@@ -2,6 +2,7 @@ import { PokemonProduce } from '@src/domain/combination/produce';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 import {
+  calculateHelpsToProcSchedule,
   calculateOddsAtLeastOneSkillProc,
   calculateSkillPercentage,
   calculateSkillProcs,
@@ -172,3 +173,62 @@ const pokemonWithAverageProduce: PokemonProduce = {
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
   },
 };
+
+describe('calculateHelpsToProcSchedule', () => {
+  it('shall schedule skill procs after x helps for full day', () => {
+    const result = calculateHelpsToProcSchedule({
+      oddsOfNightSkillProc: 1,
+      nrOfDaySkillProcs: 9.5,
+      nrOfDayHelps: 21.85,
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 0,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 2,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 4,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 6,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 9,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 11,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 13,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 16,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 18,
+        },
+        {
+          "adjustedAmount": 1,
+          "nrOfHelpsToActivate": 20,
+        },
+        {
+          "adjustedAmount": 0.5,
+          "nrOfHelpsToActivate": 21,
+        },
+      ]
+    `);
+  });
+});
