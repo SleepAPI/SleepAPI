@@ -1,8 +1,8 @@
-import { getIngredientForname, getIngredientNames } from './ingredient-utils';
+import { getIngredientForName, getIngredientNames } from './ingredient-utils';
 
 describe('getIngredientForname', () => {
   it('shall return ingredient for name', () => {
-    expect(getIngredientForname('Honey')).toMatchInlineSnapshot(`
+    expect(getIngredientForName('Honey')).toMatchInlineSnapshot(`
       {
         "longName": "Honey",
         "name": "Honey",
@@ -13,7 +13,7 @@ describe('getIngredientForname', () => {
   });
 
   it('shall lookup ingredient case-insensitive', () => {
-    expect(getIngredientForname('hOneY')).toMatchInlineSnapshot(`
+    expect(getIngredientForName('hOneY')).toMatchInlineSnapshot(`
       {
         "longName": "Honey",
         "name": "Honey",
@@ -24,7 +24,7 @@ describe('getIngredientForname', () => {
   });
 
   it('shall throw programmer error if ingredient is missing', () => {
-    expect(() => getIngredientForname('missing')).toThrowErrorMatchingInlineSnapshot(
+    expect(() => getIngredientForName('missing')).toThrowErrorMatchingInlineSnapshot(
       `"Ingredient with name [missing] does not exist"`
     );
   });

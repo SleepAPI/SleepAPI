@@ -26,11 +26,12 @@ class ShareRouterImpl {
   public async register(controller: ShareController) {
     BaseRouter.router.get('/share', async (req: Request<unknown, unknown, unknown, ShareParams>, res: Response) => {
       try {
-        Logger.log('Entered /share');
+        Logger.log('Entered /share: ' + JSON.stringify(req.query));
         const shareHtml = await controller.getCustomSite(req.query, req);
         res.send(shareHtml);
       } catch (err) {
         Logger.error(err as Error);
+        // Logger.error((err as Error).stack);
         res.status(500).send('Something went wrong');
       }
     });
