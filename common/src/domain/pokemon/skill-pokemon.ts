@@ -43,6 +43,7 @@ import {
   ENERGIZING_CHEER_S,
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
+  EXTRA_TASTY_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
 } from '../mainskill/mainskill';
@@ -717,6 +718,29 @@ export const SYLVEON: Pokemon = {
   skill: ENERGY_FOR_EVERYONE,
 };
 
+// TODO: update
+export const DEDENNE: Pokemon = {
+  name: 'DEDENNE',
+  specialty: 'skill',
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 20,
+  skillPercentage: 2,
+  berry: GREPA,
+  carrySize: 19,
+  maxCarrySize: 19,
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  ingredient60: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  skill: EXTRA_TASTY_S,
+};
+
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   PIKACHU_CHRISTMAS,
   WIGGLYTUFF,
@@ -744,6 +768,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   GLACEON,
   GALLADE,
   SYLVEON,
+  // DEDENNE, // TODO: bring back once we have data
 ];
 
 export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [

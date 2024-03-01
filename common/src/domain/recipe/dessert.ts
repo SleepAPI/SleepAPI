@@ -1,3 +1,4 @@
+import { createDessert } from 'src/utils';
 import {
   FANCY_APPLE,
   FANCY_EGG,
@@ -14,174 +15,119 @@ import {
 } from '../ingredient/ingredient';
 import { Recipe } from './recipe';
 
-export const WARM_MOOMOO_MILK: Recipe = {
+export const WARM_MOOMOO_MILK = createDessert({
   name: 'WARM_MOOMOO_MILK',
-  value: 727,
-  value50: 1803,
-  type: 'dessert',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
   bonus: 6,
-  nrOfIngredients: 7,
-};
+});
 
-export const FANCY_APPLE_JUICE: Recipe = {
+export const FANCY_APPLE_JUICE = createDessert({
   name: 'FANCY_APPLE_JUICE',
-  value: 763,
-  value50: 1892,
-  type: 'dessert',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
   bonus: 6,
-  nrOfIngredients: 8,
-};
+});
 
-export const CRAFT_SODA_POP: Recipe = {
+export const CRAFT_SODA_POP = createDessert({
   name: 'CRAFT_SODA_POP',
-  value: 964,
-  value50: 2391,
-  type: 'dessert',
   ingredients: [{ amount: 9, ingredient: HONEY }],
   bonus: 6,
-  nrOfIngredients: 9,
-};
+});
 
-export const LUCKY_CHANT_APPLE_PIE: Recipe = {
+export const LUCKY_CHANT_APPLE_PIE = createDessert({
   name: 'LUCKY_CHANT_APPLE_PIE',
-  value: 1634,
-  value50: 4052,
-  type: 'dessert',
   ingredients: [
     { amount: 12, ingredient: FANCY_APPLE },
     { amount: 4, ingredient: MOOMOO_MILK },
   ],
   bonus: 11,
-  nrOfIngredients: 16,
-};
+});
 
-export const FLUFFY_SWEET_POTATOES: Recipe = {
+export const FLUFFY_SWEET_POTATOES = createDessert({
   name: 'FLUFFY_SWEET_POTATOES',
-  value: 1783,
-  value50: 4422,
-  type: 'dessert',
   ingredients: [
     { amount: 9, ingredient: SOFT_POTATO },
     { amount: 5, ingredient: MOOMOO_MILK },
   ],
   bonus: 11,
-  nrOfIngredients: 14,
-};
+});
 
-export const EMBER_GINGER_TEA: Recipe = {
+export const EMBER_GINGER_TEA = createDessert({
   name: 'EMBER_GINGER_TEA',
-  value: 1788,
-  value50: 4434,
-  type: 'dessert',
   ingredients: [
     { amount: 9, ingredient: WARMING_GINGER },
     { amount: 7, ingredient: FANCY_APPLE },
   ],
   bonus: 11,
-  nrOfIngredients: 16,
-};
+});
 
-export const CLOUD_NINE_SOY_CAKE: Recipe = {
+export const CLOUD_NINE_SOY_CAKE = createDessert({
   name: 'CLOUD_NINE_SOY_CAKE',
-  value: 1798,
-  value50: 4459,
-  type: 'dessert',
   ingredients: [
-    { amount: 9, ingredient: FANCY_EGG },
+    { amount: 8, ingredient: FANCY_EGG },
     { amount: 7, ingredient: GREENGRASS_SOYBEANS },
   ],
   bonus: 11,
-  nrOfIngredients: 16,
-};
+});
 
-export const STALWART_VEGETABLE_JUICE: Recipe = {
+export const STALWART_VEGETABLE_JUICE = createDessert({
   name: 'STALWART_VEGETABLE_JUICE',
-  value: 1798,
-  value50: 4459,
-  type: 'dessert',
   ingredients: [
     { amount: 9, ingredient: SNOOZY_TOMATO },
     { amount: 7, ingredient: FANCY_APPLE },
   ],
   bonus: 11,
-  nrOfIngredients: 16,
-};
+});
 
-export const BIG_MALASADA: Recipe = {
+export const BIG_MALASADA = createDessert({
   name: 'BIG_MALASADA',
-  value: 2927,
-  value50: 7259,
-  type: 'dessert',
   ingredients: [
     { amount: 10, ingredient: PURE_OIL },
     { amount: 7, ingredient: MOOMOO_MILK },
     { amount: 6, ingredient: HONEY },
   ],
   bonus: 17,
-  nrOfIngredients: 23,
-};
+});
 
-export const HUSTLE_PROTEIN_SMOOTHIE: Recipe = {
+export const HUSTLE_PROTEIN_SMOOTHIE = createDessert({
   name: 'HUSTLE_PROTEIN_SMOOTHIE',
-  value: 3168,
-  value50: 7857,
-  type: 'dessert',
   ingredients: [
     { amount: 15, ingredient: GREENGRASS_SOYBEANS },
     { amount: 8, ingredient: SOOTHING_CACAO },
   ],
   bonus: 17,
-  nrOfIngredients: 23,
-};
+});
 
-export const HUGE_POWER_SOY_DONUTS: Recipe = {
+export const HUGE_POWER_SOY_DONUTS = createDessert({
   name: 'HUGE_POWER_SOY_DONUTS',
-  value: 3213,
-  value50: 7968,
-  type: 'dessert',
   ingredients: [
     { amount: 9, ingredient: PURE_OIL },
     { amount: 6, ingredient: GREENGRASS_SOYBEANS },
     { amount: 7, ingredient: SOOTHING_CACAO },
   ],
   bonus: 17,
-  nrOfIngredients: 22,
-};
+});
 
-export const SWEET_SCENT_CHOCOLATE_CAKE: Recipe = {
+export const SWEET_SCENT_CHOCOLATE_CAKE = createDessert({
   name: 'SWEET_SCENT_CHOCOLATE_CAKE',
-  value: 3280,
-  value50: 8134,
-  type: 'dessert',
   ingredients: [
     { amount: 9, ingredient: HONEY },
     { amount: 8, ingredient: SOOTHING_CACAO },
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
   bonus: 17,
-  nrOfIngredients: 24,
-};
+});
 
-export const PETAL_DANCE_CHOCOLATE_TART: Recipe = {
+export const PETAL_DANCE_CHOCOLATE_TART = createDessert({
   name: 'PETAL_DANCE_CHOCOLATE_TART',
-  value: 3314,
-  value50: 8219,
-  type: 'dessert',
   ingredients: [
     { amount: 11, ingredient: FANCY_APPLE },
     { amount: 11, ingredient: SOOTHING_CACAO },
   ],
   bonus: 25,
-  nrOfIngredients: 22,
-};
+});
 
-export const LOVELY_KISS_SMOOTHIE: Recipe = {
+export const LOVELY_KISS_SMOOTHIE = createDessert({
   name: 'LOVELY_KISS_SMOOTHIE',
-  value: 4734,
-  value50: 11740,
-  type: 'dessert',
   ingredients: [
     { amount: 11, ingredient: FANCY_APPLE },
     { amount: 9, ingredient: MOOMOO_MILK },
@@ -189,14 +135,10 @@ export const LOVELY_KISS_SMOOTHIE: Recipe = {
     { amount: 8, ingredient: SOOTHING_CACAO },
   ],
   bonus: 25,
-  nrOfIngredients: 35,
-};
+});
 
-export const STEADFAST_GINGER_COOKIES: Recipe = {
+export const STEADFAST_GINGER_COOKIES = createDessert({
   name: 'STEADFAST_GINGER_COOKIES',
-  value: 4921,
-  value50: 12204,
-  type: 'dessert',
   ingredients: [
     { amount: 14, ingredient: HONEY },
     { amount: 12, ingredient: WARMING_GINGER },
@@ -204,42 +146,30 @@ export const STEADFAST_GINGER_COOKIES: Recipe = {
     { amount: 4, ingredient: FANCY_EGG },
   ],
   bonus: 25,
-  nrOfIngredients: 35,
-};
+});
 
-export const NEROLIS_RESTORATIVE_TEA: Recipe = {
+export const NEROLIS_RESTORATIVE_TEA = createDessert({
   name: 'NEROLIS_RESTORATIVE_TEA',
-  value: 5065,
-  value50: 12561,
-  type: 'dessert',
   ingredients: [
     { amount: 11, ingredient: WARMING_GINGER },
     { amount: 15, ingredient: FANCY_APPLE },
     { amount: 9, ingredient: TASTY_MUSHROOM },
   ],
   bonus: 25,
-  nrOfIngredients: 35,
-};
+});
 
-export const EXPLOSION_POPCORN: Recipe = {
+export const EXPLOSION_POPCORN = createDessert({
   name: 'EXPLOSION_POPCORN',
-  value: 6048,
-  value50: 14999,
-  type: 'dessert',
   ingredients: [
     { amount: 15, ingredient: GREENGRASS_CORN },
     { amount: 14, ingredient: PURE_OIL },
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
   bonus: 35,
-  nrOfIngredients: 36,
-};
+});
 
-export const JIGGLYPUFFS_FRUITY_FLAN: Recipe = {
+export const JIGGLYPUFFS_FRUITY_FLAN = createDessert({
   name: 'JIGGLYPUFFS_FRUITY_FLAN',
-  value: 7594,
-  value50: 18833,
-  type: 'dessert',
   ingredients: [
     { amount: 20, ingredient: HONEY },
     { amount: 15, ingredient: FANCY_EGG },
@@ -247,14 +177,10 @@ export const JIGGLYPUFFS_FRUITY_FLAN: Recipe = {
     { amount: 10, ingredient: FANCY_APPLE },
   ],
   bonus: 35,
-  nrOfIngredients: 55,
-};
+});
 
-export const TEATIME_CORN_SCONES: Recipe = {
+export const TEATIME_CORN_SCONES = createDessert({
   name: 'TEATIME_CORN_SCONES',
-  value: 10925,
-  value50: 27094,
-  type: 'dessert',
   ingredients: [
     { amount: 20, ingredient: FANCY_APPLE },
     { amount: 20, ingredient: WARMING_GINGER },
@@ -262,14 +188,10 @@ export const TEATIME_CORN_SCONES: Recipe = {
     { amount: 9, ingredient: MOOMOO_MILK },
   ],
   bonus: 48,
-  nrOfIngredients: 67,
-};
+});
 
-export const FLOWER_GIFT_MACARONS: Recipe = {
+export const FLOWER_GIFT_MACARONS = createDessert({
   name: 'FLOWER_GIFT_MACARONS',
-  value: 13834,
-  value50: 34308,
-  type: 'dessert',
   ingredients: [
     { amount: 25, ingredient: SOOTHING_CACAO },
     { amount: 25, ingredient: FANCY_EGG },
@@ -277,8 +199,7 @@ export const FLOWER_GIFT_MACARONS: Recipe = {
     { amount: 10, ingredient: MOOMOO_MILK },
   ],
   bonus: 48,
-  nrOfIngredients: 77,
-};
+});
 
 export const DESSERTS: Recipe[] = [
   WARM_MOOMOO_MILK,

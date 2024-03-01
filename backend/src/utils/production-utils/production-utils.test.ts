@@ -38,6 +38,7 @@ describe('chooseIngredientSets', () => {
           dayHelps: 0,
           nightHelps: 0,
           averageTotalSkillProcs: 0,
+          skillActivations: [],
         },
         pokemonCombination: {
           pokemon: pokemon.PINSIR,
@@ -57,6 +58,7 @@ describe('chooseIngredientSets', () => {
         skillDreamShardValue: 11,
         skillPotSizeValue: 11,
         skillHelpsValue: 11,
+        skillTastyChanceValue: 11,
         averageEnergy: 0,
         averageFrequency: 1,
         helpsAfterSS: 2,

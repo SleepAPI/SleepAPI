@@ -1,7 +1,17 @@
 import { PokemonCombinationContributions } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
-import { PokemonIngredientSet, berry, ingredient, nature, pokemon, recipe } from 'sleepapi-common';
+import {
+  PokemonIngredientSet,
+  RecipeType,
+  berry,
+  curry,
+  dessert,
+  ingredient,
+  nature,
+  pokemon,
+  salad,
+} from 'sleepapi-common';
 import {
   calculateCombinedContributions,
   calculateOptimalFlexibleScore,
@@ -20,7 +30,7 @@ describe('calculateCombinedContributions', () => {
       contributions: [
         {
           contributedPower: 100,
-          meal: recipe.JIGGLYPUFFS_FRUITY_FLAN,
+          meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
           percentage: 100,
         },
       ],
@@ -36,10 +46,10 @@ describe('calculateCombinedContributions', () => {
     expect(result).toHaveLength(1);
     expect(result[0].scoreResult.score).toBe(120);
     expect(result[0].scoreResult.countedMeals.map((meal) => meal.meal.name)).toEqual([
-      recipe.JIGGLYPUFFS_FRUITY_FLAN.name,
+      dessert.JIGGLYPUFFS_FRUITY_FLAN.name,
     ]);
     expect(result[0].scoreResult.contributions.map((meal) => meal.meal.name)).toEqual([
-      recipe.JIGGLYPUFFS_FRUITY_FLAN.name,
+      dessert.JIGGLYPUFFS_FRUITY_FLAN.name,
     ]);
     expect(result[0].stats).toEqual(pokemonCombinationContributions.stats);
   });
@@ -51,17 +61,17 @@ describe('calculateOptimalFlexibleScore', () => {
 
     const contribution1: Contribution = {
       contributedPower: 100,
-      meal: recipe.DREAM_EATER_BUTTER_CURRY,
+      meal: curry.DREAM_EATER_BUTTER_CURRY,
       percentage: 100,
     };
     const contribution2: Contribution = {
       contributedPower: 10,
-      meal: recipe.SPORE_MUSHROOM_CURRY,
+      meal: curry.SPORE_MUSHROOM_CURRY,
       percentage: 100,
     };
     const contribution3: Contribution = {
       contributedPower: 50,
-      meal: recipe.JIGGLYPUFFS_FRUITY_FLAN,
+      meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
       percentage: 100,
     };
 
@@ -110,23 +120,23 @@ describe('selectBestContributionsWithMultiplier', () => {
 
     const curryContribution: Contribution = {
       contributedPower: 10,
-      meal: recipe.DREAM_EATER_BUTTER_CURRY,
+      meal: curry.DREAM_EATER_BUTTER_CURRY,
       percentage: 100,
     };
 
     const saladContribution: Contribution = {
       contributedPower: 15,
-      meal: recipe.NINJA_SALAD,
+      meal: salad.NINJA_SALAD,
       percentage: 100,
     };
 
     const dessertContribution: Contribution = {
       contributedPower: 20,
-      meal: recipe.JIGGLYPUFFS_FRUITY_FLAN,
+      meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
       percentage: 100,
     };
 
-    const contributionsByType: Record<recipe.RecipeType, Contribution[]> = {
+    const contributionsByType: Record<RecipeType, Contribution[]> = {
       curry: [curryContribution],
       salad: [saladContribution],
       dessert: [dessertContribution],
@@ -158,21 +168,21 @@ describe('selectBestContributionsWithMultiplier', () => {
 
     const curryContribution1: Contribution = {
       contributedPower: 10,
-      meal: recipe.SPORE_MUSHROOM_CURRY,
+      meal: curry.SPORE_MUSHROOM_CURRY,
       percentage: 100,
     };
     const curryContribution2: Contribution = {
       contributedPower: 20,
-      meal: recipe.DREAM_EATER_BUTTER_CURRY,
+      meal: curry.DREAM_EATER_BUTTER_CURRY,
       percentage: 100,
     };
     const saladContribution: Contribution = {
       contributedPower: 15,
-      meal: recipe.NINJA_SALAD,
+      meal: salad.NINJA_SALAD,
       percentage: 100,
     };
 
-    const contributionsByType: Record<recipe.RecipeType, Contribution[]> = {
+    const contributionsByType: Record<RecipeType, Contribution[]> = {
       curry: [curryContribution1, curryContribution2],
       salad: [saladContribution],
       dessert: [],
@@ -214,6 +224,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         dayHelps: 0,
         nightHelps: 0,
         averageTotalSkillProcs: 0,
+        skillActivations: [],
       },
       pokemonCombination: {
         pokemon: pokemon.PINSIR,

@@ -3,9 +3,11 @@ import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
 import { getNature } from '@src/utils/nature-utils/nature-utils';
+import { getPokemon } from '@src/utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
+import { pokemon } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')
@@ -13,10 +15,11 @@ import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 export default class ProductionController extends Controller {
   @Post('production/{name}')
   public async calculatePokemonProduction(@Path() name: string, @Body() body: ProductionRequest) {
-    return calculatePokemonProduction(name, this.#parseInput(body), body.ingredientSet, 5000);
+    const pokemon = getPokemon(name);
+    return calculatePokemonProduction(pokemon, this.#parseInput(pokemon, body), body.ingredientSet, 5000);
   }
 
-  #parseInput(input: ProductionRequest): ProductionStats {
+  #parseInput(pokemon: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
     const level = queryAsNumber(input.level) ?? 60;
     const mainBedtime = parseTime(input.mainBedtime);
     const mainWakeup = parseTime(input.mainWakeup);
@@ -34,7 +37,7 @@ export default class ProductionController extends Controller {
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,
       incense: queryAsBoolean(input.recoveryIncense),
-      skillLevel: queryAsNumber(input.skillLevel) ?? 6,
+      skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pokemon.skill.maxLevel, pokemon.skill.maxLevel),
       mainBedtime,
       mainWakeup,
     };

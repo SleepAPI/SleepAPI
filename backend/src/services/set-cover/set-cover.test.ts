@@ -32,6 +32,7 @@ describe('processOptimalTeamSolutions', () => {
       dayHelps: 0,
       nightHelps: 0,
       averageTotalSkillProcs: 0,
+      skillActivations: [],
     };
 
     const optimalTeamSolutions: OptimalTeamSolution[] = [

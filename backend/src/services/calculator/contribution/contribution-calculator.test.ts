@@ -1,5 +1,5 @@
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { IngredientSet, ingredient, nature, pokemon, recipe, subskill } from 'sleepapi-common';
+import { IngredientSet, curry, dessert, ingredient, nature, pokemon, salad, subskill } from 'sleepapi-common';
 import { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
 import { SetCover } from '../../set-cover/set-cover';
@@ -26,7 +26,7 @@ describe('getAllOptimalIngredientPokemonProduce', () => {
 
 describe('calculateMealContributionFor', () => {
   it('shall calculate Gengars contribution and divide by 3 for slowpoke tail salad with size 3 team size', () => {
-    const meal = recipe.SLOWPOKE_TAIL_PEPPER_SALAD;
+    const meal = salad.SLOWPOKE_TAIL_PEPPER_SALAD;
     const pkmn = pokemon.GENGAR;
 
     const limit50 = false;
@@ -71,6 +71,7 @@ describe('calculateMealContributionFor', () => {
       producedIngredients: detailedProduce.produce.ingredients,
       memoizedSetCover,
       timeout: 1000,
+      critMultiplier: 1,
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
@@ -83,15 +84,16 @@ describe('calculateContributionForMealWithPunishment', () => {
     const producedTomato = { amount: 8, ingredient: ingredient.SNOOZY_TOMATO };
 
     const data = calculateContributionForMealWithPunishment({
-      meal: recipe.SNOOZY_TOMATO_SALAD,
+      meal: salad.SNOOZY_TOMATO_SALAD,
       teamSize: 1,
       percentage: 100,
       producedIngredients: [producedTomato],
+      critMultiplier: 1,
     });
     const expectedContribution =
-      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + recipe.SNOOZY_TOMATO_SALAD.bonus / 100);
+      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
 
-    expect(data.meal).toBe(recipe.SNOOZY_TOMATO_SALAD);
+    expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(100);
     expect(data.contributedPower).toBe(expectedContribution);
   });
@@ -101,16 +103,17 @@ describe('calculateContributionForMealWithPunishment', () => {
     const expectedPunishment = 0.6;
 
     const data = calculateContributionForMealWithPunishment({
-      meal: recipe.SNOOZY_TOMATO_SALAD,
+      meal: salad.SNOOZY_TOMATO_SALAD,
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedTomato],
+      critMultiplier: 1,
     });
 
     const expectedContribution =
-      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + recipe.SNOOZY_TOMATO_SALAD.bonus / 100);
+      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
 
-    expect(data.meal).toBe(recipe.SNOOZY_TOMATO_SALAD);
+    expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(50);
     expect(data.contributedPower).toBe(expectedContribution * expectedPunishment);
   });
@@ -121,17 +124,18 @@ describe('calculateContributionForMealWithPunishment', () => {
     const expectedPunishment = 0.6;
 
     const data = calculateContributionForMealWithPunishment({
-      meal: recipe.SNOOZY_TOMATO_SALAD,
+      meal: salad.SNOOZY_TOMATO_SALAD,
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedTomato, producedFiller],
+      critMultiplier: 1,
     });
 
     const expectedContribution =
-      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + recipe.SNOOZY_TOMATO_SALAD.bonus / 100);
+      producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
     const expectedFiller = producedFiller.amount * ingredient.FANCY_APPLE.taxedValue;
 
-    expect(data.meal).toBe(recipe.SNOOZY_TOMATO_SALAD);
+    expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(50);
     expect(data.contributedPower).toBe(expectedContribution * expectedPunishment + expectedFiller);
   });
@@ -140,15 +144,16 @@ describe('calculateContributionForMealWithPunishment', () => {
     const producedFiller: IngredientSet = { amount: 4, ingredient: ingredient.FANCY_APPLE };
 
     const data = calculateContributionForMealWithPunishment({
-      meal: recipe.SNOOZY_TOMATO_SALAD,
+      meal: salad.SNOOZY_TOMATO_SALAD,
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedFiller],
+      critMultiplier: 1,
     });
 
     const expectedFiller = producedFiller.amount * ingredient.FANCY_APPLE.taxedValue;
 
-    expect(data.meal).toBe(recipe.SNOOZY_TOMATO_SALAD);
+    expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(50);
     expect(data.contributedPower).toBe(expectedFiller);
   });
@@ -158,24 +163,24 @@ describe('groupContributionsByType', () => {
   it('shall group contributions per recipe type', () => {
     const contributionCurry: Contribution = {
       contributedPower: 1,
-      meal: recipe.DREAM_EATER_BUTTER_CURRY,
+      meal: curry.DREAM_EATER_BUTTER_CURRY,
       percentage: 100,
     };
     const contributionSalad: Contribution = {
       contributedPower: 2,
-      meal: recipe.NINJA_SALAD,
+      meal: salad.NINJA_SALAD,
       percentage: 100,
     };
     const contributionDessert: Contribution = {
       contributedPower: 3,
-      meal: recipe.JIGGLYPUFFS_FRUITY_FLAN,
+      meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
       percentage: 100,
     };
 
     const groupedContributions = groupContributionsByType([contributionCurry, contributionSalad, contributionDessert]);
-    expect(groupedContributions.curry.map((cont) => cont.meal.name)).toEqual([recipe.DREAM_EATER_BUTTER_CURRY.name]);
-    expect(groupedContributions.salad.map((cont) => cont.meal.name)).toEqual([recipe.NINJA_SALAD.name]);
-    expect(groupedContributions.dessert.map((cont) => cont.meal.name)).toEqual([recipe.JIGGLYPUFFS_FRUITY_FLAN.name]);
+    expect(groupedContributions.curry.map((cont) => cont.meal.name)).toEqual([curry.DREAM_EATER_BUTTER_CURRY.name]);
+    expect(groupedContributions.salad.map((cont) => cont.meal.name)).toEqual([salad.NINJA_SALAD.name]);
+    expect(groupedContributions.dessert.map((cont) => cont.meal.name)).toEqual([dessert.JIGGLYPUFFS_FRUITY_FLAN.name]);
   });
 });
 
@@ -183,7 +188,7 @@ describe('selectTopNContributions', () => {
   it('shall sort by contributed power and return the 2 best contributions', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const contribution2: Contribution = {
@@ -206,7 +211,7 @@ describe('sortByContributedPowerDesc', () => {
   it('shall sort by contributed power', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const contribution2: Contribution = {
@@ -222,7 +227,7 @@ describe('findBestContribution', () => {
   it('shall return the contribution with highest contributedPower', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const contribution2: Contribution = {
@@ -238,7 +243,7 @@ describe('sumContributedPower', () => {
   it('shall sum all contributedPower into a final score', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const contribution2: Contribution = {
@@ -254,12 +259,12 @@ describe('excludeContributions', () => {
   it('shall returned contributions without excluded contributions', () => {
     const contribution: Contribution = {
       contributedPower: 1,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const contributionToExclude: Contribution = {
       contributedPower: 2,
-      meal: recipe.FANCY_APPLE_CURRY,
+      meal: curry.FANCY_APPLE_CURRY,
       percentage: 50,
     };
 
@@ -273,13 +278,13 @@ describe('boostFirstMealWithFactor', () => {
   it('shall boost first meal with 1.5x factor', () => {
     const cont1: Contribution = {
       contributedPower: 200,
-      meal: recipe.EXPLOSION_POPCORN,
+      meal: dessert.EXPLOSION_POPCORN,
       percentage: 100,
     };
 
     const cont2: Contribution = {
       contributedPower: 100,
-      meal: recipe.LOVELY_KISS_SMOOTHIE,
+      meal: dessert.LOVELY_KISS_SMOOTHIE,
       percentage: 100,
     };
     const resultWithBoost = boostFirstMealWithFactor(1.5, [cont1, cont2]);

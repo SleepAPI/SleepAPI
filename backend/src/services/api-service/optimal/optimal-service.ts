@@ -1,19 +1,19 @@
-import { PokemonCombinationContributions } from '../../../domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '../../../domain/combination/custom';
-import { Contribution } from '../../../domain/computed/contribution';
-import { InputProductionStats, TeamWithProduce, TeamsForMeal } from '../../../domain/computed/production';
-import { OptimalFlexibleResult } from '../../../routes/optimal-router/optimal-router';
-import { calculateContributionForMealWithPunishment } from '../../../services/calculator/contribution/contribution-calculator';
-import { getMeal, getMealsForFilter } from '../../../utils/meal-utils/meal-utils';
-import {
-  calculateCombinedContributions,
-  removeDuplicatePokemonCombinations,
-} from '../../../utils/optimal-utils/optimal-utils';
-import { createPokemonByIngredientReverseIndex } from '../../../utils/set-cover-utils/set-cover-utils';
+import { PokemonCombinationContributions } from '@src/domain/combination/combination';
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { Contribution } from '@src/domain/computed/contribution';
+import { InputProductionStats, TeamsForMeal, TeamWithProduce } from '@src/domain/computed/production';
+import { OptimalFlexibleResult } from '@src/routes/optimal-router/optimal-router';
+import { calculateContributionForMealWithPunishment } from '@src/services/calculator/contribution/contribution-calculator';
 import {
   calculateOptimalProductionForSetCover,
   calculateSetCover,
-} from '../../calculator/set-cover/calculate-set-cover';
+} from '@src/services/calculator/set-cover/calculate-set-cover';
+import { calculateCritMultiplier, CritInfo, getMeal, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
+import {
+  calculateCombinedContributions,
+  removeDuplicatePokemonCombinations,
+} from '@src/utils/optimal-utils/optimal-utils';
+import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
 const TEAMFINDER_SET_COVER_TIMEOUT = 10000;
@@ -40,17 +40,19 @@ export function getOptimalFlexiblePokemon(
   const flexiblePokemonCombinations: TeamsForMeal[] = generateOptimalTeamSolutions(input, monteCarloIterations);
 
   const pokemonOccurenceInOptimalSolutions: Map<string, Contribution[]> = new Map();
+  const cache: Map<number, CritInfo> = new Map();
   for (const { meal, teams } of flexiblePokemonCombinations) {
     const uniqueOptimalPokemonCombinationsForMeal: CustomPokemonCombinationWithProduce[] =
       removeDuplicatePokemonCombinations(teams.flat());
 
-    // update map
     for (const pokemonWithProduce of uniqueOptimalPokemonCombinationsForMeal) {
+      const { critMultiplier } = calculateCritMultiplier(pokemonWithProduce.detailedProduce.skillActivations, cache);
       const contribution: Contribution = calculateContributionForMealWithPunishment({
         meal,
         teamSize: teams[0].length,
         percentage: 100,
         producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
+        critMultiplier,
       });
 
       const key = JSON.stringify(pokemonWithProduce);

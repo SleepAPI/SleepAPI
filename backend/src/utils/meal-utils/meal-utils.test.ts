@@ -1,12 +1,21 @@
 import { MealError } from '@src/domain/error/meal/meal-error';
-import { recipe } from 'sleepapi-common';
+import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
+import { RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
+import { roundDown } from '../calculator-utils/calculator-utils';
 import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
 import { parseTime, prettifyTime } from '../time-utils/time-utils';
-import { getDefaultMealTimes, getMeal, getMealRecoveryAmount, getMealsForFilter } from './meal-utils';
+import {
+  CritInfo,
+  calculateCritMultiplier,
+  getDefaultMealTimes,
+  getMeal,
+  getMealRecoveryAmount,
+  getMealsForFilter,
+} from './meal-utils';
 
 describe('getMeal', () => {
   it('shall return Lovely Kiss for lovely_kIsS_smOOthie name', () => {
-    expect(getMeal('lovely_kIsS_smOOthie')).toBe(recipe.LOVELY_KISS_SMOOTHIE);
+    expect(getMeal('lovely_kIsS_smOOthie')).toBe(dessert.LOVELY_KISS_SMOOTHIE);
   });
 
   it("shall throw if Meal can't be found", () => {
@@ -22,7 +31,7 @@ describe('getMealsForFilter', () => {
         salad: false,
         dessert: false,
       })
-    ).toEqual(recipe.CURRIES);
+    ).toEqual(curry.CURRIES);
   });
 
   it('should return salad meals when salad is true', () => {
@@ -32,7 +41,7 @@ describe('getMealsForFilter', () => {
         salad: true,
         dessert: false,
       })
-    ).toEqual(recipe.SALADS);
+    ).toEqual(salad.SALADS);
   });
 
   it('should return dessert meals when dessert is true', () => {
@@ -42,7 +51,7 @@ describe('getMealsForFilter', () => {
         salad: false,
         dessert: true,
       })
-    ).toEqual(recipe.DESSERTS);
+    ).toEqual(dessert.DESSERTS);
   });
 
   it('should return all meals when no specific filters are applied', () => {
@@ -52,7 +61,7 @@ describe('getMealsForFilter', () => {
         salad: false,
         dessert: false,
       })
-    ).toEqual(recipe.RECIPES);
+    ).toEqual(RECIPES);
   });
 
   it('shall return all meals above 35% bonus', () => {
@@ -218,5 +227,80 @@ describe('getMealRecoveryAmount', () => {
   it('shall return 5 for currentEnergy < 20', () => {
     expect(getMealRecoveryAmount(19)).toBe(5);
     expect(getMealRecoveryAmount(0)).toBe(5);
+  });
+});
+
+describe('calculateCritMultiplier', () => {
+  it('shall calculate crit multplier for EXTRA_TASTY_S', () => {
+    const skillActivations: SkillActivation[] = [
+      {
+        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        fractionOfProc: 1,
+        nrOfHelpsToActivate: 0,
+        skill: mainskill.EXTRA_TASTY_S,
+      },
+      {
+        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        fractionOfProc: 1,
+        nrOfHelpsToActivate: 0,
+        skill: mainskill.EXTRA_TASTY_S,
+      },
+      {
+        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        fractionOfProc: 1,
+        nrOfHelpsToActivate: 0,
+        skill: mainskill.EXTRA_TASTY_S,
+      },
+    ];
+    const {
+      critMultiplier,
+      weekdayMultiplier,
+      sundayMultiplier,
+      fullWeekCritChance,
+      weekdayCritChance,
+      sundayCritChance,
+    } = calculateCritMultiplier(skillActivations, new Map());
+    expect(roundDown(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
+    expect(roundDown(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
+    expect(roundDown(sundayMultiplier, 1)).toMatchInlineSnapshot(`2`);
+    expect(Math.abs(fullWeekCritChance - 35)).toBeLessThanOrEqual(2);
+    expect(Math.abs(weekdayCritChance - 33)).toBeLessThanOrEqual(2);
+    expect(Math.abs(sundayCritChance - 50)).toBeLessThanOrEqual(2);
+  });
+
+  it('shall calculate default crit multiplier', () => {
+    const skillActivations: SkillActivation[] = [
+      { adjustedAmount: 18, fractionOfProc: 1, nrOfHelpsToActivate: 0, skill: mainskill.ENERGY_FOR_EVERYONE },
+    ];
+    const {
+      critMultiplier,
+      weekdayMultiplier,
+      sundayMultiplier,
+      fullWeekCritChance,
+      weekdayCritChance,
+      sundayCritChance,
+    } = calculateCritMultiplier(skillActivations, new Map());
+    expect(roundDown(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
+    expect(roundDown(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
+    expect(roundDown(sundayMultiplier, 1)).toMatchInlineSnapshot(`1.6`);
+    expect(Math.abs(fullWeekCritChance - 13)).toBeLessThanOrEqual(2);
+    expect(Math.abs(weekdayCritChance - 10)).toBeLessThanOrEqual(2);
+    expect(Math.abs(sundayCritChance - 30)).toBeLessThanOrEqual(2);
+  });
+
+  it('shall use cached results', () => {
+    const cache = new Map();
+    const critInfo: CritInfo = {
+      critMultiplier: 0,
+      fullWeekCritChance: 0,
+      sundayCritChance: 0,
+      sundayMultiplier: 0,
+      weekdayCritChance: 0,
+      weekdayMultiplier: 0,
+    };
+    cache.set(0, critInfo);
+
+    const result = calculateCritMultiplier([], cache);
+    expect(result).toEqual(critInfo);
   });
 });

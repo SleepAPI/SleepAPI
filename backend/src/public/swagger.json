@@ -87,14 +87,20 @@
 							"helps",
 							"dream shards",
 							"strength",
-							"pot size"
+							"pot size",
+							"chance"
 						]
+					},
+					"maxLevel": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"name",
 					"amount",
-					"unit"
+					"unit",
+					"maxLevel"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -206,7 +212,7 @@
 						"type": "number",
 						"format": "double"
 					},
-					"value50": {
+					"valueMax": {
 						"type": "number",
 						"format": "double"
 					},
@@ -231,7 +237,7 @@
 				"required": [
 					"name",
 					"value",
-					"value50",
+					"valueMax",
 					"type",
 					"ingredients",
 					"bonus",
@@ -627,6 +633,36 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SkillActivation": {
+				"properties": {
+					"skill": {
+						"$ref": "#/components/schemas/MainSkill"
+					},
+					"nrOfHelpsToActivate": {
+						"type": "number",
+						"format": "double"
+					},
+					"adjustedAmount": {
+						"type": "number",
+						"format": "double"
+					},
+					"fractionOfProc": {
+						"type": "number",
+						"format": "double"
+					},
+					"adjustedProduce": {
+						"$ref": "#/components/schemas/Produce"
+					}
+				},
+				"required": [
+					"skill",
+					"nrOfHelpsToActivate",
+					"adjustedAmount",
+					"fractionOfProc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DetailedProduce": {
 				"properties": {
 					"produce": {
@@ -652,6 +688,12 @@
 					"averageTotalSkillProcs": {
 						"type": "number",
 						"format": "double"
+					},
+					"skillActivations": {
+						"items": {
+							"$ref": "#/components/schemas/SkillActivation"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -660,7 +702,8 @@
 					"sneakySnack",
 					"dayHelps",
 					"nightHelps",
-					"averageTotalSkillProcs"
+					"averageTotalSkillProcs",
+					"skillActivations"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -935,6 +978,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"skillTastyChanceValue": {
+						"type": "number",
+						"format": "double"
+					},
 					"nrOfHelps": {
 						"type": "number",
 						"format": "double"
@@ -982,6 +1029,7 @@
 					"skillDreamShardValue",
 					"skillPotSizeValue",
 					"skillHelpsValue",
+					"skillTastyChanceValue",
 					"nrOfHelps",
 					"helpsBeforeSS",
 					"helpsAfterSS",

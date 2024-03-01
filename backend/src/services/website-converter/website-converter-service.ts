@@ -294,6 +294,7 @@ class WebsiteConverterServiceImpl {
       skillDreamShardValue,
       skillPotSizeValue,
       skillHelpsValue,
+      skillTastyChanceValue,
     } = summary;
     const prettifiedSkillProduce: string[] = [];
     if (skillProduceValue.berries.amount > 0) {
@@ -318,7 +319,10 @@ class WebsiteConverterServiceImpl {
       (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
       (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
-      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '');
+      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '') +
+      (skillTastyChanceValue > 0
+        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 1)}% crit chance\n`
+        : '');
 
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,
