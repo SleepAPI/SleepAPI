@@ -1,5 +1,5 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { IngredientSet, PokemonIngredientSet, ingredient, pokemon, recipe } from 'sleepapi-common';
+import { IngredientSet, PokemonIngredientSet, curry, dessert, ingredient, pokemon, salad } from 'sleepapi-common';
 import {
   calculateAveragePokemonIngredientSet,
   calculateContributedIngredientsValue,
@@ -69,14 +69,14 @@ describe('calculatePercentageCoveredByCombination', () => {
       { amount: 4, ingredient: ingredient.HONEY },
       { amount: 10, ingredient: ingredient.FANCY_APPLE },
     ];
-    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+    expect(calculatePercentageCoveredByCombination(dessert.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
       `40`
     );
   });
 
   it('shall count no matching ingredients as zero percentage', () => {
     const combination: IngredientSet[] = [];
-    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+    expect(calculatePercentageCoveredByCombination(dessert.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
       `0`
     );
   });
@@ -88,7 +88,7 @@ describe('calculatePercentageCoveredByCombination', () => {
       { amount: 100, ingredient: ingredient.SOOTHING_CACAO },
       { amount: 100, ingredient: ingredient.MOOMOO_MILK },
     ];
-    expect(calculatePercentageCoveredByCombination(recipe.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
+    expect(calculatePercentageCoveredByCombination(dessert.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
       `100`
     );
   });
@@ -99,7 +99,7 @@ describe('calculatePercentageCoveredByCombination', () => {
       { amount: 5.57, ingredient: { name: 'Apple', value: '90.00' } },
       { amount: 8.36, ingredient: { name: 'Soybeans', value: '100.00' } },
     ] as unknown as IngredientSet[];
-    expect(calculatePercentageCoveredByCombination(recipe.FANCY_APPLE_CURRY, raw)).toBe(100);
+    expect(calculatePercentageCoveredByCombination(curry.FANCY_APPLE_CURRY, raw)).toBe(100);
   });
 });
 
@@ -388,7 +388,7 @@ describe('comineIngredientDrops', () => {
 
 describe('calculateContributedIngredientsValue', () => {
   it('shall calculate contributed ingredient value correctly for 2x leek Dugtrio', () => {
-    const meal = recipe.NINJA_SALAD;
+    const meal = salad.NINJA_SALAD;
     const producedIngredients: IngredientSet[] = [
       {
         amount: 4.7,
@@ -406,7 +406,7 @@ describe('calculateContributedIngredientsValue', () => {
   });
 
   it('shall calculate contributed ingredient value correctly for leek/soy Dugtrio', () => {
-    const meal = recipe.NINJA_SALAD;
+    const meal = salad.NINJA_SALAD;
     const producedIngredients: IngredientSet[] = [
       {
         amount: 4.4,

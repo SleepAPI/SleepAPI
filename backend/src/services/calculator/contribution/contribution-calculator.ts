@@ -1,4 +1,4 @@
-import { IngredientSet, pokemon, recipe } from 'sleepapi-common';
+import { IngredientSet, pokemon, Recipe, RecipeType } from 'sleepapi-common';
 
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
@@ -65,12 +65,13 @@ export function getAllOptimalIngredientPokemonProduce(params: {
  * Calculates contribution including checking with Optimal Set
  */
 export function calculateMealContributionFor(params: {
-  meal: recipe.Recipe;
+  meal: Recipe;
   producedIngredients: IngredientSet[];
   memoizedSetCover: SetCover;
   timeout: number;
+  critMultiplier: number;
 }): Contribution {
-  const { meal, producedIngredients, memoizedSetCover, timeout } = params;
+  const { meal, producedIngredients, critMultiplier, memoizedSetCover, timeout } = params;
 
   const percentage = calculatePercentageCoveredByCombination(meal, producedIngredients);
   const remainderOfRecipe = calculateRemainingIngredients(meal.ingredients, producedIngredients);
@@ -88,20 +89,23 @@ export function calculateMealContributionFor(params: {
     teamSize: 1 + minAdditionalMonsNeeded,
     percentage,
     producedIngredients,
+    critMultiplier,
   });
 }
 
 export function calculateContributionForMealWithPunishment(params: {
-  meal: recipe.Recipe;
+  meal: Recipe;
   teamSize: number;
   percentage: number;
   producedIngredients: IngredientSet[];
+  critMultiplier: number;
 }): Contribution {
-  const { meal, teamSize, percentage, producedIngredients } = params;
+  const { meal, teamSize, percentage, producedIngredients, critMultiplier } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
 
   const punishmentFactor = 1 - (teamSize - 1) * 0.2;
-  const contributedPower = contributedValue > 0 ? contributedValue * punishmentFactor + fillerValue : fillerValue;
+  const contributedPower =
+    critMultiplier * (contributedValue > 0 ? contributedValue * punishmentFactor + fillerValue : fillerValue);
 
   return {
     meal,
@@ -118,8 +122,8 @@ export function boostFirstMealWithFactor(factor: number, contribution: Contribut
   return [firstMealWithExtraWeight, ...contribution.slice(1, contribution.length)];
 }
 
-export function groupContributionsByType(contributions: Contribution[]): Record<recipe.RecipeType, Contribution[]> {
-  const contributionsByType: Record<recipe.RecipeType, Contribution[]> = {
+export function groupContributionsByType(contributions: Contribution[]): Record<RecipeType, Contribution[]> {
+  const contributionsByType: Record<RecipeType, Contribution[]> = {
     curry: [],
     salad: [],
     dessert: [],

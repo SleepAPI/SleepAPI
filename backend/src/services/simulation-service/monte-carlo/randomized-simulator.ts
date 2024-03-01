@@ -20,6 +20,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
+import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import {
   addTime,
   isAfterOrEqualWithinPeriod,
@@ -89,7 +90,7 @@ export function randomizedSimulation(params: {
 
   // check if we proc'd skill at night
   for (let i = 0; i < nightHelpsFromYesterday; i++) {
-    const skillActivated = rollForSkillProc(skillPercentage);
+    const skillActivated = rollRandomChance(skillPercentage);
     if (skillActivated) {
       if (pokemon.skill.unit === 'energy') {
         currentEnergy += pokemon.skill.amount[skillLevel - 1] * nature.energy;
@@ -128,7 +129,7 @@ export function randomizedSimulation(params: {
       const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
       let skillRecovery = 0;
 
-      if (rollForSkillProc(skillPercentage)) {
+      if (rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
         if (pokemon.skill.unit === 'energy') {
           skillRecovery = pokemon.skill.amount[skillLevel - 1] * nature.energy;
@@ -188,9 +189,4 @@ export function randomizedSimulation(params: {
     skillProcsNight,
     endingEnergy: currentEnergy,
   };
-}
-
-function rollForSkillProc(percentage: number): boolean {
-  const roll = Math.random();
-  return roll < percentage;
 }

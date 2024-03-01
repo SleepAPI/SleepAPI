@@ -16,6 +16,7 @@ export interface Summary {
   skillDreamShardValue: number;
   skillPotSizeValue: number;
   skillHelpsValue: number;
+  skillTastyChanceValue: number;
 
   nrOfHelps: number;
   helpsBeforeSS: number;
@@ -61,6 +62,7 @@ export class SummaryEvent extends ScheduledEvent {
       skillDreamShardValue,
       skillPotSizeValue,
       skillHelpsValue,
+      skillTastyChanceValue,
       nrOfHelps,
       helpsBeforeSS,
       helpsAfterSS,
@@ -107,6 +109,9 @@ export class SummaryEvent extends ScheduledEvent {
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
       (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
       (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '') +
+      (skillTastyChanceValue > 0
+        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 1)}% crit chance\n`
+        : '') +
       `Total helps: ${nrOfHelps}\n` +
       `Helps before sneaky snacking: ${helpsBeforeSS}\n` +
       `Helps spent sneaky snacking: ${helpsAfterSS}\n` +

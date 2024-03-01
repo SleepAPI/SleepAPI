@@ -15,7 +15,7 @@
  */
 
 import { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
-import { IngredientSet, PokemonIngredientSet, nature, pokemon, recipe, subskill } from 'sleepapi-common';
+import { IngredientSet, PokemonIngredientSet, Recipe, nature, pokemon, subskill } from 'sleepapi-common';
 import { extractIngredientSubskills } from '../stats/stats-calculator';
 
 /**
@@ -47,7 +47,7 @@ export function combineSameIngredientsInDrop(ingredients: IngredientSet[]): Ingr
  * @returns
  */
 export function calculatePercentageCoveredByCombination(
-  meal: recipe.Recipe,
+  meal: Recipe,
   combination: { amount: number; ingredient: { name: string; value?: number } }[]
 ): number {
   let totalCovered = 0;
@@ -186,7 +186,7 @@ export function sumOfIngredients(ingredients: IngredientSet[]) {
 }
 
 export function calculateContributedIngredientsValue(
-  meal: recipe.Recipe,
+  meal: Recipe,
   producedIngredients: IngredientSet[]
 ): { contributedValue: number; fillerValue: number } {
   const recipeIngredients: Map<string, number> = new Map<string, number>();

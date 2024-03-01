@@ -86,6 +86,7 @@ export function simulation(params: {
   let skillDreamShardValue = 0;
   let skillPotSizeValue = 0;
   let skillHelpsValue = 0;
+  let skillTastyChanceValue = 0;
   let dayHelps = 0;
   let nightHelps = 0;
   let helpsBeforeSS = 0;
@@ -233,6 +234,8 @@ export function simulation(params: {
           skillDreamShardValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.unit === 'pot size') {
           skillPotSizeValue += skillActivation.adjustedAmount;
+        } else if (skillActivation.skill.unit === 'chance') {
+          skillTastyChanceValue += skillActivation.adjustedAmount;
         }
       } else break;
     }
@@ -360,6 +363,7 @@ export function simulation(params: {
     skillDreamShardValue,
     skillPotSizeValue,
     skillHelpsValue,
+    skillTastyChanceValue,
     nrOfHelps: helpsBeforeSS + helpsAfterSS,
     helpsBeforeSS,
     helpsAfterSS,
@@ -383,6 +387,7 @@ export function simulation(params: {
       dayHelps,
       nightHelps,
       averageTotalSkillProcs: skillProcs,
+      skillActivations,
     },
     log: eventLog,
     summary,

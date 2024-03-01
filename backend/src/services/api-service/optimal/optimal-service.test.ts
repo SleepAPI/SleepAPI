@@ -1,4 +1,4 @@
-import { berry, nature, recipe, subskill } from 'sleepapi-common';
+import { berry, dessert, nature, subskill } from 'sleepapi-common';
 import { InputProductionStats } from '../../../domain/computed/production';
 import { prettifyIngredientDrop } from '../../../utils/json/json-utils';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
@@ -20,7 +20,7 @@ describe('findOptimalSetsForMeal', () => {
       mainBedtime: { hour: 21, minute: 30, second: 0 },
       mainWakeup: { hour: 6, minute: 0, second: 0 },
     };
-    const data = findOptimalSetsForMeal(recipe.NEROLIS_RESTORATIVE_TEA.name, input, 1);
+    const data = findOptimalSetsForMeal(dessert.NEROLIS_RESTORATIVE_TEA.name, input, 1);
     expect(data.teams).toHaveLength(2);
     expect(
       data.teams.map((team) => ({

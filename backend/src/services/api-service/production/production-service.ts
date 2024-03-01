@@ -4,12 +4,12 @@ import { SkillActivation } from '@src/domain/event/events/skill-event/skill-even
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
+import { pokemon } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
-import { getPokemon } from '../../../utils/pokemon-utils/pokemon-utils';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
-  pokemonName: string,
+  pokemon: pokemon.Pokemon,
   details: ProductionStats,
   ingredientSet: string[],
   monteCarloIterations: number
@@ -30,7 +30,6 @@ export function calculatePokemonProduction(
   } = details;
 
   const subskills = maybeSubskills ?? [];
-  const pokemon = getPokemon(pokemonName);
 
   const pokemonProductionWithLogs: {
     pokemonProduction: CustomPokemonCombinationWithProduce;

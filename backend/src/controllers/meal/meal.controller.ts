@@ -1,4 +1,4 @@
-import { recipe } from 'sleepapi-common';
+import { Recipe } from 'sleepapi-common';
 import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { MealNamesQueryParams } from '../../routes/meal-router/meal-router';
 import { getMeal, getMealsForFilter } from '../../utils/meal-utils/meal-utils';
@@ -8,7 +8,7 @@ import { queryAsBoolean } from '../../utils/routing/routing-utils';
 @Tags('meal')
 export default class MealController extends Controller {
   @Get('/{name}')
-  public async getMealWithName(@Path() name: string): Promise<recipe.Recipe> {
+  public async getMealWithName(@Path() name: string): Promise<Recipe> {
     return getMeal(name);
   }
   @Get('/')

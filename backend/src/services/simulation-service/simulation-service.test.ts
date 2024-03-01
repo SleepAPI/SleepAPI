@@ -1,6 +1,6 @@
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON, MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { recipe } from 'sleepapi-common';
+import { MEALS_IN_DAY } from 'sleepapi-common';
 import { setupAndRunProductionSimulation } from './simulation-service';
 
 describe('setupAndRunProductionSimulation', () => {
@@ -25,7 +25,9 @@ describe('setupAndRunProductionSimulation', () => {
               2383,
               3290,
               4546,
+              6409,
             ],
+            "maxLevel": 7,
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -42,7 +44,9 @@ describe('setupAndRunProductionSimulation', () => {
               2383,
               3290,
               4546,
+              6409,
             ],
+            "maxLevel": 7,
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -59,7 +63,9 @@ describe('setupAndRunProductionSimulation', () => {
               2383,
               3290,
               4546,
+              6409,
             ],
+            "maxLevel": 7,
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -72,7 +78,7 @@ describe('setupAndRunProductionSimulation', () => {
     expect(summaryLog.description).toBe('Summary');
 
     expect(Math.round(summaryLog.summary.totalProduce.ingredients[0].amount)).toEqual(
-      Math.round(detailedProduce.produce.ingredients[0].amount * recipe.MEALS_IN_DAY)
+      Math.round(detailedProduce.produce.ingredients[0].amount * MEALS_IN_DAY)
     );
 
     expect(detailedProduce).toMatchInlineSnapshot(`
@@ -100,6 +106,65 @@ describe('setupAndRunProductionSimulation', () => {
             },
           ],
         },
+        "skillActivations": [
+          {
+            "adjustedAmount": 1255.6155621865146,
+            "fractionOfProc": 0.2762022794075043,
+            "nrOfHelpsToActivate": 0,
+            "skill": {
+              "amount": [
+                880,
+                1251,
+                1726,
+                2383,
+                3290,
+                4546,
+                6409,
+              ],
+              "maxLevel": 7,
+              "name": "Charge Strength M",
+              "unit": "strength",
+            },
+          },
+          {
+            "adjustedAmount": 4546,
+            "fractionOfProc": 1,
+            "nrOfHelpsToActivate": 50,
+            "skill": {
+              "amount": [
+                880,
+                1251,
+                1726,
+                2383,
+                3290,
+                4546,
+                6409,
+              ],
+              "maxLevel": 7,
+              "name": "Charge Strength M",
+              "unit": "strength",
+            },
+          },
+          {
+            "adjustedAmount": 181.84000000000017,
+            "fractionOfProc": 0.040000000000000036,
+            "nrOfHelpsToActivate": 52,
+            "skill": {
+              "amount": [
+                880,
+                1251,
+                1726,
+                2383,
+                3290,
+                4546,
+                6409,
+              ],
+              "maxLevel": 7,
+              "name": "Charge Strength M",
+              "unit": "strength",
+            },
+          },
+        ],
         "sneakySnack": {
           "amount": 0,
           "berry": {

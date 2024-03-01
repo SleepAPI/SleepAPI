@@ -1,4 +1,4 @@
-import { berry, nature, recipe, subskill } from 'sleepapi-common';
+import { berry, nature, Recipe, subskill } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '../combination/custom';
 import { Time } from '../time/time';
 
@@ -26,5 +26,5 @@ export type TeamWithProduce = CustomPokemonCombinationWithProduce[];
 
 export interface TeamsForMeal {
   teams: TeamWithProduce[];
-  meal: recipe.Recipe;
+  meal: Recipe;
 }

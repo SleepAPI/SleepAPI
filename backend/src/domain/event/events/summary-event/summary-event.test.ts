@@ -15,6 +15,7 @@ describe('SummaryEvent', () => {
       skillDreamShardValue: 11,
       skillPotSizeValue: 11,
       skillHelpsValue: 11,
+      skillTastyChanceValue: 11,
       averageEnergy: 0,
       averageFrequency: 1,
       helpsAfterSS: 2,
@@ -43,6 +44,7 @@ describe('SummaryEvent', () => {
       Dream shards skill value: 11 shards
       Pot size skill value: 11 pot size
       Helps team skill value: 11 helps
+      Tasty chance skill value: 11% crit chance
       Total helps: 5
       Helps before sneaky snacking: 3
       Helps spent sneaky snacking: 2

@@ -167,3 +167,8 @@ export function finishSimulation(params: {
   eventLog.push(skillStatusEvent);
   eventLog.push(summaryEvent);
 }
+
+export function rollRandomChance(percentage: number): boolean {
+  const roll = Math.random();
+  return roll < percentage;
+}

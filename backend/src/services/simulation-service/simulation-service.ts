@@ -24,7 +24,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { getDefaultRecoveryEvents } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { BerrySet, PokemonIngredientSet, mainskill, recipe } from 'sleepapi-common';
+import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
 import {
@@ -139,7 +139,7 @@ export function setupAndRunProductionSimulation(params: {
           berry: detailedProduce.produce.berries.berry,
         },
         ingredients: detailedProduce.produce.ingredients.map(({ amount, ingredient }) => ({
-          amount: amount / recipe.MEALS_IN_DAY,
+          amount: amount / MEALS_IN_DAY,
           ingredient: ingredient,
         })),
       },

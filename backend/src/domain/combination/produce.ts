@@ -1,4 +1,5 @@
 import { BerrySet, IngredientSet, pokemon } from 'sleepapi-common';
+import { SkillActivation } from '../event/events/skill-event/skill-event';
 
 export interface Produce {
   berries: BerrySet;
@@ -17,4 +18,5 @@ export interface DetailedProduce {
   dayHelps: number;
   nightHelps: number;
   averageTotalSkillProcs: number;
+  skillActivations: SkillActivation[];
 }

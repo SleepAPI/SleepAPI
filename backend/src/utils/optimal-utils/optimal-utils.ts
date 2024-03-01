@@ -10,7 +10,7 @@ import {
   sortByContributedPowerDesc,
   sumContributedPower,
 } from '@src/services/calculator/contribution/contribution-calculator';
-import { PokemonIngredientSet, recipe } from 'sleepapi-common';
+import { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
 
 export interface ScoreResult {
   score: number;
@@ -53,7 +53,7 @@ export function calculateOptimalFlexibleScore(contributions: Contribution[]): Sc
 }
 
 export function selectBestContributionsWithMultiplier(
-  contributionsByType: Record<recipe.RecipeType, Contribution[]>,
+  contributionsByType: Record<RecipeType, Contribution[]>,
   multiplier: number
 ): Contribution[] {
   return Object.values(contributionsByType).flatMap((typeContributions) => {

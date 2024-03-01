@@ -51,6 +51,26 @@ describe('simulator', () => {
             },
           ],
         },
+        "skillActivations": [
+          {
+            "adjustedAmount": 1,
+            "fractionOfProc": 1,
+            "nrOfHelpsToActivate": 0,
+            "skill": {
+              "amount": [
+                12,
+                16,
+                21,
+                26,
+                33,
+                43,
+              ],
+              "maxLevel": 6,
+              "name": "Charge Energy S",
+              "unit": "energy",
+            },
+          },
+        ],
         "sneakySnack": {
           "amount": 0,
           "berry": {
