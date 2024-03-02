@@ -46,7 +46,7 @@ export const BRAVE: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 0.8,
+  exp: 0.82,
 };
 
 // --- ENERGY + --- //
@@ -87,7 +87,7 @@ export const RELAXED: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1.2,
-  exp: 0.8,
+  exp: 0.82,
 };
 
 // --- ING + --- //
@@ -126,7 +126,7 @@ export const QUIET: Nature = {
   ingredient: 1.2,
   skill: 1,
   energy: 1,
-  exp: 0.8,
+  exp: 0.82,
 };
 
 // --- SKILL + --- //
@@ -145,7 +145,7 @@ export const GENTLE: Nature = {
   prettyName: 'Gentle (+skill -energy)',
   frequency: 1,
   ingredient: 1,
-  skill: 1,
+  skill: 1.2,
   energy: 0.88,
   exp: 1,
 };
@@ -167,7 +167,7 @@ export const SASSY: Nature = {
   ingredient: 1,
   skill: 1.2,
   energy: 1,
-  exp: 0.8,
+  exp: 0.82,
 };
 
 // --- EXP + --- //
@@ -178,7 +178,7 @@ export const TIMID: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1.2,
+  exp: 1.18,
 };
 
 export const HASTY: Nature = {
@@ -188,7 +188,7 @@ export const HASTY: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 0.88,
-  exp: 1.2,
+  exp: 1.18,
 };
 
 export const JOLLY: Nature = {
@@ -198,7 +198,7 @@ export const JOLLY: Nature = {
   ingredient: 0.8,
   skill: 1,
   energy: 1,
-  exp: 1.2,
+  exp: 1.18,
 };
 export const NAIVE: Nature = {
   name: 'Naive',
@@ -207,7 +207,7 @@ export const NAIVE: Nature = {
   ingredient: 1,
   skill: 0.8,
   energy: 1,
-  exp: 1.2,
+  exp: 1.18,
 };
 
 // --- NEUTRAL --- //
