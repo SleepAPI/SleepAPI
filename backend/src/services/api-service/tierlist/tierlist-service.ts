@@ -12,7 +12,7 @@ import {
 import {
   boostFirstMealWithFactor,
   calculateMealContributionFor,
-  getAllOptimalIngredientPokemonProduce,
+  getAllOptimalIngredientFocusedPokemonProduce,
 } from '@src/services/calculator/contribution/contribution-calculator';
 import { Logger } from '@src/services/logger/logger';
 import { SetCover } from '@src/services/set-cover/set-cover';
@@ -160,7 +160,7 @@ class TierlistImpl {
     // TODO: for e4e/cheer we have to rerun all sims
 
     // TODO: for both these cases we have to send in a different reverse index and cache
-    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce({
+    const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
       limit50: details.limit50,
       e4e: 0,
       cheer: 0,
@@ -174,6 +174,7 @@ class TierlistImpl {
     const memoizedSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonWithProduce), setCoverCache);
 
     const critCache: Map<number, CritInfo> = new Map();
+    const { critMultiplier: defaultCritMultiplier } = calculateCritMultiplier([], critCache);
     let counter = 0;
     for (const pokemonWithProduce of allPokemonWithProduce) {
       const currentMemoryUsage = process.memoryUsage().heapUsed;
@@ -198,6 +199,7 @@ class TierlistImpl {
           memoizedSetCover,
           timeout: TIERLIST_SET_COVER_TIMEOUT,
           critMultiplier,
+          defaultCritMultiplier,
         });
         contributions.push(contributionForMeal);
       }

@@ -17,7 +17,7 @@ export function calculatePokemonProduction(
   const {
     level,
     nature,
-    subskills: maybeSubskills,
+    subskills,
     e4e,
     helpingBonus,
     camp,
@@ -29,7 +29,12 @@ export function calculatePokemonProduction(
     mainWakeup,
   } = details;
 
-  const subskills = maybeSubskills ?? [];
+  const customStats: CustomStats = {
+    level,
+    nature: nature!,
+    subskills: subskills!,
+    skillLevel: skillLevel!,
+  };
 
   const pokemonProductionWithLogs: {
     pokemonProduction: CustomPokemonCombinationWithProduce;
@@ -39,20 +44,12 @@ export function calculatePokemonProduction(
 
   let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
   for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
-    const customStats: CustomStats = {
-      level,
-      nature,
-      subskills,
-      skillLevel,
-    };
-
     const { detailedProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pokemon,
         ingredientList,
       },
       input: {
-        ...customStats,
         e4e,
         camp,
         helpingBonus,
@@ -61,6 +58,7 @@ export function calculatePokemonProduction(
         incense,
         mainBedtime,
         mainWakeup,
+        ...customStats,
       },
       monteCarloIterations,
       preGeneratedSkillActivations,
@@ -79,7 +77,7 @@ export function calculatePokemonProduction(
   return {
     filters: {
       ...details,
-      subskills,
+      ...customStats,
     },
     production: productionForChosenIngSet,
     allIngredientSets: pokemonProductionWithLogs,

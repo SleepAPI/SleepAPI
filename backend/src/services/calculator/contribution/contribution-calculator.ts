@@ -11,9 +11,9 @@ import {
   calculateRemainingIngredients,
   getAllIngredientCombinationsForLevel,
 } from '../ingredient/ingredient-calculate';
-import { getOptimalIngredientStats } from '../stats/stats-calculator';
+import { getOptimalStats } from '../stats/stats-calculator';
 
-export function getAllOptimalIngredientPokemonProduce(params: {
+export function getAllOptimalIngredientFocusedPokemonProduce(params: {
   limit50: boolean;
   e4e: number;
   cheer: number;
@@ -37,7 +37,7 @@ export function getAllOptimalIngredientPokemonProduce(params: {
 
   const allPokemon = pokemon.OPTIMAL_POKEDEX;
   for (const pokemon of allPokemon) {
-    const customStats = getOptimalIngredientStats(level, pokemon);
+    const customStats = getOptimalStats(level, pokemon);
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
@@ -70,19 +70,21 @@ export function calculateMealContributionFor(params: {
   memoizedSetCover: SetCover;
   timeout: number;
   critMultiplier: number;
+  defaultCritMultiplier: number;
 }): Contribution {
-  const { meal, producedIngredients, critMultiplier, memoizedSetCover, timeout } = params;
+  const { meal, producedIngredients, critMultiplier, memoizedSetCover, timeout, defaultCritMultiplier } = params;
 
   const percentage = calculatePercentageCoveredByCombination(meal, producedIngredients);
   const remainderOfRecipe = calculateRemainingIngredients(meal.ingredients, producedIngredients);
 
-  // check if this mon solves recipe alone, if so no need to call optimal set
-  const minAdditionalMonsNeeded =
-    percentage > 0
-      ? remainderOfRecipe.length > 0
-        ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4, timeout)
-        : 0
-      : 6;
+  // if mon solves recipe alone, or does not contribute at all, we don't need to call set cover
+  // TODO: should calculate set cover for all support mons even if percentage===0, currently only dedenne since crit>default
+  const shouldCalculateTeamSolutions = percentage > 0 || critMultiplier > defaultCritMultiplier;
+  const minAdditionalMonsNeeded = shouldCalculateTeamSolutions
+    ? remainderOfRecipe.length > 0
+      ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4, timeout)
+      : 0
+    : 6;
 
   return calculateContributionForMealWithPunishment({
     meal,
@@ -90,6 +92,7 @@ export function calculateMealContributionFor(params: {
     percentage,
     producedIngredients,
     critMultiplier,
+    defaultCritMultiplier,
   });
 }
 
@@ -99,25 +102,31 @@ export function calculateContributionForMealWithPunishment(params: {
   percentage: number;
   producedIngredients: IngredientSet[];
   critMultiplier: number;
+  defaultCritMultiplier: number;
 }): Contribution {
-  const { meal, teamSize, percentage, producedIngredients, critMultiplier } = params;
+  const { meal, teamSize, percentage, producedIngredients, critMultiplier, defaultCritMultiplier } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
 
-  const punishmentFactor = 1 - (teamSize - 1) * 0.2;
-  const contributedPower =
-    critMultiplier * (contributedValue > 0 ? contributedValue * punishmentFactor + fillerValue : fillerValue);
+  const teamSizePenalty = Math.max(1 - (teamSize - 1) * 0.2, 0); // clamp to 0
+  const valueLeftInRecipe = meal.valueMax - contributedValue;
+  const recipeCritContribution =
+    teamSizePenalty * (critMultiplier * valueLeftInRecipe - defaultCritMultiplier * valueLeftInRecipe);
+
+  const contributedPower = critMultiplier * (contributedValue * teamSizePenalty + fillerValue) + recipeCritContribution;
 
   return {
     meal,
     percentage,
     contributedPower,
+    skillValue: recipeCritContribution, // TODO: add other support mons than dedenne here
   };
 }
 
 export function boostFirstMealWithFactor(factor: number, contribution: Contribution[]) {
-  const firstMealWithExtraWeight = {
+  const firstMealWithExtraWeight: Contribution = {
     ...contribution[0],
     contributedPower: contribution[0].contributedPower * factor,
+    skillValue: contribution[0].skillValue && contribution[0].skillValue * factor,
   };
   return [firstMealWithExtraWeight, ...contribution.slice(1, contribution.length)];
 }

@@ -41,20 +41,47 @@ export function subskillsForFilter(
     return [];
   }
 
-  const singleStageSubskillsLevel60 = [
-    subskill.INGREDIENT_FINDER_M,
-    subskill.HELPING_SPEED_M,
-    subskill.INVENTORY_L,
-    subskill.INGREDIENT_FINDER_S,
-    subskill.HELPING_SPEED_S,
-  ];
-  const optimalSubskills = [
-    subskill.INGREDIENT_FINDER_M,
-    subskill.HELPING_SPEED_M,
-    subskill.INGREDIENT_FINDER_S,
-    subskill.INVENTORY_L,
-    subskill.HELPING_SPEED_S,
-  ];
+  const singleStageSubskillsLevel60: subskill.SubSkill[] = [];
+  const optimalSubskills: subskill.SubSkill[] = [];
+  if (pokemon.specialty === 'skill') {
+    singleStageSubskillsLevel60.push(
+      ...[
+        subskill.SKILL_TRIGGER_M,
+        subskill.HELPING_SPEED_M,
+        subskill.SKILL_TRIGGER_S,
+        subskill.HELPING_SPEED_S,
+        subskill.INVENTORY_L,
+      ]
+    );
+    optimalSubskills.push(
+      ...[
+        subskill.SKILL_TRIGGER_M,
+        subskill.HELPING_SPEED_M,
+        subskill.SKILL_TRIGGER_S,
+        subskill.HELPING_SPEED_S,
+        subskill.INVENTORY_L,
+      ]
+    );
+  } else {
+    singleStageSubskillsLevel60.push(
+      ...[
+        subskill.INGREDIENT_FINDER_M,
+        subskill.HELPING_SPEED_M,
+        subskill.INVENTORY_L,
+        subskill.INGREDIENT_FINDER_S,
+        subskill.HELPING_SPEED_S,
+      ]
+    );
+    optimalSubskills.push(
+      ...[
+        subskill.INGREDIENT_FINDER_M,
+        subskill.HELPING_SPEED_M,
+        subskill.INGREDIENT_FINDER_S,
+        subskill.INVENTORY_L,
+        subskill.HELPING_SPEED_S,
+      ]
+    );
+  }
 
   const singleStageLevel60 = pokemon.carrySize === pokemon.maxCarrySize && level >= 60;
   const subskills = singleStageLevel60 ? singleStageSubskillsLevel60 : optimalSubskills;

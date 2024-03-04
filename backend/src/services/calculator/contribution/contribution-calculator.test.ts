@@ -9,7 +9,7 @@ import {
   calculateMealContributionFor,
   excludeContributions,
   findBestContribution,
-  getAllOptimalIngredientPokemonProduce,
+  getAllOptimalIngredientFocusedPokemonProduce,
   groupContributionsByType,
   selectTopNContributions,
   sortByContributedPowerDesc,
@@ -18,7 +18,12 @@ import {
 
 describe('getAllOptimalIngredientPokemonProduce', () => {
   it('shall calculate optimal produce for all optimal pokemon', () => {
-    const data = getAllOptimalIngredientPokemonProduce({ limit50: false, cheer: 0, e4e: 0, monteCarloIterations: 1 });
+    const data = getAllOptimalIngredientFocusedPokemonProduce({
+      limit50: false,
+      cheer: 0,
+      e4e: 0,
+      monteCarloIterations: 1,
+    });
     const pinsirData = data.filter((entry) => entry.pokemonCombination.pokemon === pokemon.PINSIR);
     expect(pinsirData).toHaveLength(6);
   });
@@ -57,7 +62,7 @@ describe('calculateMealContributionFor', () => {
       monteCarloIterations: 1,
     });
 
-    const allPokemonWithProduce = getAllOptimalIngredientPokemonProduce({
+    const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
       limit50,
       cheer: 0,
       e4e: 0,
@@ -72,6 +77,7 @@ describe('calculateMealContributionFor', () => {
       memoizedSetCover,
       timeout: 1000,
       critMultiplier: 1,
+      defaultCritMultiplier: 1,
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
@@ -89,6 +95,8 @@ describe('calculateContributionForMealWithPunishment', () => {
       percentage: 100,
       producedIngredients: [producedTomato],
       critMultiplier: 1,
+
+      defaultCritMultiplier: 1,
     });
     const expectedContribution =
       producedTomato.amount * 2.48 * ingredient.SNOOZY_TOMATO.value * (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
@@ -108,6 +116,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       percentage: 50,
       producedIngredients: [producedTomato],
       critMultiplier: 1,
+      defaultCritMultiplier: 1,
     });
 
     const expectedContribution =
@@ -129,6 +138,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       percentage: 50,
       producedIngredients: [producedTomato, producedFiller],
       critMultiplier: 1,
+      defaultCritMultiplier: 1,
     });
 
     const expectedContribution =
@@ -149,6 +159,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       percentage: 50,
       producedIngredients: [producedFiller],
       critMultiplier: 1,
+      defaultCritMultiplier: 1,
     });
 
     const expectedFiller = producedFiller.amount * ingredient.FANCY_APPLE.taxedValue;

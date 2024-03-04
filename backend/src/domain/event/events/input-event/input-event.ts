@@ -32,7 +32,7 @@ export class PokemonInputEvent extends InputEvent {
 
     const input =
       `[${prettifyTime(this.time)}][Input] (${this.pokemon.name}): ` +
-      `Level: ${level}, Nature: ${nature.prettyName}, Main skill level: ${skillLevel}, ` +
+      `Level: ${level}, Nature: ${nature?.prettyName ?? 'neutral'}, Main skill level: ${skillLevel}, ` +
       `Sub-skills: [${subskills?.map((subskill) => subskill.name).join(', ') ?? 'none'}]`;
 
     return input;

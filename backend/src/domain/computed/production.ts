@@ -4,15 +4,15 @@ import { Time } from '../time/time';
 
 export interface ProductionStats {
   level: number;
-  nature: nature.Nature;
+  nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
+  skillLevel?: number;
   e4e: number;
   cheer: number;
   helpingBonus: number;
   camp: boolean;
   erb: number;
   incense: boolean;
-  skillLevel: number;
   mainBedtime: Time;
   mainWakeup: Time;
   maxPotSize?: number;

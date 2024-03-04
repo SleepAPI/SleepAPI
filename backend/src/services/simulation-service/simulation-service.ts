@@ -24,7 +24,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { getDefaultRecoveryEvents } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill } from 'sleepapi-common';
+import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
 import {
@@ -53,7 +53,7 @@ export function setupAndRunProductionSimulation(params: {
   const { pokemonCombination, input, monteCarloIterations, preGeneratedSkillActivations } = params;
   const {
     level,
-    nature,
+    nature: maybeNature = nature.BASHFUL,
     subskills = [],
     e4e,
     cheer,
@@ -69,19 +69,19 @@ export function setupAndRunProductionSimulation(params: {
 
   const ingredientPercentage = calculateIngredientPercentage({
     pokemon: pokemonCombination.pokemon,
-    nature,
+    nature: maybeNature,
     subskills,
   });
-  const skillPercentage = calculateSkillPercentage(pokemonCombination.pokemon, subskills, input.nature);
+  const skillPercentage = calculateSkillPercentage(pokemonCombination.pokemon, subskills, maybeNature);
 
   const daySleepInfo: SleepInfo = {
     period: { end: mainBedtime, start: mainWakeup },
-    nature,
+    nature: maybeNature,
     incense,
     erb,
   };
 
-  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, nature, e4e, cheer);
+  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
 
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
@@ -99,7 +99,7 @@ export function setupAndRunProductionSimulation(params: {
   const helpFrequency = calculateHelpSpeedBeforeEnergy({
     pokemon: averagedPokemonCombination.pokemon,
     level,
-    nature,
+    nature: maybeNature,
     subskills,
     camp,
     helpingBonus,
@@ -172,6 +172,7 @@ export function generateSkillActivations(params: {
     sneakySnackBerries,
     monteCarloIterations,
   } = params;
+  const skillLevel = input.skillLevel ?? pokemonWithAverageProduce.pokemon.skill.maxLevel;
 
   let oddsOfNightSkillProc = 0;
   let nrOfDaySkillProcs = 0;
@@ -186,7 +187,7 @@ export function generateSkillActivations(params: {
       dayInfo,
       helpFrequency,
       skillPercentage,
-      skillLevel: input.skillLevel,
+      skillLevel,
       pokemon: pokemonWithAverageProduce.pokemon,
       recoveryEvents,
       mealTimes,
@@ -213,7 +214,7 @@ export function generateSkillActivations(params: {
   }
 
   return scheduleSkillEvents({
-    skillLevel: input.skillLevel,
+    skillLevel,
     pokemonWithAverageProduce,
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,

@@ -53,7 +53,16 @@ export function invertNatureFrequecy(nature: nature.Nature) {
   return result;
 }
 
-export function getOptimalIngredientStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
+export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
+  if (pokemon.specialty === 'skill') {
+    return {
+      level,
+      nature: nature.SASSY,
+      subskills: subskillsForFilter('optimal', level, pokemon),
+      skillLevel: 6,
+    };
+  }
+
   return {
     level,
     nature: nature.QUIET,

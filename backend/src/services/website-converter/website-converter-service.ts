@@ -100,15 +100,22 @@ class WebsiteConverterServiceImpl {
         details: allEntriesOfPokemon
           .map(
             ({ tier, pokemonCombinationContribution: otherPairingsEntry }) =>
-              `[${tier}] (${prettifyIngredientDrop(
-                otherPairingsEntry.pokemonCombination.ingredientList
-              )})\nTotal score: ${roundDown(
-                otherPairingsEntry.combinedContribution.score,
-                0
-              )}\n${otherPairingsEntry.combinedContribution.contributions
+              `[${tier}] (${prettifyIngredientDrop(otherPairingsEntry.pokemonCombination.ingredientList)})\n` +
+              `Total score: ${Math.round(otherPairingsEntry.combinedContribution.score)}` +
+              `${
+                (otherPairingsEntry.combinedContribution.contributions[0].skillValue ?? 0) > 0
+                  ? `, support value: ${Math.round(
+                      otherPairingsEntry.combinedContribution.contributions.reduce(
+                        (sum, cur) => sum + (cur.skillValue ?? 0),
+                        0
+                      )
+                    )}`
+                  : ''
+              }\n` +
+              `${otherPairingsEntry.combinedContribution.contributions
                 .map(
                   (meal) =>
-                    `[${roundDown(meal.contributedPower, 0)} ${roundDown(meal.percentage, 1)}%] ${meal.meal.name
+                    `[${Math.round(meal.contributedPower)} ${roundDown(meal.percentage, 1)}%] ${meal.meal.name
                       .toLowerCase()
                       .replace(/_/g, ' ')}`
                 )
@@ -381,7 +388,7 @@ class WebsiteConverterServiceImpl {
   #prettifyInput(details: ProductionStats) {
     let prettyString = '\n-------------\n';
 
-    prettyString += `Level: ${details.level}` + `, Nature: ${details.nature.prettyName}` + '\n';
+    prettyString += `Level: ${details.level}` + `, Nature: ${details.nature?.prettyName ?? 'None'}` + '\n';
     prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
 
     const e4eHbCamp: string[] = [];

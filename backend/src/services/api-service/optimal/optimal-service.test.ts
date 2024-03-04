@@ -1,5 +1,5 @@
+import { InputProductionStats } from '@src/domain/computed/production';
 import { berry, dessert, nature, subskill } from 'sleepapi-common';
-import { InputProductionStats } from '../../../domain/computed/production';
 import { prettifyIngredientDrop } from '../../../utils/json/json-utils';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
 
