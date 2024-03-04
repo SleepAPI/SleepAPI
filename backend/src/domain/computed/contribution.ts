@@ -4,6 +4,7 @@ export interface Contribution {
   meal: Recipe;
   percentage: number;
   contributedPower: number;
+  skillValue?: number;
 }
 
 export interface CombinedContribution {

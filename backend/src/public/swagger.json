@@ -258,6 +258,10 @@
 					"contributedPower": {
 						"type": "number",
 						"format": "double"
+					},
+					"skillValue": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -391,6 +395,10 @@
 						},
 						"type": "array"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"e4e": {
 						"type": "number",
 						"format": "double"
@@ -413,10 +421,6 @@
 					"incense": {
 						"type": "boolean"
 					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
 					"mainBedtime": {
 						"$ref": "#/components/schemas/Time"
 					},
@@ -430,14 +434,12 @@
 				},
 				"required": [
 					"level",
-					"nature",
 					"e4e",
 					"cheer",
 					"helpingBonus",
 					"camp",
 					"erb",
 					"incense",
-					"skillLevel",
 					"mainBedtime",
 					"mainWakeup"
 				],
@@ -537,6 +539,10 @@
 						},
 						"type": "array"
 					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
 					"e4e": {
 						"type": "number",
 						"format": "double"
@@ -559,10 +565,6 @@
 					"incense": {
 						"type": "boolean"
 					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
 					"mainBedtime": {
 						"$ref": "#/components/schemas/Time"
 					},
@@ -582,14 +584,12 @@
 				},
 				"required": [
 					"level",
-					"nature",
 					"e4e",
 					"cheer",
 					"helpingBonus",
 					"camp",
 					"erb",
 					"incense",
-					"skillLevel",
 					"mainBedtime",
 					"mainWakeup",
 					"berries"
@@ -1419,10 +1419,6 @@
 												"mainBedtime": {
 													"$ref": "#/components/schemas/Time"
 												},
-												"skillLevel": {
-													"type": "number",
-													"format": "double"
-												},
 												"incense": {
 													"type": "boolean"
 												},
@@ -1445,10 +1441,7 @@
 													"type": "number",
 													"format": "double"
 												},
-												"nature": {
-													"$ref": "#/components/schemas/Nature"
-												},
-												"level": {
+												"skillLevel": {
 													"type": "number",
 													"format": "double"
 												},
@@ -1457,21 +1450,28 @@
 														"$ref": "#/components/schemas/SubSkill"
 													},
 													"type": "array"
+												},
+												"nature": {
+													"$ref": "#/components/schemas/Nature"
+												},
+												"level": {
+													"type": "number",
+													"format": "double"
 												}
 											},
 											"required": [
 												"mainWakeup",
 												"mainBedtime",
-												"skillLevel",
 												"incense",
 												"erb",
 												"camp",
 												"helpingBonus",
 												"cheer",
 												"e4e",
+												"skillLevel",
+												"subskills",
 												"nature",
-												"level",
-												"subskills"
+												"level"
 											],
 											"type": "object"
 										}

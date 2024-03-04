@@ -41,18 +41,21 @@ export function getOptimalFlexiblePokemon(
 
   const pokemonOccurenceInOptimalSolutions: Map<string, Contribution[]> = new Map();
   const cache: Map<number, CritInfo> = new Map();
+  const { critMultiplier: defaultCritMultiplier } = calculateCritMultiplier([], cache);
   for (const { meal, teams } of flexiblePokemonCombinations) {
     const uniqueOptimalPokemonCombinationsForMeal: CustomPokemonCombinationWithProduce[] =
       removeDuplicatePokemonCombinations(teams.flat());
 
     for (const pokemonWithProduce of uniqueOptimalPokemonCombinationsForMeal) {
       const { critMultiplier } = calculateCritMultiplier(pokemonWithProduce.detailedProduce.skillActivations, cache);
+
       const contribution: Contribution = calculateContributionForMealWithPunishment({
         meal,
         teamSize: teams[0].length,
         percentage: 100,
         producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
         critMultiplier,
+        defaultCritMultiplier,
       });
 
       const key = JSON.stringify(pokemonWithProduce);
@@ -86,10 +89,7 @@ export function getOptimalFlexiblePokemon(
   return sorted.map(({ pokemonCombination, scoreResult, stats }) => ({
     pokemonCombination,
     scoreResult,
-    input: {
-      ...input,
-      subskills: stats.subskills,
-    },
+    input: { ...input, ...stats },
   }));
 }
 
@@ -122,13 +122,13 @@ function generateOptimalTeamSolutions(input: InputProductionStats, monteCarloIte
 
 function customOptimalSet(
   mealName: string,
-  inputStats: InputProductionStats,
+  input: InputProductionStats,
   timeout: number,
   monteCarloIterations: number
 ) {
   const meal = getMeal(mealName);
 
-  const pokemonProduction = calculateOptimalProductionForSetCover(inputStats, monteCarloIterations);
+  const pokemonProduction = calculateOptimalProductionForSetCover(input, monteCarloIterations);
 
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
 
@@ -144,7 +144,7 @@ function customOptimalSet(
     meal: meal.name,
     recipe: meal.ingredients,
     value: meal.value,
-    filter: inputStats,
+    filter: input,
     teams: optimalCombinations,
   };
 }

@@ -1,13 +1,12 @@
+import { InputProductionStats } from '@src/domain/computed/production';
+import { getBerriesForIsland } from '@src/utils/berry-utils/berry-utils';
+import { findIslandForName } from '@src/utils/island-utils/island-utils';
+import { getNature } from '@src/utils/nature-utils/nature-utils';
+import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { parseTime } from '@src/utils/time-utils/time-utils';
-import { nature } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
-import { InputProductionStats } from '../../domain/computed/production';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
-import { getBerriesForIsland } from '../../utils/berry-utils/berry-utils';
-import { findIslandForName } from '../../utils/island-utils/island-utils';
-import { getNature } from '../../utils/nature-utils/nature-utils';
-import { extractSubskillsBasedOnLevel } from '../../utils/subskill-utils/subskill-utils';
 
 @Route('api/optimal')
 @Tags('optimal')
@@ -27,8 +26,9 @@ export default class OptimalController extends Controller {
 
     return {
       level,
-      nature: getNature(input.nature ?? nature.QUIET.name),
-      subskills: input.subskills ? extractSubskillsBasedOnLevel(level, input.subskills) : undefined,
+      nature: input.nature ? getNature(input.nature) : undefined,
+      subskills: input.subskills && extractSubskillsBasedOnLevel(level, input.subskills),
+      skillLevel: input.skillLevel,
       berries: getBerriesForIsland(findIslandForName(input.island)),
       e4e: input.e4e ?? 0,
       cheer: input.cheer ?? 0,
@@ -36,7 +36,6 @@ export default class OptimalController extends Controller {
       camp: input.camp ?? false,
       erb: input.erb ?? 0,
       incense: input.recoveryIncense ?? false,
-      skillLevel: input.skillLevel ?? 6,
       mainBedtime: parseTime(input.mainBedtime ?? '21:30'),
       mainWakeup: parseTime(input.mainWakeup ?? '06:00'),
       maxPotSize: input.maxPotSize,

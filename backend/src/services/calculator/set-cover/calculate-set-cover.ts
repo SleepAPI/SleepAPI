@@ -3,37 +3,34 @@ import { InputProductionStats } from '@src/domain/computed/production';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
 import { IngredientSet, pokemon } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
+import { getOptimalStats } from '../stats/stats-calculator';
 
-export function calculateOptimalProductionForSetCover(
-  productionStats: InputProductionStats,
-  monteCarloIterations: number
-) {
-  const { level, nature, subskills, berries, skillLevel } = productionStats;
+export function calculateOptimalProductionForSetCover(input: InputProductionStats, monteCarloIterations: number) {
+  const { level, berries, nature } = input;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
   const pokemonWithCorrectBerries = pokemon.OPTIMAL_POKEDEX.filter((pokemon) => berries.includes(pokemon.berry));
   for (const pokemon of pokemonWithCorrectBerries) {
-    const subskillsForPokemon = subskills ?? subskillsForFilter('optimal', level, pokemon);
+    const optimalStats: CustomStats = getOptimalStats(level, pokemon);
+    const customStats: CustomStats = {
+      level,
+      nature: nature ?? optimalStats.nature,
+      subskills: input.subskills ?? optimalStats.subskills,
+      skillLevel: input.skillLevel ?? pokemon.skill.maxLevel,
+    };
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
-      const customStats: CustomStats = {
-        level,
-        nature,
-        subskills: subskillsForPokemon,
-        skillLevel,
-      };
       const { detailedProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination: {
           pokemon: pokemon,
           ingredientList,
         },
         input: {
-          ...productionStats,
-          subskills: subskillsForPokemon,
+          ...input,
+          ...customStats,
         },
         monteCarloIterations,
         preGeneratedSkillActivations,

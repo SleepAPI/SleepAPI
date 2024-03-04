@@ -11,3 +11,6 @@ export const WEEKDAY_CRIT_CHANCE = 0.1;
 export const WEEKDAY_CRIT_MULTIPLIER = 2;
 export const SUNDAY_CRIT_CHANCE = 0.3;
 export const SUNDAY_CRIT_MULTIPLIER = 3;
+
+// skills
+export const MAX_SKILL_LEVEL = 7;

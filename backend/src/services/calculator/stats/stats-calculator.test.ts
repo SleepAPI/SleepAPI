@@ -4,7 +4,7 @@ import {
   calculateSubskillCarrySize,
   extractIngredientSubskills,
   extractTriggerSubskills,
-  getOptimalIngredientStats,
+  getOptimalStats,
   invertNatureFrequecy,
 } from './stats-calculator';
 
@@ -86,7 +86,7 @@ describe('extractInventorySubskills', () => {
 describe('getOptimalIngredientStats', () => {
   it('shall return CustomStats with the provided level and nature RASH', () => {
     const level = 42;
-    expect(getOptimalIngredientStats(level, pokemon.BLASTOISE)).toEqual({
+    expect(getOptimalStats(level, pokemon.BLASTOISE)).toEqual({
       level,
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
