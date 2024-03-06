@@ -97,31 +97,27 @@ describe('extractSubskillsBasedOnLevel', () => {
 });
 
 describe('subskillsForFilter', () => {
-  it('should return an empty array for neutral subskill set', () => {
-    expect(subskillsForFilter('neutral', 50, pokemon.PINSIR)).toEqual([]);
+  it('should return the correct subskills for level 10', () => {
+    expect(subskillsForFilter('ingredient', 10, pokemon.BLASTOISE)).toEqual([subskill.INGREDIENT_FINDER_M]);
   });
 
-  it('should return the correct subskills for level 10 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 10, pokemon.BLASTOISE)).toEqual([subskill.INGREDIENT_FINDER_M]);
-  });
-
-  it('should return the correct subskills for level 25 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 25, pokemon.BLASTOISE)).toEqual([
+  it('should return the correct subskills for level 25', () => {
+    expect(subskillsForFilter('ingredient', 25, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
     ]);
   });
 
-  it('should return the correct subskills for level 50 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 50, pokemon.BLASTOISE)).toEqual([
+  it('should return the correct subskills for level 50', () => {
+    expect(subskillsForFilter('ingredient', 50, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
     ]);
   });
 
-  it('should return the correct subskills for level 75 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 75, pokemon.BLASTOISE)).toEqual([
+  it('should return the correct subskills for level 75', () => {
+    expect(subskillsForFilter('ingredient', 75, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
@@ -129,8 +125,8 @@ describe('subskillsForFilter', () => {
     ]);
   });
 
-  it('should return the correct subskills for level 100 and optimal set', () => {
-    expect(subskillsForFilter('optimal', 100, pokemon.BLASTOISE)).toEqual([
+  it('should return the correct subskills for level 100', () => {
+    expect(subskillsForFilter('ingredient', 100, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
@@ -139,17 +135,37 @@ describe('subskillsForFilter', () => {
     ]);
   });
 
-  it('should return the correct subskills for level 100, single-stage pokemon, and optimal set', () => {
-    expect(subskillsForFilter('optimal', 100, pokemon.PINSIR)).toEqual([
+  it('should return the correct subskills for level 100, single-stage pokemon', () => {
+    expect(subskillsForFilter('ingredient', 100, pokemon.PINSIR)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
       subskill.INVENTORY_L,
       subskill.INGREDIENT_FINDER_S,
       subskill.HELPING_SPEED_S,
+    ]);
+  });
+
+  it('should return the correct subskills for berry pokemon', () => {
+    expect(subskillsForFilter('berry', 100, pokemon.RAICHU)).toEqual([
+      subskill.BERRY_FINDING_S,
+      subskill.HELPING_SPEED_M,
+      subskill.HELPING_SPEED_S,
+      subskill.SKILL_TRIGGER_M,
+      subskill.SKILL_TRIGGER_S,
+    ]);
+  });
+
+  it('should return the correct subskills for skill pokemon', () => {
+    expect(subskillsForFilter('skill', 100, pokemon.SYLVEON)).toEqual([
+      subskill.SKILL_TRIGGER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.SKILL_TRIGGER_S,
+      subskill.HELPING_SPEED_S,
+      subskill.INVENTORY_L,
     ]);
   });
 
   it('should return an empty array for level below 10', () => {
-    expect(subskillsForFilter('optimal', 5, pokemon.BLASTOISE)).toEqual([]);
+    expect(subskillsForFilter('ingredient', 5, pokemon.BLASTOISE)).toEqual([]);
   });
 });

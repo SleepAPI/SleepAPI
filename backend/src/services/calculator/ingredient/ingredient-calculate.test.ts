@@ -1,6 +1,7 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { IngredientSet, PokemonIngredientSet, curry, dessert, ingredient, pokemon, salad } from 'sleepapi-common';
 import {
+  addIngredientSet,
   calculateAveragePokemonIngredientSet,
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
@@ -628,6 +629,49 @@ describe('calculateAverageIngredientDrop', () => {
         },
         {
           "amount": 2,
+          "ingredient": {
+            "longName": "Fancy Egg",
+            "name": "Egg",
+            "taxedValue": 38.7,
+            "value": 115,
+          },
+        },
+      ]
+    `);
+  });
+});
+
+describe('addIngredientSet', () => {
+  it('shall add two ingredient sets', () => {
+    const arr1: IngredientSet[] = [
+      {
+        amount: 1,
+        ingredient: ingredient.FANCY_APPLE,
+      },
+    ];
+    const arr2: IngredientSet[] = [
+      {
+        amount: 1,
+        ingredient: ingredient.FANCY_APPLE,
+      },
+      {
+        amount: 0.5,
+        ingredient: ingredient.FANCY_EGG,
+      },
+    ];
+    expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 2,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+        {
+          "amount": 0.5,
           "ingredient": {
             "longName": "Fancy Egg",
             "name": "Egg",

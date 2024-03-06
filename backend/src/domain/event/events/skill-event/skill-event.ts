@@ -5,8 +5,6 @@ import { prettifyTime } from '@src/utils/time-utils/time-utils';
 import { mainskill } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
-export const METRONOME_FACTOR = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME).length;
-
 export interface SkillActivation {
   skill: mainskill.MainSkill;
   nrOfHelpsToActivate: number;

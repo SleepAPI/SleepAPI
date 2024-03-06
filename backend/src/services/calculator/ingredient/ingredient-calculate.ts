@@ -73,6 +73,9 @@ export function calculatePercentageCoveredByCombination(
   return (totalCovered / meal.ingredients.reduce((sum, { amount }) => sum + amount, 0)) * 100;
 }
 
+/**
+ * subtracts producedIngredients amounts from requiredIngredients
+ */
 export function calculateRemainingIngredients(
   requiredIngredients: IngredientSet[],
   producedIngredients: IngredientSet[]
@@ -90,6 +93,24 @@ export function calculateRemainingIngredients(
     if (amountNeeded > 0) {
       result.push({ ingredient: req.ingredient, amount: amountNeeded });
     }
+  }
+
+  return result;
+}
+
+export function addIngredientSet(target: IngredientSet[], toAdd: IngredientSet[]): IngredientSet[] {
+  const result: IngredientSet[] = [];
+
+  for (const { amount, ingredient: addedIngredient } of toAdd) {
+    let addedAmount = amount;
+    for (const { amount: targetAmount, ingredient: targetIngredient } of target) {
+      if (addedIngredient.name === targetIngredient.name) {
+        addedAmount += targetAmount;
+        break;
+      }
+    }
+
+    result.push({ ingredient: addedIngredient, amount: addedAmount });
   }
 
   return result;
@@ -156,6 +177,9 @@ export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, l
   return result;
 }
 
+/**
+ * Very specific. Combines two similar ingredient sets, with same ingredients at same indices
+ */
 export function combineIngredientDrops(array1: IngredientSet[], array2: IngredientSet[]): IngredientSet[] {
   return array1.reduce((acc: IngredientSet[], curr: IngredientSet, index: number) => {
     const other: IngredientSet = array2[index];

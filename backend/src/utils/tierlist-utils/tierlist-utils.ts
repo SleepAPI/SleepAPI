@@ -1,3 +1,4 @@
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
 import { hashPokemonCombination } from '../optimal-utils/optimal-utils';
 
@@ -42,4 +43,13 @@ export function calculateDiffForEntry(
   }
 
   return currentEntry;
+}
+
+export function createDefaultProduceMap(defaultProduce: CustomPokemonCombinationWithProduce[]) {
+  const map: Map<string, CustomPokemonCombinationWithProduce> = new Map();
+  for (const pokemonWithProduce of defaultProduce) {
+    const hashedPokemon = hashPokemonCombination(pokemonWithProduce.pokemonCombination);
+    map.set(hashedPokemon, pokemonWithProduce);
+  }
+  return map;
 }

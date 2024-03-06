@@ -1,7 +1,7 @@
 import { CustomStats } from '@src/domain/combination/custom';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
-import { nature, pokemon, subskill } from 'sleepapi-common';
+import { mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 
 export function extractIngredientSubskills(subskills: subskill.SubSkill[]) {
   const ingS = subskills.some(({ name }) => name === subskill.INGREDIENT_FINDER_S.name)
@@ -54,11 +54,20 @@ export function invertNatureFrequecy(nature: nature.Nature) {
 }
 
 export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
-  if (pokemon.specialty === 'skill') {
+  const supportSkills: mainskill.MainSkill[] = [
+    // mainskill.COOKING_POWER_UP_S // in the future maybe
+    mainskill.ENERGIZING_CHEER_S,
+    mainskill.ENERGY_FOR_EVERYONE,
+    mainskill.EXTRA_HELPFUL_S,
+    mainskill.EXTRA_TASTY_S,
+    mainskill.INGREDIENT_MAGNET_S,
+    mainskill.METRONOME,
+  ];
+  if (pokemon.specialty === 'skill' && supportSkills.includes(pokemon.skill)) {
     return {
       level,
       nature: nature.SASSY,
-      subskills: subskillsForFilter('optimal', level, pokemon),
+      subskills: subskillsForFilter('skill', level, pokemon),
       skillLevel: 6,
     };
   }
@@ -66,7 +75,7 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
   return {
     level,
     nature: nature.QUIET,
-    subskills: subskillsForFilter('optimal', level, pokemon),
+    subskills: subskillsForFilter('ingredient', level, pokemon),
     skillLevel: 6,
   };
 }

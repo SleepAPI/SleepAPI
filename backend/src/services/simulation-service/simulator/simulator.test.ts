@@ -1,5 +1,6 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
@@ -15,6 +16,19 @@ describe('simulator', () => {
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       pokemonWithAverageProduce,
       recoveryEvents: [new EnergyEvent({ delta: 10, description: 'some-desc', time: parseTime('08:00') })],
+      extraHelpfulEvents: [
+        new SkillEvent({
+          description: 'Extra helpful',
+          time: parseTime('08:00'),
+          skillActivation: {
+            skill: mainskill.EXTRA_HELPFUL_S,
+            adjustedAmount: 1,
+            fractionOfProc: 1,
+            nrOfHelpsToActivate: 0,
+            adjustedProduce: pokemonWithAverageProduce.produce,
+          },
+        }),
+      ],
       skillActivations: [
         { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 },
       ],
@@ -33,7 +47,7 @@ describe('simulator', () => {
         "nightHelps": 30,
         "produce": {
           "berries": {
-            "amount": 221.33333333333334,
+            "amount": 223.33333333333334,
             "berry": {
               "name": "BELUE",
               "value": 33,
@@ -41,7 +55,7 @@ describe('simulator', () => {
           },
           "ingredients": [
             {
-              "amount": 110.66666666666667,
+              "amount": 111.66666666666667,
               "ingredient": {
                 "longName": "Bean Sausage",
                 "name": "Sausage",

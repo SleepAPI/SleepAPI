@@ -1,6 +1,7 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
 import { berry, ingredient, nature, pokemon } from 'sleepapi-common';
+import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import {
   calculateRemainingSimplifiedIngredients,
   createMemoKey,
@@ -12,37 +13,7 @@ import {
 describe('createPokemonByIngredientReverseIndex', () => {
   it('should correctly map ingredients to Pokémon', () => {
     const pokemons: CustomPokemonCombinationWithProduce[] = [
-      {
-        pokemonCombination: {
-          pokemon: pokemon.PINSIR,
-          ingredientList: [
-            { amount: 2, ingredient: ingredient.HONEY },
-            { amount: 5, ingredient: ingredient.FANCY_APPLE },
-          ],
-        },
-        detailedProduce: {
-          produce: {
-            berries: {
-              amount: 0,
-              berry: berry.LUM,
-            },
-            ingredients: [
-              { amount: 2, ingredient: ingredient.HONEY },
-              { amount: 5, ingredient: ingredient.FANCY_APPLE },
-            ],
-          },
-          spilledIngredients: [],
-          sneakySnack: {
-            amount: 0,
-            berry: berry.LUM,
-          },
-          dayHelps: 0,
-          nightHelps: 0,
-          averageTotalSkillProcs: 0,
-          skillActivations: [],
-        },
-        customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
-      },
+      MOCKED_POKEMON_WITH_PRODUCE,
       {
         pokemonCombination: {
           pokemon: pokemon.DRATINI,

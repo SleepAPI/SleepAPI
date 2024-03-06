@@ -24,11 +24,11 @@ import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import {
   addTime,
   isAfterOrEqualWithinPeriod,
-  scheduleEnergyEvents,
   secondsToTime,
+  sortEventsForPeriod,
   timeWithinPeriod,
 } from '@src/utils/time-utils/time-utils';
-import { pokemon } from 'sleepapi-common';
+import { mainskill, pokemon } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -83,7 +83,7 @@ export function randomizedSimulation(params: {
 
   let nextHelpEvent: Time = dayInfo.period.start;
 
-  const energyEvents: EnergyEvent[] = scheduleEnergyEvents(dayInfo.period, recoveryEvents);
+  const energyEvents: EnergyEvent[] = sortEventsForPeriod(dayInfo.period, recoveryEvents);
 
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
@@ -93,7 +93,14 @@ export function randomizedSimulation(params: {
     const skillActivated = rollRandomChance(skillPercentage);
     if (skillActivated) {
       if (pokemon.skill.unit === 'energy') {
-        currentEnergy += pokemon.skill.amount[skillLevel - 1] * nature.energy;
+        let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
+        if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
+          // 20% chance it affects this Pokémon
+          if (!rollRandomChance(0.2)) {
+            energyAmount = 0;
+          }
+        }
+        currentEnergy = Math.min(currentEnergy + energyAmount, 150);
       }
       skillProcsNight += 1;
       break;
@@ -127,20 +134,26 @@ export function randomizedSimulation(params: {
     if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
       const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
-      let skillRecovery = 0;
 
       if (rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
         if (pokemon.skill.unit === 'energy') {
-          skillRecovery = pokemon.skill.amount[skillLevel - 1] * nature.energy;
+          let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
+          if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
+            // 20% chance it affects this Pokémon
+            if (!rollRandomChance(0.2)) {
+              energyAmount = 0;
+            }
+          }
+          currentEnergy = Math.min(currentEnergy + energyAmount, 150);
         }
       }
-
-      currentEnergy += mealRecovery + eventRecovery + skillRecovery;
 
       ++dayHelps;
       nextHelpEvent = nextHelp;
     }
+
+    currentEnergy += mealRecovery + eventRecovery;
 
     currentEnergy = roundDown(
       currentEnergy -

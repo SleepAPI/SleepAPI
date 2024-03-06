@@ -2,13 +2,16 @@ import { IngredientSet, pokemon, Recipe, RecipeType } from 'sleepapi-common';
 
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
   calculateRemainingIngredients,
+  combineSameIngredientsInDrop,
   getAllIngredientCombinationsForLevel,
 } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
@@ -17,9 +20,10 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
   limit50: boolean;
   e4e: number;
   cheer: number;
+  extraHelpful: number;
   monteCarloIterations: number;
 }): CustomPokemonCombinationWithProduce[] {
-  const { limit50, e4e, cheer, monteCarloIterations } = params;
+  const { limit50, e4e, cheer, extraHelpful, monteCarloIterations } = params;
   const level = limit50 ? 50 : 60;
 
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
@@ -27,6 +31,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
   const teamStats = {
     e4e,
     cheer,
+    extraHelpful,
     erb: 0,
     camp: false,
     helpingBonus: 0,
@@ -71,18 +76,38 @@ export function calculateMealContributionFor(params: {
   timeout: number;
   critMultiplier: number;
   defaultCritMultiplier: number;
+  allPokemonDefaultProduce?: Map<string, CustomPokemonCombinationWithProduce>;
 }): Contribution {
-  const { meal, producedIngredients, critMultiplier, memoizedSetCover, timeout, defaultCritMultiplier } = params;
+  const {
+    meal,
+    producedIngredients,
+    critMultiplier,
+    memoizedSetCover,
+    timeout,
+    defaultCritMultiplier,
+    allPokemonDefaultProduce,
+  } = params;
 
   const percentage = calculatePercentageCoveredByCombination(meal, producedIngredients);
   const remainderOfRecipe = calculateRemainingIngredients(meal.ingredients, producedIngredients);
 
   // if mon solves recipe alone, or does not contribute at all, we don't need to call set cover
-  // TODO: should calculate set cover for all support mons even if percentage===0, currently only dedenne since crit>default
-  const shouldCalculateTeamSolutions = percentage > 0 || critMultiplier > defaultCritMultiplier;
-  const minAdditionalMonsNeeded = shouldCalculateTeamSolutions
+  const shouldCalculateTeamSolutions =
+    percentage > 0 || critMultiplier > defaultCritMultiplier || allPokemonDefaultProduce;
+
+  let allSupportedIngredients: IngredientSet[] = [];
+  const minAdditionalMonsNeeded: number = shouldCalculateTeamSolutions
     ? remainderOfRecipe.length > 0
-      ? memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4, timeout)
+      ? (() => {
+          const { allSupportedIngredients: calcedSupportIngs, teamSizeRequired } = calculateTeamSizeAndSupportValue({
+            remainderOfRecipe,
+            memoizedSetCover,
+            timeout,
+            allPokemonDefaultProduce,
+          });
+          allSupportedIngredients = calcedSupportIngs;
+          return teamSizeRequired;
+        })()
       : 0
     : 6;
 
@@ -91,9 +116,49 @@ export function calculateMealContributionFor(params: {
     teamSize: 1 + minAdditionalMonsNeeded,
     percentage,
     producedIngredients,
+    supportedIngredients: allSupportedIngredients,
     critMultiplier,
     defaultCritMultiplier,
   });
+}
+
+export function calculateTeamSizeAndSupportValue(params: {
+  remainderOfRecipe: IngredientSet[];
+  memoizedSetCover: SetCover;
+  timeout: number;
+  allPokemonDefaultProduce?: Map<string, CustomPokemonCombinationWithProduce>;
+}) {
+  const { allPokemonDefaultProduce, memoizedSetCover, remainderOfRecipe, timeout } = params;
+  let allSupportedIngredients: IngredientSet[] = [];
+  let teamSizeRequired = 0;
+
+  if (allPokemonDefaultProduce) {
+    const bestSolution = memoizedSetCover.findOptimalCombinationFor(remainderOfRecipe, 4, timeout).at(0);
+    if (bestSolution) {
+      const supportedIngredients: IngredientSet[][] = [];
+      for (const member of bestSolution.team) {
+        const hashedMember = hashPokemonCombination(member.pokemonCombination);
+        const defaultMember = allPokemonDefaultProduce.get(hashedMember);
+        if (!defaultMember) {
+          throw new ProgrammingError(`Pokemon not found in default production data: ${hashedMember}`);
+        }
+
+        supportedIngredients.push(
+          calculateRemainingIngredients(
+            member.detailedProduce.produce.ingredients,
+            defaultMember.detailedProduce.produce.ingredients
+          )
+        );
+      }
+
+      allSupportedIngredients = combineSameIngredientsInDrop(supportedIngredients.flat());
+    }
+    teamSizeRequired = bestSolution?.team.length ?? 5;
+  } else {
+    teamSizeRequired = memoizedSetCover.calculateMinTeamSizeFor(remainderOfRecipe, 4, timeout);
+  }
+
+  return { teamSizeRequired, allSupportedIngredients };
 }
 
 export function calculateContributionForMealWithPunishment(params: {
@@ -101,24 +166,39 @@ export function calculateContributionForMealWithPunishment(params: {
   teamSize: number;
   percentage: number;
   producedIngredients: IngredientSet[];
+  supportedIngredients: IngredientSet[];
   critMultiplier: number;
   defaultCritMultiplier: number;
 }): Contribution {
-  const { meal, teamSize, percentage, producedIngredients, critMultiplier, defaultCritMultiplier } = params;
+  const {
+    meal,
+    teamSize,
+    percentage,
+    producedIngredients,
+    supportedIngredients,
+    critMultiplier,
+    defaultCritMultiplier,
+  } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
 
   const teamSizePenalty = Math.max(1 - (teamSize - 1) * 0.2, 0); // clamp to 0
   const valueLeftInRecipe = meal.valueMax - contributedValue;
-  const recipeCritContribution =
-    teamSizePenalty * (critMultiplier * valueLeftInRecipe - defaultCritMultiplier * valueLeftInRecipe);
 
-  const contributedPower = critMultiplier * (contributedValue * teamSizePenalty + fillerValue) + recipeCritContribution;
+  const extraTastyContribution =
+    teamSizePenalty * (critMultiplier * valueLeftInRecipe - defaultCritMultiplier * valueLeftInRecipe);
+  // produce support are support mons that boost produce of team members, like extra helpful and e4e
+  const { contributedValue: supportedContributionValue, fillerValue: supportedFillers } =
+    calculateContributedIngredientsValue(meal, supportedIngredients);
+
+  const regularContribution = critMultiplier * contributedValue * teamSizePenalty + fillerValue;
+  const supportedContribution = critMultiplier * supportedContributionValue * teamSizePenalty + supportedFillers;
+  const contributedPower = regularContribution + supportedContribution + extraTastyContribution;
 
   return {
     meal,
     percentage,
     contributedPower,
-    skillValue: recipeCritContribution, // TODO: add other support mons than dedenne here
+    skillValue: extraTastyContribution + supportedContribution,
   };
 }
 

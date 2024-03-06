@@ -9,6 +9,7 @@ export interface ProductionStats {
   skillLevel?: number;
   e4e: number;
   cheer: number;
+  extraHelpful: number;
   helpingBonus: number;
   camp: boolean;
   erb: number;

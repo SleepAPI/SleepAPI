@@ -16,6 +16,7 @@ export interface InputProductionStatsRequest {
   island?: string;
   e4e?: number;
   cheer?: number;
+  extraHelpful?: number;
   helpingbonus?: number;
   camp?: boolean;
   erb?: number;

@@ -9,8 +9,8 @@ import {
   isBefore,
   parseTime,
   prettifyTime,
-  scheduleEnergyEvents,
   secondsToTime,
+  sortEventsForPeriod,
   sortTimesForPeriod,
   timeWithinPeriod,
   toMinutes,
@@ -363,7 +363,7 @@ describe('scheduleEnergyEvents', () => {
       new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Midmorning Recovery', delta: 20 }),
       new EnergyEvent({ time: { hour: 10, minute: 45, second: 0 }, description: 'Late Morning Recovery', delta: 25 }),
     ];
-    const sortedEvents = scheduleEnergyEvents(dayPeriod, recoveries);
+    const sortedEvents = sortEventsForPeriod(dayPeriod, recoveries);
     expect(sortedEvents[0].time.hour).toBeLessThan(sortedEvents[1].time.hour); // First event comes before second
   });
 
@@ -372,13 +372,13 @@ describe('scheduleEnergyEvents', () => {
       new EnergyEvent({ time: { hour: 21, minute: 0, second: 0 }, description: 'Post Period Recovery', delta: 15 }),
       new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Morning Recovery', delta: 20 }),
     ];
-    const sortedEvents = scheduleEnergyEvents(dayPeriod, recoveries);
+    const sortedEvents = sortEventsForPeriod(dayPeriod, recoveries);
     expect(sortedEvents[0].description).toBe('Morning Recovery'); // Event within period comes first
   });
 
   it('returns an empty array when no events are provided', () => {
     const recoveries: EnergyEvent[] = [];
-    const sortedEvents = scheduleEnergyEvents(dayPeriod, recoveries);
+    const sortedEvents = sortEventsForPeriod(dayPeriod, recoveries);
     expect(sortedEvents).toEqual([]);
   });
 });

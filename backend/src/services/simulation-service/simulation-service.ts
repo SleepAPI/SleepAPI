@@ -22,7 +22,7 @@ import { SkillActivation } from '@src/domain/event/events/skill-event/skill-even
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
-import { getDefaultRecoveryEvents } from '@src/utils/event-utils/event-utils';
+import { getDefaultRecoveryEvents, getExtraHelpfulEvents } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
@@ -57,6 +57,7 @@ export function setupAndRunProductionSimulation(params: {
     subskills = [],
     e4e,
     cheer,
+    extraHelpful,
     helpingBonus,
     camp,
     erb,
@@ -81,8 +82,6 @@ export function setupAndRunProductionSimulation(params: {
     erb,
   };
 
-  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
-
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
   const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, subskills);
@@ -105,6 +104,9 @@ export function setupAndRunProductionSimulation(params: {
     helpingBonus,
   });
 
+  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
+  const extraHelpfulEvents = getExtraHelpfulEvents(daySleepInfo.period, extraHelpful, pokemonWithAverageProduce);
+
   const skillActivations = preGeneratedSkillActivations
     ? preGeneratedSkillActivations
     : generateSkillActivations({
@@ -126,6 +128,7 @@ export function setupAndRunProductionSimulation(params: {
     pokemonWithAverageProduce,
     sneakySnackBerries,
     recoveryEvents,
+    extraHelpfulEvents,
     skillActivations,
     mealTimes,
   });
@@ -204,6 +207,7 @@ export function generateSkillActivations(params: {
       pokemonWithAverageProduce,
       sneakySnackBerries,
       recoveryEvents,
+      extraHelpfulEvents: [],
       skillActivations: [],
       mealTimes,
     });

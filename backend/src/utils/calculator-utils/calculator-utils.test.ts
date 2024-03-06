@@ -1,4 +1,4 @@
-import { roundDown } from './calculator-utils';
+import { roundDown, splitNumber } from './calculator-utils';
 
 describe('roundDown', () => {
   it('shall round to one decimal', () => {
@@ -15,5 +15,11 @@ describe('roundDown', () => {
 
   it('shall calculate and round to 1 decimal negative', () => {
     expect(roundDown(-0.26, 1)).toBe(-0.3);
+  });
+});
+
+describe('splitNumber', () => {
+  it('shall split decimal number into whole number array with ending decimal', () => {
+    expect(splitNumber(4.2069)).toEqual([1, 1, 1, 1, 0.2069]);
   });
 });

@@ -129,3 +129,4 @@ export const MAINSKILLS: MainSkill[] = [
   INGREDIENT_MAGNET_S,
   METRONOME,
 ];
+export const METRONOME_FACTOR = MAINSKILLS.filter((s) => s !== METRONOME).length;
