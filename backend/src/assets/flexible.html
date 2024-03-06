@@ -161,6 +161,46 @@
         });
       });
     </script>
+
+    <script>
+      // add event listeners to slider minus and plus buttons
+      $(document).ready(function () {
+        document.querySelectorAll('.decreaseValue').forEach((button) => {
+          button.addEventListener('click', function () {
+            var container = this.parentElement;
+            var slider = container.querySelector('.slider-input');
+            var currentValue = parseInt(slider.value);
+            if (currentValue > parseInt(slider.min)) {
+              slider.value = currentValue - 1;
+              updateSliderValue(slider);
+            }
+          });
+        });
+
+        document.querySelectorAll('.increaseValue').forEach((button) => {
+          button.addEventListener('click', function () {
+            var container = this.parentElement;
+            var slider = container.querySelector('.slider-input');
+            var currentValue = parseInt(slider.value);
+            if (currentValue < parseInt(slider.max)) {
+              slider.value = currentValue + 1;
+              updateSliderValue(slider);
+            }
+          });
+        });
+
+        function updateSliderValue(slider) {
+          var valueDisplay = document.querySelector('.slider-value[data-for="' + slider.id + '"]');
+          valueDisplay.innerText = slider.value;
+        }
+
+        document.querySelectorAll('.slider-input').forEach((slider) => {
+          slider.oninput = function () {
+            updateSliderValue(this);
+          };
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -239,19 +279,25 @@
       </select>
       <br />
 
-      <label for="level" class="form-label">Level:&nbsp;</label><span id="levelValue">50</span><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="level"
-        name="level"
-        value="50"
-        min="1"
-        max="100"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
+      <div class="slider-container mb-2">
+        <label for="level" class="form-label">Level:&nbsp;</label><span class="slider-value" data-for="level">50</span
+        ><br />
+        <div class="d-flex align-items-center justify-content-center">
+          <button type="button" class="btn btn-outline-dark btn-sm decreaseValue">-</button>
+          <input
+            type="range"
+            class="form-range mx-2 slider-input"
+            autocomplete="off"
+            id="level"
+            name="level"
+            value="50"
+            min="1"
+            max="100"
+            style="width: 224px"
+          />
+          <button type="button" class="btn btn-outline-dark btn-sm increaseValue">+</button>
+        </div>
+      </div>
 
       <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
       <input
