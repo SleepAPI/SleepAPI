@@ -1,4 +1,4 @@
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import { ScheduledEvent } from '@src/domain/event/event';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import { roundDown } from '../calculator-utils/calculator-utils';
 
@@ -120,8 +120,8 @@ export function isAfterOrEqual(time1: Time, time2: Time): boolean {
   );
 }
 
-export function scheduleEnergyEvents(dayPeriod: TimePeriod, recoveries: EnergyEvent[]): EnergyEvent[] {
-  return recoveries.sort((a, b) => sortTimesForPeriod(a.time, b.time, dayPeriod));
+export function sortEventsForPeriod<T extends ScheduledEvent>(dayPeriod: TimePeriod, events: T[]): T[] {
+  return events.sort((a, b) => sortTimesForPeriod(a.time, b.time, dayPeriod));
 }
 
 /**

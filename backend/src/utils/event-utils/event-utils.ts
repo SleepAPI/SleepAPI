@@ -1,15 +1,58 @@
-import { Produce } from '@src/domain/combination/produce';
+import { PokemonProduce, Produce } from '@src/domain/combination/produce';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
 import { mainskill, nature } from 'sleepapi-common';
-import { countInventory } from '../inventory-utils/inventory-utils';
+import { splitNumber } from '../calculator-utils/calculator-utils';
+import { addToInventory, countInventory } from '../inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
 import { divideTimePeriod, isAfterOrEqualWithinPeriod } from '../time-utils/time-utils';
+
+export function getExtraHelpfulEvents(
+  period: TimePeriod,
+  extraHelpfulProcs: number,
+  averageProduce: PokemonProduce
+): SkillEvent[] {
+  const helpfulEvents: SkillEvent[] = [];
+  const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
+
+  const extraHelpfulPeriods: TimePeriod[] = divideTimePeriod(period, extraHelpfulProcs);
+  const extraHelpfulFractions: number[] = splitNumber(extraHelpfulProcs);
+  for (let i = 0; i < extraHelpfulPeriods.length; i++) {
+    const period = extraHelpfulPeriods[i].start;
+    const adjustedAmount =
+      (extraHelpfulFractions[i] * mainskill.EXTRA_HELPFUL_S.amount[mainskill.EXTRA_HELPFUL_S.maxLevel - 1]) / 5;
+
+    const event: SkillEvent = new SkillEvent({
+      time: period,
+      description: 'Team Extra Helpful',
+      skillActivation: {
+        fractionOfProc: extraHelpfulFractions[i],
+        skill: mainskill.EXTRA_HELPFUL_S,
+        adjustedAmount,
+        nrOfHelpsToActivate: 0,
+        adjustedProduce: {
+          berries: {
+            berry: averageBerries.berry,
+            amount: averageBerries.amount * adjustedAmount,
+          },
+          ingredients: averageIngredients.map(({ amount, ingredient }) => ({
+            ingredient,
+            amount: amount * adjustedAmount,
+          })),
+        },
+      },
+    });
+    helpfulEvents.push(event);
+  }
+
+  return helpfulEvents;
+}
 
 export function getDefaultRecoveryEvents(
   period: TimePeriod,
@@ -26,34 +69,40 @@ export function getDefaultRecoveryEvents(
   return recoveryEvents;
 }
 
-// currently schedules level 6 procs
+// schedules using max skill level
 export function scheduleTeamEnergyEvents(
-  recoveryEvents: ScheduledEvent[],
+  recoveryEvents: EnergyEvent[],
   period: TimePeriod,
   e4eProcs: number,
   cheerProcs: number,
   nature: nature.Nature
-): ScheduledEvent[] {
-  if (e4eProcs === 0) {
+): EnergyEvent[] {
+  if (e4eProcs === 0 && cheerProcs === 0) {
     return recoveryEvents;
   }
 
-  const e4ePeriods: TimePeriod[] = divideTimePeriod(period, Math.floor(e4eProcs));
-  for (const period of e4ePeriods) {
+  const e4ePeriods: TimePeriod[] = divideTimePeriod(period, e4eProcs);
+  const e4eDeltas: number[] = splitNumber(e4eProcs);
+  for (let i = 0; i < e4ePeriods.length; i++) {
     const event: EnergyEvent = new EnergyEvent({
-      time: period.start,
+      time: e4ePeriods[i].start,
       description: 'E4E',
-      delta: mainskill.ENERGY_FOR_EVERYONE.amount[5] * nature.energy,
+      delta:
+        e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount[mainskill.ENERGY_FOR_EVERYONE.maxLevel - 1] * nature.energy,
     });
     recoveryEvents.push(event);
   }
 
-  const cheerPeriods: TimePeriod[] = divideTimePeriod(period, Math.floor(cheerProcs));
-  for (const period of cheerPeriods) {
+  const cheerPeriods: TimePeriod[] = divideTimePeriod(period, cheerProcs);
+  const cheerDeltas: number[] = splitNumber(cheerProcs);
+  for (let i = 0; i < cheerPeriods.length; i++) {
     const event: EnergyEvent = new EnergyEvent({
-      time: period.start,
+      time: cheerPeriods[i].start,
       description: 'Energizing Cheer',
-      delta: (mainskill.ENERGIZING_CHEER_S.amount[5] * nature.energy) / 5,
+      delta:
+        (cheerDeltas[i] *
+          (mainskill.ENERGIZING_CHEER_S.amount[mainskill.ENERGIZING_CHEER_S.maxLevel - 1] * nature.energy)) /
+        5,
     });
     recoveryEvents.push(event);
   }
@@ -138,6 +187,29 @@ export function recoverFromMeal(params: {
   }
 
   return { recoveredAmount, mealsProcessed: mealIndex };
+}
+
+export function triggerExtraHelpful(params: {
+  helpfulEvents: SkillEvent[];
+  helpfulIndex: number;
+  emptyProduce: Produce;
+  currentTime: Time;
+  period: TimePeriod;
+  eventLog: ScheduledEvent[];
+}) {
+  const { helpfulEvents, emptyProduce, currentTime, period, eventLog } = params;
+  let extraHelpfulIndex = params.helpfulIndex;
+
+  let helpfulProduce: Produce = emptyProduce;
+  for (; extraHelpfulIndex < helpfulEvents.length; extraHelpfulIndex++) {
+    const helpfulEvent = helpfulEvents[extraHelpfulIndex];
+    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: helpfulEvent.time, period })) {
+      helpfulProduce = addToInventory(helpfulProduce, helpfulEvent.skillActivation.adjustedProduce!);
+
+      eventLog.push(helpfulEvent);
+    } else break;
+  }
+  return { helpfulProduce, helpfulEventsProcessed: extraHelpfulIndex };
 }
 
 export function inventoryFull(params: {

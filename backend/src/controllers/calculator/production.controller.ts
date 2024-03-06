@@ -34,6 +34,7 @@ export default class ProductionController extends Controller {
       skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pokemon.skill.maxLevel, pokemon.skill.maxLevel),
       e4e: queryAsNumber(input.e4e) ?? 0,
       cheer: queryAsNumber(input.cheer) ?? 0,
+      extraHelpful: queryAsNumber(input.extraHelpful) ?? 0,
       helpingBonus: queryAsNumber(input.helpingbonus) ?? 0,
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,

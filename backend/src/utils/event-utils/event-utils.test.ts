@@ -1,21 +1,137 @@
+import { PokemonProduce } from '@src/domain/combination/produce';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { nature } from 'sleepapi-common';
+import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
 import { countInventory } from '../inventory-utils/inventory-utils';
-import { MOCKED_PRODUCE } from '../test-utils/defaults';
+import { getEmptyProduce } from '../production-utils/production-utils';
+import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '../test-utils/defaults';
+import { parseTime } from '../time-utils/time-utils';
 import {
   addSneakySnackEvent,
   getDefaultRecoveryEvents,
+  getExtraHelpfulEvents,
   helpEvent,
   inventoryFull,
   recoverEnergyEvents,
   recoverFromMeal,
   scheduleNapEvent,
   scheduleTeamEnergyEvents,
+  triggerExtraHelpful,
 } from './event-utils';
+
+describe('getExtraHelpfulEvents', () => {
+  it('shall schedule extra helpful events evenly throughout the day', () => {
+    const period = MOCKED_MAIN_SLEEP;
+    const procs = 1.5;
+    const produce: PokemonProduce = {
+      produce: MOCKED_PRODUCE,
+      pokemon: pokemon.ABOMASNOW,
+    };
+    const result = getExtraHelpfulEvents(period, procs, produce);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        SkillEvent {
+          "description": "Team Extra Helpful",
+          "skillActivation": {
+            "adjustedAmount": 2,
+            "adjustedProduce": {
+              "berries": {
+                "amount": 4,
+                "berry": {
+                  "name": "GREPA",
+                  "value": 25,
+                },
+              },
+              "ingredients": [
+                {
+                  "amount": 2,
+                  "ingredient": {
+                    "longName": "Fancy Apple",
+                    "name": "Apple",
+                    "taxedValue": 23.7,
+                    "value": 90,
+                  },
+                },
+              ],
+            },
+            "fractionOfProc": 1,
+            "nrOfHelpsToActivate": 0,
+            "skill": {
+              "amount": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+              ],
+              "maxLevel": 6,
+              "name": "Extra Helpful S",
+              "unit": "helps",
+            },
+          },
+          "time": {
+            "hour": 6,
+            "minute": 0,
+            "second": 0,
+          },
+          "type": "skill",
+        },
+        SkillEvent {
+          "description": "Team Extra Helpful",
+          "skillActivation": {
+            "adjustedAmount": 1,
+            "adjustedProduce": {
+              "berries": {
+                "amount": 2,
+                "berry": {
+                  "name": "GREPA",
+                  "value": 25,
+                },
+              },
+              "ingredients": [
+                {
+                  "amount": 1,
+                  "ingredient": {
+                    "longName": "Fancy Apple",
+                    "name": "Apple",
+                    "taxedValue": 23.7,
+                    "value": 90,
+                  },
+                },
+              ],
+            },
+            "fractionOfProc": 0.5,
+            "nrOfHelpsToActivate": 0,
+            "skill": {
+              "amount": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+              ],
+              "maxLevel": 6,
+              "name": "Extra Helpful S",
+              "unit": "helps",
+            },
+          },
+          "time": {
+            "hour": 16,
+            "minute": 20,
+            "second": 0,
+          },
+          "type": "skill",
+        },
+      ]
+    `);
+  });
+});
 
 describe('scheduleNapEvent', () => {
   it('adds a nap event to the recovery events array when nap info is provided', () => {
@@ -122,6 +238,16 @@ describe('getDefaultRecoveryEvents', () => {
     const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0);
 
     expect(recoveryEvents.length).toBe(2);
+  });
+
+  it('adds fractioned e4e events', () => {
+    const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
+    const e4eProcs = 1.5;
+
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0);
+
+    expect(recoveryEvents.length).toBe(2);
+    expect(recoveryEvents.map((e) => e.delta)).toEqual([18, 9]);
   });
 
   it('adds only a nap event when e4eProcs is 0', () => {
@@ -393,5 +519,80 @@ describe('addSneakySnackEvent', () => {
     expect(spilledIngEvent.description).toBe('Spilled ingredients');
     expect(spilledIngEvent.delta).toBe(countInventory(spilledProduce)); // Assuming this calculates to 1 for oranges
     expect(spilledIngEvent.before).toBe(countInventory(totalSpilledIngredients)); // Assuming this calculates to 2 for oranges
+  });
+});
+
+describe('triggerExtraHelpful', () => {
+  it('shall trigger 2nd event in the day correctly', () => {
+    const eventLog: ScheduledEvent[] = [];
+    const helpfulEvents: SkillEvent[] = [
+      new SkillEvent({
+        description: '1',
+        time: parseTime('06:00'),
+        skillActivation: {
+          skill: mainskill.EXTRA_HELPFUL_S,
+          adjustedAmount: 1,
+          fractionOfProc: 1,
+          nrOfHelpsToActivate: 1,
+          adjustedProduce: getEmptyProduce(berry.BELUE),
+        },
+      }),
+      new SkillEvent({
+        description: '1',
+        time: parseTime('13:00'),
+        skillActivation: {
+          skill: mainskill.EXTRA_HELPFUL_S,
+          adjustedAmount: 2,
+          fractionOfProc: 2,
+          nrOfHelpsToActivate: 2,
+          adjustedProduce: {
+            berries: {
+              amount: 2,
+              berry: berry.BLUK,
+            },
+            ingredients: [
+              {
+                amount: 2,
+                ingredient: ingredient.BEAN_SAUSAGE,
+              },
+            ],
+          },
+        },
+      }),
+    ];
+
+    const result = triggerExtraHelpful({
+      helpfulEvents,
+      currentTime: parseTime('13:00'),
+      emptyProduce: getEmptyProduce(berry.BELUE),
+      eventLog,
+      helpfulIndex: 1,
+      period: MOCKED_MAIN_SLEEP,
+    });
+
+    expect(result.helpfulEventsProcessed).toMatchInlineSnapshot(`2`);
+    expect(result.helpfulProduce).toMatchInlineSnapshot(`
+      {
+        "berries": {
+          "amount": 2,
+          "berry": {
+            "name": "BELUE",
+            "value": 33,
+          },
+        },
+        "ingredients": [
+          {
+            "amount": 2,
+            "ingredient": {
+              "longName": "Bean Sausage",
+              "name": "Sausage",
+              "taxedValue": 31,
+              "value": 103,
+            },
+          },
+        ],
+      }
+    `);
+    expect(eventLog).toHaveLength(1);
   });
 });

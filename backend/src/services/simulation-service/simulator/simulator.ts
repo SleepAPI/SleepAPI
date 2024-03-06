@@ -29,6 +29,7 @@ import {
   inventoryFull,
   recoverEnergyEvents,
   recoverFromMeal,
+  triggerExtraHelpful,
 } from '@src/utils/event-utils/event-utils';
 import { addToInventory, countInventory, emptyInventory } from '@src/utils/inventory-utils/inventory-utils';
 import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
@@ -37,8 +38,8 @@ import {
   addTime,
   calculateDuration,
   isAfterOrEqualWithinPeriod,
-  scheduleEnergyEvents,
   secondsToTime,
+  sortEventsForPeriod,
   timeWithinPeriod,
 } from '@src/utils/time-utils/time-utils';
 import { BerrySet, mainskill } from 'sleepapi-common';
@@ -58,6 +59,7 @@ export function simulation(params: {
   pokemonWithAverageProduce: PokemonProduce;
   sneakySnackBerries: BerrySet;
   recoveryEvents: EnergyEvent[];
+  extraHelpfulEvents: SkillEvent[];
   skillActivations: SkillActivation[];
   mealTimes: Time[];
 }): { detailedProduce: DetailedProduce; log: ScheduledEvent[]; summary: Summary } {
@@ -69,6 +71,7 @@ export function simulation(params: {
     pokemonWithAverageProduce,
     sneakySnackBerries,
     recoveryEvents,
+    extraHelpfulEvents,
     skillActivations,
     mealTimes,
   } = params;
@@ -100,6 +103,7 @@ export function simulation(params: {
   let skillIndex = 0;
   let energyIndex = 0;
   let mealIndex = 0;
+  let helpfulIndex = 0;
 
   // Set up start values
   const eventLog: ScheduledEvent[] = [];
@@ -122,7 +126,8 @@ export function simulation(params: {
 
   let nextHelpEvent: Time = dayInfo.period.start;
 
-  const energyEvents: EnergyEvent[] = scheduleEnergyEvents(dayInfo.period, recoveryEvents);
+  const energyEvents: EnergyEvent[] = sortEventsForPeriod(dayInfo.period, recoveryEvents);
+  const helpfulEvents: SkillEvent[] = sortEventsForPeriod(dayInfo.period, extraHelpfulEvents);
 
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
@@ -146,10 +151,20 @@ export function simulation(params: {
       period,
       eventLog,
     });
+    const { helpfulProduce, helpfulEventsProcessed } = triggerExtraHelpful({
+      helpfulEvents,
+      helpfulIndex,
+      emptyProduce: getEmptyProduce(pokemon.berry),
+      currentTime,
+      period,
+      eventLog,
+    });
+    totalProduce = addToInventory(totalProduce, helpfulProduce);
 
     mealIndex = mealsProcessed;
     energyIndex = energyEventsProcessed;
-    currentEnergy += mealRecovery + eventRecovery;
+    helpfulIndex = helpfulEventsProcessed;
+    currentEnergy = Math.min(currentEnergy + mealRecovery + eventRecovery, 150);
     totalRecovery += mealRecovery + eventRecovery;
 
     // check if help has occured

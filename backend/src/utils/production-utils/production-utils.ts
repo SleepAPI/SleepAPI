@@ -1,4 +1,5 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { Produce } from '@src/domain/combination/produce';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
@@ -22,7 +23,7 @@ export function chooseIngredientSet(
   return productionForChosenIngSet;
 }
 
-export function getEmptyProduce(berry: berry.Berry) {
+export function getEmptyProduce(berry: berry.Berry): Produce {
   return {
     berries: { amount: 0, berry },
     ingredients: [],

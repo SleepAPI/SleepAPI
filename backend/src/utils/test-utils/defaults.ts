@@ -1,3 +1,4 @@
+import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Produce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { TimePeriod } from '@src/domain/time/time';
@@ -22,6 +23,7 @@ export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
   subskills: [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M, subskill.INGREDIENT_FINDER_S],
   e4e: 0,
   cheer: 0,
+  extraHelpful: 0,
   helpingBonus: 0,
   camp: false,
   erb: 0,
@@ -70,4 +72,36 @@ export const MOCKED_POKEMON: pokemon.Pokemon = {
   skill: mainskill.CHARGE_STRENGTH_M,
   skillPercentage: 2,
   specialty: 'skill',
+};
+
+export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = {
+  pokemonCombination: {
+    pokemon: pokemon.PINSIR,
+    ingredientList: [
+      { amount: 2, ingredient: ingredient.HONEY },
+      { amount: 5, ingredient: ingredient.FANCY_APPLE },
+    ],
+  },
+  detailedProduce: {
+    produce: {
+      berries: {
+        amount: 0,
+        berry: berry.LUM,
+      },
+      ingredients: [
+        { amount: 2, ingredient: ingredient.HONEY },
+        { amount: 5, ingredient: ingredient.FANCY_APPLE },
+      ],
+    },
+    spilledIngredients: [],
+    sneakySnack: {
+      amount: 0,
+      berry: berry.LUM,
+    },
+    dayHelps: 0,
+    nightHelps: 0,
+    averageTotalSkillProcs: 0,
+    skillActivations: [],
+  },
+  customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
 };

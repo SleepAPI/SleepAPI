@@ -32,6 +32,7 @@ export default class OptimalController extends Controller {
       berries: getBerriesForIsland(findIslandForName(input.island)),
       e4e: input.e4e ?? 0,
       cheer: input.cheer ?? 0,
+      extraHelpful: input.extraHelpful ?? 0,
       helpingBonus: input.helpingbonus ?? 0,
       camp: input.camp ?? false,
       erb: input.erb ?? 0,

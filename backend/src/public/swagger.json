@@ -407,6 +407,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingBonus": {
 						"type": "number",
 						"format": "double"
@@ -436,6 +440,7 @@
 					"level",
 					"e4e",
 					"cheer",
+					"extraHelpful",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -489,6 +494,10 @@
 						"format": "double"
 					},
 					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
+					"extraHelpful": {
 						"type": "number",
 						"format": "double"
 					},
@@ -551,6 +560,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingBonus": {
 						"type": "number",
 						"format": "double"
@@ -586,6 +599,7 @@
 					"level",
 					"e4e",
 					"cheer",
+					"extraHelpful",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -1065,6 +1079,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
 					"helpingbonus": {
 						"type": "number",
 						"format": "double"
@@ -1102,6 +1120,7 @@
 					"subskills",
 					"e4e",
 					"cheer",
+					"extraHelpful",
 					"helpingbonus",
 					"camp",
 					"erb",
@@ -1160,7 +1179,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.10.0",
+		"version": "1.11.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1433,6 +1452,10 @@
 													"type": "number",
 													"format": "double"
 												},
+												"extraHelpful": {
+													"type": "number",
+													"format": "double"
+												},
 												"cheer": {
 													"type": "number",
 													"format": "double"
@@ -1466,6 +1489,7 @@
 												"erb",
 												"camp",
 												"helpingBonus",
+												"extraHelpful",
 												"cheer",
 												"e4e",
 												"skillLevel",

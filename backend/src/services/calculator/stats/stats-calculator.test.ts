@@ -84,12 +84,22 @@ describe('extractInventorySubskills', () => {
 });
 
 describe('getOptimalIngredientStats', () => {
-  it('shall return CustomStats with the provided level and nature RASH', () => {
+  it('shall return CustomStats for ingredient mon', () => {
     const level = 42;
     expect(getOptimalStats(level, pokemon.BLASTOISE)).toEqual({
       level,
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
+      skillLevel: 6,
+    });
+  });
+
+  it('shall return CustomStats for skill support mon', () => {
+    const level = 42;
+    expect(getOptimalStats(level, pokemon.SYLVEON)).toEqual({
+      level,
+      nature: nature.SASSY,
+      subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
     });
   });

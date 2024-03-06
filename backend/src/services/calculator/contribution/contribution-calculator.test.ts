@@ -1,4 +1,5 @@
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import { createDefaultProduceMap } from '@src/utils/tierlist-utils/tierlist-utils';
 import { IngredientSet, curry, dessert, ingredient, nature, pokemon, salad, subskill } from 'sleepapi-common';
 import { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
@@ -7,6 +8,7 @@ import {
   boostFirstMealWithFactor,
   calculateContributionForMealWithPunishment,
   calculateMealContributionFor,
+  calculateTeamSizeAndSupportValue,
   excludeContributions,
   findBestContribution,
   getAllOptimalIngredientFocusedPokemonProduce,
@@ -22,6 +24,7 @@ describe('getAllOptimalIngredientPokemonProduce', () => {
       limit50: false,
       cheer: 0,
       e4e: 0,
+      extraHelpful: 0,
       monteCarloIterations: 1,
     });
     const pinsirData = data.filter((entry) => entry.pokemonCombination.pokemon === pokemon.PINSIR);
@@ -51,6 +54,7 @@ describe('calculateMealContributionFor', () => {
         subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
         e4e: 0,
         cheer: 0,
+        extraHelpful: 0,
         erb: 0,
         camp: false,
         helpingBonus: 0,
@@ -65,6 +69,7 @@ describe('calculateMealContributionFor', () => {
     const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
       limit50,
       cheer: 0,
+      extraHelpful: 0,
       e4e: 0,
       monteCarloIterations: 1,
     });
@@ -94,8 +99,8 @@ describe('calculateContributionForMealWithPunishment', () => {
       teamSize: 1,
       percentage: 100,
       producedIngredients: [producedTomato],
+      supportedIngredients: [],
       critMultiplier: 1,
-
       defaultCritMultiplier: 1,
     });
     const expectedContribution =
@@ -115,6 +120,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedTomato],
+      supportedIngredients: [],
       critMultiplier: 1,
       defaultCritMultiplier: 1,
     });
@@ -137,6 +143,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedTomato, producedFiller],
+      supportedIngredients: [],
       critMultiplier: 1,
       defaultCritMultiplier: 1,
     });
@@ -158,6 +165,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       teamSize: 3,
       percentage: 50,
       producedIngredients: [producedFiller],
+      supportedIngredients: [],
       critMultiplier: 1,
       defaultCritMultiplier: 1,
     });
@@ -304,5 +312,61 @@ describe('boostFirstMealWithFactor', () => {
     );
 
     expect(prettifiedResult).toEqual(['EXPLOSION_POPCORN: 300', 'LOVELY_KISS_SMOOTHIE: 100']);
+  });
+});
+
+describe('calculateTeamSizeAndSupportValue', () => {
+  it('shall calculate 0 support value with correct team size for non-support mons', () => {
+    const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
+      limit50: false,
+      cheer: 0,
+      extraHelpful: 0,
+      e4e: 0,
+      monteCarloIterations: 1,
+    });
+    const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
+
+    const memoizedSetCover: SetCover = new SetCover(reverseIndex, memo);
+
+    const { teamSizeRequired, allSupportedIngredients } = calculateTeamSizeAndSupportValue({
+      remainderOfRecipe: [{ ingredient: ingredient.FANCY_APPLE, amount: 10 }],
+      memoizedSetCover,
+      timeout: 1000,
+    });
+
+    expect(teamSizeRequired).toEqual(1);
+    expect(allSupportedIngredients).toHaveLength(0);
+  });
+
+  it('shall calculate 0 support value with correct team size for non-support mons', () => {
+    const defaultProduce = getAllOptimalIngredientFocusedPokemonProduce({
+      limit50: false,
+      cheer: 0,
+      extraHelpful: 0,
+      e4e: 0,
+      monteCarloIterations: 1,
+    });
+    const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
+      limit50: false,
+      cheer: 0,
+      extraHelpful: 0,
+      e4e: 3,
+      monteCarloIterations: 1,
+    });
+
+    const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
+    const memoizedSetCover: SetCover = new SetCover(reverseIndex, new Map());
+
+    const allPokemonDefaultProduce = createDefaultProduceMap(defaultProduce);
+
+    const { teamSizeRequired, allSupportedIngredients } = calculateTeamSizeAndSupportValue({
+      remainderOfRecipe: [{ ingredient: ingredient.FANCY_APPLE, amount: 10 }],
+      memoizedSetCover,
+      timeout: 1000,
+      allPokemonDefaultProduce,
+    });
+
+    expect(teamSizeRequired).toEqual(1);
+    expect(allSupportedIngredients).not.toHaveLength(0);
   });
 });

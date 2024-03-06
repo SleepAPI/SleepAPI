@@ -19,10 +19,10 @@ import { SetCover } from '@src/services/set-cover/set-cover';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { CritInfo, calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
-import { diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
+import { createDefaultProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { MAX_POT_SIZE } from 'sleepapi-common';
+import { MAX_POT_SIZE, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
 
@@ -153,64 +153,108 @@ class TierlistImpl {
   }
 
   public generateTierListData(details: CreateTierListRequestBody) {
-    // TODO: we can calculate this once and use it for 90% of pokemon, but for any pokemon that affects team mates (e4e, cheer, xtra helpful, metronome, more?)
-    // TODO: we have to calculate their skill procs and then re-calculate all other mons, simulation-service takes e4e and cheer as input now
-
-    // TODO: for xtra helpful we can probably just take procs x averageProduce and add it
-    // TODO: for e4e/cheer we have to rerun all sims
-
-    // TODO: for both these cases we have to send in a different reverse index and cache
-    const allPokemonWithProduce = getAllOptimalIngredientFocusedPokemonProduce({
+    const allPokemonDefaultProduce = getAllOptimalIngredientFocusedPokemonProduce({
       limit50: details.limit50,
       e4e: 0,
       cheer: 0,
+      extraHelpful: 0,
       monteCarloIterations: 500,
     });
+    const defaultProduceMap = createDefaultProduceMap(allPokemonDefaultProduce);
+    const groupedByPokemonName: Record<string, CustomPokemonCombinationWithProduce[]> = allPokemonDefaultProduce.reduce(
+      (accumulator, currentValue) => {
+        const pokemonName = currentValue.pokemonCombination.pokemon.name;
+        if (!accumulator[pokemonName]) {
+          accumulator[pokemonName] = [];
+        }
+        accumulator[pokemonName].push(currentValue);
+        return accumulator;
+      },
+      {} as Record<string, CustomPokemonCombinationWithProduce[]>
+    );
 
     const mealsForFilter = getMealsForFilter(details);
-    const allPokemonWithContributions: PokemonIngredientSetContribution[] = [];
+    const results: PokemonIngredientSetContribution[] = [];
 
     const setCoverCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
-    const memoizedSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonWithProduce), setCoverCache);
+    const memoizedSetCover = new SetCover(
+      createPokemonByIngredientReverseIndex(allPokemonDefaultProduce),
+      setCoverCache
+    );
 
     const critCache: Map<number, CritInfo> = new Map();
     const { critMultiplier: defaultCritMultiplier } = calculateCritMultiplier([], critCache);
     let counter = 0;
-    for (const pokemonWithProduce of allPokemonWithProduce) {
-      const currentMemoryUsage = process.memoryUsage().heapUsed;
-      const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-      Logger.info('Current memory usage: ' + roundDown(currentMemoryUsageGigabytes, 3) + ' GB');
-      ++counter;
-      console.time(
-        `[${counter}/${allPokemonWithProduce.length}] ${pokemonWithProduce.pokemonCombination.pokemon.name}`
-      );
+    const supportSkills: mainskill.MainSkill[] = [
+      mainskill.ENERGY_FOR_EVERYONE,
+      mainskill.ENERGIZING_CHEER_S,
+      mainskill.EXTRA_HELPFUL_S,
+      mainskill.METRONOME,
+    ];
+    Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
+      let supportSetCover: SetCover | undefined = undefined;
+      let allPokemonSupportedProduce: CustomPokemonCombinationWithProduce[] = [];
+      let e4e = 0;
+      let cheer = 0;
+      let extraHelpful = 0;
+      const currentPokemonSkill = group[0].pokemonCombination.pokemon.skill;
+      if (supportSkills.includes(currentPokemonSkill)) {
+        if (currentPokemonSkill === mainskill.ENERGY_FOR_EVERYONE) {
+          e4e = group[0].detailedProduce.averageTotalSkillProcs;
+        } else if (currentPokemonSkill === mainskill.ENERGIZING_CHEER_S) {
+          cheer = group[0].detailedProduce.averageTotalSkillProcs;
+        } else if (currentPokemonSkill === mainskill.EXTRA_HELPFUL_S) {
+          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs;
+        } else if (currentPokemonSkill === mainskill.METRONOME) {
+          e4e = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+          cheer = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+        }
 
-      const contributions: Contribution[] = [];
-
-      const { critMultiplier } = calculateCritMultiplier(
-        pokemonWithProduce.detailedProduce.skillActivations,
-        critCache
-      );
-      for (const meal of mealsForFilter) {
-        const contributionForMeal = calculateMealContributionFor({
-          meal,
-          producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
-          memoizedSetCover,
-          timeout: TIERLIST_SET_COVER_TIMEOUT,
-          critMultiplier,
-          defaultCritMultiplier,
+        allPokemonSupportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
+          limit50: details.limit50,
+          e4e,
+          cheer,
+          extraHelpful,
+          monteCarloIterations: 500,
         });
-        contributions.push(contributionForMeal);
+        supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonSupportedProduce), new Map());
       }
-      console.timeEnd(
-        `[${counter}/${allPokemonWithProduce.length}] ${pokemonWithProduce.pokemonCombination.pokemon.name}`
-      );
 
-      allPokemonWithContributions.push({ pokemonIngredientSet: pokemonWithProduce.pokemonCombination, contributions });
-    }
+      for (const pokemonWithProduce of group) {
+        const currentMemoryUsage = process.memoryUsage().heapUsed;
+        const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-    return allPokemonWithContributions;
+        Logger.info('Current memory usage: ' + roundDown(currentMemoryUsageGigabytes, 3) + ' GB');
+        ++counter;
+        console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+
+        const contributions: Contribution[] = [];
+
+        const { critMultiplier } = calculateCritMultiplier(
+          pokemonWithProduce.detailedProduce.skillActivations,
+          critCache
+        );
+        for (const meal of mealsForFilter) {
+          const contributionForMeal = calculateMealContributionFor({
+            meal,
+            producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
+            memoizedSetCover: supportSetCover ?? memoizedSetCover,
+            timeout: TIERLIST_SET_COVER_TIMEOUT,
+            critMultiplier,
+            defaultCritMultiplier,
+            allPokemonDefaultProduce: supportSetCover && defaultProduceMap,
+          });
+          contributions.push(contributionForMeal);
+        }
+        console.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+
+        results.push({ pokemonIngredientSet: pokemonWithProduce.pokemonCombination, contributions });
+      }
+    });
+
+    return results;
   }
 
   public calculateScoreAndRank(

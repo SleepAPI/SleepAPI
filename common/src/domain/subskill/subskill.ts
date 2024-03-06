@@ -58,8 +58,6 @@ export const ENERGY_RECOVERY_BONUS: SubSkill = {
   amount: 0.14,
 };
 
-export type SubskillSet = 'optimal' | 'neutral';
-
 export const SUBSKILLS: SubSkill[] = [
   BERRY_FINDING_S,
   HELPING_SPEED_S,
