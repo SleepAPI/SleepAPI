@@ -51,7 +51,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
         ingredientList,
       };
 
-      const { detailedProduce, skillActivations } = setupAndRunProductionSimulation({
+      const { detailedProduce, averageProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination,
         input: { ...customStats, ...teamStats },
         monteCarloIterations,
@@ -59,7 +59,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
       });
 
       preGeneratedSkillActivations = skillActivations;
-      allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, customStats });
+      allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, averageProduce, customStats });
     }
   }
 

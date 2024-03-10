@@ -7,7 +7,7 @@ import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-rou
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { IngredientSet, nature, subskill } from 'sleepapi-common';
+import { IngredientSet, MEALS_IN_DAY, nature, subskill } from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
 
 // --- production calculator
@@ -174,7 +174,7 @@ class WebsiteConverterServiceImpl {
           (member) =>
             `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
               member.detailedProduce.produce.ingredients
-            )} (${roundDown(member.detailedProduce.averageTotalSkillProcs, 1)} skill procs)`
+            )} (${roundDown(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
         )
         .join('\n')}`,
     }));

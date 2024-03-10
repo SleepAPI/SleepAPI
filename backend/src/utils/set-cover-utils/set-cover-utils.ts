@@ -14,20 +14,34 @@
  * limitations under the License.
  */
 
-import { IngredientSet } from 'sleepapi-common';
+import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
+import { IngredientSet, berry, ingredient, mainskill } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { MemoizedParameters, SimplifiedIngredientSet } from '../../services/set-cover/set-cover';
+import { HelperBoostStatus, MemoizedParameters, SimplifiedIngredientSet } from '../../services/set-cover/set-cover';
 
 export function createPokemonByIngredientReverseIndex(pokemons: CustomPokemonCombinationWithProduce[]) {
   const reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
 
+  const helperBoostPokemon = pokemons.filter(
+    ({ pokemonCombination }) => pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
+  );
+  if (helperBoostPokemon.length > 0) {
+    for (const ing of ingredient.INGREDIENTS) {
+      reverseIndex.set(ing.name, [...helperBoostPokemon]);
+    }
+  }
+
+  const remainingPokemon = pokemons.filter(
+    ({ pokemonCombination }) => pokemonCombination.pokemon.skill !== mainskill.HELPER_BOOST
+  );
+
   // Populate the reverse index map by iterating over the pokemons array
-  for (const pokemon of pokemons) {
-    for (const ingredient of pokemon.detailedProduce.produce.ingredients) {
-      if (!reverseIndex.has(ingredient.ingredient.name)) {
-        reverseIndex.set(ingredient.ingredient.name, [pokemon]);
+  for (const pokemon of remainingPokemon) {
+    for (const { ingredient } of pokemon.detailedProduce.produce.ingredients) {
+      if (!reverseIndex.has(ingredient.name)) {
+        reverseIndex.set(ingredient.name, [pokemon]);
       } else {
-        const array = reverseIndex.get(ingredient.ingredient.name);
+        const array = reverseIndex.get(ingredient.name);
         if (array !== undefined) {
           array.push(pokemon);
         }
@@ -39,12 +53,15 @@ export function createPokemonByIngredientReverseIndex(pokemons: CustomPokemonCom
 }
 
 export function createMemoKey(params: MemoizedParameters): string {
-  const ingredientsPart = params.remainingIngredients.map((ing) => `${ing.ingredient}:${ing.amount}`).join(',');
-  return `${ingredientsPart}|${params.spotsLeftInTeam}`;
+  const { remainingIngredients, spotsLeftInTeam, helperBoost } = params;
+
+  const ingredientsPart = remainingIngredients.map((ing) => `${ing.ingredient}:${ing.amount}`).join(',');
+  const helperBoostPart = `${helperBoost ? `${helperBoost.amount}:${helperBoost.berry}` : ''}`;
+  return `${ingredientsPart}|${spotsLeftInTeam}|${helperBoostPart}`;
 }
 
 export function parseMemoKey(key: string): MemoizedParameters {
-  const [ingredientsPart, spotsLeftInTeamStr] = key.split('|');
+  const [ingredientsPart, spotsLeftInTeamStr, helperBoostPart] = key.split('|');
   let remainingIngredients: SimplifiedIngredientSet[] = [];
 
   // Only proceed to parse ingredientsPart if it is not empty
@@ -55,9 +72,20 @@ export function parseMemoKey(key: string): MemoizedParameters {
     });
   }
 
+  // Only proceed to parse helperBoostPart if it is not empty
+  let helperBoost: HelperBoostStatus | undefined = undefined;
+  if (helperBoostPart) {
+    const [amount, berry] = helperBoostPart.split(':');
+    helperBoost = {
+      amount: +amount,
+      berry,
+    };
+  }
+
   return {
     remainingIngredients,
     spotsLeftInTeam: parseInt(spotsLeftInTeamStr, 10),
+    helperBoost,
   };
 }
 
@@ -92,3 +120,52 @@ export function sumOfSimplifiedIngredients(ingredients: SimplifiedIngredientSet[
 }
 
 export const memo: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
+
+export function countUniqueHelperBoostPokemon(team: CustomPokemonCombinationWithProduce[], boostedBerry: berry.Berry) {
+  const { count } = team.reduce(
+    (accumulator, cur) => {
+      if (
+        cur.pokemonCombination.pokemon.berry === boostedBerry &&
+        !accumulator.names.has(cur.pokemonCombination.pokemon.name)
+      ) {
+        accumulator.names.add(cur.pokemonCombination.pokemon.name);
+        accumulator.count += 1;
+      }
+      return accumulator;
+    },
+    { count: 0, names: new Set<string>() }
+  );
+  return count;
+}
+
+export function countNrOfHelperBoostHelps(params: {
+  uniqueBoostedMons: number;
+  skillProcs: number;
+  skillLevel: number;
+}) {
+  const { uniqueBoostedMons, skillProcs, skillLevel } = params;
+
+  // TODO: currently we just add +1 help for each unique mon, probably doesn't work like that, but news worded very strangely
+  return skillProcs * (mainskill.HELPER_BOOST.amount[skillLevel - 1] + uniqueBoostedMons);
+}
+
+/**
+ * Will add one help of average produce to every team member and @param currentNrOfHelps to the newest team member (last index)
+ */
+export function calculateHelperBoostIngredientsIncrease(
+  currentTeam: CustomPokemonCombinationWithProduce[],
+  currentNrOfHelps: number
+) {
+  let increasedIngredients: IngredientSet[] = [];
+  for (let i = 0; i < currentTeam.length; i++) {
+    const member = currentTeam[i];
+    const addedHelps = member === currentTeam[currentTeam.length - 1] ? currentNrOfHelps : 1;
+
+    const ingredientsFromBoostedHelps = member.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+      amount: amount * addedHelps,
+      ingredient,
+    }));
+    increasedIngredients = addIngredientSet(increasedIngredients, ingredientsFromBoostedHelps);
+  }
+  return increasedIngredients;
+}
