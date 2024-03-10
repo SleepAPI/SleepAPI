@@ -23,7 +23,7 @@ export function calculateOptimalProductionForSetCover(input: InputProductionStat
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
-      const { detailedProduce, skillActivations } = setupAndRunProductionSimulation({
+      const { detailedProduce, averageProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination: {
           pokemon: pokemon,
           ingredientList,
@@ -43,6 +43,7 @@ export function calculateOptimalProductionForSetCover(input: InputProductionStat
           ingredientList,
         },
         detailedProduce,
+        averageProduce,
         customStats,
       });
     }

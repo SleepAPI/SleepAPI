@@ -43,6 +43,7 @@ import {
   ENERGIZING_CHEER_S,
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
+  HELPER_BOOST,
   INGREDIENT_MAGNET_S,
   METRONOME,
   TASTY_CHANCE_S,
@@ -502,6 +503,38 @@ export const HERACROSS: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
+// TODO: update stats
+export const RAIKOU: Pokemon = {
+  name: 'RAIKOU',
+  specialty: 'skill',
+  frequency: toSeconds(0, 44, 0),
+  ingredientPercentage: 17.8,
+  skillPercentage: 5,
+  berry: GREPA,
+  carrySize: 18,
+  maxCarrySize: 18,
+  ingredient0: { amount: 2, ingredient: SOOTHING_CACAO },
+  ingredient30: [
+    { amount: 5, ingredient: SOOTHING_CACAO },
+    { amount: 8, ingredient: FANCY_APPLE },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: SOOTHING_CACAO },
+    { amount: 12, ingredient: FANCY_APPLE },
+    { amount: 7, ingredient: TASTY_MUSHROOM },
+  ],
+  // ingredient0: { amount: 1, ingredient: FIERY_HERB },
+  // ingredient30: [
+  //   { amount: 2, ingredient: FIERY_HERB },
+  //   { amount: 3, ingredient: FANCY_EGG },
+  // ],
+  // ingredient60: [
+  //   { amount: 4, ingredient: FIERY_HERB },
+  //   { amount: 4, ingredient: FANCY_EGG },
+  // ],
+  skill: HELPER_BOOST,
+};
+
 export const RALTS: Pokemon = {
   name: 'RALTS',
   specialty: 'skill',
@@ -757,6 +790,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   SLOWKING,
   WOBBUFFET,
   HERACROSS,
+  // RAIKOU, // TODO: bring back once we have data
   GARDEVOIR,
   SABLEYE,
   SWALOT,

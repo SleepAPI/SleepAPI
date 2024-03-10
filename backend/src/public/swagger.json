@@ -759,6 +759,9 @@
 					"detailedProduce": {
 						"$ref": "#/components/schemas/DetailedProduce"
 					},
+					"averageProduce": {
+						"$ref": "#/components/schemas/Produce"
+					},
 					"customStats": {
 						"$ref": "#/components/schemas/CustomStats"
 					}
@@ -766,6 +769,7 @@
 				"required": [
 					"pokemonCombination",
 					"detailedProduce",
+					"averageProduce",
 					"customStats"
 				],
 				"type": "object",

@@ -12,6 +12,7 @@ import {
   pokemon,
   salad,
 } from 'sleepapi-common';
+import { getEmptyProduce } from '../production-utils/production-utils';
 import {
   calculateCombinedContributions,
   calculateOptimalFlexibleScore,
@@ -226,6 +227,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         averageTotalSkillProcs: 0,
         skillActivations: [],
       },
+      averageProduce: getEmptyProduce(berry.LEPPA),
       pokemonCombination: {
         pokemon: pokemon.PINSIR,
         ingredientList: [

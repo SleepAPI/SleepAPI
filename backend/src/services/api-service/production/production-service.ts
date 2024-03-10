@@ -45,7 +45,7 @@ export function calculatePokemonProduction(
 
   let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
   for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
-    const { detailedProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({
+    const { detailedProduce, averageProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({
       pokemonCombination: {
         pokemon: pokemon,
         ingredientList,
@@ -68,7 +68,13 @@ export function calculatePokemonProduction(
     preGeneratedSkillActivations = skillActivations;
 
     pokemonProductionWithLogs.push({
-      pokemonProduction: { pokemonCombination: { pokemon, ingredientList }, detailedProduce, customStats },
+      pokemonProduction: {
+        pokemonCombination: { pokemon, ingredientList },
+        averageProduce,
+        detailedProduce,
+        customStats,
+      },
+
       log,
       summary,
     });

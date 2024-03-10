@@ -682,4 +682,50 @@ describe('addIngredientSet', () => {
       ]
     `);
   });
+
+  it('shall keep original array if adding empty array', () => {
+    const arr1: IngredientSet[] = [
+      {
+        amount: 1,
+        ingredient: ingredient.FANCY_APPLE,
+      },
+    ];
+    const arr2: IngredientSet[] = [];
+    expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 1,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+      ]
+    `);
+  });
+
+  it('shall add all ingredients as is if original array empty', () => {
+    const arr1: IngredientSet[] = [];
+    const arr2: IngredientSet[] = [
+      {
+        amount: 1,
+        ingredient: ingredient.FANCY_APPLE,
+      },
+    ];
+    expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 1,
+          "ingredient": {
+            "longName": "Fancy Apple",
+            "name": "Apple",
+            "taxedValue": 23.7,
+            "value": 90,
+          },
+        },
+      ]
+    `);
+  });
 });

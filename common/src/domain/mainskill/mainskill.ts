@@ -114,6 +114,13 @@ export const TASTY_CHANCE_S: MainSkill = {
   maxLevel: MAX_SKILL_LEVEL - 1,
 };
 
+export const HELPER_BOOST: MainSkill = {
+  name: 'Extra Tasty S',
+  amount: [0, 1, 2, 3, 4, 5], // TODO: perhaps these aren't correct, announcement seems odd
+  unit: 'helps',
+  maxLevel: MAX_SKILL_LEVEL - 1,
+};
+
 export const MAINSKILLS: MainSkill[] = [
   CHARGE_ENERGY_S,
   CHARGE_STRENGTH_M,
@@ -126,6 +133,7 @@ export const MAINSKILLS: MainSkill[] = [
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
   TASTY_CHANCE_S,
+  // HELPER_BOOST, // TODO: bring back if metronome can trigger helper boost
   INGREDIENT_MAGNET_S,
   METRONOME,
 ];

@@ -5,7 +5,7 @@ import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_PRODUCE } from '../test-utils/defaults';
 import { parseTime } from '../time-utils/time-utils';
-import { chooseIngredientSet } from './production-utils';
+import { chooseIngredientSet, getEmptyProduce } from './production-utils';
 
 describe('chooseIngredientSets', () => {
   const productionData: {
@@ -22,6 +22,7 @@ describe('chooseIngredientSets', () => {
           subskills: [],
           skillLevel: 6,
         },
+        averageProduce: getEmptyProduce(berry.BELUE),
         detailedProduce: {
           produce: {
             berries: {

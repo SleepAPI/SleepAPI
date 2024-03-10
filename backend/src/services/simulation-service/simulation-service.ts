@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { DetailedProduce, PokemonProduce } from '@src/domain/combination/produce';
+import { DetailedProduce, PokemonProduce, Produce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
@@ -30,6 +30,7 @@ import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculat
 import {
   calculateAveragePokemonIngredientSet,
   calculateIngredientPercentage,
+  combineSameIngredientsInDrop,
 } from '../calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '../calculator/production/produce-calculator';
 import {
@@ -49,7 +50,13 @@ export function setupAndRunProductionSimulation(params: {
   input: ProductionStats;
   monteCarloIterations: number;
   preGeneratedSkillActivations?: SkillActivation[];
-}): { detailedProduce: DetailedProduce; skillActivations: SkillActivation[]; log: ScheduledEvent[]; summary: Summary } {
+}): {
+  detailedProduce: DetailedProduce;
+  skillActivations: SkillActivation[];
+  averageProduce: Produce;
+  log: ScheduledEvent[];
+  summary: Summary;
+} {
   const { pokemonCombination, input, monteCarloIterations, preGeneratedSkillActivations } = params;
   const {
     level,
@@ -146,6 +153,10 @@ export function setupAndRunProductionSimulation(params: {
           ingredient: ingredient,
         })),
       },
+    },
+    averageProduce: {
+      berries: pokemonWithAverageProduce.produce.berries,
+      ingredients: combineSameIngredientsInDrop(pokemonWithAverageProduce.produce.ingredients),
     },
     skillActivations,
     log,

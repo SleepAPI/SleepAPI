@@ -99,18 +99,19 @@ export function calculateRemainingIngredients(
 }
 
 export function addIngredientSet(target: IngredientSet[], toAdd: IngredientSet[]): IngredientSet[] {
-  const result: IngredientSet[] = [];
+  const result: IngredientSet[] = target.map((ingredientSet) => ({
+    ingredient: ingredientSet.ingredient,
+    amount: ingredientSet.amount,
+  }));
 
   for (const { amount, ingredient: addedIngredient } of toAdd) {
-    let addedAmount = amount;
-    for (const { amount: targetAmount, ingredient: targetIngredient } of target) {
-      if (addedIngredient.name === targetIngredient.name) {
-        addedAmount += targetAmount;
-        break;
-      }
-    }
+    const existingIngredient = result.find(({ ingredient }) => ingredient.name === addedIngredient.name);
 
-    result.push({ ingredient: addedIngredient, amount: addedAmount });
+    if (existingIngredient) {
+      existingIngredient.amount += amount;
+    } else {
+      result.push({ ingredient: addedIngredient, amount });
+    }
   }
 
   return result;
