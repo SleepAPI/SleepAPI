@@ -192,12 +192,10 @@ describe('activateExtraHelpful', () => {
     const expectedIngredientsAmount = [
       { ingredient: ingredient.BEAN_SAUSAGE, amount: (20 * mainskill.EXTRA_HELPFUL_S.amount[5]) / 5 },
     ];
-    const expectedAdjustedAmount =
-      expectedBerriesAmount + expectedIngredientsAmount.reduce((sum, item) => sum + item.amount, 0);
 
     expect(result).toEqual({
       skill: mainskill.EXTRA_HELPFUL_S,
-      adjustedAmount: expectedAdjustedAmount,
+      adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount[5] / 5,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
         berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
@@ -239,26 +237,24 @@ describe('activateExtraHelpful', () => {
       metronomeFactor: 10,
     };
     const result = activateExtraHelpful(params);
-    const metronomeFactor = 10;
-    const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount[5] * 1) / (5 * 10);
+    const metronomeAndRandomFactor = 5 * 10;
+    const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount[5] * 1) / metronomeAndRandomFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount[5] * 1) / (5 * metronomeFactor),
+        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount[5] * 1) / metronomeAndRandomFactor,
       },
     ];
-    const expectedAdjustedAmount =
-      expectedBerriesAmount + expectedIngredientsAmount.reduce((sum, item) => sum + item.amount, 0);
 
     expect(result).toEqual({
       skill: mainskill.EXTRA_HELPFUL_S,
-      adjustedAmount: expectedAdjustedAmount,
+      adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount[5] / metronomeAndRandomFactor,
       nrOfHelpsToActivate: 4,
       adjustedProduce: {
         berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
         ingredients: expectedIngredientsAmount,
       },
-      fractionOfProc: 1 / metronomeFactor,
+      fractionOfProc: 1 / (metronomeAndRandomFactor / 5),
     });
   });
 });

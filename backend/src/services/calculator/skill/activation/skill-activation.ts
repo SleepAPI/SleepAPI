@@ -1,6 +1,5 @@
 import { PokemonProduce, Produce } from '@src/domain/combination/produce';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { countInventory } from '@src/utils/inventory-utils/inventory-utils';
 import { BerrySet, IngredientSet, ingredient, mainskill } from 'sleepapi-common';
 import { emptyBerrySet } from '../../berry/berry-calculator';
 
@@ -131,7 +130,7 @@ export function activateExtraHelpful(params: {
 
   return {
     skill,
-    adjustedAmount: countInventory(extraHelpfulProduce),
+    adjustedAmount: (adjustedAmount * skill.amount[skillLevel - 1]) / divideByRandomAndMetronome,
     nrOfHelpsToActivate,
     adjustedProduce: extraHelpfulProduce,
     fractionOfProc: adjustedAmount / metronomeFactor,
