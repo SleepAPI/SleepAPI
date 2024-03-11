@@ -107,8 +107,8 @@ export const METRONOME: MainSkill = {
   maxLevel: MAX_SKILL_LEVEL - 1,
 };
 
-export const EXTRA_TASTY_S: MainSkill = {
-  name: 'Extra Tasty S',
+export const TASTY_CHANCE_S: MainSkill = {
+  name: 'Tasty Chance S',
   amount: [4, 5, 6, 7, 8, 10],
   unit: 'chance',
   maxLevel: MAX_SKILL_LEVEL - 1,
@@ -125,7 +125,7 @@ export const MAINSKILLS: MainSkill[] = [
   ENERGIZING_CHEER_S,
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
-  EXTRA_TASTY_S,
+  TASTY_CHANCE_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
 ];

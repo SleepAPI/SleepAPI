@@ -43,9 +43,9 @@ import {
   ENERGIZING_CHEER_S,
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
-  EXTRA_TASTY_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  TASTY_CHANCE_S,
 } from '../mainskill/mainskill';
 import { Pokemon } from './pokemon';
 
@@ -718,27 +718,26 @@ export const SYLVEON: Pokemon = {
   skill: ENERGY_FOR_EVERYONE,
 };
 
-// TODO: update
 export const DEDENNE: Pokemon = {
   name: 'DEDENNE',
   specialty: 'skill',
   frequency: toSeconds(0, 41, 40),
-  ingredientPercentage: 20,
-  skillPercentage: 2,
+  ingredientPercentage: 17.7,
+  skillPercentage: 4.5,
   berry: GREPA,
   carrySize: 19,
   maxCarrySize: 19,
-  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 2, ingredient: FANCY_APPLE },
+    { amount: 1, ingredient: SOOTHING_CACAO },
   ],
   ingredient60: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: SOOTHING_CACAO },
+    { amount: 2, ingredient: GREENGRASS_CORN },
   ],
-  skill: EXTRA_TASTY_S,
+  skill: TASTY_CHANCE_S,
 };
 
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
@@ -768,7 +767,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   GLACEON,
   GALLADE,
   SYLVEON,
-  // DEDENNE, // TODO: bring back once we have data
+  DEDENNE,
 ];
 
 export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [

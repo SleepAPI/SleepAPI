@@ -59,7 +59,7 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
     mainskill.ENERGIZING_CHEER_S,
     mainskill.ENERGY_FOR_EVERYONE,
     mainskill.EXTRA_HELPFUL_S,
-    mainskill.EXTRA_TASTY_S,
+    mainskill.TASTY_CHANCE_S,
     mainskill.INGREDIENT_MAGNET_S,
     mainskill.METRONOME,
   ];

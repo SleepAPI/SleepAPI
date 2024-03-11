@@ -1,12 +1,12 @@
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import {
-  EXTRA_TASTY_S_CAP,
   MEALS_IN_DAY,
   RECIPES,
   Recipe,
   SUNDAY_CRIT_CHANCE,
   SUNDAY_CRIT_MULTIPLIER,
+  TASTY_CHANCE_S_CAP,
   WEEKDAY_CRIT_CHANCE,
   WEEKDAY_CRIT_MULTIPLIER,
   mainskill,
@@ -127,7 +127,7 @@ export interface CritInfo {
 export function calculateCritMultiplier(skillActivations: SkillActivation[], cache: Map<number, CritInfo>) {
   const bonusChance =
     skillActivations.reduce(
-      (sum, cur) => (cur.skill === mainskill.EXTRA_TASTY_S ? sum + cur.adjustedAmount / 100 : 0),
+      (sum, cur) => (cur.skill === mainskill.TASTY_CHANCE_S ? sum + cur.adjustedAmount / 100 : 0),
       0
     ) / MEALS_IN_DAY;
 
@@ -204,7 +204,7 @@ export function monteCarloCrits(bonusChance: number) {
       weekdayCrits += 1;
     } else {
       weekdayMultipliers.push(1);
-      currentBonus = Math.min(currentBonus + bonusChance, EXTRA_TASTY_S_CAP + WEEKDAY_CRIT_CHANCE);
+      currentBonus = Math.min(currentBonus + bonusChance, TASTY_CHANCE_S_CAP + WEEKDAY_CRIT_CHANCE);
     }
   }
 
@@ -217,7 +217,7 @@ export function monteCarloCrits(bonusChance: number) {
       sundayCrits += 1;
     } else {
       sundayMultipliers.push(1);
-      currentBonus = Math.min(currentBonus + bonusChance, EXTRA_TASTY_S_CAP + SUNDAY_CRIT_CHANCE);
+      currentBonus = Math.min(currentBonus + bonusChance, TASTY_CHANCE_S_CAP + SUNDAY_CRIT_CHANCE);
     }
   }
 

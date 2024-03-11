@@ -221,7 +221,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
         10,
       ],
       "maxLevel": 6,
-      "name": "Extra Tasty S",
+      "name": "Tasty Chance S",
       "unit": "chance",
     },
   },
