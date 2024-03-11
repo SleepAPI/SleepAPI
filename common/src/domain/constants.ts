@@ -1,5 +1,5 @@
 // skills
-export const EXTRA_TASTY_S_CAP = 0.7;
+export const TASTY_CHANCE_S_CAP = 0.7;
 
 // recipe
 export const MAX_RECIPE_LEVEL = 55;

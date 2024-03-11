@@ -171,6 +171,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "GLACEON",
   "GALLADE",
   "SYLVEON",
+  "DEDENNE",
   "JIGGLYPUFF",
   "MEOWTH",
   "PSYDUCK",

@@ -231,25 +231,25 @@ describe('getMealRecoveryAmount', () => {
 });
 
 describe('calculateCritMultiplier', () => {
-  it('shall calculate crit multplier for EXTRA_TASTY_S', () => {
+  it('shall calculate crit multplier for TASTY_CHANCE_S', () => {
     const skillActivations: SkillActivation[] = [
       {
-        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.EXTRA_TASTY_S,
+        skill: mainskill.TASTY_CHANCE_S,
       },
       {
-        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.EXTRA_TASTY_S,
+        skill: mainskill.TASTY_CHANCE_S,
       },
       {
-        adjustedAmount: mainskill.EXTRA_TASTY_S.amount[mainskill.EXTRA_TASTY_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.EXTRA_TASTY_S,
+        skill: mainskill.TASTY_CHANCE_S,
       },
     ];
     const {

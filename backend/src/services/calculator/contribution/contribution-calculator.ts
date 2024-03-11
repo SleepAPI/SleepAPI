@@ -184,7 +184,7 @@ export function calculateContributionForMealWithPunishment(params: {
   const teamSizePenalty = Math.max(1 - (teamSize - 1) * 0.2, 0); // clamp to 0
   const valueLeftInRecipe = meal.valueMax - contributedValue;
 
-  const extraTastyContribution =
+  const tastyChanceContribution =
     teamSizePenalty * (critMultiplier * valueLeftInRecipe - defaultCritMultiplier * valueLeftInRecipe);
   // produce support are support mons that boost produce of team members, like extra helpful and e4e
   const { contributedValue: supportedContributionValue, fillerValue: supportedFillers } =
@@ -192,13 +192,13 @@ export function calculateContributionForMealWithPunishment(params: {
 
   const regularContribution = critMultiplier * contributedValue * teamSizePenalty + fillerValue;
   const supportedContribution = critMultiplier * supportedContributionValue * teamSizePenalty + supportedFillers;
-  const contributedPower = regularContribution + supportedContribution + extraTastyContribution;
+  const contributedPower = regularContribution + supportedContribution + tastyChanceContribution;
 
   return {
     meal,
     percentage,
     contributedPower,
-    skillValue: extraTastyContribution + supportedContribution,
+    skillValue: tastyChanceContribution + supportedContribution,
   };
 }
 
