@@ -410,11 +410,14 @@
                 padding-bottom: 10px;
               "
             >
-              <h5>
-                <u><strong>Ranking changelog version 1.6</strong></u>
-              </h5>
+              <h4>
+                <u><strong>Ranking changelog version 1.11</strong></u>
+              </h4>
               <ul style="text-align: left">
-                <li>Calculation of the produced ingredients changed to the new simulated production approach</li>
+                <li>Dedenne added</li>
+                <li>Support Pokémon get their contribution attributed</li>
+                <li>Many skill Pokémon changed to skill-focused setup</li>
+                <li>Tasty Chance S Monte Carlo added</li>
               </ul>
             </div>
             <br />
@@ -468,7 +471,7 @@
 
             The raw contribution power to each recipe is calculated as: <br />
             <code
-              >relevant ingredients of recipe covered * ingredient base value * recipe bonus% * recipe level 51
+              >relevant ingredients of recipe covered * ingredient base value * recipe bonus% * recipe level max
               bonus%</code
             >. <br />
             <br />
@@ -482,7 +485,9 @@
             <code>surplus ingredients not used in recipe * taxed ingredient value</code>. <br />
             <br />
             The final contribution score it calculated as: <br />
-            <code>(raw contribution power / (1 - (0.2 * team size required for recipe))) + filler value</code
+            <code
+              >(raw contribution power / (1 - (0.2 * team size required for recipe))) + filler value + support skill
+              value</code
             >.<br /><br />
 
             For the overall tier list we then select the 3 best performing recipes, we boost the value of the very best
