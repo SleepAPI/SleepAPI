@@ -144,7 +144,7 @@ export function calculateCritMultiplier(skillActivations: SkillActivation[], cac
   const averageWeekdayCritChances: number[] = [];
   const averageSundayCritChances: number[] = [];
 
-  for (let i = 0; i < 5000; i++) {
+  for (let i = 0; i < 50000; i++) {
     const {
       fullWeekMultiplier,
       weekdayMultiplier,

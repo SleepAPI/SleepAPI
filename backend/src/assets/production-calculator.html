@@ -105,6 +105,16 @@
         height: auto;
         max-width: 35px;
       }
+
+      .custom-background {
+        background-color: #f5f5f5;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        -webkit-appearance: none;
+        appearance: none;
+      }
     </style>
 
     <script src="functions.1.11.0.js"></script>
@@ -492,6 +502,7 @@
         <option value="PUPITAR">Pupitar</option>
         <option value="QUILAVA">Quilava</option>
         <option value="RAICHU">Raichu</option>
+        <!-- TODO: <option value="RAIKOU">Raikou</option> -->
         <option value="RALTS">Ralts</option>
         <option value="RATICATE">Raticate</option>
         <option value="RATTATA">Rattata</option>
@@ -663,6 +674,7 @@
         </div>
       </div>
 
+      <!-- TODO: this can be changed to input group with button, slider, button -->
       <div class="slider-container">
         <label for="level" class="form-label">Level:&nbsp;</label><span class="slider-value" data-for="level">60</span
         ><br />
@@ -683,6 +695,27 @@
         </div>
         <br />
       </div>
+
+      <!-- <div class="d-flex align-items-center justify-content-center mb-5">
+        <div class="input-group input-group-sm" style="width: 300px">
+          <select class="form-select" id="inputGroupSelect01">
+            <option value="1" selected>E4E</option>
+            <option value="2">Cheer</option>
+            <option value="3">Extra helpful</option>
+            <option value="4">Metronome</option>
+            <option value="5">..etc</option>
+          </select>
+          <select class="form-select" id="inputGroupSelect01">
+            <option value="1">Level: 1</option>
+            <option value="2">Level: 2</option>
+            <option value="3">Level: 3</option>
+            <option value="4">Level: 4</option>
+            <option value="5">Level: 5</option>
+            <option value="6" selected>Level: 6</option>
+          </select>
+          <input type="range" class="form-range custom-background w-50" min="0" max="10" step="1" />
+        </div>
+      </div> -->
 
       <p>
         <a

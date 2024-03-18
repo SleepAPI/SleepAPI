@@ -54,7 +54,8 @@ export function getOptimalFlexiblePokemon(
         teamSize: teams[0].length,
         percentage: 100,
         producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
-        supportedIngredients: [],
+        fillerSupportIngredients: [],
+        usedSupportIngredients: [],
         critMultiplier,
         defaultCritMultiplier,
       });

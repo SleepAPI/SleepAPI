@@ -1,5 +1,15 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { IngredientSet, PokemonIngredientSet, curry, dessert, ingredient, pokemon, salad } from 'sleepapi-common';
+import {
+  IngredientSet,
+  MAX_RECIPE_LEVEL,
+  PokemonIngredientSet,
+  curry,
+  dessert,
+  ingredient,
+  pokemon,
+  salad,
+  utils,
+} from 'sleepapi-common';
 import {
   addIngredientSet,
   calculateAveragePokemonIngredientSet,
@@ -401,9 +411,17 @@ describe('calculateContributedIngredientsValue', () => {
       },
     ];
 
+    const expectedContributedValue = Math.round(
+      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] * (1 + meal.bonus / 100) * (15 * ingredient.LARGE_LEEK.value)
+    );
+
+    const expectedFillerValue = Math.round(
+      4.7 * ingredient.SNOOZY_TOMATO.taxedValue + 1.4 * ingredient.LARGE_LEEK.taxedValue
+    );
+
     const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
-    expect(contributedValue).toBe(9290.7);
-    expect(fillerValue).toBe(306.51999999999987);
+    expect(Math.round(contributedValue)).toBe(expectedContributedValue);
+    expect(Math.round(fillerValue)).toBe(expectedFillerValue);
   });
 
   it('shall calculate contributed ingredient value correctly for leek/soy Dugtrio', () => {
@@ -423,9 +441,18 @@ describe('calculateContributedIngredientsValue', () => {
       },
     ];
 
+    const expectedContributedValue = Math.round(
+      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+        (1 + meal.bonus / 100) *
+        (15 * ingredient.GREENGRASS_SOYBEANS.value + 6.5 * ingredient.LARGE_LEEK.value)
+    );
+
+    const expectedFillerValue = Math.round(
+      4.4 * ingredient.SNOOZY_TOMATO.taxedValue + 2.4 * ingredient.GREENGRASS_SOYBEANS.taxedValue
+    );
     const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
-    expect(contributedValue).toBe(9047.970000000001);
-    expect(fillerValue).toBe(225.83999999999997);
+    expect(Math.round(contributedValue)).toBe(expectedContributedValue);
+    expect(Math.round(fillerValue)).toBe(expectedFillerValue);
   });
 });
 

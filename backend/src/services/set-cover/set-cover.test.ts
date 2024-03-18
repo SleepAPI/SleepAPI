@@ -74,6 +74,7 @@ describe('processOptimalTeamSolutions', () => {
   });
 });
 
+// TODO: test startingPokemon
 describe('findOptimalCombinationFor', () => {
   it('shall respect timeout and return exhaustive false', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raikou];
@@ -81,7 +82,7 @@ describe('findOptimalCombinationFor', () => {
 
     const setCover = new SetCover(reverseIndex, new Map());
     // raikou should solo this recipe, but we should timeout before
-    const result = setCover.findOptimalCombinationFor([{ amount: 1, ingredient: ingredient.FANCY_APPLE }], 5, 0);
+    const result = setCover.findOptimalCombinationFor([{ amount: 1, ingredient: ingredient.FANCY_APPLE }], [], 5, 0);
 
     expect(result).toHaveLength(0);
   });
@@ -254,11 +255,6 @@ describe('findOptimalCombinationFor', () => {
 
     expect(result).toHaveLength(1);
     const team = result[0].team!;
-    console.log(
-      `${team.map(
-        (m) => `${m.pokemonCombination.pokemon.name} (${prettifyIngredientDrop(m.detailedProduce.produce.ingredients)})`
-      )}`
-    );
     expect(team).toHaveLength(1); // vaporeon
     const vaporeonProduce = team[0]!.detailedProduce.produce.ingredients;
 
