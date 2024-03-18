@@ -62,6 +62,7 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
     mainskill.TASTY_CHANCE_S,
     mainskill.INGREDIENT_MAGNET_S,
     mainskill.METRONOME,
+    mainskill.HELPER_BOOST,
   ];
   if (pokemon.specialty === 'skill' && supportSkills.includes(pokemon.skill)) {
     return {

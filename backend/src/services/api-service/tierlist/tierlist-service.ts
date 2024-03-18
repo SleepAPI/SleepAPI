@@ -19,7 +19,7 @@ import { SetCover } from '@src/services/set-cover/set-cover';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { CritInfo, calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
-import { createDefaultProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
+import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import { MAX_POT_SIZE, mainskill } from 'sleepapi-common';
@@ -160,7 +160,8 @@ class TierlistImpl {
       extraHelpful: 0,
       monteCarloIterations: 500,
     });
-    const defaultProduceMap = createDefaultProduceMap(allPokemonDefaultProduce);
+    const defaultProduceMap = createProduceMap(allPokemonDefaultProduce);
+    let preCalcedSupportMap: Map<string, CustomPokemonCombinationWithProduce> | undefined = undefined;
     const groupedByPokemonName: Record<string, CustomPokemonCombinationWithProduce[]> = allPokemonDefaultProduce.reduce(
       (accumulator, currentValue) => {
         const pokemonName = currentValue.pokemonCombination.pokemon.name;
@@ -194,11 +195,13 @@ class TierlistImpl {
     ];
     Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
       let supportSetCover: SetCover | undefined = undefined;
-      let allPokemonSupportedProduce: CustomPokemonCombinationWithProduce[] = [];
+      preCalcedSupportMap = undefined;
+
       let e4e = 0;
       let cheer = 0;
       let extraHelpful = 0;
       const currentPokemonSkill = group[0].pokemonCombination.pokemon.skill;
+
       if (supportSkills.includes(currentPokemonSkill)) {
         if (currentPokemonSkill === mainskill.ENERGY_FOR_EVERYONE) {
           e4e = group[0].detailedProduce.averageTotalSkillProcs;
@@ -212,14 +215,15 @@ class TierlistImpl {
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
         }
 
-        allPokemonSupportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
+        const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
           limit50: details.limit50,
           e4e,
           cheer,
           extraHelpful,
           monteCarloIterations: 500,
         });
-        supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonSupportedProduce), new Map());
+        preCalcedSupportMap = createProduceMap(supportedProduce);
+        supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(supportedProduce), new Map());
       }
 
       for (const pokemonWithProduce of group) {
@@ -239,12 +243,14 @@ class TierlistImpl {
         for (const meal of mealsForFilter) {
           const contributionForMeal = calculateMealContributionFor({
             meal,
-            producedIngredients: pokemonWithProduce.detailedProduce.produce.ingredients,
-            memoizedSetCover: supportSetCover ?? memoizedSetCover,
+            currentPokemon: pokemonWithProduce,
+            memoizedSetCover:
+              supportSkills.includes(currentPokemonSkill) && supportSetCover ? supportSetCover : memoizedSetCover,
             timeout: TIERLIST_SET_COVER_TIMEOUT,
             critMultiplier,
             defaultCritMultiplier,
-            allPokemonDefaultProduce: supportSetCover && defaultProduceMap,
+            defaultProduceMap,
+            preCalcedSupportMap,
           });
           contributions.push(contributionForMeal);
         }

@@ -68,7 +68,8 @@ export class SetCover {
 
   public solveRecipe(
     params: string,
-    pokemonInTeam: CustomPokemonCombinationWithProduce[] = []
+    pokemonInTeam: CustomPokemonCombinationWithProduce[] = [],
+    requiredPokemon: CustomPokemonCombinationWithProduce[] = []
   ): CustomPokemonCombinationWithProduce[][] {
     const cachedSolution = this.#memo.get(params);
     if (cachedSolution) {
@@ -96,7 +97,11 @@ export class SetCover {
       CustomPokemonCombinationWithProduce[],
       HelperBoostStatus | undefined
     ][] = [];
-    const pokemonWithIngredient = this.#reverseIndex.get(firstIngredient.ingredient) ?? [];
+
+    // TODO: currrently for requiredPokemon legnth > 2+ we would iterate over them instead of adding them all to the same team
+    // TODO: instead for [RAIKOU, RAICHU, EKANS] we should calc RAIKOU and send requiredPokemon=[RAICHU, EKANS] to next recursive
+    const pokemonWithIngredient =
+      requiredPokemon.length > 0 ? requiredPokemon : this.#reverseIndex.get(firstIngredient.ingredient) ?? [];
     for (const currentPokemon of pokemonWithIngredient) {
       const helperBoostAlreadyInTeam = pokemonInTeam.find(
         (pkmn) => pkmn.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
@@ -169,7 +174,9 @@ export class SetCover {
           const key = createMemoKey(updatedParams);
 
           const subTeams: CustomPokemonCombinationWithProduce[][] = this.solveRecipe(key, currentTeam);
-          this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
+          if (requiredPokemon.length === 0) {
+            this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
+          }
 
           if (!subTeams) {
             throw new ProgrammingError(
@@ -214,7 +221,9 @@ export class SetCover {
       }
     }
 
-    this.#memo.set(params, teams);
+    if (requiredPokemon.length === 0) {
+      this.#memo.set(params, teams);
+    }
     return teams;
   }
 
@@ -316,6 +325,7 @@ export class SetCover {
 
   public findOptimalCombinationFor(
     recipe: IngredientSet[],
+    startingPokemon?: CustomPokemonCombinationWithProduce[],
     maxTeamSize?: number,
     timeout?: number
   ): OptimalTeamSolution[] {
@@ -333,12 +343,17 @@ export class SetCover {
     };
 
     const key = createMemoKey(params);
-    const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
+    const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
 
     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
   }
 
-  public calculateMinTeamSizeFor(recipe: IngredientSet[], maxTeamSize?: number, timeout?: number) {
+  public calculateMinTeamSizeFor(
+    recipe: IngredientSet[],
+    startingPokemon: CustomPokemonCombinationWithProduce[],
+    maxTeamSize?: number,
+    timeout?: number
+  ) {
     this.#startTime = Date.now();
     this.#timeout = timeout ?? this.#timeout;
 
@@ -353,7 +368,7 @@ export class SetCover {
     };
 
     const key = createMemoKey(params);
-    const solutions = this.#memo.get(key) ?? this.solveRecipe(key);
+    const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
 
     return solutions.at(0) ? solutions[0].length : spotsLeftInTeam + 1;
   }

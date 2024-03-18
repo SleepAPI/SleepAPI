@@ -161,7 +161,9 @@ export function activateMetronome(params: {
   pokemonWithAverageProduce: PokemonProduce;
   skillActivations: SkillActivation[];
 }) {
-  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
+  const skillsToActivate = mainskill.MAINSKILLS.filter(
+    (s) => s !== mainskill.METRONOME && s !== mainskill.HELPER_BOOST // TODO: can Metronome roll Helper Boost?
+  );
 
   for (const skillToActivate of skillsToActivate) {
     createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);

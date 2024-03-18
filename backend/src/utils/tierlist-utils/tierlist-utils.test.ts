@@ -1,9 +1,9 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ingredient } from 'sleepapi-common';
 import { MOCKED_POKEMON, MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
-import { createDefaultProduceMap } from './tierlist-utils';
+import { createProduceMap } from './tierlist-utils';
 
-describe('createDefaultProduceMap', () => {
+describe('createProduceMap', () => {
   it('shall create map with hashed pokemonIngredientSet keys', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [
       MOCKED_POKEMON_WITH_PRODUCE,
@@ -20,7 +20,7 @@ describe('createDefaultProduceMap', () => {
         },
       },
     ];
-    const result = createDefaultProduceMap(produce);
+    const result = createProduceMap(produce);
     expect(result.size).toBe(2);
     expect(Array.from(result.keys())).toEqual(['PINSIR:Honey,Apple', 'MOCK_POKEMON:Corn']);
   });

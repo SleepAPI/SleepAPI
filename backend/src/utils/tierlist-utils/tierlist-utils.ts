@@ -45,7 +45,7 @@ export function calculateDiffForEntry(
   return currentEntry;
 }
 
-export function createDefaultProduceMap(defaultProduce: CustomPokemonCombinationWithProduce[]) {
+export function createProduceMap(defaultProduce: CustomPokemonCombinationWithProduce[]) {
   const map: Map<string, CustomPokemonCombinationWithProduce> = new Map();
   for (const pokemonWithProduce of defaultProduce) {
     const hashedPokemon = hashPokemonCombination(pokemonWithProduce.pokemonCombination);

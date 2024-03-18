@@ -507,31 +507,21 @@ export const HERACROSS: Pokemon = {
 export const RAIKOU: Pokemon = {
   name: 'RAIKOU',
   specialty: 'skill',
-  frequency: toSeconds(0, 44, 0),
-  ingredientPercentage: 17.8,
-  skillPercentage: 5,
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 13,
+  skillPercentage: 4.7,
   berry: GREPA,
-  carrySize: 18,
-  maxCarrySize: 18,
-  ingredient0: { amount: 2, ingredient: SOOTHING_CACAO },
+  carrySize: 15,
+  maxCarrySize: 25,
+  ingredient0: { amount: 1, ingredient: FIERY_HERB },
   ingredient30: [
-    { amount: 5, ingredient: SOOTHING_CACAO },
-    { amount: 8, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: FIERY_HERB },
+    { amount: 3, ingredient: FANCY_EGG },
   ],
   ingredient60: [
-    { amount: 7, ingredient: SOOTHING_CACAO },
-    { amount: 12, ingredient: FANCY_APPLE },
-    { amount: 7, ingredient: TASTY_MUSHROOM },
+    { amount: 4, ingredient: FIERY_HERB },
+    { amount: 4, ingredient: FANCY_EGG },
   ],
-  // ingredient0: { amount: 1, ingredient: FIERY_HERB },
-  // ingredient30: [
-  //   { amount: 2, ingredient: FIERY_HERB },
-  //   { amount: 3, ingredient: FANCY_EGG },
-  // ],
-  // ingredient60: [
-  //   { amount: 4, ingredient: FIERY_HERB },
-  //   { amount: 4, ingredient: FANCY_EGG },
-  // ],
   skill: HELPER_BOOST,
 };
 

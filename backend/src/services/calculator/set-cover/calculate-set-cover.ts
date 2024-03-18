@@ -62,5 +62,5 @@ export function calculateSetCover(params: {
   const { recipe, cache, reverseIndex, maxTeamSize, timeout } = params;
 
   const setCover = new SetCover(reverseIndex, cache);
-  return setCover.findOptimalCombinationFor(recipe, maxTeamSize, timeout);
+  return setCover.findOptimalCombinationFor(recipe, [], maxTeamSize, timeout);
 }

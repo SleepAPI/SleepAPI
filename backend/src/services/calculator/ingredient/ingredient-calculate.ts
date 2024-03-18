@@ -15,7 +15,16 @@
  */
 
 import { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
-import { IngredientSet, PokemonIngredientSet, Recipe, nature, pokemon, subskill } from 'sleepapi-common';
+import {
+  IngredientSet,
+  MAX_RECIPE_LEVEL,
+  PokemonIngredientSet,
+  Recipe,
+  nature,
+  pokemon,
+  subskill,
+  utils,
+} from 'sleepapi-common';
 import { extractIngredientSubskills } from '../stats/stats-calculator';
 
 /**
@@ -237,11 +246,11 @@ export function calculateContributedIngredientsValue(
     }
   }
 
-  const mealBonus = 1 + meal.bonus / 100;
-  const level50RecipeBonus = 2.48;
+  const recipeBonus = 1 + meal.bonus / 100;
+  const maxLevelRecipeMultiplier = utils.recipeLevelBonus[MAX_RECIPE_LEVEL];
 
   return {
-    contributedValue: contributedValue * mealBonus * level50RecipeBonus,
+    contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,
     fillerValue,
   };
 }
