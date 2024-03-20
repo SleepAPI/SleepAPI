@@ -19,22 +19,28 @@ export default class ProductionController extends Controller {
     return calculatePokemonProduction(pokemon, this.#parseInput(pokemon, body), body.ingredientSet, 5000);
   }
 
-  #parseInput(pokemon: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
+  #parseInput(pkmn: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
     const level = queryAsNumber(input.level) ?? 60;
+
     const mainBedtime = parseTime(input.mainBedtime);
     const mainWakeup = parseTime(input.mainWakeup);
     const duration = calculateDuration({ start: mainBedtime, end: mainWakeup });
     if (duration.hour < 1) {
       throw new SleepAPIError('Minimum sleep of 1 hour required');
     }
+
+    const rawUniqueHelperBoost = queryAsNumber(input.uniqueHelperBoost) ?? 0;
+    const uniqueHelperBoost = rawUniqueHelperBoost === 0 && pkmn === pokemon.RAIKOU ? 1 : rawUniqueHelperBoost;
+
     const parsedInput: ProductionStats = {
       level,
       nature: getNature(input.nature),
       subskills: extractSubskillsBasedOnLevel(level, input.subskills),
-      skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pokemon.skill.maxLevel, pokemon.skill.maxLevel),
+      skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pkmn.skill.maxLevel, pkmn.skill.maxLevel),
       e4e: queryAsNumber(input.e4e) ?? 0,
       cheer: queryAsNumber(input.cheer) ?? 0,
       extraHelpful: queryAsNumber(input.extraHelpful) ?? 0,
+      uniqueHelperBoost,
       helpingBonus: queryAsNumber(input.helpingbonus) ?? 0,
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,

@@ -72,6 +72,7 @@ describe('scheduleSkillEvents', () => {
       oddsOfNightSkillProc: 0.5,
       nrOfDaySkillProcs: 3.1,
       nrOfDayHelps: 9,
+      uniqueHelperBoost: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -94,6 +95,7 @@ describe('scheduleSkillEvents', () => {
       oddsOfNightSkillProc: 0.3,
       nrOfDaySkillProcs: 0,
       nrOfDayHelps: 0,
+      uniqueHelperBoost: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -149,6 +151,7 @@ describe('scheduleSkillEvents', () => {
       oddsOfNightSkillProc: 0.4,
       nrOfDaySkillProcs: 2,
       nrOfDayHelps: 10,
+      uniqueHelperBoost: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 

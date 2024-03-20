@@ -215,7 +215,7 @@ export function simulation(params: {
           new SkillEvent({
             time: currentTime,
             description,
-            skillActivation: skillActivation,
+            skillActivation,
           })
         );
 
@@ -239,7 +239,7 @@ export function simulation(params: {
             skillEnergyOthersValue += clampedDelta;
           }
         } else if (skillActivation.adjustedProduce) {
-          if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S) {
+          if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
             skillHelpsValue += skillActivation.adjustedAmount;
           }
           skillProduceValue = addToInventory(skillProduceValue, skillActivation.adjustedProduce);
