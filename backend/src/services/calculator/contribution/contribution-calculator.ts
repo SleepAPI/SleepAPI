@@ -48,6 +48,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
     e4e,
     cheer,
     extraHelpful,
+    uniqueHelperBoost: 0,
     erb: 0,
     camp: false,
     helpingBonus: 0,

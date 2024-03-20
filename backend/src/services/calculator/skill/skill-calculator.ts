@@ -31,8 +31,16 @@ export function scheduleSkillEvents(params: {
   oddsOfNightSkillProc: number;
   nrOfDaySkillProcs: number;
   nrOfDayHelps: number;
+  uniqueHelperBoost: number;
 }) {
-  const { skillLevel, pokemonWithAverageProduce, oddsOfNightSkillProc, nrOfDaySkillProcs, nrOfDayHelps } = params;
+  const {
+    skillLevel,
+    pokemonWithAverageProduce,
+    oddsOfNightSkillProc,
+    nrOfDaySkillProcs,
+    nrOfDayHelps,
+    uniqueHelperBoost,
+  } = params;
   const skill = pokemonWithAverageProduce.pokemon.skill;
 
   const activationsWithAdjustedAmount = calculateHelpsToProcSchedule({
@@ -51,6 +59,7 @@ export function scheduleSkillEvents(params: {
       adjustedAmount,
       pokemonWithAverageProduce,
       skillActivations,
+      uniqueHelperBoost,
     })
   );
 

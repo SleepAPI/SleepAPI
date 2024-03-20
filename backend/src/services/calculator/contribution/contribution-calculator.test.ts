@@ -565,10 +565,10 @@ describe('calculateTeamSizeAndSupportValue', () => {
 
     expect(teamSizeRequired).toEqual(3);
     expect(prettifyIngredientDrop(supportedUsedIngredients)).toMatchInlineSnapshot(
-      `"8.2 Herb, 4.2 Corn, 3.6 Ginger, 7.4 Sausage"`
+      `"9.2 Herb, 4.6 Corn, 4 Ginger, 8.2 Sausage"`
     );
     expect(prettifyIngredientDrop(supportedFillerIngredients)).toMatchInlineSnapshot(
-      `"6.6 Herb, 7.5 Corn, 8.1 Ginger, 6.4 Sausage"`
+      `"8.2 Herb, 9 Corn, 9.6 Ginger, 7.9 Sausage"`
     );
   });
 
@@ -689,10 +689,10 @@ describe('calculateTeamSizeAndSupportValue', () => {
 
     expect(teamSizeRequired).toEqual(4);
     expect(prettifyIngredientDrop(supportedUsedIngredients)).toMatchInlineSnapshot(
-      `"8.6 Herb, 4.1 Corn, 4.7 Ginger, 7.4 Sausage"`
+      `"9.5 Herb, 4.6 Corn, 5.1 Ginger, 8.2 Sausage"`
     );
     expect(prettifyIngredientDrop(supportedFillerIngredients)).toMatchInlineSnapshot(
-      `"0.8 Herb, 6.3 Corn, 1.6 Ginger, 7.2 Sausage"`
+      `"1.4 Herb, 7.6 Corn, 2.2 Ginger, 8.8 Sausage"`
     );
   });
 
@@ -865,28 +865,28 @@ describe('summarizeTeamProducedIngredientSources', () => {
       [
         {
           "defaultAmount": 42.7,
-          "fromSupport": 14.84,
+          "fromSupport": 17.31,
           "ingredient": "Herb",
           "recipeAmount": 27,
-          "selfSupportAmount": 3.18,
+          "selfSupportAmount": 3.71,
         },
         {
           "defaultAmount": 15.9,
-          "fromSupport": 7.42,
+          "fromSupport": 8.66,
           "ingredient": "Corn",
           "recipeAmount": 14,
           "selfSupportAmount": 0,
         },
         {
           "defaultAmount": 27.1,
-          "fromSupport": 11.66,
+          "fromSupport": 13.6,
           "ingredient": "Ginger",
           "recipeAmount": 12,
           "selfSupportAmount": 0,
         },
         {
           "defaultAmount": 30.9,
-          "fromSupport": 13.78,
+          "fromSupport": 16.08,
           "ingredient": "Sausage",
           "recipeAmount": 24,
           "selfSupportAmount": 0,

@@ -25,6 +25,7 @@ export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
   e4e: 0,
   cheer: 0,
   extraHelpful: 0,
+  uniqueHelperBoost: 0,
   helpingBonus: 0,
   camp: false,
   erb: 0,

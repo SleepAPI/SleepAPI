@@ -65,6 +65,7 @@ export function setupAndRunProductionSimulation(params: {
     e4e,
     cheer,
     extraHelpful,
+    // uniqueHelperBoost,
     helpingBonus,
     camp,
     erb,
@@ -113,6 +114,7 @@ export function setupAndRunProductionSimulation(params: {
 
   const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
   const extraHelpfulEvents = getExtraHelpfulEvents(daySleepInfo.period, extraHelpful, pokemonWithAverageProduce);
+  // TODO: getHelperBoostEvents, add when adding user input
 
   const skillActivations = preGeneratedSkillActivations
     ? preGeneratedSkillActivations
@@ -234,5 +236,6 @@ export function generateSkillActivations(params: {
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,
     nrOfDayHelps,
+    uniqueHelperBoost: input.uniqueHelperBoost,
   });
 }
