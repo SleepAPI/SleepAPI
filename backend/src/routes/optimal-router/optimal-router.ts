@@ -17,6 +17,8 @@ export interface InputProductionStatsRequest {
   e4e?: number;
   cheer?: number;
   extraHelpful?: number;
+  helperBoostProcs?: number;
+  helperBoostUnique?: number;
   helpingbonus?: number;
   camp?: boolean;
   erb?: number;

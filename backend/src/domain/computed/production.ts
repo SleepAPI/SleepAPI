@@ -10,7 +10,8 @@ export interface ProductionStats {
   e4e: number;
   cheer: number;
   extraHelpful: number;
-  uniqueHelperBoost: number;
+  helperBoostProcs: number;
+  helperBoostUnique: number;
   helpingBonus: number;
   camp: boolean;
   erb: number;

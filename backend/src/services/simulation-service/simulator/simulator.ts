@@ -29,7 +29,7 @@ import {
   inventoryFull,
   recoverEnergyEvents,
   recoverFromMeal,
-  triggerExtraHelpful,
+  triggerTeamHelpsEvent,
 } from '@src/utils/event-utils/event-utils';
 import { addToInventory, countInventory, emptyInventory } from '@src/utils/inventory-utils/inventory-utils';
 import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
@@ -60,6 +60,7 @@ export function simulation(params: {
   sneakySnackBerries: BerrySet;
   recoveryEvents: EnergyEvent[];
   extraHelpfulEvents: SkillEvent[];
+  helperBoostEvents: SkillEvent[];
   skillActivations: SkillActivation[];
   mealTimes: Time[];
 }): { detailedProduce: DetailedProduce; log: ScheduledEvent[]; summary: Summary } {
@@ -72,6 +73,7 @@ export function simulation(params: {
     sneakySnackBerries,
     recoveryEvents,
     extraHelpfulEvents,
+    helperBoostEvents,
     skillActivations,
     mealTimes,
   } = params;
@@ -104,6 +106,7 @@ export function simulation(params: {
   let energyIndex = 0;
   let mealIndex = 0;
   let helpfulIndex = 0;
+  let boostIndex = 0;
 
   // Set up start values
   const eventLog: ScheduledEvent[] = [];
@@ -128,6 +131,7 @@ export function simulation(params: {
 
   const energyEvents: EnergyEvent[] = sortEventsForPeriod(dayInfo.period, recoveryEvents);
   const helpfulEvents: SkillEvent[] = sortEventsForPeriod(dayInfo.period, extraHelpfulEvents);
+  const boostEvents: SkillEvent[] = sortEventsForPeriod(dayInfo.period, helperBoostEvents);
 
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
@@ -151,19 +155,29 @@ export function simulation(params: {
       period,
       eventLog,
     });
-    const { helpfulProduce, helpfulEventsProcessed } = triggerExtraHelpful({
-      helpfulEvents,
-      helpfulIndex,
+    const { helpsProduce: helpfulProduce, helpEventsProcessed: helpfulEventsProcessed } = triggerTeamHelpsEvent({
+      helpEvents: helpfulEvents,
+      helpIndex: helpfulIndex,
+      emptyProduce: getEmptyProduce(pokemon.berry),
+      currentTime,
+      period,
+      eventLog,
+    });
+    const { helpsProduce: boostProduce, helpEventsProcessed: boostEventsProcessed } = triggerTeamHelpsEvent({
+      helpEvents: boostEvents,
+      helpIndex: boostIndex,
       emptyProduce: getEmptyProduce(pokemon.berry),
       currentTime,
       period,
       eventLog,
     });
     totalProduce = addToInventory(totalProduce, helpfulProduce);
+    totalProduce = addToInventory(totalProduce, boostProduce);
 
     mealIndex = mealsProcessed;
     energyIndex = energyEventsProcessed;
     helpfulIndex = helpfulEventsProcessed;
+    boostIndex = boostEventsProcessed;
     currentEnergy = Math.min(currentEnergy + mealRecovery + eventRecovery, 150);
     totalRecovery += mealRecovery + eventRecovery;
 

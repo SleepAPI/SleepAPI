@@ -411,7 +411,11 @@
 						"type": "number",
 						"format": "double"
 					},
-					"uniqueHelperBoost": {
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
 						"type": "number",
 						"format": "double"
 					},
@@ -445,7 +449,8 @@
 					"e4e",
 					"cheer",
 					"extraHelpful",
-					"uniqueHelperBoost",
+					"helperBoostProcs",
+					"helperBoostUnique",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -503,6 +508,14 @@
 						"format": "double"
 					},
 					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
 						"type": "number",
 						"format": "double"
 					},
@@ -569,7 +582,11 @@
 						"type": "number",
 						"format": "double"
 					},
-					"uniqueHelperBoost": {
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
 						"type": "number",
 						"format": "double"
 					},
@@ -609,7 +626,8 @@
 					"e4e",
 					"cheer",
 					"extraHelpful",
-					"uniqueHelperBoost",
+					"helperBoostProcs",
+					"helperBoostUnique",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -1097,7 +1115,11 @@
 						"type": "number",
 						"format": "double"
 					},
-					"uniqueHelperBoost": {
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
 						"type": "number",
 						"format": "double"
 					},
@@ -1139,7 +1161,8 @@
 					"e4e",
 					"cheer",
 					"extraHelpful",
-					"uniqueHelperBoost",
+					"helperBoostProcs",
+					"helperBoostUnique",
 					"helpingbonus",
 					"camp",
 					"erb",
@@ -1471,7 +1494,11 @@
 													"type": "number",
 													"format": "double"
 												},
-												"uniqueHelperBoost": {
+												"helperBoostUnique": {
+													"type": "number",
+													"format": "double"
+												},
+												"helperBoostProcs": {
 													"type": "number",
 													"format": "double"
 												},
@@ -1512,7 +1539,8 @@
 												"erb",
 												"camp",
 												"helpingBonus",
-												"uniqueHelperBoost",
+												"helperBoostUnique",
+												"helperBoostProcs",
 												"extraHelpful",
 												"cheer",
 												"e4e",

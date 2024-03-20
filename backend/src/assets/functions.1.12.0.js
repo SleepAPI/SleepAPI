@@ -190,7 +190,8 @@ function goToProductionCalculator() {
     e4e: +document.getElementById('e4e').value,
     cheer: 0, // TODO: hard-coded
     extraHelpful: 0, // TODO: hard-coded
-    uniqueHelperBoost: 0, // TODO: hard-coded
+    helperBoostProcs: +document.getElementById('helperBoost').value,
+    helperBoostUnique: 1, // TODO: hard-coded
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
     erb: +document.getElementById('erb').value,

@@ -257,7 +257,7 @@ function inventoryChart(log) {
 
 let skillChartInstance = null;
 function skillChart(log) {
-  const skillLogs = log.filter((entry) => entry.type === 'skill');
+  const skillLogs = log.filter((entry) => entry.type === 'skill' && !entry.description.toLowerCase().includes('team'));
 
   // set x, y values for input data
   let previousTimeMinutes = 0;

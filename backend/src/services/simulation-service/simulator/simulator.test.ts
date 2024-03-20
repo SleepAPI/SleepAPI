@@ -29,6 +29,19 @@ describe('simulator', () => {
           },
         }),
       ],
+      helperBoostEvents: [
+        new SkillEvent({
+          description: 'Helper boost',
+          time: parseTime('08:00'),
+          skillActivation: {
+            skill: mainskill.HELPER_BOOST,
+            adjustedAmount: 1,
+            fractionOfProc: 1,
+            nrOfHelpsToActivate: 0,
+            adjustedProduce: pokemonWithAverageProduce.produce,
+          },
+        }),
+      ],
       skillActivations: [
         { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 },
       ],
@@ -47,7 +60,7 @@ describe('simulator', () => {
         "nightHelps": 30,
         "produce": {
           "berries": {
-            "amount": 223.33333333333334,
+            "amount": 225.33333333333334,
             "berry": {
               "name": "BELUE",
               "value": 33,
@@ -55,7 +68,7 @@ describe('simulator', () => {
           },
           "ingredients": [
             {
-              "amount": 111.66666666666667,
+              "amount": 112.66666666666667,
               "ingredient": {
                 "longName": "Bean Sausage",
                 "name": "Sausage",
