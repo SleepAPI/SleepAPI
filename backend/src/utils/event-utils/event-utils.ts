@@ -24,16 +24,59 @@ export function getExtraHelpfulEvents(
   const extraHelpfulPeriods: TimePeriod[] = divideTimePeriod(period, extraHelpfulProcs);
   const extraHelpfulFractions: number[] = splitNumber(extraHelpfulProcs);
   for (let i = 0; i < extraHelpfulPeriods.length; i++) {
-    const period = extraHelpfulPeriods[i].start;
+    const time = extraHelpfulPeriods[i].start;
     const adjustedAmount =
       (extraHelpfulFractions[i] * mainskill.EXTRA_HELPFUL_S.amount[mainskill.EXTRA_HELPFUL_S.maxLevel - 1]) / 5;
 
     const event: SkillEvent = new SkillEvent({
-      time: period,
+      time,
       description: 'Team Extra Helpful',
       skillActivation: {
         fractionOfProc: extraHelpfulFractions[i],
         skill: mainskill.EXTRA_HELPFUL_S,
+        adjustedAmount,
+        nrOfHelpsToActivate: 0,
+        adjustedProduce: {
+          berries: {
+            berry: averageBerries.berry,
+            amount: averageBerries.amount * adjustedAmount,
+          },
+          ingredients: averageIngredients.map(({ amount, ingredient }) => ({
+            ingredient,
+            amount: amount * adjustedAmount,
+          })),
+        },
+      },
+    });
+    helpfulEvents.push(event);
+  }
+
+  return helpfulEvents;
+}
+
+export function getHelperBoostEvents(
+  period: TimePeriod,
+  helperBoostProcs: number,
+  helperBoostUnique: number,
+  averageProduce: PokemonProduce
+): SkillEvent[] {
+  const helpfulEvents: SkillEvent[] = [];
+  const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
+
+  const nrOfHelps = mainskill.HELPER_BOOST.amount[mainskill.HELPER_BOOST.maxLevel - 1] + helperBoostUnique;
+
+  const helperBoostPeriods: TimePeriod[] = divideTimePeriod(period, helperBoostProcs);
+  const helperBoostFractions: number[] = splitNumber(helperBoostProcs);
+  for (let i = 0; i < helperBoostPeriods.length; i++) {
+    const time = helperBoostPeriods[i].start;
+    const adjustedAmount = helperBoostFractions[i] * nrOfHelps;
+
+    const event: SkillEvent = new SkillEvent({
+      time,
+      description: 'Team Helper Boost',
+      skillActivation: {
+        fractionOfProc: helperBoostFractions[i],
+        skill: mainskill.HELPER_BOOST,
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
@@ -189,27 +232,27 @@ export function recoverFromMeal(params: {
   return { recoveredAmount, mealsProcessed: mealIndex };
 }
 
-export function triggerExtraHelpful(params: {
-  helpfulEvents: SkillEvent[];
-  helpfulIndex: number;
+export function triggerTeamHelpsEvent(params: {
+  helpEvents: SkillEvent[];
+  helpIndex: number;
   emptyProduce: Produce;
   currentTime: Time;
   period: TimePeriod;
   eventLog: ScheduledEvent[];
 }) {
-  const { helpfulEvents, emptyProduce, currentTime, period, eventLog } = params;
-  let extraHelpfulIndex = params.helpfulIndex;
+  const { helpEvents, emptyProduce, currentTime, period, eventLog } = params;
+  let helpIndex = params.helpIndex;
 
-  let helpfulProduce: Produce = emptyProduce;
-  for (; extraHelpfulIndex < helpfulEvents.length; extraHelpfulIndex++) {
-    const helpfulEvent = helpfulEvents[extraHelpfulIndex];
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: helpfulEvent.time, period })) {
-      helpfulProduce = addToInventory(helpfulProduce, helpfulEvent.skillActivation.adjustedProduce!);
+  let helpsProduce: Produce = emptyProduce;
+  for (; helpIndex < helpEvents.length; helpIndex++) {
+    const helpEvent = helpEvents[helpIndex];
+    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: helpEvent.time, period })) {
+      helpsProduce = addToInventory(helpsProduce, helpEvent.skillActivation.adjustedProduce!);
 
-      eventLog.push(helpfulEvent);
+      eventLog.push(helpEvent);
     } else break;
   }
-  return { helpfulProduce, helpfulEventsProcessed: extraHelpfulIndex };
+  return { helpsProduce, helpEventsProcessed: helpIndex };
 }
 
 export function inventoryFull(params: {

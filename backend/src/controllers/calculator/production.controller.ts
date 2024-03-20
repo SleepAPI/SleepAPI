@@ -29,7 +29,7 @@ export default class ProductionController extends Controller {
       throw new SleepAPIError('Minimum sleep of 1 hour required');
     }
 
-    const rawUniqueHelperBoost = queryAsNumber(input.uniqueHelperBoost) ?? 0;
+    const rawUniqueHelperBoost = queryAsNumber(input.helperBoostUnique) ?? 0;
     const uniqueHelperBoost = rawUniqueHelperBoost === 0 && pkmn === pokemon.RAIKOU ? 1 : rawUniqueHelperBoost;
 
     const parsedInput: ProductionStats = {
@@ -40,7 +40,8 @@ export default class ProductionController extends Controller {
       e4e: queryAsNumber(input.e4e) ?? 0,
       cheer: queryAsNumber(input.cheer) ?? 0,
       extraHelpful: queryAsNumber(input.extraHelpful) ?? 0,
-      uniqueHelperBoost,
+      helperBoostProcs: queryAsNumber(input.helperBoostProcs) ?? 0,
+      helperBoostUnique: uniqueHelperBoost,
       helpingBonus: queryAsNumber(input.helpingbonus) ?? 0,
       camp: queryAsBoolean(input.camp),
       erb: queryAsNumber(input.erb) ?? 0,

@@ -23,6 +23,7 @@ export function calculateOptimalProductionForSetCover(input: InputProductionStat
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
+      // TODO: when we add helperBoost to frontend team finder we should add class param in set-cover to exclude helperboost mon if present in team input
       const { detailedProduce, averageProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination: {
           pokemon: pokemon,

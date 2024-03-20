@@ -12,7 +12,8 @@ export interface ProductionRequest {
   e4e: number;
   cheer: number;
   extraHelpful: number;
-  uniqueHelperBoost: number;
+  helperBoostProcs: number;
+  helperBoostUnique: number;
   helpingbonus: number;
   camp: boolean;
   erb: number;

@@ -733,6 +733,21 @@
         <div class="card card-body" style="display: block; text-align: center">
           <h5>All advanced settings are optional</h5>
 
+          <label for="skilllevel" class="form-label">Main skill level:&nbsp;</label><span id="skilllevelValue">7</span
+          ><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="skilllevel"
+            name="skilllevel"
+            value="7"
+            min="1"
+            max="7"
+            style="width: 300px"
+            oninput="updateValue(this)"
+          /><br />
+
           <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
           <input
             type="range"
@@ -747,17 +762,17 @@
             oninput="updateValue(this)"
           /><br />
 
-          <label for="skilllevel" class="form-label">Main skill level:&nbsp;</label><span id="skilllevelValue">7</span
-          ><br />
+          <label for="helperBoost" class="form-label">Helper Boost procs:&nbsp;</label
+          ><span id="helperBoostValue">0</span><br />
           <input
             type="range"
             class="form-range"
             autocomplete="off"
-            id="skilllevel"
-            name="skilllevel"
-            value="7"
-            min="1"
-            max="7"
+            id="helperBoost"
+            name="helperBoost"
+            value="0"
+            min="0"
+            max="10"
             style="width: 300px"
             oninput="updateValue(this)"
           /><br />

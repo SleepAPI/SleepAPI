@@ -22,7 +22,11 @@ import { SkillActivation } from '@src/domain/event/events/skill-event/skill-even
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
-import { getDefaultRecoveryEvents, getExtraHelpfulEvents } from '@src/utils/event-utils/event-utils';
+import {
+  getDefaultRecoveryEvents,
+  getExtraHelpfulEvents,
+  getHelperBoostEvents,
+} from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature } from 'sleepapi-common';
 import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
@@ -65,7 +69,8 @@ export function setupAndRunProductionSimulation(params: {
     e4e,
     cheer,
     extraHelpful,
-    // uniqueHelperBoost,
+    helperBoostProcs,
+    helperBoostUnique,
     helpingBonus,
     camp,
     erb,
@@ -114,7 +119,12 @@ export function setupAndRunProductionSimulation(params: {
 
   const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
   const extraHelpfulEvents = getExtraHelpfulEvents(daySleepInfo.period, extraHelpful, pokemonWithAverageProduce);
-  // TODO: getHelperBoostEvents, add when adding user input
+  const helperBoostEvents = getHelperBoostEvents(
+    daySleepInfo.period,
+    helperBoostProcs,
+    helperBoostUnique,
+    pokemonWithAverageProduce
+  );
 
   const skillActivations = preGeneratedSkillActivations
     ? preGeneratedSkillActivations
@@ -138,6 +148,7 @@ export function setupAndRunProductionSimulation(params: {
     sneakySnackBerries,
     recoveryEvents,
     extraHelpfulEvents,
+    helperBoostEvents,
     skillActivations,
     mealTimes,
   });
@@ -221,6 +232,7 @@ export function generateSkillActivations(params: {
       sneakySnackBerries,
       recoveryEvents,
       extraHelpfulEvents: [],
+      helperBoostEvents: [],
       skillActivations: [],
       mealTimes,
     });
@@ -236,6 +248,6 @@ export function generateSkillActivations(params: {
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,
     nrOfDayHelps,
-    uniqueHelperBoost: input.uniqueHelperBoost,
+    uniqueHelperBoost: input.helperBoostUnique,
   });
 }
