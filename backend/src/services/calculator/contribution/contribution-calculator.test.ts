@@ -565,10 +565,10 @@ describe('calculateTeamSizeAndSupportValue', () => {
 
     expect(teamSizeRequired).toEqual(3);
     expect(prettifyIngredientDrop(supportedUsedIngredients)).toMatchInlineSnapshot(
-      `"9.2 Herb, 4.6 Corn, 4 Ginger, 8.2 Sausage"`
+      `"7.2 Herb, 3.6 Corn, 3.2 Ginger, 6.5 Sausage"`
     );
     expect(prettifyIngredientDrop(supportedFillerIngredients)).toMatchInlineSnapshot(
-      `"8.2 Herb, 9 Corn, 9.6 Ginger, 7.9 Sausage"`
+      `"5.2 Herb, 6.1 Corn, 6.5 Ginger, 5 Sausage"`
     );
   });
 
@@ -687,12 +687,12 @@ describe('calculateTeamSizeAndSupportValue', () => {
         defaultProduceMap,
       });
 
-    expect(teamSizeRequired).toEqual(4);
+    expect(teamSizeRequired).toEqual(5);
     expect(prettifyIngredientDrop(supportedUsedIngredients)).toMatchInlineSnapshot(
-      `"9.5 Herb, 4.6 Corn, 5.1 Ginger, 8.2 Sausage"`
+      `"7.8 Herb, 3.6 Corn, 4.2 Ginger, 6.5 Sausage"`
     );
     expect(prettifyIngredientDrop(supportedFillerIngredients)).toMatchInlineSnapshot(
-      `"1.4 Herb, 7.6 Corn, 2.2 Ginger, 8.8 Sausage"`
+      `"1.7 Herb, 5.1 Corn, 6.2 Ginger, 5.7 Sausage"`
     );
   });
 
@@ -865,28 +865,28 @@ describe('summarizeTeamProducedIngredientSources', () => {
       [
         {
           "defaultAmount": 42.7,
-          "fromSupport": 17.31,
+          "fromSupport": 12.37,
           "ingredient": "Herb",
           "recipeAmount": 27,
-          "selfSupportAmount": 3.71,
+          "selfSupportAmount": 2.65,
         },
         {
           "defaultAmount": 15.9,
-          "fromSupport": 8.66,
+          "fromSupport": 6.18,
           "ingredient": "Corn",
           "recipeAmount": 14,
           "selfSupportAmount": 0,
         },
         {
           "defaultAmount": 27.1,
-          "fromSupport": 13.6,
+          "fromSupport": 9.72,
           "ingredient": "Ginger",
           "recipeAmount": 12,
           "selfSupportAmount": 0,
         },
         {
           "defaultAmount": 30.9,
-          "fromSupport": 16.08,
+          "fromSupport": 11.48,
           "ingredient": "Sausage",
           "recipeAmount": 24,
           "selfSupportAmount": 0,

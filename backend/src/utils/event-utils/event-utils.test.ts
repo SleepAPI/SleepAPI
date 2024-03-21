@@ -149,10 +149,10 @@ describe('getHelperBoostEvents', () => {
         SkillEvent {
           "description": "Team Helper Boost",
           "skillActivation": {
-            "adjustedAmount": 8,
+            "adjustedAmount": 6,
             "adjustedProduce": {
               "berries": {
-                "amount": 16,
+                "amount": 12,
                 "berry": {
                   "name": "GREPA",
                   "value": 25,
@@ -160,7 +160,7 @@ describe('getHelperBoostEvents', () => {
               },
               "ingredients": [
                 {
-                  "amount": 8,
+                  "amount": 6,
                   "ingredient": {
                     "longName": "Fancy Apple",
                     "name": "Apple",
@@ -174,12 +174,12 @@ describe('getHelperBoostEvents', () => {
             "nrOfHelpsToActivate": 0,
             "skill": {
               "amount": [
-                1,
                 2,
                 3,
+                3,
+                4,
                 4,
                 5,
-                6,
               ],
               "maxLevel": 6,
               "name": "Helper Boost",
@@ -196,10 +196,10 @@ describe('getHelperBoostEvents', () => {
         SkillEvent {
           "description": "Team Helper Boost",
           "skillActivation": {
-            "adjustedAmount": 4,
+            "adjustedAmount": 3,
             "adjustedProduce": {
               "berries": {
-                "amount": 8,
+                "amount": 6,
                 "berry": {
                   "name": "GREPA",
                   "value": 25,
@@ -207,7 +207,7 @@ describe('getHelperBoostEvents', () => {
               },
               "ingredients": [
                 {
-                  "amount": 4,
+                  "amount": 3,
                   "ingredient": {
                     "longName": "Fancy Apple",
                     "name": "Apple",
@@ -221,12 +221,12 @@ describe('getHelperBoostEvents', () => {
             "nrOfHelpsToActivate": 0,
             "skill": {
               "amount": [
-                1,
                 2,
                 3,
+                3,
+                4,
                 4,
                 5,
-                6,
               ],
               "maxLevel": 6,
               "name": "Helper Boost",

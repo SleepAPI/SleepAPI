@@ -7,6 +7,7 @@ import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
 import { mainskill, nature } from 'sleepapi-common';
 import { splitNumber } from '../calculator-utils/calculator-utils';
 import { addToInventory, countInventory } from '../inventory-utils/inventory-utils';
@@ -60,10 +61,15 @@ export function getHelperBoostEvents(
   helperBoostUnique: number,
   averageProduce: PokemonProduce
 ): SkillEvent[] {
+  if (helperBoostProcs === 0) {
+    return [];
+  }
   const helpfulEvents: SkillEvent[] = [];
   const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
 
-  const nrOfHelps = mainskill.HELPER_BOOST.amount[mainskill.HELPER_BOOST.maxLevel - 1] + helperBoostUnique;
+  const nrOfHelps =
+    mainskill.HELPER_BOOST.amount[mainskill.HELPER_BOOST.maxLevel - 1] +
+    calculateHelperBoostHelpsFromUnique(helperBoostUnique, mainskill.HELPER_BOOST.maxLevel - 1);
 
   const helperBoostPeriods: TimePeriod[] = divideTimePeriod(period, helperBoostProcs);
   const helperBoostFractions: number[] = splitNumber(helperBoostProcs);

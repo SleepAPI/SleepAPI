@@ -7,7 +7,7 @@ import { getPokemon } from '@src/utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
-import { pokemon } from 'sleepapi-common';
+import { mainskill, pokemon } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')
@@ -30,7 +30,8 @@ export default class ProductionController extends Controller {
     }
 
     const rawUniqueHelperBoost = queryAsNumber(input.helperBoostUnique) ?? 0;
-    const uniqueHelperBoost = rawUniqueHelperBoost === 0 && pkmn === pokemon.RAIKOU ? 1 : rawUniqueHelperBoost;
+    const canRollHelperBoost = pkmn.skill === mainskill.HELPER_BOOST || pkmn.skill === mainskill.METRONOME;
+    const uniqueHelperBoost = rawUniqueHelperBoost === 0 && canRollHelperBoost ? 1 : rawUniqueHelperBoost;
 
     const parsedInput: ProductionStats = {
       level,

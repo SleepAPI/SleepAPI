@@ -1,6 +1,7 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { nature, pokemon, subskill } from 'sleepapi-common';
+import { mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 import { extractTriggerSubskills } from '../stats/stats-calculator';
 import { createSkillEvent } from './activation/skill-activation';
 
@@ -103,4 +104,15 @@ export function calculateHelpsToProcSchedule(params: {
     nrOfHelpsToActivate: Math.floor(nrOfDayHelps),
   });
   return activationsWithAdjustedAmount;
+}
+
+export function calculateHelperBoostHelpsFromUnique(unique: number, level: number) {
+  if (unique < 1 || unique > 5 || level < 1 || level > 6) {
+    throw new ProgrammingError('Invalid input: unique should be between 1 and 5, level should be between 1 and 6');
+  }
+
+  const rowIndex = unique - 1;
+  const colIndex = level - 1;
+
+  return mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[rowIndex][colIndex];
 }
