@@ -320,18 +320,18 @@ class WebsiteConverterServiceImpl {
       );
     }
     prettyString +=
-      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 1)} energy\n` : '') +
+      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 2)} energy\n` : '') +
       (skillEnergyOthersValue > 0
-        ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 1)} energy / member\n`
+        ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 2)} energy / member\n`
         : '') +
-      (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
-      (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
-      (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
-      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
-      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps / member\n` : '') +
+      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 2)} helps / member\n` : '') +
+      (skillStrengthValue > 0 ? `Strength skill value: ${Math.floor(skillStrengthValue)} strength\n` : '') +
+      (skillDreamShardValue > 0 ? `Dream shards skill value: ${Math.floor(skillDreamShardValue)} shards\n` : '') +
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 2)} pot size\n` : '') +
       (skillTastyChanceValue > 0
-        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 1)}% crit chance\n`
-        : '');
+        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 2)}% crit chance\n`
+        : '') +
+      (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '');
 
     prettyString += `Total berry output per 24h: ${roundDown(
       pokemonCombination.detailedProduce.produce.berries.amount,

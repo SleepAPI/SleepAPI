@@ -10,7 +10,7 @@ function prettifyTime(time) {
 
 function roundDown(value, decimals) {
   const factor = Math.pow(10, decimals);
-  return Math.floor(value * factor) / factor;
+  return Math.round(value * factor) / factor;
 }
 
 let energyChartInstance = null;
@@ -386,8 +386,8 @@ function skillChart(log) {
               const skillEvent = skillLogs[index];
               return `${skillEvent.description}: ${roundDown(
                 skillEvent.skillActivation.adjustedAmount,
-                1
-              )} (${roundDown(skillEvent.skillActivation.fractionOfProc * 100, 1)}%)`;
+                2
+              )} (${roundDown(skillEvent.skillActivation.fractionOfProc * 100, 2)}%)`;
             },
           },
         },
