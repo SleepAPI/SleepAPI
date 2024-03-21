@@ -384,7 +384,7 @@ export function summarizeTeamProducedIngredientSources(params: {
       const boostedAmount = supportMember.detailedProduce.produce.ingredients.find(
         ({ ingredient }) => ingredient === memberIngredient
       )?.amount;
-      if (!defaultAmount || !boostedAmount) {
+      if (defaultAmount === undefined || boostedAmount === undefined) {
         throw new ProgrammingError(`Pokemon not found in default production map: ${hashedMember}`);
       }
 
