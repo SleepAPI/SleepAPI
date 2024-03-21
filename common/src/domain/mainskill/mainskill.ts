@@ -116,10 +116,18 @@ export const TASTY_CHANCE_S: MainSkill = {
 
 export const HELPER_BOOST: MainSkill = {
   name: 'Helper Boost',
-  amount: [1, 2, 3, 4, 5, 6], // TODO: perhaps these aren't correct, announcement seems odd
+  amount: [2, 3, 3, 4, 4, 5],
   unit: 'helps',
   maxLevel: MAX_SKILL_LEVEL - 1,
 };
+export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
+  // Skill level 1 to 6
+  [0, 0, 0, 0, 0, 0], // unique: 1
+  [0, 0, 0, 0, 1, 1], // unique: 2
+  [1, 1, 2, 2, 3, 3], // unique: 3
+  [2, 2, 3, 3, 4, 4], // unique: 4
+  [4, 4, 5, 5, 6, 6], // unique: 5
+];
 
 export const MAINSKILLS: MainSkill[] = [
   CHARGE_ENERGY_S,
@@ -133,7 +141,7 @@ export const MAINSKILLS: MainSkill[] = [
   ENERGY_FOR_EVERYONE,
   EXTRA_HELPFUL_S,
   TASTY_CHANCE_S,
-  // HELPER_BOOST, // TODO: bring back if metronome can trigger helper boost
+  HELPER_BOOST,
   INGREDIENT_MAGNET_S,
   METRONOME,
 ];

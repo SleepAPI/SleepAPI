@@ -15,6 +15,7 @@
  */
 
 import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
 import { IngredientSet, berry, ingredient, mainskill } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
 import { HelperBoostStatus, MemoizedParameters, SimplifiedIngredientSet } from '../../services/set-cover/set-cover';
@@ -145,8 +146,10 @@ export function countNrOfHelperBoostHelps(params: {
 }) {
   const { uniqueBoostedMons, skillProcs, skillLevel } = params;
 
-  // TODO: currently we just add +1 help for each unique mon, probably doesn't work like that, but news worded very strangely
-  return skillProcs * (mainskill.HELPER_BOOST.amount[skillLevel - 1] + uniqueBoostedMons);
+  return (
+    skillProcs *
+    (mainskill.HELPER_BOOST.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueBoostedMons, skillLevel))
+  );
 }
 
 /**

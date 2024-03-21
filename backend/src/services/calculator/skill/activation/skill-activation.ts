@@ -2,6 +2,7 @@ import { PokemonProduce, Produce } from '@src/domain/combination/produce';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { BerrySet, IngredientSet, ingredient, mainskill } from 'sleepapi-common';
 import { emptyBerrySet } from '../../berry/berry-calculator';
+import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 
 export function createSkillEvent(
   params: {
@@ -51,9 +52,6 @@ export function createSkillEvent(
       break;
     }
     case mainskill.HELPER_BOOST: {
-      if (uniqueHelperBoost === 0) {
-        break;
-      }
       skillActivations.push(
         activateHelperBoost({
           skillLevel,
@@ -178,7 +176,6 @@ export function activateNonProduceSkills(params: {
   };
 }
 
-// TODO: if metronome can roll helper boost this needs to take in nrOfUniqueMons and pass it to createSkillEvent
 export function activateMetronome(params: {
   skillLevel: number;
   nrOfHelpsToActivate: number;
@@ -187,9 +184,7 @@ export function activateMetronome(params: {
   skillActivations: SkillActivation[];
   uniqueHelperBoost: number;
 }) {
-  const skillsToActivate = mainskill.MAINSKILLS.filter(
-    (s) => s !== mainskill.METRONOME && s !== mainskill.HELPER_BOOST // TODO: can Metronome roll Helper Boost?
-  );
+  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
 
   for (const skillToActivate of skillsToActivate) {
     createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);
@@ -214,7 +209,7 @@ export function activateHelperBoost(params: {
   } = params;
   const skill = mainskill.HELPER_BOOST;
 
-  const helpAmount = skill.amount[skillLevel - 1] + uniqueHelperBoost;
+  const helpAmount = skill.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel);
 
   const helperBoostProduce: Produce = {
     berries: {

@@ -2,6 +2,7 @@ import { PokemonProduce } from '@src/domain/combination/produce';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 import {
+  calculateHelperBoostHelpsFromUnique,
   calculateHelpsToProcSchedule,
   calculateOddsAtLeastOneSkillProc,
   calculateSkillPercentage,
@@ -237,5 +238,43 @@ describe('calculateHelpsToProcSchedule', () => {
         },
       ]
     `);
+  });
+});
+
+describe('calculateHelperBoostHelpsFromUnique', () => {
+  it('shall return 0 for just Raikou', () => {
+    expect(calculateHelperBoostHelpsFromUnique(1, 1)).toBe(0);
+    expect(calculateHelperBoostHelpsFromUnique(1, 2)).toBe(0);
+    expect(calculateHelperBoostHelpsFromUnique(1, 3)).toBe(0);
+    expect(calculateHelperBoostHelpsFromUnique(1, 4)).toBe(0);
+    expect(calculateHelperBoostHelpsFromUnique(1, 5)).toBe(0);
+    expect(calculateHelperBoostHelpsFromUnique(1, 6)).toBe(0);
+  });
+
+  it('shall return 6 for 5 unique and 5+ skill level', () => {
+    expect(calculateHelperBoostHelpsFromUnique(5, 5)).toBe(6);
+    expect(calculateHelperBoostHelpsFromUnique(5, 6)).toBe(6);
+  });
+
+  it('shall return 2 for 3 unique and 3 skill level', () => {
+    expect(calculateHelperBoostHelpsFromUnique(3, 3)).toBe(2);
+  });
+
+  it('shall throw if level is not between 1 and 6', () => {
+    expect(() => calculateHelperBoostHelpsFromUnique(0, 0)).toThrowErrorMatchingInlineSnapshot(
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
+    );
+    expect(() => calculateHelperBoostHelpsFromUnique(0, 7)).toThrowErrorMatchingInlineSnapshot(
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
+    );
+  });
+
+  it('shall throw if unique mons is not between 1 and 5', () => {
+    expect(() => calculateHelperBoostHelpsFromUnique(0, 0)).toThrowErrorMatchingInlineSnapshot(
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
+    );
+    expect(() => calculateHelperBoostHelpsFromUnique(0, 6)).toThrowErrorMatchingInlineSnapshot(
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
+    );
   });
 });

@@ -74,7 +74,6 @@ describe('processOptimalTeamSolutions', () => {
   });
 });
 
-// TODO: test startingPokemon
 describe('findOptimalCombinationFor', () => {
   it('shall respect timeout and return exhaustive false', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raikou];
@@ -127,7 +126,7 @@ describe('findOptimalCombinationFor', () => {
     const updatedRaichu = team[0];
 
     expect(prettifyIngredientDrop(updatedRaichu.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.6 Apple, 19 Ginger"`
+      `"4.2 Apple, 18 Ginger"`
     );
 
     const secondRecipeSolve = setCover.findOptimalCombinationFor([{ amount: 3, ingredient: ingredient.FANCY_APPLE }]);
@@ -138,7 +137,7 @@ describe('findOptimalCombinationFor', () => {
     expect(firstTeamSolution.team).toHaveLength(1);
     const raikouTeam = firstTeamSolution.team[0]!;
     expect(prettifyIngredientDrop(raikouTeam.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.4 Cacao, 21 Apple, 19 Mushroom"`
+      `"4 Cacao, 19 Apple, 17 Mushroom"`
     );
 
     expect(secondTeamSolution.team).toHaveLength(1);
@@ -148,7 +147,7 @@ describe('findOptimalCombinationFor', () => {
     );
   });
 
-  it('for team [RAICHU, RAIKOU] shall add 8 helps to both when RAIKOU gets added', () => {
+  it('for team [RAICHU, RAIKOU] shall add 6 helps to both when RAIKOU gets added', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raichu, raikou];
     const reverseIndex = createPokemonByIngredientReverseIndex(produce);
     expect(reverseIndex.size).toBe(16);
@@ -174,12 +173,16 @@ describe('findOptimalCombinationFor', () => {
     const updatedRaichu = team[0];
     const updatedRaikou = team[1];
 
-    expect(updatedRaichu.detailedProduce.produce.berries.amount).toBe(0.6 * 8);
+    const helps = 6;
+
+    expect(updatedRaichu.detailedProduce.produce.berries.amount).toBe(
+      helps * updatedRaichu.averageProduce.berries.amount
+    );
     expect(prettifyIngredientDrop(updatedRaichu.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.6 Apple, 19 Ginger"`
+      `"4.2 Apple, 18 Ginger"`
     );
     expect(prettifyIngredientDrop(updatedRaikou.detailedProduce.produce.ingredients)).toBe(
-      '4.6 Cacao, 22 Apple, 20 Mushroom'
+      '4.2 Cacao, 20 Apple, 18 Mushroom'
     );
   });
 
@@ -198,13 +201,13 @@ describe('findOptimalCombinationFor', () => {
     const thirdMember = team[2];
 
     expect(prettifyIngredientDrop(firstMember.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.6 Apple, 19 Ginger"`
+      `"4.2 Apple, 18 Ginger"`
     );
     expect(prettifyIngredientDrop(secondMember.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.6 Apple, 19 Ginger"`
+      `"4.2 Apple, 18 Ginger"`
     );
     expect(prettifyIngredientDrop(thirdMember.detailedProduce.produce.ingredients)).toBe(
-      '4.6 Cacao, 22 Apple, 20 Mushroom'
+      '4.2 Cacao, 20 Apple, 18 Mushroom'
     );
   });
 
@@ -233,13 +236,13 @@ describe('findOptimalCombinationFor', () => {
     const thirdMember = team[2];
 
     expect(prettifyIngredientDrop(firstMember.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.8 Apple, 19.5 Ginger"`
+      `"4.6 Apple, 19 Ginger"`
     );
     expect(prettifyIngredientDrop(secondMember.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
-      `"4.8 Apple, 19.5 Ginger"`
+      `"4.6 Apple, 19 Ginger"`
     );
     expect(prettifyIngredientDrop(thirdMember.detailedProduce.produce.ingredients)).toBe(
-      '4.8 Cacao, 23 Apple, 21 Mushroom'
+      '4.6 Cacao, 22 Apple, 20 Mushroom'
     );
   });
 

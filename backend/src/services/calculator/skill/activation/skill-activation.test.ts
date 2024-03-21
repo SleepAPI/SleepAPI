@@ -79,21 +79,6 @@ describe('createSkillEvent', () => {
     expect(skillActivations[0].skill).toBe(mainskill.HELPER_BOOST);
   });
 
-  it('shall not create a Helper Boost skill event if unique mons in team is 0', () => {
-    const skillActivations: SkillActivation[] = [];
-    const params = {
-      skill: mainskill.HELPER_BOOST,
-      skillLevel: 6,
-      nrOfHelpsToActivate: 1,
-      adjustedAmount: 0.5,
-      pokemonWithAverageProduce,
-      skillActivations,
-      uniqueHelperBoost: 0,
-    };
-    createSkillEvent(params);
-    expect(skillActivations.length).toBe(0);
-  });
-
   it('shall handle Metronome skill activation differently', () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
@@ -103,9 +88,10 @@ describe('createSkillEvent', () => {
       adjustedAmount: 1,
       pokemonWithAverageProduce,
       skillActivations,
-      uniqueHelperBoost: 0,
+      uniqueHelperBoost: 1,
     };
     createSkillEvent(params, 10);
+    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR);
   });
 
   it('shall default to non-produce skills activation for non-productive/non-random skills', () => {
@@ -309,17 +295,17 @@ describe('activateHelperBoost', () => {
     const result = activateHelperBoost(params);
 
     const expectedBerriesAmount =
-      pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 5);
+      pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 6);
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 5),
+        amount: pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6),
       },
     ];
 
     expect(result).toEqual({
       skill: mainskill.HELPER_BOOST,
-      adjustedAmount: mainskill.HELPER_BOOST.amount[5] + 5,
+      adjustedAmount: mainskill.HELPER_BOOST.amount[5] + 6,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
         berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
@@ -365,19 +351,19 @@ describe('activateHelperBoost', () => {
     const metronomeFactor = 15;
 
     const expectedBerriesAmount =
-      (pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 5)) / metronomeFactor;
+      (pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
         amount:
-          (pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 5)) /
+          (pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6)) /
           metronomeFactor,
       },
     ];
 
     expect(result).toEqual({
       skill: mainskill.HELPER_BOOST,
-      adjustedAmount: (mainskill.HELPER_BOOST.amount[5] + 5) / metronomeFactor,
+      adjustedAmount: (mainskill.HELPER_BOOST.amount[5] + 6) / metronomeFactor,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
         berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
@@ -528,13 +514,10 @@ describe('activateMetronome', () => {
       adjustedAmount: 0.6,
       pokemonWithAverageProduce,
       skillActivations: skillActivations,
-      uniqueHelperBoost: 0,
+      uniqueHelperBoost: 1,
     };
     activateMetronome(params);
-    // TODO: -2 since helper boost also doesnt count, although re-evaluate after patch
-    const metronomeValidSkills = mainskill.MAINSKILLS.filter(
-      (s) => s !== mainskill.METRONOME && s !== mainskill.HELPER_BOOST
-    );
+    const metronomeValidSkills = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
     expect(skillActivations.length).toBe(metronomeValidSkills.length);
     metronomeValidSkills.forEach((skill) => {
       expect(skillActivations.some((sa) => sa.skill === skill)).toBe(true);
@@ -549,7 +532,7 @@ describe('activateMetronome', () => {
       adjustedAmount: 0.8,
       pokemonWithAverageProduce,
       skillActivations: skillActivations,
-      uniqueHelperBoost: 0,
+      uniqueHelperBoost: 1,
     };
     activateMetronome(params);
     expect(skillActivations).toMatchSnapshot();
@@ -570,11 +553,10 @@ describe('activateMetronome', () => {
       adjustedAmount: 1,
       pokemonWithAverageProduce,
       skillActivations: skillActivations,
-      uniqueHelperBoost: 0,
+      uniqueHelperBoost: 1,
     };
     activateMetronome(params);
     expect(skillActivations[0]).toEqual(existingSkillActivation);
-    // TODO: maybe change to -2 if helper boost also doesnt count, although re-evaluate after patch
     expect(skillActivations.length).toBe(1 + mainskill.MAINSKILLS.length - 1);
   });
 });

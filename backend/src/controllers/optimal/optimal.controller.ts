@@ -34,7 +34,7 @@ export default class OptimalController extends Controller {
       cheer: input.cheer ?? 0,
       extraHelpful: input.extraHelpful ?? 0,
       helperBoostProcs: input.helperBoostProcs ?? 0,
-      helperBoostUnique: input.helperBoostUnique ?? 0,
+      helperBoostUnique: input.helperBoostUnique ?? 1,
       helpingBonus: input.helpingbonus ?? 0,
       camp: input.camp ?? false,
       erb: input.erb ?? 0,

@@ -485,7 +485,7 @@ describe('countUniqueHelperBoostPokemon', () => {
 
 describe('countNrOfHelperBoostHelps', () => {
   it('shall return skill amount for 1 proc without extra unique mons', () => {
-    expect(countNrOfHelperBoostHelps({ uniqueBoostedMons: 0, skillLevel: 6, skillProcs: 1 })).toEqual(
+    expect(countNrOfHelperBoostHelps({ uniqueBoostedMons: 1, skillLevel: 6, skillProcs: 1 })).toEqual(
       mainskill.HELPER_BOOST.amount[5]
     );
   });
