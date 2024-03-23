@@ -7,11 +7,13 @@ export interface ProductionStats {
   nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
   skillLevel?: number;
-  e4e: number;
+  e4eProcs: number;
+  e4eLevel: number;
   cheer: number;
   extraHelpful: number;
   helperBoostProcs: number;
   helperBoostUnique: number;
+  helperBoostLevel: number;
   helpingBonus: number;
   camp: boolean;
   erb: number;

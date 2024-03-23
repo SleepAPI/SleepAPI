@@ -4,6 +4,7 @@ import { findIslandForName } from '@src/utils/island-utils/island-utils';
 import { getNature } from '@src/utils/nature-utils/nature-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { parseTime } from '@src/utils/time-utils/time-utils';
+import { mainskill } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
@@ -30,11 +31,13 @@ export default class OptimalController extends Controller {
       subskills: input.subskills && extractSubskillsBasedOnLevel(level, input.subskills),
       skillLevel: input.skillLevel,
       berries: getBerriesForIsland(findIslandForName(input.island)),
-      e4e: input.e4e ?? 0,
+      e4eProcs: input.e4eProcs ?? 0,
+      e4eLevel: input.e4eLevel ?? mainskill.ENERGY_FOR_EVERYONE.maxLevel,
       cheer: input.cheer ?? 0,
       extraHelpful: input.extraHelpful ?? 0,
       helperBoostProcs: input.helperBoostProcs ?? 0,
       helperBoostUnique: input.helperBoostUnique ?? 1,
+      helperBoostLevel: input.helperBoostLevel ?? mainskill.HELPER_BOOST.maxLevel,
       helpingBonus: input.helpingbonus ?? 0,
       camp: input.camp ?? false,
       erb: input.erb ?? 0,

@@ -7,15 +7,20 @@ import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-rou
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { IngredientSet, MEALS_IN_DAY, nature, subskill } from 'sleepapi-common';
+import { IngredientSet, MEALS_IN_DAY, mainskill, nature, subskill } from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
+import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
 
 // --- production calculator
 interface ProductionFilters {
   level: number;
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
-  e4e: number;
+  e4eProcs: number;
+  e4eLevel: number;
+  helperBoostProcs: number;
+  helperBoostUnique: number;
+  helperBoostLevel: number;
   helpingBonus: number;
   camp: boolean;
 }
@@ -258,18 +263,26 @@ class WebsiteConverterServiceImpl {
           : 'None'
       }\n`;
 
-    const e4eHbCamp: string[] = [];
-    if (filters.e4e > 0) {
-      e4eHbCamp.push(`E4E: ${filters.e4e} x 18 energy`);
+    const teamInput: string[] = [];
+    if (filters.e4eProcs > 0) {
+      teamInput.push(`E4E: ${filters.e4eProcs} x 18 energy`);
+    }
+    if (filters.helperBoostProcs > 0) {
+      teamInput.push(
+        `Helper boost: ${filters.helperBoostProcs} x ${
+          mainskill.HELPER_BOOST.amount[filters.helperBoostLevel - 1] +
+          calculateHelperBoostHelpsFromUnique(filters.helperBoostUnique, filters.helperBoostLevel)
+        } helps`
+      );
     }
     if (filters.helpingBonus > 0) {
-      e4eHbCamp.push(`Helping bonus: ${filters.helpingBonus}`);
+      teamInput.push(`Helping bonus: ${filters.helpingBonus}`);
     }
     if (filters.camp) {
-      e4eHbCamp.push(`Good camp: ${filters.camp}`);
+      teamInput.push(`Good camp: ${filters.camp}`);
     }
-    prettyString += e4eHbCamp.join(', ');
-    if (e4eHbCamp.length > 0) {
+    prettyString += teamInput.join(', ');
+    if (teamInput.length > 0) {
       prettyString += '\n';
     }
 
@@ -393,18 +406,26 @@ class WebsiteConverterServiceImpl {
     prettyString += `Level: ${details.level}` + `, Nature: ${details.nature?.prettyName ?? 'None'}` + '\n';
     prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
 
-    const e4eHbCamp: string[] = [];
-    if (details.e4e > 0) {
-      e4eHbCamp.push(`E4E: ${details.e4e} x 18 energy`);
+    const teamInput: string[] = [];
+    if (details.e4eProcs > 0) {
+      teamInput.push(`E4E: ${details.e4eProcs} x 18 energy`);
+    }
+    if (details.helperBoostProcs > 0) {
+      teamInput.push(
+        `Helper boost: ${details.helperBoostProcs} x ${
+          mainskill.HELPER_BOOST.amount[details.helperBoostLevel - 1] +
+          calculateHelperBoostHelpsFromUnique(details.helperBoostUnique, details.helperBoostLevel)
+        } helps`
+      );
     }
     if (details.helpingBonus > 0) {
-      e4eHbCamp.push(`Helping bonus: ${details.helpingBonus}`);
+      teamInput.push(`Helping bonus: ${details.helpingBonus}`);
     }
     if (details.camp) {
-      e4eHbCamp.push(`Good camp: ${details.camp}`);
+      teamInput.push(`Good camp: ${details.camp}`);
     }
-    prettyString += e4eHbCamp.join(', ');
-    if (e4eHbCamp.length > 0) {
+    prettyString += teamInput.join(', ');
+    if (teamInput.length > 0) {
       prettyString += '\n';
     }
     prettyString += `-------------\n`;

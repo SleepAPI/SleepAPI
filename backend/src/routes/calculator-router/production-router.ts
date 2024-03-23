@@ -9,11 +9,13 @@ export interface ProductionRequest {
   level: number;
   nature: string;
   subskills: string[];
-  e4e: number;
+  e4eProcs: number;
+  e4eLevel: number;
   cheer: number;
   extraHelpful: number;
   helperBoostProcs: number;
   helperBoostUnique: number;
+  helperBoostLevel: number;
   helpingbonus: number;
   camp: boolean;
   erb: number;

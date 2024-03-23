@@ -399,7 +399,11 @@
 						"type": "number",
 						"format": "double"
 					},
-					"e4e": {
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -416,6 +420,10 @@
 						"format": "double"
 					},
 					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -446,11 +454,13 @@
 				},
 				"required": [
 					"level",
-					"e4e",
+					"e4eProcs",
+					"e4eLevel",
 					"cheer",
 					"extraHelpful",
 					"helperBoostProcs",
 					"helperBoostUnique",
+					"helperBoostLevel",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -499,7 +509,11 @@
 					"island": {
 						"type": "string"
 					},
-					"e4e": {
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -516,6 +530,10 @@
 						"format": "double"
 					},
 					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -570,7 +588,11 @@
 						"type": "number",
 						"format": "double"
 					},
-					"e4e": {
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -587,6 +609,10 @@
 						"format": "double"
 					},
 					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -623,11 +649,13 @@
 				},
 				"required": [
 					"level",
-					"e4e",
+					"e4eProcs",
+					"e4eLevel",
 					"cheer",
 					"extraHelpful",
 					"helperBoostProcs",
 					"helperBoostUnique",
+					"helperBoostLevel",
 					"helpingBonus",
 					"camp",
 					"erb",
@@ -1103,7 +1131,11 @@
 						},
 						"type": "array"
 					},
-					"e4e": {
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -1120,6 +1152,10 @@
 						"format": "double"
 					},
 					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
 						"type": "number",
 						"format": "double"
 					},
@@ -1158,11 +1194,13 @@
 					"level",
 					"nature",
 					"subskills",
-					"e4e",
+					"e4eProcs",
+					"e4eLevel",
 					"cheer",
 					"extraHelpful",
 					"helperBoostProcs",
 					"helperBoostUnique",
+					"helperBoostLevel",
 					"helpingbonus",
 					"camp",
 					"erb",
@@ -1221,7 +1259,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.12.0",
+		"version": "1.13.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1494,6 +1532,10 @@
 													"type": "number",
 													"format": "double"
 												},
+												"helperBoostLevel": {
+													"type": "number",
+													"format": "double"
+												},
 												"helperBoostUnique": {
 													"type": "number",
 													"format": "double"
@@ -1510,7 +1552,11 @@
 													"type": "number",
 													"format": "double"
 												},
-												"e4e": {
+												"e4eLevel": {
+													"type": "number",
+													"format": "double"
+												},
+												"e4eProcs": {
 													"type": "number",
 													"format": "double"
 												},
@@ -1539,11 +1585,13 @@
 												"erb",
 												"camp",
 												"helpingBonus",
+												"helperBoostLevel",
 												"helperBoostUnique",
 												"helperBoostProcs",
 												"extraHelpful",
 												"cheer",
-												"e4e",
+												"e4eLevel",
+												"e4eProcs",
 												"skillLevel",
 												"subskills",
 												"nature",

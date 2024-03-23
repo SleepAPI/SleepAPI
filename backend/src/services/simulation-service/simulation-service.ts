@@ -66,11 +66,13 @@ export function setupAndRunProductionSimulation(params: {
     level,
     nature: maybeNature = nature.BASHFUL,
     subskills = [],
-    e4e,
+    e4eProcs,
+    e4eLevel,
     cheer,
     extraHelpful,
     helperBoostProcs,
     helperBoostUnique,
+    helperBoostLevel,
     helpingBonus,
     camp,
     erb,
@@ -117,12 +119,13 @@ export function setupAndRunProductionSimulation(params: {
     helpingBonus,
   });
 
-  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4e, cheer);
+  const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4eProcs, e4eLevel, cheer);
   const extraHelpfulEvents = getExtraHelpfulEvents(daySleepInfo.period, extraHelpful, pokemonWithAverageProduce);
   const helperBoostEvents = getHelperBoostEvents(
     daySleepInfo.period,
     helperBoostProcs,
     helperBoostUnique,
+    helperBoostLevel,
     pokemonWithAverageProduce
   );
 

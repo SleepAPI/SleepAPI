@@ -106,6 +106,7 @@ export function calculateHelpsToProcSchedule(params: {
   return activationsWithAdjustedAmount;
 }
 
+// TODO: since this takes level this could probably just calculate the whole helper boost amount from level + unique, instead of only unique, since we'll be adding this outside anyway
 export function calculateHelperBoostHelpsFromUnique(unique: number, level: number) {
   if (unique < 1 || unique > 5 || level < 1 || level > 6) {
     throw new ProgrammingError('Invalid input: unique should be between 1 and 5, level should be between 1 and 6');

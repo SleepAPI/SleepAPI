@@ -117,8 +117,8 @@
       }
     </style>
 
-    <script src="functions.1.12.0.js"></script>
-    <script src="charts.1.12.0.js"></script>
+    <script src="functions.1.13.0.js"></script>
+    <script src="charts.1.13.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -674,48 +674,30 @@
         </div>
       </div>
 
-      <!-- TODO: this can be changed to input group with button, slider, button -->
       <div class="slider-container">
         <label for="level" class="form-label">Level:&nbsp;</label><span class="slider-value" data-for="level">60</span
         ><br />
-        <div class="d-flex align-items-center justify-content-center">
-          <button type="button" class="btn btn-outline-dark btn-sm decreaseValue">-</button>
+        <div class="d-flex align-items-center justify-content-center input-group">
+          <button type="button" class="btn btn-outline-dark custom-background decreaseValue" style="width: 30px">
+            -
+          </button>
           <input
             type="range"
-            class="form-range mx-2 slider-input"
+            class="form-range slider-input custom-background"
             autocomplete="off"
             id="level"
             name="level"
             value="60"
             min="1"
             max="100"
-            style="width: 224px"
+            style="width: 240px"
           />
-          <button type="button" class="btn btn-outline-dark btn-sm increaseValue">+</button>
+          <button type="button" class="btn btn-outline-dark custom-background increaseValue" style="width: 30px">
+            +
+          </button>
         </div>
         <br />
       </div>
-
-      <!-- <div class="d-flex align-items-center justify-content-center mb-5">
-        <div class="input-group input-group-sm" style="width: 300px">
-          <select class="form-select" id="inputGroupSelect01">
-            <option value="1" selected>E4E</option>
-            <option value="2">Cheer</option>
-            <option value="3">Extra helpful</option>
-            <option value="4">Metronome</option>
-            <option value="5">..etc</option>
-          </select>
-          <select class="form-select" id="inputGroupSelect01">
-            <option value="1">Level: 1</option>
-            <option value="2">Level: 2</option>
-            <option value="3">Level: 3</option>
-            <option value="4">Level: 4</option>
-            <option value="5">Level: 5</option>
-            <option value="6" selected>Level: 6</option>
-          </select>
-          <input type="range" class="form-range custom-background w-50" min="0" max="10" step="1" />
-        </div>
-      </div> -->
 
       <p>
         <a
@@ -748,35 +730,6 @@
             oninput="updateValue(this)"
           /><br />
 
-          <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
-          <input
-            type="range"
-            class="form-range"
-            autocomplete="off"
-            id="e4e"
-            name="e4e"
-            value="0"
-            min="0"
-            max="10"
-            style="width: 300px"
-            oninput="updateValue(this)"
-          /><br />
-
-          <label for="helperBoost" class="form-label">Helper Boost procs:&nbsp;</label
-          ><span id="helperBoostValue">0</span><br />
-          <input
-            type="range"
-            class="form-range"
-            autocomplete="off"
-            id="helperBoost"
-            name="helperBoost"
-            value="0"
-            min="0"
-            max="10"
-            style="width: 300px"
-            oninput="updateValue(this)"
-          /><br />
-
           <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
           ><br />
           <input
@@ -804,7 +757,97 @@
             max="5"
             style="width: 300px"
             oninput="updateValue(this)"
-          /><br />
+          />
+
+          <div class="d-flex align-items-center justify-content-center mb-2">
+            <div class="input-group d-flex flex-column" style="width: 300px">
+              <div class="d-flex w-100">
+                <div class="text-center" style="flex: 1 1 15%">Level</div>
+                <div class="text-center form-label" style="flex: 1 1 85%">
+                  E4E procs:&nbsp;<span id="e4eProcsValue">0</span>
+                </div>
+              </div>
+
+              <div class="d-flex w-100">
+                <select
+                  class="form-select"
+                  id="e4eLevel"
+                  style="flex: 1 1 15%; border-radius: 0.25rem 0 0 0.25rem; padding: 0; --bs-form-select-bg-img: none"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6" selected>6</option>
+                </select>
+
+                <input
+                  type="range"
+                  class="form-range custom-background"
+                  id="e4eProcs"
+                  name="e4eProcs"
+                  style="flex: 1 1 85%; border-radius: 0 0.25rem 0.25rem 0"
+                  value="0"
+                  min="0"
+                  max="10"
+                  step="1"
+                  oninput="updateValue(this)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center mb-2">
+            <div class="input-group d-flex flex-column" style="width: 300px">
+              <div class="d-flex w-100">
+                <div class="text-center" style="flex: 1 1 15%">Level</div>
+                <div class="text-center" style="flex: 1 1 15%">Unique</div>
+                <div class="text-center form-label" style="flex: 1 1 70%">
+                  Helper boost procs:&nbsp;<span id="helperBoostProcsValue">0</span>
+                </div>
+              </div>
+
+              <div class="d-flex w-100">
+                <select
+                  class="form-select"
+                  id="helperBoostLevel"
+                  style="flex: 1 1 15%; border-radius: 0.25rem 0 0 0.25rem; padding: 0; --bs-form-select-bg-img: none"
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6" selected>6</option>
+                </select>
+                <select
+                  class="form-select"
+                  id="helperBoostUnique"
+                  style="flex: 1 1 15%; border-radius: 0; padding: 0; --bs-form-select-bg-img: none"
+                >
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+
+                <input
+                  type="range"
+                  class="form-range custom-background"
+                  id="helperBoostProcs"
+                  name="helperBoostProcs"
+                  style="flex: 1 1 70%; border-radius: 0 0.25rem 0.25rem 0"
+                  value="0"
+                  min="0"
+                  max="10"
+                  step="1"
+                  oninput="updateValue(this)"
+                />
+              </div>
+            </div>
+          </div>
 
           <div class="d-flex justify-content-center align-items-center mb-3">
             <label class="form-check-label order-1" for="camp">Good camp:</label>

@@ -59,6 +59,7 @@ export function getHelperBoostEvents(
   period: TimePeriod,
   helperBoostProcs: number,
   helperBoostUnique: number,
+  helperBoostLevel: number,
   averageProduce: PokemonProduce
 ): SkillEvent[] {
   if (helperBoostProcs === 0) {
@@ -68,8 +69,8 @@ export function getHelperBoostEvents(
   const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
 
   const nrOfHelps =
-    mainskill.HELPER_BOOST.amount[mainskill.HELPER_BOOST.maxLevel - 1] +
-    calculateHelperBoostHelpsFromUnique(helperBoostUnique, mainskill.HELPER_BOOST.maxLevel - 1);
+    mainskill.HELPER_BOOST.amount[helperBoostLevel - 1] +
+    calculateHelperBoostHelpsFromUnique(helperBoostUnique, helperBoostLevel);
 
   const helperBoostPeriods: TimePeriod[] = divideTimePeriod(period, helperBoostProcs);
   const helperBoostFractions: number[] = splitNumber(helperBoostProcs);
@@ -107,13 +108,14 @@ export function getDefaultRecoveryEvents(
   period: TimePeriod,
   nature: nature.Nature,
   e4eProcs: number,
+  e4eLevel: number,
   cheerProcs: number,
   nap?: SleepInfo
 ): EnergyEvent[] {
   const recoveryEvents: EnergyEvent[] = [];
 
   scheduleNapEvent(recoveryEvents, nap);
-  scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, cheerProcs, nature);
+  scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, e4eLevel, cheerProcs, nature);
 
   return recoveryEvents;
 }
@@ -123,6 +125,7 @@ export function scheduleTeamEnergyEvents(
   recoveryEvents: EnergyEvent[],
   period: TimePeriod,
   e4eProcs: number,
+  e4eLevel: number,
   cheerProcs: number,
   nature: nature.Nature
 ): EnergyEvent[] {
@@ -136,8 +139,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: e4ePeriods[i].start,
       description: 'E4E',
-      delta:
-        e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount[mainskill.ENERGY_FOR_EVERYONE.maxLevel - 1] * nature.energy,
+      delta: e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount[e4eLevel - 1] * nature.energy,
     });
     recoveryEvents.push(event);
   }
