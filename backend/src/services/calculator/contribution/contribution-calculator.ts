@@ -34,22 +34,24 @@ export interface TeamIngredientInfo {
 
 export function getAllOptimalIngredientFocusedPokemonProduce(params: {
   limit50: boolean;
-  e4e: number;
+  e4eProcs: number;
   cheer: number;
   extraHelpful: number;
   monteCarloIterations: number;
 }): CustomPokemonCombinationWithProduce[] {
-  const { limit50, e4e, cheer, extraHelpful, monteCarloIterations } = params;
+  const { limit50, e4eProcs, cheer, extraHelpful, monteCarloIterations } = params;
   const level = limit50 ? 50 : 60;
 
   const allOptimalIngredientPokemonProduce: CustomPokemonCombinationWithProduce[] = [];
 
   const teamStats = {
-    e4e,
+    e4eProcs,
+    e4eLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
     cheer,
     extraHelpful,
     helperBoostProcs: 0,
     helperBoostUnique: 1,
+    helperBoostLevel: mainskill.HELPER_BOOST.maxLevel,
     erb: 0,
     camp: false,
     helpingBonus: 0,

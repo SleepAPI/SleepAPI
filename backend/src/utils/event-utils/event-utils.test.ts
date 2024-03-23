@@ -139,11 +139,12 @@ describe('getHelperBoostEvents', () => {
     const period = MOCKED_MAIN_SLEEP;
     const procs = 1.5;
     const unique = 2;
+    const level = 6;
     const produce: PokemonProduce = {
       produce: MOCKED_PRODUCE,
       pokemon: pokemon.ABOMASNOW,
     };
-    const result = getHelperBoostEvents(period, procs, unique, produce);
+    const result = getHelperBoostEvents(period, procs, unique, level, produce);
     expect(result).toMatchInlineSnapshot(`
       [
         SkillEvent {
@@ -287,7 +288,7 @@ describe('scheduleEnergyForEveryoneEvents', () => {
   it('does not add events when e4eProcs is 0', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
-    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, 0, 0, nature.BASHFUL);
+    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, 0, 6, 0, nature.BASHFUL);
 
     expect(updatedRecoveryEvents.length).toBe(0);
   });
@@ -296,7 +297,7 @@ describe('scheduleEnergyForEveryoneEvents', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 4;
-    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, 0, nature.RELAXED);
+    const updatedRecoveryEvents = scheduleTeamEnergyEvents(recoveryEvents, period, e4eProcs, 6, 0, nature.RELAXED);
 
     expect(updatedRecoveryEvents.length).toBe(e4eProcs);
     updatedRecoveryEvents.forEach((event) => {
@@ -311,11 +312,13 @@ describe('scheduleEnergyForEveryoneEvents', () => {
     const recoveryEvents: EnergyEvent[] = [];
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 4;
+    const e4eLevel = 6;
     const cheerProcs = 4;
     const updatedRecoveryEvents = scheduleTeamEnergyEvents(
       recoveryEvents,
       period,
       e4eProcs,
+      e4eLevel,
       cheerProcs,
       nature.RELAXED
     );
@@ -331,6 +334,7 @@ describe('getDefaultRecoveryEvents', () => {
   it('adds both nap and E4E events when provided', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 2;
+    const e4eLevel = 6;
     const nap = {
       period: { start: { hour: 13, minute: 0, second: 0 }, end: { hour: 14, minute: 30, second: 0 } },
       nature: nature.BASHFUL,
@@ -338,7 +342,7 @@ describe('getDefaultRecoveryEvents', () => {
       erb: 0,
     };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0, nap);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0, nap);
 
     expect(recoveryEvents.length).toBe(3);
   });
@@ -346,8 +350,9 @@ describe('getDefaultRecoveryEvents', () => {
   it('adds only E4E events when nap is not provided', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 2;
+    const e4eLevel = 6;
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0);
 
     expect(recoveryEvents.length).toBe(2);
   });
@@ -355,8 +360,9 @@ describe('getDefaultRecoveryEvents', () => {
   it('adds fractioned e4e events', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
     const e4eProcs = 1.5;
+    const e4eLevel = 6;
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, 0);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0);
 
     expect(recoveryEvents.length).toBe(2);
     expect(recoveryEvents.map((e) => e.delta)).toEqual([18, 9]);
@@ -371,7 +377,7 @@ describe('getDefaultRecoveryEvents', () => {
       erb: 0,
     };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nap.nature, 0, 0, nap);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nap.nature, 0, 6, 0, nap);
 
     expect(recoveryEvents.length).toBe(1);
   });
@@ -379,7 +385,7 @@ describe('getDefaultRecoveryEvents', () => {
   it('returns an empty array when neither nap nor e4eProcs are provided', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 17, minute: 0, second: 0 } };
 
-    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, 0, 0);
+    const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, 0, 6, 0);
 
     expect(recoveryEvents.length).toBe(0);
   });

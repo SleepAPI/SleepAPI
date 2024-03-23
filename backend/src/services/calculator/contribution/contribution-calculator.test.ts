@@ -41,7 +41,7 @@ describe('getAllOptimalIngredientPokemonProduce', () => {
     const data = getAllOptimalIngredientFocusedPokemonProduce({
       limit50: false,
       cheer: 0,
-      e4e: 0,
+      e4eProcs: 0,
       extraHelpful: 0,
       monteCarloIterations: 1,
     });
@@ -58,7 +58,7 @@ describe('calculateMealContributionFor', () => {
       limit50: false,
       cheer: 0,
       extraHelpful: 0,
-      e4e: 0,
+      e4eProcs: 0,
       monteCarloIterations: 1,
     });
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
@@ -98,7 +98,7 @@ describe('calculateMealContributionFor', () => {
       limit50: true,
       cheer: 0,
       extraHelpful: 0,
-      e4e: 0,
+      e4eProcs: 0,
       monteCarloIterations: 1,
     });
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
@@ -132,7 +132,7 @@ describe('calculateMealContributionFor', () => {
       limit50: true,
       cheer: 0,
       extraHelpful: 0,
-      e4e: 0,
+      e4eProcs: 0,
       monteCarloIterations: 1,
     });
     const defaultReverseIndex = createPokemonByIngredientReverseIndex(defaultPokemonWithProduce);
@@ -146,7 +146,7 @@ describe('calculateMealContributionFor', () => {
       limit50: true,
       cheer: 0,
       extraHelpful: defaultCurrentPokemon.detailedProduce.averageTotalSkillProcs,
-      e4e: 0,
+      e4eProcs: 0,
       monteCarloIterations: 1,
     });
     const reverseIndex = createPokemonByIngredientReverseIndex(supportBoostedProduce);

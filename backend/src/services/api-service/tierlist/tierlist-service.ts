@@ -155,7 +155,7 @@ class TierlistImpl {
   public generateTierListData(details: CreateTierListRequestBody) {
     const allPokemonDefaultProduce = getAllOptimalIngredientFocusedPokemonProduce({
       limit50: details.limit50,
-      e4e: 0,
+      e4eProcs: 0,
       cheer: 0,
       extraHelpful: 0,
       monteCarloIterations: 500,
@@ -197,27 +197,27 @@ class TierlistImpl {
       let supportSetCover: SetCover | undefined = undefined;
       preCalcedSupportMap = undefined;
 
-      let e4e = 0;
+      let e4eProcs = 0;
       let cheer = 0;
       let extraHelpful = 0;
       const currentPokemonSkill = group[0].pokemonCombination.pokemon.skill;
 
       if (supportSkills.includes(currentPokemonSkill)) {
         if (currentPokemonSkill === mainskill.ENERGY_FOR_EVERYONE) {
-          e4e = group[0].detailedProduce.averageTotalSkillProcs;
+          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs;
         } else if (currentPokemonSkill === mainskill.ENERGIZING_CHEER_S) {
           cheer = group[0].detailedProduce.averageTotalSkillProcs;
         } else if (currentPokemonSkill === mainskill.EXTRA_HELPFUL_S) {
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs;
         } else if (currentPokemonSkill === mainskill.METRONOME) {
-          e4e = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           cheer = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
         }
 
         const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
           limit50: details.limit50,
-          e4e,
+          e4eProcs,
           cheer,
           extraHelpful,
           monteCarloIterations: 500,

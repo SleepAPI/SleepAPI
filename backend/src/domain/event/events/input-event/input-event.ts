@@ -56,7 +56,7 @@ export class TeamInputEvent extends InputEvent {
   }
 
   format(): string {
-    const { e4e: e4eProcs, helpingBonus, erb } = this.input;
+    const { e4eProcs, helpingBonus, erb } = this.input;
     const timeFormatted = prettifyTime(this.time);
 
     const input =

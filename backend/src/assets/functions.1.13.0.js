@@ -187,11 +187,13 @@ function goToProductionCalculator() {
     level: +document.getElementById('level').value,
     nature: document.getElementById('nature').value,
     subskills: checkedValues,
-    e4e: +document.getElementById('e4e').value,
+    e4eProcs: +document.getElementById('e4eProcs').value,
+    e4eLevel: +document.getElementById('e4eLevel').value,
     cheer: 0, // TODO: hard-coded
     extraHelpful: 0, // TODO: hard-coded
-    helperBoostProcs: +document.getElementById('helperBoost').value,
-    helperBoostUnique: 1, // TODO: hard-coded
+    helperBoostProcs: +document.getElementById('helperBoostProcs').value,
+    helperBoostUnique: +document.getElementById('helperBoostUnique').value,
+    helperBoostLevel: +document.getElementById('helperBoostLevel').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
     erb: +document.getElementById('erb').value,
@@ -339,7 +341,7 @@ function goToOptimalRanking() {
     nature: document.getElementById('nature').value,
     subskills: checkedValues,
     island: document.getElementById('island').value,
-    e4e: +document.getElementById('e4e').value,
+    e4eProcs: +document.getElementById('e4e').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
   };
