@@ -1,11 +1,11 @@
-import { InputProductionStats } from '@src/domain/computed/production';
+import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { berry, dessert, nature, subskill } from 'sleepapi-common';
 import { prettifyIngredientDrop } from '../../../utils/json/json-utils';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {
   it('shall find all optimal solutions for a recipe', () => {
-    const input: InputProductionStats = {
+    const input: SetCoverProductionStats = {
       level: 60,
       nature: nature.RASH,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
@@ -55,7 +55,7 @@ describe('findOptimalSetsForMeal', () => {
 
 describe('getOptimalFlexiblePokemon', () => {
   it('shall rank optimal flexible pokemon', () => {
-    const input: InputProductionStats = {
+    const input: SetCoverProductionStats = {
       level: 30,
       berries: berry.LAPIS_BERRIES,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],

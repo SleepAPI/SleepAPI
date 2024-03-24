@@ -1,5 +1,5 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
-import { InputProductionStats } from '@src/domain/computed/production';
+import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
@@ -7,7 +7,7 @@ import { IngredientSet, pokemon } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
 
-export function calculateOptimalProductionForSetCover(input: InputProductionStats, monteCarloIterations: number) {
+export function calculateOptimalProductionForSetCover(input: SetCoverProductionStats, monteCarloIterations: number) {
   const { level, berries, nature } = input;
   const pokemonProduction: CustomPokemonCombinationWithProduce[] = [];
 
@@ -54,13 +54,16 @@ export function calculateOptimalProductionForSetCover(input: InputProductionStat
 
 export function calculateSetCover(params: {
   recipe: IngredientSet[];
+  legendary?: CustomPokemonCombinationWithProduce;
   cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
   maxTeamSize?: number;
   timeout?: number;
 }) {
-  const { recipe, cache, reverseIndex, maxTeamSize, timeout } = params;
+  const { recipe, legendary, cache, reverseIndex, maxTeamSize, timeout } = params;
+
+  const currentPokemon = legendary && [legendary];
 
   const setCover = new SetCover(reverseIndex, cache);
-  return setCover.findOptimalCombinationFor(recipe, [], maxTeamSize, timeout);
+  return setCover.findOptimalCombinationFor(recipe, currentPokemon, maxTeamSize, timeout);
 }

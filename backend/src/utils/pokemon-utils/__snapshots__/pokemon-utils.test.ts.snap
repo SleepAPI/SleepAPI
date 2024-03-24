@@ -161,6 +161,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "SLOWKING",
   "WOBBUFFET",
   "HERACROSS",
+  "RAIKOU",
   "GARDEVOIR",
   "SABLEYE",
   "SWALOT",

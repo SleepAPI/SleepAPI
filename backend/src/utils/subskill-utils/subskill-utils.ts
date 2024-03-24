@@ -101,6 +101,10 @@ export function subskillsForFilter(
   const singleStageLevel60 = pokemon.carrySize === pokemon.maxCarrySize && level >= 60;
   const subskills = singleStageLevel60 ? singleStageSubskillsLevel60 : optimalSubskills;
 
+  return limitSubSkillsToLevel(subskills, level);
+}
+
+export function limitSubSkillsToLevel(subskills: subskill.SubSkill[], level: number) {
   let numberOfElements;
   if (level < 10) {
     numberOfElements = 0;

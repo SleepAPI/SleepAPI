@@ -50,12 +50,20 @@
         width: 300px;
       }
 
+      /* chrome  */
       input[type='range']::-webkit-slider-thumb {
         background: #f04545;
       }
+      input[type='range']::-webkit-slider-runnable-track {
+        background-color: #ddd;
+      }
 
+      /* firefox */
       input[type='range']::-moz-range-thumb {
         background: #f04545;
+      }
+      input[type='range']::-moz-range-track-track {
+        background-color: #ddd;
       }
 
       .form-switch .form-check-input:focus {
@@ -117,8 +125,8 @@
       }
     </style>
 
-    <script src="functions.1.13.0.js"></script>
-    <script src="charts.1.13.0.js"></script>
+    <script src="functions.1.14.0.js"></script>
+    <script src="charts.1.14.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -772,7 +780,13 @@
                 <select
                   class="form-select"
                   id="e4eLevel"
-                  style="flex: 1 1 15%; border-radius: 0.25rem 0 0 0.25rem; padding: 0; --bs-form-select-bg-img: none"
+                  style="
+                    flex: 1 1 15%;
+                    border-radius: 0.25rem 0 0 0.25rem;
+                    padding: 0;
+                    --bs-form-select-bg-img: none;
+                    text-align: center;
+                  "
                 >
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -812,7 +826,13 @@
                 <select
                   class="form-select"
                   id="helperBoostLevel"
-                  style="flex: 1 1 15%; border-radius: 0.25rem 0 0 0.25rem; padding: 0; --bs-form-select-bg-img: none"
+                  style="
+                    flex: 1 1 15%;
+                    border-radius: 0.25rem 0 0 0.25rem;
+                    padding: 0;
+                    --bs-form-select-bg-img: none;
+                    text-align: center;
+                  "
                 >
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -824,7 +844,7 @@
                 <select
                   class="form-select"
                   id="helperBoostUnique"
-                  style="flex: 1 1 15%; border-radius: 0; padding: 0; --bs-form-select-bg-img: none"
+                  style="flex: 1 1 15%; border-radius: 0; padding: 0; --bs-form-select-bg-img: none; text-align: center"
                 >
                   <option value="1" selected>1</option>
                   <option value="2">2</option>

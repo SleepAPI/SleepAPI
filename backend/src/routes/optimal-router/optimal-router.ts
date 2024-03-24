@@ -31,6 +31,7 @@ export interface InputProductionStatsRequest {
   mainBedtime?: string;
   mainWakeup?: string;
   maxPotSize?: number;
+  legendary?: string; // TODO: can be remade later to array and renamed, use as "these X mons must be included"
 }
 
 export interface OptimalFlexibleResult {

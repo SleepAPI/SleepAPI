@@ -66,6 +66,7 @@ export class SetCover {
     this.#memo = memo;
   }
 
+  // TODO: should rewrite helper boost to alway assume the base is already calculated for raikou, so if raikou is added to team we only add unique, like if team had raichu already we add unique helper boost help to raikou, not the base, but raichu would get base + unique
   public solveRecipe(
     params: string,
     pokemonInTeam: CustomPokemonCombinationWithProduce[] = [],

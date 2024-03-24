@@ -50,7 +50,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
     cheer,
     extraHelpful,
     helperBoostProcs: 0,
-    helperBoostUnique: 1,
+    helperBoostUnique: 0,
     helperBoostLevel: mainskill.HELPER_BOOST.maxLevel,
     erb: 0,
     camp: false,

@@ -774,7 +774,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   SLOWKING,
   WOBBUFFET,
   HERACROSS,
-  // RAIKOU, // TODO: bring back once we have data
+  RAIKOU,
   GARDEVOIR,
   SABLEYE,
   SWALOT,
