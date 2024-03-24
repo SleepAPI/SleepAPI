@@ -79,6 +79,21 @@ describe('createSkillEvent', () => {
     expect(skillActivations[0].skill).toBe(mainskill.HELPER_BOOST);
   });
 
+  it('shall not create a Helper Boost skill event if unique mons in team is zero', () => {
+    const skillActivations: SkillActivation[] = [];
+    const params = {
+      skill: mainskill.HELPER_BOOST,
+      skillLevel: 6,
+      nrOfHelpsToActivate: 1,
+      adjustedAmount: 0.5,
+      pokemonWithAverageProduce,
+      skillActivations,
+      uniqueHelperBoost: 0,
+    };
+    createSkillEvent(params);
+    expect(skillActivations.length).toBe(0);
+  });
+
   it('shall handle Metronome skill activation differently', () => {
     const skillActivations: SkillActivation[] = [];
     const params = {

@@ -1,5 +1,10 @@
 import { pokemon, subskill } from 'sleepapi-common';
-import { extractSubskillsBasedOnLevel, getSubskillNames, subskillsForFilter } from './subskill-utils';
+import {
+  extractSubskillsBasedOnLevel,
+  getSubskillNames,
+  limitSubSkillsToLevel,
+  subskillsForFilter,
+} from './subskill-utils';
 
 describe('getSubskillNames', () => {
   it('shall get all subskill names', () => {
@@ -167,5 +172,103 @@ describe('subskillsForFilter', () => {
 
   it('should return an empty array for level below 10', () => {
     expect(subskillsForFilter('ingredient', 5, pokemon.BLASTOISE)).toEqual([]);
+  });
+});
+
+describe('limitSubSkillsToLevel', () => {
+  it('shall return all subskills for level 100', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        100
+      )
+    ).toEqual([
+      subskill.INGREDIENT_FINDER_M,
+      subskill.HELPING_SPEED_M,
+      subskill.INGREDIENT_FINDER_S,
+      subskill.INVENTORY_L,
+      subskill.HELPING_SPEED_S,
+    ]);
+  });
+
+  it('shall return first 3 subskills for level 60', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        60
+      )
+    ).toEqual([subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S]);
+  });
+
+  it('shall return first 3 subskills for level 50', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        50
+      )
+    ).toEqual([subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S]);
+  });
+
+  it('shall return first 2 subskills for level 49', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        49
+      )
+    ).toEqual([subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M]);
+  });
+
+  it('shall return first 2 subskills for level 25', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        25
+      )
+    ).toEqual([subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M]);
+  });
+
+  it('shall return first subskill for level <25', () => {
+    expect(
+      limitSubSkillsToLevel(
+        [
+          subskill.INGREDIENT_FINDER_M,
+          subskill.HELPING_SPEED_M,
+          subskill.INGREDIENT_FINDER_S,
+          subskill.INVENTORY_L,
+          subskill.HELPING_SPEED_S,
+        ],
+        24
+      )
+    ).toEqual([subskill.INGREDIENT_FINDER_M]);
   });
 });

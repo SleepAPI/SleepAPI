@@ -564,106 +564,11 @@
 					"maxPotSize": {
 						"type": "number",
 						"format": "double"
+					},
+					"legendary": {
+						"type": "string"
 					}
 				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InputProductionStats": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"$ref": "#/components/schemas/Nature"
-					},
-					"subskills": {
-						"items": {
-							"$ref": "#/components/schemas/SubSkill"
-						},
-						"type": "array"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"incense": {
-						"type": "boolean"
-					},
-					"mainBedtime": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"mainWakeup": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"berries": {
-						"items": {
-							"$ref": "#/components/schemas/Berry"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"level",
-					"e4eProcs",
-					"e4eLevel",
-					"cheer",
-					"extraHelpful",
-					"helperBoostProcs",
-					"helperBoostUnique",
-					"helperBoostLevel",
-					"helpingBonus",
-					"camp",
-					"erb",
-					"incense",
-					"mainBedtime",
-					"mainWakeup",
-					"berries"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -827,6 +732,107 @@
 					"detailedProduce",
 					"averageProduce",
 					"customStats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetCoverProductionStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"incense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"mainWakeup": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"berries": {
+						"items": {
+							"$ref": "#/components/schemas/Berry"
+						},
+						"type": "array"
+					},
+					"legendary": {
+						"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+					}
+				},
+				"required": [
+					"level",
+					"e4eProcs",
+					"e4eLevel",
+					"cheer",
+					"extraHelpful",
+					"helperBoostProcs",
+					"helperBoostUnique",
+					"helperBoostLevel",
+					"helpingBonus",
+					"camp",
+					"erb",
+					"incense",
+					"mainBedtime",
+					"mainWakeup",
+					"berries"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1259,7 +1265,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.13.0",
+		"version": "1.14.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1315,7 +1321,7 @@
 											"type": "array"
 										},
 										"filter": {
-											"$ref": "#/components/schemas/InputProductionStats"
+											"$ref": "#/components/schemas/SetCoverProductionStats"
 										},
 										"value": {
 											"type": "number",

@@ -23,8 +23,9 @@ export interface ProductionStats {
   maxPotSize?: number;
 }
 
-export interface InputProductionStats extends ProductionStats {
+export interface SetCoverProductionStats extends ProductionStats {
   berries: berry.Berry[];
+  legendary?: CustomPokemonCombinationWithProduce;
 }
 
 export type TeamWithProduce = CustomPokemonCombinationWithProduce[];

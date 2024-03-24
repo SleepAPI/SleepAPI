@@ -50,12 +50,20 @@
         width: 300px;
       }
 
+      /* chrome  */
       input[type='range']::-webkit-slider-thumb {
         background: #f04545;
       }
+      input[type='range']::-webkit-slider-runnable-track {
+        background-color: #ddd;
+      }
 
+      /* firefox */
       input[type='range']::-moz-range-thumb {
         background: #f04545;
+      }
+      input[type='range']::-moz-range-track-track {
+        background-color: #ddd;
       }
 
       .form-switch .form-check-input:focus {
@@ -68,8 +76,18 @@
         border-color: #f04545;
         border: none;
       }
+
+      .custom-background {
+        background-color: #f5f5f5;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        -webkit-appearance: none;
+        appearance: none;
+      }
     </style>
-    <script src="functions.1.13.0.js"></script>
+    <script src="functions.1.14.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -296,14 +314,6 @@
 
     <div style="text-align: center">
       <h5>Optional settings</h5>
-      <select id="island" class="btn btn-outline-dark" style="margin-bottom: 10px">
-        <option value="all" selected>All Pokémon</option>
-        <option value="cyan beach">Cyan Beach</option>
-        <option value="taupe hollow">Taupe Hollow</option>
-        <option value="snowdrop tundra">Snowdrop Tundra</option>
-        <option value="lapis lakeside">Lapis Lakeside</option>
-      </select>
-      <br />
 
       <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
         <option value="bashful">Nature</option>
@@ -418,59 +428,99 @@
         </div>
       </div>
 
-      <div class="slider-container mb-2">
+      <div class="slider-container">
         <label for="level" class="form-label">Level:&nbsp;</label><span class="slider-value" data-for="level">60</span
         ><br />
-        <div class="d-flex align-items-center justify-content-center">
-          <button type="button" class="btn btn-outline-dark btn-sm decreaseValue">-</button>
+        <div class="d-flex align-items-center justify-content-center input-group">
+          <button type="button" class="btn btn-outline-dark custom-background decreaseValue" style="width: 30px">
+            -
+          </button>
           <input
             type="range"
-            class="form-range mx-2 slider-input"
+            class="form-range slider-input custom-background"
             autocomplete="off"
             id="level"
             name="level"
             value="60"
             min="1"
             max="100"
-            style="width: 224px"
+            style="width: 240px"
           />
-          <button type="button" class="btn btn-outline-dark btn-sm increaseValue">+</button>
+          <button type="button" class="btn btn-outline-dark custom-background increaseValue" style="width: 30px">
+            +
+          </button>
         </div>
+        <br />
       </div>
 
-      <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="e4e"
-        name="e4e"
-        value="0"
-        min="0"
-        max="10"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
+      <p>
+        <a
+          class="btn btn-outline-dark"
+          data-bs-toggle="collapse"
+          href="#advancedSettings"
+          role="button"
+          aria-expanded="false"
+          aria-controls="advancedSettings"
+        >
+          Advanced settings <i class="fa fa-caret-down"></i>
+        </a>
+      </p>
+      <div class="collapse" id="advancedSettings">
+        <div class="card card-body" style="display: block; text-align: center">
+          <h5>All advanced settings are optional</h5>
 
-      <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
-      ><br />
-      <input
-        type="range"
-        class="form-range"
-        autocomplete="off"
-        id="helpingbonus"
-        name="helpingbonus"
-        value="0"
-        min="0"
-        max="5"
-        style="width: 300px"
-        oninput="updateValue(this)"
-      /><br />
+          <label for="legendary" class="form-label">Add legendary Pokémon to team</label><br />
+          <select id="legendary" class="btn btn-outline-dark" style="margin-bottom: 10px">
+            <option value="" selected>No legendary Pokémon</option>
+            <option value="RAIKOU">Raikou</option>
+          </select>
+          <br />
 
-      <div class="d-flex justify-content-center" style="margin-bottom: 20px">
-        <label class="form-check-label order-1" for="camp">Good camp:</label>
-        <div class="form-check form-switch ms-3 order-2">
-          <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+          <label for="island" class="form-label">Island filters</label><br />
+          <select id="island" class="btn btn-outline-dark" style="margin-bottom: 10px">
+            <option value="all" selected>All Pokémon</option>
+            <option value="cyan beach">Cyan Beach</option>
+            <option value="taupe hollow">Taupe Hollow</option>
+            <option value="snowdrop tundra">Snowdrop Tundra</option>
+            <option value="lapis lakeside">Lapis Lakeside</option>
+          </select>
+          <br />
+
+          <label for="e4e" class="form-label">E4E procs:&nbsp;</label><span id="e4eValue">0</span><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="e4e"
+            name="e4e"
+            value="0"
+            min="0"
+            max="10"
+            style="width: 300px"
+            oninput="updateValue(this)"
+          /><br />
+
+          <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
+          ><br />
+          <input
+            type="range"
+            class="form-range"
+            autocomplete="off"
+            id="helpingbonus"
+            name="helpingbonus"
+            value="0"
+            min="0"
+            max="5"
+            style="width: 300px"
+            oninput="updateValue(this)"
+          /><br />
+
+          <div class="d-flex justify-content-center" style="margin-bottom: 20px">
+            <label class="form-check-label order-1" for="camp">Good camp:</label>
+            <div class="form-check form-switch ms-3 order-2">
+              <input class="form-check-input" type="checkbox" role="switch" id="camp" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

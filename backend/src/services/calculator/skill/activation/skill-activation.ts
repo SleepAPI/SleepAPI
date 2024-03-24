@@ -52,6 +52,10 @@ export function createSkillEvent(
       break;
     }
     case mainskill.HELPER_BOOST: {
+      if (uniqueHelperBoost === 0) {
+        break;
+      }
+
       skillActivations.push(
         activateHelperBoost({
           skillLevel,

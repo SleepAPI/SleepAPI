@@ -344,6 +344,7 @@ function goToOptimalRanking() {
     e4eProcs: +document.getElementById('e4e').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
     camp: document.getElementById('camp').checked,
+    legendary: document.getElementById('legendary').value,
   };
 
   var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + '?pretty=true';
