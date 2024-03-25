@@ -78,7 +78,13 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
         preGeneratedSkillActivations,
       });
 
-      preGeneratedSkillActivations = skillActivations;
+      // if each ing set gives different skill result we dont cache, other skills can cache
+      const diffSkillResultForDiffIngSets = [
+        mainskill.HELPER_BOOST,
+        mainskill.EXTRA_HELPFUL_S,
+        mainskill.METRONOME,
+      ].includes(pokemon.skill);
+      preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
       allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, averageProduce, customStats });
     }
   }

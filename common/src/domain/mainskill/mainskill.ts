@@ -1,11 +1,10 @@
-import { MAX_SKILL_LEVEL } from '../constants';
-
 export interface MainSkill {
   name: string;
   amount: number[]; // level 6: amount of ings, amount of energy, amount of strength
   unit: 'energy' | 'ingredients' | 'helps' | 'dream shards' | 'strength' | 'pot size' | 'chance';
   maxLevel: number;
 }
+export const MAX_SKILL_LEVEL = 7;
 
 export const INGREDIENT_MAGNET_S: MainSkill = {
   name: 'Ingredient Magnet S',

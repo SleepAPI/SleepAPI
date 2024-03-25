@@ -79,7 +79,7 @@ describe('createSkillEvent', () => {
     expect(skillActivations[0].skill).toBe(mainskill.HELPER_BOOST);
   });
 
-  it('shall not create a Helper Boost skill event if unique mons in team is zero', () => {
+  it('shall create empty helper boost produce skill events if unique mons in team is zero', () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.HELPER_BOOST,
@@ -91,7 +91,8 @@ describe('createSkillEvent', () => {
       uniqueHelperBoost: 0,
     };
     createSkillEvent(params);
-    expect(skillActivations.length).toBe(0);
+    expect(skillActivations.length).toBe(1);
+    expect(skillActivations[0].adjustedProduce!.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toBe(0);
   });
 
   it('shall handle Metronome skill activation differently', () => {
