@@ -1,4 +1,4 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
@@ -7,7 +7,7 @@ import { findIslandForName } from '@src/utils/island-utils/island-utils';
 import { getNature } from '@src/utils/nature-utils/nature-utils';
 import { extractSubskillsBasedOnLevel, limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { parseTime } from '@src/utils/time-utils/time-utils';
-import { IngredientSet, PokemonIngredientSet, mainskill, nature, pokemon } from 'sleepapi-common';
+import { DEFAULT_RAIKOU, PokemonIngredientSet, mainskill, pokemon } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
 import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
@@ -71,35 +71,30 @@ export default class OptimalController extends Controller {
       throw new PokemonError(`Can't find legendary Pokémon with name ${maybeLegendary}`);
     }
 
-    // TODO: fix, when we know, will also differ per legendary.
-    // TODO: If this is AAA it will be easy to use same for every legendary
     const unlockedIngredients = Math.ceil((setCoverInput.level + 1) / 30);
-    const ingredientList: IngredientSet[] = [
-      // TODO: currently AAA
-      legendaryPokemon.ingredient0,
-      legendaryPokemon.ingredient30[0],
-      legendaryPokemon.ingredient60[0],
-    ];
-
     const pokemonCombination: PokemonIngredientSet = {
-      pokemon: legendaryPokemon,
-      ingredientList: ingredientList.slice(0, unlockedIngredients),
+      pokemon: DEFAULT_RAIKOU.pokemonSet.pokemon,
+      ingredientList: DEFAULT_RAIKOU.pokemonSet.ingredientList.slice(0, unlockedIngredients),
+    };
+    const customStats: CustomStats = {
+      nature: DEFAULT_RAIKOU.stats.nature,
+      level: setCoverInput.level,
+      subskills: limitSubSkillsToLevel(DEFAULT_RAIKOU.stats.subskills, setCoverInput.level),
+      skillLevel: DEFAULT_RAIKOU.stats.skillLevel,
     };
 
     const { averageProduce, detailedProduce } = setupAndRunProductionSimulation({
       pokemonCombination,
-      input: setCoverInput,
+      input: {
+        ...setCoverInput,
+        ...customStats,
+      },
       monteCarloIterations: 0,
     });
 
     return {
       pokemonCombination,
-      customStats: {
-        level: setCoverInput.level,
-        skillLevel: mainskill.HELPER_BOOST.maxLevel,
-        nature: nature.BASHFUL, // TODO: fix when default is known
-        subskills: limitSubSkillsToLevel([], setCoverInput.level), // TODO: fix when default is known
-      },
+      customStats,
       averageProduce,
       detailedProduce,
     };

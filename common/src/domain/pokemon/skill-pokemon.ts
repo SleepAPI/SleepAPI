@@ -503,19 +503,25 @@ export const HERACROSS: Pokemon = {
   skill: INGREDIENT_MAGNET_S,
 };
 
-// TODO: update stats
 export const RAIKOU: Pokemon = {
   name: 'RAIKOU',
   specialty: 'skill',
   frequency: toSeconds(0, 35, 0),
-  ingredientPercentage: 13,
-  skillPercentage: 4.7,
+  ingredientPercentage: 19.2,
+  skillPercentage: 1.9,
   berry: GREPA,
   carrySize: 22,
   maxCarrySize: 22,
-  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
-  ingredient30: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],
-  ingredient60: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],
+  ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
+  ingredient30: [
+    { amount: 2, ingredient: BEAN_SAUSAGE },
+    { amount: 2, ingredient: FIERY_HERB },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: BEAN_SAUSAGE },
+    { amount: 3, ingredient: FIERY_HERB },
+    { amount: 2, ingredient: LARGE_LEEK },
+  ],
   skill: HELPER_BOOST,
 };
 

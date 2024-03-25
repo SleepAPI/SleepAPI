@@ -3,7 +3,7 @@ import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { IngredientSet, pokemon } from 'sleepapi-common';
+import { IngredientSet, mainskill, pokemon } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
 
@@ -36,7 +36,13 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
         preGeneratedSkillActivations,
       });
 
-      preGeneratedSkillActivations = skillActivations;
+      // if each ing set gives different skill result we dont cache, other skills can cache
+      const diffSkillResultForDiffIngSets = [
+        mainskill.HELPER_BOOST,
+        mainskill.EXTRA_HELPFUL_S,
+        mainskill.METRONOME,
+      ].includes(pokemon.skill);
+      preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
       pokemonProduction.push({
         pokemonCombination: {
           pokemon,

@@ -4,7 +4,7 @@ import { SkillActivation } from '@src/domain/event/events/skill-event/skill-even
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
-import { pokemon } from 'sleepapi-common';
+import { mainskill, pokemon } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
@@ -73,7 +73,14 @@ export function calculatePokemonProduction(
       monteCarloIterations,
       preGeneratedSkillActivations,
     });
-    preGeneratedSkillActivations = skillActivations;
+
+    // if each ing set gives different skill result we dont cache, other skills can cache
+    const diffSkillResultForDiffIngSets = [
+      mainskill.HELPER_BOOST,
+      mainskill.EXTRA_HELPFUL_S,
+      mainskill.METRONOME,
+    ].includes(pokemon.skill);
+    preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
 
     pokemonProductionWithLogs.push({
       pokemonProduction: {

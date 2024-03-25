@@ -11,6 +11,7 @@ describe('getSubskillNames', () => {
     expect(getSubskillNames()).toMatchInlineSnapshot(`
       [
         "Berry Finding S",
+        "Energy Recovery Bonus",
         "Helping Speed S",
         "Helping Speed M",
         "Ingredient Finder S",
@@ -20,7 +21,7 @@ describe('getSubskillNames', () => {
         "Inventory Up L",
         "Skill Trigger M",
         "Skill Trigger S",
-        "Energy Recovery Bonus",
+        "Sleep EXP Bonus",
       ]
     `);
   });

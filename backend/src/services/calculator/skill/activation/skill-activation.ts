@@ -52,10 +52,6 @@ export function createSkillEvent(
       break;
     }
     case mainskill.HELPER_BOOST: {
-      if (uniqueHelperBoost === 0) {
-        break;
-      }
-
       skillActivations.push(
         activateHelperBoost({
           skillLevel,
@@ -213,7 +209,10 @@ export function activateHelperBoost(params: {
   } = params;
   const skill = mainskill.HELPER_BOOST;
 
-  const helpAmount = skill.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel);
+  const helpAmount =
+    uniqueHelperBoost > 0
+      ? skill.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel)
+      : 0;
 
   const helperBoostProduce: Produce = {
     berries: {
