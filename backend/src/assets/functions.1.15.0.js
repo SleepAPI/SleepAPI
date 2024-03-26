@@ -341,10 +341,13 @@ function goToOptimalRanking() {
     nature: document.getElementById('nature').value,
     subskills: checkedValues,
     island: document.getElementById('island').value,
-    e4eProcs: +document.getElementById('e4e').value,
+    e4eProcs: +document.getElementById('e4eProcs').value,
+    e4eLevel: +document.getElementById('e4eLevel').value,
     helpingbonus: +document.getElementById('helpingbonus').value,
+    helperBoostProcs: +document.getElementById('helperBoostProcs').value,
+    helperBoostUnique: +document.getElementById('helperBoostUnique').value,
+    helperBoostLevel: +document.getElementById('helperBoostLevel').value,
     camp: document.getElementById('camp').checked,
-    legendary: document.getElementById('legendary').value,
   };
 
   var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + '?pretty=true';
