@@ -136,7 +136,6 @@ function customOptimalSet(
 
   const optimalCombinations = calculateSetCover({
     recipe: meal.ingredients,
-    legendary: input.legendary,
     reverseIndex,
     cache: new Map(),
     timeout,

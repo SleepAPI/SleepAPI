@@ -25,7 +25,6 @@ export interface ProductionStats {
 
 export interface SetCoverProductionStats extends ProductionStats {
   berries: berry.Berry[];
-  legendary?: CustomPokemonCombinationWithProduce;
 }
 
 export type TeamWithProduce = CustomPokemonCombinationWithProduce[];

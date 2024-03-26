@@ -60,16 +60,13 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
 
 export function calculateSetCover(params: {
   recipe: IngredientSet[];
-  legendary?: CustomPokemonCombinationWithProduce;
   cache: Map<string, CustomPokemonCombinationWithProduce[][]>;
   reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>;
   maxTeamSize?: number;
   timeout?: number;
 }) {
-  const { recipe, legendary, cache, reverseIndex, maxTeamSize, timeout } = params;
-
-  const currentPokemon = legendary && [legendary];
+  const { recipe, cache, reverseIndex, maxTeamSize, timeout } = params;
 
   const setCover = new SetCover(reverseIndex, cache);
-  return setCover.findOptimalCombinationFor(recipe, currentPokemon, maxTeamSize, timeout);
+  return setCover.findOptimalCombinationFor(recipe, [], maxTeamSize, timeout);
 }
