@@ -52,13 +52,11 @@ async function main() {
   }
 
   // Router
-  const allowedOrigins = ['http://localhost:3000'];
   const options: cors.CorsOptions = {
-    origin: allowedOrigins,
+    origin: '*',
   };
 
   const app: Application = express();
-  const port = config.PORT ?? 3000;
 
   // Middleware
   app.use(express.json());
@@ -88,8 +86,8 @@ async function main() {
   SubskillRouter.register(new SubskillController());
   ShareRouter.register(new ShareController());
 
-  app.listen(port, async () => {
-    Logger.log(`Server is running at ${port}`);
+  app.listen(config.PORT, async () => {
+    Logger.log(`Server is running at ${config.PORT}`);
   });
 }
 
