@@ -250,14 +250,6 @@ function goToProductionCalculator() {
 
       appendCaretIcon('placeholderHeaderId');
 
-      // add allIngredientSets
-      const allIngSetsHeaderText = data.allIngredientSets.pokemon;
-      document.getElementById('allIngredientSetsHeaderId').innerText = allIngSetsHeaderText;
-      const allIngredientSetsText = data.allIngredientSets.details;
-      const allIngredientSetsDiv = document.getElementById('allIngredientSetsOutputId');
-      allIngredientSetsDiv.innerText = allIngredientSetsText;
-      appendCaretIcon('allIngredientSetsHeaderId');
-
       function appendCaretIcon(headerId) {
         const header = document.getElementById(headerId);
         // Remove existing caret icons
@@ -269,7 +261,7 @@ function goToProductionCalculator() {
         header.innerHTML += ' <i class="fa fa-caret-down"></i>';
       }
 
-      // ---- add copy buttons
+      // ---- add copy button
       var copyBtn = createCopyButton(productionDiv, 0);
       copyBtn.style.position = 'absolute';
       copyBtn.style.right = '0px';
@@ -279,17 +271,16 @@ function goToProductionCalculator() {
       copyBtn.style.cursor = 'pointer';
       copyBtn.style.outline = 'none';
       productionDiv.appendChild(copyBtn);
-      var copyBtn2 = createCopyButton(allIngredientSetsDiv, 1);
-      copyBtn2.style.position = 'absolute';
-      copyBtn2.style.right = '0px';
-      copyBtn2.querySelector('.fa').style.fontSize = '150%';
-      copyBtn2.style.border = 'none';
-      copyBtn2.style.background = 'none';
-      copyBtn2.style.cursor = 'pointer';
-      copyBtn2.style.outline = 'none';
-      allIngredientSetsDiv.appendChild(copyBtn2);
       // ----
 
+      comparisonChart(
+        data.production.specialty,
+        data.userProduction,
+        data.neutralProduction,
+        data.optimalIngredientProduction,
+        data.optimalBerryProduction,
+        data.optimalSkillProduction
+      );
       energyChart(data.production.log);
       inventoryChart(data.production.log);
       skillChart(data.production.log);

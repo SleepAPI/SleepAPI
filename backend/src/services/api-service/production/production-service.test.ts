@@ -8,19 +8,40 @@ describe('calculatePokemonProduction', () => {
       pokemon.PINSIR,
       MOCKED_OPTIMAL_PRODUCTION_STATS,
       [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
+      false,
       1
     );
 
     expect(result).toHaveProperty('filters');
     expect(result).toHaveProperty('production');
-    expect(result).toHaveProperty('allIngredientSets');
-    expect(result.allIngredientSets).toHaveLength(6);
-    expect(result.filters).toEqual(MOCKED_OPTIMAL_PRODUCTION_STATS);
+    expect(result).toHaveProperty('log');
+    expect(result).toHaveProperty('summary');
+    expect(result.neutralProduction).toBeUndefined;
+    expect(result.optimalIngredientProduction).toBeUndefined;
+    expect(result.optimalBerryProduction).toBeUndefined;
+    expect(result.optimalSkillProduction).toBeUndefined;
 
-    result.allIngredientSets.forEach(({ pokemonProduction }) => {
-      expect(pokemonProduction).toHaveProperty('pokemonCombination');
-      expect(pokemonProduction).toHaveProperty('detailedProduce');
-      expect(pokemonProduction).toHaveProperty('customStats');
-    });
+    expect(result.filters).toEqual(MOCKED_OPTIMAL_PRODUCTION_STATS);
+  });
+
+  it('should calculate production for PINSIR with production analysis', () => {
+    const result = calculatePokemonProduction(
+      pokemon.PINSIR,
+      MOCKED_OPTIMAL_PRODUCTION_STATS,
+      [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
+      true,
+      1
+    );
+
+    expect(result).toHaveProperty('filters');
+    expect(result).toHaveProperty('production');
+    expect(result).toHaveProperty('log');
+    expect(result).toHaveProperty('summary');
+    expect(result).toHaveProperty('neutralProduction');
+    expect(result).toHaveProperty('optimalIngredientProduction');
+    expect(result).toHaveProperty('optimalBerryProduction');
+    expect(result).toHaveProperty('optimalSkillProduction');
+
+    expect(result.filters).toEqual(MOCKED_OPTIMAL_PRODUCTION_STATS);
   });
 });

@@ -8,15 +8,25 @@ import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils'
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
 import { mainskill, pokemon } from 'sleepapi-common';
-import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
+import { Body, Controller, Path, Post, Query, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')
 @Tags('calculator')
 export default class ProductionController extends Controller {
   @Post('production/{name}')
-  public async calculatePokemonProduction(@Path() name: string, @Body() body: ProductionRequest) {
+  public async calculatePokemonProduction(
+    @Path() name: string,
+    @Body() body: ProductionRequest,
+    @Query() pretty?: boolean
+  ) {
     const pokemon = getPokemon(name);
-    return calculatePokemonProduction(pokemon, this.#parseInput(pokemon, body), body.ingredientSet, 5000);
+    return calculatePokemonProduction(
+      pokemon,
+      this.#parseInput(pokemon, body),
+      body.ingredientSet,
+      queryAsBoolean(pretty),
+      5000
+    );
   }
 
   #parseInput(pkmn: pokemon.Pokemon, input: ProductionRequest): ProductionStats {

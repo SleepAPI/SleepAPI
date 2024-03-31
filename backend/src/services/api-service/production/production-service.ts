@@ -1,108 +1,100 @@
+import { DetailedProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { chooseIngredientSet } from '@src/utils/production-utils/production-utils';
-import { mainskill, pokemon } from 'sleepapi-common';
-import { CustomPokemonCombinationWithProduce, CustomStats } from '../../../domain/combination/custom';
+import { getIngredientSet } from '@src/utils/production-utils/production-utils';
+import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
+import { nature, pokemon, subskill } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
   pokemon: pokemon.Pokemon,
-  details: ProductionStats,
+  input: ProductionStats,
   ingredientSet: string[],
+  includeAnalysis: boolean,
   monteCarloIterations: number
 ) {
-  const {
-    level,
-    nature,
-    subskills,
-    e4eProcs,
-    e4eLevel,
-    cheer,
-    extraHelpful,
-    helperBoostProcs,
-    helperBoostUnique,
-    helperBoostLevel,
-    helpingBonus,
-    camp,
-    erb,
-    incense,
-    skillLevel,
-    mainBedtime,
-    mainWakeup,
-  } = details;
+  const allIngredientSets = getAllIngredientCombinationsForLevel(pokemon, input.level);
+  const ingredientList = getIngredientSet(allIngredientSets, ingredientSet);
+  const pokemonCombination = { pokemon, ingredientList };
 
-  const customStats: CustomStats = {
-    level,
-    nature: nature!,
-    subskills: subskills!,
-    skillLevel: skillLevel!,
-  };
+  // calculate user's input
+  const { detailedProduce, log, summary } = setupAndRunProductionSimulation({
+    pokemonCombination,
+    input,
+    monteCarloIterations,
+  });
 
-  const pokemonProductionWithLogs: {
-    pokemonProduction: CustomPokemonCombinationWithProduce;
-    log: ScheduledEvent[];
-    summary: Summary;
-  }[] = [];
-
-  let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
-  for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
-    const { detailedProduce, averageProduce, log, skillActivations, summary } = setupAndRunProductionSimulation({
-      pokemonCombination: {
-        pokemon: pokemon,
-        ingredientList,
-      },
+  // calculate neutral and optimal setups for performance analysis
+  let neutralProduction: DetailedProduce | undefined = undefined;
+  let optimalIngredientProduction: DetailedProduce | undefined = undefined;
+  let optimalBerryProduction: DetailedProduce | undefined = undefined;
+  let optimalSkillProduction: DetailedProduce | undefined = undefined;
+  if (includeAnalysis) {
+    neutralProduction = setupAndRunProductionSimulation({
+      pokemonCombination,
       input: {
-        e4eProcs,
-        e4eLevel,
-        camp,
-        helpingBonus,
-        erb,
-        cheer,
-        extraHelpful,
-        helperBoostProcs,
-        helperBoostUnique,
-        helperBoostLevel,
-        incense,
-        mainBedtime,
-        mainWakeup,
-        ...customStats,
+        ...input,
+        subskills: [],
+        nature: nature.BASHFUL,
+        skillLevel: 1,
       },
       monteCarloIterations,
-      preGeneratedSkillActivations,
-    });
+    }).detailedProduce;
 
-    // if each ing set gives different skill result we dont cache, other skills can cache
-    const diffSkillResultForDiffIngSets = [
-      mainskill.HELPER_BOOST,
-      mainskill.EXTRA_HELPFUL_S,
-      mainskill.METRONOME,
-    ].includes(pokemon.skill);
-    preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
-
-    pokemonProductionWithLogs.push({
-      pokemonProduction: {
-        pokemonCombination: { pokemon, ingredientList },
-        averageProduce,
-        detailedProduce,
-        customStats,
+    optimalIngredientProduction = setupAndRunProductionSimulation({
+      pokemonCombination,
+      input: {
+        ...input,
+        subskills: limitSubSkillsToLevel(
+          [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+          input.level
+        ),
+        nature: nature.QUIET,
+        skillLevel: pokemon.skill.maxLevel,
       },
+      monteCarloIterations,
+    }).detailedProduce;
 
-      log,
-      summary,
-    });
+    optimalBerryProduction = setupAndRunProductionSimulation({
+      pokemonCombination,
+      input: {
+        ...input,
+        subskills: limitSubSkillsToLevel(
+          [subskill.BERRY_FINDING_S, subskill.HELPING_SPEED_M, subskill.HELPING_SPEED_S],
+          input.level
+        ),
+        nature: nature.ADAMANT,
+        skillLevel: pokemon.skill.maxLevel,
+      },
+      monteCarloIterations,
+    }).detailedProduce;
+
+    optimalSkillProduction = setupAndRunProductionSimulation({
+      pokemonCombination,
+      input: {
+        ...input,
+        subskills: limitSubSkillsToLevel(
+          [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M, subskill.SKILL_TRIGGER_S],
+          input.level
+        ),
+        nature: nature.SASSY,
+        skillLevel: pokemon.skill.maxLevel,
+      },
+      monteCarloIterations,
+    }).detailedProduce;
   }
 
-  const productionForChosenIngSet = chooseIngredientSet(pokemonProductionWithLogs, ingredientSet);
-
   return {
-    filters: {
-      ...details,
-      ...customStats,
+    filters: input,
+    production: {
+      pokemonCombination: { pokemon, ingredientList },
+      detailedProduce,
     },
-    production: productionForChosenIngSet,
-    allIngredientSets: pokemonProductionWithLogs,
+    log,
+    summary,
+    neutralProduction,
+    optimalIngredientProduction,
+    optimalBerryProduction,
+    optimalSkillProduction,
   };
 }
