@@ -46,7 +46,13 @@ export function calculatePokemonProduction(
       input: {
         ...input,
         subskills: limitSubSkillsToLevel(
-          [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+          [
+            subskill.INGREDIENT_FINDER_M,
+            subskill.HELPING_SPEED_M,
+            subskill.INGREDIENT_FINDER_S,
+            subskill.INVENTORY_L,
+            subskill.HELPING_SPEED_S,
+          ],
           input.level
         ),
         nature: nature.QUIET,
@@ -60,7 +66,13 @@ export function calculatePokemonProduction(
       input: {
         ...input,
         subskills: limitSubSkillsToLevel(
-          [subskill.BERRY_FINDING_S, subskill.HELPING_SPEED_M, subskill.HELPING_SPEED_S],
+          [
+            subskill.BERRY_FINDING_S,
+            subskill.HELPING_SPEED_M,
+            subskill.HELPING_SPEED_S,
+            subskill.SKILL_TRIGGER_M,
+            subskill.SKILL_TRIGGER_S,
+          ],
           input.level
         ),
         nature: nature.ADAMANT,
@@ -74,7 +86,13 @@ export function calculatePokemonProduction(
       input: {
         ...input,
         subskills: limitSubSkillsToLevel(
-          [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M, subskill.SKILL_TRIGGER_S],
+          [
+            subskill.SKILL_TRIGGER_M,
+            subskill.HELPING_SPEED_M,
+            subskill.SKILL_TRIGGER_S,
+            subskill.HELPING_SPEED_S,
+            subskill.INVENTORY_L,
+          ],
           input.level
         ),
         nature: nature.SASSY,
