@@ -353,8 +353,8 @@ function formatData(rawData, setupType, specialty) {
             group: 'Ingredients',
             setupType,
             item: ing.ingredient.name,
-            amount: ing.ingredient.amount,
-            percentage: ing.ingredient.percentage,
+            amount: ing.amount,
+            percentage: ing.percentage,
           },
         ],
       });
