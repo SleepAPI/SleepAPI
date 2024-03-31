@@ -153,7 +153,7 @@ function comparisonChart(
     options: {
       layout: {
         padding: {
-          top: 18,
+          top: window.innerWidth <= '1000' ? 18 : 30,
           bottom: 0,
         },
       },
