@@ -37,7 +37,7 @@ class ProductionRouterImpl {
 
           const pretty = queryAsBoolean(req.query.pretty);
 
-          const productionDataRaw = await controller.calculatePokemonProduction(name, req.body);
+          const productionDataRaw = await controller.calculatePokemonProduction(name, req.body, pretty);
           const productionData = pretty
             ? WebsiteConverterService.toProductionCalculator(productionDataRaw)
             : productionDataRaw;

@@ -1,5 +1,5 @@
 import { SurplusIngredients } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import { DetailedProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
@@ -7,15 +7,16 @@ import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-rou
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { IngredientSet, MEALS_IN_DAY, mainskill, nature, subskill } from 'sleepapi-common';
+import { IngredientSet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature, subskill } from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
 import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
 
 // --- production calculator
 interface ProductionFilters {
   level: number;
-  nature: nature.Nature;
-  subskills: subskill.SubSkill[];
+  nature?: nature.Nature;
+  subskills?: subskill.SubSkill[];
+  skillLevel?: number;
   e4eProcs: number;
   e4eLevel: number;
   helperBoostProcs: number;
@@ -24,64 +25,72 @@ interface ProductionFilters {
   helpingBonus: number;
   camp: boolean;
 }
+
 interface ProductionCombination {
   filters: ProductionFilters;
-  pokemonProduction: CustomPokemonCombinationWithProduce;
+  production: {
+    pokemonCombination: PokemonIngredientSet;
+    detailedProduce: DetailedProduce;
+  };
   summary: Summary;
-}
-interface ProductionCombinations {
-  filters: ProductionFilters;
-  production: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[]; summary: Summary };
-  allIngredientSets: {
-    pokemonProduction: CustomPokemonCombinationWithProduce;
-    log: ScheduledEvent[];
-    summary: Summary;
-  }[];
+  log: ScheduledEvent[];
+  neutralProduction?: DetailedProduce;
+  optimalIngredientProduction?: DetailedProduce;
+  optimalBerryProduction?: DetailedProduce;
+  optimalSkillProduction?: DetailedProduce;
 }
 
 class WebsiteConverterServiceImpl {
-  public toProductionCalculator(pokemonProductions: ProductionCombinations) {
+  public toProductionCalculator(pokemonProduction: ProductionCombination) {
     return {
-      details: pokemonProductions.filters,
+      details: pokemonProduction.filters,
       production: {
-        details: this.#prettifyProductionDetails({
-          pokemonProduction: pokemonProductions.production.pokemonProduction,
-          filters: pokemonProductions.filters,
-          summary: pokemonProductions.production.summary,
-        }),
-        pokemon: pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name,
-        ingredients: pokemonProductions.production.pokemonProduction.pokemonCombination.ingredientList.map(
-          (ing) => ing.ingredient.name
-        ),
-        log: pokemonProductions.production.log,
-        logName: `eventlog-${pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name}${
-          pokemonProductions.filters.level
+        details: this.#prettifyProductionDetails(pokemonProduction),
+        pokemon: pokemonProduction.production.pokemonCombination.pokemon.name,
+        ingredients: pokemonProduction.production.pokemonCombination.ingredientList.map((ing) => ing.ingredient.name),
+        specialty: pokemonProduction.production.pokemonCombination.pokemon.specialty,
+        log: pokemonProduction.log,
+        logName: `eventlog-${pokemonProduction.production.pokemonCombination.pokemon.name}${
+          pokemonProduction.filters.level
         }-${Date.now()}.txt`,
-        prettyLog: pokemonProductions.production.log.map((event) => event.format()).join('\n'),
+        prettyLog: pokemonProduction.log.map((event) => event.format()).join('\n'),
       },
-      allIngredientSets: {
-        pokemon: 'Production comparison',
-        details:
-          `👨🏻‍🍳 Production Comparison 👨🏻‍🍳\nhttps://sleepapi.net\n\n${
-            pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.name
-          }\n${this.#prettifyFiltersDetails({
-            pokemonProduction: pokemonProductions.production.pokemonProduction,
-            filters: pokemonProductions.filters,
-            summary: pokemonProductions.production.summary,
-          })}` +
-          pokemonProductions.allIngredientSets
-            .map(
-              ({ pokemonProduction }) =>
-                `${shortPrettifyIngredientDrop(pokemonProduction.pokemonCombination.ingredientList)}\n` +
-                `Ingredients per meal window: ${prettifyIngredientDrop(
-                  pokemonProduction.detailedProduce.produce.ingredients
-                )}\n` +
-                `Total berry output per 24h: ${roundDown(
-                  pokemonProductions.production.pokemonProduction.detailedProduce.produce.berries.amount,
-                  1
-                )} ${pokemonProductions.production.pokemonProduction.pokemonCombination.pokemon.berry.name}`
-            )
-            .join('\n\n'),
+      neutralProduction: pokemonProduction.neutralProduction && {
+        ingredients: pokemonProduction.neutralProduction.produce.ingredients,
+        berries: pokemonProduction.neutralProduction.produce.berries,
+        skills: pokemonProduction.neutralProduction.skillActivations.reduce((sum, cur) => sum + cur.adjustedAmount, 0),
+      },
+      userProduction: {
+        ingredients: pokemonProduction.production.detailedProduce.produce.ingredients,
+        berries: pokemonProduction.production.detailedProduce.produce.berries,
+        skills: pokemonProduction.production.detailedProduce.skillActivations.reduce(
+          (sum, cur) => sum + cur.adjustedAmount,
+          0
+        ),
+      },
+      optimalIngredientProduction: pokemonProduction.optimalIngredientProduction && {
+        ingredients: pokemonProduction.optimalIngredientProduction.produce.ingredients,
+        berries: pokemonProduction.optimalIngredientProduction.produce.berries,
+        skills: pokemonProduction.optimalIngredientProduction.skillActivations.reduce(
+          (sum, cur) => sum + cur.adjustedAmount,
+          0
+        ),
+      },
+      optimalBerryProduction: pokemonProduction.optimalBerryProduction && {
+        ingredients: pokemonProduction.optimalBerryProduction.produce.ingredients,
+        berries: pokemonProduction.optimalBerryProduction.produce.berries,
+        skills: pokemonProduction.optimalBerryProduction.skillActivations.reduce(
+          (sum, cur) => sum + cur.adjustedAmount,
+          0
+        ),
+      },
+      optimalSkillProduction: pokemonProduction.optimalSkillProduction && {
+        ingredients: pokemonProduction.optimalSkillProduction.produce.ingredients,
+        berries: pokemonProduction.optimalSkillProduction.produce.berries,
+        skills: pokemonProduction.optimalSkillProduction.skillActivations.reduce(
+          (sum, cur) => sum + cur.adjustedAmount,
+          0
+        ),
       },
     };
   }
@@ -250,17 +259,16 @@ class WebsiteConverterServiceImpl {
 
   #prettifyFiltersDetails(productionCombination: ProductionCombination) {
     const filters = productionCombination.filters;
-    const pokemonCombination = productionCombination.pokemonProduction;
 
     let prettyString = `-------------\n`;
 
     prettyString +=
-      `Level: ${pokemonCombination.customStats.level}, Nature: ${pokemonCombination.customStats.nature.prettyName}\n` +
-      `Main skill level: ${pokemonCombination.customStats.skillLevel}\n` +
+      `Level: ${productionCombination.filters.level}, Nature: ${
+        productionCombination.filters.nature?.prettyName ?? 'None'
+      }\n` +
+      `Main skill level: ${productionCombination.filters.skillLevel}\n` +
       `Subskills: ${
-        pokemonCombination.customStats.subskills.length > 0
-          ? pokemonCombination.customStats.subskills.map((s) => s.name).join(', ')
-          : 'None'
+        filters.subskills && filters.subskills.length > 0 ? filters.subskills.map((s) => s.name).join(', ') : 'None'
       }\n`;
 
     const teamInput: string[] = [];
@@ -291,7 +299,7 @@ class WebsiteConverterServiceImpl {
   }
 
   #prettifyProductionDetails(productionCombination: ProductionCombination) {
-    const pokemonCombination = productionCombination.pokemonProduction;
+    const pokemonCombination = productionCombination.production;
     const summary = productionCombination.summary;
 
     let prettyString = `👨🏻‍🍳 Production Calculator 👨🏻‍🍳\nhttps://sleepapi.net\n\n${

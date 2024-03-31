@@ -1,26 +1,18 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Produce } from '@src/domain/combination/produce';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { Summary } from '@src/domain/event/events/summary-event/summary-event';
-import { berry } from 'sleepapi-common';
+import { IngredientSet, berry } from 'sleepapi-common';
 
-export function chooseIngredientSet(
-  validSets: { pokemonProduction: CustomPokemonCombinationWithProduce; log: ScheduledEvent[]; summary: Summary }[],
-  ingredientSet: string[]
-) {
+export function getIngredientSet(validSets: IngredientSet[][], ingredientSet: string[]): IngredientSet[] {
   const lowercaseIngredientSet = ingredientSet.map((ing) => ing.toLowerCase());
-  const productionForChosenIngSet = validSets.find((set) =>
-    set.pokemonProduction.pokemonCombination.ingredientList.every(
-      (ingredientDrop, index) => ingredientDrop.ingredient.name.toLowerCase() === lowercaseIngredientSet[index]
-    )
+  const foundIngredientSet = validSets.find((set) =>
+    set.every((ingredientDrop, index) => ingredientDrop.ingredient.name.toLowerCase() === lowercaseIngredientSet[index])
   );
 
-  if (!productionForChosenIngSet) {
+  if (!foundIngredientSet) {
     throw new PokemonError(`Ingredient set [${ingredientSet.join(', ')}] was not valid`);
   }
 
-  return productionForChosenIngSet;
+  return foundIngredientSet;
 }
 
 export function getEmptyProduce(berry: berry.Berry): Produce {

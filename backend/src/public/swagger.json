@@ -1262,7 +1262,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "1.15.0",
+		"version": "2.0.0",
 		"contact": {}
 	},
 	"paths": {
@@ -1462,149 +1462,68 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"allIngredientSets": {
+										"optimalSkillProduction": {
+											"$ref": "#/components/schemas/DetailedProduce"
+										},
+										"optimalBerryProduction": {
+											"$ref": "#/components/schemas/DetailedProduce"
+										},
+										"optimalIngredientProduction": {
+											"$ref": "#/components/schemas/DetailedProduce"
+										},
+										"neutralProduction": {
+											"$ref": "#/components/schemas/DetailedProduce"
+										},
+										"summary": {
+											"$ref": "#/components/schemas/Summary"
+										},
+										"log": {
 											"items": {
-												"properties": {
-													"summary": {
-														"$ref": "#/components/schemas/Summary"
-													},
-													"log": {
-														"items": {
-															"$ref": "#/components/schemas/ScheduledEvent"
-														},
-														"type": "array"
-													},
-													"pokemonProduction": {
-														"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
-													}
-												},
-												"required": [
-													"summary",
-													"log",
-													"pokemonProduction"
-												],
-												"type": "object"
+												"$ref": "#/components/schemas/ScheduledEvent"
 											},
 											"type": "array"
 										},
 										"production": {
 											"properties": {
-												"summary": {
-													"$ref": "#/components/schemas/Summary"
+												"detailedProduce": {
+													"$ref": "#/components/schemas/DetailedProduce"
 												},
-												"log": {
-													"items": {
-														"$ref": "#/components/schemas/ScheduledEvent"
+												"pokemonCombination": {
+													"properties": {
+														"ingredientList": {
+															"items": {
+																"$ref": "#/components/schemas/IngredientSet"
+															},
+															"type": "array"
+														},
+														"pokemon": {
+															"$ref": "#/components/schemas/Pokemon"
+														}
 													},
-													"type": "array"
-												},
-												"pokemonProduction": {
-													"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+													"required": [
+														"ingredientList",
+														"pokemon"
+													],
+													"type": "object"
 												}
 											},
 											"required": [
-												"summary",
-												"log",
-												"pokemonProduction"
+												"detailedProduce",
+												"pokemonCombination"
 											],
 											"type": "object"
 										},
 										"filters": {
-											"properties": {
-												"maxPotSize": {
-													"type": "number",
-													"format": "double"
-												},
-												"mainWakeup": {
-													"$ref": "#/components/schemas/Time"
-												},
-												"mainBedtime": {
-													"$ref": "#/components/schemas/Time"
-												},
-												"incense": {
-													"type": "boolean"
-												},
-												"erb": {
-													"type": "number",
-													"format": "double"
-												},
-												"camp": {
-													"type": "boolean"
-												},
-												"helpingBonus": {
-													"type": "number",
-													"format": "double"
-												},
-												"helperBoostLevel": {
-													"type": "number",
-													"format": "double"
-												},
-												"helperBoostUnique": {
-													"type": "number",
-													"format": "double"
-												},
-												"helperBoostProcs": {
-													"type": "number",
-													"format": "double"
-												},
-												"extraHelpful": {
-													"type": "number",
-													"format": "double"
-												},
-												"cheer": {
-													"type": "number",
-													"format": "double"
-												},
-												"e4eLevel": {
-													"type": "number",
-													"format": "double"
-												},
-												"e4eProcs": {
-													"type": "number",
-													"format": "double"
-												},
-												"skillLevel": {
-													"type": "number",
-													"format": "double"
-												},
-												"subskills": {
-													"items": {
-														"$ref": "#/components/schemas/SubSkill"
-													},
-													"type": "array"
-												},
-												"nature": {
-													"$ref": "#/components/schemas/Nature"
-												},
-												"level": {
-													"type": "number",
-													"format": "double"
-												}
-											},
-											"required": [
-												"mainWakeup",
-												"mainBedtime",
-												"incense",
-												"erb",
-												"camp",
-												"helpingBonus",
-												"helperBoostLevel",
-												"helperBoostUnique",
-												"helperBoostProcs",
-												"extraHelpful",
-												"cheer",
-												"e4eLevel",
-												"e4eProcs",
-												"skillLevel",
-												"subskills",
-												"nature",
-												"level"
-											],
-											"type": "object"
+											"$ref": "#/components/schemas/ProductionStats"
 										}
 									},
 									"required": [
-										"allIngredientSets",
+										"optimalSkillProduction",
+										"optimalBerryProduction",
+										"optimalIngredientProduction",
+										"neutralProduction",
+										"summary",
+										"log",
 										"production",
 										"filters"
 									],
@@ -1625,6 +1544,14 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				],
