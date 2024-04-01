@@ -783,7 +783,7 @@
             name="helpingbonus"
             value="0"
             min="0"
-            max="5"
+            max="4"
             style="width: 300px"
             oninput="updateValue(this)"
           /><br />
@@ -985,12 +985,14 @@
                 data-bs-placement="left"
                 data-bs-html="true"
                 title="
-                  Compare your Pokémon to neutral and optimal setups. 
+                  <h6>Compare your Pokémon to neutral and optimal setups.</h6>
+
                   Which optimal setup is used is based on your Pokémon's specialty. 
                   Your Pokémon is compared to the same optimal setup for all 3 specialties. 
                   The 100% benchmark for each specialty instead indicates how much you would get if you went focused on that type.
                   </br></br>
-                  Neutral: neutral nature, no subskills, skill level 1</br></br>
+                  Neutral setup: Skill level 1</br>
+                  Neutral nature, no sub-skills</br></br>
 
                   Optimal ingredient setup: Max skill level</br>
                   Quiet [Ing M, Help M, Ing S]</br></br>
@@ -1010,12 +1012,33 @@
           </div>
           <div class="card mb-2">
             <button
-              class="card-header text-center btn btn-outline-dark"
+              class="card-header btn btn-outline-dark d-flex justify-content-between align-items-center"
               data-target="energyChartOutputId"
               data-toggle="collapse"
               id="energyChartHeader"
+              style="width: 100%"
             >
-              Energy Chart <i class="fa fa-caret-down"></i>
+              <span class="text-center" style="flex-grow: 1"> Energy <i class="fa fa-caret-down"></i> </span>
+              <span
+                class="fa fa-info-circle fa-lg"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                data-bs-html="true"
+                title="
+                <h6>See how your energy changes over a full 24h day.</h6>
+
+                The simulation accounts for sleep, natural decline, energy skills and cooking recovery etc.
+                </br></br>
+
+                Higher energy means faster Pokémon, above 80% energy is the maximum speed increase.
+                </br></br>
+
+                A setup with Energy Recovery down nature may start at 100% if enough energy is recovered during the day, since you would start at 100% tomorrow given enough residual energy.
+                </br></br>
+
+                You can tap on the data points to show a tooltip with information about the event.
+                "
+              ></span>
             </button>
             <div class="card-body" id="energyChartOutputId">
               <canvas id="energyChart"></canvas>
@@ -1023,12 +1046,28 @@
           </div>
           <div class="card mb-2">
             <button
-              class="card-header text-center btn btn-outline-dark"
+              class="card-header btn btn-outline-dark d-flex justify-content-between align-items-center"
               data-target="inventoryChartOutputId"
               data-toggle="collapse"
               id="inventoryChartHeader"
+              style="width: 100%"
             >
-              Inventory Chart <i class="fa fa-caret-down"></i>
+              <span class="text-center" style="flex-grow: 1"> Inventory <i class="fa fa-caret-down"></i> </span>
+              <span
+                class="fa fa-info-circle fa-lg"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                data-bs-html="true"
+                title="
+                <h6>See how fast your Pokémon's carry inventory fills up during the day</h6>
+
+                When inventory is full it is not possible to get skill procs or ingredients anymore, this state is called sneaky snacking.
+                Thus the graph can be used as an indicator for how often you need to check the game on average.
+                </br></br>
+
+                You can tap on the data points to show a tooltip with information about the event.
+                "
+              ></span>
             </button>
             <div class="card-body" id="inventoryChartOutputId">
               <canvas id="inventoryChart"></canvas>
@@ -1036,12 +1075,37 @@
           </div>
           <div class="card mb-2">
             <button
-              class="card-header text-center btn btn-outline-dark"
+              class="card-header btn btn-outline-dark d-flex justify-content-between align-items-center"
               data-target="skillChartOutputId"
               data-toggle="collapse"
               id="skillChartHeader"
+              style="width: 100%"
             >
-              Skill Chart <i class="fa fa-caret-down"></i>
+              <span class="text-center" style="flex-grow: 1"> Skill procs <i class="fa fa-caret-down"></i> </span>
+              <span
+                class="fa fa-info-circle fa-lg"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                data-bs-html="true"
+                title="
+                <h6>See how many skill procs are expected on average.</h6>
+
+                The simulation will both calculate a chance to wake up to a morning skill proc, and estimates the number of skill procs during the day.
+                </br></br>
+
+                It will try to schedule as many full procs during the day as possible. </br>
+                If estimated daily skill procs is 1.5 you would get 1 full proc in the middle of the day and the remaining 0.5 procs will be scheduled before bedtime.
+                </br></br>
+
+                The simulation will use the chance to proc as a skill value multiplier, thus 0.5 chance E4E proc would give <code>0.5 x 18 = 9 energy</code> at skill level 6.
+                </br></br>
+
+                Skills can't happen during sleep, so any time after bedtime will always be empty.
+                </br></br>
+
+                You can tap on the data points to show a tooltip with information about the event.
+                "
+              ></span>
             </button>
             <div class="card-body" id="skillChartOutputId">
               <canvas id="skillChart"></canvas>

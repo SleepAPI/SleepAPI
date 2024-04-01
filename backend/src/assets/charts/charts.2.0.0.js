@@ -352,7 +352,7 @@ function skillChart(log) {
           },
           title: {
             display: true,
-            text: 'Fraction of power',
+            text: 'Chance to proc',
             color: 'white',
             font: {
               size: 12,
