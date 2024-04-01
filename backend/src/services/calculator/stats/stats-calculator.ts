@@ -32,14 +32,18 @@ export function calculateSubskillCarrySize(subskills: subskill.SubSkill[]): numb
 
 // Calculate help speed subskills and clamp at 35% boost
 export function calculateHelpSpeedSubskills(subskills: subskill.SubSkill[], nrOfHelpBonus: number) {
-  const clampedNrOfHelpBonus = Math.min(5, nrOfHelpBonus);
+  const userAndTeamHelpBonus = subskills.some(({ name }) => name === subskill.HELPING_BONUS.name)
+    ? nrOfHelpBonus + 1
+    : nrOfHelpBonus;
+  const helpBonus = subskill.HELPING_BONUS.amount * Math.min(5, userAndTeamHelpBonus);
+
   const helpM = subskills.some(({ name }) => name === subskill.HELPING_SPEED_M.name)
     ? subskill.HELPING_SPEED_M.amount
     : 0;
   const helpS = subskills.some(({ name }) => name === subskill.HELPING_SPEED_S.name)
     ? subskill.HELPING_SPEED_S.amount
     : 0;
-  const helpBonus = 0.05 * clampedNrOfHelpBonus;
+
   return roundDown(Math.max(0.65, 1 - helpM - helpS - helpBonus), 2);
 }
 

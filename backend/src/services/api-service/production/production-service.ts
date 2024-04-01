@@ -70,8 +70,8 @@ export function calculatePokemonProduction(
             subskill.BERRY_FINDING_S,
             subskill.HELPING_SPEED_M,
             subskill.HELPING_SPEED_S,
+            subskill.HELPING_BONUS,
             subskill.SKILL_TRIGGER_M,
-            subskill.SKILL_TRIGGER_S,
           ],
           input.level
         ),
@@ -91,7 +91,7 @@ export function calculatePokemonProduction(
             subskill.HELPING_SPEED_M,
             subskill.SKILL_TRIGGER_S,
             subskill.HELPING_SPEED_S,
-            subskill.INVENTORY_L,
+            subskill.HELPING_BONUS,
           ],
           input.level
         ),

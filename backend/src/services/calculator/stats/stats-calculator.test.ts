@@ -36,6 +36,9 @@ describe('calculateHelpSpeedSubskills', () => {
   it('shall calculate and clamp helpS helpSpeed factor from subskills', () => {
     expect(calculateHelpSpeedSubskills([subskill.HELPING_SPEED_S, subskill.HELPING_SPEED_M], 3)).toBe(0.65);
   });
+  it('shall calculate and clamp helping bonus if user and team exceeds 5', () => {
+    expect(calculateHelpSpeedSubskills([subskill.HELPING_BONUS], 5)).toBe(0.75);
+  });
 });
 
 describe('extractIngredientSubskills', () => {
