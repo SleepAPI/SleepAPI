@@ -273,7 +273,7 @@ class WebsiteConverterServiceImpl {
 
     const teamInput: string[] = [];
     if (filters.e4eProcs > 0) {
-      teamInput.push(`E4E: ${filters.e4eProcs} x 18 energy`);
+      teamInput.push(`E4E: ${filters.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[filters.e4eLevel - 1]} energy`);
     }
     if (filters.helperBoostProcs > 0) {
       teamInput.push(
@@ -416,7 +416,7 @@ class WebsiteConverterServiceImpl {
 
     const teamInput: string[] = [];
     if (details.e4eProcs > 0) {
-      teamInput.push(`E4E: ${details.e4eProcs} x 18 energy`);
+      teamInput.push(`E4E: ${details.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[details.e4eLevel - 1]} energy`);
     }
     if (details.helperBoostProcs > 0) {
       teamInput.push(
