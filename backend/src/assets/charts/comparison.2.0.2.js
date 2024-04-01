@@ -43,11 +43,17 @@ function comparisonChart(
         ingredients: neutralSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
-          percentage: calculatePercentageOfOptimal(
+          percentageOfSame: calculatePercentageOfOptimal(
             amount,
             optimalIngredientSetup.ingredients[i].amount,
             optimalBerrySetup.ingredients[i].amount,
             optimalSkillSetup.ingredients[i].amount
+          ),
+          percentageOfTotal: calculatePercentageOfOptimal(
+            amount,
+            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
           ),
         })),
       },
@@ -82,11 +88,17 @@ function comparisonChart(
         ingredients: userSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
-          percentage: calculatePercentageOfOptimal(
+          percentageOfSame: calculatePercentageOfOptimal(
             amount,
             optimalIngredientSetup.ingredients[i].amount,
             optimalBerrySetup.ingredients[i].amount,
             optimalSkillSetup.ingredients[i].amount
+          ),
+          percentageOfTotal: calculatePercentageOfOptimal(
+            amount,
+            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
           ),
         })),
       },
@@ -128,11 +140,17 @@ function comparisonChart(
         ingredients: optimalForSpecialty.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
-          percentage: calculatePercentageOfOptimal(
+          percentageOfSame: calculatePercentageOfOptimal(
             amount,
             optimalIngredientSetup.ingredients[i].amount,
             optimalBerrySetup.ingredients[i].amount,
             optimalSkillSetup.ingredients[i].amount
+          ),
+          percentageOfTotal: calculatePercentageOfOptimal(
+            amount,
+            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
           ),
         })),
       },
@@ -304,7 +322,7 @@ function formatData(rawData, setupType, specialty) {
 
   const arr = [];
   arr.push({
-    data: [rawData.ingredients[0].percentage, rawData.berries.percentage, rawData.skills.percentage],
+    data: [rawData.ingredients[0].percentageOfTotal, rawData.berries.percentage, rawData.skills.percentage],
     backgroundColor: [
       `#fec34f${setupType === 'user' ? 'ff' : '50'}`,
       `#23da6c${setupType === 'user' ? 'ff' : '50'}`,
@@ -319,7 +337,7 @@ function formatData(rawData, setupType, specialty) {
         setupType,
         item: rawData.ingredients[0].ingredient.name,
         amount: rawData.ingredients[0].amount,
-        percentage: rawData.ingredients[0].percentage,
+        percentage: rawData.ingredients[0].percentageOfSame,
       },
       {
         specialty,
@@ -343,7 +361,7 @@ function formatData(rawData, setupType, specialty) {
   if (rawData.ingredients.length > 1) {
     for (const ing of rawData.ingredients.slice(1)) {
       arr.push({
-        data: [ing.percentage],
+        data: [ing.percentageOfTotal],
         backgroundColor: `#fec34f${setupType === 'user' ? 'ff' : '50'}`,
         borderWidth: 1,
         stack: setupType,
@@ -354,7 +372,7 @@ function formatData(rawData, setupType, specialty) {
             setupType,
             item: ing.ingredient.name,
             amount: ing.amount,
-            percentage: ing.percentage,
+            percentage: ing.percentageOfSame,
           },
         ],
       });
