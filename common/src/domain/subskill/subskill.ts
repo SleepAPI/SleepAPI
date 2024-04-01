@@ -13,6 +13,11 @@ export const ENERGY_RECOVERY_BONUS: SubSkill = {
   amount: 0.14,
 };
 
+export const HELPING_BONUS: SubSkill = {
+  name: 'Helping Bonus',
+  amount: 0.05,
+};
+
 export const HELPING_SPEED_S: SubSkill = {
   name: 'Helping Speed S',
   amount: 0.07,
@@ -76,6 +81,7 @@ export const SLEEP_EXP_BONUS: SubSkill = {
 export const SUBSKILLS: SubSkill[] = [
   BERRY_FINDING_S,
   ENERGY_RECOVERY_BONUS,
+  HELPING_BONUS,
   HELPING_SPEED_S,
   HELPING_SPEED_M,
   INGREDIENT_FINDER_S,

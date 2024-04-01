@@ -12,6 +12,7 @@ describe('getSubskillNames', () => {
       [
         "Berry Finding S",
         "Energy Recovery Bonus",
+        "Helping Bonus",
         "Helping Speed S",
         "Helping Speed M",
         "Ingredient Finder S",
