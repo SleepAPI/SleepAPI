@@ -40,14 +40,14 @@ function comparisonChart(
             optimalSkillSetup.skills
           ),
         },
-        ingredients: neutralSetup.ingredients.map(({ amount, ingredient }) => ({
+        ingredients: neutralSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
           percentage: calculatePercentageOfOptimal(
             amount,
-            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
+            optimalIngredientSetup.ingredients[i].amount,
+            optimalBerrySetup.ingredients[i].amount,
+            optimalSkillSetup.ingredients[i].amount
           ),
         })),
       },
@@ -79,14 +79,14 @@ function comparisonChart(
             optimalSkillSetup.skills
           ),
         },
-        ingredients: userSetup.ingredients.map(({ amount, ingredient }) => ({
+        ingredients: userSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
           percentage: calculatePercentageOfOptimal(
             amount,
-            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
+            optimalIngredientSetup.ingredients[i].amount,
+            optimalBerrySetup.ingredients[i].amount,
+            optimalSkillSetup.ingredients[i].amount
           ),
         })),
       },
@@ -125,14 +125,14 @@ function comparisonChart(
             optimalSkillSetup.skills
           ),
         },
-        ingredients: optimalForSpecialty.ingredients.map(({ amount, ingredient }) => ({
+        ingredients: optimalForSpecialty.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
           amount,
           percentage: calculatePercentageOfOptimal(
             amount,
-            optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
+            optimalIngredientSetup.ingredients[i].amount,
+            optimalBerrySetup.ingredients[i].amount,
+            optimalSkillSetup.ingredients[i].amount
           ),
         })),
       },
