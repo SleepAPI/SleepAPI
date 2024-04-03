@@ -127,6 +127,13 @@
       .card-body {
         padding: 0.25rem 0.25rem;
       }
+
+      .btn-group .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+      }
     </style>
 
     <script src="functions.2.0.2.js"></script>
@@ -240,15 +247,24 @@
     </script>
     <script>
       $(document).ready(function () {
-        document.getElementById('pokemon').addEventListener('change', function () {
-          var selectedPokemon = this.value;
-          if (selectedPokemon !== 'Pokémon') {
+        // remove disabled from submit button if pokemon and level chosen
+        function updateButtonState() {
+          var selectedPokemon = document.getElementById('pokemon').value;
+          var selectedLevel = [...document.querySelectorAll('input[name="level"]')].some((radio) => radio.checked);
+
+          if (selectedPokemon !== 'Pokémon' && selectedLevel) {
             document.getElementById('ingredientDropdown').removeAttribute('disabled');
             document.getElementById('submitButton').removeAttribute('disabled');
           } else {
             document.getElementById('ingredientDropdown').setAttribute('disabled', true);
             document.getElementById('submitButton').setAttribute('disabled', true);
           }
+        }
+
+        document.getElementById('pokemon').addEventListener('change', updateButtonState);
+
+        document.querySelectorAll('input[name="level"]').forEach((radio) => {
+          radio.addEventListener('change', updateButtonState);
         });
       });
     </script>
@@ -299,45 +315,6 @@
       });
     </script>
     <script>
-      // add event listeners to slider minus and plus buttons
-      $(document).ready(function () {
-        document.querySelectorAll('.decreaseValue').forEach((button) => {
-          button.addEventListener('click', function () {
-            var container = this.parentElement;
-            var slider = container.querySelector('.slider-input');
-            var currentValue = parseInt(slider.value);
-            if (currentValue > parseInt(slider.min)) {
-              slider.value = currentValue - 1;
-              updateSliderValue(slider);
-            }
-          });
-        });
-
-        document.querySelectorAll('.increaseValue').forEach((button) => {
-          button.addEventListener('click', function () {
-            var container = this.parentElement;
-            var slider = container.querySelector('.slider-input');
-            var currentValue = parseInt(slider.value);
-            if (currentValue < parseInt(slider.max)) {
-              slider.value = currentValue + 1;
-              updateSliderValue(slider);
-            }
-          });
-        });
-
-        function updateSliderValue(slider) {
-          var valueDisplay = document.querySelector('.slider-value[data-for="' + slider.id + '"]');
-          valueDisplay.innerText = slider.value;
-        }
-
-        document.querySelectorAll('.slider-input').forEach((slider) => {
-          slider.oninput = function () {
-            updateSliderValue(this);
-          };
-        });
-      });
-    </script>
-    <script>
       $(document).ready(function () {
         // Enable tooltips
         $('[data-bs-toggle="tooltip"]').each(function () {
@@ -360,6 +337,59 @@
         });
       });
     </script>
+    <script>
+      // initialize custom level popover and add focus toggle event listeners
+      $(document).ready(function () {
+        var options = {
+          html: true,
+          content: $('[data-name="popover-content"]'),
+          placement: 'auto',
+          popperConfig: {
+            modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [65, 60],
+                },
+              },
+            ],
+          },
+        };
+
+        var exampleEl = document.getElementById('valueCustom');
+        var popover = new bootstrap.Popover(exampleEl, options);
+
+        $('#valueCustom').on('shown.bs.popover', function () {
+          $('.popover').find('#popoverInput').focus();
+        });
+
+        function closePopover() {
+          $(exampleEl).popover('hide');
+        }
+
+        exampleEl.addEventListener('click', function (e) {
+          e.stopPropagation();
+          $(exampleEl).popover('toggle');
+        });
+
+        $(document).on('click', function (e) {
+          if (!$(e.target).closest('#valueCustom').length && !$(e.target).closest('.popover').length) {
+            $(exampleEl).popover('hide');
+          }
+        });
+
+        $(document).on('click', '.popover', function (e) {
+          e.stopPropagation();
+        });
+
+        $(document).on('change', '#popoverInput', function (e) {
+          var value = e.target.value;
+          document.getElementById('customPopover').textContent = value;
+          document.getElementById('valueCustom').value = value;
+          $(exampleEl).popover('hide');
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -374,23 +404,19 @@
       </a>
     </div>
 
-    <header style="text-align: center">
-      <br />
-      <h1>Production Calculator</h1>
-      <h4>Simulate your Pokémon's production</h4>
-
-      <p>
-        <a
-          class="btn btn-outline-dark"
-          data-bs-toggle="collapse"
-          href="#collapseExample"
-          role="button"
-          aria-expanded="false"
-          aria-controls="collapseExample"
-        >
-          Show more details <i class="fa fa-caret-down"></i>
-        </a>
-      </p>
+    <header class="text-center mb-2">
+      <img id="sleepapi-icon" src="cook.png" alt="Sleep API icon" style="height: 100px; margin-top: 10px" />
+      <a
+        href="#collapseExample"
+        data-bs-toggle="collapse"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+        style="text-decoration: none; color: currentColor"
+      >
+        <h1 style="margin: 0; color: #f5f5f5">
+          Production Calculator <i class="fa fa-info-circle" style="color: #f5f5f5"></i>
+        </h1>
+      </a>
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
           <h3>
@@ -446,9 +472,8 @@
       </div>
     </header>
 
-    <div style="text-align: center">
-      <h3>Select your settings</h3>
-      <select id="pokemon" name="pokemon" class="btn btn-outline-dark" style="margin-bottom: 10px">
+    <div class="text-center">
+      <select id="pokemon" name="pokemon" class="btn btn-outline-dark" style="margin-bottom: 10px; height: 40px">
         <option value="Pokémon" selected>Pokémon</option>
         <option value="ABOMASNOW">Abomasnow</option>
         <option value="ABSOL">Absol</option>
@@ -599,7 +624,7 @@
         </ul>
       </div>
 
-      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px">
+      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px; height: 40px">
         <option value="bashful" selected>Nature</option>
         <option value="lonely">Lonely (+speed -energy)</option>
         <option value="adamant">Adamant (+speed -ing)</option>
@@ -639,7 +664,7 @@
             class="btn btn-outline-dark dropdown-toggle"
             type="button"
             id="multiSelectDropdown"
-            style="width: 300px"
+            style="width: 300px; height: 40px"
             data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
@@ -717,29 +742,67 @@
         </div>
       </div>
 
-      <div class="slider-container">
-        <label for="level" class="form-label">Level:&nbsp;</label><span class="slider-value" data-for="level">60</span
-        ><br />
-        <div class="d-flex align-items-center justify-content-center input-group">
-          <button type="button" class="btn btn-outline-dark custom-background decreaseValue" style="width: 30px">
-            -
-          </button>
-          <input
-            type="range"
-            class="form-range slider-input custom-background"
-            autocomplete="off"
-            id="level"
-            name="level"
-            value="60"
-            min="1"
-            max="100"
-            style="width: 240px"
-          />
-          <button type="button" class="btn btn-outline-dark custom-background increaseValue" style="width: 30px">
-            +
-          </button>
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <div style="width: 300px">
+          <div class="btn-group" role="group" aria-label="Level Selection" style="height: 40px">
+            <input type="radio" class="btn-check" autocomplete="off" disabled />
+            <label class="btn btn-outline-dark">Level</label>
+
+            <input type="radio" class="btn-check" name="level" id="value10" value="10" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="value10">10</label>
+
+            <input type="radio" class="btn-check" name="level" id="value25" value="25" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="value25">25</label>
+
+            <input type="radio" class="btn-check" name="level" id="value30" value="30" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="value30">30</label>
+
+            <input type="radio" class="btn-check" name="level" id="value50" value="50" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="value50">50</label>
+
+            <input type="radio" class="btn-check" name="level" id="value60" value="60" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="value60">60</label>
+
+            <div hidden>
+              <div data-name="popover-content">
+                <input type="number" class="form-control" name="level" id="popoverInput" placeholder="Enter level" />
+              </div>
+            </div>
+
+            <input type="radio" class="btn-check" name="level" id="valueCustom" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="valueCustom" id="customPopover" title="Custom Level">+</label>
+          </div>
         </div>
-        <br />
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <div style="width: 300px">
+          <div class="btn-group" role="group" aria-label="Skill Level Selection" style="height: 40px">
+            <input type="radio" class="btn-check" autocomplete="off" disabled />
+            <label class="btn btn-outline-dark">Skill Lv.</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl1" value="1" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl1">1</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl2" value="2" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl2">2</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl3" value="3" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl3">3</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl4" value="4" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl4">4</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl5" value="5" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl5">5</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl6" value="6" autocomplete="off" />
+            <label class="btn btn-outline-dark" for="sl6">6</label>
+
+            <input type="radio" class="btn-check" name="skillLevel" id="sl7" value="7" autocomplete="off" checked />
+            <label class="btn btn-outline-dark" for="sl7">7</label>
+          </div>
+        </div>
       </div>
 
       <p>
@@ -756,51 +819,76 @@
       </p>
       <div class="collapse" id="advancedSettings">
         <div class="card card-body" style="display: block; text-align: center">
-          <h5>All advanced settings are optional</h5>
+          <h5 class="mt-2 mb-3">Team settings</h5>
 
-          <label for="skilllevel" class="form-label">Main skill level:&nbsp;</label><span id="skilllevelValue">7</span
-          ><br />
-          <input
-            type="range"
-            class="form-range"
-            autocomplete="off"
-            id="skilllevel"
-            name="skilllevel"
-            value="7"
-            min="1"
-            max="7"
-            style="width: 300px"
-            oninput="updateValue(this)"
-          /><br />
+          <div class="d-flex align-items-center justify-content-center mb-3">
+            <div style="width: 300px">
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="Helping Bonus Selection"
+                style="width: 300px; height: 40px"
+              >
+                <input type="radio" class="btn-check" autocomplete="off" disabled />
+                <label class="btn btn-outline-dark">Helping bonus</label>
 
-          <label for="helpingbonus" class="form-label">Helping bonus:&nbsp;</label><span id="helpingbonusValue">0</span
-          ><br />
-          <input
-            type="range"
-            class="form-range"
-            autocomplete="off"
-            id="helpingbonus"
-            name="helpingbonus"
-            value="0"
-            min="0"
-            max="4"
-            style="width: 300px"
-            oninput="updateValue(this)"
-          /><br />
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="helpingBonus"
+                  id="hb0"
+                  value="0"
+                  autocomplete="off"
+                  checked
+                />
+                <label class="btn btn-outline-dark" for="hb0">0</label>
 
-          <label for="erb" class="form-label">Energy recovery bonus:&nbsp;</label><span id="erbValue">0</span><br />
-          <input
-            type="range"
-            class="form-range"
-            autocomplete="off"
-            id="erb"
-            name="erb"
-            value="0"
-            min="0"
-            max="5"
-            style="width: 300px"
-            oninput="updateValue(this)"
-          />
+                <input type="radio" class="btn-check" name="helpingBonus" id="hb1" value="1" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="hb1">1</label>
+
+                <input type="radio" class="btn-check" name="helpingBonus" id="hb2" value="2" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="hb2">2</label>
+
+                <input type="radio" class="btn-check" name="helpingBonus" id="hb3" value="3" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="hb3">3</label>
+
+                <input type="radio" class="btn-check" name="helpingBonus" id="hb4" value="4" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="hb4">4</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-center mb-3">
+            <div style="width: 300px">
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="Energy Recovery Bonus Selection"
+                style="width: 300px; height: 40px"
+              >
+                <input type="radio" class="btn-check" autocomplete="off" disabled />
+                <label class="btn btn-outline-dark">ERB</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb0" value="0" autocomplete="off" checked />
+                <label class="btn btn-outline-dark" for="erb0">0</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb1" value="1" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="erb1">1</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb2" value="2" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="erb2">2</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb3" value="3" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="erb3">3</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb4" value="4" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="erb4">4</label>
+
+                <input type="radio" class="btn-check" name="erb" id="erb5" value="5" autocomplete="off" />
+                <label class="btn btn-outline-dark" for="erb5">5</label>
+              </div>
+            </div>
+          </div>
 
           <div class="d-flex align-items-center justify-content-center mb-2">
             <div class="input-group d-flex flex-column" style="width: 300px">
@@ -847,7 +935,7 @@
             </div>
           </div>
 
-          <div class="d-flex align-items-center justify-content-center mb-2">
+          <div class="d-flex align-items-center justify-content-center mb-3">
             <div class="input-group d-flex flex-column" style="width: 300px">
               <div class="d-flex w-100">
                 <div class="text-center" style="flex: 1 1 15%">Level</div>
@@ -904,7 +992,11 @@
             </div>
           </div>
 
-          <div class="d-flex justify-content-center align-items-center mb-3">
+          <hr />
+
+          <h5 class="mb-2">Player settings</h5>
+
+          <div class="d-flex justify-content-center align-items-center mb-2">
             <label class="form-check-label order-1" for="camp">Good camp:</label>
             <div class="form-check form-switch ms-3 order-2">
               <input class="form-check-input" type="checkbox" role="switch" id="camp" />
@@ -924,7 +1016,7 @@
             />
           </div>
 
-          <div class="d-flex justify-content-center align-items-center">
+          <div class="d-flex justify-content-center align-items-center mb-2">
             <label class="form-check-label order-1" for="mainWakeup">Wake up:</label>
             <input
               type="time"
