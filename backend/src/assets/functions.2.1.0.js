@@ -174,6 +174,26 @@ function showMenu() {
   }
 }
 
+let selectedSubskills = [];
+// prod calc subskill selector
+document.addEventListener('DOMContentLoaded', (event) => {
+  var selectPicker = document.getElementById('subskills');
+
+  selectPicker.addEventListener('change', function () {
+    var currentSelectedValues = Array.from(this.options)
+      .filter((option) => option.selected)
+      .map((option) => option.value);
+    var newlySelectedValue = currentSelectedValues.filter((value) => !selectedSubskills.includes(value));
+    var newlyDeselectedValue = selectedSubskills.filter((value) => !currentSelectedValues.includes(value));
+
+    if (newlySelectedValue.length > 0) {
+      selectedSubskills.push(...newlySelectedValue);
+    } else if (newlyDeselectedValue.length > 0) {
+      selectedSubskills = selectedSubskills.filter((value) => !newlyDeselectedValue.includes(value));
+    }
+  });
+});
+
 // --- API CALLS ---
 
 function goToProductionCalculator() {
@@ -185,8 +205,8 @@ function goToProductionCalculator() {
 
   var body = {
     level: +document.querySelector('input[name="level"]:checked').value,
-    nature: document.getElementById('nature').value,
-    subskills: checkedValues,
+    nature: document.getElementById('nature').value || 'bashful',
+    subskills: selectedSubskills,
     skillLevel: +document.querySelector('input[name="skillLevel"]:checked').value,
     e4eProcs: +document.getElementById('e4eProcs').value,
     e4eLevel: +document.getElementById('e4eLevel').value,
