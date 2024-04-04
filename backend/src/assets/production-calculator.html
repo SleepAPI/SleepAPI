@@ -35,7 +35,25 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/global.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css"
+    />
+
     <style>
+      .bootstrap-select .btn:focus {
+        outline: none !important;
+      }
+
+      input.form-control:focus {
+        border-color: #f04545;
+        box-shadow: 0 0 0 0.25rem rgba(240, 69, 69, 0.25);
+      }
+
+      .dropdown-menu {
+        --bs-dropdown-link-active-bg: #f04545;
+      }
+
       .dropdown-toggle {
         white-space: normal;
       }
@@ -134,12 +152,22 @@
         justify-content: center;
         height: 100%;
       }
+      .dropdown-item.selected {
+        color: #f04545;
+      }
+      .bootstrap-select .dropdown-toggle {
+        height: 40px;
+      }
+      .bootstrap-select .dropdown-toggle .filter-option {
+        text-align: center;
+        height: 90%;
+      }
     </style>
 
-    <script src="functions.2.0.3.js"></script>
-    <script src="charts/chart-utils.2.0.3.js"></script>
-    <script src="charts/charts.2.0.3.js"></script>
-    <script src="charts/comparison.2.0.3.js"></script>
+    <script src="functions.2.1.0.js"></script>
+    <script src="charts/chart-utils.2.1.0.js"></script>
+    <script src="charts/charts.2.1.0.js"></script>
+    <script src="charts/comparison.2.1.0.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -150,19 +178,10 @@
       integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"
-      integrity="sha384-OkuKCCwNNAv3fnqHH7lwPY3m5kkvCIUnsHbjdU7sN022wAYaQUfXkqyIZLlL0xQ/"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"
-      integrity="sha384-29LyJx1+1j98d6pqDn6FDyw3dBUacW3vjeiwEXWZMj/fdulg6SuF4vLtBilbjY+c"
-      crossorigin="anonymous"
-    ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.0/dist/chartjs-adapter-moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
     <script>
       $(document).ready(function () {
@@ -474,9 +493,15 @@
       </div>
     </header>
 
-    <div class="text-center">
-      <select id="pokemon" name="pokemon" class="btn btn-outline-dark" style="margin-bottom: 10px; height: 40px">
-        <option value="Pokémon" selected>Pokémon</option>
+    <div class="d-flex align-items-center justify-content-center mb-2">
+      <select
+        class="selectpicker"
+        id="pokemon"
+        name="pokemon"
+        data-live-search="true"
+        title="Pokémon"
+        data-width="300px"
+      >
         <option value="ABOMASNOW">Abomasnow</option>
         <option value="ABSOL">Absol</option>
         <option value="ALTARIA">Altaria</option>
@@ -607,8 +632,9 @@
         <option value="WOBBUFFET">Wobbuffet</option>
         <option value="WYNAUT">Wynaut</option>
       </select>
-      <br />
+    </div>
 
+    <div class="d-flex align-items-center justify-content-center mb-2">
       <div class="dropdown">
         <button
           class="btn btn-outline-dark dropdown-toggle"
@@ -616,7 +642,7 @@
           id="ingredientDropdown"
           data-bs-toggle="dropdown"
           aria-expanded="false"
-          style="width: 300px; height: 40px; margin-bottom: 10px"
+          style="width: 300px; height: 40px"
           disabled
         >
           Ingredients
@@ -625,9 +651,10 @@
           <!-- Dynamic content will be added here -->
         </ul>
       </div>
+    </div>
 
-      <select id="nature" class="btn btn-outline-dark" style="margin-bottom: 10px; height: 40px">
-        <option value="bashful" selected>Nature</option>
+    <div class="d-flex align-items-center justify-content-center mb-2">
+      <select class="selectpicker" id="nature" name="nature" data-live-search="true" title="Nature" data-width="300px">
         <option value="lonely">Lonely (+speed -energy)</option>
         <option value="adamant">Adamant (+speed -ing)</option>
         <option value="naughty">Naughty (+speed -skill)</option>
@@ -659,376 +686,300 @@
         <option value="quirky">Quirky (neutral)</option>
         <option value="serious">Serious (neutral)</option>
       </select>
+    </div>
 
-      <div class="container" id="subskills" style="margin-bottom: 10px">
-        <div class="dropdown">
-          <button
-            class="btn btn-outline-dark dropdown-toggle"
-            type="button"
-            id="multiSelectDropdown"
-            style="width: 300px; height: 40px"
-            data-bs-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Subskills
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="BFS" value="Berry Finding S" id="Berry_Finding_S" />
-                Berry Finding S
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="HB" value="Helping Bonus" id="Helping_Bonus" />
-                Helping Bonus
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Help M" value="Helping Speed M" id="Helping_Speed_M" />
-                Helping Speed M
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Help S" value="Helping Speed S" id="Helping_Speed_S" />
-                Helping Speed S
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Ing M" value="Ingredient Finder M" id="Ingredient_Finder_M" />
-                Ingredient Finder M
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Ing S" value="Ingredient Finder S" id="Ingredient_Finder_S" />
-                Ingredient Finder S
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Inv L" value="Inventory Up L" id="Inventory_Up_L" />
-                Inventory Up L
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Inv M" value="Inventory Up M" id="Inventory_Up_M" />
-                Inventory Up M
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Inv S" value="Inventory Up S" id="Inventory_Up_S" />
-                Inventory Up S
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Skill M" value="Skill Trigger M" id="Skill_Trigger_M" />
-                Skill Trigger M
-              </label>
-            </li>
-            <li>
-              <label class="dropdown-label">
-                <input type="checkbox" name="Skill S" value="Skill Trigger S" id="Skill_Trigger_S" />
-                Skill Trigger S
-              </label>
-            </li>
-          </ul>
+    <div class="d-flex align-items-center justify-content-center mb-2">
+      <select
+        class="selectpicker"
+        id="subskills"
+        data-live-search="true"
+        title="Sub-skills"
+        data-max-options="5"
+        data-width="300px"
+        multiple
+      >
+        <option value="Berry Finding S" title="BFS">Berry Finding S</option>
+        <option value="Helping Bonus" title="HB">Helping Bonus</option>
+        <option value="Helping Speed M" title="Help M">Helping Speed M</option>
+        <option value="Helping Speed S" title="Help S">Helping Speed S</option>
+        <option value="Ingredient Finder M" title="Ing M">Ingredient Finder M</option>
+        <option value="Ingredient Finder S" title="Ing S">Ingredient Finder S</option>
+        <option value="Inventory Up L" title="Inv L">Inventory Up L</option>
+        <option value="Inventory Up M" title="Inv M">Inventory Up M</option>
+        <option value="Inventory Up S" title="Inv S">Inventory Up S</option>
+        <option value="Skill Trigger M" title="Skill M">Skill Trigger M</option>
+        <option value="Skill Trigger S" title="Skill S">Skill Trigger S</option>
+      </select>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center mb-2">
+      <div class="btn-group" role="group" aria-label="Level Selection" style="width: 300px; height: 40px">
+        <input type="radio" class="btn-check" autocomplete="off" disabled />
+        <label class="btn btn-outline-dark">Level</label>
+
+        <input type="radio" class="btn-check" name="level" id="value10" value="10" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="value10">10</label>
+
+        <input type="radio" class="btn-check" name="level" id="value25" value="25" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="value25">25</label>
+
+        <input type="radio" class="btn-check" name="level" id="value30" value="30" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="value30">30</label>
+
+        <input type="radio" class="btn-check" name="level" id="value50" value="50" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="value50">50</label>
+
+        <input type="radio" class="btn-check" name="level" id="value60" value="60" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="value60">60</label>
+
+        <div hidden>
+          <div data-name="popover-content">
+            <input type="number" class="form-control" name="level" id="popoverInput" placeholder="Enter level" />
+          </div>
         </div>
+
+        <input type="radio" class="btn-check" name="level" id="valueCustom" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="valueCustom" id="customPopover" title="Custom Level">+</label>
       </div>
+    </div>
 
-      <div class="d-flex align-items-center justify-content-center mb-3">
-        <div style="width: 300px">
-          <div class="btn-group" role="group" aria-label="Level Selection" style="height: 40px">
-            <input type="radio" class="btn-check" autocomplete="off" disabled />
-            <label class="btn btn-outline-dark">Level</label>
+    <div class="d-flex align-items-center justify-content-center mb-3">
+      <div class="btn-group" role="group" aria-label="Skill Level Selection" style="width: 300px; height: 40px">
+        <input type="radio" class="btn-check" autocomplete="off" disabled />
+        <label class="btn btn-outline-dark">Skill Lv.</label>
 
-            <input type="radio" class="btn-check" name="level" id="value10" value="10" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="value10">10</label>
+        <input type="radio" class="btn-check" name="skillLevel" id="sl1" value="1" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl1">1</label>
 
-            <input type="radio" class="btn-check" name="level" id="value25" value="25" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="value25">25</label>
+        <input type="radio" class="btn-check" name="skillLevel" id="sl2" value="2" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl2">2</label>
 
-            <input type="radio" class="btn-check" name="level" id="value30" value="30" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="value30">30</label>
+        <input type="radio" class="btn-check" name="skillLevel" id="sl3" value="3" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl3">3</label>
 
-            <input type="radio" class="btn-check" name="level" id="value50" value="50" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="value50">50</label>
+        <input type="radio" class="btn-check" name="skillLevel" id="sl4" value="4" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl4">4</label>
 
-            <input type="radio" class="btn-check" name="level" id="value60" value="60" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="value60">60</label>
+        <input type="radio" class="btn-check" name="skillLevel" id="sl5" value="5" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl5">5</label>
 
-            <div hidden>
-              <div data-name="popover-content">
-                <input type="number" class="form-control" name="level" id="popoverInput" placeholder="Enter level" />
+        <input type="radio" class="btn-check" name="skillLevel" id="sl6" value="6" autocomplete="off" />
+        <label class="btn btn-outline-dark" for="sl6">6</label>
+
+        <input type="radio" class="btn-check" name="skillLevel" id="sl7" value="7" autocomplete="off" checked />
+        <label class="btn btn-outline-dark" for="sl7">7</label>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center mb-3">
+      <a
+        class="btn btn-outline-dark"
+        data-bs-toggle="collapse"
+        href="#advancedSettings"
+        role="button"
+        aria-expanded="false"
+        aria-controls="advancedSettings"
+      >
+        Advanced settings <i class="fa fa-caret-down"></i>
+      </a>
+    </div>
+
+    <div class="collapse" id="advancedSettings">
+      <div class="card card-body" style="display: block; text-align: center">
+        <h5 class="mt-2 mb-3">Team settings</h5>
+
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <div style="width: 300px">
+            <div class="btn-group" role="group" aria-label="Helping Bonus Selection" style="width: 300px; height: 40px">
+              <input type="radio" class="btn-check" autocomplete="off" disabled />
+              <label class="btn btn-outline-dark">Helping bonus</label>
+
+              <input type="radio" class="btn-check" name="helpingBonus" id="hb0" value="0" autocomplete="off" checked />
+              <label class="btn btn-outline-dark" for="hb0">0</label>
+
+              <input type="radio" class="btn-check" name="helpingBonus" id="hb1" value="1" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="hb1">1</label>
+
+              <input type="radio" class="btn-check" name="helpingBonus" id="hb2" value="2" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="hb2">2</label>
+
+              <input type="radio" class="btn-check" name="helpingBonus" id="hb3" value="3" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="hb3">3</label>
+
+              <input type="radio" class="btn-check" name="helpingBonus" id="hb4" value="4" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="hb4">4</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <div style="width: 300px">
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="Energy Recovery Bonus Selection"
+              style="width: 300px; height: 40px"
+            >
+              <input type="radio" class="btn-check" autocomplete="off" disabled />
+              <label class="btn btn-outline-dark">ERB</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb0" value="0" autocomplete="off" checked />
+              <label class="btn btn-outline-dark" for="erb0">0</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb1" value="1" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="erb1">1</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb2" value="2" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="erb2">2</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb3" value="3" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="erb3">3</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb4" value="4" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="erb4">4</label>
+
+              <input type="radio" class="btn-check" name="erb" id="erb5" value="5" autocomplete="off" />
+              <label class="btn btn-outline-dark" for="erb5">5</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center mb-2">
+          <div class="input-group d-flex flex-column" style="width: 300px">
+            <div class="d-flex w-100">
+              <div class="text-center" style="flex: 1 1 15%">Level</div>
+              <div class="text-center form-label" style="flex: 1 1 85%">
+                E4E procs:&nbsp;<span id="e4eProcsValue">0</span>
               </div>
             </div>
 
-            <input type="radio" class="btn-check" name="level" id="valueCustom" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="valueCustom" id="customPopover" title="Custom Level">+</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex align-items-center justify-content-center mb-3">
-        <div style="width: 300px">
-          <div class="btn-group" role="group" aria-label="Skill Level Selection" style="height: 40px">
-            <input type="radio" class="btn-check" autocomplete="off" disabled />
-            <label class="btn btn-outline-dark">Skill Lv.</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl1" value="1" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl1">1</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl2" value="2" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl2">2</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl3" value="3" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl3">3</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl4" value="4" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl4">4</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl5" value="5" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl5">5</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl6" value="6" autocomplete="off" />
-            <label class="btn btn-outline-dark" for="sl6">6</label>
-
-            <input type="radio" class="btn-check" name="skillLevel" id="sl7" value="7" autocomplete="off" checked />
-            <label class="btn btn-outline-dark" for="sl7">7</label>
-          </div>
-        </div>
-      </div>
-
-      <p>
-        <a
-          class="btn btn-outline-dark"
-          data-bs-toggle="collapse"
-          href="#advancedSettings"
-          role="button"
-          aria-expanded="false"
-          aria-controls="advancedSettings"
-        >
-          Advanced settings <i class="fa fa-caret-down"></i>
-        </a>
-      </p>
-      <div class="collapse" id="advancedSettings">
-        <div class="card card-body" style="display: block; text-align: center">
-          <h5 class="mt-2 mb-3">Team settings</h5>
-
-          <div class="d-flex align-items-center justify-content-center mb-3">
-            <div style="width: 300px">
-              <div
-                class="btn-group"
-                role="group"
-                aria-label="Helping Bonus Selection"
-                style="width: 300px; height: 40px"
+            <div class="d-flex w-100">
+              <select
+                class="form-select"
+                id="e4eLevel"
+                style="
+                  flex: 1 1 15%;
+                  border-radius: 0.25rem 0 0 0.25rem;
+                  padding: 0;
+                  --bs-form-select-bg-img: none;
+                  text-align: center;
+                "
               >
-                <input type="radio" class="btn-check" autocomplete="off" disabled />
-                <label class="btn btn-outline-dark">Helping bonus</label>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6" selected>6</option>
+              </select>
 
-                <input
-                  type="radio"
-                  class="btn-check"
-                  name="helpingBonus"
-                  id="hb0"
-                  value="0"
-                  autocomplete="off"
-                  checked
-                />
-                <label class="btn btn-outline-dark" for="hb0">0</label>
-
-                <input type="radio" class="btn-check" name="helpingBonus" id="hb1" value="1" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="hb1">1</label>
-
-                <input type="radio" class="btn-check" name="helpingBonus" id="hb2" value="2" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="hb2">2</label>
-
-                <input type="radio" class="btn-check" name="helpingBonus" id="hb3" value="3" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="hb3">3</label>
-
-                <input type="radio" class="btn-check" name="helpingBonus" id="hb4" value="4" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="hb4">4</label>
-              </div>
+              <input
+                type="range"
+                class="form-range custom-background"
+                id="e4eProcs"
+                name="e4eProcs"
+                style="flex: 1 1 85%; border-radius: 0 0.25rem 0.25rem 0"
+                value="0"
+                min="0"
+                max="10"
+                step="1"
+                oninput="updateValue(this)"
+              />
             </div>
           </div>
+        </div>
 
-          <div class="d-flex align-items-center justify-content-center mb-3">
-            <div style="width: 300px">
-              <div
-                class="btn-group"
-                role="group"
-                aria-label="Energy Recovery Bonus Selection"
-                style="width: 300px; height: 40px"
+        <div class="d-flex align-items-center justify-content-center mb-3">
+          <div class="input-group d-flex flex-column" style="width: 300px">
+            <div class="d-flex w-100">
+              <div class="text-center" style="flex: 1 1 15%">Level</div>
+              <div class="text-center" style="flex: 1 1 15%">Unique</div>
+              <div class="text-center form-label" style="flex: 1 1 70%">
+                Helper boost procs:&nbsp;<span id="helperBoostProcsValue">0</span>
+              </div>
+            </div>
+
+            <div class="d-flex w-100">
+              <select
+                class="form-select"
+                id="helperBoostLevel"
+                style="
+                  flex: 1 1 15%;
+                  border-radius: 0.25rem 0 0 0.25rem;
+                  padding: 0;
+                  --bs-form-select-bg-img: none;
+                  text-align: center;
+                "
               >
-                <input type="radio" class="btn-check" autocomplete="off" disabled />
-                <label class="btn btn-outline-dark">ERB</label>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6" selected>6</option>
+              </select>
+              <select
+                class="form-select"
+                id="helperBoostUnique"
+                style="flex: 1 1 15%; border-radius: 0; padding: 0; --bs-form-select-bg-img: none; text-align: center"
+              >
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
 
-                <input type="radio" class="btn-check" name="erb" id="erb0" value="0" autocomplete="off" checked />
-                <label class="btn btn-outline-dark" for="erb0">0</label>
-
-                <input type="radio" class="btn-check" name="erb" id="erb1" value="1" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="erb1">1</label>
-
-                <input type="radio" class="btn-check" name="erb" id="erb2" value="2" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="erb2">2</label>
-
-                <input type="radio" class="btn-check" name="erb" id="erb3" value="3" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="erb3">3</label>
-
-                <input type="radio" class="btn-check" name="erb" id="erb4" value="4" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="erb4">4</label>
-
-                <input type="radio" class="btn-check" name="erb" id="erb5" value="5" autocomplete="off" />
-                <label class="btn btn-outline-dark" for="erb5">5</label>
-              </div>
+              <input
+                type="range"
+                class="form-range custom-background"
+                id="helperBoostProcs"
+                name="helperBoostProcs"
+                style="flex: 1 1 70%; border-radius: 0 0.25rem 0.25rem 0"
+                value="0"
+                min="0"
+                max="10"
+                step="1"
+                oninput="updateValue(this)"
+              />
             </div>
           </div>
+        </div>
 
-          <div class="d-flex align-items-center justify-content-center mb-2">
-            <div class="input-group d-flex flex-column" style="width: 300px">
-              <div class="d-flex w-100">
-                <div class="text-center" style="flex: 1 1 15%">Level</div>
-                <div class="text-center form-label" style="flex: 1 1 85%">
-                  E4E procs:&nbsp;<span id="e4eProcsValue">0</span>
-                </div>
-              </div>
+        <hr />
 
-              <div class="d-flex w-100">
-                <select
-                  class="form-select"
-                  id="e4eLevel"
-                  style="
-                    flex: 1 1 15%;
-                    border-radius: 0.25rem 0 0 0.25rem;
-                    padding: 0;
-                    --bs-form-select-bg-img: none;
-                    text-align: center;
-                  "
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6" selected>6</option>
-                </select>
+        <h5 class="mb-2">Player settings</h5>
 
-                <input
-                  type="range"
-                  class="form-range custom-background"
-                  id="e4eProcs"
-                  name="e4eProcs"
-                  style="flex: 1 1 85%; border-radius: 0 0.25rem 0.25rem 0"
-                  value="0"
-                  min="0"
-                  max="10"
-                  step="1"
-                  oninput="updateValue(this)"
-                />
-              </div>
-            </div>
+        <div class="d-flex justify-content-center align-items-center mb-2">
+          <label class="form-check-label order-1" for="camp">Good camp:</label>
+          <div class="form-check form-switch ms-3 order-2">
+            <input class="form-check-input" type="checkbox" role="switch" id="camp" />
           </div>
+        </div>
 
-          <div class="d-flex align-items-center justify-content-center mb-3">
-            <div class="input-group d-flex flex-column" style="width: 300px">
-              <div class="d-flex w-100">
-                <div class="text-center" style="flex: 1 1 15%">Level</div>
-                <div class="text-center" style="flex: 1 1 15%">Unique</div>
-                <div class="text-center form-label" style="flex: 1 1 70%">
-                  Helper boost procs:&nbsp;<span id="helperBoostProcsValue">0</span>
-                </div>
-              </div>
+        <div id="sleepDuration" class="text-center mb-2"></div>
+        <div class="d-flex justify-content-center align-items-center">
+          <label class="form-check-label order-1" for="mainBedtime">Bedtime:</label>
+          <input
+            type="time"
+            id="mainBedtime"
+            name="mainBedtime"
+            class="form-control ms-3 order-2"
+            value="21:30"
+            style="width: 200px"
+          />
+        </div>
 
-              <div class="d-flex w-100">
-                <select
-                  class="form-select"
-                  id="helperBoostLevel"
-                  style="
-                    flex: 1 1 15%;
-                    border-radius: 0.25rem 0 0 0.25rem;
-                    padding: 0;
-                    --bs-form-select-bg-img: none;
-                    text-align: center;
-                  "
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6" selected>6</option>
-                </select>
-                <select
-                  class="form-select"
-                  id="helperBoostUnique"
-                  style="flex: 1 1 15%; border-radius: 0; padding: 0; --bs-form-select-bg-img: none; text-align: center"
-                >
-                  <option value="1" selected>1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-
-                <input
-                  type="range"
-                  class="form-range custom-background"
-                  id="helperBoostProcs"
-                  name="helperBoostProcs"
-                  style="flex: 1 1 70%; border-radius: 0 0.25rem 0.25rem 0"
-                  value="0"
-                  min="0"
-                  max="10"
-                  step="1"
-                  oninput="updateValue(this)"
-                />
-              </div>
-            </div>
-          </div>
-
-          <hr />
-
-          <h5 class="mb-2">Player settings</h5>
-
-          <div class="d-flex justify-content-center align-items-center mb-2">
-            <label class="form-check-label order-1" for="camp">Good camp:</label>
-            <div class="form-check form-switch ms-3 order-2">
-              <input class="form-check-input" type="checkbox" role="switch" id="camp" />
-            </div>
-          </div>
-
-          <div id="sleepDuration" class="text-center mb-2"></div>
-          <div class="d-flex justify-content-center align-items-center">
-            <label class="form-check-label order-1" for="mainBedtime">Bedtime:</label>
-            <input
-              type="time"
-              id="mainBedtime"
-              name="mainBedtime"
-              class="form-control ms-3 order-2"
-              value="21:30"
-              style="width: 200px"
-            />
-          </div>
-
-          <div class="d-flex justify-content-center align-items-center mb-2">
-            <label class="form-check-label order-1" for="mainWakeup">Wake up:</label>
-            <input
-              type="time"
-              id="mainWakeup"
-              name="mainWakeup"
-              class="form-control ms-3 order-2"
-              value="06:00"
-              style="width: 200px"
-            />
-          </div>
+        <div class="d-flex justify-content-center align-items-center mb-2">
+          <label class="form-check-label order-1" for="mainWakeup">Wake up:</label>
+          <input
+            type="time"
+            id="mainWakeup"
+            name="mainWakeup"
+            class="form-control ms-3 order-2"
+            value="06:00"
+            style="width: 200px"
+          />
         </div>
       </div>
     </div>

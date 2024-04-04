@@ -1,6 +1,7 @@
 :root {
   --main-bg: #333; /* Define a variable */
   --main-text: #f5f5f5;
+  --sleepapi-color: #f04545;
 }
 
 body {
