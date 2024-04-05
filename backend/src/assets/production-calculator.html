@@ -153,7 +153,8 @@
         height: 100%;
       }
       .dropdown-item.selected {
-        color: #f04545;
+        background-color: #f04545;
+        color: #f5f5f5;
       }
       .bootstrap-select .dropdown-toggle {
         height: 40px;
@@ -234,7 +235,9 @@
         $dropdownMenu.empty();
 
         ingredients.forEach((combination, index) => {
-          const listItem = $('<li><button class="dropdown-item" type="button"></button></li>');
+          const listItem = $(
+            '<li><button class="dropdown-item text-center" type="button" style="width:300px"></button></li>'
+          );
           const button = listItem.find('button');
 
           combination.split('/').forEach((ingredient) => {
@@ -271,7 +274,7 @@
           var selectedPokemon = document.getElementById('pokemon').value;
           var selectedLevel = [...document.querySelectorAll('input[name="level"]')].some((radio) => radio.checked);
 
-          if (selectedPokemon !== 'Pokémon') {
+          if (selectedPokemon) {
             document.getElementById('ingredientDropdown').removeAttribute('disabled');
             if (selectedLevel) {
               document.getElementById('submitButton').removeAttribute('disabled');
@@ -411,6 +414,91 @@
         });
       });
     </script>
+    <script>
+      $(document).ready(function () {
+        let levels = [10, 25, 50, 75, 100];
+        let selectedSubskills = [];
+        let selectedSubTexts = [];
+        $('#subskills').on('changed.bs.select', function () {
+          const currentSelection = $(this).find('option:selected');
+
+          // if an option was unselected then we revert text and make level available again
+          if (currentSelection.length < selectedSubskills.length) {
+            // find index of removed subskill
+            const missingIndex = selectedSubskills.findIndex(
+              (s) =>
+                !currentSelection
+                  .map(function () {
+                    return $(this).text();
+                  })
+                  .get()
+                  .includes(s)
+            );
+
+            // find the unselected option that we need to restore text for (replace level X with original text)
+            $(this)
+              .parent()
+              .find('.dropdown-menu .inner li:not(.selected) a')
+              .each(function (index) {
+                if ($(this).text().startsWith(selectedSubskills[missingIndex])) {
+                  const txt = $(this).find('span.text').text(selectedSubskills[missingIndex]);
+
+                  var additionalText = $('<small></small>', {
+                    text: selectedSubTexts[missingIndex],
+                    class: 'text-muted',
+                  });
+
+                  txt.append(additionalText);
+                }
+              });
+
+            // remove the removed select from the list of selected subskills, fixes level labeling
+            selectedSubskills.splice(missingIndex, 1);
+            selectedSubTexts.splice(missingIndex, 1);
+          }
+
+          // create all new texts for the selected subskills
+          var selectedTexts = currentSelection
+            .map(function () {
+              const thisSubskill = $(this).text();
+              const thisSubtext = $(this).data().subtext;
+
+              if (selectedSubskills.includes(thisSubskill)) {
+                return `${thisSubskill} - level ${levels[selectedSubskills.indexOf(thisSubskill)]}`;
+              } else {
+                selectedSubskills.push(thisSubskill);
+                selectedSubTexts.push(thisSubtext);
+                return `${thisSubskill} - level ${levels[selectedSubskills.length - 1]}`;
+              }
+            })
+            .get();
+
+          // update texts for selected subskills in the dropdown
+          $(this)
+            .parent()
+            .find('.dropdown-menu .inner .selected .text')
+            .each(function (index) {
+              $(this).text(selectedTexts[index]);
+            });
+        });
+      });
+    </script>
+    <script>
+      // remove auto focus search bar
+      $(document).ready(function () {
+        var blurState = false;
+        $('.bs-searchbox .form-control').on('focus', function () {
+          if (!blurState) {
+            $(this).blur();
+            blurState = true;
+          }
+        });
+
+        $('.selectpicker').on('hide.bs.select', function () {
+          blurState = false;
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -427,17 +515,18 @@
 
     <header class="text-center mb-2">
       <img id="sleepapi-icon" src="cook.png" alt="Sleep API icon" style="height: 100px; margin-top: 10px" />
-      <a
-        href="#collapseExample"
-        data-bs-toggle="collapse"
-        aria-expanded="false"
-        aria-controls="collapseExample"
-        style="text-decoration: none; color: currentColor"
-      >
-        <h1 style="margin: 0; color: #f5f5f5">
-          Production Calculator <i class="fa fa-info-circle" style="color: #f5f5f5"></i>
-        </h1>
-      </a>
+      <h1 style="margin: 0; color: #f5f5f5">
+        Production Calculator
+        <a
+          href="#collapseExample"
+          data-bs-toggle="collapse"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+          style="text-decoration: none; color: currentColor"
+        >
+          <i class="fa fa-info-circle" style="color: #f5f5f5"></i>
+        </a>
+      </h1>
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
           <h3>
@@ -493,144 +582,147 @@
       </div>
     </header>
 
+    <!-- TODO: add electric, grepa, tomato, etc -->
     <div class="d-flex align-items-center justify-content-center mb-2">
       <select
         class="selectpicker"
         id="pokemon"
         name="pokemon"
         data-live-search="true"
+        data-live-search-placeholder="Search"
+        data-live-search-style="startsWith"
         title="Pokémon"
         data-width="300px"
       >
-        <option value="ABOMASNOW">Abomasnow</option>
-        <option value="ABSOL">Absol</option>
-        <option value="ALTARIA">Altaria</option>
-        <option value="AMPHAROS">Ampharos</option>
-        <option value="ARBOK">Arbok</option>
-        <option value="ARCANINE">Arcanine</option>
-        <option value="BANETTE">Banette</option>
-        <option value="BAYLEEF">Bayleef</option>
-        <option value="BELLSPROUT">Bellsprout</option>
-        <option value="BEWEAR">Bewear</option>
-        <option value="BLASTOISE">Blastoise</option>
-        <option value="BONSLY">Bonsly</option>
-        <option value="BULBASAUR">Bulbasaur</option>
-        <option value="BUTTERFREE">Butterfree</option>
-        <option value="CATERPIE">Caterpie</option>
-        <option value="CHARIZARD">Charizard</option>
-        <option value="CHARMANDER">Charmander</option>
-        <option value="CHARMELEON">Charmeleon</option>
-        <option value="CHIKORITA">Chikorita</option>
-        <option value="CLEFABLE">Clefable</option>
-        <option value="CLEFAIRY">Clefairy</option>
-        <option value="CLEFFA">Cleffa</option>
-        <option value="CROAGUNK">Croagunk</option>
-        <option value="CROCONAW">Croconaw</option>
-        <option value="CUBONE">Cubone</option>
-        <option value="CYNDAQUIL">Cyndaquil</option>
-        <option value="DEDENNE">Dedenne</option>
-        <option value="DELIBIRD">Delibird</option>
-        <option value="DIGLETT">Diglett</option>
-        <option value="DITTO">Ditto</option>
-        <option value="DODRIO">Dodrio</option>
-        <option value="DODUO">Doduo</option>
-        <option value="DRAGONAIR">Dragonair</option>
-        <option value="DRAGONITE">Dragonite</option>
-        <option value="DRATINI">Dratini</option>
-        <option value="DUGTRIO">Dugtrio</option>
-        <option value="EEVEE">Eevee</option>
-        <option value="EKANS">Ekans</option>
-        <option value="ESPEON">Espeon</option>
-        <option value="FERALIGATR">Feraligatr</option>
-        <option value="FLAAFFY">Flaaffy</option>
-        <option value="FLAREON">Flareon</option>
-        <option value="GALLADE">Gallade</option>
-        <option value="GARDEVOIR">Gardevoir</option>
-        <option value="GASTLY">Gastly</option>
-        <option value="GENGAR">Gengar</option>
-        <option value="GEODUDE">Geodude</option>
-        <option value="GLACEON">Glaceon</option>
-        <option value="GOLDUCK">Golduck</option>
-        <option value="GOLEM">Golem</option>
-        <option value="GRAVELER">Graveler</option>
-        <option value="GROWLITHE">Growlithe</option>
-        <option value="GULPIN">Gulpin</option>
-        <option value="HAUNTER">Haunter</option>
-        <option value="HERACROSS">Heracross</option>
-        <option value="HOUNDOOM">Houndoom</option>
-        <option value="HOUNDOUR">Houndour</option>
-        <option value="IGGLYBUFF">Igglybuff</option>
-        <option value="IVYSAUR">Ivysaur</option>
-        <option value="JIGGLYPUFF">Jigglypuff</option>
-        <option value="JOLTEON">Jolteon</option>
-        <option value="KANGASKHAN">Kangaskhan</option>
-        <option value="KIRLIA">Kirlia</option>
-        <option value="LARVITAR">Larvitar</option>
-        <option value="LEAFEON">Leafeon</option>
-        <option value="LUCARIO">Lucario</option>
-        <option value="MAGNEMITE">Magnemite</option>
-        <option value="MAGNETON">Magneton</option>
-        <option value="MAGNEZONE">Magnezone</option>
-        <option value="MANKEY">Mankey</option>
-        <option value="MAREEP">Mareep</option>
-        <option value="MAROWAK">Marowak</option>
-        <option value="MEGANIUM">Meganium</option>
-        <option value="MEOWTH">Meowth</option>
-        <option value="METAPOD">Metapod</option>
-        <option value="MIME_JR">Mime Jr.</option>
-        <option value="MR_MIME">Mr. Mime</option>
-        <option value="ONIX">Onix</option>
-        <option value="PERSIAN">Persian</option>
-        <option value="PICHU">Pichu</option>
-        <option value="PIKACHU">Pikachu</option>
-        <option value="PIKACHU_HALLOWEEN">Pikachu (Halloween)</option>
-        <option value="PIKACHU_CHRISTMAS">Pikachu (Holiday)</option>
-        <option value="PINSIR">Pinsir</option>
-        <option value="PRIMEAPE">Primeape</option>
-        <option value="PSYDUCK">Psyduck</option>
-        <option value="PUPITAR">Pupitar</option>
-        <option value="QUILAVA">Quilava</option>
-        <option value="RAICHU">Raichu</option>
-        <option value="RAIKOU">Raikou</option>
-        <option value="RALTS">Ralts</option>
-        <option value="RATICATE">Raticate</option>
-        <option value="RATTATA">Rattata</option>
-        <option value="RIOLU">Riolu</option>
-        <option value="SABLEYE">Sableye</option>
-        <option value="SEALEO">Sealeo</option>
-        <option value="SHUPPET">Shuppet</option>
-        <option value="SLAKING">Slaking</option>
-        <option value="SLAKOTH">Slakoth</option>
-        <option value="SLOWBRO">Slowbro</option>
-        <option value="SLOWKING">Slowking</option>
-        <option value="SLOWPOKE">Slowpoke</option>
-        <option value="SNOVER">Snover</option>
-        <option value="SPHEAL">Spheal</option>
-        <option value="SQUIRTLE">Squirtle</option>
-        <option value="STEELIX">Steelix</option>
-        <option value="STUFFUL">Stufful</option>
-        <option value="SUDOWOODO">Sudowoodo</option>
-        <option value="SWABLU">Swablu</option>
-        <option value="SWALOT">Swalot</option>
-        <option value="SYLVEON">Sylveon</option>
-        <option value="TOGEKISS">Togekiss</option>
-        <option value="TOGEPI">Togepi</option>
-        <option value="TOGETIC">Togetic</option>
-        <option value="TOTODILE">Totodile</option>
-        <option value="TOXICROAK">Toxicroak</option>
-        <option value="TYPHLOSION">Typhlosion</option>
-        <option value="TYRANITAR">Tyranitar</option>
-        <option value="UMBREON">Umbreon</option>
-        <option value="VAPOREON">Vaporeon</option>
-        <option value="VENUSAUR">Venusaur</option>
-        <option value="VICTREEBEL">Victreebel</option>
-        <option value="VIGOROTH">Vigoroth</option>
-        <option value="WALREIN">Walrein</option>
-        <option value="WARTORTLE">Wartortle</option>
-        <option value="WEEPINBELL">Weepinbell</option>
-        <option value="WIGGLYTUFF">Wigglytuff</option>
-        <option value="WOBBUFFET">Wobbuffet</option>
-        <option value="WYNAUT">Wynaut</option>
+        <option value="ABOMASNOW" data-subtext="ingredient " data-tokens="ingredient">Abomasnow</option>
+        <option value="ABSOL" data-tokens="ingredient">Absol</option>
+        <option value="ALTARIA" data-tokens="berry">Altaria</option>
+        <option value="AMPHAROS" data-tokens="skill">Ampharos</option>
+        <option value="ARBOK" data-tokens="berry">Arbok</option>
+        <option value="ARCANINE" data-tokens="skill">Arcanine</option>
+        <option value="BANETTE" data-tokens="berry">Banette</option>
+        <option value="BAYLEEF" data-tokens="berry">Bayleef</option>
+        <option value="BELLSPROUT" data-tokens="ingredient">Bellsprout</option>
+        <option value="BEWEAR" data-tokens="ingredient">Bewear</option>
+        <option value="BLASTOISE" data-tokens="ingredient">Blastoise</option>
+        <option value="BONSLY" data-tokens="skill">Bonsly</option>
+        <option value="BULBASAUR" data-tokens="ingredient">Bulbasaur</option>
+        <option value="BUTTERFREE" data-tokens="berry">Butterfree</option>
+        <option value="CATERPIE" data-tokens="berry">Caterpie</option>
+        <option value="CHARIZARD" data-tokens="ingredient">Charizard</option>
+        <option value="CHARMANDER" data-tokens="ingredient">Charmander</option>
+        <option value="CHARMELEON" data-tokens="ingredient">Charmeleon</option>
+        <option value="CHIKORITA" data-tokens="berry">Chikorita</option>
+        <option value="CLEFABLE" data-tokens="berry">Clefable</option>
+        <option value="CLEFAIRY" data-tokens="berry">Clefairy</option>
+        <option value="CLEFFA" data-tokens="berry">Cleffa</option>
+        <option value="CROAGUNK" data-tokens="ingredient">Croagunk</option>
+        <option value="CROCONAW" data-tokens="berry">Croconaw</option>
+        <option value="CUBONE" data-tokens="berry">Cubone</option>
+        <option value="CYNDAQUIL" data-tokens="berry">Cyndaquil</option>
+        <option value="DEDENNE" data-tokens="skill">Dedenne</option>
+        <option value="DELIBIRD" data-tokens="ingredient">Delibird</option>
+        <option value="DIGLETT" data-tokens="ingredient">Diglett</option>
+        <option value="DITTO" data-tokens="ingredient">Ditto</option>
+        <option value="DODRIO" data-tokens="berry">Dodrio</option>
+        <option value="DODUO" data-tokens="berry">Doduo</option>
+        <option value="DRAGONAIR" data-tokens="ingredient">Dragonair</option>
+        <option value="DRAGONITE" data-tokens="ingredient">Dragonite</option>
+        <option value="DRATINI" data-tokens="ingredient">Dratini</option>
+        <option value="DUGTRIO" data-tokens="ingredient">Dugtrio</option>
+        <option value="EEVEE" data-tokens="skill">Eevee</option>
+        <option value="EKANS" data-tokens="berry">Ekans</option>
+        <option value="ESPEON" data-tokens="skill">Espeon</option>
+        <option value="FERALIGATR" data-tokens="berry">Feraligatr</option>
+        <option value="FLAAFFY" data-tokens="skill">Flaaffy</option>
+        <option value="FLAREON" data-tokens="skill">Flareon</option>
+        <option value="GALLADE" data-tokens="skill">Gallade</option>
+        <option value="GARDEVOIR" data-tokens="skill">Gardevoir</option>
+        <option value="GASTLY" data-tokens="ingredient">Gastly</option>
+        <option value="GENGAR" data-tokens="ingredient">Gengar</option>
+        <option value="GEODUDE" data-tokens="ingredient">Geodude</option>
+        <option value="GLACEON" data-tokens="skill">Glaceon</option>
+        <option value="GOLDUCK" data-tokens="skill">Golduck</option>
+        <option value="GOLEM" data-tokens="ingredient">Golem</option>
+        <option value="GRAVELER" data-tokens="ingredient">Graveler</option>
+        <option value="GROWLITHE" data-tokens="skill">Growlithe</option>
+        <option value="GULPIN" data-tokens="skill">Gulpin</option>
+        <option value="HAUNTER" data-tokens="ingredient">Haunter</option>
+        <option value="HERACROSS" data-tokens="skill">Heracross</option>
+        <option value="HOUNDOOM" data-tokens="berry">Houndoom</option>
+        <option value="HOUNDOUR" data-tokens="berry">Houndour</option>
+        <option value="IGGLYBUFF" data-tokens="skill">Igglybuff</option>
+        <option value="IVYSAUR" data-tokens="ingredient">Ivysaur</option>
+        <option value="JIGGLYPUFF" data-tokens="skill">Jigglypuff</option>
+        <option value="JOLTEON" data-tokens="skill">Jolteon</option>
+        <option value="KANGASKHAN" data-tokens="ingredient">Kangaskhan</option>
+        <option value="KIRLIA" data-tokens="skill">Kirlia</option>
+        <option value="LARVITAR" data-tokens="ingredient">Larvitar</option>
+        <option value="LEAFEON" data-tokens="skill">Leafeon</option>
+        <option value="LUCARIO" data-tokens="skill">Lucario</option>
+        <option value="MAGNEMITE" data-tokens="skill">Magnemite</option>
+        <option value="MAGNETON" data-tokens="skill">Magneton</option>
+        <option value="MAGNEZONE" data-tokens="skill">Magnezone</option>
+        <option value="MANKEY" data-tokens="berry">Mankey</option>
+        <option value="MAREEP" data-tokens="skill">Mareep</option>
+        <option value="MAROWAK" data-tokens="berry">Marowak</option>
+        <option value="MEGANIUM" data-tokens="berry">Meganium</option>
+        <option value="MEOWTH" data-tokens="skill">Meowth</option>
+        <option value="METAPOD" data-tokens="berry">Metapod</option>
+        <option value="MIME_JR" data-tokens="ingredient">Mime Jr.</option>
+        <option value="MR_MIME" data-tokens="ingredient">Mr. Mime</option>
+        <option value="ONIX" data-tokens="berry">Onix</option>
+        <option value="PERSIAN" data-tokens="skill">Persian</option>
+        <option value="PICHU" data-tokens="berry">Pichu</option>
+        <option value="PIKACHU" data-tokens="berry">Pikachu</option>
+        <option value="PIKACHU_HALLOWEEN" data-tokens="berry">Pikachu (Halloween)</option>
+        <option value="PIKACHU_CHRISTMAS" data-tokens="skill">Pikachu (Holiday)</option>
+        <option value="PINSIR" data-tokens="ingredient">Pinsir</option>
+        <option value="PRIMEAPE" data-tokens="berry">Primeape</option>
+        <option value="PSYDUCK" data-tokens="skill">Psyduck</option>
+        <option value="PUPITAR" data-tokens="ingredient">Pupitar</option>
+        <option value="QUILAVA" data-tokens="berry">Quilava</option>
+        <option value="RAICHU" data-tokens="berry">Raichu</option>
+        <option value="RAIKOU" data-tokens="skill">Raikou</option>
+        <option value="RALTS" data-tokens="skill">Ralts</option>
+        <option value="RATICATE" data-tokens="berry">Raticate</option>
+        <option value="RATTATA" data-tokens="berry">Rattata</option>
+        <option value="RIOLU" data-tokens="skill">Riolu</option>
+        <option value="SABLEYE" data-tokens="skill">Sableye</option>
+        <option value="SEALEO" data-tokens="berry">Sealeo</option>
+        <option value="SHUPPET" data-tokens="berry">Shuppet</option>
+        <option value="SLAKING" data-tokens="berry">Slaking</option>
+        <option value="SLAKOTH" data-tokens="berry">Slakoth</option>
+        <option value="SLOWBRO" data-tokens="skill">Slowbro</option>
+        <option value="SLOWKING" data-tokens="skill">Slowking</option>
+        <option value="SLOWPOKE" data-tokens="skill">Slowpoke</option>
+        <option value="SNOVER" data-tokens="ingredient">Snover</option>
+        <option value="SPHEAL" data-tokens="berry">Spheal</option>
+        <option value="SQUIRTLE" data-tokens="ingredient">Squirtle</option>
+        <option value="STEELIX" data-tokens="berry">Steelix</option>
+        <option value="STUFFUL" data-tokens="ingredient">Stufful</option>
+        <option value="SUDOWOODO" data-tokens="skill">Sudowoodo</option>
+        <option value="SWABLU" data-tokens="berry">Swablu</option>
+        <option value="SWALOT" data-tokens="skill">Swalot</option>
+        <option value="SYLVEON" data-tokens="skill">Sylveon</option>
+        <option value="TOGEKISS" data-tokens="skill">Togekiss</option>
+        <option value="TOGEPI" data-tokens="skill">Togepi</option>
+        <option value="TOGETIC" data-tokens="skill">Togetic</option>
+        <option value="TOTODILE" data-tokens="berry">Totodile</option>
+        <option value="TOXICROAK" data-tokens="ingredient">Toxicroak</option>
+        <option value="TYPHLOSION" data-tokens="berry">Typhlosion</option>
+        <option value="TYRANITAR" data-tokens="ingredient">Tyranitar</option>
+        <option value="UMBREON" data-tokens="skill">Umbreon</option>
+        <option value="VAPOREON" data-tokens="skill">Vaporeon</option>
+        <option value="VENUSAUR" data-tokens="ingredient">Venusaur</option>
+        <option value="VICTREEBEL" data-tokens="ingredient">Victreebel</option>
+        <option value="VIGOROTH" data-tokens="berry">Vigoroth</option>
+        <option value="WALREIN" data-tokens="berry">Walrein</option>
+        <option value="WARTORTLE" data-tokens="ingredient">Wartortle</option>
+        <option value="WEEPINBELL" data-tokens="ingredient">Weepinbell</option>
+        <option value="WIGGLYTUFF" data-tokens="skill">Wigglytuff</option>
+        <option value="WOBBUFFET" data-tokens="skill">Wobbuffet</option>
+        <option value="WYNAUT" data-tokens="skill">Wynaut</option>
       </select>
     </div>
 
@@ -654,61 +746,71 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-center mb-2">
-      <select class="selectpicker" id="nature" name="nature" data-live-search="true" title="Nature" data-width="300px">
-        <option value="lonely">Lonely (+speed -energy)</option>
-        <option value="adamant">Adamant (+speed -ing)</option>
-        <option value="naughty">Naughty (+speed -skill)</option>
-        <option value="brave">Brave (+speed -exp)</option>
+      <select class="selectpicker" id="nature" name="nature" title="Nature" data-show-subtext="true" data-width="300px">
+        <option value="bashful" disabled selected hidden>Choose Nature...</option>
 
-        <option value="bold">Bold (+energy -speed)</option>
-        <option value="impish">Impish (+energy -ing)</option>
-        <option value="lax">Lax (+energy -skill)</option>
-        <option value="relaxed">Relaxed (+energy -exp)</option>
+        <optgroup label="Speed">
+          <option value="lonely" data-subtext="+speed, -energy" data-tokens="speed">Lonely</option>
+          <option value="adamant" data-subtext="+speed -ingredient" data-tokens="speed">Adamant</option>
+          <option value="naughty" data-subtext="+speed -skill" data-tokens="speed">Naughty</option>
+          <option value="brave" data-subtext="+speed -exp" data-tokens="speed">Brave</option>
+        </optgroup>
 
-        <option value="modest">Modest (+ing -speed)</option>
-        <option value="mild">Mild (+ing -energy)</option>
-        <option value="rash">Rash (+ing -skill)</option>
-        <option value="quiet">Quiet (+ing -exp)</option>
+        <optgroup label="Energy">
+          <option value="bold" data-subtext="+energy -speed" data-tokens="energy">Bold</option>
+          <option value="impish" data-subtext="+energy -ingredient" data-tokens="energy">Impish</option>
+          <option value="lax" data-subtext="+energy -skill" data-tokens="energy">Lax</option>
+          <option value="relaxed" data-subtext="+energy -exp" data-tokens="energy">Relaxed</option>
+        </optgroup>
 
-        <option value="calm">Calm (+skill -speed)</option>
-        <option value="gentle">Gentle (+skill -energy)</option>
-        <option value="careful">Careful (+skill -ing)</option>
-        <option value="sassy">Sassy (+skill -exp)</option>
+        <optgroup label="Ingredient">
+          <option value="modest" data-subtext="+ingredient -speed" data-tokens="ingredient">Modest</option>
+          <option value="mild" data-subtext="+ingredient -energy" data-tokens="ingredient">Mild</option>
+          <option value="rash" data-subtext="+ingredient -skill" data-tokens="ingredient">Rash</option>
+          <option value="quiet" data-subtext="+ingredient -exp" data-tokens="ingredient">Quiet</option>
+        </optgroup>
 
-        <option value="timid">Timid (+exp -speed)</option>
-        <option value="hasty">Hasty (+exp -energy)</option>
-        <option value="jolly">Jolly (+exp -ing)</option>
-        <option value="naive">Naive (+exp -skill)</option>
+        <optgroup label="Skill">
+          <option value="calm" data-subtext="+skill -speed" data-tokens="skill">Calm</option>
+          <option value="gentle" data-subtext="+skill -energy" data-tokens="skill">Gentle</option>
+          <option value="careful" data-subtext="+skill -ingredient" data-tokens="skill">Careful</option>
+          <option value="sassy" data-subtext="+skill -exp" data-tokens="skill">Sassy</option>
+        </optgroup>
 
-        <option value="bashful">Bashful (neutral)</option>
-        <option value="hardy">Hardy (neutral)</option>
-        <option value="docile">Docile (neutral)</option>
-        <option value="quirky">Quirky (neutral)</option>
-        <option value="serious">Serious (neutral)</option>
+        <optgroup label="EXP">
+          <option value="timid" data-subtext="+exp -speed" data-tokens="exp">Timid</option>
+          <option value="hasty" data-subtext="+exp -energy" data-tokens="exp">Hasty</option>
+          <option value="jolly" data-subtext="+exp -ingredient" data-tokens="exp">Jolly</option>
+          <option value="naive" data-subtext="+exp -skill" data-tokens="exp">Naive</option>
+        </optgroup>
+
+        <optgroup label="Neutral">
+          <option value="bashful" data-subtext="neutral" data-tokens="neutral">Bashful</option>
+          <option value="hardy" data-subtext="neutral" data-tokens="neutral">Hardy</option>
+          <option value="docile" data-subtext="neutral" data-tokens="neutral">Docile</option>
+          <option value="quirky" data-subtext="neutral" data-tokens="neutral">Quirky</option>
+          <option value="serious" data-subtext="neutral" data-tokens="neutral">Serious</option>
+        </optgroup>
       </select>
     </div>
 
     <div class="d-flex align-items-center justify-content-center mb-2">
-      <select
-        class="selectpicker"
-        id="subskills"
-        data-live-search="true"
-        title="Sub-skills"
-        data-max-options="5"
-        data-width="300px"
-        multiple
-      >
-        <option value="Berry Finding S" title="BFS">Berry Finding S</option>
-        <option value="Helping Bonus" title="HB">Helping Bonus</option>
-        <option value="Helping Speed M" title="Help M">Helping Speed M</option>
-        <option value="Helping Speed S" title="Help S">Helping Speed S</option>
-        <option value="Ingredient Finder M" title="Ing M">Ingredient Finder M</option>
-        <option value="Ingredient Finder S" title="Ing S">Ingredient Finder S</option>
-        <option value="Inventory Up L" title="Inv L">Inventory Up L</option>
-        <option value="Inventory Up M" title="Inv M">Inventory Up M</option>
-        <option value="Inventory Up S" title="Inv S">Inventory Up S</option>
-        <option value="Skill Trigger M" title="Skill M">Skill Trigger M</option>
-        <option value="Skill Trigger S" title="Skill S">Skill Trigger S</option>
+      <select class="selectpicker" id="subskills" title="Sub-skills" data-max-options="5" data-width="300px" multiple>
+        <option value="Berry Finding S" title="BFS" data-subtext="+ 1 berry">Berry Finding S</option>
+        <option value="Helping Bonus" title="HB" data-subtext="+ 5% speed">Helping Bonus</option>
+        <option data-divider="true"></option>
+        <option value="Helping Speed M" title="Help M" data-subtext="+ 36% speed">Helping Speed M</option>
+        <option value="Helping Speed S" title="Help S" data-subtext="+ 18% speed">Helping Speed S</option>
+        <option data-divider="true"></option>
+        <option value="Ingredient Finder M" title="Ing M" data-subtext="+ 36% ingredients">Ingredient Finder M</option>
+        <option value="Ingredient Finder S" title="Ing S" data-subtext="+ 18% ingredients">Ingredient Finder S</option>
+        <option data-divider="true"></option>
+        <option value="Inventory Up L" title="Inv L" data-subtext="+ 18 inventory">Inventory Up L</option>
+        <option value="Inventory Up M" title="Inv M" data-subtext="+ 12 inventory">Inventory Up M</option>
+        <option value="Inventory Up S" title="Inv S" data-subtext="+ 6 inventory">Inventory Up S</option>
+        <option data-divider="true"></option>
+        <option value="Skill Trigger M" title="Skill M" data-subtext="+ 36% skills">Skill Trigger M</option>
+        <option value="Skill Trigger S" title="Skill S" data-subtext="+ 18% skills">Skill Trigger S</option>
       </select>
     </div>
 
@@ -729,7 +831,7 @@
         <input type="radio" class="btn-check" name="level" id="value50" value="50" autocomplete="off" />
         <label class="btn btn-outline-dark" for="value50">50</label>
 
-        <input type="radio" class="btn-check" name="level" id="value60" value="60" autocomplete="off" />
+        <input type="radio" class="btn-check" name="level" id="value60" value="60" autocomplete="off" checked />
         <label class="btn btn-outline-dark" for="value60">60</label>
 
         <div hidden>

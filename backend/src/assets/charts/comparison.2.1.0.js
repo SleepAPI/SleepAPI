@@ -351,7 +351,7 @@ function formatData(rawData, setupType, specialty) {
         specialty,
         group: 'Skills',
         setupType,
-        item: 'Skill value',
+        item: 'Skill value', // TODO: should probably also do skill procs, also skill value should probably take in unit like % or strength
         amount: rawData.skills.amount,
         percentage: rawData.skills.percentage,
       },
