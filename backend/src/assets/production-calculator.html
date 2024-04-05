@@ -163,6 +163,11 @@
         text-align: center;
         height: 90%;
       }
+
+      .dropdown-item {
+        padding: var(--bs-dropdown-item-padding-y) 2px;
+        max-width: var(--input-width);
+      }
     </style>
 
     <script src="functions.2.1.0.js"></script>
@@ -441,14 +446,7 @@
               .find('.dropdown-menu .inner li:not(.selected) a')
               .each(function (index) {
                 if ($(this).text().startsWith(selectedSubskills[missingIndex])) {
-                  const txt = $(this).find('span.text').text(selectedSubskills[missingIndex]);
-
-                  var additionalText = $('<small></small>', {
-                    text: selectedSubTexts[missingIndex],
-                    class: 'text-muted',
-                  });
-
-                  txt.append(additionalText);
+                  $(this).find('span.text span.levelText').remove();
                 }
               });
 
@@ -464,11 +462,11 @@
               const thisSubtext = $(this).data().subtext;
 
               if (selectedSubskills.includes(thisSubskill)) {
-                return `${thisSubskill} - level ${levels[selectedSubskills.indexOf(thisSubskill)]}`;
+                return levels[selectedSubskills.indexOf(thisSubskill)];
               } else {
                 selectedSubskills.push(thisSubskill);
                 selectedSubTexts.push(thisSubtext);
-                return `${thisSubskill} - level ${levels[selectedSubskills.length - 1]}`;
+                return levels[selectedSubskills.length - 1];
               }
             })
             .get();
@@ -478,7 +476,13 @@
             .parent()
             .find('.dropdown-menu .inner .selected .text')
             .each(function (index) {
-              $(this).text(selectedTexts[index]);
+              $(this).find('span.levelText').remove();
+              var additionalText = $('<span></span>', {
+                text: ` [L${selectedTexts[index]}]`,
+                class: 'levelText',
+              });
+
+              $(this).append(additionalText);
             });
         });
       });
@@ -496,6 +500,21 @@
 
         $('.selectpicker').on('hide.bs.select', function () {
           blurState = false;
+        });
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        var input = document.getElementById('popoverInput');
+
+        input.addEventListener('input', function () {
+          var value = parseInt(this.value, 10);
+
+          if (value > 100) {
+            this.value = 100;
+          } else if (value < 1) {
+            this.value = 1;
+          }
         });
       });
     </script>
@@ -582,7 +601,6 @@
       </div>
     </header>
 
-    <!-- TODO: add electric, grepa, tomato, etc -->
     <div class="d-flex align-items-center justify-content-center mb-2">
       <select
         class="selectpicker"
@@ -590,139 +608,660 @@
         name="pokemon"
         data-live-search="true"
         data-live-search-placeholder="Search"
-        data-live-search-style="startsWith"
         title="Pokémon"
         data-width="300px"
       >
-        <option value="ABOMASNOW" data-subtext="ingredient " data-tokens="ingredient">Abomasnow</option>
-        <option value="ABSOL" data-tokens="ingredient">Absol</option>
-        <option value="ALTARIA" data-tokens="berry">Altaria</option>
-        <option value="AMPHAROS" data-tokens="skill">Ampharos</option>
-        <option value="ARBOK" data-tokens="berry">Arbok</option>
-        <option value="ARCANINE" data-tokens="skill">Arcanine</option>
-        <option value="BANETTE" data-tokens="berry">Banette</option>
-        <option value="BAYLEEF" data-tokens="berry">Bayleef</option>
-        <option value="BELLSPROUT" data-tokens="ingredient">Bellsprout</option>
-        <option value="BEWEAR" data-tokens="ingredient">Bewear</option>
-        <option value="BLASTOISE" data-tokens="ingredient">Blastoise</option>
-        <option value="BONSLY" data-tokens="skill">Bonsly</option>
-        <option value="BULBASAUR" data-tokens="ingredient">Bulbasaur</option>
-        <option value="BUTTERFREE" data-tokens="berry">Butterfree</option>
-        <option value="CATERPIE" data-tokens="berry">Caterpie</option>
-        <option value="CHARIZARD" data-tokens="ingredient">Charizard</option>
-        <option value="CHARMANDER" data-tokens="ingredient">Charmander</option>
-        <option value="CHARMELEON" data-tokens="ingredient">Charmeleon</option>
-        <option value="CHIKORITA" data-tokens="berry">Chikorita</option>
-        <option value="CLEFABLE" data-tokens="berry">Clefable</option>
-        <option value="CLEFAIRY" data-tokens="berry">Clefairy</option>
-        <option value="CLEFFA" data-tokens="berry">Cleffa</option>
-        <option value="CROAGUNK" data-tokens="ingredient">Croagunk</option>
-        <option value="CROCONAW" data-tokens="berry">Croconaw</option>
-        <option value="CUBONE" data-tokens="berry">Cubone</option>
-        <option value="CYNDAQUIL" data-tokens="berry">Cyndaquil</option>
-        <option value="DEDENNE" data-tokens="skill">Dedenne</option>
-        <option value="DELIBIRD" data-tokens="ingredient">Delibird</option>
-        <option value="DIGLETT" data-tokens="ingredient">Diglett</option>
-        <option value="DITTO" data-tokens="ingredient">Ditto</option>
-        <option value="DODRIO" data-tokens="berry">Dodrio</option>
-        <option value="DODUO" data-tokens="berry">Doduo</option>
-        <option value="DRAGONAIR" data-tokens="ingredient">Dragonair</option>
-        <option value="DRAGONITE" data-tokens="ingredient">Dragonite</option>
-        <option value="DRATINI" data-tokens="ingredient">Dratini</option>
-        <option value="DUGTRIO" data-tokens="ingredient">Dugtrio</option>
-        <option value="EEVEE" data-tokens="skill">Eevee</option>
-        <option value="EKANS" data-tokens="berry">Ekans</option>
-        <option value="ESPEON" data-tokens="skill">Espeon</option>
-        <option value="FERALIGATR" data-tokens="berry">Feraligatr</option>
-        <option value="FLAAFFY" data-tokens="skill">Flaaffy</option>
-        <option value="FLAREON" data-tokens="skill">Flareon</option>
-        <option value="GALLADE" data-tokens="skill">Gallade</option>
-        <option value="GARDEVOIR" data-tokens="skill">Gardevoir</option>
-        <option value="GASTLY" data-tokens="ingredient">Gastly</option>
-        <option value="GENGAR" data-tokens="ingredient">Gengar</option>
-        <option value="GEODUDE" data-tokens="ingredient">Geodude</option>
-        <option value="GLACEON" data-tokens="skill">Glaceon</option>
-        <option value="GOLDUCK" data-tokens="skill">Golduck</option>
-        <option value="GOLEM" data-tokens="ingredient">Golem</option>
-        <option value="GRAVELER" data-tokens="ingredient">Graveler</option>
-        <option value="GROWLITHE" data-tokens="skill">Growlithe</option>
-        <option value="GULPIN" data-tokens="skill">Gulpin</option>
-        <option value="HAUNTER" data-tokens="ingredient">Haunter</option>
-        <option value="HERACROSS" data-tokens="skill">Heracross</option>
-        <option value="HOUNDOOM" data-tokens="berry">Houndoom</option>
-        <option value="HOUNDOUR" data-tokens="berry">Houndour</option>
-        <option value="IGGLYBUFF" data-tokens="skill">Igglybuff</option>
-        <option value="IVYSAUR" data-tokens="ingredient">Ivysaur</option>
-        <option value="JIGGLYPUFF" data-tokens="skill">Jigglypuff</option>
-        <option value="JOLTEON" data-tokens="skill">Jolteon</option>
-        <option value="KANGASKHAN" data-tokens="ingredient">Kangaskhan</option>
-        <option value="KIRLIA" data-tokens="skill">Kirlia</option>
-        <option value="LARVITAR" data-tokens="ingredient">Larvitar</option>
-        <option value="LEAFEON" data-tokens="skill">Leafeon</option>
-        <option value="LUCARIO" data-tokens="skill">Lucario</option>
-        <option value="MAGNEMITE" data-tokens="skill">Magnemite</option>
-        <option value="MAGNETON" data-tokens="skill">Magneton</option>
-        <option value="MAGNEZONE" data-tokens="skill">Magnezone</option>
-        <option value="MANKEY" data-tokens="berry">Mankey</option>
-        <option value="MAREEP" data-tokens="skill">Mareep</option>
-        <option value="MAROWAK" data-tokens="berry">Marowak</option>
-        <option value="MEGANIUM" data-tokens="berry">Meganium</option>
-        <option value="MEOWTH" data-tokens="skill">Meowth</option>
-        <option value="METAPOD" data-tokens="berry">Metapod</option>
-        <option value="MIME_JR" data-tokens="ingredient">Mime Jr.</option>
-        <option value="MR_MIME" data-tokens="ingredient">Mr. Mime</option>
-        <option value="ONIX" data-tokens="berry">Onix</option>
-        <option value="PERSIAN" data-tokens="skill">Persian</option>
-        <option value="PICHU" data-tokens="berry">Pichu</option>
-        <option value="PIKACHU" data-tokens="berry">Pikachu</option>
-        <option value="PIKACHU_HALLOWEEN" data-tokens="berry">Pikachu (Halloween)</option>
-        <option value="PIKACHU_CHRISTMAS" data-tokens="skill">Pikachu (Holiday)</option>
-        <option value="PINSIR" data-tokens="ingredient">Pinsir</option>
-        <option value="PRIMEAPE" data-tokens="berry">Primeape</option>
-        <option value="PSYDUCK" data-tokens="skill">Psyduck</option>
-        <option value="PUPITAR" data-tokens="ingredient">Pupitar</option>
-        <option value="QUILAVA" data-tokens="berry">Quilava</option>
-        <option value="RAICHU" data-tokens="berry">Raichu</option>
-        <option value="RAIKOU" data-tokens="skill">Raikou</option>
-        <option value="RALTS" data-tokens="skill">Ralts</option>
-        <option value="RATICATE" data-tokens="berry">Raticate</option>
-        <option value="RATTATA" data-tokens="berry">Rattata</option>
-        <option value="RIOLU" data-tokens="skill">Riolu</option>
-        <option value="SABLEYE" data-tokens="skill">Sableye</option>
-        <option value="SEALEO" data-tokens="berry">Sealeo</option>
-        <option value="SHUPPET" data-tokens="berry">Shuppet</option>
-        <option value="SLAKING" data-tokens="berry">Slaking</option>
-        <option value="SLAKOTH" data-tokens="berry">Slakoth</option>
-        <option value="SLOWBRO" data-tokens="skill">Slowbro</option>
-        <option value="SLOWKING" data-tokens="skill">Slowking</option>
-        <option value="SLOWPOKE" data-tokens="skill">Slowpoke</option>
-        <option value="SNOVER" data-tokens="ingredient">Snover</option>
-        <option value="SPHEAL" data-tokens="berry">Spheal</option>
-        <option value="SQUIRTLE" data-tokens="ingredient">Squirtle</option>
-        <option value="STEELIX" data-tokens="berry">Steelix</option>
-        <option value="STUFFUL" data-tokens="ingredient">Stufful</option>
-        <option value="SUDOWOODO" data-tokens="skill">Sudowoodo</option>
-        <option value="SWABLU" data-tokens="berry">Swablu</option>
-        <option value="SWALOT" data-tokens="skill">Swalot</option>
-        <option value="SYLVEON" data-tokens="skill">Sylveon</option>
-        <option value="TOGEKISS" data-tokens="skill">Togekiss</option>
-        <option value="TOGEPI" data-tokens="skill">Togepi</option>
-        <option value="TOGETIC" data-tokens="skill">Togetic</option>
-        <option value="TOTODILE" data-tokens="berry">Totodile</option>
-        <option value="TOXICROAK" data-tokens="ingredient">Toxicroak</option>
-        <option value="TYPHLOSION" data-tokens="berry">Typhlosion</option>
-        <option value="TYRANITAR" data-tokens="ingredient">Tyranitar</option>
-        <option value="UMBREON" data-tokens="skill">Umbreon</option>
-        <option value="VAPOREON" data-tokens="skill">Vaporeon</option>
-        <option value="VENUSAUR" data-tokens="ingredient">Venusaur</option>
-        <option value="VICTREEBEL" data-tokens="ingredient">Victreebel</option>
-        <option value="VIGOROTH" data-tokens="berry">Vigoroth</option>
-        <option value="WALREIN" data-tokens="berry">Walrein</option>
-        <option value="WARTORTLE" data-tokens="ingredient">Wartortle</option>
-        <option value="WEEPINBELL" data-tokens="ingredient">Weepinbell</option>
-        <option value="WIGGLYTUFF" data-tokens="skill">Wigglytuff</option>
-        <option value="WOBBUFFET" data-tokens="skill">Wobbuffet</option>
-        <option value="WYNAUT" data-tokens="skill">Wynaut</option>
+        <option
+          value="ABOMASNOW"
+          data-subtext="ice - ingredients"
+          data-tokens="ingredient ice rawst evolved tomato egg mushroom"
+        >
+          Abomasnow
+        </option>
+        <option
+          value="ABSOL"
+          data-subtext="dark - ingredients"
+          data-tokens="ingredient dark wiki evolved cacao apple mushroom"
+        >
+          Absol
+        </option>
+        <option
+          value="ALTARIA"
+          data-subtext="dragon - berries"
+          data-tokens="berry dragon yache evolved egg soybean apple"
+        >
+          Altaria
+        </option>
+        <option value="AMPHAROS" data-subtext="electric - skills" data-tokens="skill electric grepa evolved herb egg">
+          Ampharos
+        </option>
+        <option
+          value="ARBOK"
+          data-subtext="poison - berries"
+          data-tokens="berry poison chesto evolved sausage egg herb"
+        >
+          Arbok
+        </option>
+        <option value="ARCANINE" data-subtext="fire - skills" data-tokens="skill fire leppa evolved herb sausage milk">
+          Arcanine
+        </option>
+        <option
+          value="BANETTE"
+          data-subtext="ghost - berries"
+          data-tokens="berry ghost bluk evolved oil ginger mushroom"
+        >
+          Banette
+        </option>
+        <option value="BAYLEEF" data-subtext="grass - berries" data-tokens="berry grass durin cacao honey leek">
+          Bayleef
+        </option>
+        <option
+          value="BELLSPROUT"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin tomato potato leek"
+        >
+          Bellsprout
+        </option>
+        <option
+          value="BEWEAR"
+          data-subtext="fighting - ingredients"
+          data-tokens="ingredient fighting cheri corn sausage egg evolved"
+        >
+          Bewear
+        </option>
+        <option
+          value="BLASTOISE"
+          data-subtext="water - ingredients"
+          data-tokens="ingredient water oran milk cacao sausage evolved"
+        >
+          Blastoise
+        </option>
+        <option value="BONSLY" data-subtext="rock - skills" data-tokens="skill rock sitrus tomato soybean mushroom">
+          Bonsly
+        </option>
+        <option
+          value="BULBASAUR"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin honey tomato potato"
+        >
+          Bulbasaur
+        </option>
+        <option
+          value="BUTTERFREE"
+          data-subtext="bug - berries"
+          data-tokens="berry bug lum honey tomato soybean evolved"
+        >
+          Butterfree
+        </option>
+        <option value="CATERPIE" data-subtext="bug - berries" data-tokens="berry bug lum honey tomato soybean">
+          Caterpie
+        </option>
+        <option
+          value="CHARIZARD"
+          data-subtext="fire - ingredients"
+          data-tokens="ingredient fire leppa sausage ginger herb evolved"
+        >
+          Charizard
+        </option>
+        <option
+          value="CHARMANDER"
+          data-subtext="fire - ingredients"
+          data-tokens="ingredient fire leppa sausage ginger herb"
+        >
+          Charmander
+        </option>
+        <option
+          value="CHARMELEON"
+          data-subtext="fire - ingredients"
+          data-tokens="ingredient fire leppa sausage ginger herb"
+        >
+          Charmeleon
+        </option>
+        <option value="CHIKORITA" data-subtext="grass - berries" data-tokens="berry grass durin cacao honey leek">
+          Chikorita
+        </option>
+        <option
+          value="CLEFABLE"
+          data-subtext="fairy - berries"
+          data-tokens="berry fairy pecha apple honey soybean evolved"
+        >
+          Clefable
+        </option>
+        <option value="CLEFAIRY" data-subtext="fairy - berries" data-tokens="berry fairy pecha apple honey soybean">
+          Clefairy
+        </option>
+        <option value="CLEFFA" data-subtext="fairy - berries" data-tokens="berry fairy pecha apple honey soybean">
+          Cleffa
+        </option>
+        <option value="CROAGUNK" data-subtext="poison - ingredients" data-tokens="ingredient poison chesto oil sausage">
+          Croagunk
+        </option>
+        <option value="CROCONAW" data-subtext="water - berries" data-tokens="berry water oran sausage oil">
+          Croconaw
+        </option>
+        <option value="CUBONE" data-subtext="ground - berries" data-tokens="berry ground figy ginger cacao">
+          Cubone
+        </option>
+        <option value="CYNDAQUIL" data-subtext="fire - berries" data-tokens="berry fire leppa ginger herb oil">
+          Cyndaquil
+        </option>
+        <option
+          value="DEDENNE"
+          data-subtext="electric - skills"
+          data-tokens="skill electric grepa apple cacao corn evolved"
+        >
+          Dedenne
+        </option>
+        <option
+          value="DELIBIRD"
+          data-subtext="flying - ingredients"
+          data-tokens="ingredient flying pamtre oil apple cacao"
+        >
+          Delibird
+        </option>
+        <option
+          value="DIGLETT"
+          data-subtext="ground - ingredients"
+          data-tokens="ingredient ground figy tomato leek soybean"
+        >
+          Diglett
+        </option>
+        <option
+          value="DITTO"
+          data-subtext="normal - ingredients"
+          data-tokens="ingredient normal persim oil leek tail evolved"
+        >
+          Ditto
+        </option>
+        <option
+          value="DODRIO"
+          data-subtext="flying - berries"
+          data-tokens="berry flying pamtre soybean cacao sausage evolved"
+        >
+          Dodrio
+        </option>
+        <option value="DODUO" data-subtext="flying - berries" data-tokens="berry flying pamtre soybean cacao sausage">
+          Doduo
+        </option>
+        <option
+          value="DRAGONAIR"
+          data-subtext="dragon - ingredients"
+          data-tokens="ingredient dragon yache herb corn oil"
+        >
+          Dragonair
+        </option>
+        <option
+          value="DRAGONITE"
+          data-subtext="dragon - ingredients"
+          data-tokens="ingredient dragon yache herb corn oil evolved"
+        >
+          Dragonite
+        </option>
+        <option value="DRATINI" data-subtext="dragon - ingredients" data-tokens="ingredient dragon yache herb corn oil">
+          Dratini
+        </option>
+        <option
+          value="DUGTRIO"
+          data-subtext="ground - ingredients"
+          data-tokens="ingredient ground figy tomato leek soybean evolved"
+        >
+          Dugtrio
+        </option>
+        <option value="EEVEE" data-subtext="normal - skills" data-tokens="skill normal persim milk cacao sausage">
+          Eevee
+        </option>
+        <option value="EKANS" data-subtext="poison - berries" data-tokens="berry poison chesto sausage egg herb">
+          Ekans
+        </option>
+        <option
+          value="ESPEON"
+          data-subtext="psychic - skills"
+          data-tokens="skill psychic mago milk cacao sausage evolved"
+        >
+          Espeon
+        </option>
+        <option value="FERALIGATR" data-subtext="water - berries" data-tokens="berry water oran sausage oil evolved">
+          Feraligatr
+        </option>
+        <option value="FLAAFFY" data-subtext="electric - skills" data-tokens="skill electric grepa herb egg">
+          Flaaffy
+        </option>
+        <option value="FLAREON" data-subtext="fire - skills" data-tokens="skill fire leppa milk cacao sausage evolved">
+          Flareon
+        </option>
+        <option
+          value="GALLADE"
+          data-subtext="fighting - skills"
+          data-tokens="skill fighting cheri apple corn leek evolved"
+        >
+          Gallade
+        </option>
+        <option
+          value="GARDEVOIR"
+          data-subtext="psychic - skills"
+          data-tokens="skill psychic mago apple corn leek evolved"
+        >
+          Gardevoir
+        </option>
+        <option value="GASTLY" data-subtext="ghost - ingredients" data-tokens="ingredient ghost bluk herb mushroom oil">
+          Gastly
+        </option>
+        <option
+          value="GENGAR"
+          data-subtext="ghost - ingredients"
+          data-tokens="ingredient ghost bluk herb mushroom oil evolved"
+        >
+          Gengar
+        </option>
+        <option
+          value="GEODUDE"
+          data-subtext="rock - ingredients"
+          data-tokens="ingredient rock sitrus soybean potato mushroom"
+        >
+          Geodude
+        </option>
+        <option value="GLACEON" data-subtext="ice - skills" data-tokens="skill ice rawst milk cacao sausage evolved">
+          Glaceon
+        </option>
+        <option
+          value="GOLDUCK"
+          data-subtext="water - skills"
+          data-tokens="skill water oran cacao apple sausage evolved"
+        >
+          Golduck
+        </option>
+        <option
+          value="GOLEM"
+          data-subtext="rock - ingredients"
+          data-tokens="ingredient rock sitrus soybean potato mushroom evolved"
+        >
+          Golem
+        </option>
+        <option
+          value="GRAVELER"
+          data-subtext="rock - ingredients"
+          data-tokens="ingredient rock sitrus soybean potato mushroom"
+        >
+          Graveler
+        </option>
+        <option value="GROWLITHE" data-subtext="fire - skills" data-tokens="skill fire leppa herb sausage milk">
+          Growlithe
+        </option>
+        <option value="GULPIN" data-subtext="poison - skills" data-tokens="skill poison chesto soybean mushroom honey">
+          Gulpin
+        </option>
+        <option
+          value="HAUNTER"
+          data-subtext="ghost - ingredients"
+          data-tokens="ingredient ghost bluk herb mushroom oil"
+        >
+          Haunter
+        </option>
+        <option
+          value="HERACROSS"
+          data-subtext="bug - skills"
+          data-tokens="skill bug lum honey mushroom sausage evolved"
+        >
+          Heracross
+        </option>
+        <option value="HOUNDOOM" data-subtext="dark - berries" data-tokens="berry dark wiki herb ginger leek evolved">
+          Houndoom
+        </option>
+        <option value="HOUNDOUR" data-subtext="dark - berries" data-tokens="berry dark wiki herb ginger leek">
+          Houndour
+        </option>
+        <option value="IGGLYBUFF" data-subtext="fairy - skills" data-tokens="skill fairy pecha honey oil cacao">
+          Igglybuff
+        </option>
+        <option
+          value="IVYSAUR"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin honey tomato potato"
+        >
+          Ivysaur
+        </option>
+        <option value="JIGGLYPUFF" data-subtext="fairy - skills" data-tokens="skill fairy pecha honey oil cacao">
+          Jigglypuff
+        </option>
+        <option
+          value="JOLTEON"
+          data-subtext="electric - skills"
+          data-tokens="skill electric grepa milk cacao sausage evolved"
+        >
+          Jolteon
+        </option>
+        <option
+          value="KANGASKHAN"
+          data-subtext="normal - ingredients"
+          data-tokens="ingredient normal persim ginger potato soybean evolved"
+        >
+          Kangaskhan
+        </option>
+        <option value="KIRLIA" data-subtext="psychic - skills" data-tokens="skill psychic mago apple corn leek">
+          Kirlia
+        </option>
+        <option
+          value="LARVITAR"
+          data-subtext="rock - ingredients"
+          data-tokens="ingredient rock sitrus ginger soybean sausage evolved"
+        >
+          Larvitar
+        </option>
+        <option
+          value="LEAFEON"
+          data-subtext="grass - skills"
+          data-tokens="skill grass durin milk cacao sausage evolved"
+        >
+          Leafeon
+        </option>
+        <option
+          value="LUCARIO"
+          data-subtext="fighting - skills"
+          data-tokens="skill fighting cheri oil potato egg evolved"
+        >
+          Lucario
+        </option>
+        <option value="MAGNEMITE" data-subtext="steel - skills" data-tokens="skill steel belue oil herb">
+          Magnemite
+        </option>
+        <option value="MAGNETON" data-subtext="steel - skills" data-tokens="skill steel belue oil herb">
+          Magneton
+        </option>
+        <option value="MAGNEZONE" data-subtext="steel - skills" data-tokens="skill steel belue oil herb evolved">
+          Magnezone
+        </option>
+        <option
+          value="MANKEY"
+          data-subtext="fighting - berries"
+          data-tokens="berry fighting cheri sausage mushroom honey"
+        >
+          Mankey
+        </option>
+        <option value="MAREEP" data-subtext="electric - skills" data-tokens="skill electric grepa herb egg">
+          Mareep
+        </option>
+        <option value="MAROWAK" data-subtext="ground - berries" data-tokens="berry ground figy ginger cacao evolved">
+          Marowak
+        </option>
+        <option
+          value="MEGANIUM"
+          data-subtext="grass - berries"
+          data-tokens="berry grass durin evolved cacao honey leek"
+        >
+          Meganium
+        </option>
+        <option value="MEOWTH" data-subtext="normal - skills" data-tokens="skill normal persim milk sausage">
+          Meowth
+        </option>
+        <option value="METAPOD" data-subtext="bug - berries" data-tokens="berry bug lum honey tomato soybean">
+          Metapod
+        </option>
+        <option
+          value="MIME_JR"
+          data-subtext="psychic - ingredients"
+          data-tokens="ingredient psychic mago tomato potato leek"
+        >
+          Mime Jr.
+        </option>
+        <option
+          value="MR_MIME"
+          data-subtext="psychic - ingredients"
+          data-tokens="ingredient psychic mago tomato potato leek evolved"
+        >
+          Mr. Mime
+        </option>
+        <option value="ONIX" data-subtext="rock - berries" data-tokens="berry rock sitrus tomato sausage potato">
+          Onix
+        </option>
+        <option value="PERSIAN" data-subtext="normal - skills" data-tokens="skill normal persim milk sausage evolved">
+          Persian
+        </option>
+        <option value="PICHU" data-subtext="electric - berries" data-tokens="berry electric grepa apple ginger egg">
+          Pichu
+        </option>
+        <option value="PIKACHU" data-subtext="electric - berries" data-tokens="berry electric grepa apple ginger egg">
+          Pikachu
+        </option>
+        <option
+          value="PIKACHU_HALLOWEEN"
+          data-subtext="electric - berries"
+          data-tokens="berry electric grepa evolved apple ginger egg"
+        >
+          Pikachu (Halloween)
+        </option>
+        <option
+          value="PIKACHU_CHRISTMAS"
+          data-subtext="electric - skills"
+          data-tokens="skill electric grepa evolved apple ginger egg"
+        >
+          Pikachu (Holiday)
+        </option>
+        <option
+          value="PINSIR"
+          data-subtext="bug - ingredients"
+          data-tokens="ingredient bug lum honey apple sausage evolved"
+        >
+          Pinsir
+        </option>
+        <option
+          value="PRIMEAPE"
+          data-subtext="fighting - berries"
+          data-tokens="berry fighting cheri sausage mushroom honey evolved"
+        >
+          Primeape
+        </option>
+        <option value="PSYDUCK" data-subtext="water - skills" data-tokens="skill water oran cacao apple sausage">
+          Psyduck
+        </option>
+        <option
+          value="PUPITAR"
+          data-subtext="rock - ingredients"
+          data-tokens="ingredient rock sitrus ginger soybean sausage"
+        >
+          Pupitar
+        </option>
+        <option value="QUILAVA" data-subtext="fire - berries" data-tokens="berry fire leppa ginger herb oil">
+          Quilava
+        </option>
+        <option
+          value="RAICHU"
+          data-subtext="electric - berries"
+          data-tokens="berry electric grepa apple ginger egg evolved"
+        >
+          Raichu
+        </option>
+        <option
+          value="RAIKOU"
+          data-subtext="electric - skills"
+          data-tokens="skill electric grepa sausage herb leek evolved"
+        >
+          Raikou
+        </option>
+        <option value="RALTS" data-subtext="psychic - skills" data-tokens="skill psychic mago apple corn leek">
+          Ralts
+        </option>
+        <option
+          value="RATICATE"
+          data-subtext="normal - berries"
+          data-tokens="berry normal persim apple soybean sausage evolved"
+        >
+          Raticate
+        </option>
+        <option value="RATTATA" data-subtext="normal - berries" data-tokens="berry normal persim apple soybean sausage">
+          Rattata
+        </option>
+        <option value="RIOLU" data-subtext="fighting - skills" data-tokens="skill fighting cheri oil potato egg">
+          Riolu
+        </option>
+        <option value="SABLEYE" data-subtext="dark - skills" data-tokens="skill dark wiki oil mushroom cacao">
+          Sableye
+        </option>
+        <option value="SEALEO" data-subtext="ice - berries" data-tokens="berry ice rawst sausage oil ginger evolved">
+          Sealeo
+        </option>
+        <option value="SHUPPET" data-subtext="ghost - berries" data-tokens="berry ghost bluk oil ginger mushroom">
+          Shuppet
+        </option>
+        <option
+          value="SLAKING"
+          data-subtext="normal - berries"
+          data-tokens="berry normal persim tomato honey apple evolved"
+        >
+          Slaking
+        </option>
+        <option value="SLAKOTH" data-subtext="normal - berries" data-tokens="berry normal persim tomato honey apple">
+          Slakoth
+        </option>
+        <option value="SLOWBRO" data-subtext="water - skills" data-tokens="skill water oran cacao tail tomato evolved">
+          Slowbro
+        </option>
+        <option value="SLOWKING" data-subtext="water - skills" data-tokens="skill water oran cacao tail tomato evolved">
+          Slowking
+        </option>
+        <option value="SLOWPOKE" data-subtext="water - skills" data-tokens="skill water oran cacao tail tomato">
+          Slowpoke
+        </option>
+        <option value="SNOVER" data-subtext="ice - ingredients" data-tokens="ingredient ice rawst tomato egg mushroom">
+          Snover
+        </option>
+        <option value="SPHEAL" data-subtext="ice - berries" data-tokens="berry ice rawst sausage oil ginger">
+          Spheal
+        </option>
+        <option
+          value="SQUIRTLE"
+          data-subtext="water - ingredients"
+          data-tokens="ingredient water oran milk cacao sausage"
+        >
+          Squirtle
+        </option>
+        <option
+          value="STEELIX"
+          data-subtext="steel - berries"
+          data-tokens="berry steel belue tomato sausage potato evolved"
+        >
+          Steelix
+        </option>
+        <option
+          value="STUFFUL"
+          data-subtext="fighting - ingredients"
+          data-tokens="ingredient fighting cheri corn sausage egg"
+        >
+          Stufful
+        </option>
+        <option
+          value="SUDOWOODO"
+          data-subtext="rock - skills"
+          data-tokens="skill rock sitrus tomato soybean mushroom evolved"
+        >
+          Sudowoodo
+        </option>
+        <option value="SWABLU" data-subtext="flying - berries" data-tokens="berry flying pamtre egg soybean apple">
+          Swablu
+        </option>
+        <option
+          value="SWALOT"
+          data-subtext="poison - skills"
+          data-tokens="skill poison chesto soybean mushroom honey evolved"
+        >
+          Swalot
+        </option>
+        <option
+          value="SYLVEON"
+          data-subtext="fairy - skills"
+          data-tokens="skill fairy pecha milk cacao sausage evolved"
+        >
+          Sylveon
+        </option>
+        <option value="TOGEKISS" data-subtext="fairy - skills" data-tokens="skill fairy pecha egg ginger cacao evolved">
+          Togekiss
+        </option>
+        <option value="TOGEPI" data-subtext="fairy - skills" data-tokens="skill fairy pecha egg ginger cacao">
+          Togepi
+        </option>
+        <option value="TOGETIC" data-subtext="fairy - skills" data-tokens="skill fairy pecha egg ginger cacao">
+          Togetic
+        </option>
+        <option value="TOTODILE" data-subtext="water - berries" data-tokens="berry water oran sausage oil">
+          Totodile
+        </option>
+        <option
+          value="TOXICROAK"
+          data-subtext="poison - ingredients"
+          data-tokens="ingredient poison chesto oil sausage evolved"
+        >
+          Toxicroak
+        </option>
+        <option value="TYPHLOSION" data-subtext="fire - berries" data-tokens="berry fire leppa ginger herb oil evolved">
+          Typhlosion
+        </option>
+        <option
+          value="TYRANITAR"
+          data-subtext="dark - ingredients"
+          data-tokens="ingredient dark wiki ginger soybean sausage evolved"
+        >
+          Tyranitar
+        </option>
+        <option value="UMBREON" data-subtext="dark - skills" data-tokens="skill dark wiki milk cacao sausage evolved">
+          Umbreon
+        </option>
+        <option
+          value="VAPOREON"
+          data-subtext="water - skills"
+          data-tokens="skill water oran milk cacao sausage evolved"
+        >
+          Vaporeon
+        </option>
+        <option
+          value="VENUSAUR"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin honey tomato potato evolved"
+        >
+          Venusaur
+        </option>
+        <option
+          value="VICTREEBEL"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin tomato potato leek evolved"
+        >
+          Victreebel
+        </option>
+        <option value="VIGOROTH" data-subtext="normal - berries" data-tokens="berry normal persim tomato honey apple">
+          Vigoroth
+        </option>
+        <option value="WALREIN" data-subtext="ice - berries" data-tokens="berry ice rawst sausage oil ginger evolved">
+          Walrein
+        </option>
+        <option
+          value="WARTORTLE"
+          data-subtext="water - ingredients"
+          data-tokens="ingredient water oran milk cacao sausage"
+        >
+          Wartortle
+        </option>
+        <option
+          value="WEEPINBELL"
+          data-subtext="grass - ingredients"
+          data-tokens="ingredient grass durin tomato potato leek"
+        >
+          Weepinbell
+        </option>
+        <option
+          value="WIGGLYTUFF"
+          data-subtext="fairy - skills"
+          data-tokens="skill fairy pecha honey oil cacao evolved"
+        >
+          Wigglytuff
+        </option>
+        <option
+          value="WOBBUFFET"
+          data-subtext="psychic - skills"
+          data-tokens="skill psychic mago apple mushroom oil evolved"
+        >
+          Wobbuffet
+        </option>
+        <option value="WYNAUT" data-subtext="psychic - skills" data-tokens="skill psychic mago apple mushroom oil">
+          Wynaut
+        </option>
       </select>
     </div>
 
@@ -734,7 +1273,7 @@
           id="ingredientDropdown"
           data-bs-toggle="dropdown"
           aria-expanded="false"
-          style="width: 300px; height: 40px"
+          style="width: var(--input-width); height: 40px"
           disabled
         >
           Ingredients
@@ -795,27 +1334,35 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-center mb-2">
-      <select class="selectpicker" id="subskills" title="Sub-skills" data-max-options="5" data-width="300px" multiple>
-        <option value="Berry Finding S" title="BFS" data-subtext="+ 1 berry">Berry Finding S</option>
-        <option value="Helping Bonus" title="HB" data-subtext="+ 5% speed">Helping Bonus</option>
+      <select
+        class="selectpicker"
+        id="subskills"
+        title="Sub-skills"
+        data-max-options="5"
+        data-width="300px"
+        data-tick-icon="false"
+        multiple
+      >
+        <option value="Berry Finding S" title="BFS" data-subtext="+1 berry">Berry Finding S</option>
+        <option value="Helping Bonus" title="HB" data-subtext="+5% speed">Helping Bonus</option>
         <option data-divider="true"></option>
-        <option value="Helping Speed M" title="Help M" data-subtext="+ 36% speed">Helping Speed M</option>
-        <option value="Helping Speed S" title="Help S" data-subtext="+ 18% speed">Helping Speed S</option>
+        <option value="Helping Speed M" title="Help M" data-subtext="+36% speed">Helping Speed M</option>
+        <option value="Helping Speed S" title="Help S" data-subtext="+18% speed">Helping Speed S</option>
         <option data-divider="true"></option>
-        <option value="Ingredient Finder M" title="Ing M" data-subtext="+ 36% ingredients">Ingredient Finder M</option>
-        <option value="Ingredient Finder S" title="Ing S" data-subtext="+ 18% ingredients">Ingredient Finder S</option>
+        <option value="Ingredient Finder M" title="Ing M" data-subtext="+36% ingredients">Ingredient Finder M</option>
+        <option value="Ingredient Finder S" title="Ing S" data-subtext="+18% ingredients">Ingredient Finder S</option>
         <option data-divider="true"></option>
-        <option value="Inventory Up L" title="Inv L" data-subtext="+ 18 inventory">Inventory Up L</option>
-        <option value="Inventory Up M" title="Inv M" data-subtext="+ 12 inventory">Inventory Up M</option>
-        <option value="Inventory Up S" title="Inv S" data-subtext="+ 6 inventory">Inventory Up S</option>
+        <option value="Inventory Up L" title="Inv L" data-subtext="+18 inventory">Inventory Up L</option>
+        <option value="Inventory Up M" title="Inv M" data-subtext="+12 inventory">Inventory Up M</option>
+        <option value="Inventory Up S" title="Inv S" data-subtext="+6 inventory">Inventory Up S</option>
         <option data-divider="true"></option>
-        <option value="Skill Trigger M" title="Skill M" data-subtext="+ 36% skills">Skill Trigger M</option>
-        <option value="Skill Trigger S" title="Skill S" data-subtext="+ 18% skills">Skill Trigger S</option>
+        <option value="Skill Trigger M" title="Skill M" data-subtext="+36% skills">Skill Trigger M</option>
+        <option value="Skill Trigger S" title="Skill S" data-subtext="+18% skills">Skill Trigger S</option>
       </select>
     </div>
 
     <div class="d-flex align-items-center justify-content-center mb-2">
-      <div class="btn-group" role="group" aria-label="Level Selection" style="width: 300px; height: 40px">
+      <div class="btn-group" role="group" aria-label="Level Selection" style="width: var(--input-width); height: 40px">
         <input type="radio" class="btn-check" autocomplete="off" disabled />
         <label class="btn btn-outline-dark">Level</label>
 
@@ -846,7 +1393,12 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-center mb-3">
-      <div class="btn-group" role="group" aria-label="Skill Level Selection" style="width: 300px; height: 40px">
+      <div
+        class="btn-group"
+        role="group"
+        aria-label="Skill Level Selection"
+        style="width: var(--input-width); height: 40px"
+      >
         <input type="radio" class="btn-check" autocomplete="off" disabled />
         <label class="btn btn-outline-dark">Skill Lv.</label>
 
@@ -892,7 +1444,12 @@
 
         <div class="d-flex align-items-center justify-content-center mb-3">
           <div style="width: 300px">
-            <div class="btn-group" role="group" aria-label="Helping Bonus Selection" style="width: 300px; height: 40px">
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="Helping Bonus Selection"
+              style="width: var(--input-width); height: 40px"
+            >
               <input type="radio" class="btn-check" autocomplete="off" disabled />
               <label class="btn btn-outline-dark">Helping bonus</label>
 
@@ -915,12 +1472,12 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-center mb-3">
-          <div style="width: 300px">
+          <div style="width: var(--input-width)">
             <div
               class="btn-group"
               role="group"
               aria-label="Energy Recovery Bonus Selection"
-              style="width: 300px; height: 40px"
+              style="width: var(--input-width); height: 40px"
             >
               <input type="radio" class="btn-check" autocomplete="off" disabled />
               <label class="btn btn-outline-dark">ERB</label>
@@ -947,7 +1504,7 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-center mb-2">
-          <div class="input-group d-flex flex-column" style="width: 300px">
+          <div class="input-group d-flex flex-column" style="width: var(--input-width)">
             <div class="d-flex w-100">
               <div class="text-center" style="flex: 1 1 15%">Level</div>
               <div class="text-center form-label" style="flex: 1 1 85%">
@@ -992,7 +1549,7 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-center mb-3">
-          <div class="input-group d-flex flex-column" style="width: 300px">
+          <div class="input-group d-flex flex-column" style="width: var(--input-width)">
             <div class="d-flex w-100">
               <div class="text-center" style="flex: 1 1 15%">Level</div>
               <div class="text-center" style="flex: 1 1 15%">Unique</div>
@@ -1090,7 +1647,7 @@
       <button
         class="btn btn-outline-dark text-center"
         id="submitButton"
-        style="width: 300px"
+        style="width: var(--input-width)"
         type="button"
         onclick="goToProductionCalculator()"
         disabled
