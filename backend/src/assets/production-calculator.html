@@ -420,6 +420,7 @@
       });
     </script>
     <script>
+      // appends level labels in subskill dropdown
       $(document).ready(function () {
         let levels = [10, 25, 50, 75, 100];
         let selectedSubskills = [];
@@ -505,27 +506,13 @@
     <script>
       // unfocus search bar and scroll selects into view
       $(document).ready(function () {
-        var blurState = false;
         $('.selectpicker').on('show.bs.select', function () {
-          $('.bs-searchbox .form-control').on('focus', function () {
-            if (!blurState) {
-              $(this).blur();
-              blurState = true;
-            }
-          });
-
-          $('.selectpicker').on('hide.bs.select', function () {
-            blurState = false;
-          });
-
-          setTimeout(() => {
-            if (window.innerWidth <= 1000) {
-              var buttonId = $(this).attr('id');
-              document
-                .getElementById(`${buttonId}Container`)
-                .scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-            }
-          });
+          if (window.innerWidth <= 1000) {
+            var buttonId = $(this).attr('id');
+            document
+              .getElementById(`${buttonId}Container`)
+              .scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+          }
         });
       });
     </script>
