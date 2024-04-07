@@ -506,13 +506,39 @@
     <script>
       // unfocus search bar and scroll selects into view
       $(document).ready(function () {
+        var blurState = false;
         $('.selectpicker').on('show.bs.select', function () {
-          if (window.innerWidth <= 1000) {
-            var buttonId = $(this).attr('id');
-            document
-              .getElementById(`${buttonId}Container`)
-              .scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
-          }
+          var $select = $(this);
+          var FOCUS_SEARCH_AFTER_MS = 300;
+          var MOBILE_WIDTH = 1000;
+
+          var onFocus = function () {
+            if (!blurState) {
+              $(this).blur();
+              blurState = true;
+              setTimeout(function () {
+                if (window.innerWidth <= MOBILE_WIDTH && blurState) {
+                  $('.bs-searchbox input').focus();
+                }
+              }, FOCUS_SEARCH_AFTER_MS);
+            }
+          };
+
+          $('.bs-searchbox .form-control').on('focus', onFocus);
+          $('.selectpicker').on('hide.bs.select', function () {
+            blurState = false;
+            $('.bs-searchbox .form-control').off('focus', onFocus);
+          });
+
+          setTimeout(() => {
+            if (window.innerWidth <= 1000) {
+              var buttonId = $select.attr('id');
+              var container = document.getElementById(`${buttonId}Container`);
+              if (container) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+              }
+            }
+          }, 50);
         });
       });
     </script>
