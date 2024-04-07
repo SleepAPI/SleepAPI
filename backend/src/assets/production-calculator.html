@@ -488,22 +488,6 @@
       });
     </script>
     <script>
-      // remove auto focus search bar
-      $(document).ready(function () {
-        var blurState = false;
-        $('.bs-searchbox .form-control').on('focus', function () {
-          if (!blurState) {
-            $(this).blur();
-            blurState = true;
-          }
-        });
-
-        $('.selectpicker').on('hide.bs.select', function () {
-          blurState = false;
-        });
-      });
-    </script>
-    <script>
       $(document).ready(function () {
         var input = document.getElementById('popoverInput');
 
@@ -515,6 +499,33 @@
           } else if (value < 1) {
             this.value = 1;
           }
+        });
+      });
+    </script>
+    <script>
+      // unfocus search bar and scroll selects into view
+      $(document).ready(function () {
+        var blurState = false;
+        $('.selectpicker').on('show.bs.select', function () {
+          $('.bs-searchbox .form-control').on('focus', function () {
+            if (!blurState) {
+              $(this).blur();
+              blurState = true;
+            }
+          });
+
+          $('.selectpicker').on('hide.bs.select', function () {
+            blurState = false;
+          });
+
+          setTimeout(() => {
+            if (window.innerWidth <= 1000) {
+              var buttonId = $(this).attr('id');
+              document
+                .getElementById(`${buttonId}Container`)
+                .scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            }
+          });
         });
       });
     </script>
@@ -601,13 +612,14 @@
       </div>
     </header>
 
-    <div class="d-flex align-items-center justify-content-center mb-2">
+    <div class="d-flex align-items-center justify-content-center mb-2" id="pokemonContainer">
       <select
         class="selectpicker"
         id="pokemon"
         name="pokemon"
         data-live-search="true"
         data-live-search-placeholder="Search"
+        data-dropup-auto="false"
         title="Pokémon"
         data-width="300px"
       >
@@ -1265,7 +1277,7 @@
       </select>
     </div>
 
-    <div class="d-flex align-items-center justify-content-center mb-2">
+    <div class="d-flex align-items-center justify-content-center mb-2" id="ingredientContainer">
       <div class="dropdown">
         <button
           class="btn btn-outline-dark dropdown-toggle"
@@ -1284,8 +1296,16 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center justify-content-center mb-2">
-      <select class="selectpicker" id="nature" name="nature" title="Nature" data-show-subtext="true" data-width="300px">
+    <div class="d-flex align-items-center justify-content-center mb-2" id="natureContainer">
+      <select
+        class="selectpicker"
+        id="nature"
+        name="nature"
+        title="Nature"
+        data-show-subtext="true"
+        data-dropup-auto="false"
+        data-width="300px"
+      >
         <option value="bashful" disabled selected hidden>Choose Nature...</option>
 
         <optgroup label="Speed">
@@ -1293,13 +1313,6 @@
           <option value="adamant" data-subtext="+speed -ingredient" data-tokens="speed">Adamant</option>
           <option value="naughty" data-subtext="+speed -skill" data-tokens="speed">Naughty</option>
           <option value="brave" data-subtext="+speed -exp" data-tokens="speed">Brave</option>
-        </optgroup>
-
-        <optgroup label="Energy">
-          <option value="bold" data-subtext="+energy -speed" data-tokens="energy">Bold</option>
-          <option value="impish" data-subtext="+energy -ingredient" data-tokens="energy">Impish</option>
-          <option value="lax" data-subtext="+energy -skill" data-tokens="energy">Lax</option>
-          <option value="relaxed" data-subtext="+energy -exp" data-tokens="energy">Relaxed</option>
         </optgroup>
 
         <optgroup label="Ingredient">
@@ -1314,6 +1327,13 @@
           <option value="gentle" data-subtext="+skill -energy" data-tokens="skill">Gentle</option>
           <option value="careful" data-subtext="+skill -ingredient" data-tokens="skill">Careful</option>
           <option value="sassy" data-subtext="+skill -exp" data-tokens="skill">Sassy</option>
+        </optgroup>
+
+        <optgroup label="Energy">
+          <option value="bold" data-subtext="+energy -speed" data-tokens="energy">Bold</option>
+          <option value="impish" data-subtext="+energy -ingredient" data-tokens="energy">Impish</option>
+          <option value="lax" data-subtext="+energy -skill" data-tokens="energy">Lax</option>
+          <option value="relaxed" data-subtext="+energy -exp" data-tokens="energy">Relaxed</option>
         </optgroup>
 
         <optgroup label="EXP">
@@ -1333,7 +1353,7 @@
       </select>
     </div>
 
-    <div class="d-flex align-items-center justify-content-center mb-2">
+    <div class="d-flex align-items-center justify-content-center mb-2" id="subskillsContainer">
       <select
         class="selectpicker"
         id="subskills"
@@ -1341,11 +1361,12 @@
         data-max-options="5"
         data-width="300px"
         data-tick-icon="false"
+        data-dropup-auto="false"
         multiple
       >
         <option value="Berry Finding S" title="BFS" data-subtext="+1 berry">Berry Finding S</option>
-        <option value="Energy Recovery Bonus" title="ERB" data-subtext="+14% energy">Energy Recovery Bonus</option>
         <option value="Helping Bonus" title="HB" data-subtext="+5% speed">Helping Bonus</option>
+        <option value="Energy Recovery Bonus" title="ERB" data-subtext="+14% energy">Energy Recovery Bonus</option>
         <option data-divider="true"></option>
         <option value="Helping Speed M" title="Help M" data-subtext="+36% speed">Helping Speed M</option>
         <option value="Helping Speed S" title="Help S" data-subtext="+18% speed">Helping Speed S</option>
@@ -1353,12 +1374,12 @@
         <option value="Ingredient Finder M" title="Ing M" data-subtext="+36% ingredients">Ingredient Finder M</option>
         <option value="Ingredient Finder S" title="Ing S" data-subtext="+18% ingredients">Ingredient Finder S</option>
         <option data-divider="true"></option>
+        <option value="Skill Trigger M" title="Skill M" data-subtext="+36% skills">Skill Trigger M</option>
+        <option value="Skill Trigger S" title="Skill S" data-subtext="+18% skills">Skill Trigger S</option>
+        <option data-divider="true"></option>
         <option value="Inventory Up L" title="Inv L" data-subtext="+18 inventory">Inventory Up L</option>
         <option value="Inventory Up M" title="Inv M" data-subtext="+12 inventory">Inventory Up M</option>
         <option value="Inventory Up S" title="Inv S" data-subtext="+6 inventory">Inventory Up S</option>
-        <option data-divider="true"></option>
-        <option value="Skill Trigger M" title="Skill M" data-subtext="+36% skills">Skill Trigger M</option>
-        <option value="Skill Trigger S" title="Skill S" data-subtext="+18% skills">Skill Trigger S</option>
         <option data-divider="true"></option>
         <option value="Dream Shard Bonus" title="DSB" data-subtext="+6% shards" style="color: rgba(33, 37, 41, 0.4)">
           Dream Shard Bonus
@@ -1378,7 +1399,7 @@
       </select>
     </div>
 
-    <div class="d-flex align-items-center justify-content-center mb-2">
+    <div class="d-flex align-items-center justify-content-center mb-2" id="levelContainer">
       <div class="btn-group" role="group" aria-label="Level Selection" style="width: var(--input-width); height: 40px">
         <input type="radio" class="btn-check" autocomplete="off" disabled />
         <label class="btn btn-outline-dark">Level</label>
@@ -1409,7 +1430,7 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center justify-content-center mb-3">
+    <div class="d-flex align-items-center justify-content-center mb-3" id="skillLevelContainer">
       <div
         class="btn-group"
         role="group"
