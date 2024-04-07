@@ -78,8 +78,19 @@ export const SLEEP_EXP_BONUS: SubSkill = {
   amount: 0.14,
 };
 
+export const DREAM_SHARD_BONUS: SubSkill = {
+  name: 'Dream Shard Bonus',
+  amount: 0.06,
+};
+
+export const RESEARCH_EXP_BONUS: SubSkill = {
+  name: 'Research EXP Bonus',
+  amount: 0.06,
+};
+
 export const SUBSKILLS: SubSkill[] = [
   BERRY_FINDING_S,
+  DREAM_SHARD_BONUS,
   ENERGY_RECOVERY_BONUS,
   HELPING_BONUS,
   HELPING_SPEED_S,
@@ -89,6 +100,9 @@ export const SUBSKILLS: SubSkill[] = [
   INVENTORY_S,
   INVENTORY_M,
   INVENTORY_L,
+  RESEARCH_EXP_BONUS,
+  SKILL_LEVEL_UP_M,
+  SKILL_LEVEL_UP_S,
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S,
   SLEEP_EXP_BONUS,
