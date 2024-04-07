@@ -1,6 +1,7 @@
 import { pokemon, subskill } from 'sleepapi-common';
 import {
   extractSubskillsBasedOnLevel,
+  getSubskill,
   getSubskillNames,
   limitSubSkillsToLevel,
   subskillsForFilter,
@@ -29,6 +30,17 @@ describe('getSubskillNames', () => {
         "Sleep EXP Bonus",
       ]
     `);
+  });
+});
+
+describe('getSubskill', () => {
+  it.each(subskill.SUBSKILLS)('finds subskill "%s"', (ss: subskill.SubSkill) => {
+    const result = getSubskill(ss.name);
+    expect(result).toEqual(ss);
+  });
+
+  it('shall throw if looking up missing subskill', () => {
+    expect(() => getSubskill('missing')).toThrowErrorMatchingInlineSnapshot(`"Can't find Subskill with name missing"`);
   });
 });
 

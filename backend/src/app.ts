@@ -8,6 +8,7 @@ import { config } from './config/config';
 import ProductionController from './controllers/calculator/production.controller';
 import HealthController from './controllers/health/health.controller';
 import IngredientController from './controllers/ingredient/ingredient.controller';
+import MainskillController from './controllers/mainskill/mainskill.controller';
 import MealController from './controllers/meal/meal.controller';
 import NatureController from './controllers/nature/nature.controller';
 import OptimalController from './controllers/optimal/optimal.controller';
@@ -22,6 +23,7 @@ import { BaseRouter } from './routes/base-router';
 import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
 import { IngredientRouter } from './routes/ingredient-router/ingredient-router';
+import { MainskillRouter } from './routes/mainskill-router/mainskill-router';
 import { MealRouter } from './routes/meal-router/meal-router';
 import { NatureRouter } from './routes/nature-router/nature-router';
 import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
@@ -83,6 +85,7 @@ async function main() {
   TierlistRouter.register(new TierlistController());
   IngredientRouter.register(new IngredientController());
   NatureRouter.register(new NatureController());
+  MainskillRouter.register(new MainskillController());
   SubskillRouter.register(new SubskillController());
   ShareRouter.register(new ShareController());
 
