@@ -3,7 +3,7 @@
 
 window.onload = function () {
   var img = new Image();
-  img.src = 'spinner.gif';
+  img.src = 'sneasel_spinner.gif';
 };
 
 function makeRequest(url, method, callback, body) {
@@ -174,26 +174,6 @@ function showMenu() {
   }
 }
 
-let selectedSubskills = [];
-// prod calc subskill selector
-document.addEventListener('DOMContentLoaded', (event) => {
-  var selectPicker = document.getElementById('subskills');
-
-  selectPicker.addEventListener('change', function () {
-    var currentSelectedValues = Array.from(this.options)
-      .filter((option) => option.selected)
-      .map((option) => option.value);
-    var newlySelectedValue = currentSelectedValues.filter((value) => !selectedSubskills.includes(value));
-    var newlyDeselectedValue = selectedSubskills.filter((value) => !currentSelectedValues.includes(value));
-
-    if (newlySelectedValue.length > 0) {
-      selectedSubskills.push(...newlySelectedValue);
-    } else if (newlyDeselectedValue.length > 0) {
-      selectedSubskills = selectedSubskills.filter((value) => !newlyDeselectedValue.includes(value));
-    }
-  });
-});
-
 // --- API CALLS ---
 
 function goToProductionCalculator() {
@@ -206,7 +186,7 @@ function goToProductionCalculator() {
   var body = {
     level: +document.querySelector('input[name="level"]:checked').value,
     nature: document.getElementById('nature').value || 'bashful',
-    subskills: selectedSubskills,
+    subskills: getCurrentSubskills(),
     skillLevel: +document.querySelector('input[name="skillLevel"]:checked').value,
     e4eProcs: +document.getElementById('e4eProcs').value,
     e4eLevel: +document.getElementById('e4eLevel').value,
