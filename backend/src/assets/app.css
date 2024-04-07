@@ -1681,19 +1681,6 @@ table.w3-table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#spinner-div {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 999;
-  width: 50px;
-  height: 50px;
-  background-image: url('spinner.gif');
-  background-size: cover;
-}
-
 button:hover {
   cursor: pointer;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
