@@ -23,6 +23,16 @@ export function extractTriggerSubskills(subskills: subskill.SubSkill[]) {
   return roundDown(1 + triggerM + triggerS, 2);
 }
 
+export function countErbUsers(erb: number, subskills: subskill.SubSkill[]) {
+  const subskillErb = subskills.some(
+    ({ name }) => name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase()
+  )
+    ? 1
+    : 0;
+
+  return Math.max(Math.min(erb + subskillErb, 5), 0);
+}
+
 export function calculateSubskillCarrySize(subskills: subskill.SubSkill[]): number {
   const invS = subskills.some(({ name }) => name === subskill.INVENTORY_S.name) ? subskill.INVENTORY_S.amount : 0;
   const invM = subskills.some(({ name }) => name === subskill.INVENTORY_M.name) ? subskill.INVENTORY_M.amount : 0;

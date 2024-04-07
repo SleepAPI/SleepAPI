@@ -2,6 +2,7 @@ import { nature, pokemon, subskill } from 'sleepapi-common';
 import {
   calculateHelpSpeedSubskills,
   calculateSubskillCarrySize,
+  countErbUsers,
   extractIngredientSubskills,
   extractTriggerSubskills,
   getOptimalStats,
@@ -105,5 +106,19 @@ describe('getOptimalIngredientStats', () => {
       subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
     });
+  });
+});
+
+describe('countErbUsers', () => {
+  it('shall clamp to 5 when user adds erb to both own and 5 members', () => {
+    expect(countErbUsers(5, [subskill.ENERGY_RECOVERY_BONUS])).toBe(5);
+  });
+
+  it('shall clamp to 0 when team erb is negative', () => {
+    expect(countErbUsers(-1, [])).toBe(0);
+  });
+
+  it('shall add user erb and team members erb', () => {
+    expect(countErbUsers(2, [subskill.ENERGY_RECOVERY_BONUS])).toBe(3);
   });
 });

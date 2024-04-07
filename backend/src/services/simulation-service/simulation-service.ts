@@ -43,6 +43,7 @@ import {
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
+import { countErbUsers } from '../calculator/stats/stats-calculator';
 import { monteCarlo } from './monte-carlo/monte-carlo';
 import { simulation } from './simulator/simulator';
 
@@ -94,7 +95,7 @@ export function setupAndRunProductionSimulation(params: {
     period: { end: mainBedtime, start: mainWakeup },
     nature: maybeNature,
     incense,
-    erb,
+    erb: countErbUsers(erb, subskills),
   };
 
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
