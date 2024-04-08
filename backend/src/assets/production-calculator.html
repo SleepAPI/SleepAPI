@@ -542,12 +542,11 @@
             if (!blurState) {
               $(this).blur();
               blurState = true;
+              var platformTimeout = window.innerWidth <= MOBILE_WIDTH ? FOCUS_SEARCH_AFTER_MS : 50;
               setTimeout(function () {
-                if (window.innerWidth <= MOBILE_WIDTH && blurState) {
-                  $('.bs-searchbox input').focus();
-                  $('.bs-searchbox input').click();
-                }
-              }, FOCUS_SEARCH_AFTER_MS);
+                $('.bs-searchbox input').focus();
+                $('.bs-searchbox input').click();
+              }, platformTimeout);
             }
           };
 
@@ -558,7 +557,7 @@
           });
 
           setTimeout(() => {
-            if (window.innerWidth <= 1000) {
+            if (window.innerWidth <= MOBILE_WIDTH) {
               var buttonId = $select.attr('id');
               var container = document.getElementById(`${buttonId}Container`);
               if (container) {
