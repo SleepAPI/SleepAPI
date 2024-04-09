@@ -83,7 +83,8 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
       level,
       nature: nature.SASSY,
       subskills: subskillsForFilter('skill', level, pokemon),
-      skillLevel: 6,
+      skillLevel: pokemon.skill.maxLevel,
+      maxCarrySize: pokemon.maxCarrySize,
     };
   }
 
@@ -91,6 +92,7 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
     level,
     nature: nature.QUIET,
     subskills: subskillsForFilter('ingredient', level, pokemon),
-    skillLevel: 6,
+    skillLevel: pokemon.skill.maxLevel,
+    maxCarrySize: pokemon.maxCarrySize,
   };
 }

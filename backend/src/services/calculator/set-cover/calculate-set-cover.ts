@@ -19,6 +19,7 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
       nature: nature ?? optimalStats.nature,
       subskills: input.subskills ?? optimalStats.subskills,
       skillLevel: input.skillLevel ?? pokemon.skill.maxLevel,
+      maxCarrySize: optimalStats.maxCarrySize,
     };
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;

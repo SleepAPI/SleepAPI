@@ -399,6 +399,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
+					},
 					"e4eProcs": {
 						"type": "number",
 						"format": "double"
@@ -588,6 +592,10 @@
 						"type": "array"
 					},
 					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxCarrySize": {
 						"type": "number",
 						"format": "double"
 					},
@@ -799,13 +807,18 @@
 					"skillLevel": {
 						"type": "number",
 						"format": "double"
+					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"level",
 					"nature",
 					"subskills",
-					"skillLevel"
+					"skillLevel",
+					"maxCarrySize"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1134,6 +1147,10 @@
 						},
 						"type": "array"
 					},
+					"nrOfEvolutions": {
+						"type": "number",
+						"format": "double"
+					},
 					"e4eProcs": {
 						"type": "number",
 						"format": "double"
@@ -1197,6 +1214,7 @@
 					"level",
 					"nature",
 					"subskills",
+					"nrOfEvolutions",
 					"e4eProcs",
 					"e4eLevel",
 					"cheer",
@@ -1262,7 +1280,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "2.2.0",
+		"version": "2.3.0",
 		"contact": {}
 	},
 	"paths": {

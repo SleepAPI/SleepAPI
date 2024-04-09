@@ -1,4 +1,5 @@
 import { ProductionStats } from '@src/domain/computed/production';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
@@ -43,11 +44,18 @@ export default class ProductionController extends Controller {
     const canRollHelperBoost = pkmn.skill === mainskill.HELPER_BOOST || pkmn.skill === mainskill.METRONOME;
     const uniqueHelperBoost = rawUniqueHelperBoost === 0 && canRollHelperBoost ? 1 : rawUniqueHelperBoost;
 
+    const inputNrOfEvos = queryAsNumber(input.nrOfEvolutions);
+    const maxCarrySize = inputNrOfEvos !== undefined ? pkmn.carrySize + inputNrOfEvos * 5 : pkmn.maxCarrySize;
+    if (maxCarrySize > pkmn.maxCarrySize) {
+      throw new PokemonError(`${pkmn.name} doesn't evolve ${inputNrOfEvos} times`);
+    }
+
     const parsedInput: ProductionStats = {
       level,
       nature: getNature(input.nature),
       subskills: extractSubskillsBasedOnLevel(level, input.subskills),
       skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pkmn.skill.maxLevel, pkmn.skill.maxLevel),
+      maxCarrySize,
       e4eProcs: queryAsNumber(input.e4eProcs) ?? 0,
       e4eLevel: queryAsNumber(input.e4eLevel) ?? mainskill.ENERGY_FOR_EVERYONE.maxLevel,
       cheer: queryAsNumber(input.cheer) ?? 0,

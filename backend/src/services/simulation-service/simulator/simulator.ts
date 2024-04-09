@@ -80,7 +80,8 @@ export function simulation(params: {
   const sneakySnackProduce: Produce = { berries: sneakySnackBerries, ingredients: [] };
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
   const averageProduceAmount = countInventory(averageProduce);
-  const inventoryLimit = pokemon.maxCarrySize + calculateSubskillCarrySize(input.subskills ?? []);
+  const inventoryLimit =
+    (input.maxCarrySize ?? pokemon.maxCarrySize) + calculateSubskillCarrySize(input.subskills ?? []);
 
   // summary values
   let skillProcs = 0;

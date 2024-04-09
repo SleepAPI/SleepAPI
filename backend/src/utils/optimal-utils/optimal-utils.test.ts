@@ -40,6 +40,7 @@ describe('calculateCombinedContributions', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
+        maxCarrySize: pokemon.PINSIR.maxCarrySize,
       },
     };
 
@@ -214,6 +215,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
+        maxCarrySize: pokemon.PINSIR.maxCarrySize,
       },
       detailedProduce: {
         produce: {
