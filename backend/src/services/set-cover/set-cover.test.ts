@@ -28,6 +28,7 @@ describe('processOptimalTeamSolutions', () => {
       nature: nature.RASH,
       subskills: [],
       skillLevel: 6,
+      maxCarrySize: pokemon.PINSIR.maxCarrySize,
     };
 
     const detailedProduce: DetailedProduce = {
@@ -306,6 +307,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+    maxCarrySize: pokemon.RAICHU.maxCarrySize,
   },
   detailedProduce: {
     produce: {
@@ -373,6 +375,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+    maxCarrySize: pokemon.RAIKOU.maxCarrySize,
   },
   detailedProduce: {
     produce: {
@@ -425,6 +428,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
+    maxCarrySize: pokemon.VAPOREON.maxCarrySize,
   },
   detailedProduce: {
     produce: {

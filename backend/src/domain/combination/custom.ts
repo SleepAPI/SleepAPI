@@ -6,6 +6,7 @@ export interface CustomStats {
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
   skillLevel: number;
+  maxCarrySize: number;
 }
 
 export interface CustomPokemonCombinationWithProduce {

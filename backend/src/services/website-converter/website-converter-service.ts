@@ -17,6 +17,7 @@ interface ProductionFilters {
   nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
   skillLevel?: number;
+  maxCarrySize?: number;
   e4eProcs: number;
   e4eLevel: number;
   helperBoostProcs: number;
@@ -266,7 +267,15 @@ class WebsiteConverterServiceImpl {
       `Level: ${productionCombination.filters.level}, Nature: ${
         productionCombination.filters.nature?.prettyName ?? 'None'
       }\n` +
-      `Main skill level: ${productionCombination.filters.skillLevel}\n` +
+      `Main skill level: ${productionCombination.filters.skillLevel}${
+        productionCombination.filters.maxCarrySize !== undefined
+          ? `, evolutions: ${
+              (productionCombination.filters.maxCarrySize -
+                productionCombination.production.pokemonCombination.pokemon.carrySize) /
+              5
+            }`
+          : ''
+      }\n` +
       `Subskills: ${
         filters.subskills && filters.subskills.length > 0 ? filters.subskills.map((s) => s.name).join(', ') : 'None'
       }\n`;

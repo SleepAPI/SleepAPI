@@ -7,6 +7,7 @@ export interface ProductionStats {
   nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
   skillLevel?: number;
+  maxCarrySize?: number;
   e4eProcs: number;
   e4eLevel: number;
   cheer: number;

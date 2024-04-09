@@ -109,5 +109,11 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     skillActivations: [],
   },
   averageProduce: getEmptyProduce(berry.LUM),
-  customStats: { level: 30, nature: nature.RASH, subskills: [], skillLevel: 6 },
+  customStats: {
+    level: 30,
+    nature: nature.RASH,
+    subskills: [],
+    skillLevel: 6,
+    maxCarrySize: pokemon.PINSIR.maxCarrySize,
+  },
 };

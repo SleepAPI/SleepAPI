@@ -9,6 +9,7 @@ export interface ProductionRequest {
   level: number;
   nature: string;
   subskills: string[];
+  nrOfEvolutions: number;
   e4eProcs: number;
   e4eLevel: number;
   cheer: number;

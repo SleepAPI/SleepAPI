@@ -95,6 +95,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
+      maxCarrySize: pokemon.BLASTOISE.maxCarrySize,
     });
   });
 
@@ -105,6 +106,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.SASSY,
       subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
+      maxCarrySize: pokemon.SYLVEON.maxCarrySize,
     });
   });
 });

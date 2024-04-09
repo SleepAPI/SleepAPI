@@ -188,6 +188,7 @@ function goToProductionCalculator() {
     nature: document.getElementById('nature').value || 'bashful',
     subskills: getCurrentSubskills(),
     skillLevel: +document.querySelector('input[name="skillLevel"]:checked').value,
+    nrOfEvolutions: document.getElementById('nrOfEvolutions').value,
     e4eProcs: +document.getElementById('e4eProcs').value,
     e4eLevel: +document.getElementById('e4eLevel').value,
     helpingbonus: +document.querySelector('input[name="helpingBonus"]:checked').value,
@@ -295,7 +296,7 @@ function goToProductionCalculator() {
   );
 }
 
-function getPokemonIngredients(pokemonName) {
+function getPokemonData(pokemonName) {
   var url = 'pokemon/' + pokemonName;
   makeRequest(url, 'GET', function (data) {
     var pokemonInfo = JSON.parse(data);
@@ -316,7 +317,10 @@ function getPokemonIngredients(pokemonName) {
       ingredients.push(`${ing0}/${ing30_2}/${ing60_3}`); // ABC
     }
 
+    var nrOfEvolutions = (pokemonInfo.maxCarrySize - pokemonInfo.carrySize) / 5;
+
     populateIngredientOptions(ingredients);
+    populateEvolutionData(nrOfEvolutions);
   });
 }
 

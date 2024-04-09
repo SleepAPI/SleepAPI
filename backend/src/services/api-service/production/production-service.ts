@@ -57,6 +57,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.QUIET,
         skillLevel: pokemon.skill.maxLevel,
+        maxCarrySize: pokemon.maxCarrySize,
       },
       monteCarloIterations,
     }).detailedProduce;
@@ -77,6 +78,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.ADAMANT,
         skillLevel: pokemon.skill.maxLevel,
+        maxCarrySize: pokemon.maxCarrySize,
       },
       monteCarloIterations,
     }).detailedProduce;
@@ -97,6 +99,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.SASSY,
         skillLevel: pokemon.skill.maxLevel,
+        maxCarrySize: pokemon.maxCarrySize,
       },
       monteCarloIterations,
     }).detailedProduce;
