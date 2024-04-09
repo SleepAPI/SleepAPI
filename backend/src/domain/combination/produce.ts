@@ -17,6 +17,7 @@ export interface DetailedProduce {
   sneakySnack: BerrySet;
   dayHelps: number;
   nightHelps: number;
+  nightHelpsBeforeSS: number;
   averageTotalSkillProcs: number;
   skillActivations: SkillActivation[];
 }

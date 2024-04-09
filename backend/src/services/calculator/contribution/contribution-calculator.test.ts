@@ -929,6 +929,7 @@ function generateProducingPokemon(params: {
       averageTotalSkillProcs: skillProcs,
       dayHelps: 0,
       nightHelps: 0,
+      nightHelpsBeforeSS: 0,
       skillActivations: [],
       sneakySnack: emptyBerrySet(pokemon.berry),
       spilledIngredients: [],

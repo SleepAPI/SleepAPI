@@ -9,7 +9,6 @@ export interface ProductionRequest {
   level: number;
   nature: string;
   subskills: string[];
-  nrOfEvolutions: number;
   e4eProcs: number;
   e4eLevel: number;
   cheer: number;
@@ -25,6 +24,7 @@ export interface ProductionRequest {
   mainBedtime: string;
   mainWakeup: string;
   ingredientSet: string[];
+  nrOfEvolutions?: number;
 }
 
 class ProductionRouterImpl {

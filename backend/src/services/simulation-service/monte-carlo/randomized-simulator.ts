@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+import { PokemonProduce, Produce } from '@src/domain/combination/produce';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
+import { addToInventory, countInventory } from '@src/utils/inventory-utils/inventory-utils';
+import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
 import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import {
   addTime,
@@ -28,7 +31,7 @@ import {
   sortEventsForPeriod,
   timeWithinPeriod,
 } from '@src/utils/time-utils/time-utils';
-import { mainskill, pokemon } from 'sleepapi-common';
+import { mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -41,11 +44,12 @@ export function randomizedSimulation(params: {
   helpFrequency: number;
   skillPercentage: number;
   skillLevel: number;
-  pokemon: pokemon.Pokemon;
+  pokemonWithAverageProduce: PokemonProduce;
+  inventoryLimit: number;
   recoveryEvents: EnergyEvent[];
   mealTimes: Time[];
   energyFromYesterday: number;
-  nightHelpsFromYesterday: number;
+  nightHelpsBeforeCarryFromYesterday: number;
 }): MonteCarloResult {
   // Set up input
   const {
@@ -53,22 +57,25 @@ export function randomizedSimulation(params: {
     helpFrequency,
     skillPercentage,
     skillLevel,
-    pokemon,
+    pokemonWithAverageProduce,
+    inventoryLimit,
     recoveryEvents,
     mealTimes,
     energyFromYesterday,
-    nightHelpsFromYesterday,
+    nightHelpsBeforeCarryFromYesterday,
   } = params;
   const nature = dayInfo.nature;
+  const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
 
   // TODO: only needed before refactor
   const eventLog: ScheduledEvent[] = [];
+  let currentInventory: Produce = getEmptyProduce(pokemon.berry);
 
   // summary values
   let skillProcsDay = 0;
   let skillProcsNight = 0;
   let dayHelps = 0;
-  let nightHelps = 0;
+  let nightHelpsBeforeSS = 0;
 
   // event array indices
   let energyIndex = 0;
@@ -89,7 +96,7 @@ export function randomizedSimulation(params: {
   let chunksOf5Minutes = 0;
 
   // check if we proc'd skill at night
-  for (let i = 0; i < nightHelpsFromYesterday; i++) {
+  for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
     const skillActivated = rollRandomChance(skillPercentage);
     if (skillActivated) {
       if (pokemon.skill.unit === 'energy') {
@@ -172,12 +179,17 @@ export function randomizedSimulation(params: {
   // --- NIGHT ---
   period = { start: dayInfo.period.end, end: dayInfo.period.start };
   while (timeWithinPeriod(currentTime, period)) {
-    // check if help has occured
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
+    // only process helps if it fits in carry, not interested in total produce here
+    if (
+      countInventory(currentInventory) < inventoryLimit &&
+      isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })
+    ) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
       const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
 
-      ++nightHelps;
+      currentInventory = addToInventory(currentInventory, averageProduce);
+
+      ++nightHelpsBeforeSS;
       nextHelpEvent = nextHelp;
     }
 
@@ -197,7 +209,7 @@ export function randomizedSimulation(params: {
 
   return {
     dayHelps,
-    nightHelps,
+    nightHelpsBeforeSS,
     skillProcsDay,
     skillProcsNight,
     endingEnergy: currentEnergy,

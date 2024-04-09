@@ -766,6 +766,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"nightHelpsBeforeSS": {
+						"type": "number",
+						"format": "double"
+					},
 					"averageTotalSkillProcs": {
 						"type": "number",
 						"format": "double"
@@ -783,6 +787,7 @@
 					"sneakySnack",
 					"dayHelps",
 					"nightHelps",
+					"nightHelpsBeforeSS",
 					"averageTotalSkillProcs",
 					"skillActivations"
 				],
@@ -1147,10 +1152,6 @@
 						},
 						"type": "array"
 					},
-					"nrOfEvolutions": {
-						"type": "number",
-						"format": "double"
-					},
 					"e4eProcs": {
 						"type": "number",
 						"format": "double"
@@ -1208,13 +1209,16 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"nrOfEvolutions": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"level",
 					"nature",
 					"subskills",
-					"nrOfEvolutions",
 					"e4eProcs",
 					"e4eLevel",
 					"cheer",

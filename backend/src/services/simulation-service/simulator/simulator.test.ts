@@ -15,6 +15,7 @@ describe('simulator', () => {
       helpFrequency: 1000,
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       pokemonWithAverageProduce,
+      inventoryLimit: pokemonWithAverageProduce.pokemon.maxCarrySize,
       recoveryEvents: [new EnergyEvent({ delta: 10, description: 'some-desc', time: parseTime('08:00') })],
       extraHelpfulEvents: [
         new SkillEvent({
@@ -58,6 +59,7 @@ describe('simulator', () => {
         "averageTotalSkillProcs": 1,
         "dayHelps": 104,
         "nightHelps": 30,
+        "nightHelpsBeforeSS": 7,
         "produce": {
           "berries": {
             "amount": 225.33333333333334,
