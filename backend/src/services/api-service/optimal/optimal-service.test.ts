@@ -87,8 +87,8 @@ describe('getOptimalFlexiblePokemon', () => {
       [
         "BEWEAR(2 Corn, 5 Corn)",
         "VENUSAUR(2 Honey, 4 Tomato)",
-        "VENUSAUR(2 Honey, 5 Honey)",
         "VICTREEBEL(2 Tomato, 4 Potato)",
+        "VENUSAUR(2 Honey, 5 Honey)",
         "MR_MIME(2 Tomato, 4 Potato)",
         "MEGANIUM(1 Cacao, 2 Cacao)",
         "BEWEAR(2 Corn, 6 Sausage)",

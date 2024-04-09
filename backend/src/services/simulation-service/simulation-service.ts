@@ -43,7 +43,7 @@ import {
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
-import { countErbUsers } from '../calculator/stats/stats-calculator';
+import { calculateSubskillCarrySize, countErbUsers } from '../calculator/stats/stats-calculator';
 import { monteCarlo } from './monte-carlo/monte-carlo';
 import { simulation } from './simulator/simulator';
 
@@ -106,6 +106,10 @@ export function setupAndRunProductionSimulation(params: {
     berry: averagedPokemonCombination.pokemon.berry,
   };
 
+  const inventoryLimit =
+    (input.maxCarrySize ?? averagedPokemonCombination.pokemon.maxCarrySize) +
+    calculateSubskillCarrySize(input.subskills ?? []);
+
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
     produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop),
@@ -138,6 +142,7 @@ export function setupAndRunProductionSimulation(params: {
         skillPercentage,
         input,
         pokemonWithAverageProduce,
+        inventoryLimit,
         sneakySnackBerries,
         recoveryEvents,
         mealTimes,
@@ -149,6 +154,7 @@ export function setupAndRunProductionSimulation(params: {
     input,
     helpFrequency,
     pokemonWithAverageProduce,
+    inventoryLimit,
     sneakySnackBerries,
     recoveryEvents,
     extraHelpfulEvents,
@@ -189,6 +195,7 @@ export function generateSkillActivations(params: {
   mealTimes: Time[];
   input: ProductionStats;
   pokemonWithAverageProduce: PokemonProduce;
+  inventoryLimit: number;
   sneakySnackBerries: BerrySet;
   monteCarloIterations: number;
 }) {
@@ -200,6 +207,7 @@ export function generateSkillActivations(params: {
     mealTimes,
     input,
     pokemonWithAverageProduce,
+    inventoryLimit,
     sneakySnackBerries,
     monteCarloIterations,
   } = params;
@@ -219,7 +227,8 @@ export function generateSkillActivations(params: {
       helpFrequency,
       skillPercentage,
       skillLevel,
-      pokemon: pokemonWithAverageProduce.pokemon,
+      pokemonWithAverageProduce,
+      inventoryLimit,
       recoveryEvents,
       mealTimes,
       monteCarloIterations,
@@ -233,6 +242,7 @@ export function generateSkillActivations(params: {
       input,
       helpFrequency,
       pokemonWithAverageProduce,
+      inventoryLimit,
       sneakySnackBerries,
       recoveryEvents,
       extraHelpfulEvents: [],
@@ -240,9 +250,9 @@ export function generateSkillActivations(params: {
       skillActivations: [],
       mealTimes,
     });
-    const { dayHelps, nightHelps } = detailedProduce;
+    const { dayHelps, nightHelpsBeforeSS } = detailedProduce;
     nrOfDaySkillProcs = calculateSkillProcs(dayHelps ?? 0, skillPercentage);
-    oddsOfNightSkillProc = calculateOddsAtLeastOneSkillProc({ skillPercentage, helps: nightHelps });
+    oddsOfNightSkillProc = calculateOddsAtLeastOneSkillProc({ skillPercentage, helps: nightHelpsBeforeSS });
     nrOfDayHelps = dayHelps;
   }
 

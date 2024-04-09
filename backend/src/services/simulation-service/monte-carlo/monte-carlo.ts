@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
+import { PokemonProduce } from '@src/domain/combination/produce';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
-import { pokemon } from 'sleepapi-common';
 import { randomizedSimulation } from './randomized-simulator';
 
 export interface MonteCarloResult {
   skillProcsDay: number;
   skillProcsNight: number;
   dayHelps: number;
-  nightHelps: number;
+  nightHelpsBeforeSS: number;
   endingEnergy: number;
 }
 
@@ -33,7 +33,8 @@ export function monteCarlo(params: {
   helpFrequency: number;
   skillPercentage: number;
   skillLevel: number;
-  pokemon: pokemon.Pokemon;
+  pokemonWithAverageProduce: PokemonProduce;
+  inventoryLimit: number;
   recoveryEvents: EnergyEvent[];
   mealTimes: Time[];
   monteCarloIterations: number;
@@ -43,7 +44,8 @@ export function monteCarlo(params: {
     helpFrequency,
     skillPercentage,
     skillLevel,
-    pokemon,
+    pokemonWithAverageProduce,
+    inventoryLimit,
     recoveryEvents,
     mealTimes,
     monteCarloIterations,
@@ -51,23 +53,24 @@ export function monteCarlo(params: {
 
   const results: MonteCarloResult[] = [];
   let energyFromYesterday = 0;
-  let nightHelpsFromYesterday = 0;
+  let nightHelpsBeforeCarryFromYesterday = 0;
   for (let i = 0; i < monteCarloIterations; i++) {
     const simResult = randomizedSimulation({
       dayInfo,
       helpFrequency,
       skillPercentage,
       skillLevel,
-      pokemon,
+      pokemonWithAverageProduce,
+      inventoryLimit,
       recoveryEvents,
       mealTimes,
       energyFromYesterday,
-      nightHelpsFromYesterday,
+      nightHelpsBeforeCarryFromYesterday,
     });
-    const { endingEnergy, nightHelps } = simResult;
+    const { endingEnergy, nightHelpsBeforeSS } = simResult;
 
     energyFromYesterday = endingEnergy;
-    nightHelpsFromYesterday = nightHelps;
+    nightHelpsBeforeCarryFromYesterday = nightHelpsBeforeSS;
 
     results.push(simResult);
   }

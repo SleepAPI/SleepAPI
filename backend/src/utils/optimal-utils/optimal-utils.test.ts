@@ -226,6 +226,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         spilledIngredients: [],
         dayHelps: 0,
         nightHelps: 0,
+        nightHelpsBeforeSS: 0,
         averageTotalSkillProcs: 0,
         skillActivations: [],
       },

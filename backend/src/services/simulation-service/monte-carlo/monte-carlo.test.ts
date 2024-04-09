@@ -1,5 +1,6 @@
+import { PokemonProduce } from '@src/domain/combination/produce';
 import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
-import { nature } from 'sleepapi-common';
+import { berry, ingredient, nature } from 'sleepapi-common';
 import { monteCarlo } from './monte-carlo';
 
 describe('monteCarlo', () => {
@@ -8,7 +9,8 @@ describe('monteCarlo', () => {
       dayInfo: { period: MOCKED_MAIN_SLEEP, erb: 0, incense: false, nature: nature.QUIET },
       helpFrequency: 1000,
       mealTimes: [],
-      pokemon: MOCKED_POKEMON,
+      pokemonWithAverageProduce,
+      inventoryLimit: MOCKED_POKEMON.maxCarrySize,
       recoveryEvents: [],
       skillPercentage: MOCKED_POKEMON.skillPercentage / 100,
       skillLevel: 6,
@@ -22,3 +24,11 @@ describe('monteCarlo', () => {
     expect(averageNightlySkillProcOdds).toBeLessThan(1);
   });
 });
+
+const pokemonWithAverageProduce: PokemonProduce = {
+  pokemon: MOCKED_POKEMON,
+  produce: {
+    berries: { berry: berry.BELUE, amount: 2 },
+    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
+  },
+};

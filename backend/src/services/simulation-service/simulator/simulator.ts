@@ -47,7 +47,6 @@ import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { combineSameIngredientsInDrop } from '../../calculator/ingredient/ingredient-calculate';
 import { clampHelp } from '../../calculator/production/produce-calculator';
-import { calculateSubskillCarrySize } from '../../calculator/stats/stats-calculator';
 
 /**
  * Runs the production simulation
@@ -57,6 +56,7 @@ export function simulation(params: {
   input: ProductionStats;
   helpFrequency: number;
   pokemonWithAverageProduce: PokemonProduce;
+  inventoryLimit: number;
   sneakySnackBerries: BerrySet;
   recoveryEvents: EnergyEvent[];
   extraHelpfulEvents: SkillEvent[];
@@ -70,6 +70,7 @@ export function simulation(params: {
     input,
     helpFrequency,
     pokemonWithAverageProduce,
+    inventoryLimit,
     sneakySnackBerries,
     recoveryEvents,
     extraHelpfulEvents,
@@ -80,8 +81,6 @@ export function simulation(params: {
   const sneakySnackProduce: Produce = { berries: sneakySnackBerries, ingredients: [] };
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
   const averageProduceAmount = countInventory(averageProduce);
-  const inventoryLimit =
-    (input.maxCarrySize ?? pokemon.maxCarrySize) + calculateSubskillCarrySize(input.subskills ?? []);
 
   // summary values
   let skillProcs = 0;
@@ -416,6 +415,7 @@ export function simulation(params: {
       sneakySnack: totalSneakySnack.berries,
       dayHelps,
       nightHelps,
+      nightHelpsBeforeSS: nightHelps - helpsAfterSS,
       averageTotalSkillProcs: skillProcs,
       skillActivations,
     },

@@ -86,6 +86,7 @@ describe('setupAndRunProductionSimulation', () => {
         "averageTotalSkillProcs": 1.3162022794075043,
         "dayHelps": 52,
         "nightHelps": 16,
+        "nightHelpsBeforeSS": 16,
         "produce": {
           "berries": {
             "amount": 42.8672,

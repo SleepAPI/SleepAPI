@@ -105,6 +105,7 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     },
     dayHelps: 0,
     nightHelps: 0,
+    nightHelpsBeforeSS: 0,
     averageTotalSkillProcs: 0,
     skillActivations: [],
   },
