@@ -191,32 +191,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
     <script>
-      $(document).ready(function () {
-        const chBoxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]');
-        const dpBtn = document.getElementById('multiSelectDropdown');
-        let mySelectedListItems = [];
-
-        function handleCB() {
-          mySelectedListItems = [];
-          let mySelectedListItemsText = '';
-
-          chBoxes.forEach((checkbox) => {
-            if (checkbox.checked) {
-              mySelectedListItems.push(checkbox.value);
-              mySelectedListItemsText += checkbox.name + ', ';
-            }
-          });
-
-          dpBtn.innerText = mySelectedListItems.length > 0 ? mySelectedListItemsText.slice(0, -2) : 'Subskills';
-        }
-
-        chBoxes.forEach((checkbox) => {
-          checkbox.addEventListener('change', handleCB);
-        });
-      });
-    </script>
-
-    <script>
       // updates the range slider values
       function updateValue(slider) {
         var output = document.getElementById(slider.id + 'Value');
@@ -226,6 +200,16 @@
     <script>
       // calls /api/pokemon when a pokemon is selected, so we may act on its ing list
       $(document).ready(function () {
+        const pokemonSelect = document.getElementById('pokemon');
+
+        // if pokemon is populated after refresh
+        if (pokemonSelect.value) {
+          getPokemonData(pokemonSelect.value);
+        } else {
+          document.getElementById('ingredientDropdown').setAttribute('disabled', true);
+        }
+
+        // if pokemon is changed
         document.getElementById('pokemon').addEventListener('change', function () {
           var selectedPokemon = this.value;
           if (selectedPokemon !== 'Pokémon') {
@@ -462,35 +446,35 @@
         let levels = [10, 25, 50, 75, 100];
         let selectedSubskills = [];
         let selectedSubTexts = [];
+
+        // register change event
         $('#subskills').on('changed.bs.select', function () {
           const currentSelection = $(this).find('option:selected');
 
           // if an option was unselected then we revert text and make level available again
           if (currentSelection.length < selectedSubskills.length) {
-            // find index of removed subskill
-            const missingIndex = selectedSubskills.findIndex(
-              (s) =>
-                !currentSelection
-                  .map(function () {
-                    return $(this).text();
-                  })
-                  .get()
-                  .includes(s)
-            );
+            const currentSelectionTexts = currentSelection
+              .map(function () {
+                return $(this).text();
+              })
+              .get();
 
-            // find the unselected option that we need to restore text for (replace level X with original text)
-            $(this)
-              .parent()
-              .find('.dropdown-menu .inner li:not(.selected) a')
-              .each(function (index) {
-                if ($(this).text().startsWith(selectedSubskills[missingIndex])) {
+            // find index of removed subskill
+            const missingIndices = selectedSubskills
+              .map((s, index) => (!currentSelectionTexts.includes(s) ? index : -1))
+              .filter((index) => index !== -1);
+
+            // find the unselected options that we need to restore text for (replace level X with original text)
+            $('.dropdown-menu .inner li:not(.selected) a').each(function () {
+              const currentText = $(this).text();
+              missingIndices.forEach((index) => {
+                if (currentText.startsWith(selectedSubskills[index])) {
                   $(this).find('span.text span.levelText').remove();
+                  selectedSubskills.splice(index, 1);
+                  selectedSubTexts.splice(index, 1);
                 }
               });
-
-            // remove the removed select from the list of selected subskills, fixes level labeling
-            selectedSubskills.splice(missingIndex, 1);
-            selectedSubTexts.splice(missingIndex, 1);
+            });
           }
 
           // create all new texts for the selected subskills
@@ -545,6 +529,13 @@
       $(document).ready(function () {
         // subskill selector
         var selectPicker = document.getElementById('subskills');
+
+        // populate subskills at startup
+        const cachedSubskills = Array.from(selectPicker.options)
+          .filter((option) => option.selected)
+          .map((option) => {
+            selectedSubskills.push(option.value);
+          });
 
         selectPicker.addEventListener('change', function () {
           var currentSelectedValues = Array.from(this.options)
@@ -698,6 +689,7 @@
         title="Pokémon"
         data-width="300px"
       >
+        <option value="" disabled hidden></option>
         <option
           value="ABOMASNOW"
           data-subtext="ice - ingredients"
@@ -1439,6 +1431,7 @@
         data-width="300px"
         data-tick-icon="false"
         data-dropup-auto="false"
+        data-allow-clear="true"
         multiple
       >
         <option value="Berry Finding S" title="BFS" data-subtext="+1 berry">Berry Finding S</option>
