@@ -215,7 +215,7 @@ function inventoryChart(log) {
               const tooltipItem = tooltipItems[0];
               const dataIndex = tooltipItem.dataIndex;
               const inventoryLog = inventoryLogs[dataIndex];
-              return prettifyTime(inventoryLog.time);
+              return `[${prettifyTime(inventoryLog.time)}] Inventory: ${prettifyProduce(inventoryLog.contents)}`;
             },
             label: function (context) {
               const index = context.dataIndex;
