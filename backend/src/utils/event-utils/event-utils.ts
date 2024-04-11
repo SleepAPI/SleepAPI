@@ -12,6 +12,7 @@ import { mainskill, nature } from 'sleepapi-common';
 import { splitNumber } from '../calculator-utils/calculator-utils';
 import { addToInventory, countInventory } from '../inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
+import { getEmptyProduce } from '../production-utils/production-utils';
 import { divideTimePeriod, isAfterOrEqualWithinPeriod } from '../time-utils/time-utils';
 
 export function getExtraHelpfulEvents(
@@ -278,6 +279,7 @@ export function inventoryFull(params: {
       delta: -countInventory(currentInventory),
       before: countInventory(currentInventory),
       max: inventoryLimit,
+      contents: getEmptyProduce(currentInventory.berries.berry),
     });
 
     eventLog.push(emptyInventoryEvent);
@@ -309,6 +311,7 @@ export function helpEvent(params: {
     delta: amount,
     before: countInventory(currentInventory),
     max: inventoryLimit,
+    contents: addToInventory(currentInventory, produce),
   });
 
   eventLog.push(helpEvent);
@@ -348,12 +351,14 @@ export function addSneakySnackEvent(params: {
     description: 'Sneaky snack',
     delta: countInventory(sneakySnackProduce),
     before: countInventory(totalSneakySnack),
+    contents: addToInventory(totalSneakySnack, sneakySnackProduce),
   });
   const spilledIngsEvent: InventoryEvent = new InventoryEvent({
     time: currentTime,
     description: 'Spilled ingredients',
     delta: countInventory(spilledProduce),
     before: countInventory(totalSpilledIngredients),
+    contents: addToInventory(totalSpilledIngredients, spilledProduce),
   });
 
   eventLog.push(sneakySnackEvent);

@@ -1,4 +1,6 @@
+import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
 import { parseTime } from '@src/utils/time-utils/time-utils';
+import { berry } from 'sleepapi-common';
 import { InventoryEvent } from './inventory-event';
 
 describe('InventoryEvent', () => {
@@ -9,7 +11,10 @@ describe('InventoryEvent', () => {
       before: 1,
       delta: 1,
       max: 3,
+      contents: getEmptyProduce(berry.BELUE),
     });
-    expect(event.format()).toMatchInlineSnapshot(`"[06:00:00][Inventory] (test): 1 -> 2 (+1), filled: 2/3 (66.67%)"`);
+    expect(event.format()).toMatchInlineSnapshot(
+      `"[06:00:00][Inventory] (test): 1 -> 2 (+1), filled: 2/3 (66.67%), current contents: 0 BELUE "`
+    );
   });
 });

@@ -12,6 +12,7 @@ import { TimePeriod } from '@src/domain/time/time';
 import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator';
 import { pokemon } from 'sleepapi-common';
 import { countInventory } from '../inventory-utils/inventory-utils';
+import { getEmptyProduce } from '../production-utils/production-utils';
 
 export function startDayAndEnergy(
   dayInfo: SleepInfo,
@@ -64,6 +65,7 @@ export function startDayAndEnergy(
     before: 0,
     delta: 0,
     max: inventoryLimit,
+    contents: getEmptyProduce(pokemon.berry),
   });
 
   eventLog.push(startingDayEvent);
@@ -90,6 +92,7 @@ export function startNight(params: {
     delta: -countInventory(currentInventory),
     before: countInventory(currentInventory),
     max: inventoryLimit,
+    contents: getEmptyProduce(currentInventory.berries.berry),
   });
 
   const sleepStartEvent: SleepEvent = new SleepEvent({
@@ -126,6 +129,7 @@ export function finishSimulation(params: {
     delta: 0,
     before: countInventory(currentInventory),
     max: inventoryLimit,
+    contents: currentInventory,
   });
 
   const sneakySnackClaim: InventoryEvent = new InventoryEvent({
@@ -133,6 +137,7 @@ export function finishSimulation(params: {
     description: 'Sneaky snack claim',
     delta: -countInventory(totalSneakySnack),
     before: countInventory(totalSneakySnack),
+    contents: getEmptyProduce(currentInventory.berries.berry),
   });
 
   const morningEmptyInventoryEvent: InventoryEvent = new InventoryEvent({
@@ -141,6 +146,7 @@ export function finishSimulation(params: {
     delta: -countInventory(currentInventory),
     before: countInventory(currentInventory),
     max: inventoryLimit,
+    contents: getEmptyProduce(currentInventory.berries.berry),
   });
 
   const skillStatusEvent: SkillEvent = new SkillEvent({

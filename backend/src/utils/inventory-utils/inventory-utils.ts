@@ -1,21 +1,30 @@
 import { Produce as Inventory } from '@src/domain/combination/produce';
 
 export function addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {
-  currentInventory.berries.amount += produce.berries.amount;
+  const newInventory: Inventory = {
+    berries: {
+      amount: currentInventory.berries.amount + produce.berries.amount,
+      berry: currentInventory.berries.berry,
+    },
+    ingredients: [...currentInventory.ingredients],
+  };
 
   produce.ingredients.forEach((produceIngredientSet) => {
-    const { ingredient, amount } = produceIngredientSet;
+    const index = newInventory.ingredients.findIndex(
+      (item) => item.ingredient.name === produceIngredientSet.ingredient.name
+    );
 
-    const currentIngredientSet = currentInventory.ingredients.find((item) => item.ingredient.name === ingredient.name);
-
-    if (currentIngredientSet) {
-      currentIngredientSet.amount += amount;
+    if (index !== -1) {
+      newInventory.ingredients[index] = {
+        ingredient: newInventory.ingredients[index].ingredient,
+        amount: newInventory.ingredients[index].amount + produceIngredientSet.amount,
+      };
     } else {
-      currentInventory.ingredients.push({ ...produceIngredientSet });
+      newInventory.ingredients.push({ ...produceIngredientSet });
     }
   });
 
-  return currentInventory;
+  return newInventory;
 }
 
 export function emptyInventory(inventory: Inventory): Inventory {

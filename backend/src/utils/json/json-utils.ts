@@ -15,14 +15,13 @@ export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], provided
 
     const nonIngMagnetIngs = ingredientDrop.filter((ing) => ing.amount !== ingMagnetAmount);
 
-    let prettyString = nonIngMagnetIngs
-      .map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`)
-      .join(separator);
-
     if (nonIngMagnetIngs.length > 0) {
-      return (prettyString += ` and ${roundDown(ingMagnetAmount, 2)} of all ${
+      const prettyString = nonIngMagnetIngs
+        .map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`)
+        .join(separator);
+      return `${prettyString} and ${roundDown(ingMagnetAmount, 2)} of all ${
         ingredient.INGREDIENTS.length - new Set(nonIngMagnetIngs.map((ing) => ing.ingredient.name)).size
-      } other ingredients`);
+      } other ingredients`;
     } else {
       return `${roundDown(ingMagnetAmount, 2)} of all ${ingredient.INGREDIENTS.length} ingredients`;
     }
