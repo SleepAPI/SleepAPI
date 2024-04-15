@@ -1,35 +1,6 @@
-@import 'bulma/sass/utilities/_all.sass';
+@import '@/assets/variables.scss';
+@import '@/assets/colors.scss';
 
-@import 'bulma/bulma';
-@import '@/assets/colors';
-@import '@/assets/global';
-@import '@/assets/components';
-
-#app {
-  font-weight: normal;
-}
-
-body {
-  min-height: 100vh;
-  color: $text;
-  background: $background;
-  transition: color 0.5s;
-  line-height: 1.6;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: $sneasel-feather-background;
-    color: $sneasel-feather;
-  }
-}
-
-@media (min-width: $desktop) {
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+#app * {
+  transition: all 0.2s ease;
 }

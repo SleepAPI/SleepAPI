@@ -31,6 +31,13 @@ jobs:
           key: backend-${{ hashFiles('backend/package-lock.json') }}
           restore-keys: backend-
 
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        with:
+          path: frontend/node_modules
+          key: frontend-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: frontend-
+
       - name: Install and Build Common Module
         run: |
           cd common
@@ -40,6 +47,14 @@ jobs:
       - name: Install and Test Backend
         run: |
           cd backend
+          npm ci
+          npm run build
+          npm run test
+          npm run lint
+
+      - name: Install and Test Frontend
+        run: |
+          cd frontend
           npm ci
           npm run build
           npm run test
