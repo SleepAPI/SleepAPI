@@ -185,14 +185,14 @@ describe('getDefaultMealTimes', () => {
   it('shall work with night schedule', () => {
     const mealTimes = getDefaultMealTimes({
       start: parseTime('17:00'),
-      end: parseTime('07:00'),
+      end: parseTime('05:00'),
     });
     const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
       [
         "17:59:00",
-        "05:59:00",
-        "07:00:00",
+        "03:59:00",
+        "05:00:00",
       ]
     `);
   });
