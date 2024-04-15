@@ -43,10 +43,17 @@
       "package-lock.json": true,
       "*.tsbuildinfo": true,
       "coverage": true,
-      ".eslintrc.cjs": true,
-      ".prettierignore": true
+      ".prettierignore": true,
+      "*.d.*": true,
+      "*.mjs": true
     },
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true
+    },
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative"
   },
   "extensions": {
     "recommendations": [

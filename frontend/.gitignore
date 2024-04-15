@@ -30,4 +30,6 @@ coverage
 *.tsbuildinfo
 
 test-results/
-playwright-report/
+
+*.mjs
+*.d.*

@@ -2,7 +2,7 @@
 
 This is a project in its early days, but it's scheduled to replace the backend-hosted basic website at some point.
 
-The frontend is written in Typescript with [Vue.js][vue.js]. Currently it uses Bulma as its CSS framework, but this will most likely be replaced with [Vuetify][Vuetify] (Material Design 2).
+The frontend is written in Typescript with [Vue.js 3][vue.js] and [Vuetify 3][Vuetify].
 
 ## Running the bot in development mode
 
