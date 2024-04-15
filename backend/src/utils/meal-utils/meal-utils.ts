@@ -47,7 +47,7 @@ export function getMealsForFilter(params: {
 
 export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
   const breakfastWindow: TimePeriod = {
-    start: parseTime('06:00'),
+    start: parseTime('04:00'),
     end: parseTime('11:59'),
   };
   const lunchWindow: TimePeriod = {
@@ -56,7 +56,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
   };
   const dinnerWindow: TimePeriod = {
     start: parseTime('18:00'),
-    end: parseTime('05:59'),
+    end: parseTime('03:59'),
   };
 
   const mealTimes: Time[] = [];
