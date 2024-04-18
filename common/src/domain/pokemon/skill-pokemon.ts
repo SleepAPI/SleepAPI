@@ -225,10 +225,10 @@ export const SLOWBRO: Pokemon = {
   ...SLOWPOKE,
   name: 'SLOWBRO',
   frequency: toSeconds(1, 3, 20),
-  ingredientPercentage: 15.1,
+  ingredientPercentage: 19.7,
   skillPercentage: 6.8,
-  carrySize: 10,
-  maxCarrySize: 15,
+  carrySize: 16,
+  maxCarrySize: 21,
 };
 
 export const MAGNEMITE: Pokemon = {
@@ -407,11 +407,11 @@ export const SUDOWOODO: Pokemon = {
   name: 'SUDOWOODO',
   specialty: 'skill',
   frequency: toSeconds(1, 6, 40),
-  ingredientPercentage: 19.7,
-  skillPercentage: 6.5,
+  ingredientPercentage: 21.7,
+  skillPercentage: 7.2,
   berry: SITRUS,
-  carrySize: 10,
-  maxCarrySize: 15,
+  carrySize: 16,
+  maxCarrySize: 21,
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 2, ingredient: SNOOZY_TOMATO },
@@ -453,10 +453,10 @@ export const SLOWKING: Pokemon = {
   ...SLOWPOKE,
   name: 'SLOWKING',
   frequency: toSeconds(0, 56, 40),
-  ingredientPercentage: 15.1,
-  skillPercentage: 6.8,
-  carrySize: 11,
-  maxCarrySize: 16,
+  ingredientPercentage: 16.6,
+  skillPercentage: 7.4,
+  carrySize: 17,
+  maxCarrySize: 22,
 };
 
 export const WOBBUFFET: Pokemon = {
@@ -571,8 +571,8 @@ export const SABLEYE: Pokemon = {
   name: 'SABLEYE',
   specialty: 'skill',
   frequency: toSeconds(1, 0, 0),
-  ingredientPercentage: 17.1,
-  skillPercentage: 5.9,
+  ingredientPercentage: 18.8,
+  skillPercentage: 6.8,
   berry: WIKI,
   carrySize: 16,
   maxCarrySize: 16,
@@ -615,10 +615,10 @@ export const SWALOT: Pokemon = {
   ...GULPIN,
   name: 'SWALOT',
   frequency: toSeconds(0, 58, 20),
-  ingredientPercentage: 21.0,
-  skillPercentage: 6.1,
-  carrySize: 13,
-  maxCarrySize: 18,
+  ingredientPercentage: 21,
+  skillPercentage: 7,
+  carrySize: 19,
+  maxCarrySize: 24,
 };
 
 export const WYNAUT: Pokemon = {
