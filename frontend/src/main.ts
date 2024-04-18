@@ -4,8 +4,6 @@ import { createApp } from 'vue'
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
 import 'vuetify/styles'
 
 import '@/assets/main.scss'
@@ -36,9 +34,7 @@ const vuetify = createVuetify({
     themes: {
       darkTheme
     }
-  },
-  components,
-  directives
+  }
 })
 
 app.use(createPinia())

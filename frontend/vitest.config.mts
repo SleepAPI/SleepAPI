@@ -8,11 +8,11 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/*'],
+      exclude: [...configDefaults.exclude, 'e2e/*', '**/main.ts'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         include: ['**/src/**'],
-        exclude: ['**/node_modules/**', '**/test/**']
+        exclude: ['**/node_modules/**', '**/test/**', '**/main.ts']
       },
       setupFiles: ['./src/vitest']
     }

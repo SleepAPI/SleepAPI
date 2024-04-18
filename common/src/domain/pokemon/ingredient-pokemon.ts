@@ -10,6 +10,7 @@ import {
   MAGO,
   ORAN,
   PAMTRE,
+  PECHA,
   PERSIM,
   RAWST,
   SITRUS,
@@ -38,6 +39,7 @@ import {
   CHARGE_ENERGY_S,
   CHARGE_STRENGTH_S,
   CHARGE_STRENGTH_S_RANGE,
+  ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
 } from '../mainskill/mainskill';
 import { Pokemon } from './pokemon';
@@ -647,6 +649,28 @@ export const BEWEAR: Pokemon = {
   maxCarrySize: 25,
 };
 
+export const COMFEY: Pokemon = {
+  name: 'COMFEY',
+  specialty: 'ingredient',
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 20,
+  skillPercentage: 2,
+  berry: PECHA,
+  carrySize: 20,
+  maxCarrySize: 20,
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  ingredient60: [
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ],
+  skill: ENERGIZING_CHEER_S,
+};
+
 export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   VENUSAUR,
   CHARIZARD,
@@ -667,6 +691,7 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   TOXICROAK,
   ABOMASNOW,
   BEWEAR,
+  // COMFEY // TODO: bring back once details drop
 ];
 
 export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
