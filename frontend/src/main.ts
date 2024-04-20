@@ -16,10 +16,10 @@ import { type ThemeDefinition } from 'vuetify'
 const darkTheme: ThemeDefinition = {
   dark: true,
   colors: {
-    background: '#1D1717',
-    surface: '#2e1e1f',
-    primary: '#F04545',
-    secondary: '#482f30',
+    background: '#191224',
+    surface: '#403D58',
+    primary: '#E63946',
+    secondary: '#403D58',
     'on-background': '#ffffff',
     'on-surface': '#ffffff',
     'on-primary': '#ffffff',
