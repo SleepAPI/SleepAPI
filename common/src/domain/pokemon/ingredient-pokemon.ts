@@ -653,20 +653,20 @@ export const COMFEY: Pokemon = {
   name: 'COMFEY',
   specialty: 'ingredient',
   frequency: toSeconds(0, 41, 40),
-  ingredientPercentage: 20,
-  skillPercentage: 2,
+  ingredientPercentage: 13.9,
+  skillPercentage: 2.2,
   berry: PECHA,
   carrySize: 20,
   maxCarrySize: 20,
-  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient0: { amount: 2, ingredient: GREENGRASS_CORN },
   ingredient30: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 5, ingredient: GREENGRASS_CORN },
+    { amount: 6, ingredient: WARMING_GINGER },
   ],
   ingredient60: [
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
-    { amount: 0, ingredient: SLOWPOKE_TAIL },
+    { amount: 7, ingredient: GREENGRASS_CORN },
+    { amount: 9, ingredient: WARMING_GINGER },
+    { amount: 7, ingredient: SOOTHING_CACAO },
   ],
   skill: ENERGIZING_CHEER_S,
 };
@@ -691,7 +691,7 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   TOXICROAK,
   ABOMASNOW,
   BEWEAR,
-  // COMFEY // TODO: bring back once details drop
+  COMFEY,
 ];
 
 export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [

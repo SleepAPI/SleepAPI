@@ -25,6 +25,7 @@ import path from 'path';
 import { MAX_POT_SIZE, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
+const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
 
 class TierlistImpl {
   public async seed() {
@@ -158,7 +159,7 @@ class TierlistImpl {
       e4eProcs: 0,
       cheer: 0,
       extraHelpful: 0,
-      monteCarloIterations: 500,
+      monteCarloIterations: MONTE_CARLO_ITERATIONS,
     });
     const defaultProduceMap = createProduceMap(allPokemonDefaultProduce);
     let preCalcedSupportMap: Map<string, CustomPokemonCombinationWithProduce> | undefined = undefined;
@@ -220,7 +221,7 @@ class TierlistImpl {
           e4eProcs,
           cheer,
           extraHelpful,
-          monteCarloIterations: 500,
+          monteCarloIterations: MONTE_CARLO_ITERATIONS,
         });
         preCalcedSupportMap = createProduceMap(supportedProduce);
         supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(supportedProduce), new Map());
