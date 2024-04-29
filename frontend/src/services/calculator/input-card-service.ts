@@ -2,23 +2,7 @@ import type { pokemon } from 'sleepapi-common'
 
 class InputCardServiceImpl {
   public async fetchCardImage(pkmn: string): Promise<string> {
-    const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pkmn.toLowerCase()}`
-
-    return fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-
-        return response.json()
-      })
-      .then((data) => {
-        return data.sprites.front_default
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error)
-        return ''
-      })
+    return `/images/pokemon/${pkmn.toLowerCase()}.png`
   }
 
   public async fetchPokemonData(pkmn: string): Promise<pokemon.Pokemon> {

@@ -19,7 +19,8 @@
       :show="showSelectDialog"
       @update-selected="updateSelected"
       @close-dialog="closeDetailsDialog"
-    ></InputDetails>
+    >
+    </InputDetails>
   </v-card>
 </template>
 
@@ -78,14 +79,12 @@ export default defineComponent({
 }
 
 .image-zoom {
-  transform: scale(2);
-  transition: transform 0.3s ease-in-out;
   object-fit: cover;
-  height: 100%; /* Make image fill the container */
-  width: 100%; /* Stretch image to cover the width fully */
+  height: 100%;
+  width: 100%;
 }
 
 .image-container:hover .image-zoom {
-  transform: scale(2.2); /* Zoom in the image */
+  transform: scale(1.2);
 }
 </style>
