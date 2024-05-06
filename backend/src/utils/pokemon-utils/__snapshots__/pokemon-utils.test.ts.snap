@@ -70,6 +70,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "PIKACHU_HALLOWEEN",
   "RAICHU",
   "CLEFABLE",
+  "NINETALES",
   "PRIMEAPE",
   "DODRIO",
   "ONIX",
@@ -90,6 +91,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "EKANS",
   "PIKACHU",
   "CLEFAIRY",
+  "VULPIX",
   "MANKEY",
   "DODUO",
   "CUBONE",
@@ -201,6 +203,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
 [
   "RATICATE",
   "CLEFABLE",
+  "NINETALES",
   "PRIMEAPE",
   "DODRIO",
   "ONIX",
@@ -214,6 +217,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
   "WALREIN",
   "RATTATA",
   "CLEFAIRY",
+  "VULPIX",
   "MANKEY",
   "DODUO",
   "CUBONE",
@@ -326,9 +330,11 @@ exports[`getPokemonNames shall return all snowdrop pokemon 1`] = `
 
 exports[`getPokemonNames shall return all taupe pokemon 1`] = `
 [
+  "NINETALES",
   "ONIX",
   "MAROWAK",
   "TYPHLOSION",
+  "VULPIX",
   "CUBONE",
   "CYNDAQUIL",
   "QUILAVA",
