@@ -23,6 +23,7 @@ import {
   FANCY_APPLE,
   FANCY_EGG,
   FIERY_HERB,
+  GREENGRASS_CORN,
   GREENGRASS_SOYBEANS,
   HONEY,
   LARGE_LEEK,
@@ -37,6 +38,7 @@ import {
   CHARGE_ENERGY_S,
   CHARGE_STRENGTH_S,
   CHARGE_STRENGTH_S_RANGE,
+  ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
 } from '../mainskill/mainskill';
@@ -232,6 +234,38 @@ export const CLEFABLE: Pokemon = {
   skillPercentage: 3.6,
   carrySize: 24,
   maxCarrySize: 34,
+};
+
+export const VULPIX: Pokemon = {
+  name: 'VULPIX',
+  specialty: 'berry',
+  frequency: toSeconds(1, 18, 20),
+  ingredientPercentage: 16.8,
+  skillPercentage: 2.7,
+  berry: LEPPA,
+  carrySize: 13,
+  maxCarrySize: 13,
+  ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
+  ingredient30: [
+    { amount: 2, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 2, ingredient: GREENGRASS_CORN },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 3, ingredient: GREENGRASS_CORN },
+    { amount: 3, ingredient: SOFT_POTATO },
+  ],
+  skill: ENERGIZING_CHEER_S,
+};
+
+export const NINETALES: Pokemon = {
+  ...VULPIX,
+  name: 'NINETALES',
+  frequency: toSeconds(0, 43, 20),
+  ingredientPercentage: 16.4,
+  skillPercentage: 2.5,
+  carrySize: 23,
+  maxCarrySize: 28,
 };
 
 export const MANKEY: Pokemon = {
@@ -695,6 +729,7 @@ export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
   PIKACHU_HALLOWEEN,
   RAICHU,
   CLEFABLE,
+  NINETALES,
   PRIMEAPE,
   DODRIO,
   ONIX,
@@ -718,6 +753,7 @@ export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
   EKANS,
   PIKACHU,
   CLEFAIRY,
+  VULPIX,
   MANKEY,
   DODUO,
   CUBONE,
