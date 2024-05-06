@@ -101,7 +101,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
 }
 
 export function getMealRecoveryAmount(currentEnergy: number) {
-  if (currentEnergy >= 100) {
+  if (currentEnergy >= 150) {
     return 0;
   } else if (currentEnergy >= 80) {
     return 1;

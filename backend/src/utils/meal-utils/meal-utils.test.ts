@@ -199,14 +199,14 @@ describe('getDefaultMealTimes', () => {
 });
 
 describe('getMealRecoveryAmount', () => {
-  it('shall return 0 for currentEnergy >= 100', () => {
-    expect(getMealRecoveryAmount(100)).toBe(0);
+  it('shall return 0 for currentEnergy >= 150', () => {
     expect(getMealRecoveryAmount(150)).toBe(0);
   });
 
-  it('shall return 1 for 80 <= currentEnergy < 100', () => {
+  it('shall return 1 for 80 <= currentEnergy < 150', () => {
     expect(getMealRecoveryAmount(80)).toBe(1);
     expect(getMealRecoveryAmount(99)).toBe(1);
+    expect(getMealRecoveryAmount(149)).toBe(1);
   });
 
   it('shall return 2 for 60 <= currentEnergy < 80', () => {
