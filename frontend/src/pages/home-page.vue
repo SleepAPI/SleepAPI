@@ -5,8 +5,8 @@
         <SneaselHomeIcon alt="Sleep API Logo" />
       </v-col>
       <v-col cols="auto" class="text-center text-lg-start">
-        <h1 class="text-h2 font-weight-medium mb-3 ms-n1">Pokémon Sleep Simulations</h1>
-        <p class="mb-10 mx-auto ms-lg-0" style="max-width: 568px">
+        <h1 class="title text-h4 font-weight-medium mb-3">Pokémon Sleep Simulations</h1>
+        <p class="mb-6 mx-auto text-center" style="max-width: 568px">
           Get started running your own simulation-based calculations with Sleep API's built-in data
           analysis.
         </p>
@@ -15,7 +15,7 @@
           <v-col cols="auto" class="align-center justify-center px-1">
             <v-btn
               class="responsive-button"
-              size="x-large"
+              size="large"
               rounded="lg"
               color="secondary"
               @click="scrollTo('calculatorSection')"
@@ -25,7 +25,7 @@
           <v-col cols="auto" class="align-center justify-center px-1">
             <v-btn
               class="responsive-button"
-              size="x-large"
+              size="large"
               rounded="lg"
               color="primary"
               :to="'/calculator'"
