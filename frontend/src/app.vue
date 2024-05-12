@@ -1,20 +1,23 @@
 <template>
-  <v-app>
-    <Navbar />
+  <TheBackground />
 
+  <v-app>
     <v-main>
+      <TheNavbar />
       <RouterView />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import Navbar from '@/components/nav-bar/nav-bar.vue'
+import TheBackground from '@/components/background/background.vue'
+import TheNavbar from '@/components/nav-bar/nav-bar.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    Navbar
+    TheNavbar,
+    TheBackground
   }
 })
 </script>

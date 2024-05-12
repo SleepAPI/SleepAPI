@@ -1,7 +1,9 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" location="bottom">
     <template #activator="{ props }">
-      <v-btn icon="mdi-account-circle" v-bind="props"></v-btn>
+      <v-btn icon>
+        <v-icon v-bind="props" size="36">mdi-account-circle</v-icon>
+      </v-btn>
     </template>
 
     <v-container class="account-menu-container">
@@ -69,10 +71,7 @@ export default defineComponent({
   name: 'AccountMenu',
   components: { DiscordIcon, GithubIcon },
   data: () => ({
-    fav: true,
-    menu: false,
-    message: false,
-    hints: true
+    menu: false
   })
 })
 </script>

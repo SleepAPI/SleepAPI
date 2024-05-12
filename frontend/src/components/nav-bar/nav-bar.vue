@@ -1,17 +1,15 @@
 <template>
-  <v-app-bar>
+  <v-app-bar color="background">
     <template #prepend>
-      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer">
+        <v-icon size="36">mdi-menu</v-icon>
+      </v-app-bar-nav-icon>
     </template>
 
+    <v-app-bar-title>{{ $route.name }}</v-app-bar-title>
+
     <template #append>
-      <AccountMenu>
-        <template #activator="{ props }">
-          <v-btn>
-            <v-icon v-bind="props">mdi-account-circle</v-icon>
-          </v-btn>
-        </template>
-      </AccountMenu>
+      <AccountMenu />
     </template>
   </v-app-bar>
 
