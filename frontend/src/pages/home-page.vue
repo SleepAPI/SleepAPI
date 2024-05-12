@@ -1,104 +1,137 @@
 <template>
-  <v-app>
-    <v-container id="section1" class="blue-bg" :style="{ height: appHeight }">
-      <v-row class="fill-height align-center justify-center">
-        <SneaselHomeIcon style="height: 200px; width: 200px"></SneaselHomeIcon>
-        <v-btn large @click="scrollTo('section2')">Scroll Down</v-btn>
-      </v-row>
-    </v-container>
+  <v-container class="pt-12">
+    <v-row class="align-center justify-center">
+      <v-col cols="auto">
+        <SneaselHomeIcon alt="Sleep API Logo" />
+      </v-col>
+      <v-col cols="auto" class="text-center text-lg-start">
+        <h1 class="text-h2 font-weight-medium mb-3 ms-n1">Pokémon Sleep Simulations</h1>
+        <p class="mb-10 mx-auto ms-lg-0" style="max-width: 568px">
+          Get started running your own simulation-based calculations with Sleep API's built-in data
+          analysis.
+        </p>
 
-    <v-container id="section2" class="green-bg" :style="{ height: appHeight }">
-      <v-row class="fill-height align-center justify-center">
-        <v-btn large color="white" @click="scrollTo('section3')">Scroll Down</v-btn>
-      </v-row>
-    </v-container>
+        <v-row class="align-center justify-center">
+          <v-col cols="auto" class="align-center justify-center px-1">
+            <v-btn
+              class="responsive-button"
+              size="x-large"
+              rounded="lg"
+              color="secondary"
+              @click="scrollTo('calculatorSection')"
+              >Learn more</v-btn
+            >
+          </v-col>
+          <v-col cols="auto" class="align-center justify-center px-1">
+            <v-btn
+              class="responsive-button"
+              size="x-large"
+              rounded="lg"
+              color="primary"
+              :to="'/calculator'"
+              >Get started</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
 
-    <v-container id="section3" class="purple-bg" :style="{ height: appHeight }">
-      <v-row class="fill-height align-center justify-center">
-        <v-btn large color="white" @click="scrollTo('section1')">To the top </v-btn>
-      </v-row>
-    </v-container>
-  </v-app>
+  <v-container>
+    <v-row justify="center">
+      <v-col v-for="(feature, i) in features" :key="i" class="d-flex flex-shrink-1" cols="auto">
+        <v-card class="mx-auto" max-width="300" flat>
+          <!-- <v-img :alt="feature.title" :aspect-ratio="2.6" :src="feature.src" width="100%" cover /> -->
+          <v-skeleton-loader
+            width="100%"
+            :aspect-ratio="2.6"
+            cover
+            type="image"
+          ></v-skeleton-loader>
+
+          <v-card-text>
+            <div class="d-flex">
+              <v-icon class="mr-2">{{ feature.icon }}</v-icon>
+              <h3 class="text-subheading-1 font-weight-bold mb-2">
+                {{ feature.title }}
+              </h3>
+            </div>
+            <p class="mb-2">{{ feature.description }}</p>
+          </v-card-text>
+
+          <v-card-actions> </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import SneaselHomeIcon from '@/components/icons/sneasel-home-icon.vue'
-import { defineComponent, nextTick, onMounted, ref } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
     SneaselHomeIcon
   },
-  setup() {
-    const appHeight = ref('100vh')
-    const navbarHeight = ref(0)
-
-    onMounted(async () => {
-      await nextTick() // Ensures that all rendering is flushed and the DOM is updated.
-      const navbar = document.querySelector('.v-app-bar')
-      if (navbar) {
-        navbarHeight.value = navbar.clientHeight // Updates navbar height.
-        appHeight.value = `calc(100vh - ${navbarHeight.value}px)` // Adjust the section heights.
-        console.log('Navbar height:', navbarHeight.value) // Log navbar height for debugging.
+  data: () => ({
+    features: [
+      {
+        description: "Simulate your Pokémon's production with in-depth data analysis.",
+        title: 'Calculator',
+        src: '@/assets/images/cook.png',
+        icon: 'mdi-square-root',
+        to: ''
+      },
+      {
+        description: 'Cooking tier lists based on millions of simulated recipe solutions.',
+        title: 'Tier lists',
+        src: '',
+        icon: 'mdi-chart-line',
+        to: ''
+      },
+      {
+        description: 'Find the most optimal teams for any given recipe.',
+        title: 'Team finder',
+        src: '',
+        icon: 'mdi-text-search-variant',
+        to: ''
       }
-    })
-
-    const scrollTo = (elementId: string) => {
-      nextTick(() => {
-        // Ensures we are calculating positions after any reactive updates.
-        const element = document.getElementById(elementId)
-        if (element) {
-          const yOffset = -navbarHeight.value // Negative offset for the navbar height.
-          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-          window.scrollTo({ top: y, behavior: 'smooth' }) // Perform the scroll.
-        }
-      })
+    ]
+  }),
+  methods: {
+    scrollTo(elementId: string) {
+      const element = document.getElementById(elementId)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
     }
-
-    return { appHeight, scrollTo }
   }
 })
 </script>
 
 <style lang="scss">
-body,
-#app {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-html {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+@import '@/assets/colors.scss';
+
+.title {
+  text-align: center;
+  font-weight: 600;
+  line-height: 120%;
 }
 
-.v-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.sub-title {
+  text-align: center;
+  font-weight: 500;
+  line-height: 120%;
 }
 
-/* Ensure full height rows are correctly styled */
-.fill-height {
-  height: 100%;
+.responsive-button {
+  width: 200px;
 }
 
-.align-center {
-  align-items: center; /* Align items vertically center */
-}
-
-.justify-center {
-  justify-content: center; /* Align items horizontally center */
-}
-
-.blue-bg {
-  background-color: #2196f3;
-}
-.green-bg {
-  background-color: #4caf50;
-}
-.purple-bg {
-  background-color: #9c27b0;
+@media (max-width: 450px) {
+  .responsive-button {
+    width: 150px;
+  }
 }
 </style>

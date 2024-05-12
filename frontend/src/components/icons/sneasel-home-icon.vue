@@ -17,21 +17,19 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/colors';
 
-.content-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.circle img {
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-}
-
 .circle {
+  max-width: 300px;
+  height: 300px;
   background-color: $secondary;
   border-radius: 50%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle img {
+  max-width: 100%;
+  height: auto;
 }
 </style>
