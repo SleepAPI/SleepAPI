@@ -18,8 +18,8 @@ export default defineComponent({
 @import '@/assets/colors';
 
 .circle {
-  max-width: 300px;
-  height: 300px;
+  max-width: min(200px, 50vw);
+  width: 100%;
   background-color: $secondary;
   border-radius: 50%;
   overflow: hidden;
