@@ -128,7 +128,7 @@ export const MEOWTH: Pokemon = {
 export const PERSIAN: Pokemon = {
   ...MEOWTH,
   name: 'PERSIAN',
-  frequency: toSeconds(0, 50, 0),
+  frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 16.9,
   skillPercentage: 4.4,
   carrySize: 12,
@@ -161,10 +161,10 @@ export const GOLDUCK: Pokemon = {
   ...PSYDUCK,
   name: 'GOLDUCK',
   frequency: toSeconds(0, 56, 40),
-  ingredientPercentage: 13.5,
+  ingredientPercentage: 16.2,
   skillPercentage: 12.5,
-  carrySize: 11,
-  maxCarrySize: 16,
+  carrySize: 14,
+  maxCarrySize: 19,
 };
 
 export const GROWLITHE: Pokemon = {
@@ -464,10 +464,10 @@ export const WOBBUFFET: Pokemon = {
   specialty: 'skill',
   frequency: toSeconds(0, 58, 20),
   ingredientPercentage: 21.1,
-  skillPercentage: 5.8,
+  skillPercentage: 6.4,
   berry: MAGO,
-  carrySize: 10,
-  maxCarrySize: 15,
+  carrySize: 13,
+  maxCarrySize: 18,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
@@ -666,7 +666,7 @@ export const RIOLU: Pokemon = {
 export const LUCARIO: Pokemon = {
   ...RIOLU,
   name: 'LUCARIO',
-  frequency: toSeconds(0, 45, 0),
+  frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 15.0,
   skillPercentage: 5.1,
   carrySize: 14,
