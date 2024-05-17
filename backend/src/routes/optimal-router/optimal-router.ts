@@ -49,8 +49,40 @@ export interface OptimalSetResult {
   teams: OptimalTeamSolution[];
 }
 
+export interface IngredientRankerResult {
+  ingredient: string;
+  filter: ProductionStats;
+  teams: OptimalTeamSolution[];
+}
+
 class OptimalCombinationRouterImpl {
   public async register(controller: OptimalController) {
+    BaseRouter.router.post(
+      '/optimal/ingredient/:name',
+      async (
+        req: Request<{ name: string }, unknown, InputProductionStatsRequest, { pretty?: boolean }>,
+        res: Response
+      ) => {
+        try {
+          Logger.log('Entered /optimal/ingredient/:name');
+          const { pretty } = req.query;
+          const mealName = req.params.name;
+
+          const data: IngredientRankerResult = controller.getOptimalPokemonForIngredientRaw(mealName, req.body);
+
+          if (queryAsBoolean(pretty)) {
+            const optimalData = WebsiteConverterService.toIngredientRanker(data);
+            res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
+          } else {
+            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
+          }
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
     BaseRouter.router.post(
       '/optimal/meal/flexible',
       async (req: Request<unknown, unknown, InputProductionStatsRequest, { pretty: boolean }>, res: Response) => {

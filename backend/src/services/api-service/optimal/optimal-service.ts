@@ -8,6 +8,7 @@ import {
   calculateOptimalProductionForSetCover,
   calculateSetCover,
 } from '@src/services/calculator/set-cover/calculate-set-cover';
+import { getIngredientForName } from '@src/utils/ingredient-utils/ingredient-utils';
 import { calculateCritMultiplier, CritInfo, getMeal, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import {
   calculateCombinedContributions,
@@ -26,6 +27,36 @@ const FLEXIBLE_SET_COVER_TIMEOUT = 3000;
  */
 export function findOptimalSetsForMeal(mealName: string, input: SetCoverProductionStats, monteCarloIterations: number) {
   return customOptimalSet(mealName, input, TEAMFINDER_SET_COVER_TIMEOUT, monteCarloIterations);
+}
+
+/**
+ * Finds the optimal Pokemon for a specific ingredient
+ *
+ * API: /api/optimal/ingredient
+ */
+export function findOptimalMonsForIngredient(
+  ingredientName: string,
+  input: SetCoverProductionStats,
+  monteCarloIterations: number
+) {
+  const ingredient = getIngredientForName(ingredientName);
+  const ingAsRecipe = [{ ingredient: ingredient, amount: 0.001 }];
+  const pokemonProduction = calculateOptimalProductionForSetCover(input, monteCarloIterations);
+  const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);
+
+  const optimalCombinations = calculateSetCover({
+    recipe: ingAsRecipe,
+    cache: new Map(),
+    reverseIndex,
+    maxTeamSize: 1,
+    timeout: TEAMFINDER_SET_COVER_TIMEOUT,
+  });
+
+  return {
+    ingredient: ingredient.name,
+    filter: input,
+    teams: optimalCombinations,
+  };
 }
 
 /**

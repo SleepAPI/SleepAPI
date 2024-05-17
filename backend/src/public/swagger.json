@@ -1400,6 +1400,66 @@
 				}
 			}
 		},
+		"/api/optimal/ingredient/{name}": {
+			"post": {
+				"operationId": "GetOptimalPokemonForIngredientRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"teams": {
+											"items": {
+												"$ref": "#/components/schemas/OptimalTeamSolution"
+											},
+											"type": "array"
+										},
+										"filter": {
+											"$ref": "#/components/schemas/SetCoverProductionStats"
+										},
+										"ingredient": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"teams",
+										"filter",
+										"ingredient"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"optimal"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InputProductionStatsRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/tierlist/cooking": {
 			"get": {
 				"operationId": "GetCookingTierlist",

@@ -7,7 +7,11 @@ import { parseTime } from '@src/utils/time-utils/time-utils';
 import { mainskill } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
-import { findOptimalSetsForMeal, getOptimalFlexiblePokemon } from '../../services/api-service/optimal/optimal-service';
+import {
+  findOptimalMonsForIngredient,
+  findOptimalSetsForMeal,
+  getOptimalFlexiblePokemon,
+} from '../../services/api-service/optimal/optimal-service';
 
 @Route('api/optimal')
 @Tags('optimal')
@@ -20,6 +24,11 @@ export default class OptimalController extends Controller {
   @Post('meal/{name}')
   public getOptimalPokemonForMealRaw(@Path() name: string, @Body() input: InputProductionStatsRequest) {
     return findOptimalSetsForMeal(name, this.#parseInputProductionStatsRequest(input), 500);
+  }
+
+  @Post('ingredient/{name}')
+  public getOptimalPokemonForIngredientRaw(@Path() name: string, @Body() input: InputProductionStatsRequest) {
+    return findOptimalMonsForIngredient(name, this.#parseInputProductionStatsRequest(input), 500);
   }
 
   #parseInputProductionStatsRequest(input: InputProductionStatsRequest): SetCoverProductionStats {
