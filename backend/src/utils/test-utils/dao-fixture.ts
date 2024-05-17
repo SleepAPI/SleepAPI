@@ -5,7 +5,6 @@ import { MockService } from './mock-service';
 
 type InitParams = {
   enforceForeignKeyConstraints?: boolean;
-  registerInsertDefaultDataPlugin?: boolean;
   recreateDatabasesBeforeEachTest?: boolean;
 };
 

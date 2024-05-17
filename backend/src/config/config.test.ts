@@ -13,6 +13,8 @@ describe('config', () => {
         "DB_PORT": undefined,
         "DB_USER": undefined,
         "GENERATE_TIERLIST": false,
+        "GOOGLE_CLIENT_ID": undefined,
+        "GOOGLE_CLIENT_SECRET": undefined,
         "NODE_ENV": "DEV",
         "PORT": 3000,
       }
@@ -29,6 +31,8 @@ describe('config', () => {
     process.env.GENERATE_TIERLIST = 'false';
     process.env.NODE_ENV = 'DEV';
     process.env.PORT = '2';
+    process.env.GOOGLE_CLIENT_ID = 'some-google-id';
+    process.env.GOOGLE_CLIENT_SECRET = 'some-google-secret';
 
     expect(backendConfig.config).toMatchInlineSnapshot(`
       {
@@ -38,6 +42,8 @@ describe('config', () => {
         "DB_PORT": "1",
         "DB_USER": "some-user",
         "GENERATE_TIERLIST": false,
+        "GOOGLE_CLIENT_ID": "some-google-id",
+        "GOOGLE_CLIENT_SECRET": "some-google-secret",
         "NODE_ENV": "DEV",
         "PORT": "2",
       }

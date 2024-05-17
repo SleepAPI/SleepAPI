@@ -35,7 +35,7 @@ export default defineComponent({
 
 .blur {
   background: rgba(255, 255, 255, 0.02);
-  height: calc(100% - 64px); // TODO: should probably fetch navbar height better
+  height: 100dvh;
   width: 100%;
   position: absolute;
   filter: blur(128px);

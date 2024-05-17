@@ -7,7 +7,18 @@ export class BackendConfig {
   }
 
   get config() {
-    const { NODE_ENV, DATABASE_MIGRATION, PORT, DB_HOST, DB_PORT, DB_USER, DB_PASS, GENERATE_TIERLIST } = process.env;
+    const {
+      NODE_ENV,
+      DATABASE_MIGRATION,
+      PORT,
+      DB_HOST,
+      DB_PORT,
+      DB_USER,
+      DB_PASS,
+      GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET,
+      GENERATE_TIERLIST,
+    } = process.env;
 
     if (DATABASE_MIGRATION && DATABASE_MIGRATION !== 'UP' && DATABASE_MIGRATION !== 'DOWN') {
       throw new DatabaseMigrationError('DATABASE_MIGRATION is optional, but if set must be one of [UP, DOWN]');
@@ -21,6 +32,8 @@ export class BackendConfig {
       DB_PORT,
       DB_USER,
       DB_PASS,
+      GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET,
       GENERATE_TIERLIST: GENERATE_TIERLIST === 'true' ? true : false,
     };
   }

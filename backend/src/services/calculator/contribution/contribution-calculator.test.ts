@@ -13,9 +13,9 @@ import {
   ingredient,
   nature,
   pokemon,
+  recipeLevelBonus,
   salad,
   subskill,
-  utils,
 } from 'sleepapi-common';
 import { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
@@ -183,7 +183,7 @@ describe('calculateMealContributionFor', () => {
     const expectedBaseUsed =
       totalDefaultMilkProduceAmount *
       ingredient.MOOMOO_MILK.value *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       teamPenalty *
       critMultiplier *
       (1 + meal.bonus / 100);
@@ -195,7 +195,7 @@ describe('calculateMealContributionFor', () => {
       ingredient.MOOMOO_MILK.value *
       teamPenalty *
       critMultiplier *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       (1 + meal.bonus / 100);
 
     const expectedSupportedFiller =
@@ -225,7 +225,7 @@ describe('calculateContributionForMealWithPunishment', () => {
     });
     const expectedContribution =
       producedTomato.amount *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       ingredient.SNOOZY_TOMATO.value *
       (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
 
@@ -251,7 +251,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     const expectedContribution =
       producedTomato.amount *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       ingredient.SNOOZY_TOMATO.value *
       (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
 
@@ -278,7 +278,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     const expectedContribution =
       producedTomato.amount *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       ingredient.SNOOZY_TOMATO.value *
       (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100);
     const expectedFiller = producedFiller.amount * ingredient.FANCY_APPLE.taxedValue;
@@ -326,7 +326,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     const expectedUsedSupportValue =
       teamPenalty *
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
       (1 + salad.SNOOZY_TOMATO_SALAD.bonus / 100) *
       support.amount *
       ingredient.FANCY_APPLE.value;

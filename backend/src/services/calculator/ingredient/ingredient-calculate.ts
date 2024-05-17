@@ -22,8 +22,8 @@ import {
   Recipe,
   nature,
   pokemon,
+  recipeLevelBonus,
   subskill,
-  utils,
 } from 'sleepapi-common';
 import { extractIngredientSubskills } from '../stats/stats-calculator';
 
@@ -247,7 +247,7 @@ export function calculateContributedIngredientsValue(
   }
 
   const recipeBonus = 1 + meal.bonus / 100;
-  const maxLevelRecipeMultiplier = utils.recipeLevelBonus[MAX_RECIPE_LEVEL];
+  const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL];
 
   return {
     contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,

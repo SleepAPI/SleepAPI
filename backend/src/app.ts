@@ -1,10 +1,15 @@
-import cors from 'cors';
 import dotenv from 'dotenv';
+import { config } from './config/config';
+
+import cors from 'cors';
+
 import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
+
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import { config } from './config/config';
+import swaggerDocument from './public/swagger.json';
+
 import ProductionController from './controllers/calculator/production.controller';
 import HealthController from './controllers/health/health.controller';
 import IngredientController from './controllers/ingredient/ingredient.controller';
@@ -17,8 +22,9 @@ import ShareController from './controllers/share/share.controller';
 import SubskillController from './controllers/subskill/subskill.controller';
 import TierlistController from './controllers/tierlist/tierlist.controller';
 import DatabaseMigration from './database/migration/database-migration';
-import DataSeed from './database/seed/data-seed';
-import swaggerDocument from './public/swagger.json';
+
+import LoginController from '@src/controllers/login/login.controller';
+import { LoginRouter } from '@src/routes/login-router/login-router';
 import { BaseRouter } from './routes/base-router';
 import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
@@ -41,7 +47,6 @@ async function main() {
   const migration = config.DATABASE_MIGRATION;
   if (migration === 'UP') {
     await DatabaseMigration.migrate();
-    await DataSeed.seed();
   } else if (migration === 'DOWN') {
     await DatabaseMigration.downgrade();
   } else {
@@ -88,6 +93,7 @@ async function main() {
   MainskillRouter.register(new MainskillController());
   SubskillRouter.register(new SubskillController());
   ShareRouter.register(new ShareController());
+  LoginRouter.register(new LoginController());
 
   app.listen(config.PORT, async () => {
     Logger.log(`Server is running at ${config.PORT}`);

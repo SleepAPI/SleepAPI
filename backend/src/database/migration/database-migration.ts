@@ -24,8 +24,7 @@ const DatabaseMigration = new (class {
     const knex = await DatabaseService.getKnex();
 
     let retryCount = 5;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
+    while (retryCount > 0) {
       const migrations = await knex.migrate.list(configuration);
 
       type MigrationData = {

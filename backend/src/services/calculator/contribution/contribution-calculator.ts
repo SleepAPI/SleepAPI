@@ -5,8 +5,8 @@ import {
   MAX_RECIPE_LEVEL,
   pokemon,
   Recipe,
+  recipeLevelBonus,
   RecipeType,
-  utils,
 } from 'sleepapi-common';
 
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
@@ -231,31 +231,6 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
       const inclusionFactor = remainingInRecipe / (defaultAmount - amountProducedByCurrentPokemon + fromSupport) || 0;
       usedSupportAmount += inclusionFactor * fromSupport;
       const fillerSupportAmount = totalSkillAmount - usedSupportAmount;
-      // console.log(
-      //   `[${ingredientProduction.ingredient.name}]: recipe needs: ${recipeAmount}, ${currentPokemon.pokemonCombination.pokemon.name} total from skill: ${totalSkillAmount}\n` +
-      //     `remove ${currentPokemon.pokemonCombination.pokemon.name} base from recipe ${amountProducedByCurrentPokemon}\n` +
-      //     `remove ${
-      //       currentPokemon.pokemonCombination.pokemon.name
-      //     } self skill from recipe and count as used: ${Math.min(
-      //       selfSupportAmount,
-      //       Math.max(recipeAmount - amountProducedByCurrentPokemon, 0)
-      //     )}\n` +
-      //     `Remaining in recipe: ${remainingInRecipe}, used: ${Math.min(
-      //       selfSupportAmount,
-      //       Math.max(recipeAmount - amountProducedByCurrentPokemon, 0)
-      //     )}, filler: 0, ${currentPokemon.pokemonCombination.pokemon.name} remaining skill: ${fromSupport}\n` +
-      //     `Calculate inclusionFactor (remaining recipe / (base-${
-      //       currentPokemon.pokemonCombination.pokemon.name
-      //     } base + remaining skill)): ${remainingInRecipe} / (${
-      //       defaultAmount - amountProducedByCurrentPokemon
-      //     } + ${fromSupport}) = ${inclusionFactor}\n` +
-      //     `Add inclusionFactor * remaining skill to used. ${Math.min(
-      //       selfSupportAmount,
-      //       Math.max(recipeAmount - amountProducedByCurrentPokemon, 0)
-      //     )} + (${inclusionFactor} * ${fromSupport}) = ${usedSupportAmount}\n` +
-      //     `Add rest of remaining skill to filler: ${totalSkillAmount} - ${usedSupportAmount} = ${fillerSupportAmount}\n` +
-      //     `Result: used ${usedSupportAmount}, filler ${fillerSupportAmount}`
-      // );
 
       supportedUsedIngredients.push({ ingredient, amount: usedSupportAmount });
       supportedFillerIngredients.push({
@@ -301,8 +276,7 @@ export function calculateContributionForMealWithPunishment(params: {
     teamSizePenalty * (critMultiplier * valueLeftInRecipe - defaultCritMultiplier * valueLeftInRecipe);
 
   const supportedUsedContributionValue = usedSupportIngredients.reduce(
-    (sum, cur) =>
-      sum + cur.amount * cur.ingredient.value * utils.recipeLevelBonus[MAX_RECIPE_LEVEL] * (1 + meal.bonus / 100),
+    (sum, cur) => sum + cur.amount * cur.ingredient.value * recipeLevelBonus[MAX_RECIPE_LEVEL] * (1 + meal.bonus / 100),
     0
   );
   const supportedFillerContributionValue = fillerSupportIngredients.reduce(
