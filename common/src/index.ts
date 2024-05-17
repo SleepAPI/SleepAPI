@@ -1,2 +1,3 @@
+export * from './api';
 export * from './domain';
-export * as utils from './utils';
+export * from './utils';

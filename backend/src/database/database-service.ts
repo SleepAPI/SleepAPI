@@ -25,6 +25,9 @@ class DatabaseServiceImpl {
           password,
           database: 'pokemonsleep',
         },
+        migrations: {
+          loadExtensions: ['.js'],
+        },
       });
     }
 

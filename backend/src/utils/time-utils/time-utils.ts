@@ -223,3 +223,7 @@ export function prettifyTime(time: Time) {
 
   return `${hourString}:${minuteString}:${secondString}`;
 }
+
+export function getMySQLNow() {
+  return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}

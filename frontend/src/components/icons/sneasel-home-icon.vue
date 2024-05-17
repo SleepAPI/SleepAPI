@@ -1,8 +1,6 @@
 <template>
-  <div class="content-container">
-    <div class="circle">
-      <img src="@/assets/images/cook.png" alt="Sleep API icon" />
-    </div>
+  <div class="circle">
+    <img src="/cook.png" alt="Sleep API icon" />
   </div>
 </template>
 

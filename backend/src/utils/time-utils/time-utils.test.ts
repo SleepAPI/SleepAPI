@@ -4,6 +4,7 @@ import {
   addTime,
   calculateDuration,
   divideTimePeriod,
+  getMySQLNow,
   isAfterOrEqual,
   isAfterOrEqualWithinPeriod,
   isBefore,
@@ -514,5 +515,21 @@ describe('isBefore', () => {
       second: 1,
     };
     expect(isBefore(time1, time2)).toBeTruthy();
+  });
+});
+
+describe('getMySQLNow', () => {
+  it('shall return the current date and time in MySQL format', () => {
+    const now = new Date();
+
+    // We use a tolerance of 1 second to account for the time difference between the call and assertion
+    const actualResult = getMySQLNow();
+    const actualDate = new Date(actualResult.replace(' ', 'T') + 'Z');
+
+    const differenceInSeconds = Math.abs((actualDate.getTime() - now.getTime()) / 1000);
+    expect(differenceInSeconds).toBeLessThanOrEqual(1);
+
+    const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    expect(actualResult).toMatch(regex);
   });
 });

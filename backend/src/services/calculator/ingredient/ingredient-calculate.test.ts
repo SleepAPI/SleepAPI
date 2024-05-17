@@ -7,8 +7,8 @@ import {
   dessert,
   ingredient,
   pokemon,
+  recipeLevelBonus,
   salad,
-  utils,
 } from 'sleepapi-common';
 import {
   addIngredientSet,
@@ -412,7 +412,7 @@ describe('calculateContributedIngredientsValue', () => {
     ];
 
     const expectedContributedValue = Math.round(
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] * (1 + meal.bonus / 100) * (15 * ingredient.LARGE_LEEK.value)
+      recipeLevelBonus[MAX_RECIPE_LEVEL] * (1 + meal.bonus / 100) * (15 * ingredient.LARGE_LEEK.value)
     );
 
     const expectedFillerValue = Math.round(
@@ -442,7 +442,7 @@ describe('calculateContributedIngredientsValue', () => {
     ];
 
     const expectedContributedValue = Math.round(
-      utils.recipeLevelBonus[MAX_RECIPE_LEVEL] *
+      recipeLevelBonus[MAX_RECIPE_LEVEL] *
         (1 + meal.bonus / 100) *
         (15 * ingredient.GREENGRASS_SOYBEANS.value + 6.5 * ingredient.LARGE_LEEK.value)
     );

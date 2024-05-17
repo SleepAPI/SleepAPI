@@ -23,7 +23,6 @@ export abstract class AbstractDAO<
 > {
   public abstract get tableName(): string;
   protected abstract get schema(): DBEntitySchemaType;
-  public abstract seed(): Promise<void>;
 
   async find(
     filter: Filter<DBEntityType>,
@@ -83,6 +82,22 @@ export abstract class AbstractDAO<
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.get({ id: result[0] } as any);
+  }
+
+  async update(entity: DBEntityType): Promise<DBEntityType> {
+    const knex = await DatabaseService.getKnex();
+
+    await knex
+      .update(
+        this.preProcess({
+          ...entity,
+        })
+      )
+      .into(this.tableName)
+      .where({ id: entity.id });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.get({ id: entity.id } as any);
   }
 
   async batchInsert(

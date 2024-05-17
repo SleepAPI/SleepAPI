@@ -79,7 +79,7 @@ export default defineComponent({
       {
         description: "Simulate your Pokémon's production with in-depth data analysis.",
         title: 'Calculator',
-        src: '@/assets/images/cook.png',
+        src: '/cook.png',
         icon: 'mdi-square-root',
         to: ''
       },

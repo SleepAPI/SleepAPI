@@ -1,5 +1,6 @@
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import vue3GoogleLogin from 'vue3-google-login'
 
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'
@@ -38,7 +39,10 @@ const vuetify = createVuetify({
 })
 
 app.use(createPinia())
-app.use(router)
 app.use(vuetify)
+app.use(router)
+app.use(vue3GoogleLogin, {
+  clientId: '983013278971-m60s443rk30e8sjk04aof0ltaanogck0.apps.googleusercontent.com'
+})
 
 app.mount('#app')
