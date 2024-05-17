@@ -3,7 +3,11 @@ import { DetailedProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
-import { OptimalFlexibleResult, OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
+import {
+  IngredientRankerResult,
+  OptimalFlexibleResult,
+  OptimalSetResult,
+} from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
@@ -158,6 +162,48 @@ class WebsiteConverterServiceImpl {
     }
 
     return this.#filterOnlyBest(tiersWithPokemonDetails);
+  }
+
+  public toIngredientRanker(optimalMons: IngredientRankerResult) {
+    const prettifiedCombinations = optimalMons.teams.slice(0, 500).map((solution) => ({
+      team: solution.team
+        .map(
+          (member) =>
+            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
+              member.pokemonCombination.ingredientList
+            )})`
+        )
+        .join(),
+      details: `👨🏻‍🍳 Ingredient ranker - https://sleepapi.net 👨🏻‍🍳\n\nIngredient: ${
+        optimalMons.ingredient
+      }\n\nPokemon\n- ${solution.team
+        .map(
+          (member) =>
+            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
+              member.pokemonCombination.ingredientList
+            )})`
+        )
+        .join()}
+        \n\nProduce per meal window\n${solution.team
+          .map(
+            (member) =>
+              `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
+                member.detailedProduce.produce.ingredients
+              )} (${roundDown(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
+          )
+          .join()}`,
+    }));
+
+    return {
+      ingredient: optimalMons.ingredient,
+      info:
+        optimalMons.teams.length > 0
+          ? !optimalMons.teams.at(0)?.exhaustive
+            ? `Showing ${prettifiedCombinations.length} of ${optimalMons.teams.length} Pokemon.\nTimeout of 10 seconds reached, results may not be exhaustive`
+            : `${prettifiedCombinations.length} Pokemon found`
+          : "No possible Pokemon found, can't be found with current filter",
+      teams: prettifiedCombinations,
+    };
   }
 
   public toOptimalSet(optimalCombinations: OptimalSetResult) {
