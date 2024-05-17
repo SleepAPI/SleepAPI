@@ -46,7 +46,13 @@
         <v-list>
           <v-list-item v-if="!loggedIn">
             <GoogleLogin :callback="callback" style="width: 100%">
-              <v-card title="Login" class="text-center" rounded="xl" color="#181717">
+              <v-card
+                title="Login"
+                class="text-center"
+                rounded="xl"
+                color="#181717"
+                style="cursor: pointer"
+              >
                 <template #prepend>
                   <GoogleIcon class="icon-24" />
                 </template>
@@ -89,30 +95,25 @@ export default defineComponent({
     }
   }),
   async mounted() {
-    const expiryDate = localStorage.getItem('expiryDate')
-    const deviceId = localStorage.getItem('deviceId')
+    const expiryDate = localStorage.getItem('expiry_date')
 
-    if (expiryDate && deviceId) {
-      if (Date.now() < +expiryDate) {
-        try {
-          const idToken = localStorage.getItem('idToken')
-          if (!idToken) {
-            throw new Error('Missing id-token, logging out user')
-          }
+    if (expiryDate) {
+      try {
+        const idToken = localStorage.getItem('id_token')
+        if (!idToken) {
+          throw new Error('Missing id-token, logging out user')
+        }
+        const userData: DecodedUserData = decodeCredential(idToken) as DecodedUserData
 
-          const userData: DecodedUserData = decodeCredential(idToken) as DecodedUserData
-          this.updateUserData(userData)
-        } catch {
-          this.logout()
+        if (Date.now() > +expiryDate) {
+          const refresh_token = localStorage.getItem('refresh_token')
+          const { access_token, expiry_date } = await GoogleService.refresh(refresh_token!) // we force here so we fail and logout if missing
+          localStorage.setItem('access_token', access_token)
+          localStorage.setItem('expiry_date', '' + expiry_date)
         }
-      } else {
-        try {
-          const { accessToken, expiryDate } = await GoogleService.refresh(deviceId)
-          localStorage.setItem('accessToken', accessToken)
-          localStorage.setItem('expiryDate', '' + expiryDate)
-        } catch {
-          this.logout()
-        }
+        this.updateUserData(userData)
+      } catch {
+        this.logout()
       }
     } else {
       this.logout()
@@ -125,13 +126,13 @@ export default defineComponent({
         try {
           const loginResponse: LoginResponse = await GoogleService.login(authCode)
 
-          localStorage.setItem('accessToken', loginResponse.accessToken)
-          localStorage.setItem('deviceId', loginResponse.deviceId)
-          localStorage.setItem('expiryDate', '' + loginResponse.expiryDate)
-          localStorage.setItem('idToken', loginResponse.idToken)
+          localStorage.setItem('access_token', loginResponse.access_token)
+          localStorage.setItem('refresh_token', loginResponse.refresh_token)
+          localStorage.setItem('expiry_date', '' + loginResponse.expiry_date)
+          localStorage.setItem('id_token', loginResponse.id_token)
 
           const userData: DecodedUserData = decodeCredential(
-            loginResponse.idToken
+            loginResponse.id_token
           ) as DecodedUserData
           this.updateUserData(userData)
         } catch {

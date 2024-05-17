@@ -6,13 +6,13 @@ export interface DecodedUserData {
 }
 
 export interface LoginResponse {
-  idToken: string;
-  accessToken: string;
-  expiryDate: number;
-  deviceId: string;
+  id_token: string;
+  access_token: string;
+  refresh_token: string;
+  expiry_date: number;
 }
 
 export interface RefreshResponse {
-  accessToken: string;
-  expiryDate: number;
+  access_token: string;
+  expiry_date: number;
 }
