@@ -1,11 +1,9 @@
 import { config } from '@src/config/config';
-import { TokenDAO } from '@src/database/dao/user/token-dao';
 import { UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
 import { client, refresh, signup, verify } from '@src/services/api-service/login/login-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
-import { getMySQLNow } from '@src/utils/time-utils/time-utils';
 import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
@@ -17,7 +15,7 @@ jest.mock('@src/utils/time-utils/time-utils', () => ({
 
 beforeEach(() => {
   uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
-  MockService.init({ UserDAO, TokenDAO, client });
+  MockService.init({ UserDAO, client });
 });
 
 afterEach(() => {
@@ -54,19 +52,13 @@ describe('signup', () => {
         },
       ]
     `);
-    const tokens = await TokenDAO.findMultiple();
-    expect(tokens).toHaveLength(1);
-    const [token] = tokens;
-    expect(token.last_login).toBeDefined();
-    expect(token.device_id).toEqual('000000000000000000000000000000000000');
-    expect(token.refresh_token).toEqual('some-refresh-token');
 
     expect(loginResponse).toMatchInlineSnapshot(`
       {
-        "accessToken": "some-access-token",
-        "deviceId": "000000000000000000000000000000000000",
-        "expiryDate": 10,
-        "idToken": "some-id-token",
+        "access_token": "some-access-token",
+        "expiry_date": 10,
+        "id_token": "some-id-token",
+        "refresh_token": "some-refresh-token",
       }
     `);
     expect(client.getToken).toHaveBeenCalledWith({ code: 'some-auth-code', redirect_uri: 'postmessage' });
@@ -112,18 +104,13 @@ describe('signup', () => {
         },
       ]
     `);
-    const tokens = await TokenDAO.findMultiple();
-    expect(tokens).toHaveLength(1);
-    const [token] = tokens;
-    expect(token.device_id).toEqual('000000000000000000000000000000000000');
-    expect(token.refresh_token).toEqual('some-refresh-token');
 
     expect(loginResponse).toMatchInlineSnapshot(`
       {
-        "accessToken": "some-access-token",
-        "deviceId": "000000000000000000000000000000000000",
-        "expiryDate": 10,
-        "idToken": "some-id-token",
+        "access_token": "some-access-token",
+        "expiry_date": 10,
+        "id_token": "some-id-token",
+        "refresh_token": "some-refresh-token",
       }
     `);
   });
@@ -131,13 +118,6 @@ describe('signup', () => {
 
 describe('refresh', () => {
   it('should refresh the access token successfully', async () => {
-    const deviceId = 'some-device-id';
-    await TokenDAO.insert({
-      device_id: deviceId,
-      refresh_token: 'some-refresh-token',
-      last_login: getMySQLNow(),
-    });
-
     client.setCredentials = jest.fn();
     client.getAccessToken = jest.fn().mockResolvedValue({
       token: 'new-access-token',
@@ -146,70 +126,25 @@ describe('refresh', () => {
       expiry_date: 10,
     };
 
-    const refreshResponse = await refresh(deviceId);
+    const refreshResponse = await refresh('some-refresh-token');
 
     expect(refreshResponse).toMatchInlineSnapshot(`
       {
-        "accessToken": "new-access-token",
-        "expiryDate": 10,
+        "access_token": "new-access-token",
+        "expiry_date": 10,
       }
     `);
 
     expect(client.setCredentials).toHaveBeenCalledWith({ refresh_token: 'some-refresh-token' });
     expect(client.getAccessToken).toHaveBeenCalled();
-    expect(await TokenDAO.findMultiple()).toMatchInlineSnapshot(`
-      [
-        {
-          "device_id": "some-device-id",
-          "id": 1,
-          "last_login": "2024-01-01 18:00:00",
-          "refresh_token": "some-refresh-token",
-        },
-      ]
-    `);
-  });
-
-  it('should throw an error if token is not found', async () => {
-    const deviceId = 'non-existing-device-id';
-    await expect(refresh(deviceId)).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Unable to find entry in token with filter [{"device_id":"non-existing-device-id"}]"`
-    );
   });
 
   it('should throw an error if Google API fails to provide a new access token', async () => {
-    const deviceId = 'some-device-id';
-    await TokenDAO.insert({
-      device_id: deviceId,
-      refresh_token: 'some-refresh-token',
-      last_login: getMySQLNow(),
-    });
-
     client.setCredentials = jest.fn();
     client.getAccessToken = jest.fn().mockResolvedValue({ token: null });
     client.credentials = {};
 
-    await expect(refresh(deviceId)).rejects.toThrow('Failed to refresh access token');
-  });
-
-  it('should handle database update failure', async () => {
-    const deviceId = 'some-device-id';
-    await TokenDAO.insert({
-      device_id: deviceId,
-      refresh_token: 'some-refresh-token',
-      last_login: getMySQLNow(),
-    });
-
-    client.setCredentials = jest.fn();
-    client.getAccessToken = jest.fn().mockResolvedValue({
-      token: 'new-access-token',
-    });
-    client.credentials = {
-      expiry_date: 10,
-    };
-
-    TokenDAO.update = jest.fn().mockRejectedValue(new Error('Database update failed'));
-
-    await expect(refresh(deviceId)).rejects.toThrow('Database update failed');
+    await expect(refresh('some-refresh-token')).rejects.toThrow('Failed to refresh access token');
   });
 });
 

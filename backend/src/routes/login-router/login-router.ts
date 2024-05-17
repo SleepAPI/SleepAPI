@@ -7,7 +7,7 @@ class LoginRouterImpl {
   public async register(controller: LoginController) {
     BaseRouter.router.post(
       '/login/signup',
-      async (req: Request<unknown, unknown, { authorizationCode: string }>, res: Response) => {
+      async (req: Request<unknown, unknown, { authorization_code: string }>, res: Response) => {
         try {
           Logger.info('Entered /login/signup');
           const userData = await controller.signup(req.body);
@@ -22,7 +22,7 @@ class LoginRouterImpl {
 
     BaseRouter.router.post(
       '/login/refresh',
-      async (req: Request<unknown, unknown, { deviceId: string }>, res: Response) => {
+      async (req: Request<unknown, unknown, { refresh_token: string }>, res: Response) => {
         try {
           Logger.info('Entered /login/refresh');
 

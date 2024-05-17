@@ -2,17 +2,17 @@ import axios from 'axios'
 import type { LoginResponse, RefreshResponse } from 'sleepapi-common'
 
 class GoogleServiceImpl {
-  public async login(authorizationCode: string): Promise<LoginResponse> {
+  public async login(authorization_code: string): Promise<LoginResponse> {
     const response = await axios.post<LoginResponse>('/api/login/signup', {
-      authorizationCode
+      authorization_code
     })
 
     return response.data
   }
 
-  public async refresh(deviceId: string): Promise<RefreshResponse> {
+  public async refresh(refresh_token: string): Promise<RefreshResponse> {
     const response = await axios.post<RefreshResponse>('/api/login/refresh', {
-      deviceId
+      refresh_token
     })
 
     return response.data
