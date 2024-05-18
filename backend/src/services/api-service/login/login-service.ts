@@ -45,6 +45,9 @@ export async function refresh(refresh_token: string) {
   const { token } = await client.getAccessToken();
   const { expiry_date } = client.credentials;
 
+  // TODO: after we have verified that the refresh token was valid and new access token was generated we
+  // TODO: might want to generate a new refresh_token and access_token, refresh token rotation, and return those
+
   if (!token || !expiry_date) {
     throw new AuthorizationError('Failed to refresh access token');
   }
