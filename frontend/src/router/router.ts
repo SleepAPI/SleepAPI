@@ -1,16 +1,19 @@
 import HomePage from '@/pages/home-page.vue'
+
 import { createRouter, createWebHistory } from 'vue-router'
 
 export enum RouteName {
   Home = 'Home',
   Calculator = 'Calculator',
   Profile = 'Profile',
-  Settings = 'Settings'
+  Settings = 'Settings',
+  NotFound = 'NotFound'
 }
 
 const CalculatorPage = () => import('@/pages/calculator-page.vue')
 const ProfilePage = () => import('@/pages/profile-page.vue')
 const SettingsPage = () => import('@/pages/settings-page.vue')
+const NotFoundPage = () => import('@/pages/not-found/not-found-page.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +37,11 @@ const router = createRouter({
       path: '/settings',
       name: RouteName.Settings,
       component: SettingsPage
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: RouteName.NotFound,
+      component: NotFoundPage
     }
   ]
 })
