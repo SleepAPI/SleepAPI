@@ -166,6 +166,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "WOBBUFFET",
   "HERACROSS",
   "RAIKOU",
+  "ENTEI",
   "GARDEVOIR",
   "SABLEYE",
   "SWALOT",
@@ -276,6 +277,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
   "UMBREON",
   "SLOWKING",
   "WOBBUFFET",
+  "ENTEI",
   "GARDEVOIR",
   "SABLEYE",
   "LUCARIO",
@@ -351,6 +353,7 @@ exports[`getPokemonNames shall return all taupe pokemon 1`] = `
   "ARCANINE",
   "FLAREON",
   "SUDOWOODO",
+  "ENTEI",
   "GROWLITHE",
   "BONSLY",
 ]
