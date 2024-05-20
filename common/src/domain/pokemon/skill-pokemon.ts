@@ -525,6 +525,28 @@ export const RAIKOU: Pokemon = {
   skill: HELPER_BOOST,
 };
 
+export const ENTEI: Pokemon = {
+  name: 'ENTEI',
+  specialty: 'skill',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 18.7,
+  skillPercentage: 2.3,
+  berry: LEPPA,
+  carrySize: 19,
+  maxCarrySize: 19,
+  ingredient0: { amount: 1, ingredient: PURE_OIL },
+  ingredient30: [
+    { amount: 2, ingredient: PURE_OIL },
+    { amount: 2, ingredient: SNOOZY_TOMATO },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: PURE_OIL },
+    { amount: 4, ingredient: SNOOZY_TOMATO },
+    { amount: 3, ingredient: TASTY_MUSHROOM },
+  ],
+  skill: HELPER_BOOST,
+};
+
 export const RALTS: Pokemon = {
   name: 'RALTS',
   specialty: 'skill',
@@ -781,6 +803,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   WOBBUFFET,
   HERACROSS,
   RAIKOU,
+  ENTEI,
   GARDEVOIR,
   SABLEYE,
   SWALOT,
