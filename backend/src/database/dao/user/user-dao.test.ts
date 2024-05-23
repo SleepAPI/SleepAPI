@@ -27,6 +27,7 @@ describe('UserDAO insert', () => {
     expect(data).toMatchInlineSnapshot(`
       [
         {
+          "avatar": undefined,
           "external_id": "000000000000000000000000000000000000",
           "id": 1,
           "name": "some-name",
@@ -60,11 +61,13 @@ describe('UserDAO insert', () => {
     await UserDAO.insert({
       external_id: uuid.v4(),
       sub: 'sub1',
+      name: 'some-name',
     });
     await expect(
       UserDAO.insert({
         external_id: uuid.v4(),
         sub: 'sub1',
+        name: 'some-name',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: UNIQUE constraint failed: user.external_id/);
   });
@@ -85,6 +88,7 @@ describe('UserDAO update', () => {
     expect(data).toMatchInlineSnapshot(`
       [
         {
+          "avatar": undefined,
           "external_id": "000000000000000000000000000000000000",
           "id": 1,
           "name": "updated-name",

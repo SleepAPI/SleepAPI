@@ -2,7 +2,19 @@
   <v-container class="pt-12">
     <v-row class="align-center justify-center">
       <v-col cols="auto">
-        <SneaselHomeIcon alt="Sleep API Logo" />
+        <!-- <SneaselHomeIcon alt="Sleep API Logo" /> -->
+        <v-skeleton-loader
+          type="image"
+          class="fill-height"
+          style="
+            max-width: min(200px, 50vw);
+            min-height: 200px;
+            width: 100%;
+            min-width: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+          "
+        ></v-skeleton-loader>
       </v-col>
       <v-col cols="auto" class="text-center text-lg-start">
         <h1 class="title text-h4 font-weight-medium mb-3">Pokémon Sleep Simulations</h1>
@@ -12,16 +24,6 @@
         </p>
 
         <v-row class="align-center justify-center">
-          <v-col cols="auto" class="align-center justify-center px-1">
-            <v-btn
-              class="responsive-button"
-              size="large"
-              rounded="lg"
-              color="secondary"
-              @click="scrollTo('calculatorSection')"
-              >Learn more</v-btn
-            >
-          </v-col>
           <v-col cols="auto" class="align-center justify-center px-1">
             <v-btn
               class="responsive-button"
@@ -72,6 +74,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
+    // TODO: bring back when we get avatar
+    // eslint-disable-next-line vue/no-unused-components
     SneaselHomeIcon
   },
   data: () => ({

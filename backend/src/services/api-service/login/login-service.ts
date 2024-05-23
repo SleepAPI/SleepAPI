@@ -2,7 +2,14 @@ import { config } from '@src/config/config';
 import { UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
 import { OAuth2Client, TokenInfo } from 'google-auth-library';
-import { DecodedUserData, uuid } from 'sleepapi-common';
+import { LoginResponse, RefreshResponse, uuid } from 'sleepapi-common';
+
+interface DecodedUserData {
+  sub: string;
+  email: string;
+  given_name: string;
+  picture: string;
+}
 
 export const client = new OAuth2Client({
   clientId: config.GOOGLE_CLIENT_ID,
@@ -10,13 +17,13 @@ export const client = new OAuth2Client({
   redirectUri: 'postmessage',
 });
 
-export async function signup(authorization_code: string) {
+export async function signup(authorization_code: string): Promise<LoginResponse> {
   const { tokens } = await client.getToken({
     code: authorization_code,
     redirect_uri: 'postmessage',
   });
 
-  if (!tokens.id_token || !tokens.refresh_token || !tokens.access_token || !tokens.expiry_date) {
+  if (!tokens.refresh_token || !tokens.access_token || !tokens.expiry_date) {
     throw new AuthorizationError(`Missing data in google getToken response. Response: [${JSON.stringify(tokens)}]`);
   }
 
@@ -26,27 +33,24 @@ export async function signup(authorization_code: string) {
     url: 'https://www.googleapis.com/oauth2/v3/userinfo',
   });
 
-  const existingUser = await UserDAO.find({ sub: userinfo.data.sub });
-  if (!existingUser) {
-    await UserDAO.insert({ sub: userinfo.data.sub, external_id: uuid.v4(), name: 'New user' });
-  }
+  const existingUser =
+    (await UserDAO.find({ sub: userinfo.data.sub })) ??
+    (await UserDAO.insert({ sub: userinfo.data.sub, external_id: uuid.v4(), name: 'New user' }));
 
   return {
-    id_token: tokens.id_token,
+    name: existingUser.name,
+    avatar: existingUser.avatar,
     access_token: tokens.access_token,
     refresh_token: tokens.refresh_token,
     expiry_date: tokens.expiry_date,
   };
 }
 
-export async function refresh(refresh_token: string) {
+export async function refresh(refresh_token: string): Promise<RefreshResponse> {
   client.setCredentials({ refresh_token });
 
   const { token } = await client.getAccessToken();
   const { expiry_date } = client.credentials;
-
-  // TODO: after we have verified that the refresh token was valid and new access token was generated we
-  // TODO: might want to generate a new refresh_token and access_token, refresh token rotation, and return those
 
   if (!token || !expiry_date) {
     throw new AuthorizationError('Failed to refresh access token');

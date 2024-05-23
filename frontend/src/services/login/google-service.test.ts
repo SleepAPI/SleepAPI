@@ -12,9 +12,10 @@ const mockedAxios = axios as unknown as {
 describe('login', () => {
   it('should login user', async () => {
     const mockResponse: LoginResponse = {
+      name: 'some name',
+      avatar: 'some-avatar',
       access_token: 'some-access-token',
       refresh_token: 'some-refresh-id',
-      id_token: 'some-id-token',
       expiry_date: 1
     }
 

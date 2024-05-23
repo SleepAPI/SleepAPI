@@ -6,7 +6,8 @@ const DBUserSchema = Type.Composite([
   Type.Object({
     sub: Type.String(),
     external_id: Type.String({ minLength: 36, maxLength: 36 }),
-    name: Type.Optional(Type.String()),
+    name: Type.String(),
+    avatar: Type.Optional(Type.String()),
   }),
 ]);
 export type DBUser = Static<typeof DBUserSchema>;
