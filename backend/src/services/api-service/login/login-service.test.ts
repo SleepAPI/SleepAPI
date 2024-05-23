@@ -26,7 +26,6 @@ describe('signup', () => {
   it('should call google API with correct credentials', async () => {
     client.getToken = jest.fn().mockResolvedValue({
       tokens: {
-        id_token: 'some-id-token',
         refresh_token: 'some-refresh-token',
         access_token: 'some-access-token',
         expiry_date: 10,
@@ -45,6 +44,7 @@ describe('signup', () => {
     expect(await UserDAO.findMultiple()).toMatchInlineSnapshot(`
       [
         {
+          "avatar": undefined,
           "external_id": "000000000000000000000000000000000000",
           "id": 1,
           "name": "New user",
@@ -56,8 +56,9 @@ describe('signup', () => {
     expect(loginResponse).toMatchInlineSnapshot(`
       {
         "access_token": "some-access-token",
+        "avatar": undefined,
         "expiry_date": 10,
-        "id_token": "some-id-token",
+        "name": "New user",
         "refresh_token": "some-refresh-token",
       }
     `);
@@ -76,7 +77,6 @@ describe('signup', () => {
   it('should handle existing user correctly', async () => {
     client.getToken = jest.fn().mockResolvedValue({
       tokens: {
-        id_token: 'some-id-token',
         refresh_token: 'some-refresh-token',
         access_token: 'some-access-token',
         expiry_date: 10,
@@ -97,6 +97,7 @@ describe('signup', () => {
     expect(await UserDAO.findMultiple()).toMatchInlineSnapshot(`
       [
         {
+          "avatar": undefined,
           "external_id": "000000000000000000000000000000000000",
           "id": 1,
           "name": "Existing user",
@@ -108,8 +109,9 @@ describe('signup', () => {
     expect(loginResponse).toMatchInlineSnapshot(`
       {
         "access_token": "some-access-token",
+        "avatar": undefined,
         "expiry_date": 10,
-        "id_token": "some-id-token",
+        "name": "Existing user",
         "refresh_token": "some-refresh-token",
       }
     `);

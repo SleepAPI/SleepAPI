@@ -1,6 +1,10 @@
 import AccountMenu from '@/components/account/account-menu.vue'
-import { VueWrapper, mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useUserStore } from '@/stores/user-store'
+import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 
 vi.mock('vue3-google-login', () => ({
   GoogleLogin: {
@@ -10,73 +14,112 @@ vi.mock('vue3-google-login', () => ({
   decodeCredential: vi.fn()
 }))
 
-type AccountMenuInstance = InstanceType<typeof AccountMenu>
-
 describe('AccountMenu', () => {
-  let wrapper: VueWrapper<AccountMenuInstance>
+  let wrapper: VueWrapper<InstanceType<typeof AccountMenu>>
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
     wrapper = mount(AccountMenu)
   })
 
-  it('renders guest information when not logged in', async () => {
-    const activatorButton = wrapper.find('button')
-    await activatorButton.trigger('click')
-    expect(wrapper.vm.$data).toMatchInlineSnapshot(`
-      {
-        "loggedIn": false,
-        "menu": true,
-        "user": {
-          "email": "",
-          "id": "",
-          "name": "Guest",
-          "picture": "",
-        },
-      }
-    `)
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount()
+    }
   })
 
-  it('renders user information when logged in', async () => {
-    wrapper.vm.updateUserData({
-      picture: 'https://example.com/picture.jpg',
-      given_name: 'John',
-      email: 'john@example.xom',
-      sub: '12345'
+  it('clicking activator should open menu', async () => {
+    expect(document.querySelector('.account-menu-container')).toBeNull()
+
+    const button = wrapper.find('#navBarIcon')
+    await button.trigger('click')
+
+    await nextTick()
+    await flushPromises()
+
+    const menuContainer = document.querySelector('.account-menu-container')
+    expect(menuContainer).not.toBeNull()
+
+    if (menuContainer) {
+      const style = window.getComputedStyle(menuContainer)
+      expect(style.display).not.toBe('none')
+    }
+  })
+
+  it('renders correctly when logged in', async () => {
+    expect(wrapper.find('.mdi-account-circle').exists()).toBe(true)
+
+    const userStore = useUserStore()
+
+    userStore.name = 'John Doe'
+    userStore.avatar = 'default-avatar'
+    userStore.setTokens({
+      accessToken: 'access token',
+      refreshToken: 'refresh token',
+      expiryDate: 10
     })
-    expect(wrapper.vm.$data).toMatchInlineSnapshot(`
-      {
-        "loggedIn": true,
-        "menu": false,
-        "user": {
-          "email": "john@example.xom",
-          "id": "12345",
-          "name": "John",
-          "picture": "https://example.com/picture.jpg",
-        },
-      }
-    `)
+
+    await nextTick()
+
+    expect(wrapper.find('#navBarIcon').exists()).toBe(true)
+    expect(wrapper.find('.mdi-account-circle').exists()).toBe(false)
+    expect(wrapper.find('img').exists()).toBe(true)
+    expect(wrapper.find('img').attributes('src')).toContain('/images/avatar/default-avatar.png')
+
+    const openMenuButton = wrapper.find('#navBarIcon')
+    await openMenuButton.trigger('click')
+
+    const menuContainer = document.querySelector('.account-menu-container')
+    expect(menuContainer).not.toBeNull()
+
+    if (menuContainer) {
+      const h6 = menuContainer.querySelector('h6')
+      expect(h6).not.toBeNull()
+      expect(h6!.textContent).toBe('John Doe')
+
+      expect(menuContainer.querySelector('#logoutButton')).not.toBeNull()
+      expect(menuContainer.querySelector('.mdi-logout')).not.toBeNull()
+    }
   })
 
   it('resets user information when logged out', async () => {
-    wrapper.vm.updateUserData({
-      picture: 'https://example.com/picture.jpg',
-      given_name: 'John',
-      email: 'john@example.xom',
-      sub: '12345'
-    })
-    expect(wrapper.vm.$data.loggedIn).toBe(true)
+    const userStore = useUserStore()
 
-    wrapper.vm.logout()
-    expect(wrapper.vm.$data).toMatchInlineSnapshot(`
+    userStore.setUserData({
+      name: 'some name'
+    })
+    userStore.setTokens({
+      accessToken: 'access token',
+      refreshToken: 'refresh token',
+      expiryDate: 10
+    })
+
+    expect(wrapper.vm.userStore.loggedIn).toBe(true)
+    expect(userStore.$state).toMatchInlineSnapshot(`
       {
-        "loggedIn": false,
-        "menu": false,
-        "user": {
-          "email": "",
-          "id": "",
-          "name": "Guest",
-          "picture": "",
+        "avatar": "default",
+        "name": "some name",
+        "tokens": {
+          "accessToken": "access token",
+          "expiryDate": 10,
+          "refreshToken": "refresh token",
         },
+      }
+    `)
+
+    const openMenuButton = wrapper.find('#navBarIcon')
+    await openMenuButton.trigger('click')
+
+    const logoutButton = document.querySelector('#logoutButton')
+    expect(logoutButton).not.toBeNull()
+    ;(logoutButton as HTMLElement).click()
+
+    expect(wrapper.vm.userStore.loggedIn).toBe(false)
+    expect(userStore.$state).toMatchInlineSnapshot(`
+      {
+        "avatar": null,
+        "name": "Guest",
+        "tokens": null,
       }
     `)
   })

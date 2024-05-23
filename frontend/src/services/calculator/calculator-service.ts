@@ -1,14 +1,14 @@
-import axios from 'axios'
+import serverAxios from '@/router/server-axios'
 import type { pokemon } from 'sleepapi-common'
 
-class InputCardServiceImpl {
+class CalculatorServiceImpl {
   public async fetchCardImage(pkmn: string): Promise<string> {
     return `/images/pokemon/${pkmn.toLowerCase()}.png`
   }
 
   public async fetchPokemonData(pkmn: string): Promise<pokemon.Pokemon> {
     try {
-      const response = await axios.get<pokemon.Pokemon>(`/api/pokemon/${pkmn}`)
+      const response = await serverAxios.get<pokemon.Pokemon>(`pokemon/${pkmn}`)
       return response.data
     } catch (error) {
       console.error('Error fetching data: ', error)
@@ -17,4 +17,4 @@ class InputCardServiceImpl {
   }
 }
 
-export const InputCardService = new InputCardServiceImpl()
+export const CalculatorService = new CalculatorServiceImpl()

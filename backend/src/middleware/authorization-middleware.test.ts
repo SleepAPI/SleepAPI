@@ -1,4 +1,5 @@
-import { validateAuthHeader } from '@src/middleware/authorization-middleware';
+import { DBUser } from '@src/database/dao/user/user-dao';
+import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
 import { verify } from '@src/services/api-service/login/login-service';
 import { Logger } from '@src/services/logger/logger';
 import { NextFunction, Request, Response } from 'express';
@@ -42,11 +43,19 @@ describe('validateAuthHeader middleware', () => {
 
   it('should call next if Authorization header is valid and token is verified', async () => {
     req.headers!.authorization = 'Bearer validtoken';
-    (verify as jest.Mock).mockResolvedValue(true);
+    const mockUser: DBUser = {
+      id: 1,
+      sub: 'test-sub',
+      external_id: '00000000-0000-0000-0000-000000000000',
+      name: 'Test User',
+      avatar: 'test-avatar',
+    };
+    (verify as jest.Mock).mockResolvedValue(mockUser);
 
     await validateAuthHeader(req as Request, res as Response, next);
     expect(next).toHaveBeenCalled();
     expect(res.status).not.toHaveBeenCalled();
+    expect((req as AuthenticatedRequest).user).toEqual(mockUser);
   });
 
   it('should respond with 401 if token verification fails', async () => {

@@ -100,6 +100,13 @@ export abstract class AbstractDAO<
     return this.get({ id: entity.id } as any);
   }
 
+  async delete(filter: Filter<DBEntityType> = {}): Promise<number> {
+    const knex = await DatabaseService.getKnex();
+
+    const queryToExecute = this.#createQuery(knex.delete(), filter, {});
+    return await queryToExecute;
+  }
+
   async batchInsert(
     entities: Array<Omit<DBEntityType, 'id'>>,
     chunkSize = 1000,

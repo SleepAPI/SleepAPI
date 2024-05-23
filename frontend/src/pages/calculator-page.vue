@@ -1,25 +1,17 @@
 <template>
-  <main>
-    <v-container>
-      <v-row class="flex-nowrap">
-        <v-col v-for="n in 5" :key="n" flex="1" style="padding: 4px 4px">
-          <InputCard />
-        </v-col>
-      </v-row>
-    </v-container>
-  </main>
+  <TeamSection />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import InputCard from '@/components/calculator/input-card.vue'
+import TeamSection from '@/components/calculator/team-section.vue'
 
 export default defineComponent({
   components: {
-    InputCard
+    TeamSection
   }
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss"></style>
