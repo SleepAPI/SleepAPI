@@ -40,7 +40,7 @@ class TeamRouterImpl {
 
           await controller.upsert(+index, req.body, user);
 
-          res.status(200);
+          res.sendStatus(200);
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');

@@ -1,15 +1,19 @@
 <template>
   <v-dialog v-model="showDialog" @click:outside="closeDialog">
     <v-card>
-      <v-card-title class="text-h5">Choose a Pokémon</v-card-title>
-      <v-card-text>
-        <v-select v-model="selectedOption" :items="options" label="Select"></v-select>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text="Close" @click="closeDialog"></v-btn>
-        <v-btn color="primary" text="Save" @click="emitSelection"></v-btn>
-      </v-card-actions>
+      <v-list>
+        <v-list-item prepend-icon="mdi-plus-circle-outline" @click="toggleAddPokemon"
+          >Add</v-list-item
+        >
+        <v-divider inset />
+        <v-list-item prepend-icon="mdi-bookmark-outline" @click="toggleAddPokemon"
+          >Saved</v-list-item
+        >
+        <v-divider inset />
+        <v-list-item prepend-icon="mdi-content-copy" @click="toggleAddPokemon"
+          >Duplicate</v-list-item
+        >
+      </v-list>
     </v-card>
   </v-dialog>
 </template>
@@ -45,6 +49,9 @@ export default defineComponent({
     emitSelection() {
       this.$emit('update-selected', this.selectedOption)
       this.$emit('close-dialog', false)
+    },
+    toggleAddPokemon() {
+      // TODO: this.showAddPokemon = true
     }
   }
 })

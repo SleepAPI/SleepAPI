@@ -1,11 +1,64 @@
 import vue from '@vitejs/plugin-vue'
-import vuetify from 'vite-plugin-vuetify'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
+import { ManifestOptions, VitePWA } from 'vite-plugin-pwa'
+import vuetify from 'vite-plugin-vuetify'
+import { name, version } from './package.json'
+
+const manifest: Partial<ManifestOptions> = {
+  name: 'Sleep API',
+  short_name: 'Sleep API',
+  display: 'fullscreen',
+  description:
+    "Get started running your own simulation-based calculations with Sleep API's built-in data analysis.",
+  theme_color: '#191224',
+  background_color: '#191224',
+  icons: [
+    {
+      src: 'pwa-64x64.png',
+      sizes: '64x64',
+      type: 'image/png'
+    },
+    {
+      src: `pwa-192x192.png`,
+      sizes: '192x192',
+      type: 'image/png'
+    },
+    {
+      src: `pwa-512x512.png`,
+      sizes: '512x512',
+      type: 'image/png',
+      purpose: 'any'
+    },
+    {
+      src: 'maskable-icon-512x512.png',
+      sizes: '512x512',
+      type: 'image/png',
+      purpose: 'maskable'
+    }
+  ]
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vuetify()],
+  plugins: [
+    vue(),
+    vuetify(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest,
+      strategies: 'generateSW',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        navigateFallbackDenylist: [/^\/api/]
+      },
+      includeAssets: ['apple-touch-icon.png', 'favicon.ico'],
+      devOptions: {
+        enabled: true
+      }
+    })
+  ],
   server: {
     port: 8001,
     proxy: {
@@ -25,5 +78,10 @@ export default defineConfig({
         inline: ['vuetify']
       }
     }
+  },
+  define: {
+    APP_NAME: JSON.stringify(name),
+    APP_VERSION: JSON.stringify(version),
+    __INTLIFY_JIT_COMPILATION__: true
   }
 })

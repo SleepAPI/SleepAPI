@@ -17,7 +17,7 @@ describe('validateAuthHeader middleware', () => {
       headers: {},
     };
     res = {
-      status: jest.fn().mockReturnThis(),
+      sendStatus: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
     next = jest.fn();
@@ -29,14 +29,14 @@ describe('validateAuthHeader middleware', () => {
 
   it('should respond with 401 if no Authorization header is present', async () => {
     await validateAuthHeader(req as Request, res as Response, next);
-    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.sendStatus).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();
   });
 
   it('should respond with 401 if Authorization header does not start with Bearer', async () => {
     req.headers!.authorization = 'Basic token';
     await validateAuthHeader(req as Request, res as Response, next);
-    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.sendStatus).toHaveBeenCalledWith(401);
     expect(Logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid access token');
     expect(next).not.toHaveBeenCalled();
   });
@@ -54,7 +54,7 @@ describe('validateAuthHeader middleware', () => {
 
     await validateAuthHeader(req as Request, res as Response, next);
     expect(next).toHaveBeenCalled();
-    expect(res.status).not.toHaveBeenCalled();
+    expect(res.sendStatus).not.toHaveBeenCalled();
     expect((req as AuthenticatedRequest).user).toEqual(mockUser);
   });
 
@@ -64,7 +64,7 @@ describe('validateAuthHeader middleware', () => {
     (verify as jest.Mock).mockRejectedValue(new Error('Invalid token'));
 
     await validateAuthHeader(req as Request, res as Response, next);
-    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.sendStatus).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();
     expect(Logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid token');
   });
