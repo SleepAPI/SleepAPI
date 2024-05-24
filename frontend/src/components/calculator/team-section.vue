@@ -139,7 +139,7 @@ export default defineComponent({
       if (this.remainingChars >= 0) {
         this.teams[this.teamIndex].name = this.editedTeamName
 
-        TeamService.upsert(this.teamIndex, {
+        TeamService.createOrUpdateTeam(this.teamIndex, {
           name: this.teams[this.teamIndex].name,
           camp: this.teams[this.teamIndex].camp
         })

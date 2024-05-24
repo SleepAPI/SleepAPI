@@ -2,7 +2,7 @@ import serverAxios from '@/router/server-axios'
 import type { GetTeamsResponse, PutTeamRequest, PutTeamResponse } from 'sleepapi-common'
 
 class TeamServiceImpl {
-  public async upsert(index: number, teamInfo: PutTeamRequest) {
+  public async createOrUpdateTeam(index: number, teamInfo: PutTeamRequest) {
     const response = await serverAxios.put<PutTeamResponse>(`team/${index}`, teamInfo)
 
     return response.data
