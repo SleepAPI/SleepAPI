@@ -24,6 +24,6 @@ export async function validateAuthHeader(req: Request, res: Response, next: Next
     next();
   } catch (error) {
     Logger.error('Unauthorized: ' + error);
-    res.status(401);
+    res.sendStatus(401);
   }
 }

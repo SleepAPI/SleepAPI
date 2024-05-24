@@ -54,6 +54,7 @@
     "sleepapi-common": "file:../common",
     "typescript": "~5.4.0",
     "vite": "^5.1.6",
+    "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vitest": "^1.4.0",
     "vue-tsc": "^2.0.6",

@@ -15,7 +15,7 @@ class LoginRouterImpl {
           res.header('Content-Type', 'application/json').send(userData);
         } catch (err) {
           Logger.error((err as Error).stack);
-          res.status(401);
+          res.sendStatus(401);
         }
       }
     );
@@ -30,7 +30,7 @@ class LoginRouterImpl {
           res.json(refreshedData);
         } catch (err) {
           Logger.error((err as Error).stack);
-          res.status(401);
+          res.sendStatus(401);
         }
       }
     );

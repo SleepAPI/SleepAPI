@@ -6,29 +6,45 @@
         icon="mdi-chevron-left"
         variant="plain"
         :disabled="!userStore.loggedIn"
+        style="width: 36px; height: 36px"
         @click="prev"
       ></v-btn>
 
-      <v-card
-        class="flex-grow-1 text-center"
-        rounded="xl"
-        :disabled="!userStore.loggedIn"
-        @click="openEditDialog"
+      <v-badge
+        :model-value="!loadingTeams && notificationStore.showTeamNameNotification"
+        dot
+        color="primary"
+        class="flex-grow-1"
       >
-        <v-row>
-          <v-col style="flex: 1">
-            {{ getCurrentTeamName }}
-          </v-col>
-          <v-col style="position: absolute; right: 0px">
-            <v-icon style="position: absolute; right: 0px">mdi-pencil-circle</v-icon>
-          </v-col>
-        </v-row>
-      </v-card>
+        <v-card
+          class="flex-grow-1 text-center"
+          rounded="xl"
+          :disabled="!userStore.loggedIn"
+          @click="openEditDialog"
+        >
+          <v-row>
+            <v-col class="team-name">
+              <v-skeleton-loader
+                v-if="loadingTeams"
+                type="card"
+                style="width: 100%"
+              ></v-skeleton-loader>
+              <template v-else>
+                <span style="width: 100%; font-size: 0.875rem; margin: 24px">{{
+                  getCurrentTeamName
+                }}</span>
+              </template>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-badge>
+
       <v-btn
         class="team-label-margin"
         icon="mdi-chevron-right"
         variant="plain"
         :disabled="!userStore.loggedIn"
+        style="width: 36px; height: 36px"
         @click="next"
       ></v-btn>
     </v-card-actions>
@@ -43,7 +59,6 @@
       </v-window-item>
     </v-window>
 
-    <!-- TODO: this width makes sense, but is random -->
     <v-dialog v-model="isEditDialogOpen" max-width="600px">
       <v-card title="Change Team Name">
         <v-card-text class="pt-4 pb-0">
@@ -79,6 +94,7 @@ import { defineComponent } from 'vue'
 
 import TeamSlot from '@/components/calculator/team-slot.vue'
 import { TeamService } from '@/services/team/team-service'
+import { useNotificationStore } from '@/stores/notification-store'
 import { useUserStore } from '@/stores/user-store'
 
 export default defineComponent({
@@ -87,7 +103,8 @@ export default defineComponent({
   },
   setup() {
     const userStore = useUserStore()
-    return { userStore }
+    const notificationStore = useNotificationStore()
+    return { userStore, notificationStore }
   },
   data: () => ({
     teamIndex: 0,
@@ -97,9 +114,10 @@ export default defineComponent({
     editedTeamName: '',
     teams: Array.from({ length: 1 }, (_, i) => ({
       index: i,
-      name: 'Log in to save teams',
+      name: '',
       camp: false
-    }))
+    })),
+    loadingTeams: true
   }),
   computed: {
     getCurrentTeamName() {
@@ -119,7 +137,13 @@ export default defineComponent({
           ? teamFromResponse
           : { index: i, name: `Helper team #${i + 1}`, camp: false }
       })
+    } else {
+      this.teams = this.teams.map((team) => ({
+        ...team,
+        name: 'Log in to save your team'
+      }))
     }
+    this.loadingTeams = false
   },
   methods: {
     next() {
@@ -131,6 +155,10 @@ export default defineComponent({
     openEditDialog() {
       this.editedTeamName = this.getCurrentTeamName
       this.isEditDialogOpen = true
+
+      if (this.notificationStore.showTeamNameNotification) {
+        this.notificationStore.hideTeamNameNotification()
+      }
     },
     closeEditDialog() {
       this.isEditDialogOpen = false
@@ -162,6 +190,21 @@ export default defineComponent({
 
 .team-container {
   max-width: 100%;
+}
+
+.team-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+
+.team-icon {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  position: absolute;
+  right: 0px;
 }
 
 @media (min-width: 1000px) {

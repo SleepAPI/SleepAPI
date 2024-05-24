@@ -4,24 +4,25 @@
     <div v-else class="d-flex align-center justify-center" style="height: 100%">
       <v-icon>mdi-plus</v-icon>
     </div>
-    <InputDetails
+
+    <FilledSlotMenu
       :show="showSelectDialog"
       @update-selected="updateSelected"
       @close-dialog="closeDetailsDialog"
     >
-    </InputDetails>
+    </FilledSlotMenu>
   </v-card>
 </template>
 
 <script lang="ts">
-import InputDetails from '@/components/calculator/input-details.vue'
+import FilledSlotMenu from '@/components/calculator/menus/filled-slot-menu.vue'
 import { CalculatorService } from '@/services/calculator/calculator-service'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlot',
   components: {
-    InputDetails
+    FilledSlotMenu
   },
   data: () => ({
     loading: false,

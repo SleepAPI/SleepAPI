@@ -33,3 +33,5 @@ test-results/
 
 *.mjs
 *.d.*
+
+/dev-dist

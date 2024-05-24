@@ -163,6 +163,7 @@ export default defineComponent({
       this.userStore.clearUserData()
       googleLogout()
       router.push('/')
+      this.toggleMenu()
     },
     toggleMenu() {
       this.menu = !this.menu
