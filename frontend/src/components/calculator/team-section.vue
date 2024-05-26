@@ -75,6 +75,8 @@
             no-resize
             label="Team Name"
             class="compact-control"
+            @input="filterInput"
+            @keydown.enter="saveEditDialog"
           ></v-textarea>
         </v-card-text>
         <v-card-actions class="pt-0">
@@ -172,6 +174,13 @@ export default defineComponent({
           camp: this.teams[this.teamIndex].camp
         })
         this.isEditDialogOpen = false
+      }
+    },
+    filterInput(event: Event) {
+      const input = event.target as HTMLInputElement
+      const regex = /^[a-zA-Z0-9 ]*$/
+      if (!regex.test(input.value)) {
+        this.editedTeamName = this.editedTeamName.replace(/[^a-zA-Z0-9 ]/g, '')
       }
     }
   }
