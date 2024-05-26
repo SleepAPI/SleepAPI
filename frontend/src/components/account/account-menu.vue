@@ -4,8 +4,8 @@
       <v-btn v-bind="props" id="navBarIcon" icon>
         <v-avatar size="36" color="background">
           <img
-            v-if="loggedIn"
-            :src="`/images/avatar/${user.avatar}.png`"
+            v-if="userStore.loggedIn"
+            :src="`/images/avatar/${userStore.avatar}.png`"
             alt="User Profile Picture"
             style="width: 100%; height: 100%; object-fit: cover"
           />
@@ -19,15 +19,15 @@
         <v-col cols="auto" class="text-center">
           <v-avatar size="72" color="background" class="mb-2">
             <img
-              v-if="loggedIn"
-              :src="`/images/avatar/${user.avatar}.png`"
+              v-if="userStore.loggedIn"
+              :src="`/images/avatar/${userStore.avatar}.png`"
               alt="User Profile Picture"
               style="width: 100%; height: 100%; object-fit: cover"
             />
             <v-icon v-else size="48">mdi-account-circle</v-icon>
           </v-avatar>
 
-          <h6 class="text-h6">{{ user.name }}</h6>
+          <h6 class="text-h6">{{ userStore.name }}</h6>
         </v-col>
 
         <v-divider />
@@ -35,14 +35,14 @@
         <v-list>
           <v-list-item
             :to="'/profile'"
-            :disabled="!loggedIn"
+            :disabled="!userStore.loggedIn"
             prepend-icon="mdi-account-box"
             @click="toggleMenu"
             >Profile</v-list-item
           >
           <v-list-item
             :to="'/settings'"
-            :disabled="!loggedIn"
+            :disabled="!userStore.loggedIn"
             prepend-icon="mdi-cog"
             @click="toggleMenu"
             >Settings</v-list-item
@@ -52,7 +52,7 @@
         <v-divider />
 
         <v-list>
-          <v-list-item v-if="!loggedIn">
+          <v-list-item v-if="!userStore.loggedIn">
             <GoogleLogin :callback="callback" style="width: 100%">
               <!-- should not hard code color -->
               <v-card
@@ -82,13 +82,10 @@
 
 <script lang="ts">
 import GoogleIcon from '@/components/icons/icon-google.vue'
-import router from '@/router/router'
-import { GoogleService } from '@/services/login/google-service'
 import { useUserStore } from '@/stores/user-store'
-import type { LoginResponse } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 import type { CallbackTypes } from 'vue3-google-login'
-import { GoogleLogin, googleLogout } from 'vue3-google-login'
+import { GoogleLogin } from 'vue3-google-login'
 
 export default defineComponent({
   name: 'AccountMenu',
@@ -103,66 +100,19 @@ export default defineComponent({
   data: () => ({
     menu: false
   }),
-  computed: {
-    loggedIn() {
-      return this.userStore.loggedIn
-    },
-    user() {
-      return {
-        name: this.userStore.name,
-        avatar: this.userStore.avatar
-      }
-    }
-  },
-  async mounted() {
-    const userStore = this.userStore
-    const tokens = userStore.tokens
-
-    if (tokens?.expiryDate) {
-      try {
-        if (Date.now() > tokens.expiryDate) {
-          const { refreshToken } = tokens
-          const { access_token, expiry_date } = await GoogleService.refresh(refreshToken)
-          userStore.setTokens({
-            accessToken: access_token,
-            refreshToken,
-            expiryDate: expiry_date
-          })
-        }
-      } catch {
-        this.logout()
-      }
-    } else {
-      this.userStore.clearUserData()
-    }
-  },
   methods: {
     async callback(response: CallbackTypes.CodePopupResponse) {
       const authCode = response.code
       if (authCode) {
         try {
-          const loginResponse: LoginResponse = await GoogleService.login(authCode)
-          this.userStore.setTokens({
-            accessToken: loginResponse.access_token,
-            refreshToken: loginResponse.refresh_token,
-            expiryDate: loginResponse.expiry_date
-          })
-          this.userStore.setUserData({
-            name: loginResponse.name,
-            avatar: loginResponse.avatar
-          })
-
-          // Refresh the current page
-          router.go(0)
+          await this.userStore.login(authCode)
         } catch {
           this.logout()
         }
       }
     },
     logout() {
-      this.userStore.clearUserData()
-      googleLogout()
-      router.push('/')
+      this.userStore.logout()
       this.toggleMenu()
     },
     toggleMenu() {
