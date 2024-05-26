@@ -1,4 +1,8 @@
+import router from '@/router/router'
+import { GoogleService } from '@/services/login/google-service'
 import { defineStore } from 'pinia'
+import type { LoginResponse } from 'sleepapi-common'
+import { googleLogout } from 'vue3-google-login'
 
 export interface UserState {
   name: string
@@ -21,6 +25,7 @@ export const useUserStore = defineStore('user', {
     }
   },
   getters: {
+    // loggedIn doesnt check if access token valid/expired, just that the user is logged in
     loggedIn: (state) => state.tokens !== null
   },
   actions: {
@@ -35,6 +40,46 @@ export const useUserStore = defineStore('user', {
     },
     setTokens(tokens: TokenInfo) {
       this.tokens = tokens
+    },
+    async login(authCode: string) {
+      const loginResponse: LoginResponse = await GoogleService.login(authCode)
+      this.setTokens({
+        accessToken: loginResponse.access_token,
+        refreshToken: loginResponse.refresh_token,
+        expiryDate: loginResponse.expiry_date
+      })
+      this.setUserData({
+        name: loginResponse.name,
+        avatar: loginResponse.avatar
+      })
+
+      // Refresh the current page
+      router.go(0)
+    },
+    async refresh() {
+      try {
+        const tokens = this.tokens
+        if (tokens?.expiryDate) {
+          if (Date.now() > tokens.expiryDate) {
+            const { refreshToken } = tokens
+            const { access_token, expiry_date } = await GoogleService.refresh(refreshToken)
+            this.setTokens({
+              accessToken: access_token,
+              refreshToken,
+              expiryDate: expiry_date
+            })
+          }
+        } else {
+          this.clearUserData()
+        }
+      } catch {
+        this.logout()
+      }
+    },
+    logout() {
+      this.clearUserData()
+      googleLogout()
+      router.push('/')
     }
   },
   persist: true
