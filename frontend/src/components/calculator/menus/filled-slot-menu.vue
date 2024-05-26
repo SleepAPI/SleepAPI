@@ -1,5 +1,6 @@
 <template>
-  <v-dialog v-model="showDialog" @click:outside="closeDialog">
+  <!-- TODO: 2nd place we have this dialog max width, breakpoint store?  -->
+  <v-dialog v-model="showDialog" max-width="600px" @click:outside="closeDialog">
     <v-card>
       <v-list>
         <v-list-item prepend-icon="mdi-plus-circle-outline" @click="toggleAddPokemon"
@@ -8,10 +9,6 @@
         <v-divider inset />
         <v-list-item prepend-icon="mdi-bookmark-outline" @click="toggleAddPokemon"
           >Saved</v-list-item
-        >
-        <v-divider inset />
-        <v-list-item prepend-icon="mdi-content-copy" @click="toggleAddPokemon"
-          >Duplicate</v-list-item
         >
       </v-list>
     </v-card>
