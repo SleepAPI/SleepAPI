@@ -5,41 +5,42 @@
       <v-icon>mdi-plus</v-icon>
     </div>
 
-    <FilledSlotMenu
-      :show="showSelectDialog"
+    <TeamSlotMenu
+      v-model:show="showTeamSlotDialog"
+      :empty-slot="emptySlot"
       @update-selected="updateSelected"
-      @close-dialog="closeDetailsDialog"
-    >
-    </FilledSlotMenu>
+    />
   </v-card>
 </template>
 
 <script lang="ts">
-import FilledSlotMenu from '@/components/calculator/menus/filled-slot-menu.vue'
+import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
 import { CalculatorService } from '@/services/calculator/calculator-service'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlot',
   components: {
-    FilledSlotMenu
+    TeamSlotMenu
   },
   data: () => ({
     loading: false,
-    showSelectDialog: false,
+    showTeamSlotDialog: false,
     pokemon: '',
     imageUrl: ''
   }),
+  computed: {
+    emptySlot() {
+      return this.pokemon === '' // TODO: update to better empty alg
+    }
+  },
   methods: {
     fetch() {
       this.loading = true
       setTimeout(() => (this.loading = false), 2000)
     },
     openDetailsDialog() {
-      this.showSelectDialog = true
-    },
-    closeDetailsDialog() {
-      this.showSelectDialog = false
+      this.showTeamSlotDialog = true
     },
     async updateSelected(option: string) {
       this.pokemon = option
