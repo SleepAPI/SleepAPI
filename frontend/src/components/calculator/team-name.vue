@@ -1,26 +1,22 @@
 <template>
   <v-badge
-    :model-value="!loadingTeams && notificationStore.showTeamNameNotification"
+    :model-value="!teamStore.loadingTeams && notificationStore.showTeamNameNotification"
     dot
     color="primary"
     class="flex-grow-1"
   >
-    <v-card
-      id="teamNameCard"
-      class="flex-grow-1 text-center"
-      rounded="xl"
-      :disabled="!userStore.loggedIn"
-      @click="openEditDialog"
-    >
+    <v-card id="teamNameCard" class="flex-grow-1 text-center" rounded="xl" @click="openEditDialog">
       <v-row>
         <v-col class="team-name">
           <v-skeleton-loader
-            v-if="loadingTeams"
+            v-if="teamStore.loadingTeams"
             type="card"
             style="width: 100%"
           ></v-skeleton-loader>
           <template v-else>
-            <span style="width: 100%; font-size: 0.875rem; margin: 24px">{{ teamName }}</span>
+            <span id="teamNameText" style="width: 100%; font-size: 0.875rem; margin: 24px">{{
+              teamStore.getCurrentTeam.name
+            }}</span>
           </template>
         </v-col>
       </v-row>
@@ -64,36 +60,18 @@
 </template>
 
 <script lang="ts">
-import { TeamService } from '@/services/team/team-service'
 import { useNotificationStore } from '@/stores/notification-store'
+import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamName',
-  props: {
-    loadingTeams: {
-      type: Boolean,
-      default: false
-    },
-    teamIndex: {
-      type: Number,
-      default: 0
-    },
-    teamName: {
-      type: String,
-      default: ''
-    },
-    teamCamp: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['update-team-name'],
   setup() {
     const userStore = useUserStore()
+    const teamStore = useTeamStore()
     const notificationStore = useNotificationStore()
-    return { userStore, notificationStore }
+    return { userStore, teamStore, notificationStore }
   },
   data: () => ({
     isEditDialogOpen: false,
@@ -107,7 +85,7 @@ export default defineComponent({
   },
   methods: {
     openEditDialog() {
-      this.editedTeamName = this.teamName
+      this.editedTeamName = this.teamStore.getCurrentTeam.name
       this.isEditDialogOpen = true
 
       if (this.notificationStore.showTeamNameNotification) {
@@ -119,12 +97,7 @@ export default defineComponent({
     },
     async saveEditDialog() {
       if (this.remainingChars >= 0) {
-        this.$emit('update-team-name', this.editedTeamName)
-
-        await TeamService.createOrUpdateTeam(this.teamIndex, {
-          name: this.editedTeamName,
-          camp: this.teamCamp
-        })
+        this.teamStore.updateTeamName(this.editedTeamName)
         this.isEditDialogOpen = false
       }
     },

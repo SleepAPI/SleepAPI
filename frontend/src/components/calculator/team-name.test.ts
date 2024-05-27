@@ -1,7 +1,7 @@
 import TeamName from '@/components/calculator/team-name.vue' // Adjust the import path as needed
 import { TeamService } from '@/services/team/team-service'
 import { useNotificationStore } from '@/stores/notification-store'
-import { useUserStore } from '@/stores/user-store'
+import { useTeamStore } from '@/stores/team/team-store'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,14 +11,7 @@ describe('TeamSlotName', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    wrapper = mount(TeamName, {
-      props: {
-        loadingTeams: false,
-        teamIndex: 1,
-        teamName: 'Old Team Name',
-        teamCamp: true
-      }
-    })
+    wrapper = mount(TeamName)
   })
 
   afterEach(() => {
@@ -27,10 +20,24 @@ describe('TeamSlotName', () => {
     }
   })
 
-  it('displays team name correctly', () => {
-    const teamNameSpan = wrapper.find('.team-name span')
+  it('displays team name correctly', async () => {
+    const teamStore = useTeamStore()
+    teamStore.loadingTeams = false
+    wrapper = mount(TeamName)
+
+    const teamNameSpan = wrapper.find('#teamNameText')
     expect(teamNameSpan.exists()).toBe(true)
-    expect(teamNameSpan.text()).toBe('Old Team Name')
+    expect(teamNameSpan.text()).toBe('Log in to save your teams')
+  })
+
+  it('displays skeleton loader while team is loading', async () => {
+    const teamStore = useTeamStore()
+    teamStore.loadingTeams = true
+
+    wrapper = mount(TeamName)
+
+    const skeletonLoader = wrapper.find('.v-skeleton-loader')
+    expect(skeletonLoader.exists()).toBe(true)
   })
 
   it('opens edit dialog on click', async () => {
@@ -58,6 +65,8 @@ describe('TeamSlotName', () => {
   })
 
   it('saves edited team name', async () => {
+    const teamStore = useTeamStore()
+    teamStore.updateTeamName = vi.fn()
     await wrapper.setData({ isEditDialogOpen: true, editedTeamName: 'New Team Name' })
     TeamService.createOrUpdateTeam = vi.fn()
 
@@ -65,22 +74,7 @@ describe('TeamSlotName', () => {
     expect(saveButton).not.toBeNull()
     saveButton.click()
 
-    expect(TeamService.createOrUpdateTeam).toHaveBeenCalledWith(1, {
-      camp: true,
-      name: 'New Team Name'
-    })
-
-    expect(wrapper.emitted('update-team-name')).toBeTruthy()
-    expect(wrapper.emitted('update-team-name')![0]).toEqual(['New Team Name'])
-  })
-
-  it('disables card when user is not logged in', async () => {
-    const userStore = useUserStore()
-    userStore.tokens = null
-
-    const teamNameCard = wrapper.find('#teamNameCard')
-    expect(teamNameCard.exists()).toBeTruthy()
-    expect(teamNameCard.classes()).toContain('v-card--disabled')
+    expect(teamStore.updateTeamName).toHaveBeenCalledWith('New Team Name')
   })
 
   it('handles notification correctly when opening dialog', async () => {
