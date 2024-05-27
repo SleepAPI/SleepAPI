@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa'
+import VueDevTools from 'vite-plugin-vue-devtools'
 import vuetify from 'vite-plugin-vuetify'
 import { name, version } from './package.json'
 
@@ -57,7 +58,8 @@ export default defineConfig({
       devOptions: {
         enabled: true
       }
-    })
+    }),
+    VueDevTools()
   ],
   server: {
     port: 8001,

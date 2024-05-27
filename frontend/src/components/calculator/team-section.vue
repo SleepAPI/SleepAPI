@@ -6,16 +6,10 @@
         variant="plain"
         :disabled="!userStore.loggedIn"
         style="width: 36px; height: 36px"
-        @click="prev"
+        @click="teamStore.prev"
       ></v-btn>
 
-      <TeamName
-        :loading-teams="loadingTeams"
-        :team-index="teamIndex"
-        :team-name="getCurrentTeamName"
-        :team-camp="getCurrentTeamCamp"
-        @update-team-name="updateTeamName"
-      ></TeamName>
+      <TeamName />
 
       <v-btn
         class="team-label-margin"
@@ -23,12 +17,12 @@
         variant="plain"
         :disabled="!userStore.loggedIn"
         style="width: 36px; height: 36px"
-        @click="next"
+        @click="teamStore.next"
       ></v-btn>
     </v-card-actions>
 
-    <v-window v-model="teamIndex">
-      <v-window-item v-for="(team, index) in teams" :key="index">
+    <v-window v-model="teamStore.currentIndex" continuous>
+      <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
         <v-row class="flex-nowrap" dense>
           <v-col v-for="member in 5" :key="member" class="team-slot">
             <TeamSlot />
@@ -44,8 +38,8 @@ import { defineComponent } from 'vue'
 
 import TeamName from '@/components/calculator/team-name.vue'
 import TeamSlot from '@/components/calculator/team-slot.vue'
-import { TeamService } from '@/services/team/team-service'
 import { useNotificationStore } from '@/stores/notification-store'
+import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 
 export default defineComponent({
@@ -55,55 +49,15 @@ export default defineComponent({
   },
   setup() {
     const userStore = useUserStore()
+    const teamStore = useTeamStore()
     const notificationStore = useNotificationStore()
-    return { userStore, notificationStore }
+    return { userStore, teamStore, notificationStore }
   },
   data: () => ({
-    teamIndex: 0,
-    maxAvailableTeams: 5,
-    teams: Array.from({ length: 1 }, (_, i) => ({
-      index: i,
-      name: '',
-      camp: false
-    })),
     loadingTeams: true
   }),
-  computed: {
-    getCurrentTeamName() {
-      return this.teams[this.teamIndex].name
-    },
-    getCurrentTeamCamp() {
-      return this.teams[this.teamIndex].camp
-    }
-  },
   async mounted() {
-    if (this.userStore.loggedIn) {
-      const teams = await TeamService.getTeams()
-
-      this.teams = Array.from({ length: 5 }, (_, i) => {
-        const teamFromResponse = teams.find((team) => team.index === i)
-        return teamFromResponse
-          ? teamFromResponse
-          : { index: i, name: `Helper team ${i + 1}`, camp: false }
-      })
-    } else {
-      this.teams = this.teams.map((team) => ({
-        ...team,
-        name: 'Log in to save your team'
-      }))
-    }
-    this.loadingTeams = false
-  },
-  methods: {
-    next() {
-      this.teamIndex = (this.teamIndex + 1) % this.teams.length
-    },
-    prev() {
-      this.teamIndex = (this.teamIndex - 1 + this.teams.length) % this.teams.length
-    },
-    updateTeamName(updatedName: string) {
-      this.teams[this.teamIndex].name = updatedName
-    }
+    await this.teamStore.populateTeams()
   }
 })
 </script>
