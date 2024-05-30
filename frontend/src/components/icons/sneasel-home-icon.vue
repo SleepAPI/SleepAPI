@@ -18,7 +18,7 @@ export default defineComponent({
 .circle {
   max-width: min(200px, 50vw);
   width: 100%;
-  background-color: $secondary;
+  background-color: $surface;
   border-radius: 50%;
   overflow: hidden;
   display: flex;

@@ -81,6 +81,15 @@ export default defineConfig({
       }
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          faker: ['@faker-js/faker']
+        }
+      }
+    }
+  },
   define: {
     APP_NAME: JSON.stringify(name),
     APP_VERSION: JSON.stringify(version),

@@ -6,7 +6,7 @@ $typoOptions: text-h1, text-sm-h1, text-md-h1, text-lg-h1, text-h2, text-sm-h2, 
   text-lg-h6, headline, title, subtitle-1, subtitle-2, text-body-1, text-sm-body-1, text-md-body-1,
   text-lg-body-1, text-body-2, text-sm-body-2, text-md-body-2, text-lg-body-2, text-caption;
 
-#app {
+html {
   font-family: $body-font-family, sans-serif !important;
 
   @each $typoOption in $typoOptions {

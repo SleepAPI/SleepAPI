@@ -2,23 +2,42 @@
   <v-dialog v-model="internalShow" max-width="600px">
     <v-card>
       <v-list>
-        <v-list-item prepend-icon="mdi-plus-circle-outline" @click="emitSelection('Add')"
+        <!-- Empty team slot -->
+        <v-list-item
+          v-if="emptySlot"
+          prepend-icon="mdi-plus-circle-outline"
+          @click="openSubDialog('PokemonInput')"
           >Add</v-list-item
         >
-        <v-divider inset />
-        <v-list-item prepend-icon="mdi-bookmark-outline" @click="emitSelection('Saved')"
-          >Saved</v-list-item
+        <v-list-item v-if="emptySlot" prepend-icon="mdi-bookmark-outline">Saved</v-list-item>
+
+        <!-- Filled team slot  -->
+        <v-list-item v-if="!emptySlot" prepend-icon="mdi-pencil">Edit</v-list-item>
+        <!-- TODO: change to filled bookmark AND text to Unsane if already saved -->
+        <v-list-item v-if="!emptySlot" prepend-icon="mdi-bookmark-outline" @click="savePokemon"
+          >Save</v-list-item
         >
+        <v-list-item v-if="!emptySlot" prepend-icon="mdi-content-copy">Duplicate</v-list-item>
+        <v-list-item v-if="!emptySlot" prepend-icon="mdi-delete">Remove</v-list-item>
       </v-list>
     </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="subDialog" max-width="600px">
+    <component :is="currentDialogComponent" @close="closeSubDialog"></component>
   </v-dialog>
 </template>
 
 <script lang="ts">
+import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
+
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlotMenu',
+  components: {
+    PokemonInput
+  },
   props: {
     show: {
       type: Boolean,
@@ -29,7 +48,11 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['update-selected', 'update:show'],
+  emits: ['update:show'],
+  data: () => ({
+    subDialog: false,
+    currentDialogComponent: null as string | null
+  }),
   computed: {
     internalShow: {
       get() {
@@ -41,9 +64,16 @@ export default defineComponent({
     }
   },
   methods: {
-    emitSelection(option: string) {
-      this.$emit('update-selected', option)
+    openSubDialog(dialogComponent: string) {
       this.internalShow = false
+      this.currentDialogComponent = dialogComponent
+      this.subDialog = true
+    },
+    closeSubDialog() {
+      this.subDialog = false
+    },
+    savePokemon() {
+      //
     }
   }
 })

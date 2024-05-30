@@ -1,0 +1,23 @@
+// flex
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.flex-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// debug
+.debug-border {
+  border: 1px solid red;
+}

@@ -44,6 +44,9 @@
         ></v-textarea>
       </v-card-text>
       <v-card-actions class="pt-0">
+        <v-btn id="rerollButton" icon @click="reroll">
+          <v-icon>mdi-dice-multiple</v-icon>
+        </v-btn>
         <v-spacer />
         <v-btn id="cancelButton" @click="closeEditDialog">Cancel</v-btn>
         <v-btn
@@ -63,6 +66,7 @@
 import { useNotificationStore } from '@/stores/notification-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
+import { faker } from '@faker-js/faker/locale/en'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -97,9 +101,19 @@ export default defineComponent({
     },
     async saveEditDialog() {
       if (this.remainingChars >= 0) {
+        if (this.remainingChars === this.maxTeamNameLength) {
+          this.editedTeamName = `Helper team ${this.teamStore.currentIndex + 1}`
+        }
         this.teamStore.updateTeamName(this.editedTeamName)
         this.isEditDialogOpen = false
       }
+    },
+    reroll() {
+      let name = faker.music.songName().replace(/[^a-zA-Z0-9 ]/g, '')
+      while (name.length > this.maxTeamNameLength) {
+        name = faker.music.songName().replace(/[^a-zA-Z0-9 ]/g, '')
+      }
+      this.editedTeamName = name
     },
     filterInput(event: Event) {
       const input = event.target as HTMLInputElement

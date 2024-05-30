@@ -1,0 +1,19 @@
+.nudge {
+  &:active {
+    animation: nudge 0.4s linear;
+  }
+}
+
+@keyframes nudge {
+  0% {
+    transform: translateX(-2px);
+  }
+
+  33% {
+    transform: translateX(2px);
+  }
+
+  66% {
+    transform: translateX(-2px);
+  }
+}

@@ -348,11 +348,20 @@
 					"amount": {
 						"type": "number",
 						"format": "double"
+					},
+					"rarity": {
+						"type": "string",
+						"enum": [
+							"gold",
+							"silver",
+							"white"
+						]
 					}
 				},
 				"required": [
 					"name",
-					"amount"
+					"amount",
+					"rarity"
 				],
 				"type": "object",
 				"additionalProperties": false

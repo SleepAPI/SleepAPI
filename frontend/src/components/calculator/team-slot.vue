@@ -5,17 +5,12 @@
       <v-icon>mdi-plus</v-icon>
     </div>
 
-    <TeamSlotMenu
-      v-model:show="showTeamSlotDialog"
-      :empty-slot="emptySlot"
-      @update-selected="updateSelected"
-    />
+    <TeamSlotMenu v-model:show="showTeamSlotDialog" :empty-slot="emptySlot" />
   </v-card>
 </template>
 
 <script lang="ts">
 import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
-import { CalculatorService } from '@/services/calculator/calculator-service'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -41,15 +36,6 @@ export default defineComponent({
     },
     openDetailsDialog() {
       this.showTeamSlotDialog = true
-    },
-    async updateSelected(option: string) {
-      this.pokemon = option
-      this.loading = true
-
-      await CalculatorService.fetchCardImage(option).then((imageUrl) => {
-        this.imageUrl = imageUrl
-        this.loading = false
-      })
     }
   }
 })
@@ -59,7 +45,7 @@ export default defineComponent({
 @import '@/assets/colors';
 
 .frosted-glass {
-  background: rgba($secondary, 0.4) !important;
+  background: rgba($surface, 0.4) !important;
   backdrop-filter: blur(10px);
 }
 </style>
