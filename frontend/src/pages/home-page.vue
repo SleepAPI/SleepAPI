@@ -1,26 +1,13 @@
 <template>
   <v-container class="pt-12">
-    <v-row class="align-center justify-center">
+    <v-row class="flex-center">
       <v-col cols="auto">
-        <!-- <SneaselHomeIcon alt="Sleep API Logo" /> -->
-        <v-skeleton-loader
-          type="image"
-          class="fill-height"
-          style="
-            max-width: min(200px, 50vw);
-            min-height: 200px;
-            width: 100%;
-            min-width: 200px;
-            border-radius: 50%;
-            overflow: hidden;
-          "
-        ></v-skeleton-loader>
+        <SneaselHomeIcon />
       </v-col>
       <v-col cols="auto" class="text-center text-lg-start">
         <h1 class="title text-h4 font-weight-medium mb-3">Pokémon Sleep Simulations</h1>
-        <p class="mb-6 mx-auto text-center" style="max-width: 568px">
-          Get started running your own simulation-based calculations with Sleep API's built-in data
-          analysis.
+        <p class="mb-6 mx-auto text-center">
+          Run your own simulation-based calculations with Sleep API's built-in data analysis.
         </p>
 
         <v-row class="align-center justify-center">
@@ -42,14 +29,8 @@
   <v-container>
     <v-row justify="center">
       <v-col v-for="(feature, i) in features" :key="i" class="d-flex flex-shrink-1" cols="auto">
-        <v-card class="mx-auto" max-width="300" flat>
-          <!-- <v-img :alt="feature.title" :aspect-ratio="2.6" :src="feature.src" width="100%" cover /> -->
-          <v-skeleton-loader
-            width="100%"
-            :aspect-ratio="2.6"
-            cover
-            type="image"
-          ></v-skeleton-loader>
+        <v-card max-width="300" :to="feature.to">
+          <v-img :src="feature.src" :aspect-ratio="2" width="100%" cover></v-img>
 
           <v-card-text>
             <div class="d-flex">
@@ -74,8 +55,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    // TODO: bring back when we get avatar
-    // eslint-disable-next-line vue/no-unused-components
     SneaselHomeIcon
   },
   data: () => ({
@@ -83,34 +62,26 @@ export default defineComponent({
       {
         description: "Simulate your Pokémon's production with in-depth data analysis.",
         title: 'Calculator',
-        src: '',
+        src: '/images/home-page/calculator.png',
         icon: 'mdi-square-root',
-        to: ''
+        to: '/calculator'
       },
       {
         description: 'Cooking tier lists based on millions of simulated recipe solutions.',
         title: 'Tier lists',
-        src: '',
+        src: '/images/home-page/tierlists.png',
         icon: 'mdi-chart-line',
-        to: ''
+        to: '/tierlist'
       },
       {
         description: 'Find the most optimal teams for any given recipe.',
         title: 'Team finder',
-        src: '',
+        src: '/images/home-page/teamfinder.png',
         icon: 'mdi-text-search-variant',
-        to: ''
+        to: '/teamfinder'
       }
     ]
-  }),
-  methods: {
-    scrollTo(elementId: string) {
-      const element = document.getElementById(elementId)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    }
-  }
+  })
 })
 </script>
 

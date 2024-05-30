@@ -1,6 +1,6 @@
 <template>
   <div class="circle">
-    <img src="/cook.png" alt="Sleep API icon" />
+    <img src="/images/home-page/sneasel-home.png" alt="Sleep API icon" />
   </div>
 </template>
 
@@ -16,14 +16,8 @@ export default defineComponent({
 @import '@/assets/colors';
 
 .circle {
-  max-width: min(200px, 50vw);
+  max-width: min(300px, 75vw);
   width: 100%;
-  background-color: $surface;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .circle img {
