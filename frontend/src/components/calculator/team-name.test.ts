@@ -96,4 +96,30 @@ describe('TeamSlotName', () => {
 
     expect(wrapper.vm.isEditDialogOpen).toBe(false)
   })
+
+  it('rerolls team name correctly', async () => {
+    await wrapper.setData({ isEditDialogOpen: true })
+
+    const rerollButton = document.querySelector('#rerollButton') as HTMLElement
+    expect(rerollButton).not.toBeNull()
+    rerollButton.click()
+
+    const newTeamName = wrapper.vm.editedTeamName
+    expect(newTeamName).not.toBe('')
+    expect(newTeamName.length).toBeLessThanOrEqual(wrapper.vm.maxTeamNameLength)
+  })
+
+  it('saves default team name when edited name is empty', async () => {
+    const teamStore = useTeamStore()
+    teamStore.updateTeamName = vi.fn()
+    await wrapper.setData({ isEditDialogOpen: true, editedTeamName: '' })
+    TeamService.createOrUpdateTeam = vi.fn()
+
+    const saveButton = document.querySelector('#saveButton') as HTMLElement
+    expect(saveButton).not.toBeNull()
+    saveButton.click()
+
+    const expectedDefaultName = `Helper team ${teamStore.currentIndex + 1}`
+    expect(teamStore.updateTeamName).toHaveBeenCalledWith(expectedDefaultName)
+  })
 })
