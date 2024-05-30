@@ -11,7 +11,7 @@ const manifest: Partial<ManifestOptions> = {
   short_name: 'Sleep API',
   display: 'fullscreen',
   description:
-    "Get started running your own simulation-based calculations with Sleep API's built-in data analysis.",
+    "Run your own simulation-based calculations with Sleep API's built-in data analysis.",
   theme_color: '#191224',
   background_color: '#191224',
   icons: [
@@ -82,6 +82,7 @@ export default defineConfig({
     }
   },
   build: {
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {

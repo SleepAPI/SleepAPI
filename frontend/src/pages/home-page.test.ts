@@ -16,7 +16,7 @@ describe('HomePage.vue', () => {
 
     const description = wrapper.find('p')
     expect(description.text()).toBe(
-      "Get started running your own simulation-based calculations with Sleep API's built-in data analysis."
+      "Run your own simulation-based calculations with Sleep API's built-in data analysis."
     )
   })
 
