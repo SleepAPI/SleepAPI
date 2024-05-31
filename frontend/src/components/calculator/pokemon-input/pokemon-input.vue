@@ -48,14 +48,10 @@
 
     <v-row dense class="mt-3">
       <v-col cols="6" class="flex-center">
-        <v-btn class="w-100">
-          <span class="responsive-text"> Level 31 </span>
-        </v-btn>
+        <LevelButton :disabled="pokemon === undefined" @update-level="updateLevel" />
       </v-col>
       <v-col cols="6" class="flex-center">
-        <v-btn class="w-100">
-          <span class="responsive-text"> Carry limit 20 </span>
-        </v-btn>
+        <CarryLimitButton :pokemon="pokemon" @update-limit="updateLimit" />
       </v-col>
     </v-row>
 
@@ -213,6 +209,8 @@
 </template>
 
 <script lang="ts">
+import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-button.vue'
+import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
@@ -223,14 +221,17 @@ export default {
   components: {
     SubskillButton,
     PokemonButton,
-    PokemonName
+    PokemonName,
+    LevelButton,
+    CarryLimitButton
   },
   data: () => ({
     saved: false,
     pokemon: undefined as pokemon.Pokemon | undefined,
     name: undefined as string | undefined,
-    level: 31, // TODO: which default? 50?
-    rp: 1293,
+    level: 50,
+    carryLimit: 0,
+    rp: 0,
     subskills: [
       {
         level: 10,
@@ -264,6 +265,11 @@ export default {
     }
   },
   methods: {
+    toggleSave() {
+      if (this.pokemon) {
+        this.saved = !this.saved
+      }
+    },
     updateSubskill(params: { subskill: subskill.SubSkill; subskillLevel: number }) {
       const subskillToUpdate = this.subskills.find((sub) => sub.level === params.subskillLevel)
       if (subskillToUpdate) {
@@ -276,10 +282,11 @@ export default {
     updateName(newName: string) {
       this.name = newName
     },
-    toggleSave() {
-      if (this.pokemon) {
-        this.saved = !this.saved
-      }
+    updateLevel(newLevel: number) {
+      this.level = newLevel
+    },
+    updateLimit(newLimit: number) {
+      this.carryLimit = newLimit
     }
   }
 }

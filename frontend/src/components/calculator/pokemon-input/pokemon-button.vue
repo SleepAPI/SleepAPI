@@ -19,13 +19,13 @@
       </v-btn>
     </template>
 
-    <v-container>
+    <v-card style="min-height: 50dvh">
       <GroupList
         :data="pokedex"
         :selected-options="pokemon ? [pokemon.name] : []"
         @select-option="selectPokemon"
       />
-    </v-container>
+    </v-card>
   </v-dialog>
 </template>
 
