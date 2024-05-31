@@ -68,4 +68,40 @@ describe('GroupList', () => {
     expect(wrapper.emitted('select-option')).toBeTruthy()
     expect(wrapper.emitted('select-option')![0]).toEqual(['Option 1.2'])
   })
+
+  it('filters groups based on search query', async () => {
+    const searchInput = wrapper.findComponent({ name: 'v-text-field' })
+    await searchInput.setValue('Option 2.1')
+
+    const listGroups = wrapper.findAllComponents({ name: 'v-list-group' })
+    expect(listGroups.length).toBe(1) // Only one group should match the search query
+
+    const listItems = listGroups[0].findAllComponents({ name: 'v-list-item' }).slice(1)
+    expect(listItems.length).toBe(1) // Only one item should match the search query
+    expect(listItems[0].props('title')).toBe('Option 2.1')
+  })
+
+  it('opens all groups when there is a search query', async () => {
+    const searchInput = wrapper.findComponent({ name: 'v-text-field' })
+    await searchInput.setValue('Option')
+
+    const listGroups = wrapper.findAllComponents({ name: 'v-list-group' })
+    listGroups.forEach((group) => {
+      expect(group.props('value')).toBeTruthy()
+    })
+  })
+
+  it('closes all groups when the search query is cleared', async () => {
+    const searchInput = wrapper.findComponent({ name: 'v-text-field' })
+    await searchInput.setValue('Option')
+    await searchInput.setValue('')
+
+    const openedGroups = wrapper.vm.openedGroups
+    expect(openedGroups.length).toBe(0)
+
+    const listGroups = wrapper.findAllComponents({ name: 'v-list-group' })
+    listGroups.forEach((group) => {
+      expect(openedGroups).not.toContain(group.props('value'))
+    })
+  })
 })
