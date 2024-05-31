@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
-import { subskill } from 'sleepapi-common'
+import { capitalize, subskill } from 'sleepapi-common'
 
 export default {
   name: 'SubskillButton',
@@ -73,7 +73,7 @@ export default {
     rarityColor() {
       if (this.name === '???') return 'surface'
       const ss = this.subskills.find((ss) => ss.name.toLowerCase() === this.name.toLowerCase())
-      return ss ? `subskill${ss.rarity[0].toUpperCase() + ss.rarity.slice(1)}` : 'surface'
+      return ss ? `subskill${capitalize(ss.rarity)}` : 'surface'
     },
     locked() {
       return this.pokemonLevel < this.subskillLevel

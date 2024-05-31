@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import GroupList, { type GroupData } from '@/components/custom-components/group-list.vue'
-import { pokemon } from 'sleepapi-common'
+import { capitalize, pokemon } from 'sleepapi-common'
 
 export default {
   name: 'PokemonButton',
@@ -61,14 +61,14 @@ export default {
     // TODO: this seems to take a bit of time, perhaps we can lazy load instead of compute on pokemon button click
     populatePokedex(): GroupData[] {
       const categories = ['ingredient', 'berry', 'skill']
-      const completePokedex = pokemon.COMPLETE_POKEDEX.sort()
+      const completePokedex = pokemon.COMPLETE_POKEDEX.sort((a, b) => a.name.localeCompare(b.name))
 
       return categories.map((category) => {
         return {
           category,
           list: completePokedex
             .filter((pkmn) => pkmn.specialty === category)
-            .map((pkmn) => pkmn.name[0].toUpperCase() + pkmn.name.slice(1).toLowerCase())
+            .map((pkmn) => capitalize(pkmn.name))
         }
       })
     }

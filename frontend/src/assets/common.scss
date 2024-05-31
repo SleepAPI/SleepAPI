@@ -17,6 +17,18 @@
   justify-content: flex-end;
 }
 
+.flex-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.flex-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
 // debug
 .debug-border {
   border: 1px solid red;
