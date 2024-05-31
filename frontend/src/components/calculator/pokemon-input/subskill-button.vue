@@ -28,13 +28,13 @@
         </v-btn>
       </template>
 
-      <v-container>
+      <v-card style="min-height: 50dvh">
         <GroupList
           :data="filteredSubskills"
           :selected-options="selectedSubskills.map((s) => s.name)"
           @select-option="selectSubskill"
         />
-      </v-container>
+      </v-card>
     </v-dialog>
   </v-badge>
 </template>

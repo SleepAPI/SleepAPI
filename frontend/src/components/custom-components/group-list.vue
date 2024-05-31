@@ -1,38 +1,32 @@
 <template>
-  <v-container style="height: 55dvh">
-    <v-row class="flex-top">
+  <v-container class="group-container">
+    <v-row>
       <v-col cols="12">
-        <v-card>
-          <v-text-field
-            v-model="searchQuery"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-          <div class="scrollable-list">
-            <v-list v-model:opened="openedGroups" density="compact">
-              <v-list-group
-                v-for="group in filteredData"
-                :key="group.category"
-                :value="group.category"
-              >
-                <template #activator="{ props }">
-                  <v-list-item v-bind="props" :title="title(group.category)"></v-list-item>
-                </template>
-                <v-list-item
-                  v-for="(option, i) in group.list"
-                  :key="i"
-                  :title="option"
-                  :value="option"
-                  :disabled="isOptionSelected(option)"
-                  @click="selectOption(option)"
-                ></v-list-item>
-              </v-list-group>
-            </v-list>
-          </div>
-        </v-card>
+        <v-text-field
+          v-model="searchQuery"
+          label="Search"
+          single-line
+          hide-details
+          autofocus
+          @keydown.enter="selectFirstOption"
+        ></v-text-field>
       </v-col>
     </v-row>
+    <v-list v-model:opened="openedGroups" density="compact">
+      <v-list-group v-for="group in filteredData" :key="group.category" :value="group.category">
+        <template #activator="{ props }">
+          <v-list-item v-bind="props" :title="title(group.category)"></v-list-item>
+        </template>
+        <v-list-item
+          v-for="(option, i) in group.list"
+          :key="i"
+          :title="option"
+          :value="option"
+          :disabled="isOptionSelected(option)"
+          @click="selectOption(option)"
+        ></v-list-item>
+      </v-list-group>
+    </v-list>
   </v-container>
 </template>
 
@@ -106,14 +100,23 @@ export default defineComponent({
     },
     title(str: string) {
       return capitalize(str)
+    },
+    selectFirstOption(event: KeyboardEvent) {
+      event.preventDefault()
+      event.stopPropagation()
+      const firstGroup = this.filteredData[0]
+      if (firstGroup && firstGroup.list.length > 0) {
+        this.selectOption(firstGroup.list[0])
+      }
     }
   }
 })
 </script>
 
-<style>
-.scrollable-list {
-  max-height: 50dvh;
-  overflow-y: auto;
+<style lang="scss">
+@import '@/assets/main.scss';
+.group-container {
+  position: absolute;
+  height: 100%;
 }
 </style>
