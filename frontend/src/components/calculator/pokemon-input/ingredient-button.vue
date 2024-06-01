@@ -14,11 +14,7 @@
       <template #activator="{ props }">
         <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
           <v-avatar>
-            <v-img
-              id="ingredientImage"
-              :src="ingredientImage"
-              :class="{ 'disabled-image': locked || !ingredientSet }"
-            ></v-img>
+            <v-img id="ingredientImage" :src="ingredientImage"></v-img>
           </v-avatar>
         </v-btn>
       </template>
@@ -121,10 +117,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.disabled-image {
-  opacity: 0.5;
-  filter: grayscale(100%);
-}
-</style>

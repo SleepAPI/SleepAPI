@@ -65,6 +65,7 @@ describe('simulator', () => {
             "amount": 225.33333333333334,
             "berry": {
               "name": "BELUE",
+              "type": "steel",
               "value": 33,
             },
           },
@@ -94,6 +95,7 @@ describe('simulator', () => {
                 33,
                 43,
               ],
+              "description": "Restores ? Energy to the user.",
               "maxLevel": 6,
               "name": "Charge Energy S",
               "unit": "energy",
@@ -104,6 +106,7 @@ describe('simulator', () => {
           "amount": 0,
           "berry": {
             "name": "BELUE",
+            "type": "steel",
             "value": 33,
           },
         },
