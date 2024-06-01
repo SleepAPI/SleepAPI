@@ -45,8 +45,7 @@ export async function up(knex: Knex) {
 
     table.string('pokemon', 255).notNullable();
     table.integer('skill_level').notNullable();
-    // TODO: change to carry_size
-    table.integer('times_evolved').notNullable();
+    table.integer('carry_size').notNullable();
     table.integer('level').notNullable();
     table.string('nature', 255).defaultTo('BASHFUL');
 
