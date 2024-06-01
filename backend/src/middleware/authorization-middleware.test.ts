@@ -45,6 +45,7 @@ describe('validateAuthHeader middleware', () => {
     req.headers!.authorization = 'Bearer validtoken';
     const mockUser: DBUser = {
       id: 1,
+      version: 1,
       sub: 'test-sub',
       external_id: '00000000-0000-0000-0000-000000000000',
       name: 'Test User',

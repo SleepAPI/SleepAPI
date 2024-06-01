@@ -13,6 +13,7 @@ export enum Tables {
 export async function up(knex: Knex) {
   await knex.schema.createTable(Tables.User, (table) => {
     table.increments('id');
+    table.integer('version').defaultTo(1);
 
     table.string('sub').notNullable().unique();
     table.uuid('external_id').notNullable().unique();
@@ -22,6 +23,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable(Tables.UserSettings, (table) => {
     table.increments('id');
+    table.integer('version').defaultTo(1);
 
     table.string('bedtime').defaultTo('21:30');
     table.string('wakeup').defaultTo('06:00');
@@ -29,6 +31,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable(Tables.Pokemon, (table) => {
     table.increments('id');
+    table.integer('version').defaultTo(1);
 
     table
       .integer(`fk_${Tables.User}_id`)
@@ -42,6 +45,7 @@ export async function up(knex: Knex) {
 
     table.string('pokemon', 255).notNullable();
     table.integer('skill_level').notNullable();
+    // TODO: change to carry_size
     table.integer('times_evolved').notNullable();
     table.integer('level').notNullable();
     table.string('nature', 255).defaultTo('BASHFUL');
@@ -59,6 +63,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable(Tables.Team, (table) => {
     table.increments('id');
+    table.integer('version').defaultTo(1);
 
     table
       .integer(`fk_${Tables.User}_id`)
@@ -78,6 +83,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable(Tables.TeamMember, (table) => {
     table.increments('id');
+    table.integer('version').defaultTo(1);
 
     table
       .integer(`fk_${Tables.Team}_id`)

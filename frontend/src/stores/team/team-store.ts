@@ -9,6 +9,7 @@ export interface TeamState {
   teams: TeamInterface[]
 }
 
+// TODO: should expand this with version
 export interface TeamInterface {
   index: number
   name: string
