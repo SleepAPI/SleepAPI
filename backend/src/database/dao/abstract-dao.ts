@@ -6,11 +6,12 @@ import { chunkArray } from '../../utils/database-utils/array-utils';
 import { AbstractFilterOperator, Filter } from '../../utils/database-utils/find-filter';
 import { DatabaseService } from '../database-service';
 
-export const DBWithIdSchema = Type.Object({
+export const DBWithVersionedIdSchema = Type.Object({
   id: Type.Number({ minimum: 0 }),
+  version: Type.Number({ minimum: 1 }),
 });
 
-export const DBEntitySchema = DBWithIdSchema;
+export const DBEntitySchema = DBWithVersionedIdSchema;
 export type DBEntity = Static<typeof DBEntitySchema>;
 
 type SortKey<DBEntityType extends object> = keyof DBEntityType extends string
@@ -64,7 +65,7 @@ export abstract class AbstractDAO<
     return result.map((row) => this.postProcess(row));
   }
 
-  async insert(entity: Omit<DBEntityType, 'id'>): Promise<DBEntityType> {
+  async insert(entity: Omit<DBEntityType, 'id' | 'version'>): Promise<DBEntityType> {
     const knex = await DatabaseService.getKnex();
 
     const result = await knex
@@ -72,6 +73,7 @@ export abstract class AbstractDAO<
         this.preProcess({
           ...entity,
           id: undefined,
+          version: 1,
         })
       )
       .into(this.tableName);
@@ -91,6 +93,7 @@ export abstract class AbstractDAO<
       .update(
         this.preProcess({
           ...entity,
+          version: (entity.version ?? 0) + 1,
         })
       )
       .into(this.tableName)
@@ -123,6 +126,7 @@ export abstract class AbstractDAO<
           this.preProcess({
             ...entity,
             id: undefined,
+            version: 1,
           })
         )
       );

@@ -28,6 +28,7 @@ describe('TeamDAO insert', () => {
           "id": 1,
           "name": "Team A",
           "team_index": 0,
+          "version": 1,
         },
       ]
     `);
@@ -105,6 +106,7 @@ describe('TeamDAO update', () => {
           "id": 1,
           "name": "Updated Team A",
           "team_index": 0,
+          "version": 2,
         },
       ]
     `);

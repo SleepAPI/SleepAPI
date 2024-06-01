@@ -26,6 +26,7 @@ describe('TeamMemberDAO insert', () => {
           "fk_team_id": 1,
           "id": 1,
           "member_index": 0,
+          "version": 1,
         },
       ]
     `);
@@ -96,6 +97,7 @@ describe('TeamMemberDAO update', () => {
           "fk_team_id": 1,
           "id": 1,
           "member_index": 0,
+          "version": 2,
         },
       ]
     `);

@@ -1,8 +1,8 @@
 import { Static, Type } from '@sinclair/typebox';
-import { AbstractDAO, DBWithIdSchema } from '@src/database/dao/abstract-dao';
+import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
 
 const DBTeamMemberSchema = Type.Composite([
-  DBWithIdSchema,
+  DBWithVersionedIdSchema,
   Type.Object({
     fk_team_id: Type.Number(),
     fk_pokemon_id: Type.Number(),

@@ -1,13 +1,14 @@
-import { DBTeam, TeamDAO } from '@src/database/dao/team/team-dao';
+import { DBTeamWithoutVersion, TeamDAO } from '@src/database/dao/team/team-dao';
 import { DBUser } from '@src/database/dao/user/user-dao';
 import { GetTeamsResponse } from 'sleepapi-common';
 
-export async function upsertTeam(team: Omit<DBTeam, 'id'>) {
+export async function upsertTeam(team: DBTeamWithoutVersion) {
   const existingTeam = await TeamDAO.find({ fk_user_id: team.fk_user_id, team_index: team.team_index });
 
   if (existingTeam) {
     return await TeamDAO.update({
       id: existingTeam.id,
+      version: existingTeam.version,
       fk_user_id: existingTeam.fk_user_id,
       team_index: existingTeam.team_index,
       name: team.name,

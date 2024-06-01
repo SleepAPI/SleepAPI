@@ -32,6 +32,7 @@ describe('UserDAO insert', () => {
           "id": 1,
           "name": "some-name",
           "sub": "some-sub",
+          "version": 1,
         },
       ]
     `);
@@ -93,6 +94,7 @@ describe('UserDAO update', () => {
           "id": 1,
           "name": "updated-name",
           "sub": "some-sub",
+          "version": 2,
         },
       ]
     `);

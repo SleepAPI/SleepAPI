@@ -49,6 +49,7 @@ describe('signup', () => {
           "id": 1,
           "name": "New user",
           "sub": "some-sub",
+          "version": 1,
         },
       ]
     `);
@@ -102,6 +103,7 @@ describe('signup', () => {
           "id": 1,
           "name": "Existing user",
           "sub": "some-sub",
+          "version": 1,
         },
       ]
     `);
