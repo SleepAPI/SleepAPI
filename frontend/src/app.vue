@@ -1,9 +1,9 @@
 <template>
-  <TheBackground />
-
   <v-app>
+    <TheBackground />
+    <TheNavbar />
+
     <v-main>
-      <TheNavbar />
       <RouterView />
     </v-main>
   </v-app>

@@ -90,36 +90,8 @@
 
     <!-- Mainskill -->
     <v-row no-gutters class="mt-3">
-      <v-col cols="3">
-        <v-card
-          class="rounded-te-0 rounded-be-0 fill-height"
-          color="secondary"
-          style="justify-content: center; align-content: center"
-          @click="console.log('hello')"
-        >
-          <v-img
-            class="ma-2"
-            src="/images/mainskill/ingredient.png"
-            style="max-height: 50px"
-          ></v-img>
-        </v-card>
-      </v-col>
-      <v-col cols="9">
-        <v-card
-          class="fill-height rounded-ts-0 rounded-bs-0 flex-column px-2"
-          style="align-content: center"
-          @click="console.log('hello')"
-        >
-          <div class="nowrap responsive-text">
-            <span class="my-1">Ingredient Magnet S</span>
-            <v-spacer></v-spacer>
-            <span class="my-1">Lv.1</span>
-          </div>
-          <v-divider />
-          <div class="nowrap responsive-text">
-            <span class="my-1"> Gets you 6 ingredients chosen at random </span>
-          </div>
-        </v-card>
+      <v-col cols="12">
+        <MainskillButton :pokemon="pokemon" @update-skill-level="updateSkillLevel" />
       </v-col>
     </v-row>
 
@@ -208,6 +180,7 @@
 import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-button.vue'
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
+import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
@@ -221,7 +194,8 @@ export default {
     PokemonName,
     LevelButton,
     CarryLimitButton,
-    IngredientButton
+    IngredientButton,
+    MainskillButton
   },
   data: () => ({
     saved: false,
@@ -230,6 +204,7 @@ export default {
     level: 50,
     carryLimit: 0,
     rp: 0,
+    skillLevel: 0,
     subskills: [
       {
         level: 10,
@@ -307,6 +282,9 @@ export default {
       if (ingredientToUpdate) {
         ingredientToUpdate.ingredientSet = params.ingredientSet
       }
+    },
+    updateSkillLevel(skillLevel: number) {
+      this.skillLevel = skillLevel
     }
   }
 }

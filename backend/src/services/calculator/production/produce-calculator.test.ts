@@ -17,6 +17,7 @@ describe('calculateAverageProduce', () => {
           "amount": 0.5,
           "berry": {
             "name": "LUM",
+            "type": "bug",
             "value": 24,
           },
         },

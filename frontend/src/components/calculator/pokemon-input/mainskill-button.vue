@@ -1,0 +1,144 @@
+<template>
+  <v-menu v-model="menu" :close-on-content-click="false" offset-y>
+    <template #activator="{ props }">
+      <v-card :disabled="disabled" v-bind="props">
+        <v-row no-gutters>
+          <v-col cols="3">
+            <v-card class="flex-center rounded-te-0 rounded-be-0 fill-height" color="secondary">
+              <v-img class="ma-2" :src="mainskillImage"></v-img>
+            </v-card>
+          </v-col>
+          <v-col cols="9">
+            <v-card
+              class="fill-height rounded-ts-0 rounded-bs-0 flex-column px-2"
+              style="align-content: center"
+            >
+              <div class="nowrap responsive-text">
+                <span class="my-1">{{ skillName }}</span>
+                <v-spacer></v-spacer>
+                <span class="my-1">Lv.{{ mainskillLevel }}</span>
+              </div>
+              <v-divider />
+              <div class="nowrap responsive-text-small">
+                <span class="my-1"> {{ description }} </span>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card>
+    </template>
+
+    <v-card>
+      <!-- hide overflow since selecting max value appears to give slight scrollbar -->
+      <v-col cols="12" class="flex-center" style="overflow: hidden">
+        <v-slider
+          v-model="mainskillLevel"
+          min="1"
+          :max="maxLevel"
+          :ticks="defaultValues"
+          show-ticks="always"
+          step="1"
+          color="primary"
+        ></v-slider>
+      </v-col>
+    </v-card>
+  </v-menu>
+</template>
+
+<script lang="ts">
+import { mainskill, type pokemon } from 'sleepapi-common'
+import type { PropType } from 'vue'
+
+export default {
+  name: 'MainskillButton',
+  props: {
+    pokemon: {
+      type: Object as PropType<pokemon.Pokemon | undefined>,
+      required: false,
+      default: undefined
+    }
+  },
+  emits: ['update-skill-level'],
+  data: () => ({
+    mainskillLevel: 1,
+    menu: false,
+    defaultValues: {} as Record<number, string>
+  }),
+  computed: {
+    disabled() {
+      return !this.pokemon
+    },
+    skillName() {
+      if (!this.pokemon) {
+        return 'Choose a Pokémon above'
+      }
+      return this.pokemon.skill.name
+    },
+    description() {
+      if (!this.pokemon) {
+        return '???'
+      }
+      return this.pokemon.skill.description.replace(
+        '?',
+        this.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
+      )
+    },
+    mainskillImage() {
+      if (!this.pokemon) {
+        return '/images/pokemon/unknown.png'
+      } else if (this.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
+        return `/images/type/${this.pokemon.berry.type}.png`
+      }
+
+      return `/images/mainskill/${this.pokemon.skill.unit}.png`
+    },
+    maxLevel() {
+      return this.pokemon?.skill.maxLevel ?? 6
+    }
+  },
+  watch: {
+    pokemon: {
+      immediate: true,
+      handler(newPokemon: pokemon.Pokemon) {
+        if (newPokemon) {
+          const nrOfEvolutions = (newPokemon.maxCarrySize - newPokemon.carrySize) / 5
+          this.mainskillLevel = 1 + nrOfEvolutions
+          this.defaultValues = Array.from(
+            { length: newPokemon.skill.maxLevel },
+            (_, i) => i + 1
+          ).reduce(
+            (acc, val) => {
+              acc[val] = val.toString()
+              return acc
+            },
+            {} as Record<number, string>
+          )
+        }
+      }
+    },
+    mainskillLevel(newLevel: number) {
+      this.$emit('update-skill-level', newLevel)
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.responsive-text {
+  font-size: 0.875rem !important;
+}
+
+.responsive-text-small {
+  font-size: 0.8rem !important;
+}
+
+@media (max-width: 360px) {
+  .responsive-text {
+    font-size: 0.7rem !important;
+  }
+
+  .responsive-text-small {
+    font-size: 0.6rem !important;
+  }
+}
+</style>

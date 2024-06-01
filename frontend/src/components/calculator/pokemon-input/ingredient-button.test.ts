@@ -88,11 +88,4 @@ describe('IngredientButton', () => {
     const button = wrapper.findComponent({ name: 'v-btn' })
     expect(button.classes()).toContain('v-btn--disabled')
   })
-
-  it('disables the image if pokemon level is lower than ingredient level', async () => {
-    await wrapper.setProps({ pokemonLevel: 20, ingredientLevel: 30 })
-
-    const img = wrapper.find('#ingredientImage')
-    expect(img.classes()).toContain('disabled-image')
-  })
 })

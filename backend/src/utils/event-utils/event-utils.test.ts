@@ -44,6 +44,7 @@ describe('getExtraHelpfulEvents', () => {
                 "amount": 4,
                 "berry": {
                   "name": "GREPA",
+                  "type": "electric",
                   "value": 25,
                 },
               },
@@ -70,6 +71,7 @@ describe('getExtraHelpfulEvents', () => {
                 9,
                 10,
               ],
+              "description": "Instantly gets you x? the usual help from a helper Pokémon.",
               "maxLevel": 6,
               "name": "Extra Helpful S",
               "unit": "helps",
@@ -91,6 +93,7 @@ describe('getExtraHelpfulEvents', () => {
                 "amount": 2,
                 "berry": {
                   "name": "GREPA",
+                  "type": "electric",
                   "value": 25,
                 },
               },
@@ -117,6 +120,7 @@ describe('getExtraHelpfulEvents', () => {
                 9,
                 10,
               ],
+              "description": "Instantly gets you x? the usual help from a helper Pokémon.",
               "maxLevel": 6,
               "name": "Extra Helpful S",
               "unit": "helps",
@@ -156,6 +160,7 @@ describe('getHelperBoostEvents', () => {
                 "amount": 12,
                 "berry": {
                   "name": "GREPA",
+                  "type": "electric",
                   "value": 25,
                 },
               },
@@ -182,6 +187,7 @@ describe('getHelperBoostEvents', () => {
                 4,
                 5,
               ],
+              "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
               "maxLevel": 6,
               "name": "Helper Boost",
               "unit": "helps",
@@ -203,6 +209,7 @@ describe('getHelperBoostEvents', () => {
                 "amount": 6,
                 "berry": {
                   "name": "GREPA",
+                  "type": "electric",
                   "value": 25,
                 },
               },
@@ -229,6 +236,7 @@ describe('getHelperBoostEvents', () => {
                 4,
                 5,
               ],
+              "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
               "maxLevel": 6,
               "name": "Helper Boost",
               "unit": "helps",
@@ -695,6 +703,7 @@ describe('triggerTeamHelpsEvent', () => {
           "amount": 2,
           "berry": {
             "name": "BELUE",
+            "type": "steel",
             "value": 33,
           },
         },

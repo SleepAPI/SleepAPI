@@ -26,6 +26,7 @@ describe('emptyBerrySet', () => {
         "amount": 0,
         "berry": {
           "name": "BELUE",
+          "type": "steel",
           "value": 33,
         },
       }
