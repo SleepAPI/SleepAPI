@@ -63,32 +63,28 @@
         >
       </v-col>
       <v-col class="flex-center">
-        <v-btn icon>
-          <v-avatar>
-            <v-img src="/images/ingredient/egg.png"></v-img>
-          </v-avatar>
-        </v-btn>
+        <IngredientButton
+          :ingredient-level="0"
+          :pokemon="pokemon"
+          :pokemon-level="level"
+          @update-ingredient="updateIngredient"
+        />
       </v-col>
       <v-col class="flex-center">
-        <v-btn icon :class="{ 'disabled-image-btn': level < 30 }">
-          <v-avatar>
-            <v-img src="/images/ingredient/egg.png"></v-img>
-          </v-avatar>
-        </v-btn>
+        <IngredientButton
+          :ingredient-level="30"
+          :pokemon="pokemon"
+          :pokemon-level="level"
+          @update-ingredient="updateIngredient"
+        />
       </v-col>
       <v-col class="flex-center">
-        <v-badge color="secondary" class="flex-center" location="top left" offset-x="auto">
-          <template #badge>
-            <v-icon left class="mr-1">mdi-lock</v-icon>
-            Lv.60
-          </template>
-          <!-- TODO: disabled if -->
-          <v-btn icon :class="{ 'disabled-image-btn': level < 60 }">
-            <v-avatar>
-              <v-img src="/images/ingredient/egg.png" class="disabled-image"></v-img>
-            </v-avatar>
-          </v-btn>
-        </v-badge>
+        <IngredientButton
+          :ingredient-level="60"
+          :pokemon="pokemon"
+          :pokemon-level="level"
+          @update-ingredient="updateIngredient"
+        />
       </v-col>
     </v-row>
 
@@ -210,11 +206,12 @@
 
 <script lang="ts">
 import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-button.vue'
+import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
-import type { pokemon, subskill } from 'sleepapi-common'
+import type { IngredientSet, pokemon, subskill } from 'sleepapi-common'
 
 export default {
   name: 'PokemonInput',
@@ -223,7 +220,8 @@ export default {
     PokemonButton,
     PokemonName,
     LevelButton,
-    CarryLimitButton
+    CarryLimitButton,
+    IngredientButton
   },
   data: () => ({
     saved: false,
@@ -252,6 +250,20 @@ export default {
       {
         level: 100,
         subskill: undefined as subskill.SubSkill | undefined
+      }
+    ],
+    ingredients: [
+      {
+        level: 0,
+        ingredientSet: undefined as IngredientSet | undefined
+      },
+      {
+        level: 30,
+        ingredientSet: undefined as IngredientSet | undefined
+      },
+      {
+        level: 60,
+        ingredientSet: undefined as IngredientSet | undefined
       }
     ]
   }),
@@ -287,6 +299,14 @@ export default {
     },
     updateLimit(newLimit: number) {
       this.carryLimit = newLimit
+    },
+    updateIngredient(params: { ingredientSet: IngredientSet; ingredientLevel: number }) {
+      const ingredientToUpdate = this.ingredients.find(
+        (sub) => sub.level === params.ingredientLevel
+      )
+      if (ingredientToUpdate) {
+        ingredientToUpdate.ingredientSet = params.ingredientSet
+      }
     }
   }
 }
@@ -298,15 +318,6 @@ export default {
 .nowrap {
   display: flex;
   align-items: center;
-}
-
-.disabled-image {
-  opacity: 0.5;
-  filter: grayscale(100%);
-}
-
-.disabled-image-btn {
-  cursor: not-allowed;
 }
 
 .responsive-text {

@@ -26,6 +26,7 @@ import AccountMenu from '@/components/account/account-menu.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+  name: 'TheNavBar',
   components: {
     AccountMenu
   },

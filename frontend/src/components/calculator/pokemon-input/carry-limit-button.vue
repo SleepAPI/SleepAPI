@@ -58,7 +58,7 @@ export default {
   watch: {
     pokemon: {
       immediate: true,
-      handler(newPokemon) {
+      handler(newPokemon: pokemon.Pokemon) {
         if (newPokemon) {
           this.carryLimit = newPokemon.maxCarrySize
         }
