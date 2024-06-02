@@ -78,10 +78,9 @@ export default {
   },
   watch: {
     pokemon: {
-      handler(newVal: pokemon.Pokemon | undefined) {
-        if (newVal !== undefined) {
-          this.name = this.rerollName()
-        }
+      handler() {
+        this.name = this.rerollName()
+        this.$emit('update-name', this.name)
       },
       immediate: true
     }
@@ -114,6 +113,7 @@ export default {
     rerollName() {
       let name = faker.person.firstName()
       while (name.length > this.maxNameLength) {
+        // TODO: we could save possible genders on each mon and pass, some mons can only be one gender, some have higher likelihood
         name = faker.person.firstName()
       }
       return name

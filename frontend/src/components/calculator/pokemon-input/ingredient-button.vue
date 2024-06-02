@@ -22,9 +22,10 @@
       <v-btn
         v-for="key in otherIngredientOptions"
         :key="key.ingredient.name"
-        color="secondary"
+        color="primary"
+        size="large"
         icon
-        @click="updateIngredient(key)"
+        @click="handleIngredientClick(key)"
       >
         <v-avatar>
           <v-img :src="ingredientImageForNameKey(key.ingredient.name)"></v-img>
@@ -50,16 +51,15 @@ export default {
       required: true
     },
     pokemon: {
-      type: Object as PropType<pokemon.Pokemon | undefined>,
-      required: false,
-      default: undefined
+      type: Object as PropType<pokemon.Pokemon>,
+      required: true
     }
   },
   emits: ['update-ingredient'],
   data: () => ({
     ingredientSet: undefined as IngredientSet | undefined,
     fab: false,
-    otherIngredientOptions: [] as IngredientSet[]
+    updateTimer: null as ReturnType<typeof setTimeout> | null
   }),
   computed: {
     ingredientImage() {
@@ -72,24 +72,44 @@ export default {
     },
     disabled() {
       return !this.ingredientSet || this.ingredientLevel < 30 // first ingredient is always disabled
+    },
+    otherIngredientOptions() {
+      if (this.ingredientLevel < 30) {
+        return []
+      } else if (this.ingredientLevel < 60) {
+        return this.pokemon.ingredient30.filter(
+          (ing) =>
+            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+        )
+      } else
+        return this.pokemon.ingredient60.filter(
+          (ing) =>
+            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+        )
     }
   },
   watch: {
     pokemon: {
       immediate: true,
       handler(newPokemon: pokemon.Pokemon) {
-        if (newPokemon) {
-          if (this.ingredientLevel < 30) {
-            this.ingredientSet = newPokemon.ingredient0
-          } else if (this.ingredientLevel < 60) {
-            this.otherIngredientOptions = [newPokemon.ingredient30[1]]
-            this.ingredientSet = newPokemon.ingredient30[0]
-          } else {
-            this.otherIngredientOptions = [newPokemon.ingredient60[1], newPokemon.ingredient60[2]]
-            this.ingredientSet = newPokemon.ingredient60[0]
-          }
+        if (this.ingredientLevel < 30) {
+          this.ingredientSet = newPokemon.ingredient0
+        } else if (this.ingredientLevel < 60) {
+          this.ingredientSet = newPokemon.ingredient30[0]
+        } else {
+          this.ingredientSet = newPokemon.ingredient60[0]
         }
+
+        this.$emit('update-ingredient', {
+          ingredientSet: this.ingredientSet,
+          ingredientLevel: this.ingredientLevel
+        })
       }
+    }
+  },
+  beforeUnmount() {
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer)
     }
   },
   methods: {
@@ -99,14 +119,19 @@ export default {
       }
       return `/images/ingredient/${key.toLowerCase()}.png`
     },
+    handleIngredientClick(ingredientSet: IngredientSet) {
+      if (this.updateTimer) {
+        clearTimeout(this.updateTimer)
+      }
+      this.updateTimer = setTimeout(() => {
+        this.updateIngredient(ingredientSet)
+        this.updateTimer = null
+      }, 200) // Delay update by 300ms to smooth transition
+    },
     updateIngredient(ingredientSet: IngredientSet) {
       if (!this.pokemon || !this.ingredientSet) {
         return
       }
-      // put previous ingredient list back as option available
-      this.otherIngredientOptions = this.otherIngredientOptions
-        .filter((ing) => ing.ingredient.name !== ingredientSet.ingredient.name)
-        .concat(this.ingredientSet)
 
       this.ingredientSet = ingredientSet
       this.$emit('update-ingredient', {
