@@ -1,76 +1,68 @@
 <template>
   <v-dialog v-model="pokemonMenu">
     <template #activator="{ props }">
-      <v-btn
-        icon
-        size="150"
-        color="#19122400"
-        v-bind="props"
-        elevation="0"
-        @click="pokemonMenu = true"
-      >
-        <v-img
-          v-if="pokemon"
-          :src="`/images/pokemon/${pokemon.name.toLowerCase()}.png`"
-          max-height="150px"
-          width="180px"
-        />
-        <v-img v-else src="/images/pokemon/unknown.png" max-height="150px" width="180px" />
+      <v-btn icon size="150" color="#19122400" v-bind="props" elevation="0" @click="openMenu">
+        <v-badge icon="mdi-pencil" color="primary" offset-x="50" offset-y="30">
+          <v-img
+            :src="`/images/pokemon/${pokemon.name.toLowerCase()}.png`"
+            max-height="150px"
+            width="180px"
+          />
+        </v-badge>
       </v-btn>
     </template>
 
-    <v-card style="min-height: 50dvh">
+    <v-card>
       <GroupList
-        :data="pokedex"
-        :selected-options="pokemon ? [pokemon.name] : []"
+        :data="pokedexStore.groupedPokedex"
+        :selected-options="[pokemon.name]"
         @select-option="selectPokemon"
+        @cancel="closeMenu"
       />
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import GroupList, { type GroupData } from '@/components/custom-components/group-list.vue'
-import { capitalize, pokemon } from 'sleepapi-common'
+import GroupList from '@/components/custom-components/group-list.vue'
+import { usePokedexStore } from '@/stores/pokedex-store/pokedex-store'
+import { pokemon } from 'sleepapi-common'
+import type { PropType } from 'vue'
 
 export default {
   name: 'PokemonButton',
   components: {
     GroupList
   },
-  emits: ['select-pokemon'],
-  data: () => ({
-    pokemon: undefined as pokemon.Pokemon | undefined,
-    pokemonMenu: false,
-    pokedex: [] as GroupData[]
-  }),
-  mounted() {
-    this.pokedex = this.populatePokedex()
+  props: {
+    pokemon: {
+      type: Object as PropType<pokemon.Pokemon>,
+      required: true
+    }
   },
+  emits: ['update-pokemon'],
+  setup() {
+    const pokedexStore = usePokedexStore()
+    return { pokedexStore }
+  },
+  data: () => ({
+    pokemonMenu: false
+  }),
   methods: {
+    openMenu() {
+      this.pokemonMenu = true
+    },
+    closeMenu() {
+      this.pokemonMenu = false
+    },
     selectPokemon(name: string) {
       const pkmn = pokemon.COMPLETE_POKEDEX.find((p) => p.name.toLowerCase() === name.toLowerCase())
       if (!pkmn) {
         console.error('Error selecting Pokémon')
         return
       }
-      this.pokemon = pkmn
       this.pokemonMenu = false
-      this.$emit('select-pokemon', pkmn)
-    },
-    // TODO: this seems to take a bit of time, perhaps we can lazy load instead of compute on pokemon button click
-    populatePokedex(): GroupData[] {
-      const categories = ['ingredient', 'berry', 'skill']
-      const completePokedex = pokemon.COMPLETE_POKEDEX.sort((a, b) => a.name.localeCompare(b.name))
-
-      return categories.map((category) => {
-        return {
-          category,
-          list: completePokedex
-            .filter((pkmn) => pkmn.specialty === category)
-            .map((pkmn) => capitalize(pkmn.name))
-        }
-      })
+      this.$emit('update-pokemon', pkmn)
     }
   }
 }

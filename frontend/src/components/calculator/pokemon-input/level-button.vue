@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
-      <v-btn class="w-100" v-bind="props" :disabled="disabled">
+      <v-btn class="w-100" v-bind="props">
         <span class="text-body-1"> Level {{ level }} </span>
       </v-btn>
     </template>
@@ -32,12 +32,6 @@
 <script lang="ts">
 export default {
   name: 'LevelButton',
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
   emits: ['update-level'],
   data: () => ({
     level: 50,

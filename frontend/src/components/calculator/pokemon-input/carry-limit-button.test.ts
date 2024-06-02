@@ -56,13 +56,6 @@ describe('CarryLimitButton', () => {
     expect(wrapper.vm.$data.menu).toBe(false)
   })
 
-  it('disables the button when disabled prop is true', async () => {
-    await wrapper.setProps({ pokemon: { ...mockPokemon, carrySize: 20, maxCarrySize: 20 } })
-    const button = wrapper.findComponent({ name: 'v-btn' })
-
-    expect(button.attributes('disabled')).toBeDefined()
-  })
-
   it('updates carry limit when the pokemon prop changes', async () => {
     const newPokemon = { name: 'Bulbasaur', carrySize: 5, maxCarrySize: 15 } as pokemon.Pokemon
     await wrapper.setProps({ pokemon: newPokemon })

@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
-      <v-btn class="w-100" v-bind="props" :disabled="disabled">
+      <v-btn class="w-100" v-bind="props" :disabled="singleStageMon">
         <span class="text-body-1"> Carry limit {{ carryLimit }} </span>
       </v-btn>
     </template>
@@ -24,9 +24,8 @@ export default {
   name: 'CarryLimitButton',
   props: {
     pokemon: {
-      type: Object as PropType<pokemon.Pokemon | undefined>,
-      required: false,
-      default: undefined
+      type: Object as PropType<pokemon.Pokemon>,
+      required: true
     }
   },
   emits: ['update-limit'],
@@ -51,8 +50,8 @@ export default {
 
       return values
     },
-    disabled() {
-      return !this.pokemon || this.pokemon.carrySize === this.pokemon.maxCarrySize
+    singleStageMon() {
+      return this.pokemon.carrySize === this.pokemon.maxCarrySize
     }
   },
   watch: {

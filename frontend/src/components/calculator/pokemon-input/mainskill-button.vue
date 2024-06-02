@@ -5,7 +5,7 @@
         <v-row no-gutters>
           <v-col cols="3">
             <v-card class="flex-center rounded-te-0 rounded-be-0 fill-height" color="secondary">
-              <v-img class="ma-2" :src="mainskillImage"></v-img>
+              <v-img class="ma-2" :src="mainskillImage" max-height="50px"></v-img>
             </v-card>
           </v-col>
           <v-col cols="9">
@@ -34,7 +34,7 @@
         <v-slider
           v-model="mainskillLevel"
           min="1"
-          :max="maxLevel"
+          :max="pokemon.skill.maxLevel"
           :ticks="defaultValues"
           show-ticks="always"
           step="1"
@@ -53,9 +53,8 @@ export default {
   name: 'MainskillButton',
   props: {
     pokemon: {
-      type: Object as PropType<pokemon.Pokemon | undefined>,
-      required: false,
-      default: undefined
+      type: Object as PropType<pokemon.Pokemon>,
+      required: true
     }
   },
   emits: ['update-skill-level'],
@@ -69,31 +68,20 @@ export default {
       return !this.pokemon
     },
     skillName() {
-      if (!this.pokemon) {
-        return 'Choose a Pokémon above'
-      }
       return this.pokemon.skill.name
     },
     description() {
-      if (!this.pokemon) {
-        return '???'
-      }
       return this.pokemon.skill.description.replace(
         '?',
         this.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
       )
     },
     mainskillImage() {
-      if (!this.pokemon) {
-        return '/images/pokemon/unknown.png'
-      } else if (this.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
+      if (this.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
         return `/images/type/${this.pokemon.berry.type}.png`
       }
 
       return `/images/mainskill/${this.pokemon.skill.unit}.png`
-    },
-    maxLevel() {
-      return this.pokemon?.skill.maxLevel ?? 6
     }
   },
   watch: {

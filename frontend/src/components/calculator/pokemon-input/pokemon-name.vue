@@ -66,7 +66,7 @@ export default {
   },
   emits: ['update-name'],
   data: () => ({
-    name: 'Select a Pokémon above',
+    name: 'Choose a Pokémon',
     isEditDialogOpen: false,
     maxNameLength: 12,
     editedName: ''
