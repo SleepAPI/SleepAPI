@@ -1,14 +1,39 @@
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { pokemon } from 'sleepapi-common'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+
+vi.mock('@/stores/pokedex-store/pokedex-store', () => ({
+  usePokedexStore: () => ({
+    groupedPokedex: [
+      {
+        category: 'ingredient',
+        list: ['Bulbasaur', 'Charmander', 'Squirtle']
+      },
+      {
+        category: 'berry',
+        list: ['Pikachu', 'Raichu']
+      },
+      {
+        category: 'skill',
+        list: ['Machop', 'Machoke', 'Machamp']
+      }
+    ]
+  })
+}))
 
 describe('PokemonButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof PokemonButton>>
 
   beforeEach(() => {
-    wrapper = mount(PokemonButton)
+    setActivePinia(createPinia())
+    wrapper = mount(PokemonButton, {
+      props: {
+        pokemon: pokemon.ABOMASNOW
+      }
+    })
   })
 
   afterEach(() => {
@@ -23,12 +48,12 @@ describe('PokemonButton', () => {
 
     const img = wrapper.find('img')
     expect(img.exists()).toBe(true)
-    expect(img.attributes('src')).toBe('/images/pokemon/unknown.png')
+    expect(img.attributes('src')).toBe('/images/pokemon/abomasnow.png')
   })
 
   it('renders correctly with a Pokémon selected', async () => {
     const pkmn = pokemon.PIKACHU
-    wrapper.setData({ pokemon: pkmn })
+    await wrapper.setProps({ pokemon: pkmn })
 
     await nextTick()
 
@@ -48,23 +73,29 @@ describe('PokemonButton', () => {
 
   it('selects Pokémon correctly', async () => {
     const pkmn = pokemon.PIKACHU
-    wrapper.setData({ pokedex: [{ category: 'berry', list: [pkmn.name] }] })
-
     wrapper.vm.selectPokemon(pkmn.name)
-    expect(wrapper.vm.pokemon).toEqual(pkmn)
+
+    expect(wrapper.emitted('update-pokemon')).toBeTruthy()
+    expect(wrapper.emitted('update-pokemon')![0]).toEqual([pkmn])
     expect(wrapper.vm.pokemonMenu).toBe(false)
-    expect(wrapper.emitted('select-pokemon')).toBeTruthy()
-    expect(wrapper.emitted('select-pokemon')![0]).toEqual([pkmn])
   })
 
   it('displays Pokémon image correctly', async () => {
     const pkmn = pokemon.PIKACHU
-    wrapper.setData({ pokemon: pkmn })
+    await wrapper.setProps({ pokemon: pkmn })
 
     await nextTick()
 
     const img = wrapper.find('img')
     expect(img.exists()).toBe(true)
-    expect(img.attributes('src')).toBe(`/images/pokemon/pikachu.png`)
+    expect(img.attributes('src')).toBe('/images/pokemon/pikachu.png')
+  })
+
+  it('closes Pokémon menu on cancel', async () => {
+    wrapper.vm.openMenu()
+    expect(wrapper.vm.pokemonMenu).toBe(true)
+
+    wrapper.vm.closeMenu()
+    expect(wrapper.vm.pokemonMenu).toBe(false)
   })
 })

@@ -1,8 +1,4 @@
 <template>
-  <!-- TODO: cleanup css styles, classes, common classes etc -->
-
-  <!-- TODO: many badges with top left w-100, create class -->
-
   <v-card color="background" class="pa-4">
     <div class="flex-center">
       <v-row style="position: absolute; top: 0; width: 100%">
@@ -30,7 +26,7 @@
 
     <v-row no-gutters>
       <v-col class="flex-center">
-        <PokemonButton @select-pokemon="updatePokemon" />
+        <PokemonButton :pokemon="pokemon" @update-pokemon="updatePokemon" />
       </v-col>
     </v-row>
 
@@ -48,7 +44,7 @@
 
     <v-row dense class="mt-3">
       <v-col cols="6" class="flex-center">
-        <LevelButton :disabled="pokemon === undefined" @update-level="updateLevel" />
+        <LevelButton @update-level="updateLevel" />
       </v-col>
       <v-col cols="6" class="flex-center">
         <CarryLimitButton :pokemon="pokemon" @update-limit="updateLimit" />
@@ -101,7 +97,7 @@
           :subskill-level="10"
           :pokemon-level="level"
           :selected-subskills="selectedSubskills"
-          @select-subskill="updateSubskill"
+          @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
@@ -109,7 +105,7 @@
           :subskill-level="25"
           :pokemon-level="level"
           :selected-subskills="selectedSubskills"
-          @select-subskill="updateSubskill"
+          @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
@@ -117,7 +113,7 @@
           :subskill-level="50"
           :pokemon-level="level"
           :selected-subskills="selectedSubskills"
-          @select-subskill="updateSubskill"
+          @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
@@ -125,7 +121,7 @@
           :subskill-level="75"
           :pokemon-level="level"
           :selected-subskills="selectedSubskills"
-          @select-subskill="updateSubskill"
+          @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
@@ -133,7 +129,7 @@
           :subskill-level="100"
           :pokemon-level="level"
           :selected-subskills="selectedSubskills"
-          @select-subskill="updateSubskill"
+          @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
@@ -142,30 +138,19 @@
     </v-row>
 
     <v-row id="nature">
-      <v-col cols="6">
-        <v-badge color="primary" content="Nature" location="top left" :offset-x="35" class="w-100">
-          <v-btn class="responsive-text w-100" size="large" rounded="pill" color="secondary"
-            >Adamant</v-btn
-          >
-        </v-badge>
-      </v-col>
-      <v-col cols="6" class="flex-colum px-0" style="align-content: center">
-        <div class="nowrap responsive-text">
-          <span class="nowrap mr-1">Main Skill Chance</span>
-          <v-icon color="primary" class="responsive-icon">mdi-triangle</v-icon>
-          <v-icon color="primary" class="responsive-icon">mdi-triangle</v-icon>
-        </div>
-        <div class="nowrap responsive-text">
-          <span class="nowrap mr-1">Ingredient Finding</span>
-          <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
-          <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
-        </div>
+      <v-col cols="12">
+        <NatureButton @update-nature="updateNature" />
       </v-col>
     </v-row>
 
-    <v-row id="closeAndSave" dense class="mt-3">
+    <v-row dense class="mt-3">
       <v-col cols="6">
-        <v-btn class="w-100 responsive-text" size="large" rounded="lg" color="surface"
+        <v-btn
+          class="w-100 responsive-text"
+          size="large"
+          rounded="lg"
+          color="surface"
+          @click="cancel"
           >Cancel</v-btn
         >
       </v-col>
@@ -181,11 +166,14 @@ import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
 import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
+import NatureButton from '@/components/calculator/pokemon-input/nature-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
-import type { IngredientSet, pokemon, subskill } from 'sleepapi-common'
+import { nature, pokemon, type IngredientSet, type subskill } from 'sleepapi-common'
+import type { PropType } from 'vue'
 
+// TODO: on mount we can populate all stuff like nature etc since now we already have mon
 export default {
   name: 'PokemonInput',
   components: {
@@ -195,16 +183,25 @@ export default {
     LevelButton,
     CarryLimitButton,
     IngredientButton,
-    MainskillButton
+    MainskillButton,
+    NatureButton
   },
+  props: {
+    selectedPokemon: {
+      type: Object as PropType<pokemon.Pokemon>,
+      required: true
+    }
+  },
+  emits: ['cancel'],
   data: () => ({
     saved: false,
-    pokemon: undefined as pokemon.Pokemon | undefined,
+    pokemon: pokemon.MEOWTH, // TODO: set to selectedPokemon incoming instead
     name: undefined as string | undefined,
     level: 50,
     carryLimit: 0,
     rp: 0,
     skillLevel: 0,
+    nature: undefined as nature.Nature | undefined,
     subskills: [
       {
         level: 10,
@@ -251,6 +248,9 @@ export default {
         .map((s) => s.subskill)
     }
   },
+  mounted() {
+    this.pokemon = this.selectedPokemon
+  },
   methods: {
     toggleSave() {
       if (this.pokemon) {
@@ -285,6 +285,12 @@ export default {
     },
     updateSkillLevel(skillLevel: number) {
       this.skillLevel = skillLevel
+    },
+    updateNature(nature: nature.Nature) {
+      this.nature = nature
+    },
+    cancel() {
+      this.$emit('cancel')
     }
   }
 }

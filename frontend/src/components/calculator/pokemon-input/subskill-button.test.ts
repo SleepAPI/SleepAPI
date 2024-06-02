@@ -62,8 +62,8 @@ describe('SubskillButton', () => {
     wrapper.vm.selectSubskill('GoldSubskill')
     expect(wrapper.vm.name).toBe('GoldSubskill')
     expect(wrapper.vm.subskillMenu).toBe(false)
-    expect(wrapper.emitted('select-subskill')).toBeTruthy()
-    expect(wrapper.emitted('select-subskill')![0]).toEqual([
+    expect(wrapper.emitted('update-subskill')).toBeTruthy()
+    expect(wrapper.emitted('update-subskill')![0]).toEqual([
       { subskill, subskillLevel: subskillProps.subskillLevel }
     ])
   })

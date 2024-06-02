@@ -3,40 +3,40 @@
     <v-card>
       <v-list>
         <!-- Empty team slot -->
-        <v-list-item
-          v-if="emptySlot"
-          prepend-icon="mdi-plus-circle-outline"
-          @click="openSubDialog('PokemonInput')"
-          >Add</v-list-item
-        >
-        <v-list-item v-if="emptySlot" prepend-icon="mdi-bookmark-outline">Saved</v-list-item>
-
-        <!-- Filled team slot  -->
-        <v-list-item v-if="!emptySlot" prepend-icon="mdi-pencil">Edit</v-list-item>
-        <!-- TODO: change to filled bookmark AND text to Unsane if already saved -->
-        <v-list-item v-if="!emptySlot" prepend-icon="mdi-bookmark-outline" @click="savePokemon"
-          >Save</v-list-item
-        >
-        <v-list-item v-if="!emptySlot" prepend-icon="mdi-content-copy">Duplicate</v-list-item>
-        <v-list-item v-if="!emptySlot" prepend-icon="mdi-delete">Remove</v-list-item>
+        <div v-if="emptySlot">
+          <v-list-item
+            prepend-icon="mdi-plus-circle-outline"
+            @click="openSubDialog('PokemonSearch')"
+            >Add</v-list-item
+          >
+          <v-list-item prepend-icon="mdi-bookmark-outline">Saved</v-list-item>
+        </div>
+        <div v-else>
+          <!-- Filled team slot  -->
+          <v-list-item prepend-icon="mdi-pencil">Edit</v-list-item>
+          <!-- TODO: change to filled bookmark AND text to Unsane if already saved -->
+          <v-list-item prepend-icon="mdi-bookmark-outline" @click="savePokemon">Save</v-list-item>
+          <v-list-item prepend-icon="mdi-content-copy">Duplicate</v-list-item>
+          <v-list-item prepend-icon="mdi-delete">Remove</v-list-item>
+        </div>
       </v-list>
     </v-card>
   </v-dialog>
 
   <v-dialog v-model="subDialog" max-width="600px">
-    <component :is="currentDialogComponent" @close="closeSubDialog"></component>
+    <component :is="currentDialogComponent" @cancel="closeSubDialog"></component>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
+import PokemonSearch from '@/components/calculator/pokemon-input/pokemon-search.vue'
 
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlotMenu',
   components: {
-    PokemonInput
+    PokemonSearch
   },
   props: {
     show: {

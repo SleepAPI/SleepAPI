@@ -56,11 +56,4 @@ describe('MainskillButton', () => {
     })
     expect(wrapper.vm.defaultValues).toEqual({ 1: '1', 2: '2', 3: '3', 4: '4' })
   })
-
-  it('disables the card if no pokemon is provided', async () => {
-    await wrapper.setProps({ pokemon: undefined })
-    expect(wrapper.vm.disabled).toBe(true)
-    const card = wrapper.findComponent({ name: 'v-card' })
-    expect(card.classes()).toContain('v-card--disabled')
-  })
 })

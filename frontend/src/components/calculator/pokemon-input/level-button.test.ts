@@ -59,13 +59,6 @@ describe('LevelButton', () => {
     expect(wrapper.vm.$data.menu).toBe(false)
   })
 
-  it('disables the button when disabled prop is true', async () => {
-    await wrapper.setProps({ disabled: true })
-    const button = wrapper.findComponent({ name: 'v-btn' })
-
-    expect(button.attributes('disabled')).toBeDefined()
-  })
-
   it('does not emit update-level for invalid custom values', async () => {
     await wrapper.setData({ menu: true })
     const customInput = wrapper.findComponent({ name: 'v-text-field' })

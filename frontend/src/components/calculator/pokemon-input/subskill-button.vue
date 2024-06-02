@@ -28,7 +28,7 @@
         </v-btn>
       </template>
 
-      <v-card style="min-height: 50dvh">
+      <v-card>
         <GroupList
           :data="filteredSubskills"
           :selected-options="selectedSubskills.map((s) => s.name)"
@@ -63,7 +63,7 @@ export default {
       default: () => []
     }
   },
-  emits: ['select-subskill'],
+  emits: ['update-subskill'],
   data: () => ({
     name: '???',
     subskillMenu: false,
@@ -71,9 +71,9 @@ export default {
   }),
   computed: {
     rarityColor() {
-      if (this.name === '???') return 'surface'
+      if (this.name === '???') return undefined
       const ss = this.subskills.find((ss) => ss.name.toLowerCase() === this.name.toLowerCase())
-      return ss ? `subskill${capitalize(ss.rarity)}` : 'surface'
+      return ss ? `subskill${capitalize(ss.rarity)}` : undefined
     },
     locked() {
       return this.pokemonLevel < this.subskillLevel
@@ -100,7 +100,7 @@ export default {
       }
       this.name = subskill.name
       this.subskillMenu = false
-      this.$emit('select-subskill', { subskill, subskillLevel: this.subskillLevel })
+      this.$emit('update-subskill', { subskill, subskillLevel: this.subskillLevel })
     }
   }
 }

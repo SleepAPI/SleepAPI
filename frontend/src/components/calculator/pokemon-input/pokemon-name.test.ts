@@ -20,7 +20,7 @@ describe('PokemonName', () => {
 
   it('displays default name when no Pokémon is selected', () => {
     const button = wrapper.find('button')
-    expect(button.text()).toBe('Select a Pokémon above')
+    expect(button.text()).toBe('Choose a Pokémon')
     expect(button.attributes('disabled')).toBeDefined()
   })
 
@@ -29,7 +29,7 @@ describe('PokemonName', () => {
     await wrapper.setProps({ pokemon: pkmn })
 
     const button = wrapper.find('button')
-    expect(button.text()).not.toBe('Select a Pokémon above')
+    expect(button.text()).not.toBe('Choose a Pokémon')
     expect(button.attributes('disabled')).toBeUndefined()
   })
 

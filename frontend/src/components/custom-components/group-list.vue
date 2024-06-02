@@ -1,18 +1,17 @@
 <template>
-  <v-container class="group-container">
+  <v-container>
     <v-row>
       <v-col cols="12">
         <v-text-field
           v-model="searchQuery"
-          label="Search"
-          single-line
+          label="Search for your Pokémon"
           hide-details
           autofocus
           @keydown.enter="selectFirstOption"
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-list v-model:opened="openedGroups" density="compact">
+    <v-list v-model:opened="openedGroups" density="compact" style="height: 50dvh">
       <v-list-group v-for="group in filteredData" :key="group.category" :value="group.category">
         <template #activator="{ props }">
           <v-list-item v-bind="props" :title="title(group.category)"></v-list-item>
@@ -27,6 +26,18 @@
         ></v-list-item>
       </v-list-group>
     </v-list>
+    <v-row>
+      <v-col cols="12">
+        <v-btn
+          class="w-100 responsive-text"
+          size="large"
+          rounded="lg"
+          color="surface"
+          @click="cancel"
+          >Cancel</v-btn
+        >
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -56,7 +67,7 @@ export default defineComponent({
       default: () => []
     }
   },
-  emits: ['select-option'],
+  emits: ['select-option', 'cancel'],
   data() {
     return {
       searchQuery: '',
@@ -95,6 +106,9 @@ export default defineComponent({
     selectOption(option: string) {
       this.$emit('select-option', option)
     },
+    cancel() {
+      this.$emit('cancel')
+    },
     isOptionSelected(name: string) {
       return this.selectedOptions.some((selected) => selected === name)
     },
@@ -112,11 +126,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss">
-@import '@/assets/main.scss';
-.group-container {
-  position: absolute;
-  height: 100%;
-}
-</style>
