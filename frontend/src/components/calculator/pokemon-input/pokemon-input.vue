@@ -171,10 +171,9 @@ import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
 import { nature, pokemon, type IngredientSet, type subskill } from 'sleepapi-common'
-import type { PropType } from 'vue'
+import { defineComponent, type PropType } from 'vue'
 
-// TODO: on mount we can populate all stuff like nature etc since now we already have mon
-export default {
+export default defineComponent({
   name: 'PokemonInput',
   components: {
     SubskillButton,
@@ -195,13 +194,12 @@ export default {
   emits: ['cancel'],
   data: () => ({
     saved: false,
-    pokemon: pokemon.MEOWTH, // TODO: set to selectedPokemon incoming instead
+    pokemon: pokemon.PIKACHU,
     name: undefined as string | undefined,
     level: 50,
     carryLimit: 0,
-    rp: 0,
     skillLevel: 0,
-    nature: undefined as nature.Nature | undefined,
+    nature: nature.BASHFUL,
     subskills: [
       {
         level: 10,
@@ -246,10 +244,14 @@ export default {
           (s): s is { level: number; subskill: subskill.SubSkill } => s.subskill !== undefined
         )
         .map((s) => s.subskill)
+    },
+    rp() {
+      return 0
     }
   },
   mounted() {
     this.pokemon = this.selectedPokemon
+    this.carryLimit = this.selectedPokemon.maxCarrySize
   },
   methods: {
     toggleSave() {
@@ -293,7 +295,7 @@ export default {
       this.$emit('cancel')
     }
   }
-}
+})
 </script>
 
 <style lang="scss">

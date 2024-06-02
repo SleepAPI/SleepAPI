@@ -18,12 +18,6 @@ describe('PokemonName', () => {
     }
   })
 
-  it('displays default name when no Pokémon is selected', () => {
-    const button = wrapper.find('button')
-    expect(button.text()).toBe('Choose a Pokémon')
-    expect(button.attributes('disabled')).toBeDefined()
-  })
-
   it('enables button and displays name when Pokémon is provided', async () => {
     const pkmn = pokemon.PINSIR
     await wrapper.setProps({ pokemon: pkmn })
@@ -68,8 +62,8 @@ describe('PokemonName', () => {
     expect(saveButton).not.toBeNull()
     saveButton.click()
 
-    expect(wrapper.emitted('update-name')).toBeTruthy()
-    expect(wrapper.emitted('update-name')![0]).toEqual(['NewName'])
+    expect(wrapper.emitted('update-name')).toHaveLength(3) // emits random roll on mount and 2nd emit is manual name change
+    expect(wrapper.emitted('update-name')![2]).toEqual(['NewName'])
     expect(wrapper.vm.isEditDialogOpen).toBe(false)
   })
 

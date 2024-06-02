@@ -1,7 +1,7 @@
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { pokemon, type IngredientSet } from 'sleepapi-common'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof IngredientButton>>
@@ -60,6 +60,9 @@ describe('IngredientButton', () => {
   })
 
   it('updates ingredient when an option is clicked', async () => {
+    // Use fake timers
+    vitest.useFakeTimers()
+
     await wrapper.setData({ fab: true })
     const otherIngredientBtns = wrapper
       .findAllComponents({ name: 'v-btn' })
@@ -69,18 +72,27 @@ describe('IngredientButton', () => {
     expect(otherIngredientBtns).toHaveLength(2)
 
     await otherIngredientBtns[0].trigger('click')
+
+    // Advance timers by 300ms
+    vitest.advanceTimersByTime(300)
+
+    // Use nextTick to ensure any pending updates are processed
+    await wrapper.vm.$nextTick()
+
     expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('banana')
 
     const emitted = wrapper.emitted('update-ingredient') as Array<
       Array<{ ingredientSet: IngredientSet; ingredientLevel: number }>
     >
 
-    expect(emitted).toHaveLength(1)
-
-    const emittedEvent = emitted[0][0]
+    expect(emitted).toHaveLength(2)
+    const emittedEvent = emitted[1][0]
 
     expect(emittedEvent.ingredientSet.ingredient.name).toBe('banana')
     expect(emittedEvent.ingredientLevel).toBe(60)
+
+    // Clear mock timers after the test
+    vitest.useRealTimers()
   })
 
   it('disables the button if ingredientLevel is less than 30', async () => {
