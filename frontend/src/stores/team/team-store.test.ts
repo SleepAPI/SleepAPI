@@ -27,7 +27,15 @@ describe('Team Store', () => {
           {
             "camp": false,
             "index": 0,
+            "members": [
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+            ],
             "name": "Log in to save your teams",
+            "version": 0,
           },
         ],
       }
@@ -62,21 +70,6 @@ describe('Team Store', () => {
           "index": 1,
           "name": "Team 2",
         },
-        {
-          "camp": false,
-          "index": 2,
-          "name": "Helper team 3",
-        },
-        {
-          "camp": false,
-          "index": 3,
-          "name": "Helper team 4",
-        },
-        {
-          "camp": false,
-          "index": 4,
-          "name": "Helper team 5",
-        },
       ]
     `)
   })
@@ -100,7 +93,7 @@ describe('Team Store', () => {
       expiryDate: 10,
       refreshToken: 'token2'
     })
-    teamStore.teams = [{ index: 0, name: 'Old Team Name', camp: false }]
+    teamStore.teams = [{ index: 0, name: 'Old Team Name', camp: false, members: [], version: 1 }]
 
     await teamStore.updateTeamName('New Team Name')
 
@@ -115,8 +108,8 @@ describe('Team Store', () => {
   it('should reset the state correctly', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false },
-      { index: 1, name: 'Team 2', camp: false }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
     ]
     teamStore.currentIndex = 1
     teamStore.maxAvailableTeams = 4
@@ -133,7 +126,15 @@ describe('Team Store', () => {
           {
             "camp": false,
             "index": 0,
+            "members": [
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+            ],
             "name": "Log in to save your teams",
+            "version": 0,
           },
         ],
       }
@@ -143,8 +144,8 @@ describe('Team Store', () => {
   it('should increment currentIndex correctly on next()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false },
-      { index: 1, name: 'Team 2', camp: false }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
     ]
 
     teamStore.next()
@@ -157,8 +158,8 @@ describe('Team Store', () => {
   it('should decrement currentIndex correctly on prev()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false },
-      { index: 1, name: 'Team 2', camp: false }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
     ]
 
     teamStore.prev()

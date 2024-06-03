@@ -8,13 +8,13 @@ import {
   calculateOptimalProductionForSetCover,
   calculateSetCover,
 } from '@src/services/calculator/set-cover/calculate-set-cover';
-import { getIngredientForName } from '@src/utils/ingredient-utils/ingredient-utils';
 import { calculateCritMultiplier, CritInfo, getMeal, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import {
   calculateCombinedContributions,
   removeDuplicatePokemonCombinations,
 } from '@src/utils/optimal-utils/optimal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
+import { getIngredient } from 'sleepapi-common';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;
 const TEAMFINDER_SET_COVER_TIMEOUT = 10000;
@@ -39,7 +39,7 @@ export function findOptimalMonsForIngredient(
   input: SetCoverProductionStats,
   monteCarloIterations: number
 ) {
-  const ingredient = getIngredientForName(ingredientName);
+  const ingredient = getIngredient(ingredientName);
   const ingAsRecipe = [{ ingredient: ingredient, amount: 0.001 }];
   const pokemonProduction = calculateOptimalProductionForSetCover(input, monteCarloIterations);
   const reverseIndex = createPokemonByIngredientReverseIndex(pokemonProduction);

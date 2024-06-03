@@ -1,6 +1,5 @@
-import { subskill } from 'sleepapi-common';
+import { getSubskill, getSubskillNames, subskill } from 'sleepapi-common';
 import { Controller, Get, Path, Route, Tags } from 'tsoa';
-import { getSubskill, getSubskillNames } from '../../utils/subskill-utils/subskill-utils';
 
 @Route('api/subskill')
 @Tags('subskill')

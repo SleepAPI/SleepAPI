@@ -7,7 +7,12 @@
       @cancel="closeMenu"
     />
   </v-card>
-  <PokemonInput v-else :selected-pokemon="pokemon" @cancel="closeMenu" />
+  <PokemonInput
+    v-else
+    :selected-pokemon="pokemon"
+    :member-index="memberIndex"
+    @cancel="closeMenu"
+  />
 </template>
 
 <script lang="ts">
@@ -21,6 +26,12 @@ export default {
   components: {
     GroupList,
     PokemonInput
+  },
+  props: {
+    memberIndex: {
+      type: Number,
+      required: true
+    }
   },
   emits: ['cancel'],
   setup() {

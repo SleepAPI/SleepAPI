@@ -155,7 +155,9 @@
         >
       </v-col>
       <v-col cols="6">
-        <v-btn class="w-100 responsive-text" size="large" rounded="lg" color="primary">Save</v-btn>
+        <v-btn class="w-100 responsive-text" size="large" rounded="lg" color="primary" @click="save"
+          >Save</v-btn
+        >
       </v-col>
     </v-row>
   </v-card>
@@ -170,6 +172,7 @@ import NatureButton from '@/components/calculator/pokemon-input/nature-button.vu
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
+import { useTeamStore } from '@/stores/team/team-store'
 import { nature, pokemon, type IngredientSet, type subskill } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
@@ -189,9 +192,17 @@ export default defineComponent({
     selectedPokemon: {
       type: Object as PropType<pokemon.Pokemon>,
       required: true
+    },
+    memberIndex: {
+      type: Number,
+      required: true
     }
   },
   emits: ['cancel'],
+  setup() {
+    const teamStore = useTeamStore()
+    return { teamStore }
+  },
   data: () => ({
     saved: false,
     pokemon: pokemon.PIKACHU,
@@ -250,6 +261,17 @@ export default defineComponent({
     }
   },
   mounted() {
+    // const existingPokemon = this.teamStore.getPokemon(this.memberIndex)
+    // if (existingPokemon) {
+    //   // TODO: find pokemon matching  name and if cant then emit cancel
+    //   this.pokemon = existingPokemon.pokemon
+    //   // TODO: populate rest
+    // } else {
+    //   this.pokemon = this.selectedPokemon
+    //   this.carryLimit = this.selectedPokemon.maxCarrySize
+    // }
+
+    // TODO: replace with above
     this.pokemon = this.selectedPokemon
     this.carryLimit = this.selectedPokemon.maxCarrySize
   },
@@ -293,6 +315,9 @@ export default defineComponent({
     },
     cancel() {
       this.$emit('cancel')
+    },
+    save() {
+      // TODO: need to start running simulations too asap, perhaps we can emit a promise so team section can show skeleton loader and await
     }
   }
 })

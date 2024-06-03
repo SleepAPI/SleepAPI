@@ -1,17 +1,4 @@
-import { SubskillError } from '@src/domain/error/stat/stat-error';
 import { pokemon, subskill, SubskillSet } from 'sleepapi-common';
-
-export function getSubskillNames() {
-  return subskill.SUBSKILLS.map((subskill) => subskill.name);
-}
-
-export function getSubskill(name: string) {
-  const found = subskill.SUBSKILLS.find((s) => s.name.toLowerCase() === name.toLowerCase());
-  if (!found) {
-    throw new SubskillError(`Can't find Subskill with name ${name}`);
-  }
-  return found;
-}
 
 export function extractSubskillsBasedOnLevel(level: number, subskills: string[]): subskill.SubSkill[] {
   const subskill10 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[0]?.toUpperCase());

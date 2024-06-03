@@ -1,31 +1,27 @@
 import { TeamService } from '@/services/team/team-service'
 import { useUserStore } from '@/stores/user-store'
+import { MAX_TEAMS, MAX_TEAM_MEMBERS, type InstancedTeamExt } from '@/types/instanced'
 import { defineStore } from 'pinia'
 
 export interface TeamState {
   currentIndex: number
   maxAvailableTeams: number
   loadingTeams: boolean
-  teams: TeamInterface[]
-}
-
-// TODO: should expand this with version
-export interface TeamInterface {
-  index: number
-  name: string
-  camp: boolean
+  teams: InstancedTeamExt[]
 }
 
 export const useTeamStore = defineStore('team', {
   state: (): TeamState => ({
     currentIndex: 0,
-    maxAvailableTeams: 5,
+    maxAvailableTeams: MAX_TEAMS,
     loadingTeams: true,
     teams: [
       {
         index: 0,
         name: 'Log in to save your teams',
-        camp: false
+        camp: false,
+        version: 0,
+        members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
       }
     ]
   }),
@@ -33,6 +29,7 @@ export const useTeamStore = defineStore('team', {
     getCurrentTeam: (state) => state.teams[state.currentIndex]
   },
   actions: {
+    // empty cache, first time user loads teams on this device
     async populateTeams() {
       const userStore = useUserStore()
       if (userStore.loggedIn && this.teams.length < this.maxAvailableTeams) {
@@ -41,12 +38,7 @@ export const useTeamStore = defineStore('team', {
           const teams = await TeamService.getTeams()
           this.loadingTeams = false
 
-          this.teams = Array.from({ length: this.maxAvailableTeams }, (_, i) => {
-            const teamFromResponse = teams.find((team) => team.index === i)
-            return teamFromResponse
-              ? teamFromResponse
-              : { index: i, name: `Helper team ${i + 1}`, camp: false }
-          })
+          this.teams = teams
         } catch (error) {
           console.error('Error fetching teams')
         }
@@ -76,13 +68,15 @@ export const useTeamStore = defineStore('team', {
     },
     reset() {
       this.currentIndex = 0
-      this.maxAvailableTeams = 5
+      this.maxAvailableTeams = MAX_TEAMS
       this.loadingTeams = true
       this.teams = [
         {
           index: 0,
           name: 'Log in to save your teams',
-          camp: false
+          camp: false,
+          version: 0,
+          members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
         }
       ]
     }

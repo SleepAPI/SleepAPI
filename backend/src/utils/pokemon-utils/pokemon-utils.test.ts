@@ -1,16 +1,4 @@
-import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { pokemon } from 'sleepapi-common';
-import { getPokemon, getPokemonNames } from './pokemon-utils';
-
-describe('getPokemon', () => {
-  it('shall return PINSIR for pinSIr name', () => {
-    expect(getPokemon('pinSIr')).toBe(pokemon.PINSIR);
-  });
-
-  it("shall throw if Pokémon can't be found", () => {
-    expect(() => getPokemon('missing')).toThrow(PokemonError);
-  });
-});
+import { getPokemonNames } from './pokemon-utils';
 
 describe('getPokemonNames', () => {
   it('shall return all pokemon by default', () => {

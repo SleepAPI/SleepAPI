@@ -1,4 +1,4 @@
-import { getIngredientNames } from '@src/utils/ingredient-utils/ingredient-utils';
+import { getIngredientNames } from 'sleepapi-common';
 import { Controller, Get, Route, Tags } from 'tsoa';
 
 @Route('api/ingredient')
