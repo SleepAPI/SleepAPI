@@ -20,18 +20,9 @@ export async function upsertTeam(team: DBTeamWithoutVersion) {
 }
 
 export async function getTeams(user: DBUser): Promise<GetTeamsResponse> {
-  const teams = await TeamDAO.findMultiple({ fk_user_id: user.id });
-
-  // TODO: find pokemon too
+  const teams = await TeamDAO.findTeamsWithMembers(user.id);
 
   return {
-    teams: teams.map((team) => ({
-      index: team.team_index,
-      name: team.name,
-      camp: team.camp,
-      version: team.version,
-      // TODO: populate
-      members: [],
-    })),
+    teams,
   };
 }

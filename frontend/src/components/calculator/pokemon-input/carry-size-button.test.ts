@@ -1,10 +1,10 @@
-import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-button.vue'
+import CarrySizeButton from '@/components/calculator/pokemon-input/carry-size-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-describe('CarryLimitButton', () => {
-  let wrapper: VueWrapper<InstanceType<typeof CarryLimitButton>>
+describe('CarrySizeButton', () => {
+  let wrapper: VueWrapper<InstanceType<typeof CarrySizeButton>>
 
   const mockPokemon = {
     name: 'Pikachu',
@@ -13,7 +13,7 @@ describe('CarryLimitButton', () => {
   } as pokemon.Pokemon
 
   beforeEach(() => {
-    wrapper = mount(CarryLimitButton, {
+    wrapper = mount(CarrySizeButton, {
       props: {
         pokemon: mockPokemon
       }
@@ -27,7 +27,7 @@ describe('CarryLimitButton', () => {
   })
 
   it('renders correctly with provided data', () => {
-    expect(wrapper.text()).toContain('Carry limit 20')
+    expect(wrapper.text()).toContain('Carry size 20')
   })
 
   it('displays default values correctly in the list', async () => {
@@ -44,8 +44,8 @@ describe('CarryLimitButton', () => {
     const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
     await listItems[0].trigger('click')
 
-    expect(wrapper.emitted('update-limit')).toBeTruthy()
-    expect(wrapper.emitted('update-limit')![0]).toEqual([10])
+    expect(wrapper.emitted('update-carry')).toBeTruthy()
+    expect(wrapper.emitted('update-carry')![0]).toEqual([10])
   })
 
   it('closes the menu when a value is selected', async () => {
@@ -60,6 +60,6 @@ describe('CarryLimitButton', () => {
     const newPokemon = { name: 'Bulbasaur', carrySize: 5, maxCarrySize: 15 } as pokemon.Pokemon
     await wrapper.setProps({ pokemon: newPokemon })
 
-    expect(wrapper.vm.carryLimit).toBe(15)
+    expect(wrapper.vm.carrySize).toBe(15)
   })
 })

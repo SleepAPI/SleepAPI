@@ -14,7 +14,7 @@ export interface InstancedPokemon {
   pokemon: string;
   name: string;
   level: number;
-  carryLimit: number;
+  carrySize: number;
   skillLevel: number;
   nature: string;
   subskills: InstancedSubskill[];

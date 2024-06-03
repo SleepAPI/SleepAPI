@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`findTeamsWithMembers shall get team with members 1`] = `
+[
+  {
+    "camp": false,
+    "index": 0,
+    "members": [
+      {
+        "carrySize": 10,
+        "index": 0,
+        "ingredients": [
+          {
+            "ingredient": "Berry",
+            "level": 0,
+          },
+          {
+            "ingredient": "Potion",
+            "level": 30,
+          },
+          {
+            "ingredient": "Elixir",
+            "level": 60,
+          },
+        ],
+        "level": 25,
+        "name": "Sparky",
+        "nature": "Brave",
+        "pokemon": "Pikachu",
+        "saved": true,
+        "skillLevel": 5,
+        "subskills": [
+          {
+            "level": 10,
+            "subskill": "Thunderbolt",
+          },
+          {
+            "level": 25,
+            "subskill": "Quick Attack",
+          },
+          {
+            "level": 50,
+            "subskill": "Iron Tail",
+          },
+          {
+            "level": 75,
+            "subskill": "Electro Ball",
+          },
+          {
+            "level": 100,
+            "subskill": "Thunder",
+          },
+        ],
+      },
+      {
+        "carrySize": 10,
+        "index": 1,
+        "ingredients": [
+          {
+            "ingredient": "Berry",
+            "level": 0,
+          },
+          {
+            "ingredient": "Potion",
+            "level": 30,
+          },
+          {
+            "ingredient": "Elixir",
+            "level": 60,
+          },
+        ],
+        "level": 25,
+        "name": "Sparky",
+        "nature": "Brave",
+        "pokemon": "Pikachu",
+        "saved": true,
+        "skillLevel": 5,
+        "subskills": [
+          {
+            "level": 10,
+            "subskill": "Thunderbolt",
+          },
+          {
+            "level": 25,
+            "subskill": "Quick Attack",
+          },
+          {
+            "level": 50,
+            "subskill": "Iron Tail",
+          },
+          {
+            "level": 75,
+            "subskill": "Electro Ball",
+          },
+          {
+            "level": 100,
+            "subskill": "Thunder",
+          },
+        ],
+      },
+      {
+        "carrySize": 10,
+        "index": 2,
+        "ingredients": [
+          {
+            "ingredient": "Berry",
+            "level": 0,
+          },
+          {
+            "ingredient": "Potion",
+            "level": 30,
+          },
+          {
+            "ingredient": "Elixir",
+            "level": 60,
+          },
+        ],
+        "level": 25,
+        "name": "Bubble",
+        "nature": "Brave",
+        "pokemon": "Bulbasaur",
+        "saved": true,
+        "skillLevel": 5,
+        "subskills": [
+          {
+            "level": 10,
+            "subskill": "Thunderbolt",
+          },
+          {
+            "level": 25,
+            "subskill": "Quick Attack",
+          },
+          {
+            "level": 50,
+            "subskill": "Iron Tail",
+          },
+          {
+            "level": 75,
+            "subskill": "Electro Ball",
+          },
+          {
+            "level": 100,
+            "subskill": "Thunder",
+          },
+        ],
+      },
+    ],
+    "name": "Team A",
+    "version": 1,
+  },
+]
+`;

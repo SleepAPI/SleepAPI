@@ -40,7 +40,9 @@ export const useTeamStore = defineStore('team', {
 
           this.teams = teams
         } catch (error) {
-          console.error('Error fetching teams')
+          console.error('Error fetching teams: ')
+          const userStore = useUserStore()
+          userStore.logout()
         }
       }
       this.loadingTeams = false

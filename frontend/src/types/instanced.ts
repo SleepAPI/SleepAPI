@@ -14,7 +14,7 @@ export interface InstancedPokemonExt {
   pokemon: pokemon.Pokemon
   name: string
   level: number
-  carryLimit: number
+  carrySize: number
   skillLevel: number
   nature: nature.Nature
   subskills: InstancedSubskillExt[]

@@ -43,11 +43,13 @@ export async function up(knex: Knex) {
 
     table.boolean('saved').index().defaultTo(false);
 
+    // TODO: need to trigger production migration
     table.string('pokemon', 255).notNullable();
+    table.string('name', 255).notNullable();
     table.integer('skill_level').notNullable();
     table.integer('carry_size').notNullable();
     table.integer('level').notNullable();
-    table.string('nature', 255).defaultTo('BASHFUL');
+    table.string('nature', 255).notNullable();
 
     table.string('subskill_10', 255);
     table.string('subskill_25', 255);
