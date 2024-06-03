@@ -80,7 +80,7 @@ class TeamServiceImpl {
       pokemon: getPokemon(instancedPokemon.pokemon),
       name: instancedPokemon.name,
       level: instancedPokemon.level,
-      carryLimit: instancedPokemon.carryLimit,
+      carrySize: instancedPokemon.carrySize,
       skillLevel: instancedPokemon.skillLevel,
       nature: getNature(instancedPokemon.nature),
       subskills: instancedPokemon.subskills.map((instancedSubskill) => ({

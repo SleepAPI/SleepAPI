@@ -47,7 +47,7 @@
         <LevelButton @update-level="updateLevel" />
       </v-col>
       <v-col cols="6" class="flex-center">
-        <CarryLimitButton :pokemon="pokemon" @update-limit="updateLimit" />
+        <CarrySizeButton :pokemon="pokemon" @update-carry="updateLimit" />
       </v-col>
     </v-row>
 
@@ -164,7 +164,7 @@
 </template>
 
 <script lang="ts">
-import CarryLimitButton from '@/components/calculator/pokemon-input/carry-limit-button.vue'
+import CarrySizeButton from '@/components/calculator/pokemon-input/carry-size-button.vue'
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
 import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
@@ -183,7 +183,7 @@ export default defineComponent({
     PokemonButton,
     PokemonName,
     LevelButton,
-    CarryLimitButton,
+    CarrySizeButton,
     IngredientButton,
     MainskillButton,
     NatureButton
@@ -208,7 +208,7 @@ export default defineComponent({
     pokemon: pokemon.PIKACHU,
     name: undefined as string | undefined,
     level: 50,
-    carryLimit: 0,
+    carrySize: 0,
     skillLevel: 0,
     nature: nature.BASHFUL,
     subskills: [
@@ -268,12 +268,12 @@ export default defineComponent({
     //   // TODO: populate rest
     // } else {
     //   this.pokemon = this.selectedPokemon
-    //   this.carryLimit = this.selectedPokemon.maxCarrySize
+    //   this.carrySize = this.selectedPokemon.maxCarrySize
     // }
 
     // TODO: replace with above
     this.pokemon = this.selectedPokemon
-    this.carryLimit = this.selectedPokemon.maxCarrySize
+    this.carrySize = this.selectedPokemon.maxCarrySize
   },
   methods: {
     toggleSave() {
@@ -297,7 +297,7 @@ export default defineComponent({
       this.level = newLevel
     },
     updateLimit(newLimit: number) {
-      this.carryLimit = newLimit
+      this.carrySize = newLimit
     },
     updateIngredient(params: { ingredientSet: IngredientSet; ingredientLevel: number }) {
       const ingredientToUpdate = this.ingredients.find(

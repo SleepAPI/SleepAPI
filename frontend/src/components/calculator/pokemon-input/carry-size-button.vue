@@ -2,7 +2,7 @@
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
       <v-btn class="w-100" v-bind="props" :disabled="singleStageMon">
-        <span class="text-body-1"> Carry limit {{ carryLimit }} </span>
+        <span class="text-body-1"> Carry size {{ carrySize }} </span>
       </v-btn>
     </template>
 
@@ -21,16 +21,16 @@ import { pokemon } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
-  name: 'CarryLimitButton',
+  name: 'CarrySizeButton',
   props: {
     pokemon: {
       type: Object as PropType<pokemon.Pokemon>,
       required: true
     }
   },
-  emits: ['update-limit'],
+  emits: ['update-carry'],
   data: () => ({
-    carryLimit: 0,
+    carrySize: 0,
     menu: false
   }),
   computed: {
@@ -59,19 +59,19 @@ export default {
       immediate: true,
       handler(newPokemon: pokemon.Pokemon) {
         if (newPokemon) {
-          this.carryLimit = newPokemon.maxCarrySize
+          this.carrySize = newPokemon.maxCarrySize
         }
       }
     }
   },
   methods: {
     selectValue(value: number) {
-      this.updateCarryLimit(value)
+      this.updateCarrySize(value)
       this.menu = false
     },
-    updateCarryLimit(newLimit: number) {
-      this.carryLimit = newLimit
-      this.$emit('update-limit', newLimit)
+    updateCarrySize(newSize: number) {
+      this.carrySize = newSize
+      this.$emit('update-carry', newSize)
     }
   }
 }
