@@ -1,11 +1,11 @@
 import { ShareParams } from '@src/routes/share-router/share-router';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
-import { getIngredientForName } from '@src/utils/ingredient-utils/ingredient-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { Request as Protocol } from 'express';
 import { readFileSync } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import { getIngredient } from 'sleepapi-common';
 import { Controller, Get, Hidden, Queries, Request, Route } from 'tsoa';
 
 export default class ShareController extends Controller {
@@ -25,7 +25,7 @@ export default class ShareController extends Controller {
       const ingredient = match?.at(3) ?? 'unknown';
       return {
         amount: +amount,
-        ingredient: getIngredientForName(ingredient),
+        ingredient: getIngredient(ingredient),
       };
     });
     const producedIngredientsPretty = prettifyIngredientDrop(producedIngredientsSplit);
@@ -38,7 +38,7 @@ export default class ShareController extends Controller {
       const ingredient = match?.at(3) ?? 'unknown';
       return {
         amount: +amount,
-        ingredient: getIngredientForName(ingredient),
+        ingredient: getIngredient(ingredient),
       };
     });
     const ingredientSetPretty = shortPrettifyIngredientDrop(ingredientSetSplit);

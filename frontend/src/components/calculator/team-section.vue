@@ -25,7 +25,7 @@
       <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
         <v-row class="flex-nowrap" dense>
           <v-col v-for="member in 5" :key="member" class="team-slot">
-            <TeamSlot />
+            <TeamSlot :member-index="member" />
           </v-col>
         </v-row>
       </v-window-item>

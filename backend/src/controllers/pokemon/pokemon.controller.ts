@@ -1,7 +1,7 @@
 import { GetPokemonQueryParams } from '@src/routes/pokemon-router/pokemon-router';
-import { getPokemon, getPokemonNames } from '@src/utils/pokemon-utils/pokemon-utils';
+import { getPokemonNames } from '@src/utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
-import { pokemon } from 'sleepapi-common';
+import { getPokemon, pokemon } from 'sleepapi-common';
 import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 
 @Route('api/pokemon')

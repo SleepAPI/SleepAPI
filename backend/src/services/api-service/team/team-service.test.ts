@@ -64,8 +64,8 @@ describe('getTeams', () => {
 
     expect(response).toEqual({
       teams: [
-        { index: 0, name: 'Team A', camp: false },
-        { index: 1, name: 'Team B', camp: true },
+        { index: 0, name: 'Team A', camp: false, members: [], version: 1 },
+        { index: 1, name: 'Team B', camp: true, members: [], version: 1 },
       ],
     });
   });
@@ -79,7 +79,7 @@ describe('getTeams', () => {
     const response = await getTeams(user1);
 
     expect(response).toEqual({
-      teams: [{ index: 0, name: 'Team A', camp: false }],
+      teams: [{ index: 0, name: 'Team A', camp: false, members: [], version: 1 }],
     });
   });
 });

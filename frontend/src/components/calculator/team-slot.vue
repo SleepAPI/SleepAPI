@@ -5,7 +5,7 @@
       <v-icon>mdi-plus</v-icon>
     </div>
 
-    <TeamSlotMenu v-model:show="showTeamSlotDialog" :empty-slot="emptySlot" />
+    <TeamSlotMenu v-model:show="showTeamSlotDialog" :member-index="memberIndex" />
   </v-card>
 </template>
 
@@ -18,17 +18,18 @@ export default defineComponent({
   components: {
     TeamSlotMenu
   },
+  props: {
+    memberIndex: {
+      type: Number,
+      required: true
+    }
+  },
   data: () => ({
     loading: false,
     showTeamSlotDialog: false,
     pokemon: '',
     imageUrl: ''
   }),
-  computed: {
-    emptySlot() {
-      return this.pokemon === '' // TODO: update to better empty alg
-    }
-  },
   methods: {
     fetch() {
       this.loading = true

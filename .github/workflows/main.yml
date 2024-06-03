@@ -38,11 +38,13 @@ jobs:
           key: frontend-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: frontend-
 
-      - name: Install and Build Common Module
+      - name: Install and Test Common
         run: |
           cd common
           npm ci
           npm run build
+          npm run test
+          npm run lint
 
       - name: Install and Test Backend
         run: |

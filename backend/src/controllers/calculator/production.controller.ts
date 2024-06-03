@@ -3,12 +3,10 @@ import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
-import { getNature } from '@src/utils/nature-utils/nature-utils';
-import { getPokemon } from '@src/utils/pokemon-utils/pokemon-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
-import { mainskill, pokemon } from 'sleepapi-common';
+import { getNature, getPokemon, mainskill, pokemon } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Query, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')

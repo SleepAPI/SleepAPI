@@ -1,9 +1,12 @@
+import { InstancedPokemon } from '../../pokemon/instanced-pokemon';
+
 export interface GetTeamResponse {
   index: number;
   name: string;
   camp: boolean;
+  version: number;
 
-  // TODO: add pokemon
+  members: InstancedPokemon[];
 }
 
 export interface GetTeamsResponse {
