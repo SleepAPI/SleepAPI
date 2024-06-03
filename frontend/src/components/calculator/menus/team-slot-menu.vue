@@ -23,7 +23,7 @@
     </v-card>
   </v-dialog>
 
-  <v-dialog v-model="subDialog" max-width="600px">
+  <v-dialog v-model="subDialog" max-width="600px" content-class="fixed-dialog-content">
     <component :is="currentDialogComponent" @cancel="closeSubDialog"></component>
   </v-dialog>
 </template>
@@ -73,8 +73,16 @@ export default defineComponent({
       this.subDialog = false
     },
     savePokemon() {
-      //
+      // Your save logic
     }
   }
 })
 </script>
+
+<style lang="scss">
+// I would rather avoid this, but on Android PWA the dialog jumps with keyboard open
+.fixed-dialog-content {
+  position: fixed !important;
+  top: 20px !important;
+}
+</style>

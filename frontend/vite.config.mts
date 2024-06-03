@@ -62,6 +62,7 @@ export default defineConfig({
     VueDevTools()
   ],
   server: {
+    host: true,
     port: 8001,
     proxy: {
       '/api': 'http://localhost:3000'
