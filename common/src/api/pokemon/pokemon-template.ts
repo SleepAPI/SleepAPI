@@ -1,15 +1,16 @@
-export interface InstancedSubskill {
+export interface SubskillTemplate {
   level: number;
   subskill: string;
 }
 
-export interface InstancedIngredient {
+export interface IngredientTemplate {
   level: number;
   ingredient: string;
 }
 
-export interface InstancedPokemon {
+export interface PokemonTemplate {
   index: number;
+  version: number;
   saved: boolean;
   pokemon: string;
   name: string;
@@ -17,6 +18,6 @@ export interface InstancedPokemon {
   carrySize: number;
   skillLevel: number;
   nature: string;
-  subskills: InstancedSubskill[];
-  ingredients: InstancedIngredient[];
+  subskills: SubskillTemplate[];
+  ingredients: IngredientTemplate[];
 }

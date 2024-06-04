@@ -1,1 +1,2 @@
-export * from './instanced-pokemon';
+export * from './pokemon-instance';
+export * from './pokemon-template';

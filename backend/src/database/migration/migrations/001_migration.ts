@@ -42,8 +42,8 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE');
 
     table.boolean('saved').index().defaultTo(false);
+    table.uuid('external_id').notNullable().unique();
 
-    // TODO: need to trigger production migration
     table.string('pokemon', 255).notNullable();
     table.string('name', 255).notNullable();
     table.integer('skill_level').notNullable();

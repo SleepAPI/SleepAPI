@@ -1,4 +1,4 @@
-import { toSeconds } from 'src/utils/time-utils/frequency-utils';
+import { toSeconds } from '../../utils/time-utils/frequency-utils';
 import {
   BLUK,
   CHERI,

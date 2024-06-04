@@ -6,6 +6,7 @@ const DBPokemonSchema = Type.Composite([
   Type.Object({
     fk_user_id: Type.Number(),
     saved: Type.Boolean(),
+    external_id: Type.String({ minLength: 36, maxLength: 36 }),
     pokemon: Type.String(),
     name: Type.String(),
     skill_level: Type.Number(),

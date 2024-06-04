@@ -8,7 +8,8 @@ import { uuid } from 'sleepapi-common';
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  let innerCounter = 0;
+  uuid.v4 = jest.fn(() => `${++innerCounter}`.padEnd(36, `${innerCounter}`));
 });
 
 describe('TeamDAO insert', () => {
@@ -169,6 +170,7 @@ describe('findTeamsWithMembers', () => {
     await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Pikachu',
       name: 'Sparky',
       skill_level: 5,
@@ -188,6 +190,7 @@ describe('findTeamsWithMembers', () => {
     await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Bulbasaur',
       name: 'Bubble',
       skill_level: 5,
@@ -208,6 +211,7 @@ describe('findTeamsWithMembers', () => {
     await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Bulbasaur',
       name: 'Bubble',
       skill_level: 5,
