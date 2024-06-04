@@ -1,6 +1,11 @@
 import { TeamService } from '@/services/team/team-service'
 import { useUserStore } from '@/stores/user-store'
-import { MAX_TEAMS, MAX_TEAM_MEMBERS, type InstancedTeamExt } from '@/types/instanced'
+import {
+  MAX_TEAMS,
+  MAX_TEAM_MEMBERS,
+  type InstancedPokemonExt,
+  type InstancedTeamExt
+} from '@/types/member/instanced'
 import { defineStore } from 'pinia'
 
 export interface TeamState {
@@ -66,6 +71,22 @@ export const useTeamStore = defineStore('team', {
         } catch {
           console.error('Error updating teams')
         }
+      }
+    },
+    async updateTeamMember(updatedMember: InstancedPokemonExt) {
+      const userStore = useUserStore()
+      if (userStore.loggedIn) {
+        try {
+          const instancedMember = await TeamService.createOrUpdateMember({
+            teamIndex: this.currentIndex,
+            member: updatedMember
+          })
+          this.teams[this.currentIndex].members[updatedMember.index] = instancedMember
+        } catch (error) {
+          console.error('Error updating teams')
+        }
+      } else {
+        this.teams[this.currentIndex].members[updatedMember.index] = updatedMember
       }
     },
     reset() {

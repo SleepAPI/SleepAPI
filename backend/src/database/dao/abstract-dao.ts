@@ -110,6 +110,18 @@ export abstract class AbstractDAO<
     return await queryToExecute;
   }
 
+  async upsert(params: { updated: Omit<DBEntityType, 'id' | 'version'>; filter: Filter<DBEntityType> }) {
+    const { updated, filter } = params;
+    const prev = await this.find(filter);
+
+    if (prev) {
+      const entityToUpdate = { ...updated, id: prev.id, version: prev.version } as DBEntityType;
+      return await this.update(entityToUpdate);
+    } else {
+      return await this.insert(updated);
+    }
+  }
+
   async batchInsert(
     entities: Array<Omit<DBEntityType, 'id'>>,
     chunkSize = 1000,

@@ -4,23 +4,40 @@ import {
   MAX_TEAM_MEMBERS,
   type InstancedPokemonExt,
   type InstancedTeamExt
-} from '@/types/instanced'
+} from '@/types/member/instanced'
 import {
   getIngredient,
   getNature,
   getPokemon,
   getSubskill,
   type GetTeamsResponse,
-  type InstancedPokemon,
-  type PutTeamRequest,
-  type PutTeamResponse
+  type PokemonInstance,
+  type UpsertTeamMemberRequest,
+  type UpsertTeamMemberResponse,
+  type UpsertTeamMetaRequest,
+  type UpsertTeamMetaResponse
 } from 'sleepapi-common'
 
 class TeamServiceImpl {
-  public async createOrUpdateTeam(index: number, teamInfo: PutTeamRequest) {
-    const response = await serverAxios.put<PutTeamResponse>(`team/${index}`, teamInfo)
+  public async createOrUpdateTeam(index: number, teamInfo: UpsertTeamMetaRequest) {
+    const response = await serverAxios.put<UpsertTeamMetaResponse>(`team/meta/${index}`, teamInfo)
 
     return response.data
+  }
+
+  public async createOrUpdateMember(params: {
+    teamIndex: number
+    member: InstancedPokemonExt
+  }): Promise<InstancedPokemonExt> {
+    const { teamIndex, member } = params
+
+    const request = this.#toUpsertTeamMemberRequest(member)
+
+    const response = await serverAxios.put<UpsertTeamMemberResponse>(
+      `team/member/${teamIndex}`,
+      request
+    )
+    return this.#populateMember(response.data)
   }
 
   public async getTeams(): Promise<InstancedTeamExt[]> {
@@ -67,7 +84,7 @@ class TeamServiceImpl {
     return teams
   }
 
-  #populateMember(instancedPokemon: InstancedPokemon): InstancedPokemonExt {
+  #toUpsertTeamMemberRequest(instancedPokemon: InstancedPokemonExt): UpsertTeamMemberRequest {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (instancedPokemon.subskills.length > 5) {
@@ -76,7 +93,38 @@ class TeamServiceImpl {
 
     return {
       index: instancedPokemon.index,
+      version: instancedPokemon.version,
       saved: instancedPokemon.saved,
+      externalId: instancedPokemon.externalId,
+      pokemon: instancedPokemon.pokemon.name,
+      name: instancedPokemon.name,
+      level: instancedPokemon.level,
+      carrySize: instancedPokemon.carrySize,
+      skillLevel: instancedPokemon.skillLevel,
+      nature: instancedPokemon.nature.name,
+      subskills: instancedPokemon.subskills.map((instancedSubskill) => ({
+        level: instancedSubskill.level,
+        subskill: instancedSubskill.subskill.name
+      })),
+      ingredients: instancedPokemon.ingredients.map((instancedIngredient) => ({
+        level: instancedIngredient.level,
+        ingredient: instancedIngredient.ingredient.name
+      }))
+    }
+  }
+
+  #populateMember(instancedPokemon: PokemonInstance): InstancedPokemonExt {
+    if (instancedPokemon.ingredients.length !== 3) {
+      throw new Error('Received corrupt ingredient data')
+    } else if (instancedPokemon.subskills.length > 5) {
+      throw new Error('Received corrupt subskill data')
+    }
+
+    return {
+      index: instancedPokemon.index,
+      version: instancedPokemon.version,
+      saved: instancedPokemon.saved,
+      externalId: instancedPokemon.externalId,
       pokemon: getPokemon(instancedPokemon.pokemon),
       name: instancedPokemon.name,
       level: instancedPokemon.level,

@@ -1,4 +1,4 @@
-import { InstancedPokemon } from '../../pokemon/instanced-pokemon';
+import { PokemonInstance } from '../../pokemon/pokemon-instance';
 
 export interface GetTeamResponse {
   index: number;
@@ -6,7 +6,7 @@ export interface GetTeamResponse {
   camp: boolean;
   version: number;
 
-  members: InstancedPokemon[];
+  members: PokemonInstance[];
 }
 
 export interface GetTeamsResponse {

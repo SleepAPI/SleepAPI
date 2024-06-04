@@ -10,7 +10,9 @@ export interface InstancedSubskillExt {
 }
 export interface InstancedPokemonExt {
   index: number
+  version: number // TODO: maybe this should just be optional too, easier to use with in memory templates
   saved: boolean
+  externalId?: string
   pokemon: pokemon.Pokemon
   name: string
   level: number

@@ -12,6 +12,7 @@
     </template>
     <v-speed-dial v-model="fab" location="top center" transition="fade-transition">
       <template #activator="{ props }">
+        <!-- TODO: add small badge with amount of the ingredient this mon has at this level -->
         <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
           <v-avatar>
             <v-img id="ingredientImage" :src="ingredientImage"></v-img>
@@ -101,7 +102,7 @@ export default {
         }
 
         this.$emit('update-ingredient', {
-          ingredientSet: this.ingredientSet,
+          ingredient: this.ingredientSet.ingredient,
           ingredientLevel: this.ingredientLevel
         })
       }
@@ -135,7 +136,7 @@ export default {
 
       this.ingredientSet = ingredientSet
       this.$emit('update-ingredient', {
-        ingredientSet,
+        ingredient: this.ingredientSet.ingredient,
         ingredientLevel: this.ingredientLevel
       })
     }

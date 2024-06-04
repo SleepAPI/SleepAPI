@@ -1,15 +1,18 @@
 import serverAxios from '@/router/server-axios'
 import { TeamService } from '@/services/team/team-service'
 import { useTeamStore } from '@/stores/team/team-store'
-import { MAX_TEAM_MEMBERS } from '@/types/instanced'
+import { MAX_TEAM_MEMBERS, type InstancedPokemonExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
 import {
+  getIngredient,
   getNature,
   getPokemon,
+  getSubskill,
   ingredient,
   nature,
   pokemon,
   subskill,
+  uuid,
   type GetTeamResponse
 } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -21,12 +24,16 @@ vi.mock('@/router/server-axios', () => ({
   }
 }))
 
+beforeEach(() => {
+  uuid.v4 = vi.fn().mockReturnValue('0'.repeat(36))
+})
+
 describe('createOrUpdateTeam', () => {
   it('should call server to create team', async () => {
     const teamRequest = { name: 'some name', camp: false }
     const res = await TeamService.createOrUpdateTeam(0, teamRequest)
 
-    expect(serverAxios.put).toHaveBeenCalledWith('team/0', teamRequest)
+    expect(serverAxios.put).toHaveBeenCalledWith('team/meta/0', teamRequest)
     expect(res).toMatchInlineSnapshot(`"successful response"`)
   })
 })
@@ -71,7 +78,9 @@ describe('getTeams', () => {
         members: [
           {
             index: 0,
+            version: 0,
             saved: false,
+            externalId: uuid.v4(),
             pokemon: 'bulbasaur',
             name: 'Bulbasaur',
             level: 5,
@@ -101,7 +110,9 @@ describe('getTeams', () => {
       members: [
         {
           index: 0,
+          version: 0,
           saved: false,
+          externalId: '000000000000000000000000000000000000',
           pokemon: getPokemon('bulbasaur'),
           name: 'Bulbasaur',
           level: 5,
@@ -182,6 +193,122 @@ describe('getTeams', () => {
           ]
         }))
       })
+    })
+  })
+})
+
+describe('createOrUpdateMember', () => {
+  it('should call server to create or update a member and return the updated member', async () => {
+    const teamIndex = 0
+    const member: InstancedPokemonExt = {
+      index: 1,
+      version: 1,
+      saved: true,
+      externalId: uuid.v4(),
+      pokemon: pokemon.BULBASAUR,
+      name: 'Bulbasaur',
+      level: 5,
+      carrySize: 3,
+      skillLevel: 2,
+      nature: nature.BRAVE,
+      subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }],
+      ingredients: [
+        { level: 0, ingredient: ingredient.FANCY_APPLE },
+        { level: 30, ingredient: ingredient.FANCY_APPLE },
+        { level: 60, ingredient: ingredient.FANCY_APPLE }
+      ]
+    }
+    serverAxios.put = vi.fn().mockResolvedValueOnce({
+      data: {
+        index: 1,
+        version: 1,
+        saved: true,
+        externalId: uuid.v4(),
+        pokemon: pokemon.BULBASAUR.name,
+        name: 'Bulbasaur',
+        level: 5,
+        carrySize: 3,
+        skillLevel: 2,
+        nature: nature.BRAVE.name,
+        subskills: [{ level: 10, subskill: subskill.HELPING_BONUS.name }],
+        ingredients: [
+          { level: 0, ingredient: ingredient.FANCY_APPLE.name },
+          { level: 30, ingredient: ingredient.FANCY_APPLE.name },
+          { level: 60, ingredient: ingredient.FANCY_APPLE.name }
+        ]
+      }
+    })
+
+    const result = await TeamService.createOrUpdateMember({ teamIndex, member })
+
+    expect(serverAxios.put).toHaveBeenCalledWith(`team/member/${teamIndex}`, {
+      index: member.index,
+      version: member.version,
+      saved: member.saved,
+      externalId: member.externalId,
+      pokemon: member.pokemon.name,
+      name: member.name,
+      level: member.level,
+      carrySize: member.carrySize,
+      skillLevel: member.skillLevel,
+      nature: member.nature.name,
+      subskills: member.subskills.map((subskill) => ({
+        level: subskill.level,
+        subskill: subskill.subskill.name
+      })),
+      ingredients: member.ingredients.map((ingredient) => ({
+        level: ingredient.level,
+        ingredient: ingredient.ingredient.name
+      }))
+    })
+    expect(result).toEqual(member)
+  })
+
+  it('should handle server error when updating a member', async () => {
+    const teamIndex = 0
+    const member = {
+      index: 1,
+      version: 1,
+      saved: true,
+      externalId: uuid.v4(),
+      pokemon: getPokemon('bulbasaur'),
+      name: 'Bulbasaur',
+      level: 5,
+      carrySize: 3,
+      skillLevel: 2,
+      nature: getNature('brave'),
+      subskills: [{ level: 10, subskill: getSubskill('Helping Bonus') }],
+      ingredients: [
+        { level: 0, ingredient: getIngredient('apple') },
+        { level: 30, ingredient: getIngredient('apple') },
+        { level: 60, ingredient: getIngredient('apple') }
+      ]
+    }
+    serverAxios.put = vi.fn().mockRejectedValueOnce(new Error('Server error'))
+
+    await expect(TeamService.createOrUpdateMember({ teamIndex, member })).rejects.toThrow(
+      'Server error'
+    )
+
+    expect(serverAxios.put).toHaveBeenCalledWith(`team/member/${teamIndex}`, {
+      index: member.index,
+      version: member.version,
+      saved: member.saved,
+      externalId: member.externalId,
+      pokemon: member.pokemon.name,
+      name: member.name,
+      level: member.level,
+      carrySize: member.carrySize,
+      skillLevel: member.skillLevel,
+      nature: member.nature.name,
+      subskills: member.subskills.map((subskill) => ({
+        level: subskill.level,
+        subskill: subskill.subskill.name
+      })),
+      ingredients: member.ingredients.map((ingredient) => ({
+        level: ingredient.level,
+        ingredient: ingredient.ingredient.name
+      }))
     })
   })
 })

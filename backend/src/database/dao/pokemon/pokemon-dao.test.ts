@@ -14,6 +14,7 @@ describe('PokemonDAO insert', () => {
     const pokemon = await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Pikachu',
       name: 'Sparky',
       skill_level: 5,
@@ -36,6 +37,7 @@ describe('PokemonDAO insert', () => {
       [
         {
           "carry_size": 10,
+          "external_id": "000000000000000000000000000000000000",
           "fk_user_id": 1,
           "id": 1,
           "ingredient_0": "Berry",
@@ -63,6 +65,7 @@ describe('PokemonDAO insert', () => {
       PokemonDAO.insert({
         fk_user_id: undefined as any,
         saved: true,
+        external_id: uuid.v4(),
         pokemon: 'Pikachu',
         name: 'Sparky',
         skill_level: 5,
@@ -86,6 +89,7 @@ describe('PokemonDAO insert', () => {
       PokemonDAO.insert({
         fk_user_id: 1,
         saved: true,
+        external_id: uuid.v4(),
         pokemon: undefined as any,
         name: 'Sparky',
         skill_level: 5,
@@ -103,8 +107,6 @@ describe('PokemonDAO insert', () => {
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: pokemon.pokemon/);
   });
-
-  // Add more tests for other required fields similarly...
 });
 
 describe('PokemonDAO update', () => {
@@ -112,6 +114,7 @@ describe('PokemonDAO update', () => {
     const pokemon = await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Pikachu',
       name: 'Sparky',
       skill_level: 5,
@@ -136,6 +139,7 @@ describe('PokemonDAO update', () => {
       [
         {
           "carry_size": 10,
+          "external_id": "000000000000000000000000000000000000",
           "fk_user_id": 1,
           "id": 1,
           "ingredient_0": "Berry",
@@ -157,8 +161,6 @@ describe('PokemonDAO update', () => {
       ]
     `);
   });
-
-  // Add more update tests as needed...
 });
 
 describe('PokemonDAO delete', () => {
@@ -166,6 +168,7 @@ describe('PokemonDAO delete', () => {
     const pokemon = await PokemonDAO.insert({
       fk_user_id: 1,
       saved: true,
+      external_id: uuid.v4(),
       pokemon: 'Pikachu',
       name: 'Sparky',
       skill_level: 5,

@@ -1,6 +1,6 @@
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
-import { pokemon, type IngredientSet } from 'sleepapi-common'
+import { ingredient, pokemon, type IngredientSet } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
@@ -82,13 +82,13 @@ describe('IngredientButton', () => {
     expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('banana')
 
     const emitted = wrapper.emitted('update-ingredient') as Array<
-      Array<{ ingredientSet: IngredientSet; ingredientLevel: number }>
+      Array<{ ingredient: ingredient.Ingredient; ingredientLevel: number }>
     >
 
     expect(emitted).toHaveLength(2)
     const emittedEvent = emitted[1][0]
 
-    expect(emittedEvent.ingredientSet.ingredient.name).toBe('banana')
+    expect(emittedEvent.ingredient.name).toBe('banana')
     expect(emittedEvent.ingredientLevel).toBe(60)
 
     // Clear mock timers after the test
