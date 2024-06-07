@@ -36,8 +36,7 @@ export const useTeamStore = defineStore('team', {
       return (memberIndex: number) =>
         state.teams[state.currentIndex].members[memberIndex] ?? undefined
     },
-    getTeamSize: (state) =>
-      state.teams[state.currentIndex].members.filter((member) => member !== undefined).length
+    getTeamSize: (state) => state.teams[state.currentIndex].members.filter(Boolean).length
   },
   actions: {
     async populateTeams() {
@@ -116,8 +115,8 @@ export const useTeamStore = defineStore('team', {
       const existingMember = this.getPokemon(memberIndex)
       const currentTeam = this.getCurrentTeam
 
-      const openSlotIndex = currentTeam.members.findIndex((member) => member === undefined)
-      if (openSlotIndex === -1 || existingMember === undefined) {
+      const openSlotIndex = currentTeam.members.findIndex((member) => member == null) // checks for both null and undefined
+      if (openSlotIndex === -1 || existingMember == null) {
         console.error("No open slot or member can't be found")
         return
       }
@@ -125,18 +124,22 @@ export const useTeamStore = defineStore('team', {
       const duplicatedMember = { ...existingMember, index: openSlotIndex }
       currentTeam.members[openSlotIndex] = duplicatedMember
 
-      // TODO: does this just work?
+      await this.updateTeamMember(duplicatedMember)
+    },
+    async removeMember(memberIndex: number) {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          await TeamService.createOrUpdateMember({
+          await TeamService.removeMember({
             teamIndex: this.currentIndex,
-            member: duplicatedMember
+            memberIndex
           })
         } catch (error) {
-          console.error('Error adding member to the team')
+          console.error('Error updating teams')
         }
       }
+
+      this.teams[this.currentIndex].members[memberIndex] = undefined
     }
   },
   persist: true

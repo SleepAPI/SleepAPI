@@ -105,6 +105,32 @@ export async function upsertTeamMember(params: {
   };
 }
 
+export async function getTeams(user: DBUser): Promise<GetTeamsResponse> {
+  const teams = await TeamDAO.findTeamsWithMembers(user.id);
+
+  return {
+    teams,
+  };
+}
+
+export async function deleteMember(params: { teamIndex: number; memberIndex: number; user: DBUser }) {
+  const { teamIndex, memberIndex, user } = params;
+
+  // update since we need to bump version too
+  const teamToUpdate = await TeamDAO.get({ fk_user_id: user.id, team_index: teamIndex });
+  const team = await TeamDAO.update(teamToUpdate);
+
+  const teamMember = await TeamMemberDAO.get({ fk_team_id: team.id, member_index: memberIndex });
+  await TeamMemberDAO.delete(teamMember);
+
+  const pokemon = await PokemonDAO.get({ id: teamMember.fk_pokemon_id });
+  const nrOfTimesInTeams = await TeamMemberDAO.count({ fk_pokemon_id: pokemon.id });
+  // if pokemon not saved and this is the only time it is used in a team
+  if (!pokemon.saved && nrOfTimesInTeams === 0) {
+    await PokemonDAO.delete(pokemon);
+  }
+}
+
 function subskillForLevel(level: number, subskills: SubskillTemplate[]) {
   return subskills.find((subskill) => subskill.level === level)?.subskill;
 }
@@ -137,12 +163,4 @@ function ingredientForLevel(level: number, ingredients: IngredientTemplate[]) {
     throw new IngredientError('Missing required ingredient in upsert member request for level: ' + level);
   }
   return ingredient;
-}
-
-export async function getTeams(user: DBUser): Promise<GetTeamsResponse> {
-  const teams = await TeamDAO.findTeamsWithMembers(user.id);
-
-  return {
-    teams,
-  };
 }

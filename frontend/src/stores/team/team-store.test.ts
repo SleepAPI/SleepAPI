@@ -243,4 +243,64 @@ describe('Team Store', () => {
     expect(consoleSpy).toHaveBeenCalledWith("No open slot or member can't be found")
     consoleSpy.mockRestore()
   })
+
+  it('should remove member', async () => {
+    const teamStore = useTeamStore()
+    const userStore = useUserStore()
+
+    userStore.setTokens({
+      accessToken: 'token1',
+      expiryDate: 10,
+      refreshToken: 'token2'
+    })
+
+    const member2 = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
+    const member4 = { index: 3, name: 'Pikachu2' } as InstancedPokemonExt
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        members: [undefined, member2, undefined, member4, undefined],
+        version: 1
+      }
+    ]
+
+    TeamService.removeMember = vi.fn().mockResolvedValue(undefined)
+
+    await teamStore.removeMember(member2.index)
+
+    expect(teamStore.teams[0].members).toEqual([
+      undefined,
+      undefined,
+      undefined,
+      {
+        index: member4.index,
+        name: 'Pikachu2'
+      },
+      undefined
+    ])
+    expect(TeamService.removeMember).toHaveBeenCalledWith({
+      teamIndex: 0,
+      memberIndex: 1
+    })
+  })
+
+  it('should get number of members in team', async () => {
+    const teamStore = useTeamStore()
+
+    const member = { name: 'Pikachu' } as InstancedPokemonExt
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        members: [undefined, member, null as any, member, '' as any],
+        version: 1
+      }
+    ]
+
+    const size = teamStore.getTeamSize
+    expect(size).toBe(2)
+  })
 })

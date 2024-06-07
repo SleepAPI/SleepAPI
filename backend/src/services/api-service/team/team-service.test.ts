@@ -4,7 +4,7 @@ import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
 import { DBUser, UserDAO } from '@src/database/dao/user/user-dao';
 import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
 import { client } from '@src/services/api-service/login/login-service';
-import { getTeams, upsertTeamMember, upsertTeamMeta } from '@src/services/api-service/team/team-service';
+import { deleteMember, getTeams, upsertTeamMember, upsertTeamMeta } from '@src/services/api-service/team/team-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
 import { uuid } from 'sleepapi-common';
@@ -312,5 +312,107 @@ describe('upsertTeamMember', () => {
     };
 
     await expect(upsertTeamMember({ teamIndex: 0, request, user })).rejects.toThrow(IngredientError);
+  });
+});
+
+describe('deleteMember', () => {
+  it('should delete the member and its associated Pokemon if not saved and not in other teams', async () => {
+    const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
+    const team = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
+
+    const pokemon = await PokemonDAO.insert({
+      external_id: uuid.v4(),
+      fk_user_id: user.id,
+      saved: false,
+      pokemon: 'bulbasaur',
+      name: 'Bulbasaur',
+      level: 5,
+      carry_size: 3,
+      skill_level: 2,
+      nature: 'brave',
+      subskill_10: 'quick-attack',
+      subskill_25: 'solar-beam',
+      subskill_50: 'razor-leaf',
+      subskill_75: 'growl',
+      subskill_100: 'tackle',
+      ingredient_0: 'apple',
+      ingredient_30: 'berry',
+      ingredient_60: 'pearl',
+    });
+
+    await TeamMemberDAO.insert({ fk_team_id: team.id, fk_pokemon_id: pokemon.id, member_index: 0 });
+
+    await deleteMember({ teamIndex: 0, memberIndex: 0, user });
+
+    expect(await TeamMemberDAO.findMultiple()).toEqual([]);
+    expect(await PokemonDAO.findMultiple()).toEqual([]);
+  });
+
+  it('should not delete the Pokemon if it is saved', async () => {
+    const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
+    const team = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
+
+    const pokemon = await PokemonDAO.insert({
+      external_id: uuid.v4(),
+      fk_user_id: user.id,
+      saved: true,
+      pokemon: 'bulbasaur',
+      name: 'Bulbasaur',
+      level: 5,
+      carry_size: 3,
+      skill_level: 2,
+      nature: 'brave',
+      subskill_10: 'quick-attack',
+      subskill_25: 'solar-beam',
+      subskill_50: 'razor-leaf',
+      subskill_75: 'growl',
+      subskill_100: 'tackle',
+      ingredient_0: 'apple',
+      ingredient_30: 'berry',
+      ingredient_60: 'pearl',
+    });
+
+    await TeamMemberDAO.insert({ fk_team_id: team.id, fk_pokemon_id: pokemon.id, member_index: 0 });
+
+    await deleteMember({ teamIndex: 0, memberIndex: 0, user });
+
+    expect(await TeamMemberDAO.findMultiple()).toEqual([]);
+    expect(await PokemonDAO.findMultiple()).toEqual([pokemon]);
+  });
+
+  it('should not delete the Pokemon if it is in another team', async () => {
+    const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
+    const team1 = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
+    const team2 = await TeamDAO.insert({ fk_user_id: user.id, team_index: 1, name: 'Team B', camp: false });
+
+    const pokemon = await PokemonDAO.insert({
+      external_id: uuid.v4(),
+      fk_user_id: user.id,
+      saved: false,
+      pokemon: 'bulbasaur',
+      name: 'Bulbasaur',
+      level: 5,
+      carry_size: 3,
+      skill_level: 2,
+      nature: 'brave',
+      subskill_10: 'quick-attack',
+      subskill_25: 'solar-beam',
+      subskill_50: 'razor-leaf',
+      subskill_75: 'growl',
+      subskill_100: 'tackle',
+      ingredient_0: 'apple',
+      ingredient_30: 'berry',
+      ingredient_60: 'pearl',
+    });
+
+    await TeamMemberDAO.insert({ fk_team_id: team1.id, fk_pokemon_id: pokemon.id, member_index: 0 });
+    await TeamMemberDAO.insert({ fk_team_id: team2.id, fk_pokemon_id: pokemon.id, member_index: 1 });
+
+    await deleteMember({ teamIndex: 0, memberIndex: 0, user });
+
+    expect(await TeamMemberDAO.findMultiple()).toEqual([
+      { fk_team_id: team2.id, fk_pokemon_id: pokemon.id, member_index: 1, id: 2, version: 1 },
+    ]);
+    expect(await PokemonDAO.findMultiple()).toEqual([pokemon]);
   });
 });
