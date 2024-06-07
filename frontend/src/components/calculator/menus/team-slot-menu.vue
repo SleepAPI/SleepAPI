@@ -12,10 +12,13 @@
         <div v-else>
           <!-- Filled team slot  -->
           <v-list-item prepend-icon="mdi-pencil" @click="handleEditClick">Edit</v-list-item>
-          <!-- TODO: change to filled bookmark AND text to Unsane if already saved -->
-          <v-list-item prepend-icon="mdi-bookmark-outline" @click="savePokemon">Save</v-list-item>
+          <v-list-item
+            :prepend-icon="saved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+            @click="savePokemon"
+            >{{ saved ? 'Unsave' : 'Save' }}</v-list-item
+          >
           <v-list-item prepend-icon="mdi-content-copy">Duplicate</v-list-item>
-          <v-list-item prepend-icon="mdi-delete">Remove</v-list-item>
+          <v-list-item prepend-icon="mdi-delete" @click="removePokemon">Remove</v-list-item>
         </div>
       </v-list>
     </v-card>
@@ -33,6 +36,7 @@
 <script lang="ts">
 import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
 import PokemonSearch from '@/components/calculator/pokemon-input/pokemon-search.vue'
+import { useTeamStore } from '@/stores/team/team-store'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -52,10 +56,15 @@ export default defineComponent({
     }
   },
   emits: ['update:show'],
+  setup() {
+    const teamStore = useTeamStore()
+    return { teamStore }
+  },
   data: () => ({
     subDialog: false,
     currentDialogComponent: null as string | null,
-    currentDialogProps: {}
+    currentDialogProps: {},
+    saved: false
   }),
   computed: {
     internalShow: {
@@ -67,8 +76,7 @@ export default defineComponent({
       }
     },
     emptySlot() {
-      // TODO: lookup pokemon for team/member index in team store instead
-      return true
+      return this.teamStore.getPokemon(this.memberIndex) === undefined
     }
   },
   methods: {
@@ -96,7 +104,13 @@ export default defineComponent({
       this.internalShow = false
     },
     savePokemon() {
-      // Your save logic
+      // TODO: call server to save
+      // TODO: be clever here, people will probably spam save unsave because haha, we should probably debounce or send right before unmount if value was diff from start
+      this.saved = !this.saved
+    },
+    removePokemon() {
+      // TODO: remove from cache
+      // TODO: send to server to remove from team_member table, pokemon should also be removed if not saved
     }
   }
 })

@@ -32,9 +32,14 @@
 <script lang="ts">
 export default {
   name: 'LevelButton',
+  props: {
+    level: {
+      type: Number,
+      required: true
+    }
+  },
   emits: ['update-level'],
   data: () => ({
-    level: 50,
     menu: false,
     customValue: 50,
     defaultValues: [10, 25, 30, 50, 60]
@@ -43,6 +48,9 @@ export default {
     level(newValue) {
       this.customValue = newValue
     }
+  },
+  mounted() {
+    this.customValue = this.level
   },
   methods: {
     selectValue(value: number) {
@@ -56,7 +64,6 @@ export default {
       }
     },
     updateLevel(newLevel: number) {
-      this.level = newLevel
       this.$emit('update-level', newLevel)
     }
   }

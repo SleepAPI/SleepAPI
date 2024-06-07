@@ -8,7 +8,7 @@ describe('LevelButton', () => {
   beforeEach(() => {
     wrapper = mount(LevelButton, {
       props: {
-        disabled: false
+        level: 50
       }
     })
   })

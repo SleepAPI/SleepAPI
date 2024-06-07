@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
-      <v-card :disabled="disabled" v-bind="props">
+      <v-card v-bind="props">
         <v-row no-gutters>
           <v-col cols="3">
             <v-card class="flex-center rounded-te-0 rounded-be-0 fill-height" color="secondary">
@@ -34,7 +34,7 @@
         <v-slider
           v-model="mainskillLevel"
           min="1"
-          :max="pokemon.skill.maxLevel"
+          :max="pokemonInstance.pokemon.skill.maxLevel"
           :ticks="defaultValues"
           show-ticks="always"
           step="1"
@@ -46,14 +46,15 @@
 </template>
 
 <script lang="ts">
-import { mainskill, type pokemon } from 'sleepapi-common'
+import type { InstancedPokemonExt } from '@/types/member/instanced'
+import { mainskill, pokemon } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'MainskillButton',
   props: {
-    pokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
+    pokemonInstance: {
+      type: Object as PropType<InstancedPokemonExt>,
       required: true
     }
   },
@@ -64,44 +65,47 @@ export default {
     defaultValues: {} as Record<number, string>
   }),
   computed: {
-    disabled() {
-      return !this.pokemon
-    },
     skillName() {
-      return this.pokemon.skill.name
+      return this.pokemonInstance.pokemon.skill.name
     },
     description() {
-      return this.pokemon.skill.description.replace(
+      return this.pokemonInstance.pokemon.skill.description.replace(
         '?',
-        this.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
+        this.pokemonInstance.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
       )
     },
     mainskillImage() {
-      if (this.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
-        return `/images/type/${this.pokemon.berry.type}.png`
+      if (this.pokemonInstance.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
+        return `/images/type/${this.pokemonInstance.pokemon.berry.type}.png`
       }
 
-      return `/images/mainskill/${this.pokemon.skill.unit}.png`
+      return `/images/mainskill/${this.pokemonInstance.pokemon.skill.unit}.png`
+    },
+    pokemon() {
+      return this.pokemonInstance.pokemon
     }
   },
   watch: {
     pokemon: {
-      immediate: true,
-      handler(newPokemon: pokemon.Pokemon) {
-        if (newPokemon) {
+      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
+        // only grab from cache on initial setup, if pre-existing value exists
+        if (oldPokemon.name === pokemon.MOCK_POKEMON.name && this.pokemonInstance.skillLevel > 0) {
+          this.mainskillLevel = this.pokemonInstance.skillLevel
+        } else {
           const nrOfEvolutions = (newPokemon.maxCarrySize - newPokemon.carrySize) / 5
           this.mainskillLevel = 1 + nrOfEvolutions
-          this.defaultValues = Array.from(
-            { length: newPokemon.skill.maxLevel },
-            (_, i) => i + 1
-          ).reduce(
-            (acc, val) => {
-              acc[val] = val.toString()
-              return acc
-            },
-            {} as Record<number, string>
-          )
         }
+
+        this.defaultValues = Array.from(
+          { length: newPokemon.skill.maxLevel },
+          (_, i) => i + 1
+        ).reduce(
+          (acc, val) => {
+            acc[val] = val.toString()
+            return acc
+          },
+          {} as Record<number, string>
+        )
       }
     },
     mainskillLevel(newLevel: number) {

@@ -1,7 +1,6 @@
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('PokemonName', () => {
@@ -9,7 +8,7 @@ describe('PokemonName', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    wrapper = mount(PokemonName)
+    wrapper = mount(PokemonName, { props: { name: '' } })
   })
 
   afterEach(() => {
@@ -19,17 +18,13 @@ describe('PokemonName', () => {
   })
 
   it('enables button and displays name when Pokémon is provided', async () => {
-    const pkmn = pokemon.PINSIR
-    await wrapper.setProps({ pokemon: pkmn })
-
     const button = wrapper.find('button')
-    expect(button.text()).not.toBe('Choose a Pokémon')
-    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.text()).toBe('')
+    expect(wrapper.emitted('update-name')).toHaveLength(1) // emits random roll on mount and 2nd emit is manual name change
   })
 
   it('opens edit dialog on button click', async () => {
-    const pkmn = pokemon.PINSIR
-    await wrapper.setProps({ pokemon: pkmn })
+    await wrapper.setProps({ name: 'Bernard' })
 
     const button = wrapper.find('button')
     await button.trigger('click')
@@ -54,22 +49,19 @@ describe('PokemonName', () => {
   })
 
   it('saves edited name', async () => {
-    const pkmn = pokemon.PINSIR
-    await wrapper.setProps({ pokemon: pkmn })
     await wrapper.setData({ isEditDialogOpen: true, editedName: 'NewName' })
 
     const saveButton = document.querySelector('#saveButton') as HTMLElement
     expect(saveButton).not.toBeNull()
     saveButton.click()
 
-    expect(wrapper.emitted('update-name')).toHaveLength(3) // emits random roll on mount and 2nd emit is manual name change
-    expect(wrapper.emitted('update-name')![2]).toEqual(['NewName'])
+    expect(wrapper.emitted('update-name')).toHaveLength(2) // emits random roll on mount and 2nd emit is manual name change
+    expect(wrapper.emitted('update-name')![1]).toEqual(['NewName'])
     expect(wrapper.vm.isEditDialogOpen).toBe(false)
   })
 
   it('rerolls name correctly', async () => {
-    const pkmn = pokemon.PINSIR
-    await wrapper.setProps({ pokemon: pkmn })
+    await wrapper.setProps({ name: 'Bernard' })
     await wrapper.setData({ isEditDialogOpen: true })
 
     const rerollButton = document.querySelector('#rerollButton') as HTMLElement

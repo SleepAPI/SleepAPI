@@ -24,14 +24,14 @@
           stacked
           @click="subskillMenu = true"
         >
-          {{ name }}
+          {{ subskillName }}
         </v-btn>
       </template>
 
       <v-card>
         <GroupList
           :data="filteredSubskills"
-          :selected-options="selectedSubskills.map((s) => s.name)"
+          :selected-options="selectedSubskills.map((s) => s.subskill.name)"
           @select-option="selectSubskill"
         />
       </v-card>
@@ -41,6 +41,7 @@
 
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
+import type { InstancedSubskillExt } from '@/types/member/instanced'
 import { capitalize, subskill } from 'sleepapi-common'
 
 export default {
@@ -58,31 +59,38 @@ export default {
       required: true
     },
     selectedSubskills: {
-      type: Array<subskill.SubSkill>,
+      type: Array<InstancedSubskillExt>,
       required: true,
       default: () => []
     }
   },
   emits: ['update-subskill'],
   data: () => ({
-    name: '???',
     subskillMenu: false,
-    subskills: subskill.SUBSKILLS
+    subskillOptions: subskill.SUBSKILLS
   }),
   computed: {
     rarityColor() {
-      if (this.name === '???') return undefined
-      const ss = this.subskills.find((ss) => ss.name.toLowerCase() === this.name.toLowerCase())
-      return ss ? `subskill${capitalize(ss.rarity)}` : undefined
+      if (!this.thisSubskill) {
+        return undefined
+      } else {
+        return `subskill${capitalize(this.thisSubskill.rarity)}`
+      }
     },
     locked() {
       return this.pokemonLevel < this.subskillLevel
+    },
+    thisSubskill(): subskill.SubSkill | undefined {
+      return this.selectedSubskills.find((ssExt) => ssExt.level === this.subskillLevel)?.subskill
+    },
+    subskillName() {
+      return this.thisSubskill?.name ?? '???'
     },
     filteredSubskills() {
       const categories = ['Gold', 'Helping Speed', 'Ingredient', 'Inventory', 'Skill']
 
       return categories.map((category) => {
-        const subskills = this.subskills.filter((subskill) =>
+        const subskills = this.subskillOptions.filter((subskill) =>
           category === 'Gold'
             ? subskill.rarity === 'gold'
             : subskill.name.toLowerCase().includes(category.toLowerCase())
@@ -93,19 +101,14 @@ export default {
   },
   methods: {
     selectSubskill(name: string) {
-      const subskill = this.subskills.find((s) => s.name === name)
+      const subskill = this.subskillOptions.find((s) => s.name === name)
       if (!subskill) {
         console.error('Error selecting subskill')
         return
       }
-      this.name = subskill.name
       this.subskillMenu = false
       this.$emit('update-subskill', { subskill, subskillLevel: this.subskillLevel })
     }
   }
 }
 </script>
-
-<style scoped>
-/* Add any scoped styles if necessary */
-</style>

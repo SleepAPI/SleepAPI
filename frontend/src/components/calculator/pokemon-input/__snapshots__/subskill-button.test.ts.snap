@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SubskillButton > filters subskills correctly 1`] = `
+[
+  {
+    "category": "Gold",
+    "list": [
+      "Berry Finding S",
+      "Dream Shard Bonus",
+      "Energy Recovery Bonus",
+      "Helping Bonus",
+      "Research EXP Bonus",
+      "Skill Level Up M",
+      "Sleep EXP Bonus",
+    ],
+  },
+  {
+    "category": "Helping Speed",
+    "list": [
+      "Helping Speed S",
+      "Helping Speed M",
+    ],
+  },
+  {
+    "category": "Ingredient",
+    "list": [
+      "Ingredient Finder S",
+      "Ingredient Finder M",
+    ],
+  },
+  {
+    "category": "Inventory",
+    "list": [
+      "Inventory Up S",
+      "Inventory Up M",
+      "Inventory Up L",
+    ],
+  },
+  {
+    "category": "Skill",
+    "list": [
+      "Skill Level Up M",
+      "Skill Level Up S",
+      "Skill Trigger M",
+      "Skill Trigger S",
+    ],
+  },
+]
+`;

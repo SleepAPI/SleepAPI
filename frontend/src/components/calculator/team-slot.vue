@@ -1,6 +1,6 @@
 <template>
   <v-card :loading="loading" class="fill-height frosted-glass" @click="openDetailsDialog">
-    <v-img v-if="pokemon" :src="imageUrl" />
+    <v-img v-if="pokemonInstance" :src="imageUrl" />
     <div v-else class="d-flex align-center justify-center" style="height: 100%">
       <v-icon>mdi-plus</v-icon>
     </div>
@@ -11,6 +11,7 @@
 
 <script lang="ts">
 import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
+import { useTeamStore } from '@/stores/team/team-store'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -24,12 +25,24 @@ export default defineComponent({
       required: true
     }
   },
+  setup() {
+    const teamStore = useTeamStore()
+    return { teamStore }
+  },
   data: () => ({
     loading: false,
-    showTeamSlotDialog: false,
-    pokemon: '',
-    imageUrl: ''
+    showTeamSlotDialog: false
   }),
+  computed: {
+    pokemonInstance() {
+      return this.teamStore.getPokemon(this.memberIndex)
+    },
+    imageUrl(): string | undefined {
+      return this.pokemonInstance
+        ? `/images/pokemon/${this.pokemonInstance.pokemon.name.toLowerCase()}.png`
+        : ''
+    }
+  },
   methods: {
     fetch() {
       this.loading = true
