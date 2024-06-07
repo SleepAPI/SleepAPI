@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NatureButton > computes filteredNatures correctly 1`] = `
+[
+  {
+    "category": "Speed",
+    "list": [
+      "Lonely",
+      "Adamant",
+      "Naughty",
+      "Brave",
+    ],
+  },
+  {
+    "category": "Ingredient",
+    "list": [
+      "Modest",
+      "Mild",
+      "Rash",
+      "Quiet",
+    ],
+  },
+  {
+    "category": "Skill",
+    "list": [
+      "Calm",
+      "Gentle",
+      "Careful",
+      "Sassy",
+    ],
+  },
+  {
+    "category": "Energy",
+    "list": [
+      "Bold",
+      "Impish",
+      "Lax",
+      "Relaxed",
+    ],
+  },
+  {
+    "category": "EXP",
+    "list": [
+      "Timid",
+      "Hasty",
+      "Jolly",
+      "Naive",
+    ],
+  },
+  {
+    "category": "Neutral",
+    "list": [
+      "Bashful",
+      "Hardy",
+      "Docile",
+      "Quirky",
+      "Serious",
+    ],
+  },
+]
+`;

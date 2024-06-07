@@ -10,12 +10,7 @@ describe('NatureButton', () => {
   beforeEach(() => {
     wrapper = mount(NatureButton, {
       props: {
-        disabled: false
-      },
-      data() {
-        return {
-          nature: sampleNature
-        }
+        nature: sampleNature
       }
     })
   })
@@ -25,7 +20,7 @@ describe('NatureButton', () => {
   })
 
   it('renders correctly with provided data', () => {
-    expect(wrapper.find('.responsive-text').text()).toContain('Bashful')
+    expect(wrapper.find('.responsive-text').text()).toContain(sampleNature.name)
   })
 
   it('computes natureName correctly when enabled', () => {
@@ -34,8 +29,7 @@ describe('NatureButton', () => {
 
   it('computes filteredNatures correctly', () => {
     const filteredNatures = wrapper.vm.filteredNatures
-    expect(filteredNatures).toBeDefined()
-    expect(filteredNatures.length).toBeGreaterThan(0)
+    expect(filteredNatures).toMatchSnapshot()
   })
 
   it('computes positiveStat correctly', () => {
@@ -47,9 +41,8 @@ describe('NatureButton', () => {
   })
 
   it('updates nature and emits update-nature event when selectNature is called', () => {
-    const newNatureName = 'Brave'
+    const newNatureName = nature.BRAVE.name
     wrapper.vm.selectNature(newNatureName)
-    expect(wrapper.vm.nature.name).toBe(newNatureName)
     const emitted = wrapper.emitted('update-nature') as Array<Array<nature.Nature>>
     expect(emitted).toHaveLength(1)
 
@@ -65,9 +58,8 @@ describe('NatureButton', () => {
   })
 
   it('displays correct positive and negative stats for non-neutral nature', async () => {
-    const customNature = { ...sampleNature, frequency: 2 }
-    await wrapper.setData({ nature: customNature })
+    await wrapper.setProps({ nature: nature.LONELY })
     expect(wrapper.vm.positiveStat).toBe('Speed of help')
-    expect(wrapper.vm.negativeStat).toBe('This nature has no effect')
+    expect(wrapper.vm.negativeStat).toBe('Energy recovery')
   })
 })

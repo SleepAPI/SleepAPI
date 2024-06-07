@@ -1,17 +1,11 @@
 <template>
-  <v-btn
-    variant="text"
-    :class="`${pokemon ? 'text-h6' : 'text-body-1'}`"
-    :text="name"
-    :disabled="pokemon === undefined"
-    @click="openEditDialog"
-  >
-    <template v-if="pokemon" #append>
+  <v-btn variant="text" class="text-h6" :text="name" @click="openEditDialog">
+    <template #append>
       <v-icon size="24">mdi-pencil</v-icon>
     </template>
   </v-btn>
 
-  <v-dialog id="pokemonNameDialog" v-model="isEditDialogOpen" max-width="80%">
+  <v-dialog id="pokemonNameDialog" v-model="isEditDialogOpen" max-width="600px">
     <v-card title="Change Name">
       <v-card-text class="pt-4 pb-0">
         <v-textarea
@@ -43,7 +37,7 @@
           rounded="lg"
           color="primary"
           @click="saveEditDialog"
-          >Save</v-btn
+          >OK</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -52,21 +46,17 @@
 
 <script lang="ts">
 import { faker } from '@faker-js/faker/locale/en'
-import { pokemon } from 'sleepapi-common'
-import type { PropType } from 'vue'
 
 export default {
   name: 'PokemonName',
   props: {
-    pokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
-      required: false,
-      default: undefined
+    name: {
+      type: String,
+      required: true
     }
   },
   emits: ['update-name'],
   data: () => ({
-    name: 'Choose a Pokémon',
     isEditDialogOpen: false,
     maxNameLength: 12,
     editedName: ''
@@ -76,13 +66,9 @@ export default {
       return this.maxNameLength - (this.editedName?.length || 0)
     }
   },
-  watch: {
-    pokemon: {
-      handler() {
-        this.name = this.rerollName()
-        this.$emit('update-name', this.name)
-      },
-      immediate: true
+  mounted() {
+    if (this.name === '') {
+      this.$emit('update-name', this.rerollName())
     }
   },
   methods: {
@@ -98,8 +84,7 @@ export default {
         if (this.remainingChars === this.maxNameLength) {
           this.editedName = this.name
         }
-        this.name = this.editedName
-        this.$emit('update-name', this.name)
+        this.$emit('update-name', this.editedName)
         this.isEditDialogOpen = false
       }
     },

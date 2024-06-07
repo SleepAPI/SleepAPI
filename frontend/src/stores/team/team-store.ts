@@ -31,19 +31,26 @@ export const useTeamStore = defineStore('team', {
     ]
   }),
   getters: {
-    getCurrentTeam: (state) => state.teams[state.currentIndex]
+    getCurrentTeam: (state) => state.teams[state.currentIndex],
+    getPokemon: (state) => {
+      return (memberIndex: number) =>
+        state.teams[state.currentIndex].members[memberIndex] ?? undefined
+    }
   },
   actions: {
-    // empty cache, first time user loads teams on this device
     async populateTeams() {
       const userStore = useUserStore()
-      if (userStore.loggedIn && this.teams.length < this.maxAvailableTeams) {
+      if (userStore.loggedIn) {
         try {
           this.loadingTeams = true
           const teams = await TeamService.getTeams()
-          this.loadingTeams = false
 
+          // TODO: should diff versions of this.teams and teams, all teams/members
+          // TODO: for teams/members that have diff in version we rerun simulations
           this.teams = teams
+
+          // TODO: loadingTeams can be used to skeleton load the results while simulations rerunning
+          this.loadingTeams = false
         } catch (error) {
           console.error('Error fetching teams: ')
           const userStore = useUserStore()

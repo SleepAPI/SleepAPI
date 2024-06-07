@@ -2,8 +2,9 @@
  * Base skill% and ing% from Mathcord RP data project: https://docs.google.com/spreadsheets/d/1kBrPl0pdAO8gjOf_NrTgAPseFtqQA27fdfEbMBBeAhs/edit?usp=sharing
  */
 
-import { Berry } from '../berry/berry';
-import { MainSkill } from '../mainskill/mainskill';
+import { BELUE, Berry } from '../berry/berry';
+import { SLOWPOKE_TAIL } from '../ingredient';
+import { HELPER_BOOST, MainSkill } from '../mainskill/mainskill';
 import { IngredientSet } from '../types';
 import { ALL_BERRY_SPECIALISTS, INFERIOR_BERRY_SPECIALISTS, OPTIMAL_BERRY_SPECIALISTS } from './berry-pokemon';
 import {
@@ -27,6 +28,21 @@ export interface Pokemon {
   ingredient60: IngredientSet[];
   skill: MainSkill;
 }
+
+export const MOCK_POKEMON: Pokemon = {
+  name: 'Mockemon',
+  specialty: 'berry',
+  frequency: 0,
+  ingredientPercentage: 0,
+  skillPercentage: 0,
+  berry: BELUE,
+  carrySize: 0,
+  maxCarrySize: 0,
+  ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
+  ingredient30: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],
+  ingredient60: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],
+  skill: HELPER_BOOST,
+};
 
 export const OPTIMAL_POKEDEX: Pokemon[] = [
   ...OPTIMAL_BERRY_SPECIALISTS,

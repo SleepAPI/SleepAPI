@@ -1,6 +1,7 @@
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { subskill } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -26,24 +27,29 @@ describe('SubskillButton', () => {
     }
   })
 
-  it('renders correctly', () => {
+  it('renders with default values', () => {
     const button = wrapper.find('button')
+
     expect(button.exists()).toBe(true)
     expect(button.text()).toBe('???')
+    expect(wrapper.vm.subskillMenu).toBe(false)
+    expect(wrapper.vm.subskillOptions).toEqual(subskill.SUBSKILLS)
+  })
+
+  it('handles empty selectedSubskills array', async () => {
+    await wrapper.setProps({ selectedSubskills: [] })
+    expect(wrapper.vm.thisSubskill).toBeUndefined()
+    expect(wrapper.vm.subskillName).toBe('???')
   })
 
   it('displays the correct color based on rarity', async () => {
-    wrapper.setData({ name: 'GoldSubskill' })
-    const subskill = {
-      name: 'GoldSubskill',
-      rarity: 'gold'
-    }
-    wrapper.setData({ subskills: [subskill] })
+    wrapper.setProps({ selectedSubskills: [{ level: 5, subskill: subskill.HELPING_BONUS }] })
     await nextTick()
 
     const button = wrapper.find('button')
-    expect(button.text()).toBe('GoldSubskill')
+    expect(button.text()).toBe(subskill.HELPING_BONUS.name)
     expect(button.classes()).toContain('bg-subskillGold')
+    expect(wrapper.vm.rarityColor).toBe('subskillGold')
   })
 
   it('opens subskill menu on button click', async () => {
@@ -55,16 +61,22 @@ describe('SubskillButton', () => {
     expect(editTeamNameDialog).not.toBeNull()
   })
 
-  it('selects subskill correctly', async () => {
-    const subskill = { name: 'GoldSubskill', rarity: 'gold' }
-    wrapper.setData({ subskills: [subskill] })
+  it('should update subskill name label automatically when new subskill selected matching subskillLevel', async () => {
+    wrapper.setProps({ selectedSubskills: [{ level: 5, subskill: subskill.HELPING_BONUS }] })
+    await nextTick()
 
-    wrapper.vm.selectSubskill('GoldSubskill')
-    expect(wrapper.vm.name).toBe('GoldSubskill')
-    expect(wrapper.vm.subskillMenu).toBe(false)
-    expect(wrapper.emitted('update-subskill')).toBeTruthy()
+    expect(wrapper.vm.subskillName).toEqual(subskill.HELPING_BONUS.name)
+  })
+
+  it('selects subskill correctly', async () => {
+    wrapper.vm.selectSubskill(subskill.HELPING_BONUS.name)
+
+    expect(wrapper.emitted('update-subskill')).toHaveLength(1)
     expect(wrapper.emitted('update-subskill')![0]).toEqual([
-      { subskill, subskillLevel: subskillProps.subskillLevel }
+      {
+        subskill: subskill.HELPING_BONUS,
+        subskillLevel: subskillProps.subskillLevel
+      }
     ])
   })
 
@@ -81,5 +93,10 @@ describe('SubskillButton', () => {
     const badgeText = badge.find('.v-badge__badge')
     expect(badgeText.exists()).toBe(true)
     expect(badgeText.text()).toBe('Lv.10')
+  })
+
+  it('filters subskills correctly', () => {
+    const filteredSubskills = wrapper.vm.filteredSubskills
+    expect(filteredSubskills).toMatchSnapshot()
   })
 })

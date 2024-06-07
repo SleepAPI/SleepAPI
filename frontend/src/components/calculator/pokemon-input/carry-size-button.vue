@@ -2,13 +2,13 @@
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
       <v-btn class="w-100" v-bind="props" :disabled="singleStageMon">
-        <span class="text-body-1"> Carry size {{ carrySize }} </span>
+        <span class="text-body-1"> Carry size {{ pokemonInstance.carrySize }} </span>
       </v-btn>
     </template>
 
     <v-card>
       <v-list density="compact">
-        <v-list-item v-for="value in defaultValues" :key="value" @click="selectValue(value)">
+        <v-list-item v-for="value in carrySizeOptions" :key="value" @click="updateCarrySize(value)">
           <v-list-item-title>{{ value }}</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -17,28 +17,25 @@
 </template>
 
 <script lang="ts">
+import type { InstancedPokemonExt } from '@/types/member/instanced'
 import { pokemon } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'CarrySizeButton',
   props: {
-    pokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
+    pokemonInstance: {
+      type: Object as PropType<InstancedPokemonExt>,
       required: true
     }
   },
   emits: ['update-carry'],
   data: () => ({
-    carrySize: 0,
     menu: false
   }),
   computed: {
-    defaultValues() {
-      if (!this.pokemon) {
-        return []
-      }
-      const { carrySize, maxCarrySize } = this.pokemon
+    carrySizeOptions() {
+      const { carrySize, maxCarrySize } = this.pokemonInstance.pokemon
       const values = [carrySize]
 
       if (maxCarrySize > carrySize) {
@@ -51,26 +48,29 @@ export default {
       return values
     },
     singleStageMon() {
-      return this.pokemon.carrySize === this.pokemon.maxCarrySize
+      return this.pokemonInstance.pokemon.carrySize === this.pokemonInstance.pokemon.maxCarrySize
+    },
+    pokemon() {
+      return this.pokemonInstance.pokemon
     }
   },
   watch: {
     pokemon: {
-      immediate: true,
-      handler(newPokemon: pokemon.Pokemon) {
-        if (newPokemon) {
-          this.carrySize = newPokemon.maxCarrySize
-        }
+      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
+        // new mon is from search or new mon is actually new and not just mocked mon changing
+        const loadFromExisting =
+          this.pokemonInstance.carrySize > 0 && oldPokemon.name === pokemon.MOCK_POKEMON.name
+
+        const newCarrySize = loadFromExisting
+          ? this.pokemonInstance.carrySize
+          : newPokemon.maxCarrySize
+        this.$emit('update-carry', newCarrySize)
       }
     }
   },
   methods: {
-    selectValue(value: number) {
-      this.updateCarrySize(value)
-      this.menu = false
-    },
     updateCarrySize(newSize: number) {
-      this.carrySize = newSize
+      this.menu = false
       this.$emit('update-carry', newSize)
     }
   }

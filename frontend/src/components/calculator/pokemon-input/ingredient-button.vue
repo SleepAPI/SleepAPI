@@ -37,7 +37,8 @@
 </template>
 
 <script lang="ts">
-import type { IngredientSet, pokemon } from 'sleepapi-common'
+import type { InstancedPokemonExt } from '@/types/member/instanced'
+import { pokemon, type IngredientSet } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -47,12 +48,8 @@ export default {
       type: Number,
       required: true
     },
-    pokemonLevel: {
-      type: Number,
-      required: true
-    },
-    pokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
+    pokemonInstance: {
+      type: Object as PropType<InstancedPokemonExt>,
       required: true
     }
   },
@@ -74,16 +71,22 @@ export default {
     disabled() {
       return !this.ingredientSet || this.ingredientLevel < 30 // first ingredient is always disabled
     },
+    pokemon() {
+      return this.pokemonInstance.pokemon
+    },
+    pokemonLevel() {
+      return this.pokemonInstance.level
+    },
     otherIngredientOptions() {
       if (this.ingredientLevel < 30) {
         return []
       } else if (this.ingredientLevel < 60) {
-        return this.pokemon.ingredient30.filter(
+        return this.pokemonInstance.pokemon.ingredient30.filter(
           (ing) =>
             ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
       } else
-        return this.pokemon.ingredient60.filter(
+        return this.pokemonInstance.pokemon.ingredient60.filter(
           (ing) =>
             ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
@@ -91,18 +94,33 @@ export default {
   },
   watch: {
     pokemon: {
-      immediate: true,
-      handler(newPokemon: pokemon.Pokemon) {
+      deep: false,
+      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
+        // only grab from cache on initial setup, if pre-existing value exists
         if (this.ingredientLevel < 30) {
           this.ingredientSet = newPokemon.ingredient0
-        } else if (this.ingredientLevel < 60) {
-          this.ingredientSet = newPokemon.ingredient30[0]
         } else {
-          this.ingredientSet = newPokemon.ingredient60[0]
+          if (this.loadFromExisting(oldPokemon)) {
+            if (this.ingredientLevel === 30) {
+              this.ingredientSet = newPokemon.ingredient30.find(
+                (ing) => ing.ingredient.name === this.pokemonInstance.ingredients[1].ingredient.name
+              )
+            } else {
+              this.ingredientSet = newPokemon.ingredient60.find(
+                (ing) => ing.ingredient.name === this.pokemonInstance.ingredients[2].ingredient.name
+              )
+            }
+          } else {
+            if (this.ingredientLevel === 30) {
+              this.ingredientSet = newPokemon.ingredient30[0]
+            } else {
+              this.ingredientSet = newPokemon.ingredient60[0]
+            }
+          }
         }
 
         this.$emit('update-ingredient', {
-          ingredient: this.ingredientSet.ingredient,
+          ingredient: this.ingredientSet?.ingredient,
           ingredientLevel: this.ingredientLevel
         })
       }
@@ -115,9 +133,6 @@ export default {
   },
   methods: {
     ingredientImageForNameKey(key: string) {
-      if (!this.pokemon) {
-        return '/images/pokemon/unknown.png'
-      }
       return `/images/ingredient/${key.toLowerCase()}.png`
     },
     handleIngredientClick(ingredientSet: IngredientSet) {
@@ -130,7 +145,7 @@ export default {
       }, 200) // Delay update by 300ms to smooth transition
     },
     updateIngredient(ingredientSet: IngredientSet) {
-      if (!this.pokemon || !this.ingredientSet) {
+      if (!this.ingredientSet) {
         return
       }
 
@@ -139,6 +154,12 @@ export default {
         ingredient: this.ingredientSet.ingredient,
         ingredientLevel: this.ingredientLevel
       })
+    },
+    loadFromExisting(oldPokemon: pokemon.Pokemon) {
+      const existingIngredients =
+        this.pokemonInstance.ingredients.filter((ing) => ing.ingredient !== undefined).length === 3
+
+      return oldPokemon.name === pokemon.MOCK_POKEMON.name && existingIngredients
     }
   }
 }

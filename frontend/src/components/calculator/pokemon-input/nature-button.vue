@@ -47,15 +47,21 @@
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
 import { nature } from 'sleepapi-common'
+import type { PropType } from 'vue'
 
 export default {
   name: 'NatureButton',
   components: {
     GroupList
   },
+  props: {
+    nature: {
+      type: Object as PropType<nature.Nature>,
+      required: true
+    }
+  },
   emits: ['update-nature'],
   data: () => ({
-    nature: nature.BASHFUL,
     natureMenu: false
   }),
   computed: {
@@ -96,7 +102,6 @@ export default {
         console.error('Error selecting nature')
         return
       }
-      this.nature = nat
       this.natureMenu = false
       this.$emit('update-nature', nat)
     },

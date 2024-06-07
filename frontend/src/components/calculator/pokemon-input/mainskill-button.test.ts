@@ -1,16 +1,17 @@
 import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
+import type { InstancedPokemonExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof MainskillButton>>
-  const samplePokemon = pokemon.PIKACHU
+  const samplePokemon = { pokemon: pokemon.PIKACHU, skillLevel: 0 } as InstancedPokemonExt
 
   beforeEach(() => {
     wrapper = mount(MainskillButton, {
       props: {
-        pokemon: samplePokemon
+        pokemonInstance: samplePokemon
       }
     })
   })
@@ -19,10 +20,13 @@ describe('MainskillButton', () => {
     wrapper.unmount()
   })
 
-  it('renders correctly with provided data', () => {
-    expect(wrapper.find('.responsive-text').text()).toBe('Charge Strength SLv.2')
+  it('renders correctly with provided data', async () => {
+    await wrapper.setProps({
+      pokemonInstance: { pokemon: pokemon.GENGAR, skillLevel: 0 } as InstancedPokemonExt
+    })
+    expect(wrapper.find('.responsive-text').text()).toBe('Charge Strength S RangeLv.3')
     expect(wrapper.find('.responsive-text-small').text()).toContain(
-      "Increases Snorlax's Strength by 569."
+      "Increases Snorlax's Strength on average by 981.25."
     )
     expect(wrapper.find('img').attributes('src')).toBe('/images/mainskill/strength.png')
   })
@@ -45,14 +49,18 @@ describe('MainskillButton', () => {
   })
 
   it('displays default values dynamically', async () => {
-    await wrapper.setProps({
+    const changedPokemon = {
+      skillLevel: samplePokemon.skillLevel,
       pokemon: {
-        ...samplePokemon,
+        ...samplePokemon.pokemon,
         skill: {
-          ...samplePokemon.skill,
+          ...samplePokemon.pokemon.skill,
           maxLevel: 4
         }
       }
+    } as InstancedPokemonExt
+    await wrapper.setProps({
+      pokemonInstance: changedPokemon
     })
     expect(wrapper.vm.defaultValues).toEqual({ 1: '1', 2: '2', 3: '3', 4: '4' })
   })

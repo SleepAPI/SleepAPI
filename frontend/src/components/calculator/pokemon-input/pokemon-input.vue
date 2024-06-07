@@ -8,6 +8,7 @@
         </v-col>
         <v-col class="flex-right pr-1">
           <v-btn
+            id="saveIcon"
             icon
             color="background"
             :class="{ nudge: !pokemonInstance.pokemon }"
@@ -37,7 +38,7 @@
 
     <v-row no-gutters>
       <v-col class="flex-center">
-        <PokemonName :pokemon="pokemonInstance.pokemon" @update-name="updateName" />
+        <PokemonName :name="pokemonInstance.name" @update-name="updateName" />
       </v-col>
     </v-row>
 
@@ -49,10 +50,10 @@
 
     <v-row dense class="mt-3">
       <v-col cols="6" class="flex-center">
-        <LevelButton @update-level="updateLevel" />
+        <LevelButton :level="pokemonInstance.level" @update-level="updateLevel" />
       </v-col>
       <v-col cols="6" class="flex-center">
-        <CarrySizeButton :pokemon="pokemonInstance.pokemon" @update-carry="updateLimit" />
+        <CarrySizeButton :pokemon-instance="pokemonInstance" @update-carry="updateCarry" />
       </v-col>
     </v-row>
 
@@ -66,24 +67,21 @@
       <v-col class="flex-center">
         <IngredientButton
           :ingredient-level="0"
-          :pokemon="pokemonInstance.pokemon"
-          :pokemon-level="pokemonInstance.level"
+          :pokemon-instance="pokemonInstance"
           @update-ingredient="updateIngredient"
         />
       </v-col>
       <v-col class="flex-center">
         <IngredientButton
           :ingredient-level="30"
-          :pokemon="pokemonInstance.pokemon"
-          :pokemon-level="pokemonInstance.level"
+          :pokemon-instance="pokemonInstance"
           @update-ingredient="updateIngredient"
         />
       </v-col>
       <v-col class="flex-center">
         <IngredientButton
           :ingredient-level="60"
-          :pokemon="pokemonInstance.pokemon"
-          :pokemon-level="pokemonInstance.level"
+          :pokemon-instance="pokemonInstance"
           @update-ingredient="updateIngredient"
         />
       </v-col>
@@ -93,7 +91,7 @@
     <v-row no-gutters class="mt-3">
       <v-col cols="12">
         <MainskillButton
-          :pokemon="pokemonInstance.pokemon"
+          :pokemon-instance="pokemonInstance"
           @update-skill-level="updateSkillLevel"
         />
       </v-col>
@@ -104,7 +102,7 @@
         <SubskillButton
           :subskill-level="10"
           :pokemon-level="pokemonInstance.level"
-          :selected-subskills="selectedSubskills"
+          :selected-subskills="pokemonInstance.subskills"
           @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
@@ -112,7 +110,7 @@
         <SubskillButton
           :subskill-level="25"
           :pokemon-level="pokemonInstance.level"
-          :selected-subskills="selectedSubskills"
+          :selected-subskills="pokemonInstance.subskills"
           @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
@@ -120,7 +118,7 @@
         <SubskillButton
           :subskill-level="50"
           :pokemon-level="pokemonInstance.level"
-          :selected-subskills="selectedSubskills"
+          :selected-subskills="pokemonInstance.subskills"
           @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
@@ -128,7 +126,7 @@
         <SubskillButton
           :subskill-level="75"
           :pokemon-level="pokemonInstance.level"
-          :selected-subskills="selectedSubskills"
+          :selected-subskills="pokemonInstance.subskills"
           @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
@@ -136,7 +134,7 @@
         <SubskillButton
           :subskill-level="100"
           :pokemon-level="pokemonInstance.level"
-          :selected-subskills="selectedSubskills"
+          :selected-subskills="pokemonInstance.subskills"
           @update-subskill="updateSubskill"
         ></SubskillButton>
       </v-col>
@@ -147,13 +145,14 @@
 
     <v-row id="nature">
       <v-col cols="12">
-        <NatureButton @update-nature="updateNature" />
+        <NatureButton :nature="pokemonInstance.nature" @update-nature="updateNature" />
       </v-col>
     </v-row>
 
     <v-row dense class="mt-3">
       <v-col cols="6">
         <v-btn
+          id="cancelButton"
           class="w-100 responsive-text"
           size="large"
           rounded="lg"
@@ -163,7 +162,13 @@
         >
       </v-col>
       <v-col cols="6">
-        <v-btn class="w-100 responsive-text" size="large" rounded="lg" color="primary" @click="save"
+        <v-btn
+          id="saveButton"
+          class="w-100 responsive-text"
+          size="large"
+          rounded="lg"
+          color="primary"
+          @click="save"
           >Save</v-btn
         >
       </v-col>
@@ -199,8 +204,9 @@ export default defineComponent({
   },
   props: {
     selectedPokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
-      required: true
+      type: undefined as PropType<pokemon.Pokemon> | undefined,
+      required: false,
+      default: undefined
     },
     memberIndex: {
       type: Number,
@@ -213,16 +219,15 @@ export default defineComponent({
     return { teamStore }
   },
   data: () => ({
-    // TODO: on mount check if teamStore.getPokemon(member_index) exists, then overwrite entire object
     pokemonInstance: {
-      index: 0, // TODO: overwrite this with member_index on mount
+      index: 0,
       version: 0,
       externalId: undefined as string | undefined,
       saved: false,
-      pokemon: pokemon.PIKACHU, // TODO: always overwrite this with selectedPokemon
-      name: 'Pikachu 1',
+      pokemon: pokemon.MOCK_POKEMON,
+      name: '',
       level: 50,
-      carrySize: 0, // TODO: always overwrite this with selectedPokemon
+      carrySize: 0,
       skillLevel: 0,
       nature: nature.BASHFUL,
       subskills: [],
@@ -243,32 +248,21 @@ export default defineComponent({
     } as InstancedPokemonExt
   }),
   computed: {
-    selectedSubskills(): subskill.SubSkill[] {
-      return this.pokemonInstance.subskills
-        .filter(
-          (s): s is { level: number; subskill: subskill.SubSkill } => s.subskill !== undefined
-        )
-        .map((s) => s.subskill)
-    },
     rp() {
       return 0
     }
   },
   mounted() {
-    // const existingPokemon = this.teamStore.getPokemon(this.memberIndex)
-    // if (existingPokemon) {
-    //   // TODO: find pokemon matching  name and if cant then emit cancel
-    //   this.pokemon = existingPokemon.pokemon
-    //   // TODO: populate rest
-    // } else {
-    //   this.pokemon = this.selectedPokemon
-    //   this.carrySize = this.selectedPokemon.maxCarrySize
-    // }
+    const existingPokemon = this.teamStore.getPokemon(this.memberIndex)
+    if (existingPokemon) {
+      this.pokemonInstance = JSON.parse(JSON.stringify(existingPokemon))
+    } else if (this.selectedPokemon) {
+      this.pokemonInstance.index = this.memberIndex
+      this.pokemonInstance.pokemon = this.selectedPokemon
+      this.pokemonInstance.carrySize = this.selectedPokemon.maxCarrySize
+    } else console.error('Missing both cached and search input mon, contact developer')
 
-    // TODO: replace with above
-    this.pokemonInstance.index = this.memberIndex
-    this.pokemonInstance.pokemon = this.selectedPokemon
-    this.pokemonInstance.carrySize = this.selectedPokemon.maxCarrySize
+    // in future we will also mount from saved mons here
   },
   methods: {
     toggleSave() {
@@ -282,7 +276,14 @@ export default defineComponent({
       )
       if (subskillToUpdate) {
         subskillToUpdate.subskill = params.subskill
+      } else {
+        this.pokemonInstance.subskills.push({
+          level: params.subskillLevel,
+          subskill: params.subskill
+        })
+        this.pokemonInstance
       }
+      this.pokemonInstance.subskills.sort((a, b) => a.level - b.level)
     },
     updatePokemon(pokemon: pokemon.Pokemon) {
       this.pokemonInstance.pokemon = pokemon
@@ -293,7 +294,7 @@ export default defineComponent({
     updateLevel(newLevel: number) {
       this.pokemonInstance.level = newLevel
     },
-    updateLimit(newLimit: number) {
+    updateCarry(newLimit: number) {
       this.pokemonInstance.carrySize = newLimit
     },
     updateIngredient(params: { ingredient: ingredient.Ingredient; ingredientLevel: number }) {
@@ -307,8 +308,8 @@ export default defineComponent({
     updateSkillLevel(skillLevel: number) {
       this.pokemonInstance.skillLevel = skillLevel
     },
-    updateNature(nature: nature.Nature) {
-      this.pokemonInstance.nature = nature
+    updateNature(newNature: nature.Nature) {
+      this.pokemonInstance.nature = newNature
     },
     cancel() {
       this.$emit('cancel')
@@ -316,6 +317,7 @@ export default defineComponent({
     save() {
       // TODO: need to start running simulations too asap, perhaps we can emit a promise so team section can show skeleton loader and await
       this.teamStore.updateTeamMember(this.pokemonInstance)
+      this.$emit('cancel') // TODO: should probably be renamed to close
     }
   }
 })

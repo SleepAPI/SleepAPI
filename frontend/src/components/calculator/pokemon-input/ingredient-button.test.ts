@@ -1,31 +1,23 @@
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { InstancedIngredientExt, InstancedPokemonExt } from '@/types/member/instanced'
+import { VueWrapper, mount } from '@vue/test-utils'
 import { ingredient, pokemon, type IngredientSet } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof IngredientButton>>
 
-  const mockPokemon: pokemon.Pokemon = {
-    name: 'Pikachu',
-    ingredient0: { ingredient: { name: 'berry' } } as IngredientSet,
-    ingredient30: [
-      { ingredient: { name: 'berry' } } as IngredientSet,
-      { ingredient: { name: 'banana' } } as IngredientSet
-    ],
-    ingredient60: [
-      { ingredient: { name: 'berry' } } as IngredientSet,
-      { ingredient: { name: 'banana' } } as IngredientSet,
-      { ingredient: { name: 'apple' } } as IngredientSet
-    ]
-  } as unknown as pokemon.Pokemon
+  const mockPokemon: InstancedPokemonExt = {
+    level: 60,
+    pokemon: pokemon.PIKACHU,
+    ingredients: [] as InstancedIngredientExt[]
+  } as InstancedPokemonExt
 
   beforeEach(() => {
     wrapper = mount(IngredientButton, {
       props: {
         ingredientLevel: 60,
-        pokemonLevel: 60,
-        pokemon: mockPokemon
+        pokemonInstance: mockPokemon
       }
     })
   })
@@ -36,19 +28,51 @@ describe('IngredientButton', () => {
     }
   })
 
-  it('renders correctly with provided data', () => {
+  it('renders correctly with provided data', async () => {
+    // triggers the watcher
+    await wrapper.setProps({
+      ingredientLevel: 60,
+      pokemonInstance: mockPokemon
+    })
+
+    const badge = wrapper.findComponent({ name: 'v-badge' })
+    expect(wrapper.vm.locked).toBeFalsy()
     expect(wrapper.text()).toContain('Lv.60')
+
+    const lockIcon = badge.find('i.mdi-lock')
+    expect(lockIcon.isVisible()).toBe(false)
   })
 
-  it('displays ingredient image correctly', () => {
+  it('displays ingredient image correctly', async () => {
+    // triggers the watcher
+    await wrapper.setProps({
+      ingredientLevel: 60,
+      pokemonInstance: {
+        ...mockPokemon,
+        pokemon: pokemon.PINSIR
+      }
+    })
+
     const avatar = wrapper.findComponent({ name: 'v-avatar' })
     expect(avatar.exists()).toBe(true)
+    expect(avatar.isVisible()).toBe(true)
+
     const img = avatar.find('img')
-    expect(img.attributes('src')).toBe('/images/ingredient/berry.png')
+    expect(img.attributes('src')).toBe('/images/ingredient/honey.png')
   })
 
   it('displays other ingredient options in the speed dial', async () => {
+    // triggers the watcher
+    await wrapper.setProps({
+      ingredientLevel: 60,
+      pokemonInstance: {
+        ...mockPokemon,
+        pokemon: pokemon.PINSIR
+      }
+    })
     await wrapper.setData({ fab: true })
+
+    expect(wrapper.vm.otherIngredientOptions).toHaveLength(2)
     const speedDialBtns = wrapper
       .findAllComponents({ name: 'v-btn' })
       .filter((btn) => btn.vm.$props.icon)
@@ -56,10 +80,19 @@ describe('IngredientButton', () => {
 
     const ingredientBtns = speedDialBtns.slice(1)
     expect(ingredientBtns.length).toBe(2) // two options for level 60
-    expect(ingredientBtns[0].find('img').attributes('src')).toBe('/images/ingredient/banana.png')
+    expect(ingredientBtns[0].find('img').attributes('src')).toBe('/images/ingredient/apple.png')
+    expect(ingredientBtns[1].find('img').attributes('src')).toBe('/images/ingredient/sausage.png')
   })
 
   it('updates ingredient when an option is clicked', async () => {
+    // triggers the watcher
+    await wrapper.setProps({
+      ingredientLevel: 60,
+      pokemonInstance: {
+        ...mockPokemon,
+        pokemon: pokemon.PINSIR
+      }
+    })
     // Use fake timers
     vitest.useFakeTimers()
 
@@ -76,10 +109,7 @@ describe('IngredientButton', () => {
     // Advance timers by 300ms
     vitest.advanceTimersByTime(300)
 
-    // Use nextTick to ensure any pending updates are processed
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('banana')
+    expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('Apple')
 
     const emitted = wrapper.emitted('update-ingredient') as Array<
       Array<{ ingredient: ingredient.Ingredient; ingredientLevel: number }>
@@ -88,7 +118,7 @@ describe('IngredientButton', () => {
     expect(emitted).toHaveLength(2)
     const emittedEvent = emitted[1][0]
 
-    expect(emittedEvent.ingredient.name).toBe('banana')
+    expect(emittedEvent.ingredient.name).toBe('Apple')
     expect(emittedEvent.ingredientLevel).toBe(60)
 
     // Clear mock timers after the test
@@ -99,5 +129,19 @@ describe('IngredientButton', () => {
     await wrapper.setProps({ ingredientLevel: 20 })
     const button = wrapper.findComponent({ name: 'v-btn' })
     expect(button.classes()).toContain('v-btn--disabled')
+  })
+
+  it('sets ingredientSet correctly based on ingredientLevel', async () => {
+    await wrapper.setProps({
+      ingredientLevel: 30,
+      pokemonInstance: {
+        ...mockPokemon,
+        pokemon: {
+          ...mockPokemon.pokemon,
+          ingredient30: [{ ingredient: { name: 'Herb' }, amount: 0 } as IngredientSet]
+        }
+      }
+    })
+    expect(wrapper.vm.ingredientSet?.ingredient.name).toBe('Herb')
   })
 })
