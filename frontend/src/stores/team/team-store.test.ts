@@ -1,13 +1,15 @@
 import { TeamService } from '@/services/team/team-service'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
+import type { InstancedPokemonExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
   TeamService: {
     getTeams: vi.fn(),
-    createOrUpdateTeam: vi.fn()
+    createOrUpdateTeam: vi.fn(),
+    createOrUpdateMember: vi.fn()
   }
 }))
 
@@ -167,5 +169,78 @@ describe('Team Store', () => {
 
     teamStore.prev()
     expect(teamStore.currentIndex).toBe(0)
+  })
+
+  it('should duplicate member to the first open slot', async () => {
+    const teamStore = useTeamStore()
+    const userStore = useUserStore()
+
+    userStore.setTokens({
+      accessToken: 'token1',
+      expiryDate: 10,
+      refreshToken: 'token2'
+    })
+    const member = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        members: [undefined, member, undefined, undefined, undefined],
+        version: 1
+      }
+    ]
+
+    TeamService.createOrUpdateMember = vi.fn().mockResolvedValue({ index: 0, name: 'Pikachu' })
+
+    await teamStore.duplicateMember(1)
+
+    expect(teamStore.teams[0].members[0]).toEqual({ index: 0, name: 'Pikachu' })
+    expect(TeamService.createOrUpdateMember).toHaveBeenCalledWith({
+      teamIndex: 0,
+      member: { index: 0, name: 'Pikachu' }
+    })
+  })
+
+  it('should not duplicate if no open slot is available', async () => {
+    const teamStore = useTeamStore()
+    const member = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
+
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        members: [member, member, member, member, member],
+        version: 1
+      }
+    ]
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await teamStore.duplicateMember(1)
+
+    expect(consoleSpy).toHaveBeenCalledWith("No open slot or member can't be found")
+    consoleSpy.mockRestore()
+  })
+
+  it('should not duplicate if member does not exist', async () => {
+    const teamStore = useTeamStore()
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        members: [undefined, undefined, undefined, undefined, undefined],
+        version: 1
+      }
+    ]
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await teamStore.duplicateMember(1)
+
+    expect(consoleSpy).toHaveBeenCalledWith("No open slot or member can't be found")
+    consoleSpy.mockRestore()
   })
 })

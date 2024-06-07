@@ -46,6 +46,8 @@ export async function upsertTeamMember(params: {
   });
 
   const memberExternalId = request.externalId ?? uuid.v4();
+  // TODO: this will always update the mon even if no changes, which will bump version, which will cause resims
+  // TODO: this will happen for "duplicate" function in frontend and "add from saved"
   const upsertedMember = await PokemonDAO.upsert({
     updated: {
       external_id: memberExternalId,

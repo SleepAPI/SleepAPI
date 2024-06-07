@@ -14,11 +14,13 @@
           <v-list-item prepend-icon="mdi-pencil" @click="handleEditClick">Edit</v-list-item>
           <v-list-item
             :prepend-icon="saved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
-            @click="savePokemon"
+            @click="save"
             >{{ saved ? 'Unsave' : 'Save' }}</v-list-item
           >
-          <v-list-item prepend-icon="mdi-content-copy">Duplicate</v-list-item>
-          <v-list-item prepend-icon="mdi-delete" @click="removePokemon">Remove</v-list-item>
+          <v-list-item :disabled="fullTeam" prepend-icon="mdi-content-copy" @click="duplicate"
+            >Duplicate</v-list-item
+          >
+          <v-list-item prepend-icon="mdi-delete" @click="remove">Remove</v-list-item>
         </div>
       </v-list>
     </v-card>
@@ -37,6 +39,7 @@
 import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
 import PokemonSearch from '@/components/calculator/pokemon-input/pokemon-search.vue'
 import { useTeamStore } from '@/stores/team/team-store'
+import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -77,6 +80,9 @@ export default defineComponent({
     },
     emptySlot() {
       return this.teamStore.getPokemon(this.memberIndex) === undefined
+    },
+    fullTeam() {
+      return this.teamStore.getTeamSize === MAX_TEAM_MEMBERS
     }
   },
   methods: {
@@ -103,12 +109,15 @@ export default defineComponent({
     closeInternalDialog() {
       this.internalShow = false
     },
-    savePokemon() {
+    async duplicate() {
+      await this.teamStore.duplicateMember(this.memberIndex)
+    },
+    save() {
       // TODO: call server to save
       // TODO: be clever here, people will probably spam save unsave because haha, we should probably debounce or send right before unmount if value was diff from start
       this.saved = !this.saved
     },
-    removePokemon() {
+    remove() {
       // TODO: remove from cache
       // TODO: send to server to remove from team_member table, pokemon should also be removed if not saved
     }
