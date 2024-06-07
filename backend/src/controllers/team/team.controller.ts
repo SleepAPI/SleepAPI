@@ -1,6 +1,6 @@
 import { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
 import { DBUser } from '@src/database/dao/user/user-dao';
-import { getTeams, upsertTeamMember, upsertTeamMeta } from '@src/services/api-service/team/team-service';
+import { deleteMember, getTeams, upsertTeamMember, upsertTeamMeta } from '@src/services/api-service/team/team-service';
 import { UpsertTeamMemberRequest, UpsertTeamMetaRequest } from 'sleepapi-common';
 
 export default class TeamController {
@@ -20,5 +20,9 @@ export default class TeamController {
 
   public async getTeams(user: DBUser) {
     return getTeams(user);
+  }
+
+  public async deleteMember(params: { teamIndex: number; memberIndex: number; user: DBUser }) {
+    return deleteMember(params);
   }
 }

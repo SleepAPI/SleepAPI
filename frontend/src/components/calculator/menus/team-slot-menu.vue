@@ -3,24 +3,34 @@
     <v-card>
       <v-list>
         <!-- Empty team slot -->
-        <div v-if="emptySlot">
-          <v-list-item prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
+        <div v-if="emptySlot" id="emptyMenu">
+          <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
             >Add</v-list-item
           >
           <v-list-item prepend-icon="mdi-bookmark-outline">Saved</v-list-item>
         </div>
-        <div v-else>
+        <div v-else id="filledMenu">
           <!-- Filled team slot  -->
-          <v-list-item prepend-icon="mdi-pencil" @click="handleEditClick">Edit</v-list-item>
+          <v-list-item id="editButton" prepend-icon="mdi-pencil" @click="handleEditClick"
+            >Edit</v-list-item
+          >
           <v-list-item
+            id="saveButton"
+            :disabled="!userStore.loggedIn"
             :prepend-icon="saved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
             @click="save"
             >{{ saved ? 'Unsave' : 'Save' }}</v-list-item
           >
-          <v-list-item :disabled="fullTeam" prepend-icon="mdi-content-copy" @click="duplicate"
+          <v-list-item
+            id="duplicateButton"
+            :disabled="fullTeam"
+            prepend-icon="mdi-content-copy"
+            @click="duplicate"
             >Duplicate</v-list-item
           >
-          <v-list-item prepend-icon="mdi-delete" @click="remove">Remove</v-list-item>
+          <v-list-item id="removeButton" prepend-icon="mdi-delete" @click="remove"
+            >Remove</v-list-item
+          >
         </div>
       </v-list>
     </v-card>
@@ -39,6 +49,7 @@
 import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
 import PokemonSearch from '@/components/calculator/pokemon-input/pokemon-search.vue'
 import { useTeamStore } from '@/stores/team/team-store'
+import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { defineComponent } from 'vue'
 
@@ -61,7 +72,8 @@ export default defineComponent({
   emits: ['update:show'],
   setup() {
     const teamStore = useTeamStore()
-    return { teamStore }
+    const userStore = useUserStore()
+    return { teamStore, userStore }
   },
   data: () => ({
     subDialog: false,
@@ -87,13 +99,13 @@ export default defineComponent({
   },
   methods: {
     handleAddClick() {
-      this.closeInternalDialog()
+      this.closeTeamSlotMenuDialog()
       this.openSubDialog('PokemonSearch', {
         memberIndex: this.memberIndex
       })
     },
     handleEditClick() {
-      this.closeInternalDialog()
+      this.closeTeamSlotMenuDialog()
       this.openSubDialog('PokemonInput', {
         memberIndex: this.memberIndex
       })
@@ -106,7 +118,7 @@ export default defineComponent({
     closeSubDialog() {
       this.subDialog = false
     },
-    closeInternalDialog() {
+    closeTeamSlotMenuDialog() {
       this.internalShow = false
     },
     async duplicate() {
@@ -116,10 +128,11 @@ export default defineComponent({
       // TODO: call server to save
       // TODO: be clever here, people will probably spam save unsave because haha, we should probably debounce or send right before unmount if value was diff from start
       this.saved = !this.saved
+      // TODO: saved should update every member in the cache with this mon's external id
     },
-    remove() {
-      // TODO: remove from cache
-      // TODO: send to server to remove from team_member table, pokemon should also be removed if not saved
+    async remove() {
+      await this.teamStore.removeMember(this.memberIndex)
+      this.closeTeamSlotMenuDialog()
     }
   }
 })

@@ -20,7 +20,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@/router/server-axios', () => ({
   default: {
     put: vi.fn(() => ({ data: 'successful response' })),
-    get: vi.fn(() => ({ data: { teams: [] } }))
+    get: vi.fn(() => ({ data: { teams: [] } })),
+    delete: vi.fn(() => undefined)
   }
 }))
 
@@ -310,5 +311,13 @@ describe('createOrUpdateMember', () => {
         ingredient: ingredient.ingredient.name
       }))
     })
+  })
+})
+
+describe('removeMember', () => {
+  it('should call server to delete a team member', async () => {
+    await TeamService.removeMember({ teamIndex: 1, memberIndex: 2 })
+
+    expect(serverAxios.delete).toHaveBeenCalledWith('team/1/member/2')
   })
 })

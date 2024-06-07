@@ -82,6 +82,30 @@ class TeamRouterImpl {
         }
       }
     );
+
+    BaseRouter.router.delete(
+      '/team/:teamIndex/member/:memberIndex',
+      validateAuthHeader,
+      async (req: Request<{ teamIndex: string; memberIndex: string }, unknown, unknown, unknown>, res: Response) => {
+        try {
+          Logger.log('Entered /team/:teamIndex/member/:memberIndex');
+
+          const { teamIndex, memberIndex } = req.params;
+
+          const user = (req as AuthenticatedRequest).user;
+          if (!user) {
+            throw new Error('User not found');
+          }
+
+          await controller.deleteMember({ teamIndex: +teamIndex, memberIndex: +memberIndex, user });
+
+          res.sendStatus(204);
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
   }
 }
 

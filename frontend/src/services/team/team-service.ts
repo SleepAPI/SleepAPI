@@ -84,6 +84,11 @@ class TeamServiceImpl {
     return teams
   }
 
+  public async removeMember(params: { teamIndex: number; memberIndex: number }) {
+    const { teamIndex, memberIndex } = params
+    await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
+  }
+
   #toUpsertTeamMemberRequest(instancedPokemon: InstancedPokemonExt): UpsertTeamMemberRequest {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
