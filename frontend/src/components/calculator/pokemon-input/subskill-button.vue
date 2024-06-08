@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
-import type { InstancedSubskillExt } from '@/types/member/instanced'
+import type { SubskillInstanceExt } from '@/types/member/instanced'
 import { capitalize, subskill } from 'sleepapi-common'
 
 export default {
@@ -59,7 +59,7 @@ export default {
       required: true
     },
     selectedSubskills: {
-      type: Array<InstancedSubskillExt>,
+      type: Array<SubskillInstanceExt>,
       required: true,
       default: () => []
     }

@@ -1,5 +1,5 @@
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
-import type { InstancedIngredientExt, InstancedPokemonExt } from '@/types/member/instanced'
+import type { IngredientInstanceExt, PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { ingredient, pokemon, type IngredientSet } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
@@ -7,11 +7,11 @@ import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 describe('IngredientButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof IngredientButton>>
 
-  const mockPokemon: InstancedPokemonExt = {
+  const mockPokemon: PokemonInstanceExt = {
     level: 60,
     pokemon: pokemon.PIKACHU,
-    ingredients: [] as InstancedIngredientExt[]
-  } as InstancedPokemonExt
+    ingredients: [] as IngredientInstanceExt[]
+  } as PokemonInstanceExt
 
   beforeEach(() => {
     wrapper = mount(IngredientButton, {

@@ -1,34 +1,33 @@
 import type { ingredient, nature, pokemon, subskill } from 'sleepapi-common'
 
-export interface InstancedIngredientExt {
+export interface IngredientInstanceExt {
   level: number
   ingredient: ingredient.Ingredient
 }
-export interface InstancedSubskillExt {
+export interface SubskillInstanceExt {
   level: number
   subskill: subskill.SubSkill
 }
-export interface InstancedPokemonExt {
-  index: number
-  version: number // TODO: maybe this should just be optional too, easier to use with in memory templates
+export interface PokemonInstanceExt {
+  version: number
   saved: boolean
-  externalId?: string
+  externalId: string
   pokemon: pokemon.Pokemon
   name: string
   level: number
   carrySize: number
   skillLevel: number
   nature: nature.Nature
-  subskills: InstancedSubskillExt[]
-  ingredients: InstancedIngredientExt[]
+  subskills: SubskillInstanceExt[]
+  ingredients: IngredientInstanceExt[]
 }
-export interface InstancedTeamExt {
+
+export interface TeamInstance {
   index: number
   name: string
   camp: boolean
   version: number
-
-  members: (InstancedPokemonExt | undefined)[]
+  members: (string | undefined)[]
 }
 
 export const MAX_TEAM_MEMBERS = 5

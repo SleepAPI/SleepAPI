@@ -2,7 +2,7 @@ import { Static, Type } from '@sinclair/typebox';
 import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
 import { DBPokemon, PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
 import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { GetTeamResponse, PokemonInstance, SubskillTemplate } from 'sleepapi-common';
+import { GetTeamResponse, MemberInstance, SubskillInstance } from 'sleepapi-common';
 
 const DBTeamSchema = Type.Composite([
   DBWithVersionedIdSchema,
@@ -25,12 +25,12 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
 
     const teamsWithMembers: GetTeamResponse[] = [];
     for (const team of teams) {
-      const members: PokemonInstance[] = [];
+      const members: MemberInstance[] = [];
       const memberMetaData = await TeamMemberDAO.findMultiple({ fk_team_id: team.id });
       for (const memberData of memberMetaData) {
         const member: DBPokemon = await PokemonDAO.get({ id: memberData.fk_pokemon_id });
 
-        const subskills: SubskillTemplate[] = [];
+        const subskills: SubskillInstance[] = [];
         if (member.subskill_10) {
           subskills.push({ level: 10, subskill: member.subskill_10 });
         }
@@ -48,7 +48,7 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
         }
 
         members.push({
-          index: memberData.member_index,
+          memberIndex: memberData.member_index,
           version: member.version,
           saved: member.saved,
           externalId: member.external_id,

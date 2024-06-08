@@ -1,8 +1,10 @@
 import { TeamService } from '@/services/team/team-service'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
+import { uuid } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
@@ -174,13 +176,14 @@ describe('Team Store', () => {
   it('should duplicate member to the first open slot', async () => {
     const teamStore = useTeamStore()
     const userStore = useUserStore()
+    const pokemonStore = usePokemonStore()
 
     userStore.setTokens({
       accessToken: 'token1',
       expiryDate: 10,
       refreshToken: 'token2'
     })
-    const member = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
+    const member = uuid.v4()
     teamStore.teams = [
       {
         index: 0,
@@ -190,21 +193,26 @@ describe('Team Store', () => {
         version: 1
       }
     ]
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId: member } as any)
 
     TeamService.createOrUpdateMember = vi.fn().mockResolvedValue({ index: 0, name: 'Pikachu' })
 
     await teamStore.duplicateMember(1)
 
-    expect(teamStore.teams[0].members[0]).toEqual({ index: 0, name: 'Pikachu' })
+    expect(teamStore.teams[0].members[0]).toEqual(member)
     expect(TeamService.createOrUpdateMember).toHaveBeenCalledWith({
       teamIndex: 0,
-      member: { index: 0, name: 'Pikachu' }
+      memberIndex: 0,
+      member: {
+        externalId: member,
+        name: 'Pikachu'
+      }
     })
   })
 
   it('should not duplicate if no open slot is available', async () => {
     const teamStore = useTeamStore()
-    const member = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
+    const member = uuid.v4()
 
     teamStore.teams = [
       {
@@ -254,8 +262,8 @@ describe('Team Store', () => {
       refreshToken: 'token2'
     })
 
-    const member2 = { index: 1, name: 'Pikachu' } as InstancedPokemonExt
-    const member4 = { index: 3, name: 'Pikachu2' } as InstancedPokemonExt
+    const member2 = uuid.v4()
+    const member4 = uuid.v4()
     teamStore.teams = [
       {
         index: 0,
@@ -268,16 +276,13 @@ describe('Team Store', () => {
 
     TeamService.removeMember = vi.fn().mockResolvedValue(undefined)
 
-    await teamStore.removeMember(member2.index)
+    await teamStore.removeMember(1)
 
     expect(teamStore.teams[0].members).toEqual([
       undefined,
       undefined,
       undefined,
-      {
-        index: member4.index,
-        name: 'Pikachu2'
-      },
+      member4,
       undefined
     ])
     expect(TeamService.removeMember).toHaveBeenCalledWith({
@@ -289,7 +294,7 @@ describe('Team Store', () => {
   it('should get number of members in team', async () => {
     const teamStore = useTeamStore()
 
-    const member = { name: 'Pikachu' } as InstancedPokemonExt
+    const member = { name: 'Pikachu' } as PokemonInstanceExt
     teamStore.teams = [
       {
         index: 0,

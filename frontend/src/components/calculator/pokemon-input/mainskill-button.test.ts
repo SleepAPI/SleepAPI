@@ -1,12 +1,12 @@
 import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof MainskillButton>>
-  const samplePokemon = { pokemon: pokemon.PIKACHU, skillLevel: 0 } as InstancedPokemonExt
+  const samplePokemon = { pokemon: pokemon.PIKACHU, skillLevel: 0 } as PokemonInstanceExt
 
   beforeEach(() => {
     wrapper = mount(MainskillButton, {
@@ -22,7 +22,7 @@ describe('MainskillButton', () => {
 
   it('renders correctly with provided data', async () => {
     await wrapper.setProps({
-      pokemonInstance: { pokemon: pokemon.GENGAR, skillLevel: 0 } as InstancedPokemonExt
+      pokemonInstance: { pokemon: pokemon.GENGAR, skillLevel: 0 } as PokemonInstanceExt
     })
     expect(wrapper.find('.responsive-text').text()).toBe('Charge Strength S RangeLv.3')
     expect(wrapper.find('.responsive-text-small').text()).toContain(
@@ -58,7 +58,7 @@ describe('MainskillButton', () => {
           maxLevel: 4
         }
       }
-    } as InstancedPokemonExt
+    } as PokemonInstanceExt
     await wrapper.setProps({
       pokemonInstance: changedPokemon
     })

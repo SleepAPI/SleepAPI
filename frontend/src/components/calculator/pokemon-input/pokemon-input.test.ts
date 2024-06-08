@@ -1,19 +1,20 @@
 import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import { useUserStore } from '@/stores/user-store'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { ingredient, nature, pokemon, subskill } from 'sleepapi-common'
+import { ingredient, nature, pokemon, subskill, uuid } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('PokemonInput', () => {
   let wrapper: VueWrapper<InstanceType<typeof PokemonInput>>
   console.error = vi.fn()
 
-  const preExistingMon: InstancedPokemonExt = {
-    index: 0,
+  const preExistingMon: PokemonInstanceExt = {
     version: 1,
-    externalId: undefined,
+    externalId: uuid.v4(),
     saved: false,
     pokemon: pokemon.PIKACHU,
     name: 'Spike',
@@ -67,13 +68,15 @@ describe('PokemonInput', () => {
 
   it('shall update data from cache on mount', () => {
     const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertPokemon(preExistingMon)
     teamStore.teams = [
       {
         index: 0,
         name: 'Mock team',
         camp: false,
         version: 0,
-        members: [preExistingMon]
+        members: [preExistingMon.externalId]
       }
     ]
     wrapper = mount(PokemonInput, {
@@ -97,7 +100,6 @@ describe('PokemonInput', () => {
     expect(updatedPokemonInstance).not.toEqual(preExistingMon)
     expect(updatedPokemonInstance.pokemon).not.toEqual(pokemon.MOCK_POKEMON)
 
-    expect(updatedPokemonInstance.index).toBe(2)
     expect(updatedPokemonInstance.pokemon).toEqual(pokemon.GALLADE)
     expect(updatedPokemonInstance.carrySize).toBe(pokemon.GALLADE.maxCarrySize)
   })
@@ -112,7 +114,13 @@ describe('PokemonInput', () => {
     expect(wrapper.findComponent({ name: 'NatureButton' }).exists()).toBe(true)
   })
 
-  it('toggles save state correctly', async () => {
+  it('toggles save state correctly if logged in', async () => {
+    const userStore = useUserStore()
+    userStore.setTokens({
+      accessToken: 'token1',
+      expiryDate: 10,
+      refreshToken: 'token2'
+    })
     const saveButton = wrapper.find('#saveIcon')
     expect(wrapper.vm.pokemonInstance.saved).toBe(false)
 
@@ -121,6 +129,15 @@ describe('PokemonInput', () => {
 
     await saveButton.trigger('click')
     expect(wrapper.vm.pokemonInstance.saved).toBe(false)
+  })
+
+  it('cant save if not logged in', async () => {
+    const saveButton = wrapper.find('#saveIcon')
+    expect(wrapper.vm.pokemonInstance.saved).toBe(false)
+
+    await saveButton.trigger('click')
+    expect(wrapper.vm.pokemonInstance.saved).toBe(false)
+    expect(saveButton.classes()).toContain('nudge')
   })
 
   it('updates subskill correctly', async () => {
@@ -173,12 +190,16 @@ describe('PokemonInput', () => {
 
   it('saves data and emits cancel event on save button click', async () => {
     const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
     await wrapper.setData({
       pokemonInstance: { ...wrapper.vm.pokemonInstance, name: 'updatedName' }
     })
     const saveButton = wrapper.find('#saveButton')
     await saveButton.trigger('click')
     expect(wrapper.emitted('cancel')).toHaveLength(1)
-    expect(teamStore.teams[0].members[0]!.name).toEqual('updatedName')
+
+    const member = pokemonStore.getPokemon(wrapper.vm.pokemonInstance.externalId)
+    expect(member.name).toEqual('updatedName')
+    expect(teamStore.teams[0].members[0]).toEqual(member.externalId)
   })
 })

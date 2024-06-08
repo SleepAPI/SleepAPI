@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { pokemon, type IngredientSet } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
@@ -49,7 +49,7 @@ export default {
       required: true
     },
     pokemonInstance: {
-      type: Object as PropType<InstancedPokemonExt>,
+      type: Object as PropType<PokemonInstanceExt>,
       required: true
     }
   },

@@ -88,13 +88,12 @@ describe('getTeams', () => {
 });
 
 describe('upsertTeamMember', () => {
-  it('should create a new member if externalId is not provided', async () => {
+  it('should create a new pokemon if member doesnt exist', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
     const request = {
-      index: 0,
       version: 1,
       saved: true,
-      externalId: undefined,
+      externalId: uuid.v4(),
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
       level: 5,
@@ -109,10 +108,10 @@ describe('upsertTeamMember', () => {
       ],
     };
 
-    const result = await upsertTeamMember({ teamIndex: 0, request, user });
+    const result = await upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user });
 
     expect(result).toEqual({
-      index: 0,
+      memberIndex: 0,
       externalId: '0'.repeat(36),
       version: 1,
       saved: true,
@@ -221,10 +220,10 @@ describe('upsertTeamMember', () => {
       ingredient_60: 'apple',
     });
 
-    const result = await upsertTeamMember({ teamIndex: 0, request, user });
+    const result = await upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user });
 
     expect(result).toEqual({
-      index: 0,
+      memberIndex: 0,
       externalId: request.externalId,
       version: 2,
       saved: true,
@@ -290,7 +289,6 @@ describe('upsertTeamMember', () => {
   it('should throw an error if required ingredient is missing', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
     const request = {
-      index: 0,
       version: 1,
       saved: true,
       externalId: uuid.v4(),
@@ -311,7 +309,7 @@ describe('upsertTeamMember', () => {
       ],
     };
 
-    await expect(upsertTeamMember({ teamIndex: 0, request, user })).rejects.toThrow(IngredientError);
+    await expect(upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user })).rejects.toThrow(IngredientError);
   });
 });
 

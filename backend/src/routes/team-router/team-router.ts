@@ -57,23 +57,33 @@ class TeamRouterImpl {
     );
 
     BaseRouter.router.put(
-      '/team/member/:index',
+      '/team/:teamIndex/member/:memberIndex',
       validateAuthHeader,
       async (
-        req: Request<{ index: string }, UpsertTeamMemberResponse, UpsertTeamMemberRequest, unknown>,
+        req: Request<
+          { teamIndex: string; memberIndex: string },
+          UpsertTeamMemberResponse,
+          UpsertTeamMemberRequest,
+          unknown
+        >,
         res: Response
       ) => {
         try {
-          Logger.log('Entered /team/member/:index');
+          Logger.log('Entered PUT /team/:teamIndex/member/:memberIndex');
 
-          const { index } = req.params;
+          const { teamIndex, memberIndex } = req.params;
 
           const user = (req as AuthenticatedRequest).user;
           if (!user) {
             throw new Error('User not found');
           }
 
-          const updatedMember = await controller.upsertMember({ teamIndex: +index, request: req.body, user });
+          const updatedMember = await controller.upsertMember({
+            teamIndex: +teamIndex,
+            memberIndex: +memberIndex,
+            request: req.body,
+            user,
+          });
 
           res.json(updatedMember);
         } catch (err) {
@@ -88,7 +98,7 @@ class TeamRouterImpl {
       validateAuthHeader,
       async (req: Request<{ teamIndex: string; memberIndex: string }, unknown, unknown, unknown>, res: Response) => {
         try {
-          Logger.log('Entered /team/:teamIndex/member/:memberIndex');
+          Logger.log('Entered DEL /team/:teamIndex/member/:memberIndex');
 
           const { teamIndex, memberIndex } = req.params;
 

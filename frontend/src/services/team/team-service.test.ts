@@ -1,7 +1,8 @@
 import serverAxios from '@/router/server-axios'
 import { TeamService } from '@/services/team/team-service'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { MAX_TEAM_MEMBERS, type InstancedPokemonExt } from '@/types/member/instanced'
+import { MAX_TEAM_MEMBERS, type PokemonInstanceExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
 import {
   getIngredient,
@@ -69,7 +70,6 @@ describe('getTeams', () => {
   })
 
   it('should return partially filled teams', async () => {
-    const mockTeamStore = useTeamStore()
     const existingTeams: GetTeamResponse[] = [
       {
         index: 0,
@@ -78,7 +78,7 @@ describe('getTeams', () => {
         version: 1,
         members: [
           {
-            index: 0,
+            memberIndex: 0,
             version: 0,
             saved: false,
             externalId: uuid.v4(),
@@ -108,38 +108,8 @@ describe('getTeams', () => {
       name: 'Team 1',
       camp: true,
       version: 1,
-      members: [
-        {
-          index: 0,
-          version: 0,
-          saved: false,
-          externalId: '000000000000000000000000000000000000',
-          pokemon: getPokemon('bulbasaur'),
-          name: 'Bulbasaur',
-          level: 5,
-          carrySize: 3,
-          skillLevel: 2,
-          nature: getNature('brave'),
-          subskills: [],
-          ingredients: [
-            { level: 0, ingredient: ingredient.FANCY_APPLE },
-            { level: 30, ingredient: ingredient.FANCY_APPLE },
-            { level: 60, ingredient: ingredient.FANCY_APPLE }
-          ]
-        },
-        ...new Array(MAX_TEAM_MEMBERS - 1).fill(undefined)
-      ]
+      members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined]
     })
-
-    for (let i = 1; i < mockTeamStore.maxAvailableTeams; i++) {
-      expect(res[i]).toEqual({
-        index: i,
-        name: `Helper team ${i + 1}`,
-        camp: false,
-        version: 0,
-        members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
-      })
-    }
   })
 
   it('should return fully filled teams', async () => {
@@ -150,10 +120,12 @@ describe('getTeams', () => {
       camp: index % 2 === 0,
       version: 1,
       members: Array.from({ length: MAX_TEAM_MEMBERS }, (__, memberIndex) => ({
-        index: memberIndex,
+        version: 1,
+        memberIndex,
         saved: false,
+        externalId: uuid.v4(),
         pokemon: 'bulbasaur',
-        name: `Bulbasaur ${memberIndex}`,
+        name: `Bubble`,
         level: 5,
         carrySize: 3,
         skillLevel: 2,
@@ -177,23 +149,32 @@ describe('getTeams', () => {
         name: `Team ${teamIndex + 1}`,
         camp: teamIndex % 2 === 0,
         version: 1,
-        members: Array.from({ length: MAX_TEAM_MEMBERS }, (__, memberIndex) => ({
-          index: memberIndex,
-          saved: false,
-          pokemon: pokemon.BULBASAUR,
-          name: `Bulbasaur ${memberIndex}`,
-          level: 5,
-          carrySize: 3,
-          skillLevel: 2,
-          nature: nature.BRAVE,
-          subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }],
-          ingredients: [
-            { level: 0, ingredient: ingredient.FANCY_APPLE },
-            { level: 30, ingredient: ingredient.FANCY_APPLE },
-            { level: 60, ingredient: ingredient.FANCY_APPLE }
-          ]
-        }))
+        members: [
+          '000000000000000000000000000000000000',
+          '000000000000000000000000000000000000',
+          '000000000000000000000000000000000000',
+          '000000000000000000000000000000000000',
+          '000000000000000000000000000000000000'
+        ]
       })
+    })
+    const pokemonStore = usePokemonStore()
+    expect(pokemonStore.getPokemon('000000000000000000000000000000000000')).toEqual({
+      version: 1,
+      externalId: '000000000000000000000000000000000000',
+      saved: false,
+      pokemon: pokemon.BULBASAUR,
+      name: `Bubble`,
+      level: 5,
+      carrySize: 3,
+      skillLevel: 2,
+      nature: nature.BRAVE,
+      subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }],
+      ingredients: [
+        { level: 0, ingredient: ingredient.FANCY_APPLE },
+        { level: 30, ingredient: ingredient.FANCY_APPLE },
+        { level: 60, ingredient: ingredient.FANCY_APPLE }
+      ]
     })
   })
 })
@@ -201,8 +182,8 @@ describe('getTeams', () => {
 describe('createOrUpdateMember', () => {
   it('should call server to create or update a member and return the updated member', async () => {
     const teamIndex = 0
-    const member: InstancedPokemonExt = {
-      index: 1,
+    const memberIndex = 0
+    const member: PokemonInstanceExt = {
       version: 1,
       saved: true,
       externalId: uuid.v4(),
@@ -240,10 +221,9 @@ describe('createOrUpdateMember', () => {
       }
     })
 
-    const result = await TeamService.createOrUpdateMember({ teamIndex, member })
+    const result = await TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })
 
-    expect(serverAxios.put).toHaveBeenCalledWith(`team/member/${teamIndex}`, {
-      index: member.index,
+    expect(serverAxios.put).toHaveBeenCalledWith(`team/${teamIndex}/member/${memberIndex}`, {
       version: member.version,
       saved: member.saved,
       externalId: member.externalId,
@@ -267,6 +247,7 @@ describe('createOrUpdateMember', () => {
 
   it('should handle server error when updating a member', async () => {
     const teamIndex = 0
+    const memberIndex = 0
     const member = {
       index: 1,
       version: 1,
@@ -287,12 +268,11 @@ describe('createOrUpdateMember', () => {
     }
     serverAxios.put = vi.fn().mockRejectedValueOnce(new Error('Server error'))
 
-    await expect(TeamService.createOrUpdateMember({ teamIndex, member })).rejects.toThrow(
-      'Server error'
-    )
+    await expect(
+      TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })
+    ).rejects.toThrow('Server error')
 
-    expect(serverAxios.put).toHaveBeenCalledWith(`team/member/${teamIndex}`, {
-      index: member.index,
+    expect(serverAxios.put).toHaveBeenCalledWith(`team/${teamIndex}/member/${memberIndex}`, {
       version: member.version,
       saved: member.saved,
       externalId: member.externalId,

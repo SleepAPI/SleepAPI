@@ -29,7 +29,11 @@ describe('PokemonSearch', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    wrapper = mount(PokemonSearch)
+    wrapper = mount(PokemonSearch, {
+      props: {
+        memberIndex: 0
+      }
+    })
   })
 
   it('renders GroupList when no Pokémon is selected', () => {

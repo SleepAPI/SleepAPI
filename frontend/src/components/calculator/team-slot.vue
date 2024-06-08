@@ -5,6 +5,7 @@
       <v-icon>mdi-plus</v-icon>
     </div>
 
+    <!-- TODO: this will cause mount instantly instead of when slot is clicked, it's just hidden until clicked -->
     <TeamSlotMenu v-model:show="showTeamSlotDialog" :member-index="memberIndex" />
   </v-card>
 </template>
