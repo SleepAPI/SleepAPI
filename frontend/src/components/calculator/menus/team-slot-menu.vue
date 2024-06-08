@@ -17,9 +17,9 @@
           <v-list-item
             id="saveButton"
             :disabled="!userStore.loggedIn"
-            :prepend-icon="saved ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+            :prepend-icon="savedState.state ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
             @click="save"
-            >{{ saved ? 'Unsave' : 'Save' }}</v-list-item
+            >{{ savedState.state ? 'Unsave' : 'Save' }}</v-list-item
           >
           <v-list-item
             id="duplicateButton"
@@ -79,7 +79,11 @@ export default defineComponent({
     subDialog: false,
     currentDialogComponent: null as string | null,
     currentDialogProps: {},
-    saved: false
+    savedState: {
+      state: false,
+      serverState: false,
+      timer: null as ReturnType<typeof setTimeout> | null
+    }
   }),
   computed: {
     internalShow: {
@@ -90,12 +94,20 @@ export default defineComponent({
         this.$emit('update:show', value)
       }
     },
+    maybePokemon() {
+      return this.teamStore.getPokemon(this.memberIndex)
+    },
     emptySlot() {
-      return this.teamStore.getPokemon(this.memberIndex) === undefined
+      return this.maybePokemon === undefined
     },
     fullTeam() {
       return this.teamStore.getTeamSize === MAX_TEAM_MEMBERS
     }
+  },
+  mounted() {
+    const initialSavedState = this.maybePokemon?.saved ?? false
+    this.savedState.serverState = initialSavedState
+    this.savedState.state = initialSavedState
   },
   methods: {
     handleAddClick() {
@@ -125,10 +137,27 @@ export default defineComponent({
       await this.teamStore.duplicateMember(this.memberIndex)
     },
     save() {
-      // TODO: call server to save
-      // TODO: be clever here, people will probably spam save unsave because haha, we should probably debounce or send right before unmount if value was diff from start
-      this.saved = !this.saved
-      // TODO: saved should update every member in the cache with this mon's external id
+      this.savedState.state = !this.savedState.state
+      this.resetSaveTimer()
+    },
+    resetSaveTimer() {
+      if (this.savedState.timer) {
+        clearTimeout(this.savedState.timer)
+      }
+      this.savedState.timer = setTimeout(this.sendSaveRequest, 1000)
+    },
+    async sendSaveRequest() {
+      if (this.savedState.state !== this.savedState.serverState) {
+        const pokemonToUpdate = this.maybePokemon
+        if (!pokemonToUpdate) {
+          console.error("Can't find Pokémon to save")
+          return
+        }
+        this.savedState.serverState = this.savedState.state
+        await this.teamStore.updateTeamMember({ ...pokemonToUpdate, saved: this.savedState.state })
+
+        // TODO: move mon out to pokemon store, which we could point to and then that could hold production info too, that would let all members pointing to that pokemon get saved state updated
+      }
     },
     async remove() {
       await this.teamStore.removeMember(this.memberIndex)

@@ -5,7 +5,7 @@ import { MAX_TEAM_MEMBERS, type InstancedPokemonExt } from '@/types/member/insta
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { nature, pokemon } from 'sleepapi-common'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi, vitest } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
   TeamService: {
@@ -136,4 +136,33 @@ describe('TeamSlotMenu', () => {
   })
 
   it.todo('toggles save')
+  it('toggles save and calls server', async () => {
+    vitest.useFakeTimers()
+    const member: InstancedPokemonExt = {
+      index: 0,
+      carrySize: 0,
+      ingredients: [],
+      level: 0,
+      name: 'Bert',
+      nature: nature.BASHFUL,
+      pokemon: pokemon.PIKACHU,
+      saved: false,
+      skillLevel: 0,
+      subskills: [],
+      version: 0
+    }
+    teamStore.teams[0].members[0] = member
+    teamStore.updateTeamMember = vi.fn()
+    await wrapper.setProps({ show: true, memberIndex: 0 })
+
+    const saveButton = document.querySelector('#saveButton') as HTMLElement
+    expect(saveButton).not.toBeNull()
+    saveButton.click()
+
+    // skip past debounce
+    vitest.advanceTimersByTime(2000)
+
+    expect(teamStore.updateTeamMember).toHaveBeenCalledWith({ ...member, saved: true })
+    vitest.useRealTimers()
+  })
 })
