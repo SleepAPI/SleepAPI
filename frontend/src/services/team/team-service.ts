@@ -1,9 +1,10 @@
 import serverAxios from '@/router/server-axios'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import {
   MAX_TEAM_MEMBERS,
-  type InstancedPokemonExt,
-  type InstancedTeamExt
+  type PokemonInstanceExt,
+  type TeamInstance
 } from '@/types/member/instanced'
 import {
   getIngredient,
@@ -27,30 +28,32 @@ class TeamServiceImpl {
 
   public async createOrUpdateMember(params: {
     teamIndex: number
-    member: InstancedPokemonExt
-  }): Promise<InstancedPokemonExt> {
-    const { teamIndex, member } = params
+    memberIndex: number
+    member: PokemonInstanceExt
+  }): Promise<PokemonInstanceExt> {
+    const { teamIndex, memberIndex, member } = params
 
     const request = this.#toUpsertTeamMemberRequest(member)
 
     const response = await serverAxios.put<UpsertTeamMemberResponse>(
-      `team/member/${teamIndex}`,
+      `team/${teamIndex}/member/${memberIndex}`,
       request
     )
     return this.#populateMember(response.data)
   }
 
-  public async getTeams(): Promise<InstancedTeamExt[]> {
+  public async getTeams(): Promise<TeamInstance[]> {
     const response = await serverAxios.get<GetTeamsResponse>('team')
 
     const existingTeams = response.data.teams
     const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
 
-    const teams: InstancedTeamExt[] = []
+    const teams: TeamInstance[] = []
     for (let teamIndex = 0; teamIndex < teamStore.maxAvailableTeams; teamIndex++) {
       const existingTeam = existingTeams.find((team) => team.index === teamIndex)
       if (!existingTeam) {
-        const emptyTeam: InstancedTeamExt = {
+        const emptyTeam: TeamInstance = {
           index: teamIndex,
           name: `Helper team ${teamIndex + 1}`,
           camp: false,
@@ -59,18 +62,22 @@ class TeamServiceImpl {
         }
         teams.push(emptyTeam)
       } else {
-        const members: (InstancedPokemonExt | undefined)[] = []
+        const members: (string | undefined)[] = []
         for (let memberIndex = 0; memberIndex < MAX_TEAM_MEMBERS; memberIndex++) {
-          const existingMember = existingTeam.members.find((member) => member.index === memberIndex)
+          const existingMember = existingTeam.members.find(
+            (member) => member.memberIndex === memberIndex
+          )
 
           if (!existingMember) {
             members.push(undefined)
           } else {
-            members.push(this.#populateMember(existingMember))
+            const cachedMember = this.#populateMember(existingMember)
+            pokemonStore.upsertPokemon(cachedMember)
+            members.push(cachedMember.externalId)
           }
         }
 
-        const instancedTeam: InstancedTeamExt = {
+        const instancedTeam: TeamInstance = {
           index: existingTeam.index,
           name: existingTeam.name,
           camp: existingTeam.camp,
@@ -89,7 +96,7 @@ class TeamServiceImpl {
     await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
   }
 
-  #toUpsertTeamMemberRequest(instancedPokemon: InstancedPokemonExt): UpsertTeamMemberRequest {
+  #toUpsertTeamMemberRequest(instancedPokemon: PokemonInstanceExt): UpsertTeamMemberRequest {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (instancedPokemon.subskills.length > 5) {
@@ -97,7 +104,6 @@ class TeamServiceImpl {
     }
 
     return {
-      index: instancedPokemon.index,
       version: instancedPokemon.version,
       saved: instancedPokemon.saved,
       externalId: instancedPokemon.externalId,
@@ -118,7 +124,7 @@ class TeamServiceImpl {
     }
   }
 
-  #populateMember(instancedPokemon: PokemonInstance): InstancedPokemonExt {
+  #populateMember(instancedPokemon: PokemonInstance): PokemonInstanceExt {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (instancedPokemon.subskills.length > 5) {
@@ -126,7 +132,6 @@ class TeamServiceImpl {
     }
 
     return {
-      index: instancedPokemon.index,
       version: instancedPokemon.version,
       saved: instancedPokemon.saved,
       externalId: instancedPokemon.externalId,

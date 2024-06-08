@@ -9,7 +9,6 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       {
         "carrySize": 10,
         "externalId": "111111111111111111111111111111111111",
-        "index": 0,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -25,6 +24,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
           },
         ],
         "level": 25,
+        "memberIndex": 0,
         "name": "Sparky",
         "nature": "Brave",
         "pokemon": "Pikachu",
@@ -57,7 +57,6 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       {
         "carrySize": 10,
         "externalId": "111111111111111111111111111111111111",
-        "index": 1,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -73,6 +72,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
           },
         ],
         "level": 25,
+        "memberIndex": 1,
         "name": "Sparky",
         "nature": "Brave",
         "pokemon": "Pikachu",
@@ -105,7 +105,6 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       {
         "carrySize": 10,
         "externalId": "222222222222222222222222222222222222",
-        "index": 2,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -121,6 +120,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
           },
         ],
         "level": 25,
+        "memberIndex": 2,
         "name": "Bubble",
         "nature": "Brave",
         "pokemon": "Bulbasaur",

@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { mainskill, pokemon } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
@@ -54,7 +54,7 @@ export default {
   name: 'MainskillButton',
   props: {
     pokemonInstance: {
-      type: Object as PropType<InstancedPokemonExt>,
+      type: Object as PropType<PokemonInstanceExt>,
       required: true
     }
   },

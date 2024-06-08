@@ -154,9 +154,10 @@ export default defineComponent({
           return
         }
         this.savedState.serverState = this.savedState.state
-        await this.teamStore.updateTeamMember({ ...pokemonToUpdate, saved: this.savedState.state })
-
-        // TODO: move mon out to pokemon store, which we could point to and then that could hold production info too, that would let all members pointing to that pokemon get saved state updated
+        await this.teamStore.updateTeamMember(
+          { ...pokemonToUpdate, saved: this.savedState.state },
+          this.memberIndex
+        )
       }
     },
     async remove() {

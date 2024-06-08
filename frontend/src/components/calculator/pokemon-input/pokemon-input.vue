@@ -11,7 +11,7 @@
             id="saveIcon"
             icon
             color="background"
-            :class="{ nudge: !pokemonInstance.pokemon }"
+            :class="{ nudge: !userStore.loggedIn }"
             @click="toggleSave"
           >
             <v-icon v-if="pokemonInstance.saved" size="30">mdi-bookmark</v-icon>
@@ -186,8 +186,9 @@ import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { InstancedPokemonExt } from '@/types/member/instanced'
-import { ingredient, nature, pokemon, type subskill } from 'sleepapi-common'
+import { useUserStore } from '@/stores/user-store'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
+import { ingredient, nature, pokemon, uuid, type subskill } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -216,13 +217,13 @@ export default defineComponent({
   emits: ['cancel'],
   setup() {
     const teamStore = useTeamStore()
-    return { teamStore }
+    const userStore = useUserStore()
+    return { teamStore, userStore }
   },
   data: () => ({
     pokemonInstance: {
-      index: 0,
       version: 0,
-      externalId: undefined as string | undefined,
+      externalId: '',
       saved: false,
       pokemon: pokemon.MOCK_POKEMON,
       name: '',
@@ -245,7 +246,7 @@ export default defineComponent({
           ingredient: undefined as ingredient.Ingredient | undefined
         }
       ]
-    } as InstancedPokemonExt
+    } as PokemonInstanceExt
   }),
   computed: {
     rp() {
@@ -257,16 +258,16 @@ export default defineComponent({
     if (existingPokemon) {
       this.pokemonInstance = JSON.parse(JSON.stringify(existingPokemon))
     } else if (this.selectedPokemon) {
-      this.pokemonInstance.index = this.memberIndex
       this.pokemonInstance.pokemon = this.selectedPokemon
       this.pokemonInstance.carrySize = this.selectedPokemon.maxCarrySize
+      this.pokemonInstance.externalId = uuid.v4()
     } else console.error('Missing both cached and search input mon, contact developer')
 
     // in future we will also mount from saved mons here
   },
   methods: {
     toggleSave() {
-      if (this.pokemonInstance.pokemon) {
+      if (this.userStore.loggedIn) {
         this.pokemonInstance.saved = !this.pokemonInstance.saved
       }
     },
@@ -316,7 +317,7 @@ export default defineComponent({
     },
     save() {
       // TODO: need to start running simulations too asap, perhaps we can emit a promise so team section can show skeleton loader and await
-      this.teamStore.updateTeamMember(this.pokemonInstance)
+      this.teamStore.updateTeamMember(this.pokemonInstance, this.memberIndex)
       this.$emit('cancel') // TODO: should probably be renamed to close
     }
   }

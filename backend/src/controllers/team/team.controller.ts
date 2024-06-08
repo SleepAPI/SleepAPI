@@ -14,7 +14,12 @@ export default class TeamController {
     return upsertTeamMeta(team);
   }
 
-  public async upsertMember(params: { teamIndex: number; request: UpsertTeamMemberRequest; user: DBUser }) {
+  public async upsertMember(params: {
+    teamIndex: number;
+    memberIndex: number;
+    request: UpsertTeamMemberRequest;
+    user: DBUser;
+  }) {
     return upsertTeamMember(params);
   }
 

@@ -5,12 +5,11 @@ import { DBUser } from '@src/database/dao/user/user-dao';
 import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
 import {
   GetTeamsResponse,
-  IngredientTemplate,
-  SubskillTemplate,
+  IngredientInstance,
+  SubskillInstance,
   UpsertTeamMemberRequest,
   UpsertTeamMemberResponse,
   UpsertTeamMetaResponse,
-  uuid,
 } from 'sleepapi-common';
 
 export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<UpsertTeamMetaResponse> {
@@ -29,10 +28,11 @@ export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<Upsert
 // TODO: would be better if this entire thing was in a transaction
 export async function upsertTeamMember(params: {
   teamIndex: number;
+  memberIndex: number;
   request: UpsertTeamMemberRequest;
   user: DBUser;
 }): Promise<UpsertTeamMemberResponse> {
-  const { teamIndex, request, user } = params;
+  const { teamIndex, memberIndex, request, user } = params;
 
   const team = await TeamDAO.find({ fk_user_id: user.id, team_index: teamIndex });
   const updatedTeam = await TeamDAO.upsert({
@@ -45,12 +45,11 @@ export async function upsertTeamMember(params: {
     filter: { fk_user_id: user.id, team_index: teamIndex },
   });
 
-  const memberExternalId = request.externalId ?? uuid.v4();
   // TODO: this will always update the mon even if no changes, which will bump version, which will cause resims
   // TODO: this will happen for "duplicate" function in frontend and "add from saved"
   const upsertedMember = await PokemonDAO.upsert({
     updated: {
-      external_id: memberExternalId,
+      external_id: request.externalId,
       fk_user_id: user.id,
       saved: request.saved,
       pokemon: request.pokemon,
@@ -68,16 +67,16 @@ export async function upsertTeamMember(params: {
       ingredient_30: ingredientForLevel(30, request.ingredients),
       ingredient_60: ingredientForLevel(60, request.ingredients),
     },
-    filter: { external_id: memberExternalId },
+    filter: { external_id: request.externalId },
   });
 
   const updatedMemberMeta = await TeamMemberDAO.upsert({
-    updated: { fk_pokemon_id: upsertedMember.id, fk_team_id: updatedTeam.id, member_index: request.index },
-    filter: { fk_team_id: updatedTeam.id, member_index: request.index },
+    updated: { fk_pokemon_id: upsertedMember.id, fk_team_id: updatedTeam.id, member_index: memberIndex },
+    filter: { fk_team_id: updatedTeam.id, member_index: memberIndex },
   });
 
   return {
-    index: updatedMemberMeta.member_index,
+    memberIndex: updatedMemberMeta.member_index,
     externalId: upsertedMember.external_id,
     version: upsertedMember.version,
     saved: upsertedMember.saved,
@@ -108,9 +107,7 @@ export async function upsertTeamMember(params: {
 export async function getTeams(user: DBUser): Promise<GetTeamsResponse> {
   const teams = await TeamDAO.findTeamsWithMembers(user.id);
 
-  return {
-    teams,
-  };
+  return { teams };
 }
 
 export async function deleteMember(params: { teamIndex: number; memberIndex: number; user: DBUser }) {
@@ -131,12 +128,12 @@ export async function deleteMember(params: { teamIndex: number; memberIndex: num
   }
 }
 
-function subskillForLevel(level: number, subskills: SubskillTemplate[]) {
+function subskillForLevel(level: number, subskills: SubskillInstance[]) {
   return subskills.find((subskill) => subskill.level === level)?.subskill;
 }
 
-function filterFilledSubskills(subskills: DBPokemon): SubskillTemplate[] {
-  const filledSubskills: SubskillTemplate[] = [];
+function filterFilledSubskills(subskills: DBPokemon): SubskillInstance[] {
+  const filledSubskills: SubskillInstance[] = [];
 
   if (subskills.subskill_10) {
     filledSubskills.push({ level: 10, subskill: subskills.subskill_10 });
@@ -157,7 +154,7 @@ function filterFilledSubskills(subskills: DBPokemon): SubskillTemplate[] {
   return filledSubskills;
 }
 
-function ingredientForLevel(level: number, ingredients: IngredientTemplate[]) {
+function ingredientForLevel(level: number, ingredients: IngredientInstance[]) {
   const ingredient = ingredients.find((ingredient) => ingredient.level === level)?.ingredient;
   if (!ingredient) {
     throw new IngredientError('Missing required ingredient in upsert member request for level: ' + level);

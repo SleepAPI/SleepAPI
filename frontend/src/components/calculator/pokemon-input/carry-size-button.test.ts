@@ -1,5 +1,5 @@
 import CarrySizeButton from '@/components/calculator/pokemon-input/carry-size-button.vue'
-import type { InstancedPokemonExt } from '@/types/member/instanced'
+import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { pokemon } from 'sleepapi-common'
@@ -11,7 +11,7 @@ describe('CarrySizeButton', () => {
   const mockPokemon = {
     pokemon: pokemon.PIKACHU,
     carrySize: 0
-  } as InstancedPokemonExt
+  } as PokemonInstanceExt
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -71,7 +71,7 @@ describe('CarrySizeButton', () => {
     const newPokemon = {
       pokemon: { name: 'Bulbasaur', carrySize: 5, maxCarrySize: 15 },
       carrySize: 10
-    } as InstancedPokemonExt
+    } as PokemonInstanceExt
     await wrapper.setProps({ pokemonInstance: newPokemon })
 
     expect(wrapper.emitted('update-carry')).toBeTruthy()

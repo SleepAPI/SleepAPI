@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { MAX_TEAM_MEMBERS, type InstancedPokemonExt } from '@/types/member/instanced'
+import { MAX_TEAM_MEMBERS, type PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { nature, pokemon } from 'sleepapi-common'
+import { nature, pokemon, uuid } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi, vitest } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
@@ -20,6 +22,7 @@ describe('TeamSlotMenu', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamSlotMenu>>
   let teamStore: ReturnType<typeof useTeamStore>
   let userStore: ReturnType<typeof useUserStore>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -31,6 +34,7 @@ describe('TeamSlotMenu', () => {
     })
     teamStore = useTeamStore()
     userStore = useUserStore()
+    pokemonStore = usePokemonStore()
   })
 
   afterEach(() => {
@@ -48,7 +52,9 @@ describe('TeamSlotMenu', () => {
   })
 
   it('renders correctly when the slot is filled', async () => {
-    teamStore.teams[0].members[0] = { name: 'Pikachu' } as any
+    const externalId = uuid.v4()
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId } as any)
+    teamStore.teams[0].members[0] = externalId // so isEmpty is false and we can see button
     await wrapper.setProps({ show: true, memberIndex: 0 })
     expect(wrapper.vm.emptySlot).toBe(false)
     expect(document.querySelector('#emptyMenu')).toBeNull()
@@ -68,8 +74,7 @@ describe('TeamSlotMenu', () => {
   })
 
   it('opens PokemonInput on edit click', async () => {
-    const member: InstancedPokemonExt = {
-      index: 1,
+    const member: PokemonInstanceExt = {
       carrySize: 0,
       ingredients: [],
       level: 0,
@@ -79,9 +84,11 @@ describe('TeamSlotMenu', () => {
       saved: false,
       skillLevel: 0,
       subskills: [],
-      version: 0
+      version: 0,
+      externalId: uuid.v4()
     }
-    teamStore.teams[0].members[0] = member
+    pokemonStore.upsertPokemon(member)
+    teamStore.teams[0].members[0] = member.externalId
     await wrapper.setProps({ show: true, memberIndex: 0 })
 
     const editButton = document.querySelector('#editButton') as HTMLElement
@@ -94,7 +101,9 @@ describe('TeamSlotMenu', () => {
 
   it('duplicates member', async () => {
     teamStore.duplicateMember = vi.fn()
-    teamStore.teams[0].members[0] = { name: 'Pikachu', index: 0 } as any
+    const externalId = uuid.v4()
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId } as any)
+    teamStore.teams[0].members[0] = externalId // so isEmpty is false and we can see button
     teamStore.teams[0].members[1] = undefined
     await wrapper.setProps({ show: true, memberIndex: 0 })
 
@@ -107,7 +116,9 @@ describe('TeamSlotMenu', () => {
 
   it('removes member and closes dialog', async () => {
     teamStore.removeMember = vi.fn()
-    teamStore.teams[0].members[0] = { name: 'Pikachu' } as any
+    const externalId = uuid.v4()
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId } as any)
+    teamStore.teams[0].members[0] = externalId // so isEmpty is false and we can see button
     await wrapper.setProps({ show: true, memberIndex: 0 })
 
     const removeButton = document.querySelector('#removeButton') as HTMLElement
@@ -118,7 +129,9 @@ describe('TeamSlotMenu', () => {
   })
 
   it('disables duplicate button when team is full', async () => {
-    teamStore.teams[0].members = new Array(MAX_TEAM_MEMBERS).fill({ name: 'Pikachu' })
+    const externalId = uuid.v4()
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId } as any)
+    teamStore.teams[0].members = new Array(MAX_TEAM_MEMBERS).fill(externalId) // so isEmpty is false and we can see button
     await wrapper.setProps({ show: true, memberIndex: 0 })
     const duplicateButton = document.querySelector('#duplicateButton') as HTMLElement
     expect(duplicateButton).not.toBeNull()
@@ -127,7 +140,9 @@ describe('TeamSlotMenu', () => {
 
   it('disables save button when user is not logged in', async () => {
     userStore.tokens = null
-    teamStore.teams[0].members[0] = { name: 'Pikachu' } as any
+    const externalId = uuid.v4()
+    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId } as any)
+    teamStore.teams[0].members[0] = externalId // so isEmpty is false and we can see button
     await wrapper.setProps({ show: true, memberIndex: 0 })
 
     const saveButton = document.querySelector('#saveButton') as HTMLElement
@@ -135,11 +150,9 @@ describe('TeamSlotMenu', () => {
     expect(saveButton.classList).toContain('v-list-item--disabled')
   })
 
-  it.todo('toggles save')
   it('toggles save and calls server', async () => {
     vitest.useFakeTimers()
-    const member: InstancedPokemonExt = {
-      index: 0,
+    const member: PokemonInstanceExt = {
       carrySize: 0,
       ingredients: [],
       level: 0,
@@ -149,9 +162,11 @@ describe('TeamSlotMenu', () => {
       saved: false,
       skillLevel: 0,
       subskills: [],
-      version: 0
+      version: 0,
+      externalId: uuid.v4()
     }
-    teamStore.teams[0].members[0] = member
+    pokemonStore.upsertPokemon(member)
+    teamStore.teams[0].members[0] = member.externalId
     teamStore.updateTeamMember = vi.fn()
     await wrapper.setProps({ show: true, memberIndex: 0 })
 
@@ -162,7 +177,7 @@ describe('TeamSlotMenu', () => {
     // skip past debounce
     vitest.advanceTimersByTime(2000)
 
-    expect(teamStore.updateTeamMember).toHaveBeenCalledWith({ ...member, saved: true })
+    expect(teamStore.updateTeamMember).toHaveBeenCalledWith({ ...member, saved: true }, 0)
     vitest.useRealTimers()
   })
 })
