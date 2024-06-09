@@ -7,7 +7,7 @@ describe('SneaselHomeIcon', () => {
     const wrapper = mount(SneaselHomeIcon)
 
     expect(wrapper.html()).toMatchInlineSnapshot(
-      `"<div class="circle"><img src="/images/home-page/sneasel-home.png" alt="Sleep API icon"></div>"`
+      `"<div class="circle"><img src="/images/sneasel/home.png" alt="Sleep API icon"></div>"`
     )
   })
 
@@ -23,7 +23,7 @@ describe('SneaselHomeIcon', () => {
     const img = wrapper.find('img')
 
     expect(img.exists()).toBe(true)
-    expect(img.attributes('src')).toBe('/images/home-page/sneasel-home.png')
+    expect(img.attributes('src')).toBe('/images/sneasel/home.png')
     expect(img.attributes('alt')).toBe('Sleep API icon')
   })
 })

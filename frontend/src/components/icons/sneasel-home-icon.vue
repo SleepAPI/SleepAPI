@@ -1,6 +1,6 @@
 <template>
   <div class="circle">
-    <img src="/images/home-page/sneasel-home.png" alt="Sleep API icon" />
+    <img src="/images/sneasel/home.png" alt="Sleep API icon" />
   </div>
 </template>
 
