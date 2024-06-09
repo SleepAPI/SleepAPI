@@ -53,6 +53,7 @@ export const useTeamStore = defineStore('team', {
           // TODO: should diff versions of this.teams and teams, all teams/members
           // TODO: for teams/members that have diff in version we rerun simulations
 
+          // overwrite cached teams with data from server
           this.teams = teams
 
           // TODO: loadingTeams can be used to skeleton load the results while simulations rerunning

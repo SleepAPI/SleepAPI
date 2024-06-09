@@ -7,7 +7,9 @@
           <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
             >Add</v-list-item
           >
-          <v-list-item prepend-icon="mdi-bookmark-outline">Saved</v-list-item>
+          <v-list-item prepend-icon="mdi-bookmark-outline" @click="openCollection"
+            >Saved</v-list-item
+          >
         </div>
         <div v-else id="filledMenu">
           <!-- Filled team slot  -->
@@ -163,6 +165,13 @@ export default defineComponent({
     async remove() {
       await this.teamStore.removeMember(this.memberIndex)
       this.closeTeamSlotMenuDialog()
+    },
+    openCollection() {
+      console.log('Not implemented..') // TODO:
+
+      // TODO: this should load generic collection component, in dialog
+      // TODO: in mounted of collection component we should clean up pokemon-store:
+      // TODO:    get all pokemon for this user from server and I think we can probably just overwrite the entire pokemon-store?
     }
   }
 })
