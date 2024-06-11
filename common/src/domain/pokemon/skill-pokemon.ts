@@ -484,12 +484,12 @@ export const WOBBUFFET: Pokemon = {
 export const HERACROSS: Pokemon = {
   name: 'HERACROSS',
   specialty: 'skill',
-  frequency: toSeconds(0, 41, 40),
+  frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 15.8,
-  skillPercentage: 4.5,
+  skillPercentage: 4.7,
   berry: LUM,
-  carrySize: 18,
-  maxCarrySize: 18,
+  carrySize: 20,
+  maxCarrySize: 20,
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
     { amount: 2, ingredient: HONEY },
