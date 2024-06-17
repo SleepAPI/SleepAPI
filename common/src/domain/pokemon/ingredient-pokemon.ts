@@ -41,6 +41,7 @@ import {
   CHARGE_STRENGTH_S_RANGE,
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
+  TASTY_CHANCE_S,
 } from '../mainskill/mainskill';
 import { Pokemon } from './pokemon';
 
@@ -671,6 +672,28 @@ export const COMFEY: Pokemon = {
   skill: ENERGIZING_CHEER_S,
 };
 
+export const CRAMORANT: Pokemon = {
+  name: 'CRAMORANT',
+  specialty: 'ingredient',
+  frequency: toSeconds(0, 45, 0),
+  ingredientPercentage: 16.5,
+  skillPercentage: 3.3,
+  berry: PAMTRE,
+  carrySize: 19,
+  maxCarrySize: 19,
+  ingredient0: { amount: 2, ingredient: PURE_OIL },
+  ingredient30: [
+    { amount: 5, ingredient: PURE_OIL },
+    { amount: 4, ingredient: SOFT_POTATO },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: PURE_OIL },
+    { amount: 7, ingredient: SOFT_POTATO },
+    { amount: 8, ingredient: FANCY_EGG },
+  ],
+  skill: TASTY_CHANCE_S,
+};
+
 export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   VENUSAUR,
   CHARIZARD,
@@ -692,6 +715,7 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   ABOMASNOW,
   BEWEAR,
   COMFEY,
+  CRAMORANT,
 ];
 
 export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
