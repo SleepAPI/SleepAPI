@@ -1,5 +1,4 @@
-import { IngredientSet, ingredient } from 'sleepapi-common';
-import { roundDown } from '../calculator-utils/calculator-utils';
+import { IngredientSet, MathUtils, ingredient } from 'sleepapi-common';
 
 export function shortPrettifyIngredientDrop(ingredientDrop: IngredientSet[]) {
   return ingredientDrop.map(({ ingredient }) => `${ingredient.name}`).join('/');
@@ -17,15 +16,17 @@ export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], provided
 
     if (nonIngMagnetIngs.length > 0) {
       const prettyString = nonIngMagnetIngs
-        .map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`)
+        .map(({ amount, ingredient }) => `${MathUtils.round(amount, 1)} ${ingredient.name}`)
         .join(separator);
-      return `${prettyString} and ${roundDown(ingMagnetAmount, 2)} of all ${
+      return `${prettyString} and ${MathUtils.round(ingMagnetAmount, 2)} of all ${
         ingredient.INGREDIENTS.length - new Set(nonIngMagnetIngs.map((ing) => ing.ingredient.name)).size
       } other ingredients`;
     } else {
-      return `${roundDown(ingMagnetAmount, 2)} of all ${ingredient.INGREDIENTS.length} ingredients`;
+      return `${MathUtils.round(ingMagnetAmount, 2)} of all ${ingredient.INGREDIENTS.length} ingredients`;
     }
   } else {
-    return ingredientDrop.map(({ amount, ingredient }) => `${roundDown(amount, 1)} ${ingredient.name}`).join(separator);
+    return ingredientDrop
+      .map(({ amount, ingredient }) => `${MathUtils.round(amount, 1)} ${ingredient.name}`)
+      .join(separator);
   }
 }

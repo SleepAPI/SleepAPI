@@ -1,5 +1,5 @@
 import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { mainskill } from 'sleepapi-common';
 import { Summary, SummaryEvent } from './summary-event';
 
@@ -24,10 +24,10 @@ describe('SummaryEvent', () => {
       spilledIngredients: MOCKED_PRODUCE.ingredients,
       totalProduce: MOCKED_PRODUCE,
       totalRecovery: 6,
-      collectFrequency: parseTime('00:10'),
+      collectFrequency: TimeUtils.parseTime('00:10'),
     };
     const event = new SummaryEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
       summary,
     });

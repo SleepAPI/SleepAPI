@@ -2,7 +2,7 @@ import serverAxios from '@/router/server-axios'
 import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { MAX_TEAM_MEMBERS, type PokemonInstanceExt } from '@/types/member/instanced'
+import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
 import {
   getIngredient,
@@ -14,7 +14,8 @@ import {
   pokemon,
   subskill,
   uuid,
-  type GetTeamResponse
+  type GetTeamResponse,
+  type PokemonInstanceExt
 } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

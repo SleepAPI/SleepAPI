@@ -1,6 +1,6 @@
-import { PokemonInstance } from '../../pokemon/pokemon-instance';
+import { PokemonInstanceWithMeta } from '../../pokemon/pokemon-instance';
 
-export interface MemberInstance extends PokemonInstance {
+export interface MemberInstance extends PokemonInstanceWithMeta {
   memberIndex: number;
 }
 

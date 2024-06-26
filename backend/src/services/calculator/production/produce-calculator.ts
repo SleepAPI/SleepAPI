@@ -38,9 +38,9 @@ export function calculateAverageProduce(
 export function clampHelp(params: { inventorySpace: number; averageProduce: Produce; amount: number }) {
   const { inventorySpace, averageProduce, amount } = params;
 
-  const spillFactor = inventorySpace / amount;
+  const spillFactor = Math.min(1, inventorySpace / amount);
   const clampedProduce: Produce = {
-    berries: {
+    berries: averageProduce.berries && {
       amount: averageProduce.berries.amount * spillFactor,
       berry: averageProduce.berries.berry,
     },

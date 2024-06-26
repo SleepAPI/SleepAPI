@@ -1,9 +1,8 @@
 import { MealError } from '@src/domain/error/meal/meal-error';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
-import { roundDown } from '../calculator-utils/calculator-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
-import { parseTime, prettifyTime } from '../time-utils/time-utils';
 import {
   CritInfo,
   calculateCritMultiplier,
@@ -158,7 +157,7 @@ describe('getMealsForFilter', () => {
 describe('getDefaultMealTimes', () => {
   it('shall return default meal times late in each window', () => {
     const mealTimes = getDefaultMealTimes(MOCKED_MAIN_SLEEP);
-    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
       [
         "11:59:00",
@@ -170,10 +169,10 @@ describe('getDefaultMealTimes', () => {
 
   it('shall skip dinner if we are sleeping', () => {
     const mealTimes = getDefaultMealTimes({
-      start: parseTime('06:00'),
-      end: parseTime('17:00'),
+      start: TimeUtils.parseTime('06:00'),
+      end: TimeUtils.parseTime('17:00'),
     });
-    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
       [
         "11:59:00",
@@ -184,10 +183,10 @@ describe('getDefaultMealTimes', () => {
 
   it('shall work with night schedule', () => {
     const mealTimes = getDefaultMealTimes({
-      start: parseTime('17:00'),
-      end: parseTime('05:00'),
+      start: TimeUtils.parseTime('17:00'),
+      end: TimeUtils.parseTime('05:00'),
     });
-    const prettifiedTimes = mealTimes.map((t) => prettifyTime(t));
+    const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
       [
         "17:59:00",
@@ -260,9 +259,9 @@ describe('calculateCritMultiplier', () => {
       weekdayCritChance,
       sundayCritChance,
     } = calculateCritMultiplier(skillActivations, new Map());
-    expect(roundDown(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
-    expect(roundDown(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
-    expect(roundDown(sundayMultiplier, 1)).toMatchInlineSnapshot(`2`);
+    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
+    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
+    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`2`);
     expect(Math.abs(fullWeekCritChance - 35)).toBeLessThanOrEqual(2);
     expect(Math.abs(weekdayCritChance - 33)).toBeLessThanOrEqual(2);
     expect(Math.abs(sundayCritChance - 50)).toBeLessThanOrEqual(2);
@@ -280,9 +279,9 @@ describe('calculateCritMultiplier', () => {
       weekdayCritChance,
       sundayCritChance,
     } = calculateCritMultiplier(skillActivations, new Map());
-    expect(roundDown(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
-    expect(roundDown(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
-    expect(roundDown(sundayMultiplier, 1)).toMatchInlineSnapshot(`1.6`);
+    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
+    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
+    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`1.6`);
     expect(Math.abs(fullWeekCritChance - 13)).toBeLessThanOrEqual(2);
     expect(Math.abs(weekdayCritChance - 10)).toBeLessThanOrEqual(2);
     expect(Math.abs(sundayCritChance - 30)).toBeLessThanOrEqual(2);

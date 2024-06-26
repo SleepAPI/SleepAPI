@@ -5,11 +5,10 @@ import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
 import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
-import { countInventory } from '../inventory-utils/inventory-utils';
-import { getEmptyProduce } from '../production-utils/production-utils';
 import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '../test-utils/defaults';
-import { parseTime } from '../time-utils/time-utils';
 import {
   addSneakySnackEvent,
   getDefaultRecoveryEvents,
@@ -63,6 +62,14 @@ describe('getExtraHelpfulEvents', () => {
             "fractionOfProc": 1,
             "nrOfHelpsToActivate": 0,
             "skill": {
+              "RP": [
+                880,
+                1251,
+                1726,
+                2383,
+                3290,
+                4546,
+              ],
               "amount": [
                 5,
                 6,
@@ -112,6 +119,14 @@ describe('getExtraHelpfulEvents', () => {
             "fractionOfProc": 0.5,
             "nrOfHelpsToActivate": 0,
             "skill": {
+              "RP": [
+                880,
+                1251,
+                1726,
+                2383,
+                3290,
+                4546,
+              ],
               "amount": [
                 5,
                 6,
@@ -179,6 +194,14 @@ describe('getHelperBoostEvents', () => {
             "fractionOfProc": 1,
             "nrOfHelpsToActivate": 0,
             "skill": {
+              "RP": [
+                2800,
+                3902,
+                5273,
+                6975,
+                9317,
+                12438,
+              ],
               "amount": [
                 2,
                 3,
@@ -228,6 +251,14 @@ describe('getHelperBoostEvents', () => {
             "fractionOfProc": 0.5,
             "nrOfHelpsToActivate": 0,
             "skill": {
+              "RP": [
+                2800,
+                3902,
+                5273,
+                6975,
+                9317,
+                12438,
+              ],
               "amount": [
                 2,
                 3,
@@ -637,14 +668,14 @@ describe('addSneakySnackEvent', () => {
     expect(eventLog[1]).toBeInstanceOf(InventoryEvent);
     const ssEvent = eventLog[1] as InventoryEvent;
     expect(ssEvent.description).toBe('Sneaky snack');
-    expect(ssEvent.delta).toBe(countInventory(sneakySnackProduce)); // Assuming this calculates to 2 for apples
-    expect(ssEvent.before).toBe(countInventory(totalSneakySnack)); // Assuming this calculates to 5 for apples
+    expect(ssEvent.delta).toBe(InventoryUtils.countInventory(sneakySnackProduce)); // Assuming this calculates to 2 for apples
+    expect(ssEvent.before).toBe(InventoryUtils.countInventory(totalSneakySnack)); // Assuming this calculates to 5 for apples
 
     expect(eventLog[2]).toBeInstanceOf(InventoryEvent);
     const spilledIngEvent = eventLog[2] as InventoryEvent;
     expect(spilledIngEvent.description).toBe('Spilled ingredients');
-    expect(spilledIngEvent.delta).toBe(countInventory(spilledProduce)); // Assuming this calculates to 1 for oranges
-    expect(spilledIngEvent.before).toBe(countInventory(totalSpilledIngredients)); // Assuming this calculates to 2 for oranges
+    expect(spilledIngEvent.delta).toBe(InventoryUtils.countInventory(spilledProduce)); // Assuming this calculates to 1 for oranges
+    expect(spilledIngEvent.before).toBe(InventoryUtils.countInventory(totalSpilledIngredients)); // Assuming this calculates to 2 for oranges
   });
 });
 
@@ -654,18 +685,18 @@ describe('triggerTeamHelpsEvent', () => {
     const helpfulEvents: SkillEvent[] = [
       new SkillEvent({
         description: '1',
-        time: parseTime('06:00'),
+        time: TimeUtils.parseTime('06:00'),
         skillActivation: {
           skill: mainskill.EXTRA_HELPFUL_S,
           adjustedAmount: 1,
           fractionOfProc: 1,
           nrOfHelpsToActivate: 1,
-          adjustedProduce: getEmptyProduce(berry.BELUE),
+          adjustedProduce: InventoryUtils.getEmptyInventory(),
         },
       }),
       new SkillEvent({
         description: '1',
-        time: parseTime('13:00'),
+        time: TimeUtils.parseTime('13:00'),
         skillActivation: {
           skill: mainskill.EXTRA_HELPFUL_S,
           adjustedAmount: 2,
@@ -689,8 +720,8 @@ describe('triggerTeamHelpsEvent', () => {
 
     const result = triggerTeamHelpsEvent({
       helpEvents: helpfulEvents,
-      currentTime: parseTime('13:00'),
-      emptyProduce: getEmptyProduce(berry.BELUE),
+      currentTime: TimeUtils.parseTime('13:00'),
+      emptyProduce: InventoryUtils.getEmptyInventory(),
       eventLog,
       helpIndex: 1,
       period: MOCKED_MAIN_SLEEP,
@@ -702,9 +733,9 @@ describe('triggerTeamHelpsEvent', () => {
         "berries": {
           "amount": 2,
           "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
+            "name": "BLUK",
+            "type": "ghost",
+            "value": 26,
           },
         },
         "ingredients": [

@@ -1,12 +1,12 @@
 import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { mainskill } from 'sleepapi-common';
 import { SkillEvent } from './skill-event';
 
 describe('SkillEvent', () => {
   it('skill event shall format correctly', () => {
     const event = new SkillEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'test',
       skillActivation: {
         skill: mainskill.INGREDIENT_MAGNET_S,

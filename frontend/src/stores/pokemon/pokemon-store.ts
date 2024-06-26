@@ -1,5 +1,5 @@
-import { type PokemonInstanceExt } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
+import type { PokemonInstanceExt } from 'sleepapi-common'
 
 export interface PokemonState {
   pokemon: Record<string, PokemonInstanceExt>

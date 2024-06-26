@@ -19,7 +19,7 @@ import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event'
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time, TimePeriod } from '@src/domain/time/time';
-import { calculateDuration } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { subskill } from 'sleepapi-common';
 
 /**
@@ -74,15 +74,15 @@ export function calculateEnergyLeftInMorning(
  * Uses numbers for representing Bedtime and Waking time
  * 21.5 = 21:30 (9:30PM)
  */
-export function calculateSleepEnergyRecovery(dayPeriod: SleepInfo): number {
-  const { period, nature, erb, incense } = dayPeriod;
+export function calculateSleepEnergyRecovery(nightPeriod: SleepInfo): number {
+  const { period, nature, erb, incense } = nightPeriod;
 
   const erbFactor = 1 + erb * subskill.ENERGY_RECOVERY_BONUS.amount;
   const incenseFactor = incense ? 2 : 1;
 
   const energyRecoveredPerMinute = 100 / (8.5 * 60);
 
-  const sleepDuration = calculateDuration(period);
+  const sleepDuration = TimeUtils.calculateDuration(period);
   const sleepDurationInMinutes = sleepDuration.hour * 60 + sleepDuration.minute;
 
   return Math.min(sleepDurationInMinutes * energyRecoveredPerMinute * nature.energy * erbFactor * incenseFactor, 100);

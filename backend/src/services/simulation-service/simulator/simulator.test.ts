@@ -4,7 +4,7 @@ import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { berry, ingredient, mainskill, nature } from 'sleepapi-common';
 import { simulation } from './simulator';
 
@@ -16,11 +16,11 @@ describe('simulator', () => {
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       pokemonWithAverageProduce,
       inventoryLimit: pokemonWithAverageProduce.pokemon.maxCarrySize,
-      recoveryEvents: [new EnergyEvent({ delta: 10, description: 'some-desc', time: parseTime('08:00') })],
+      recoveryEvents: [new EnergyEvent({ delta: 10, description: 'some-desc', time: TimeUtils.parseTime('08:00') })],
       extraHelpfulEvents: [
         new SkillEvent({
           description: 'Extra helpful',
-          time: parseTime('08:00'),
+          time: TimeUtils.parseTime('08:00'),
           skillActivation: {
             skill: mainskill.EXTRA_HELPFUL_S,
             adjustedAmount: 1,
@@ -33,7 +33,7 @@ describe('simulator', () => {
       helperBoostEvents: [
         new SkillEvent({
           description: 'Helper boost',
-          time: parseTime('08:00'),
+          time: TimeUtils.parseTime('08:00'),
           skillActivation: {
             skill: mainskill.HELPER_BOOST,
             adjustedAmount: 1,
@@ -87,6 +87,14 @@ describe('simulator', () => {
             "fractionOfProc": 1,
             "nrOfHelpsToActivate": 0,
             "skill": {
+              "RP": [
+                400,
+                569,
+                785,
+                1083,
+                1496,
+                2066,
+              ],
               "amount": [
                 12,
                 16,

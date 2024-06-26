@@ -1,22 +1,12 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
+import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
 import {
   calculateHelperBoostHelpsFromUnique,
   calculateHelpsToProcSchedule,
   calculateOddsAtLeastOneSkillProc,
-  calculateSkillPercentage,
   calculateSkillProcs,
   scheduleSkillEvents,
 } from './skill-calculator';
-
-describe('calculateSkillPercentage', () => {
-  it('shall calculate skill percentage for Venusaur', () => {
-    expect(
-      calculateSkillPercentage(pokemon.VENUSAUR, [subskill.SKILL_TRIGGER_M, subskill.SKILL_TRIGGER_S], nature.SASSY)
-    ).toBe(0.038808);
-  });
-});
 
 describe('calculateSkillProcs', () => {
   it('shall calculate skill percentage for Venusaur', () => {
@@ -86,7 +76,7 @@ describe('scheduleSkillEvents', () => {
     expect(skillActivations[3].adjustedAmount).toBe(2066); // Third day proc
 
     expect(Math.round(skillActivations[4].adjustedAmount)).toBe(207); // Final partial proc
-    expect(roundDown(skillActivations[4].fractionOfProc, 1)).toBe(0.1); // Final partial proc
+    expect(MathUtils.round(skillActivations[4].fractionOfProc, 1)).toBe(0.1); // Final partial proc
   });
 
   it('shall handle zero day helps correctly', () => {
@@ -107,6 +97,15 @@ describe('scheduleSkillEvents', () => {
         "fractionOfProc": 0.3,
         "nrOfHelpsToActivate": 0,
         "skill": {
+          "RP": [
+            400,
+            569,
+            785,
+            1083,
+            1496,
+            2066,
+            2656,
+          ],
           "amount": [
             400,
             569,
@@ -129,6 +128,15 @@ describe('scheduleSkillEvents', () => {
         "fractionOfProc": 0,
         "nrOfHelpsToActivate": 0,
         "skill": {
+          "RP": [
+            400,
+            569,
+            785,
+            1083,
+            1496,
+            2066,
+            2656,
+          ],
           "amount": [
             400,
             569,

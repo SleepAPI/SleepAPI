@@ -1,7 +1,7 @@
-import { PokemonInstance } from '../../pokemon';
+import { PokemonInstanceWithMeta } from '../../pokemon';
 
-export interface UpsertTeamMemberRequest extends PokemonInstance {}
+export interface UpsertTeamMemberRequest extends PokemonInstanceWithMeta {}
 
-export interface UpsertTeamMemberResponse extends PokemonInstance {
+export interface UpsertTeamMemberResponse extends PokemonInstanceWithMeta {
   memberIndex: number;
 }

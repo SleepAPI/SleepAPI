@@ -9,15 +9,18 @@ export interface IngredientInstance {
 }
 
 export interface PokemonInstance {
-  version: number;
-  externalId: string;
-  saved: boolean;
   pokemon: string;
-  name: string;
   level: number;
   carrySize: number;
   skillLevel: number;
   nature: string;
   subskills: SubskillInstance[];
   ingredients: IngredientInstance[];
+}
+
+export interface PokemonInstanceWithMeta extends PokemonInstance {
+  version: number;
+  externalId: string;
+  saved: boolean;
+  name: string;
 }

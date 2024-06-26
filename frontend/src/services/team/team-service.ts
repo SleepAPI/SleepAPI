@@ -1,18 +1,15 @@
 import serverAxios from '@/router/server-axios'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import {
-  MAX_TEAM_MEMBERS,
-  type PokemonInstanceExt,
-  type TeamInstance
-} from '@/types/member/instanced'
+import { MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
 import {
   getIngredient,
   getNature,
   getPokemon,
   getSubskill,
   type GetTeamsResponse,
-  type PokemonInstance,
+  type PokemonInstanceExt,
+  type PokemonInstanceWithMeta,
   type UpsertTeamMemberRequest,
   type UpsertTeamMemberResponse,
   type UpsertTeamMetaRequest,
@@ -58,7 +55,8 @@ class TeamServiceImpl {
           name: `Helper team ${teamIndex + 1}`,
           camp: false,
           version: 0,
-          members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
+          members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+          production: undefined
         }
         teams.push(emptyTeam)
       } else {
@@ -82,7 +80,8 @@ class TeamServiceImpl {
           name: existingTeam.name,
           camp: existingTeam.camp,
           version: existingTeam.version,
-          members
+          members,
+          production: undefined
         }
         teams.push(instancedTeam)
       }
@@ -124,7 +123,7 @@ class TeamServiceImpl {
     }
   }
 
-  #populateMember(instancedPokemon: PokemonInstance): PokemonInstanceExt {
+  #populateMember(instancedPokemon: PokemonInstanceWithMeta): PokemonInstanceExt {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (instancedPokemon.subskills.length > 5) {

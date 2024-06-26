@@ -1,18 +1,8 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { mainskill, nature, pokemon, subskill } from 'sleepapi-common';
-import { extractTriggerSubskills } from '../stats/stats-calculator';
+import { mainskill } from 'sleepapi-common';
 import { createSkillEvent } from './activation/skill-activation';
-
-export function calculateSkillPercentage(
-  pokemon: pokemon.Pokemon,
-  subskills: subskill.SubSkill[],
-  nature: nature.Nature
-) {
-  const triggerSubskills = extractTriggerSubskills(subskills);
-  return (pokemon.skillPercentage / 100) * triggerSubskills * nature.skill;
-}
 
 export function calculateSkillProcs(nrOfHelps: number, skillPercentage: number) {
   return nrOfHelps * skillPercentage;

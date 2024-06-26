@@ -2,9 +2,8 @@ import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
-import { uuid } from 'sleepapi-common'
+import { uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
@@ -39,6 +38,7 @@ describe('Team Store', () => {
               undefined,
             ],
             "name": "Log in to save your teams",
+            "production": undefined,
             "version": 0,
           },
         ],
@@ -97,7 +97,16 @@ describe('Team Store', () => {
       expiryDate: 10,
       refreshToken: 'token2'
     })
-    teamStore.teams = [{ index: 0, name: 'Old Team Name', camp: false, members: [], version: 1 }]
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Old Team Name',
+        camp: false,
+        members: [],
+        version: 1,
+        production: undefined
+      }
+    ]
 
     await teamStore.updateTeamName('New Team Name')
 
@@ -112,8 +121,8 @@ describe('Team Store', () => {
   it('should reset the state correctly', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
     ]
     teamStore.currentIndex = 1
     teamStore.maxAvailableTeams = 4
@@ -138,6 +147,7 @@ describe('Team Store', () => {
               undefined,
             ],
             "name": "Log in to save your teams",
+            "production": undefined,
             "version": 0,
           },
         ],
@@ -148,8 +158,8 @@ describe('Team Store', () => {
   it('should increment currentIndex correctly on next()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
     ]
 
     teamStore.next()
@@ -162,8 +172,8 @@ describe('Team Store', () => {
   it('should decrement currentIndex correctly on prev()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1 },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1 }
+      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
+      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
     ]
 
     teamStore.prev()
@@ -190,7 +200,8 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: false,
         members: [undefined, member, undefined, undefined, undefined],
-        version: 1
+        version: 1,
+        production: undefined
       }
     ]
     pokemonStore.upsertPokemon({ name: 'Pikachu', externalId: member } as any)
@@ -220,7 +231,8 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: false,
         members: [member, member, member, member, member],
-        version: 1
+        version: 1,
+        production: undefined
       }
     ]
 
@@ -240,7 +252,8 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: false,
         members: [undefined, undefined, undefined, undefined, undefined],
-        version: 1
+        version: 1,
+        production: undefined
       }
     ]
 
@@ -270,7 +283,8 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: false,
         members: [undefined, member2, undefined, member4, undefined],
-        version: 1
+        version: 1,
+        production: undefined
       }
     ]
 
@@ -301,7 +315,8 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: false,
         members: [undefined, member, null as any, member, '' as any],
-        version: 1
+        version: 1,
+        production: undefined
       }
     ]
 

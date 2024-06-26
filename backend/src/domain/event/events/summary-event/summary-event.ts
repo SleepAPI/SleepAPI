@@ -1,9 +1,8 @@
 import { Produce } from '@src/domain/combination/produce';
 import { Time } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { prettifyTime } from '@src/utils/time-utils/time-utils';
-import { IngredientSet, mainskill } from 'sleepapi-common';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { IngredientSet, MathUtils, mainskill } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export interface Summary {
@@ -73,21 +72,21 @@ export class SummaryEvent extends ScheduledEvent {
       collectFrequency,
       totalRecovery,
     } = this.summary;
-    const prettifiedProduce = `${roundDown(totalProduce.berries.amount, 2)} ${totalProduce.berries.berry.name} ${
-      totalProduce.ingredients.length > 0 ? `+ ${prettifyIngredientDrop(totalProduce.ingredients)}` : ''
-    }`;
+    const prettifiedProduce = `${
+      totalProduce.berries && MathUtils.round(totalProduce.berries.amount, 2) + ' ' + totalProduce.berries.berry.name
+    } ${totalProduce.ingredients.length > 0 ? `+ ${prettifyIngredientDrop(totalProduce.ingredients)}` : ''}`;
 
     const prettifiedSkillProduce: string[] = [];
-    if (skillProduceValue.berries.amount > 0) {
+    if (skillProduceValue.berries) {
       prettifiedSkillProduce.push(
-        `${roundDown(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
+        `${MathUtils.round(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
       );
     }
     if (skillProduceValue.ingredients.length > 0) {
       prettifiedSkillProduce.push(
         `${prettifyIngredientDrop(
           skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
-            amount: roundDown(amount, 1),
+            amount: MathUtils.round(amount, 1),
             ingredient,
           }))
         )}`
@@ -98,29 +97,35 @@ export class SummaryEvent extends ScheduledEvent {
 
     return (
       `-----\n` +
-      `[${prettifyTime(this.time)}][${this.description}]\n` +
+      `[${TimeUtils.prettifyTime(this.time)}][${this.description}]\n` +
       `Total produce: ${prettifiedProduce}\n` +
       `Spilled produce: ${spilledProduce}\n` +
-      `${skill.name} activations: ${roundDown(skillProcs, 2)}\n` +
-      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 1)} energy\n` : '') +
-      (skillEnergyOthersValue > 0 ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 1)} energy\n` : '') +
+      `${skill.name} activations: ${MathUtils.round(skillProcs, 2)}\n` +
+      (skillEnergySelfValue > 0
+        ? `Energy self skill value: ${MathUtils.round(skillEnergySelfValue, 1)} energy\n`
+        : '') +
+      (skillEnergyOthersValue > 0
+        ? `Energy team skill value: ${MathUtils.round(skillEnergyOthersValue, 1)} energy\n`
+        : '') +
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
-      (skillStrengthValue > 0 ? `Strength skill value: ${roundDown(skillStrengthValue, 1)} strength\n` : '') +
-      (skillDreamShardValue > 0 ? `Dream shards skill value: ${roundDown(skillDreamShardValue, 1)} shards\n` : '') +
-      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 1)} pot size\n` : '') +
-      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 1)} helps\n` : '') +
+      (skillStrengthValue > 0 ? `Strength skill value: ${MathUtils.round(skillStrengthValue, 1)} strength\n` : '') +
+      (skillDreamShardValue > 0
+        ? `Dream shards skill value: ${MathUtils.round(skillDreamShardValue, 1)} shards\n`
+        : '') +
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${MathUtils.round(skillPotSizeValue, 1)} pot size\n` : '') +
+      (skillHelpsValue > 0 ? `Helps team skill value: ${MathUtils.round(skillHelpsValue, 1)} helps\n` : '') +
       (skillTastyChanceValue > 0
-        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 1)}% crit chance\n`
+        ? `Tasty chance skill value: ${MathUtils.round(skillTastyChanceValue, 1)}% crit chance\n`
         : '') +
       `Total helps: ${nrOfHelps}\n` +
       `Helps before sneaky snacking: ${helpsBeforeSS}\n` +
       `Helps spent sneaky snacking: ${helpsAfterSS}\n` +
       `Average time before full inventory: ${
-        collectFrequency ? `${prettifyTime(collectFrequency)} (hh:mm:ss)` : 'never'
+        collectFrequency ? `${TimeUtils.prettifyTime(collectFrequency)} (hh:mm:ss)` : 'never'
       }\n` +
-      `Average energy: ${roundDown(averageEnergy, 1)}%\n` +
+      `Average energy: ${MathUtils.round(averageEnergy, 1)}%\n` +
       `Average frequency: ${Math.floor(averageFrequency)}\n` +
-      `Total recovery: ${roundDown(totalRecovery, 1)}\n`
+      `Total recovery: ${MathUtils.round(totalRecovery, 1)}\n`
     );
   }
 }

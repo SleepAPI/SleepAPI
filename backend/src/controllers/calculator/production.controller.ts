@@ -1,12 +1,21 @@
+import { TeamMember } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { ProductionRequest } from '@src/routes/calculator-router/production-router';
-import { calculatePokemonProduction } from '@src/services/api-service/production/production-service';
+import { CalculateTeamRequest, ProductionRequest } from '@src/routes/calculator-router/production-router';
+import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { calculateDuration, parseTime } from '@src/utils/time-utils/time-utils';
-import { getNature, getPokemon, mainskill, pokemon } from 'sleepapi-common';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import {
+  IngredientInstance,
+  IngredientSet,
+  getNature,
+  getPokemon,
+  getSubskill,
+  mainskill,
+  pokemon,
+} from 'sleepapi-common';
 import { Body, Controller, Path, Post, Query, Route, Tags } from 'tsoa';
 
 @Route('api/calculator')
@@ -21,19 +30,89 @@ export default class ProductionController extends Controller {
     const pokemon = getPokemon(name);
     return calculatePokemonProduction(
       pokemon,
-      this.#parseInput(pokemon, body),
+      this.#parseSingleProductionInput(pokemon, body),
       body.ingredientSet,
       queryAsBoolean(pretty),
       5000
     );
   }
 
-  #parseInput(pkmn: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
+  public async calculateTeam(body: CalculateTeamRequest) {
+    const parsedInput = this.#parseTeamInput(body);
+    return await calculateTeam(parsedInput);
+  }
+
+  #parseTeamInput(body: CalculateTeamRequest) {
+    const { settings, members } = body;
+    const bedtime = TimeUtils.parseTime(settings.bedtime);
+    const wakeup = TimeUtils.parseTime(settings.wakeup);
+    const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
+    if (duration.hour < 1) {
+      throw new SleepAPIError('Minimum sleep of 1 hour required');
+    }
+
+    const parsedMembers: TeamMember[] = [];
+    for (const member of members) {
+      const pokemon = getPokemon(member.pokemon);
+      parsedMembers.push({
+        pokemonSet: {
+          pokemon,
+          ingredientList: this.#getIngredientSet({ pokemon, level: member.level, ingredients: member.ingredients }),
+        },
+        level: member.level,
+        carrySize: member.carrySize,
+        nature: getNature(member.nature),
+        skillLevel: member.skillLevel,
+        subskills: member.subskills
+          .filter((subskill) => subskill.level <= member.level)
+          .map((subskill) => getSubskill(subskill.subskill)),
+      });
+    }
+
+    return {
+      settings: {
+        camp: queryAsBoolean(settings.camp),
+        bedtime,
+        wakeup,
+      },
+      members: parsedMembers,
+    };
+  }
+
+  #getIngredientSet(params: {
+    pokemon: pokemon.Pokemon;
+    level: number;
+    ingredients: IngredientInstance[];
+  }): IngredientSet[] {
+    const { pokemon, level, ingredients } = params;
+
+    const ingredientSet: IngredientSet[] = [pokemon.ingredient0];
+
+    const ingredient30 = pokemon.ingredient30.find(
+      (ingList) =>
+        ingList.ingredient.name.toLowerCase() === ingredients.find((ing) => ing.level === 30)?.ingredient.toLowerCase()
+    );
+    if (ingredient30 && level >= 30) {
+      ingredientSet.push(ingredient30);
+    }
+
+    const ingredient60 = pokemon.ingredient60.find(
+      (ingList) =>
+        ingList.ingredient.name.toLowerCase() === ingredients.find((ing) => ing.level === 60)?.ingredient.toLowerCase()
+    );
+    if (ingredient60 && level >= 60) {
+      ingredientSet.push(ingredient60);
+    }
+
+    return ingredientSet;
+  }
+
+  #parseSingleProductionInput(pkmn: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
     const level = queryAsNumber(input.level) ?? 60;
 
-    const mainBedtime = parseTime(input.mainBedtime);
-    const mainWakeup = parseTime(input.mainWakeup);
-    const duration = calculateDuration({ start: mainBedtime, end: mainWakeup });
+    const mainBedtime = TimeUtils.parseTime(input.mainBedtime);
+    const mainWakeup = TimeUtils.parseTime(input.mainWakeup);
+    const duration = TimeUtils.calculateDuration({ start: mainBedtime, end: mainWakeup });
     if (duration.hour < 1) {
       throw new SleepAPIError('Minimum sleep of 1 hour required');
     }

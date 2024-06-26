@@ -1,5 +1,6 @@
+import { Produce } from '@src/domain/combination/produce';
 import { PokemonIngredientSet, ingredient, pokemon } from 'sleepapi-common';
-import { calculateAverageProduce } from './produce-calculator';
+import { calculateAverageProduce, clampHelp } from './produce-calculator';
 
 describe('calculateAverageProduce', () => {
   it('shall average a Pokemons produce based on ingredient percentage', () => {
@@ -29,6 +30,54 @@ describe('calculateAverageProduce', () => {
               "name": "Apple",
               "taxedValue": 23.7,
               "value": 90,
+            },
+          },
+        ],
+      }
+    `);
+  });
+});
+
+describe('clampHelp', () => {
+  it('shall clamp help if not enough space left in inventory', () => {
+    const produce: Produce = {
+      ingredients: [{ amount: 2, ingredient: ingredient.BEAN_SAUSAGE }],
+    };
+    const result = clampHelp({ amount: 2, averageProduce: produce, inventorySpace: 1 });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "berries": undefined,
+        "ingredients": [
+          {
+            "amount": 1,
+            "ingredient": {
+              "longName": "Bean Sausage",
+              "name": "Sausage",
+              "taxedValue": 31,
+              "value": 103,
+            },
+          },
+        ],
+      }
+    `);
+  });
+
+  it('shall not clamp help if space left in inventory', () => {
+    const produce: Produce = {
+      ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
+    };
+    const result = clampHelp({ amount: 1, averageProduce: produce, inventorySpace: 2 });
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "berries": undefined,
+        "ingredients": [
+          {
+            "amount": 1,
+            "ingredient": {
+              "longName": "Bean Sausage",
+              "name": "Sausage",
+              "taxedValue": 31,
+              "value": 103,
             },
           },
         ],

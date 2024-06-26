@@ -1,9 +1,19 @@
+export type MainSkillType =
+  | 'energy'
+  | 'ingredients'
+  | 'helps'
+  | 'dream shards'
+  | 'strength'
+  | 'pot size'
+  | 'chance'
+  | 'metronome';
 export interface MainSkill {
   name: string;
   amount: number[]; // level 6: amount of ings, amount of energy, amount of strength
-  unit: 'energy' | 'ingredients' | 'helps' | 'dream shards' | 'strength' | 'pot size' | 'chance' | 'metronome';
+  unit: MainSkillType;
   maxLevel: number;
   description: string;
+  RP: number[];
 }
 export const MAX_SKILL_LEVEL = 7;
 
@@ -13,6 +23,7 @@ export const INGREDIENT_MAGNET_S: MainSkill = {
   unit: 'ingredients',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Gets you ? ingredients chosen at random.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const CHARGE_STRENGTH_S: MainSkill = {
@@ -21,6 +32,7 @@ export const CHARGE_STRENGTH_S: MainSkill = {
   unit: 'strength',
   maxLevel: MAX_SKILL_LEVEL,
   description: "Increases Snorlax's Strength by ?.",
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
 };
 
 export const CHARGE_STRENGTH_S_RANGE: MainSkill = {
@@ -37,6 +49,7 @@ export const CHARGE_STRENGTH_S_RANGE: MainSkill = {
   unit: 'strength',
   maxLevel: MAX_SKILL_LEVEL,
   description: "Increases Snorlax's Strength on average by ?.",
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
 };
 
 export const CHARGE_STRENGTH_M: MainSkill = {
@@ -45,6 +58,7 @@ export const CHARGE_STRENGTH_M: MainSkill = {
   unit: 'strength',
   maxLevel: MAX_SKILL_LEVEL,
   description: "Increases Snorlax's Strength by ?.",
+  RP: [880, 1251, 1726, 2383, 3290, 4546, 5843],
 };
 
 export const DREAM_SHARD_MAGNET_S: MainSkill = {
@@ -53,6 +67,7 @@ export const DREAM_SHARD_MAGNET_S: MainSkill = {
   unit: 'dream shards',
   maxLevel: MAX_SKILL_LEVEL,
   description: 'Obtain ? Dream Shards.',
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
 };
 
 export const DREAM_SHARD_MAGNET_S_RANGE: MainSkill = {
@@ -69,6 +84,7 @@ export const DREAM_SHARD_MAGNET_S_RANGE: MainSkill = {
   unit: 'dream shards',
   maxLevel: MAX_SKILL_LEVEL,
   description: 'Obtain ? Dream Shards on average.',
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
 };
 
 export const ENERGIZING_CHEER_S: MainSkill = {
@@ -77,6 +93,7 @@ export const ENERGIZING_CHEER_S: MainSkill = {
   unit: 'energy',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Restores ? Energy to one random Pokémon on your team.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const CHARGE_ENERGY_S: MainSkill = {
@@ -85,6 +102,7 @@ export const CHARGE_ENERGY_S: MainSkill = {
   unit: 'energy',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Restores ? Energy to the user.',
+  RP: [400, 569, 785, 1083, 1496, 2066],
 };
 
 export const ENERGY_FOR_EVERYONE: MainSkill = {
@@ -93,6 +111,7 @@ export const ENERGY_FOR_EVERYONE: MainSkill = {
   unit: 'energy',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Restores ? Energy to each helper Pokémon on your team.',
+  RP: [1120, 1593, 2197, 3033, 4187, 5785],
 };
 
 export const EXTRA_HELPFUL_S: MainSkill = {
@@ -101,6 +120,7 @@ export const EXTRA_HELPFUL_S: MainSkill = {
   unit: 'helps',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Instantly gets you x? the usual help from a helper Pokémon.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const COOKING_POWER_UP_S: MainSkill = {
@@ -109,6 +129,7 @@ export const COOKING_POWER_UP_S: MainSkill = {
   unit: 'pot size',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Gives your pot room for ? more ingredients next time you cook.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const METRONOME: MainSkill = {
@@ -117,6 +138,7 @@ export const METRONOME: MainSkill = {
   unit: 'metronome',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Uses one randomly chosen main skill.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const TASTY_CHANCE_S: MainSkill = {
@@ -126,6 +148,7 @@ export const TASTY_CHANCE_S: MainSkill = {
   maxLevel: MAX_SKILL_LEVEL - 1,
   description:
     'Raises your Extra Tasty rate by ?%. The effect lasts until you cook an Extra Tasty dish or change sites.',
+  RP: [880, 1251, 1726, 2383, 3290, 4546],
 };
 
 export const HELPER_BOOST: MainSkill = {
@@ -135,7 +158,9 @@ export const HELPER_BOOST: MainSkill = {
   maxLevel: MAX_SKILL_LEVEL - 1,
   description:
     'Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.',
+  RP: [2800, 3902, 5273, 6975, 9317, 12438],
 };
+
 export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
   // Skill level 1 to 6
   [0, 0, 0, 0, 0, 0], // unique: 1

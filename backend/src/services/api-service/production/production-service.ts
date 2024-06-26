@@ -1,6 +1,8 @@
 import { DetailedProduce } from '@src/domain/combination/produce';
+import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { nature, pokemon, subskill } from 'sleepapi-common';
@@ -118,4 +120,18 @@ export function calculatePokemonProduction(
     optimalBerryProduction,
     optimalSkillProduction,
   };
+}
+
+// TODO: test, but need to pull in iterations elsewhere, want to do that anyway
+export async function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }) {
+  const { settings, members } = params;
+  const teamSimulator = new TeamSimulator({ settings, members });
+
+  const iterations = 5000;
+
+  for (let i = 0; i < iterations; i++) {
+    teamSimulator.simulate();
+  }
+
+  return teamSimulator.results();
 }

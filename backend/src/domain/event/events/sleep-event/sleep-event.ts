@@ -1,6 +1,6 @@
 import { Time, TimePeriod } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { calculateDuration, prettifyTime, toMinutes } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class SleepEvent extends ScheduledEvent {
@@ -23,12 +23,14 @@ export class SleepEvent extends ScheduledEvent {
   }
 
   format(): string {
-    const duration = calculateDuration(this.period);
-    const durationInMinute = toMinutes(duration);
+    const duration = TimeUtils.calculateDuration(this.period);
+    const durationInMinute = TimeUtils.toMinutes(duration);
     const minutesInPerfectSleepScore = 8.5 * 60;
-    const sleepScore = roundDown(Math.min(durationInMinute / minutesInPerfectSleepScore, 1) * 100, 0);
+    const sleepScore = MathUtils.round(Math.min(durationInMinute / minutesInPerfectSleepScore, 1) * 100, 0);
 
-    let result = `[${prettifyTime(this.time)}][Sleep] (${this.description}): ` + `Duration ${prettifyTime(duration)}`;
+    let result =
+      `[${TimeUtils.prettifyTime(this.time)}][Sleep] (${this.description}): ` +
+      `Duration ${TimeUtils.prettifyTime(duration)}`;
     if (this.sleepState === 'end') {
       result += `, Score (${sleepScore})`;
     }

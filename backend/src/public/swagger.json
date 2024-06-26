@@ -71,6 +71,19 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MainSkillType": {
+				"type": "string",
+				"enum": [
+					"energy",
+					"ingredients",
+					"helps",
+					"dream shards",
+					"strength",
+					"pot size",
+					"chance",
+					"metronome"
+				]
+			},
 			"MainSkill": {
 				"properties": {
 					"name": {
@@ -84,17 +97,7 @@
 						"type": "array"
 					},
 					"unit": {
-						"type": "string",
-						"enum": [
-							"energy",
-							"ingredients",
-							"helps",
-							"dream shards",
-							"strength",
-							"pot size",
-							"chance",
-							"metronome"
-						]
+						"$ref": "#/components/schemas/MainSkillType"
 					},
 					"maxLevel": {
 						"type": "number",
@@ -102,6 +105,13 @@
 					},
 					"description": {
 						"type": "string"
+					},
+					"RP": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -109,7 +119,8 @@
 					"amount",
 					"unit",
 					"maxLevel",
-					"description"
+					"description",
+					"RP"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -726,7 +737,6 @@
 					}
 				},
 				"required": [
-					"berries",
 					"ingredients"
 				],
 				"type": "object",
@@ -802,7 +812,6 @@
 				"required": [
 					"produce",
 					"spilledIngredients",
-					"sneakySnack",
 					"dayHelps",
 					"nightHelps",
 					"nightHelpsBeforeSS",

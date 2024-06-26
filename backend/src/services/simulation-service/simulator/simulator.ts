@@ -22,7 +22,6 @@ import { SkillActivation, SkillEvent } from '@src/domain/event/events/skill-even
 import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import {
   addSneakySnackEvent,
   helpEvent,
@@ -31,18 +30,11 @@ import {
   recoverFromMeal,
   triggerTeamHelpsEvent,
 } from '@src/utils/event-utils/event-utils';
-import { addToInventory, countInventory, emptyInventory } from '@src/utils/inventory-utils/inventory-utils';
-import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
 import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simulation-utils/simulation-utils';
-import {
-  addTime,
-  calculateDuration,
-  isAfterOrEqualWithinPeriod,
-  secondsToTime,
-  sortEventsForPeriod,
-  timeWithinPeriod,
-} from '@src/utils/time-utils/time-utils';
-import { BerrySet, mainskill } from 'sleepapi-common';
+
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { BerrySet, MathUtils, mainskill } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { combineSameIngredientsInDrop } from '../../calculator/ingredient/ingredient-calculate';
@@ -80,13 +72,13 @@ export function simulation(params: {
   } = params;
   const sneakySnackProduce: Produce = { berries: sneakySnackBerries, ingredients: [] };
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
-  const averageProduceAmount = countInventory(averageProduce);
+  const averageProduceAmount = InventoryUtils.countInventory(averageProduce);
 
   // summary values
   let skillProcs = 0;
   let skillEnergySelfValue = 0;
   let skillEnergyOthersValue = 0;
-  let skillProduceValue: Produce = getEmptyProduce(pokemon.berry);
+  let skillProduceValue: Produce = InventoryUtils.getEmptyInventory();
   let skillStrengthValue = 0;
   let skillDreamShardValue = 0;
   let skillPotSizeValue = 0;
@@ -120,25 +112,28 @@ export function simulation(params: {
     eventLog
   );
 
-  let totalProduce: Produce = getEmptyProduce(pokemon.berry);
-  let spilledIngredients: Produce = getEmptyProduce(pokemon.berry);
-  let totalSneakySnack: Produce = getEmptyProduce(pokemon.berry);
+  let totalProduce: Produce = InventoryUtils.getEmptyInventory();
+  let spilledIngredients: Produce = InventoryUtils.getEmptyInventory();
+  let totalSneakySnack: Produce = {
+    ingredients: [],
+    berries: { amount: 0, berry: pokemonWithAverageProduce.pokemon.berry },
+  };
 
   let currentEnergy = startingEnergy;
-  let currentInventory: Produce = getEmptyProduce(pokemon.berry);
+  let currentInventory: Produce = InventoryUtils.getEmptyInventory();
 
   let nextHelpEvent: Time = dayInfo.period.start;
 
-  const energyEvents: EnergyEvent[] = sortEventsForPeriod(dayInfo.period, recoveryEvents);
-  const helpfulEvents: SkillEvent[] = sortEventsForPeriod(dayInfo.period, extraHelpfulEvents);
-  const boostEvents: SkillEvent[] = sortEventsForPeriod(dayInfo.period, helperBoostEvents);
+  const energyEvents: EnergyEvent[] = TimeUtils.sortEventsForPeriod(dayInfo.period, recoveryEvents);
+  const helpfulEvents: SkillEvent[] = TimeUtils.sortEventsForPeriod(dayInfo.period, extraHelpfulEvents);
+  const boostEvents: SkillEvent[] = TimeUtils.sortEventsForPeriod(dayInfo.period, helperBoostEvents);
 
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
 
   // --- DAY ---
   let period = dayInfo.period;
-  while (timeWithinPeriod(currentTime, period)) {
+  while (TimeUtils.timeWithinPeriod(currentTime, period)) {
     const { recoveredAmount: mealRecovery, mealsProcessed } = recoverFromMeal({
       currentEnergy,
       currentTime,
@@ -158,7 +153,7 @@ export function simulation(params: {
     const { helpsProduce: helpfulProduce, helpEventsProcessed: helpfulEventsProcessed } = triggerTeamHelpsEvent({
       helpEvents: helpfulEvents,
       helpIndex: helpfulIndex,
-      emptyProduce: getEmptyProduce(pokemon.berry),
+      emptyProduce: InventoryUtils.getEmptyInventory(),
       currentTime,
       period,
       eventLog,
@@ -166,13 +161,13 @@ export function simulation(params: {
     const { helpsProduce: boostProduce, helpEventsProcessed: boostEventsProcessed } = triggerTeamHelpsEvent({
       helpEvents: boostEvents,
       helpIndex: boostIndex,
-      emptyProduce: getEmptyProduce(pokemon.berry),
+      emptyProduce: InventoryUtils.getEmptyInventory(),
       currentTime,
       period,
       eventLog,
     });
-    totalProduce = addToInventory(totalProduce, helpfulProduce);
-    totalProduce = addToInventory(totalProduce, boostProduce);
+    totalProduce = InventoryUtils.addToInventory(totalProduce, helpfulProduce);
+    totalProduce = InventoryUtils.addToInventory(totalProduce, boostProduce);
 
     mealIndex = mealsProcessed;
     energyIndex = energyEventsProcessed;
@@ -182,9 +177,9 @@ export function simulation(params: {
     totalRecovery += mealRecovery + eventRecovery;
 
     // check if help has occured
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
-      const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
+      const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
       helpEvent({
         time: nextHelpEvent,
         frequency,
@@ -198,17 +193,17 @@ export function simulation(params: {
       ++helpsBeforeSS;
       ++dayHelps;
       frequencyIntervals.push(frequency);
-      currentInventory = addToInventory(currentInventory, averageProduce);
+      currentInventory = InventoryUtils.addToInventory(currentInventory, averageProduce);
 
       // check if next help scheduled help would hit inventory limit
       if (
         inventoryFull({ currentInventory, averageProduceAmount, inventoryLimit, currentTime: nextHelpEvent, eventLog })
       ) {
         if (!collectFrequency) {
-          collectFrequency = calculateDuration({ start: period.start, end: nextHelpEvent });
+          collectFrequency = TimeUtils.calculateDuration({ start: period.start, end: nextHelpEvent });
         }
-        totalProduce = addToInventory(totalProduce, currentInventory);
-        currentInventory = emptyInventory(currentInventory);
+        totalProduce = InventoryUtils.addToInventory(totalProduce, currentInventory);
+        currentInventory = InventoryUtils.getEmptyInventory();
       }
 
       nextHelpEvent = nextHelp;
@@ -220,7 +215,7 @@ export function simulation(params: {
       // if we have reached helps required or we are at the last help of the day
       if (
         dayHelps >= skillActivation.nrOfHelpsToActivate ||
-        !timeWithinPeriod(addTime(currentTime, { hour: 0, minute: 5, second: 0 }), period)
+        !TimeUtils.timeWithinPeriod(TimeUtils.addTime(currentTime, { hour: 0, minute: 5, second: 0 }), period)
       ) {
         skillProcs += skillActivation.fractionOfProc;
         const description = `${skillActivation.skill.name} activation`;
@@ -240,15 +235,15 @@ export function simulation(params: {
           eventLog.push(
             new EnergyEvent({
               time: currentTime,
-              delta: clampedDelta,
+              delta: clampedDelta * dayInfo.nature.energy,
               description,
               before: currentEnergy,
             })
           );
-          currentEnergy += clampedDelta;
-          totalRecovery += clampedDelta;
+          currentEnergy += clampedDelta * dayInfo.nature.energy;
+          totalRecovery += clampedDelta * dayInfo.nature.energy;
           if (skillActivation.skill === mainskill.CHARGE_ENERGY_S) {
-            skillEnergySelfValue += clampedDelta;
+            skillEnergySelfValue += clampedDelta * dayInfo.nature.energy;
           } else {
             skillEnergyOthersValue += clampedDelta;
           }
@@ -256,7 +251,7 @@ export function simulation(params: {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
             skillHelpsValue += skillActivation.adjustedAmount;
           }
-          skillProduceValue = addToInventory(skillProduceValue, skillActivation.adjustedProduce);
+          skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
         } else if (skillActivation.skill.unit === 'strength') {
           skillStrengthValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.unit === 'dream shards') {
@@ -269,7 +264,7 @@ export function simulation(params: {
       } else break;
     }
 
-    currentEnergy = roundDown(
+    currentEnergy = MathUtils.round(
       currentEnergy -
         maybeDegradeEnergy({
           timeToDegrade: chunksOf5Minutes++ % 2 === 0 && chunksOf5Minutes >= 2,
@@ -282,25 +277,24 @@ export function simulation(params: {
 
     energyIntervals.push(currentEnergy);
 
-    currentTime = addTime(currentTime, { hour: 0, minute: 5, second: 0 });
+    currentTime = TimeUtils.addTime(currentTime, { hour: 0, minute: 5, second: 0 });
   }
 
   // --- NIGHT ---
   startNight({ period, currentInventory, inventoryLimit, eventLog });
-  totalProduce = addToInventory(totalProduce, currentInventory);
-  currentInventory = emptyInventory(currentInventory);
+  totalProduce = InventoryUtils.addToInventory(totalProduce, currentInventory);
+  currentInventory = InventoryUtils.getEmptyInventory();
 
   period = { start: dayInfo.period.end, end: dayInfo.period.start };
 
-  while (timeWithinPeriod(currentTime, period)) {
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
+  while (TimeUtils.timeWithinPeriod(currentTime, period)) {
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
-      const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
+      const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
 
-      if (countInventory(currentInventory) >= inventoryLimit) {
+      if (InventoryUtils.countInventory(currentInventory) >= inventoryLimit) {
         // sneaky snacking
         const spilledProduce: Produce = {
-          berries: { amount: 0, berry: averageProduce.berries.berry },
           ingredients: averageProduce.ingredients,
         };
 
@@ -316,11 +310,11 @@ export function simulation(params: {
         });
         ++helpsAfterSS;
 
-        spilledIngredients = addToInventory(spilledIngredients, averageProduce);
-        totalSneakySnack = addToInventory(totalSneakySnack, sneakySnackProduce);
-      } else if (countInventory(currentInventory) + averageProduceAmount >= inventoryLimit) {
+        spilledIngredients = InventoryUtils.addToInventory(spilledIngredients, averageProduce);
+        totalSneakySnack = InventoryUtils.addToInventory(totalSneakySnack, sneakySnackProduce);
+      } else if (InventoryUtils.countInventory(currentInventory) + averageProduceAmount >= inventoryLimit) {
         // next help starts sneaky snacking
-        const inventorySpace = inventoryLimit - countInventory(currentInventory);
+        const inventorySpace = inventoryLimit - InventoryUtils.countInventory(currentInventory);
         const clampedProduce = clampHelp({ inventorySpace, averageProduce, amount: averageProduceAmount });
         const voidProduce = clampHelp({
           inventorySpace: averageProduceAmount - inventorySpace,
@@ -340,8 +334,8 @@ export function simulation(params: {
         });
         ++helpsBeforeSS;
 
-        currentInventory = addToInventory(currentInventory, clampedProduce);
-        spilledIngredients = addToInventory(spilledIngredients, voidProduce);
+        currentInventory = InventoryUtils.addToInventory(currentInventory, clampedProduce);
+        spilledIngredients = InventoryUtils.addToInventory(spilledIngredients, voidProduce);
       } else {
         // not yet reached inventory limit
         helpEvent({
@@ -356,7 +350,7 @@ export function simulation(params: {
         });
         ++helpsBeforeSS;
 
-        currentInventory = addToInventory(currentInventory, averageProduce);
+        currentInventory = InventoryUtils.addToInventory(currentInventory, averageProduce);
       }
 
       ++nightHelps;
@@ -364,7 +358,7 @@ export function simulation(params: {
       nextHelpEvent = nextHelp;
     }
 
-    currentEnergy = roundDown(
+    currentEnergy = MathUtils.round(
       currentEnergy -
         maybeDegradeEnergy({
           timeToDegrade: chunksOf5Minutes++ % 2 === 0,
@@ -376,12 +370,12 @@ export function simulation(params: {
     );
 
     energyIntervals.push(currentEnergy);
-    currentTime = addTime(currentTime, { hour: 0, minute: 5, second: 0 });
+    currentTime = TimeUtils.addTime(currentTime, { hour: 0, minute: 5, second: 0 });
   }
 
-  totalProduce = addToInventory(totalProduce, currentInventory);
-  totalProduce = addToInventory(totalProduce, skillProduceValue);
-  totalProduce = addToInventory(totalProduce, totalSneakySnack);
+  totalProduce = InventoryUtils.addToInventory(totalProduce, currentInventory);
+  totalProduce = InventoryUtils.addToInventory(totalProduce, skillProduceValue);
+  totalProduce = InventoryUtils.addToInventory(totalProduce, totalSneakySnack);
   const summary: Summary = {
     skill: pokemon.skill,
     skillProcs,

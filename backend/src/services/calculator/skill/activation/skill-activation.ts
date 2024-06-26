@@ -138,7 +138,7 @@ export function activateExtraHelpful(params: {
   const divideByRandomAndMetronome = 5 * metronomeFactor;
 
   const extraHelpfulProduce: Produce = {
-    berries: {
+    berries: pokemonWithAverageProduce.produce.berries && {
       berry: pokemonWithAverageProduce.produce.berries.berry,
       amount:
         (pokemonWithAverageProduce.produce.berries.amount * skill.amount[skillLevel - 1] * adjustedAmount) /
@@ -215,7 +215,7 @@ export function activateHelperBoost(params: {
       : 0;
 
   const helperBoostProduce: Produce = {
-    berries: {
+    berries: pokemonWithAverageProduce.produce.berries && {
       berry: pokemonWithAverageProduce.produce.berries.berry,
       amount: (pokemonWithAverageProduce.produce.berries.amount * helpAmount * adjustedAmount) / metronomeFactor,
     },

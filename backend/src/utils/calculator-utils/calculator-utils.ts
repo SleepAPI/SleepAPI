@@ -1,8 +1,3 @@
-export function roundDown(num: number, decimals: number) {
-  const factor = Math.pow(10, decimals);
-  return Math.round(num * factor) / factor;
-}
-
 /**
  * splits number into array for each whole integer, finishing with the decimals
  * 2.35 -> [1, 1, 0.35]
