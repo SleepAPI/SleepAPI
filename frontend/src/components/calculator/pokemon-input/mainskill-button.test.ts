@@ -1,7 +1,6 @@
 import MainskillButton from '@/components/calculator/pokemon-input/mainskill-button.vue'
-import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
-import { pokemon } from 'sleepapi-common'
+import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {

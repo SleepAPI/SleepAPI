@@ -3,6 +3,7 @@ import { Logger } from '@src/services/logger/logger';
 import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
+import { PokemonInstance } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
@@ -26,6 +27,15 @@ export interface ProductionRequest {
   ingredientSet: string[];
   nrOfEvolutions?: number;
 }
+export interface TeamSettingsRequest {
+  camp: boolean;
+  bedtime: string;
+  wakeup: string;
+}
+export interface CalculateTeamRequest {
+  settings: TeamSettingsRequest;
+  members: PokemonInstance[];
+}
 
 class ProductionRouterImpl {
   public async register(controller: ProductionController) {
@@ -46,6 +56,21 @@ class ProductionRouterImpl {
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
+    BaseRouter.router.post(
+      '/calculator/team',
+      async (req: Request<unknown, unknown, CalculateTeamRequest, unknown>, res: Response) => {
+        try {
+          Logger.log('Entered /calculator/team');
+
+          const data = await controller.calculateTeam(req.body);
+          res.json(data);
+        } catch (err) {
+          Logger.error((err as Error).stack);
+          res.sendStatus(500);
         }
       }
     );

@@ -1,8 +1,7 @@
 import { Produce } from '@src/domain/combination/produce';
 import { Time } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { prettifyTime } from '@src/utils/time-utils/time-utils';
-import { mainskill } from 'sleepapi-common';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils, mainskill } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export interface SkillActivation {
@@ -31,9 +30,9 @@ export class SkillEvent extends ScheduledEvent {
   }
 
   format(): string {
-    return `[${prettifyTime(this.time)}][Skill] (${this.description}): ${roundDown(
+    return `[${TimeUtils.prettifyTime(this.time)}][Skill] (${this.description}): ${MathUtils.round(
       this.skillActivation.adjustedAmount,
       2
-    )} ${this.skillActivation.skill.unit} (${roundDown(this.skillActivation.fractionOfProc * 100, 1)}% strength)`;
+    )} ${this.skillActivation.skill.unit} (${MathUtils.round(this.skillActivation.fractionOfProc * 100, 1)}% strength)`;
   }
 }

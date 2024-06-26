@@ -1,7 +1,9 @@
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { Time, TimePeriod } from '@src/domain/time/time';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
   MEALS_IN_DAY,
+  MathUtils,
   RECIPES,
   Recipe,
   SUNDAY_CRIT_CHANCE,
@@ -12,9 +14,7 @@ import {
   mainskill,
 } from 'sleepapi-common';
 import { MealError } from '../../domain/error/meal/meal-error';
-import { roundDown } from '../calculator-utils/calculator-utils';
 import { rollRandomChance } from '../simulation-utils/simulation-utils';
-import { isAfterOrEqualWithinPeriod, parseTime, sortTimesForPeriod, timeWithinPeriod } from '../time-utils/time-utils';
 
 export function getMeal(name: string) {
   const meal: Recipe | undefined = RECIPES.find((meal) => meal.name === name.toUpperCase());
@@ -47,22 +47,25 @@ export function getMealsForFilter(params: {
 
 export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
   const breakfastWindow: TimePeriod = {
-    start: parseTime('04:00'),
-    end: parseTime('11:59'),
+    start: TimeUtils.parseTime('04:00'),
+    end: TimeUtils.parseTime('11:59'),
   };
   const lunchWindow: TimePeriod = {
-    start: parseTime('12:00'),
-    end: parseTime('17:59'),
+    start: TimeUtils.parseTime('12:00'),
+    end: TimeUtils.parseTime('17:59'),
   };
   const dinnerWindow: TimePeriod = {
-    start: parseTime('18:00'),
-    end: parseTime('03:59'),
+    start: TimeUtils.parseTime('18:00'),
+    end: TimeUtils.parseTime('03:59'),
   };
 
   const mealTimes: Time[] = [];
 
-  if (timeWithinPeriod(breakfastWindow.start, dayPeriod) || timeWithinPeriod(breakfastWindow.end, dayPeriod)) {
-    const beforeWindowEndOrBedtime = isAfterOrEqualWithinPeriod({
+  if (
+    TimeUtils.timeWithinPeriod(breakfastWindow.start, dayPeriod) ||
+    TimeUtils.timeWithinPeriod(breakfastWindow.end, dayPeriod)
+  ) {
+    const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: breakfastWindow.end,
       period: dayPeriod,
@@ -73,8 +76,11 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     mealTimes.push(beforeWindowEndOrBedtime);
   }
 
-  if (timeWithinPeriod(lunchWindow.start, dayPeriod) || timeWithinPeriod(lunchWindow.end, dayPeriod)) {
-    const beforeWindowEndOrBedtime = isAfterOrEqualWithinPeriod({
+  if (
+    TimeUtils.timeWithinPeriod(lunchWindow.start, dayPeriod) ||
+    TimeUtils.timeWithinPeriod(lunchWindow.end, dayPeriod)
+  ) {
+    const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: lunchWindow.end,
       period: dayPeriod,
@@ -85,8 +91,11 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     mealTimes.push(beforeWindowEndOrBedtime);
   }
 
-  if (timeWithinPeriod(dinnerWindow.start, dayPeriod) || timeWithinPeriod(dinnerWindow.end, dayPeriod)) {
-    const beforeWindowEndOrBedtime = isAfterOrEqualWithinPeriod({
+  if (
+    TimeUtils.timeWithinPeriod(dinnerWindow.start, dayPeriod) ||
+    TimeUtils.timeWithinPeriod(dinnerWindow.end, dayPeriod)
+  ) {
+    const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: dinnerWindow.end,
       period: dayPeriod,
@@ -97,7 +106,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     mealTimes.push(beforeWindowEndOrBedtime);
   }
 
-  return mealTimes.sort((a, b) => sortTimesForPeriod(a, b, dayPeriod));
+  return mealTimes.sort((a, b) => TimeUtils.sortTimesForPeriod(a, b, dayPeriod));
 }
 
 export function getMealRecoveryAmount(currentEnergy: number) {
@@ -131,7 +140,7 @@ export function calculateCritMultiplier(skillActivations: SkillActivation[], cac
       0
     ) / MEALS_IN_DAY;
 
-  const key = roundDown(bonusChance, 2);
+  const key = MathUtils.round(bonusChance, 2);
   const cachedResult = cache.get(key);
   if (cachedResult) {
     return cachedResult;

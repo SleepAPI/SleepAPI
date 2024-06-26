@@ -1,6 +1,6 @@
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
+import type { PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('Pokemon Store', () => {

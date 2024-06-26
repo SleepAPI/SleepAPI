@@ -12,7 +12,7 @@
       Lv.{{ subskillLevel }}
     </template>
 
-    <v-dialog id="subskillDialog" v-model="subskillMenu">
+    <v-dialog id="subskillDialog" v-model="subskillMenu" max-width="550px">
       <template #activator="{ props }">
         <v-btn
           :color="rarityColor"
@@ -41,8 +41,7 @@
 
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
-import type { SubskillInstanceExt } from '@/types/member/instanced'
-import { capitalize, subskill } from 'sleepapi-common'
+import { capitalize, subskill, type SubskillInstanceExt } from 'sleepapi-common'
 
 export default {
   name: 'SubskillButton',

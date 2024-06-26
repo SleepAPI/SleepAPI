@@ -2,7 +2,7 @@ import { BerrySet, IngredientSet, pokemon } from 'sleepapi-common';
 import { SkillActivation } from '../event/events/skill-event/skill-event';
 
 export interface Produce {
-  berries: BerrySet;
+  berries?: BerrySet;
   ingredients: IngredientSet[];
 }
 
@@ -14,7 +14,7 @@ export interface PokemonProduce {
 export interface DetailedProduce {
   produce: Produce;
   spilledIngredients: IngredientSet[];
-  sneakySnack: BerrySet;
+  sneakySnack?: BerrySet;
   dayHelps: number;
   nightHelps: number;
   nightHelpsBeforeSS: number;

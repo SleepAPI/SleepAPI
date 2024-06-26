@@ -277,8 +277,10 @@ export class SetCover {
                 amount: amount * addedHelps,
               }))
             ),
-            berries: {
-              amount: member.detailedProduce.produce.berries.amount + addedHelps * member.averageProduce.berries.amount,
+            berries: member.detailedProduce.produce.berries && {
+              amount:
+                member.detailedProduce.produce.berries.amount +
+                addedHelps * (member.averageProduce.berries?.amount ?? 0),
               berry: member.detailedProduce.produce.berries.berry,
             },
           },

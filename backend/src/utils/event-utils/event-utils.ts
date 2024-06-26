@@ -8,12 +8,11 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time, TimePeriod } from '@src/domain/time/time';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
 import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { mainskill, nature } from 'sleepapi-common';
 import { splitNumber } from '../calculator-utils/calculator-utils';
-import { addToInventory, countInventory } from '../inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
-import { getEmptyProduce } from '../production-utils/production-utils';
-import { divideTimePeriod, isAfterOrEqualWithinPeriod } from '../time-utils/time-utils';
 
 export function getExtraHelpfulEvents(
   period: TimePeriod,
@@ -23,7 +22,7 @@ export function getExtraHelpfulEvents(
   const helpfulEvents: SkillEvent[] = [];
   const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
 
-  const extraHelpfulPeriods: TimePeriod[] = divideTimePeriod(period, extraHelpfulProcs);
+  const extraHelpfulPeriods: TimePeriod[] = TimeUtils.divideTimePeriod(period, extraHelpfulProcs);
   const extraHelpfulFractions: number[] = splitNumber(extraHelpfulProcs);
   for (let i = 0; i < extraHelpfulPeriods.length; i++) {
     const time = extraHelpfulPeriods[i].start;
@@ -39,7 +38,7 @@ export function getExtraHelpfulEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: {
+          berries: averageBerries && {
             berry: averageBerries.berry,
             amount: averageBerries.amount * adjustedAmount,
           },
@@ -73,7 +72,7 @@ export function getHelperBoostEvents(
     mainskill.HELPER_BOOST.amount[helperBoostLevel - 1] +
     calculateHelperBoostHelpsFromUnique(helperBoostUnique, helperBoostLevel);
 
-  const helperBoostPeriods: TimePeriod[] = divideTimePeriod(period, helperBoostProcs);
+  const helperBoostPeriods: TimePeriod[] = TimeUtils.divideTimePeriod(period, helperBoostProcs);
   const helperBoostFractions: number[] = splitNumber(helperBoostProcs);
   for (let i = 0; i < helperBoostPeriods.length; i++) {
     const time = helperBoostPeriods[i].start;
@@ -88,7 +87,7 @@ export function getHelperBoostEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: {
+          berries: averageBerries && {
             berry: averageBerries.berry,
             amount: averageBerries.amount * adjustedAmount,
           },
@@ -134,7 +133,7 @@ export function scheduleTeamEnergyEvents(
     return recoveryEvents;
   }
 
-  const e4ePeriods: TimePeriod[] = divideTimePeriod(period, e4eProcs);
+  const e4ePeriods: TimePeriod[] = TimeUtils.divideTimePeriod(period, e4eProcs);
   const e4eDeltas: number[] = splitNumber(e4eProcs);
   for (let i = 0; i < e4ePeriods.length; i++) {
     const event: EnergyEvent = new EnergyEvent({
@@ -145,7 +144,7 @@ export function scheduleTeamEnergyEvents(
     recoveryEvents.push(event);
   }
 
-  const cheerPeriods: TimePeriod[] = divideTimePeriod(period, cheerProcs);
+  const cheerPeriods: TimePeriod[] = TimeUtils.divideTimePeriod(period, cheerProcs);
   const cheerDeltas: number[] = splitNumber(cheerProcs);
   for (let i = 0; i < cheerPeriods.length; i++) {
     const event: EnergyEvent = new EnergyEvent({
@@ -189,7 +188,7 @@ export function recoverEnergyEvents(params: {
   let recoveredEnergy = 0;
   for (; energyIndex < energyEvents.length; energyIndex++) {
     const energyEvent = energyEvents[energyIndex];
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: energyEvent.time, period })) {
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: energyEvent.time, period })) {
       const { delta, description } = energyEvent;
 
       const clampedDelta =
@@ -224,7 +223,7 @@ export function recoverFromMeal(params: {
   let recoveredAmount = 0;
   for (; mealIndex < mealTimes.length; mealIndex++) {
     const mealTime = mealTimes[mealIndex];
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: mealTime, period })) {
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: mealTime, period })) {
       recoveredAmount = getMealRecoveryAmount(currentEnergy);
 
       const mealEvent: EnergyEvent = new EnergyEvent({
@@ -255,8 +254,8 @@ export function triggerTeamHelpsEvent(params: {
   let helpsProduce: Produce = emptyProduce;
   for (; helpIndex < helpEvents.length; helpIndex++) {
     const helpEvent = helpEvents[helpIndex];
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: helpEvent.time, period })) {
-      helpsProduce = addToInventory(helpsProduce, helpEvent.skillActivation.adjustedProduce!);
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: helpEvent.time, period })) {
+      helpsProduce = InventoryUtils.addToInventory(helpsProduce, helpEvent.skillActivation.adjustedProduce!);
 
       eventLog.push(helpEvent);
     } else break;
@@ -272,14 +271,14 @@ export function inventoryFull(params: {
   eventLog: ScheduledEvent[];
 }) {
   const { currentInventory, averageProduceAmount, inventoryLimit, currentTime, eventLog } = params;
-  if (countInventory(currentInventory) + averageProduceAmount >= inventoryLimit) {
+  if (InventoryUtils.countInventory(currentInventory) + averageProduceAmount >= inventoryLimit) {
     const emptyInventoryEvent: InventoryEvent = new InventoryEvent({
       time: currentTime,
       description: 'Empty',
-      delta: -countInventory(currentInventory),
-      before: countInventory(currentInventory),
+      delta: -InventoryUtils.countInventory(currentInventory),
+      before: InventoryUtils.countInventory(currentInventory),
       max: inventoryLimit,
-      contents: getEmptyProduce(currentInventory.berries.berry),
+      contents: InventoryUtils.getEmptyInventory(),
     });
 
     eventLog.push(emptyInventoryEvent);
@@ -309,9 +308,9 @@ export function helpEvent(params: {
     time,
     description: 'Add',
     delta: amount,
-    before: countInventory(currentInventory),
+    before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: addToInventory(currentInventory, produce),
+    contents: InventoryUtils.addToInventory(currentInventory, produce),
   });
 
   eventLog.push(helpEvent);
@@ -349,16 +348,16 @@ export function addSneakySnackEvent(params: {
   const addInventoryEvent: InventoryEvent = new InventoryEvent({
     time: currentTime,
     description: 'Sneaky snack',
-    delta: countInventory(sneakySnackProduce),
-    before: countInventory(totalSneakySnack),
-    contents: addToInventory(totalSneakySnack, sneakySnackProduce),
+    delta: InventoryUtils.countInventory(sneakySnackProduce),
+    before: InventoryUtils.countInventory(totalSneakySnack),
+    contents: InventoryUtils.addToInventory(totalSneakySnack, sneakySnackProduce),
   });
   const spilledIngsEvent: InventoryEvent = new InventoryEvent({
     time: currentTime,
     description: 'Spilled ingredients',
-    delta: countInventory(spilledProduce),
-    before: countInventory(totalSpilledIngredients),
-    contents: addToInventory(totalSpilledIngredients, spilledProduce),
+    delta: InventoryUtils.countInventory(spilledProduce),
+    before: InventoryUtils.countInventory(totalSpilledIngredients),
+    contents: InventoryUtils.addToInventory(totalSpilledIngredients, spilledProduce),
   });
 
   eventLog.push(sneakySnackEvent);

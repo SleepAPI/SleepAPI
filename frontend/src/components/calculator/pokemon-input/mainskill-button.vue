@@ -46,8 +46,7 @@
 </template>
 
 <script lang="ts">
-import type { PokemonInstanceExt } from '@/types/member/instanced'
-import { mainskill, pokemon } from 'sleepapi-common'
+import { mainskill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {

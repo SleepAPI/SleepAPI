@@ -1,7 +1,7 @@
 <template>
   <v-row id="nature">
     <v-col cols="6">
-      <v-dialog id="natureDialog" v-model="natureMenu">
+      <v-dialog id="natureDialog" v-model="natureMenu" max-width="550px">
         <template #activator="{ props }">
           <v-badge
             color="primary"

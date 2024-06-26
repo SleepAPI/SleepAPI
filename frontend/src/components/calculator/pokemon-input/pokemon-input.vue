@@ -187,8 +187,15 @@ import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
 import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type { PokemonInstanceExt } from '@/types/member/instanced'
-import { ingredient, nature, pokemon, uuid, type subskill } from 'sleepapi-common'
+import {
+  RP,
+  ingredient,
+  nature,
+  pokemon,
+  uuid,
+  type PokemonInstanceExt,
+  type subskill
+} from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -232,25 +239,17 @@ export default defineComponent({
       skillLevel: 0,
       nature: nature.BASHFUL,
       subskills: [],
-      ingredients: [
-        {
-          level: 0,
-          ingredient: undefined as ingredient.Ingredient | undefined
-        },
-        {
-          level: 30,
-          ingredient: undefined as ingredient.Ingredient | undefined
-        },
-        {
-          level: 60,
-          ingredient: undefined as ingredient.Ingredient | undefined
-        }
-      ]
-    } as PokemonInstanceExt
+      ingredients: []
+    } as PokemonInstanceExt,
+    rp: 0
   }),
-  computed: {
-    rp() {
-      return 0
+  watch: {
+    pokemonInstance: {
+      deep: true,
+      handler(newPokemon: PokemonInstanceExt) {
+        const rp = new RP(newPokemon)
+        this.rp = rp.calc()
+      }
     }
   },
   mounted() {
@@ -304,6 +303,11 @@ export default defineComponent({
       )
       if (ingredientToUpdate) {
         ingredientToUpdate.ingredient = params.ingredient
+      } else {
+        this.pokemonInstance.ingredients.push({
+          level: params.ingredientLevel,
+          ingredient: params.ingredient
+        })
       }
     },
     updateSkillLevel(skillLevel: number) {

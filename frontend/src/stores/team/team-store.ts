@@ -1,13 +1,9 @@
 import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
-import {
-  MAX_TEAMS,
-  MAX_TEAM_MEMBERS,
-  type PokemonInstanceExt,
-  type TeamInstance
-} from '@/types/member/instanced'
+import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
+import type { PokemonInstanceExt } from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
@@ -27,7 +23,8 @@ export const useTeamStore = defineStore('team', {
         name: 'Log in to save your teams',
         camp: false,
         version: 0,
-        members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
+        members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+        production: undefined
       }
     ]
   }),
@@ -51,7 +48,7 @@ export const useTeamStore = defineStore('team', {
           const teams = await TeamService.getTeams()
 
           // TODO: should diff versions of this.teams and teams, all teams/members
-          // TODO: for teams/members that have diff in version we rerun simulations
+          // TODO: for teams/members that have diff in version we rerun team simulation
 
           // overwrite cached teams with data from server
           this.teams = teams
@@ -91,6 +88,8 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
+      // TODO: probably should run team sim here first
+
       pokemonStore.upsertPokemon(updatedMember)
 
       if (userStore.loggedIn) {
@@ -106,20 +105,6 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
-    },
-    reset() {
-      this.currentIndex = 0
-      this.maxAvailableTeams = MAX_TEAMS
-      this.loadingTeams = true
-      this.teams = [
-        {
-          index: 0,
-          name: 'Log in to save your teams',
-          camp: false,
-          version: 0,
-          members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
-        }
-      ]
     },
     async duplicateMember(memberIndex: number) {
       const existingMember = this.getPokemon(memberIndex)
@@ -159,6 +144,21 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = undefined
+    },
+    reset() {
+      this.currentIndex = 0
+      this.maxAvailableTeams = MAX_TEAMS
+      this.loadingTeams = true
+      this.teams = [
+        {
+          index: 0,
+          name: 'Log in to save your teams',
+          camp: false,
+          version: 0,
+          members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+          production: undefined
+        }
+      ]
     }
   },
   persist: true

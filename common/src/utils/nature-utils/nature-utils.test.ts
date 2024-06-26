@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { NATURES, RASH } from '../../domain/nature';
-import { getNature, getNatureNames } from './nature-utils';
+import { ADAMANT, MODEST, NATURES, RASH } from '../../domain/nature';
+import { getNature, getNatureNames, invertNatureFrequency } from './nature-utils';
 
 describe('getNature', () => {
   it('shall return RASH for RaSh name', () => {
@@ -77,5 +77,17 @@ describe('natures', () => {
       : `${nat.name} (neutral)`;
 
     expect(nat.prettyName).toEqual(expectedPrettyName);
+  });
+});
+
+describe('invertNatureFrequency', () => {
+  it('shall default to 1 for neutral frequency nature', () => {
+    expect(invertNatureFrequency(RASH)).toBe(1);
+  });
+  it('shall invert ADAMANT to 0.9', () => {
+    expect(invertNatureFrequency(ADAMANT)).toBe(0.9);
+  });
+  it('shall invert MODEST to 1.1', () => {
+    expect(invertNatureFrequency(MODEST)).toBe(1.1);
   });
 });

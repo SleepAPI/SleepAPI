@@ -1,8 +1,8 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { DetailedProduce } from '@src/domain/combination/produce';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 import { PokemonIngredientSet, berry, dessert, ingredient, nature, pokemon, subskill } from 'sleepapi-common';
 import { emptyBerrySet } from '../calculator/berry/berry-calculator';
@@ -45,8 +45,8 @@ describe('processOptimalTeamSolutions', () => {
     const optimalTeamSolutions: OptimalTeamSolution[] = [
       {
         team: [
-          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: getEmptyProduce(berry.LEPPA) },
-          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: getEmptyProduce(berry.LEPPA) },
+          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
+          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
         ],
         surplus: {
           extra: [],
@@ -57,8 +57,8 @@ describe('processOptimalTeamSolutions', () => {
       },
       {
         team: [
-          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: getEmptyProduce(berry.LEPPA) },
-          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: getEmptyProduce(berry.LEPPA) },
+          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
+          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
         ],
         surplus: {
           extra: [],
@@ -177,8 +177,8 @@ describe('findOptimalCombinationFor', () => {
 
     const helps = 6;
 
-    expect(updatedRaichu.detailedProduce.produce.berries.amount).toBe(
-      helps * updatedRaichu.averageProduce.berries.amount
+    expect(updatedRaichu.detailedProduce.produce.berries?.amount).toBe(
+      helps * updatedRaichu.averageProduce.berries!.amount
     );
     expect(prettifyIngredientDrop(updatedRaichu.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
       `"4.2 Apple, 18 Ginger"`
@@ -425,7 +425,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
       },
     ],
   },
-  averageProduce: getEmptyProduce(pokemon.VAPOREON.berry),
+  averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
     level: 60,
     nature: nature.QUIET,

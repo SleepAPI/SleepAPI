@@ -2,7 +2,7 @@ import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { getBerriesForIsland } from '@src/utils/berry-utils/berry-utils';
 import { findIslandForName } from '@src/utils/island-utils/island-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { getNature, mainskill } from 'sleepapi-common';
 import { Body, Controller, Path, Post, Route, Tags } from 'tsoa';
 import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
@@ -50,8 +50,8 @@ export default class OptimalController extends Controller {
       camp: input.camp ?? false,
       erb: input.erb ?? 0,
       incense: input.recoveryIncense ?? false,
-      mainBedtime: parseTime(input.mainBedtime ?? '21:30'),
-      mainWakeup: parseTime(input.mainWakeup ?? '06:00'),
+      mainBedtime: TimeUtils.parseTime(input.mainBedtime ?? '21:30'),
+      mainWakeup: TimeUtils.parseTime(input.mainWakeup ?? '06:00'),
       maxPotSize: input.maxPotSize,
     };
   }

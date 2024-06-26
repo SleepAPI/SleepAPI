@@ -1,14 +1,14 @@
 import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { HelpEvent } from './help-event';
 
 describe('HelpEvent', () => {
   it('help event shall format correctly', () => {
     const event = new HelpEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
       frequency: 1,
-      nextHelp: parseTime('06:10'),
+      nextHelp: TimeUtils.parseTime('06:10'),
       produce: MOCKED_PRODUCE,
     });
     expect(event.format()).toMatchInlineSnapshot(

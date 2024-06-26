@@ -19,19 +19,11 @@ import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { Time } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
-import { addToInventory, countInventory } from '@src/utils/inventory-utils/inventory-utils';
-import { getEmptyProduce } from '@src/utils/production-utils/production-utils';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
-import {
-  addTime,
-  isAfterOrEqualWithinPeriod,
-  secondsToTime,
-  sortEventsForPeriod,
-  timeWithinPeriod,
-} from '@src/utils/time-utils/time-utils';
-import { mainskill } from 'sleepapi-common';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -69,7 +61,13 @@ export function randomizedSimulation(params: {
 
   // TODO: only needed before refactor
   const eventLog: ScheduledEvent[] = [];
-  let currentInventory: Produce = getEmptyProduce(pokemon.berry);
+  let currentInventory: Produce = {
+    ingredients: [],
+    berries: {
+      amount: 0,
+      berry: pokemonWithAverageProduce.pokemon.berry,
+    },
+  };
 
   // summary values
   let skillProcsDay = 0;
@@ -90,7 +88,7 @@ export function randomizedSimulation(params: {
 
   let nextHelpEvent: Time = dayInfo.period.start;
 
-  const energyEvents: EnergyEvent[] = sortEventsForPeriod(dayInfo.period, recoveryEvents);
+  const energyEvents: EnergyEvent[] = TimeUtils.sortEventsForPeriod(dayInfo.period, recoveryEvents);
 
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
@@ -116,7 +114,7 @@ export function randomizedSimulation(params: {
 
   // --- DAY ---
   let period = dayInfo.period;
-  while (timeWithinPeriod(currentTime, period)) {
+  while (TimeUtils.timeWithinPeriod(currentTime, period)) {
     const { recoveredAmount: mealRecovery, mealsProcessed } = recoverFromMeal({
       currentEnergy,
       currentTime,
@@ -138,9 +136,9 @@ export function randomizedSimulation(params: {
     energyIndex = energyEventsProcessed;
 
     // check if help has occured
-    if (isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
+    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
-      const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
+      const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
 
       if (rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
@@ -162,7 +160,7 @@ export function randomizedSimulation(params: {
 
     currentEnergy += mealRecovery + eventRecovery;
 
-    currentEnergy = roundDown(
+    currentEnergy = MathUtils.round(
       currentEnergy -
         maybeDegradeEnergy({
           timeToDegrade: chunksOf5Minutes++ % 2 === 0 && chunksOf5Minutes >= 2,
@@ -173,27 +171,27 @@ export function randomizedSimulation(params: {
       2
     );
 
-    currentTime = addTime(currentTime, { hour: 0, minute: 5, second: 0 });
+    currentTime = TimeUtils.addTime(currentTime, { hour: 0, minute: 5, second: 0 });
   }
 
   // --- NIGHT ---
   period = { start: dayInfo.period.end, end: dayInfo.period.start };
-  while (timeWithinPeriod(currentTime, period)) {
+  while (TimeUtils.timeWithinPeriod(currentTime, period)) {
     // only process helps if it fits in carry, not interested in total produce here
     if (
-      countInventory(currentInventory) < inventoryLimit &&
-      isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })
+      InventoryUtils.countInventory(currentInventory) < inventoryLimit &&
+      TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: nextHelpEvent, period })
     ) {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
-      const nextHelp = addTime(nextHelpEvent, secondsToTime(frequency));
+      const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
 
-      currentInventory = addToInventory(currentInventory, averageProduce);
+      currentInventory = InventoryUtils.addToInventory(currentInventory, averageProduce);
 
       ++nightHelpsBeforeSS;
       nextHelpEvent = nextHelp;
     }
 
-    currentEnergy = roundDown(
+    currentEnergy = MathUtils.round(
       currentEnergy -
         maybeDegradeEnergy({
           timeToDegrade: chunksOf5Minutes++ % 2 === 0,
@@ -204,7 +202,7 @@ export function randomizedSimulation(params: {
       2
     );
 
-    currentTime = addTime(currentTime, { hour: 0, minute: 5, second: 0 });
+    currentTime = TimeUtils.addTime(currentTime, { hour: 0, minute: 5, second: 0 });
   }
 
   return {

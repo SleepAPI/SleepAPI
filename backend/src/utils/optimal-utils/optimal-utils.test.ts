@@ -1,6 +1,7 @@
 import { PokemonCombinationContributions } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import {
   PokemonIngredientSet,
   RecipeType,
@@ -12,7 +13,6 @@ import {
   pokemon,
   salad,
 } from 'sleepapi-common';
-import { getEmptyProduce } from '../production-utils/production-utils';
 import {
   calculateCombinedContributions,
   calculateOptimalFlexibleScore,
@@ -230,7 +230,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         averageTotalSkillProcs: 0,
         skillActivations: [],
       },
-      averageProduce: getEmptyProduce(berry.LEPPA),
+      averageProduce: InventoryUtils.getEmptyInventory(),
       pokemonCombination: {
         pokemon: pokemon.PINSIR,
         ingredientList: [

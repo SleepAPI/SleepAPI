@@ -3,10 +3,10 @@ import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { MAX_TEAM_MEMBERS, type PokemonInstanceExt } from '@/types/member/instanced'
+import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { nature, pokemon, uuid } from 'sleepapi-common'
+import { nature, pokemon, uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi, vitest } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({

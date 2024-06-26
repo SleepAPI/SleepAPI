@@ -16,13 +16,12 @@ import {
 } from '@src/services/calculator/contribution/contribution-calculator';
 import { Logger } from '@src/services/logger/logger';
 import { SetCover } from '@src/services/set-cover/set-cover';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { CritInfo, calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { MAX_POT_SIZE, mainskill } from 'sleepapi-common';
+import { MAX_POT_SIZE, MathUtils, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
 const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
@@ -231,7 +230,7 @@ class TierlistImpl {
         const currentMemoryUsage = process.memoryUsage().heapUsed;
         const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-        Logger.info('Current memory usage: ' + roundDown(currentMemoryUsageGigabytes, 3) + ' GB');
+        Logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
         ++counter;
         console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 

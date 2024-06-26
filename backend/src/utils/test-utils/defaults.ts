@@ -2,8 +2,8 @@ import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/cus
 import { Produce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { TimePeriod } from '@src/domain/time/time';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
-import { getEmptyProduce } from '../production-utils/production-utils';
 
 export const MOCKED_MAIN_SLEEP: TimePeriod = {
   start: {
@@ -109,7 +109,7 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     averageTotalSkillProcs: 0,
     skillActivations: [],
   },
-  averageProduce: getEmptyProduce(berry.LUM),
+  averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
     level: 30,
     nature: nature.RASH,

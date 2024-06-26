@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils';
 import {
   IngredientSet,
   MAX_RECIPE_LEVEL,
+  MathUtils,
   Recipe,
   curry,
   dessert,
@@ -855,10 +855,10 @@ describe('summarizeTeamProducedIngredientSources', () => {
 
     const result = teamIngredientInfo.map((ing) => ({
       ingredient: ing.ingredient.name,
-      defaultAmount: roundDown(ing.defaultAmount, 2),
-      fromSupport: roundDown(ing.fromSupport, 2),
-      recipeAmount: roundDown(ing.recipeAmount, 2),
-      selfSupportAmount: roundDown(ing.selfSupportAmount, 2),
+      defaultAmount: MathUtils.round(ing.defaultAmount, 2),
+      fromSupport: MathUtils.round(ing.fromSupport, 2),
+      recipeAmount: MathUtils.round(ing.recipeAmount, 2),
+      selfSupportAmount: MathUtils.round(ing.selfSupportAmount, 2),
     }));
 
     expect(result).toMatchInlineSnapshot(`

@@ -20,12 +20,9 @@ import {
   MAX_RECIPE_LEVEL,
   PokemonIngredientSet,
   Recipe,
-  nature,
   pokemon,
   recipeLevelBonus,
-  subskill,
 } from 'sleepapi-common';
-import { extractIngredientSubskills } from '../stats/stats-calculator';
 
 /**
  * Combines same ingredients in drop, for example [2 honey, 4 honey, 5 milk] becomes [6 honey, 5 milk]
@@ -253,15 +250,4 @@ export function calculateContributedIngredientsValue(
     contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,
     fillerValue,
   };
-}
-
-export function calculateIngredientPercentage(params: {
-  pokemon: pokemon.Pokemon;
-  nature: nature.Nature;
-  subskills: subskill.SubSkill[];
-}) {
-  const { pokemon, nature, subskills } = params;
-  const ingredientSubskills = extractIngredientSubskills(subskills);
-  const ingredientPercentage = (pokemon.ingredientPercentage / 100) * nature.ingredient * ingredientSubskills;
-  return ingredientPercentage;
 }

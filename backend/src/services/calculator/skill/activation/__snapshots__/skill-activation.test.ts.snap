@@ -7,6 +7,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+      ],
       "amount": [
         12,
         16,
@@ -26,6 +34,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+      ],
       "amount": [
         14,
         17,
@@ -45,6 +61,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        1120,
+        1593,
+        2197,
+        3033,
+        4187,
+        5785,
+      ],
       "amount": [
         5,
         7,
@@ -64,6 +88,15 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+        5843,
+      ],
       "amount": [
         880,
         1251,
@@ -84,6 +117,15 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
       "amount": [
         400,
         569,
@@ -104,6 +146,15 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
       "amount": [
         500,
         711.25,
@@ -124,6 +175,15 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
       "amount": [
         240,
         340,
@@ -144,6 +204,15 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
       "amount": [
         300,
         425,
@@ -185,6 +254,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+      ],
       "amount": [
         5,
         6,
@@ -225,6 +302,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        2800,
+        3902,
+        5273,
+        6975,
+        9317,
+        12438,
+      ],
       "amount": [
         2,
         3,
@@ -244,6 +329,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+      ],
       "amount": [
         7,
         10,
@@ -263,6 +356,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+      ],
       "amount": [
         4,
         5,
@@ -438,6 +539,14 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
     "fractionOfProc": 0.06153846153846154,
     "nrOfHelpsToActivate": 2,
     "skill": {
+      "RP": [
+        880,
+        1251,
+        1726,
+        2383,
+        3290,
+        4546,
+      ],
       "amount": [
         6,
         8,

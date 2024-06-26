@@ -1,6 +1,5 @@
-import { Produce } from '@src/domain/combination/produce';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { IngredientSet, berry } from 'sleepapi-common';
+import { IngredientSet } from 'sleepapi-common';
 
 export function getIngredientSet(validSets: IngredientSet[][], ingredientSet: string[]): IngredientSet[] {
   const lowercaseIngredientSet = ingredientSet.map((ing) => ing.toLowerCase());
@@ -13,11 +12,4 @@ export function getIngredientSet(validSets: IngredientSet[][], ingredientSet: st
   }
 
   return foundIngredientSet;
-}
-
-export function getEmptyProduce(berry: berry.Berry): Produce {
-  return {
-    berries: { amount: 0, berry },
-    ingredients: [],
-  };
 }

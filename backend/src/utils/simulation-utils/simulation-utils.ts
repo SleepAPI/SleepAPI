@@ -10,9 +10,8 @@ import { Summary, SummaryEvent } from '@src/domain/event/events/summary-event/su
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { TimePeriod } from '@src/domain/time/time';
 import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { pokemon } from 'sleepapi-common';
-import { countInventory } from '../inventory-utils/inventory-utils';
-import { getEmptyProduce } from '../production-utils/production-utils';
 
 export function startDayAndEnergy(
   dayInfo: SleepInfo,
@@ -65,7 +64,7 @@ export function startDayAndEnergy(
     before: 0,
     delta: 0,
     max: inventoryLimit,
-    contents: getEmptyProduce(pokemon.berry),
+    contents: InventoryUtils.getEmptyInventory(),
   });
 
   eventLog.push(startingDayEvent);
@@ -89,10 +88,10 @@ export function startNight(params: {
   const emptyInventoryEvent: InventoryEvent = new InventoryEvent({
     time: period.end,
     description: 'Empty',
-    delta: -countInventory(currentInventory),
-    before: countInventory(currentInventory),
+    delta: -InventoryUtils.countInventory(currentInventory),
+    before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: getEmptyProduce(currentInventory.berries.berry),
+    contents: InventoryUtils.getEmptyInventory(),
   });
 
   const sleepStartEvent: SleepEvent = new SleepEvent({
@@ -127,7 +126,7 @@ export function finishSimulation(params: {
     time: period.end,
     description: 'Status',
     delta: 0,
-    before: countInventory(currentInventory),
+    before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
     contents: currentInventory,
   });
@@ -135,18 +134,18 @@ export function finishSimulation(params: {
   const sneakySnackClaim: InventoryEvent = new InventoryEvent({
     time: period.end,
     description: 'Sneaky snack claim',
-    delta: -countInventory(totalSneakySnack),
-    before: countInventory(totalSneakySnack),
-    contents: getEmptyProduce(currentInventory.berries.berry),
+    delta: -InventoryUtils.countInventory(totalSneakySnack),
+    before: InventoryUtils.countInventory(totalSneakySnack),
+    contents: InventoryUtils.getEmptyInventory(),
   });
 
   const morningEmptyInventoryEvent: InventoryEvent = new InventoryEvent({
     time: period.end,
     description: 'Empty',
-    delta: -countInventory(currentInventory),
-    before: countInventory(currentInventory),
+    delta: -InventoryUtils.countInventory(currentInventory),
+    before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: getEmptyProduce(currentInventory.berries.berry),
+    contents: InventoryUtils.getEmptyInventory(),
   });
 
   const skillStatusEvent: SkillEvent = new SkillEvent({

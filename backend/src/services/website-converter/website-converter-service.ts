@@ -9,9 +9,16 @@ import {
   OptimalSetResult,
 } from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { IngredientSet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature, subskill } from 'sleepapi-common';
+import {
+  IngredientSet,
+  MEALS_IN_DAY,
+  MathUtils,
+  PokemonIngredientSet,
+  mainskill,
+  nature,
+  subskill,
+} from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
 import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
 
@@ -134,7 +141,7 @@ class WebsiteConverterServiceImpl {
               `${otherPairingsEntry.combinedContribution.contributions
                 .map(
                   (meal) =>
-                    `[${Math.round(meal.contributedPower)} ${roundDown(meal.percentage, 1)}%] ${meal.meal.name
+                    `[${Math.round(meal.contributedPower)} ${MathUtils.round(meal.percentage, 1)}%] ${meal.meal.name
                       .toLowerCase()
                       .replace(/_/g, ' ')}`
                 )
@@ -189,7 +196,7 @@ class WebsiteConverterServiceImpl {
             (member) =>
               `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
                 member.detailedProduce.produce.ingredients
-              )} (${roundDown(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
+              )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
           )
           .join()}`,
     }));
@@ -235,7 +242,7 @@ class WebsiteConverterServiceImpl {
           (member) =>
             `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
               member.detailedProduce.produce.ingredients
-            )} (${roundDown(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
+            )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
         )
         .join('\n')}`,
     }));
@@ -280,11 +287,11 @@ class WebsiteConverterServiceImpl {
           basePower && contribution.contributedPower === basePower * FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER;
 
         const powerDisplay = is20PercentHigher
-          ? `[${roundDown(
+          ? `[${MathUtils.round(
               contribution.contributedPower / FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER,
               0
             )} x ${FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER})]`
-          : `[${roundDown(contribution.contributedPower, 0)}]`;
+          : `[${MathUtils.round(contribution.contributedPower, 0)}]`;
 
         return `${powerDisplay} ${contribution.meal.name}`;
       });
@@ -292,7 +299,7 @@ class WebsiteConverterServiceImpl {
       return {
         pokemon: pokemonCombinationWithContribution.pokemonCombination.pokemon.name,
         ingredientList: pokemonCombinationWithContribution.pokemonCombination.ingredientList,
-        score: roundDown(pokemonCombinationWithContribution.scoreResult.score, 0),
+        score: MathUtils.round(pokemonCombinationWithContribution.scoreResult.score, 0),
         rank: i + 1,
         meals,
         countedMeals,
@@ -363,7 +370,7 @@ class WebsiteConverterServiceImpl {
 
     prettyString += this.#prettifyFiltersDetails(productionCombination);
 
-    prettyString += `Estimated skill procs per day: ${roundDown(
+    prettyString += `Estimated skill procs per day: ${MathUtils.round(
       pokemonCombination.detailedProduce.averageTotalSkillProcs,
       1
     )}\n`;
@@ -380,37 +387,39 @@ class WebsiteConverterServiceImpl {
       skillTastyChanceValue,
     } = summary;
     const prettifiedSkillProduce: string[] = [];
-    if (skillProduceValue.berries.amount > 0) {
+    if (skillProduceValue.berries) {
       prettifiedSkillProduce.push(
-        `${roundDown(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
+        `${MathUtils.round(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
       );
     }
     if (skillProduceValue.ingredients.length > 0) {
       prettifiedSkillProduce.push(
         `${prettifyIngredientDrop(
           skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
-            amount: roundDown(amount, 1),
+            amount: MathUtils.round(amount, 1),
             ingredient,
           }))
         )}`
       );
     }
     prettyString +=
-      (skillEnergySelfValue > 0 ? `Energy self skill value: ${roundDown(skillEnergySelfValue, 2)} energy\n` : '') +
-      (skillEnergyOthersValue > 0
-        ? `Energy team skill value: ${roundDown(skillEnergyOthersValue, 2)} energy / member\n`
+      (skillEnergySelfValue > 0
+        ? `Energy self skill value: ${MathUtils.round(skillEnergySelfValue, 2)} energy\n`
         : '') +
-      (skillHelpsValue > 0 ? `Helps team skill value: ${roundDown(skillHelpsValue, 2)} helps / member\n` : '') +
+      (skillEnergyOthersValue > 0
+        ? `Energy team skill value: ${MathUtils.round(skillEnergyOthersValue, 2)} energy / member\n`
+        : '') +
+      (skillHelpsValue > 0 ? `Helps team skill value: ${MathUtils.round(skillHelpsValue, 2)} helps / member\n` : '') +
       (skillStrengthValue > 0 ? `Strength skill value: ${Math.floor(skillStrengthValue)} strength\n` : '') +
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${Math.floor(skillDreamShardValue)} shards\n` : '') +
-      (skillPotSizeValue > 0 ? `Pot size skill value: ${roundDown(skillPotSizeValue, 2)} pot size\n` : '') +
+      (skillPotSizeValue > 0 ? `Pot size skill value: ${MathUtils.round(skillPotSizeValue, 2)} pot size\n` : '') +
       (skillTastyChanceValue > 0
-        ? `Tasty chance skill value: ${roundDown(skillTastyChanceValue, 2)}% crit chance\n`
+        ? `Tasty chance skill value: ${MathUtils.round(skillTastyChanceValue, 2)}% crit chance\n`
         : '') +
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '');
 
-    prettyString += `Total berry output per day: ${roundDown(
-      pokemonCombination.detailedProduce.produce.berries.amount,
+    prettyString += `Total berry output per day: ${MathUtils.round(
+      pokemonCombination.detailedProduce.produce.berries?.amount ?? 0,
       1
     )} ${pokemonCombination.pokemonCombination.pokemon.berry.name}\n`;
 
@@ -500,11 +509,13 @@ class WebsiteConverterServiceImpl {
     const fillers = surplus.relevant.map((filler) => {
       const recipeIngredient = recipe.find((r) => r.ingredient.name === filler.ingredient.name);
       const percentage = recipeIngredient ? (filler.amount / recipeIngredient.amount) * 100 : 0;
-      return `${roundDown(filler.amount, 1)} ${filler.ingredient.name} (${roundDown(percentage, 0)}%)`;
+      return `${MathUtils.round(filler.amount, 1)} ${filler.ingredient.name} (${MathUtils.round(percentage, 0)}%)`;
     });
 
     fillers.push(
-      `${surplus.extra.map((filler) => `${roundDown(filler.amount, 1)} ${filler.ingredient.name} (N/A)`).join(', ')}`
+      `${surplus.extra
+        .map((filler) => `${MathUtils.round(filler.amount, 1)} ${filler.ingredient.name} (N/A)`)
+        .join(', ')}`
     );
 
     return fillers.join(', ');

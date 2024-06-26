@@ -3,23 +3,8 @@ import {
   calculateHelpSpeedSubskills,
   calculateSubskillCarrySize,
   countErbUsers,
-  extractIngredientSubskills,
-  extractTriggerSubskills,
   getOptimalStats,
-  invertNatureFrequecy,
 } from './stats-calculator';
-
-describe('convertNatureToNegative', () => {
-  it('shall default to 1 for neutral frequency nature', () => {
-    expect(invertNatureFrequecy(nature.RASH)).toBe(1);
-  });
-  it('shall invert ADAMANT to 0.9', () => {
-    expect(invertNatureFrequecy(nature.ADAMANT)).toBe(0.9);
-  });
-  it('shall invert MODEST to 1.1', () => {
-    expect(invertNatureFrequecy(nature.MODEST)).toBe(1.1);
-  });
-});
 
 describe('calculateHelpSpeedSubskills', () => {
   it('shall calculate default helpSpeed factor from subskills', () => {
@@ -39,36 +24,6 @@ describe('calculateHelpSpeedSubskills', () => {
   });
   it('shall calculate and clamp helping bonus if user and team exceeds 5', () => {
     expect(calculateHelpSpeedSubskills([subskill.HELPING_BONUS], 5)).toBe(0.75);
-  });
-});
-
-describe('extractIngredientSubskills', () => {
-  it('shall calculate default ing% from subskills', () => {
-    expect(extractIngredientSubskills([])).toBe(1);
-  });
-  it('shall calculate ingM+ingS ing% from subskills', () => {
-    expect(extractIngredientSubskills([subskill.INGREDIENT_FINDER_M, subskill.INGREDIENT_FINDER_S])).toBe(1.54);
-  });
-  it('shall calculate ingM ing% from subskills', () => {
-    expect(extractIngredientSubskills([subskill.INGREDIENT_FINDER_M])).toBe(1.36);
-  });
-  it('shall calculate ingS ing% from subskills', () => {
-    expect(extractIngredientSubskills([subskill.INGREDIENT_FINDER_S])).toBe(1.18);
-  });
-});
-
-describe('extractTriggerSubskills', () => {
-  it('shall calculate default trigger factor from subskills', () => {
-    expect(extractTriggerSubskills([])).toBe(1);
-  });
-  it('shall calculate triggerM+triggerS trigger factor from subskills', () => {
-    expect(extractTriggerSubskills([subskill.SKILL_TRIGGER_M, subskill.SKILL_TRIGGER_S])).toBe(1.54);
-  });
-  it('shall calculate triggerM trigger factor from subskills', () => {
-    expect(extractTriggerSubskills([subskill.SKILL_TRIGGER_M])).toBe(1.36);
-  });
-  it('shall calculate triggerS trigger factor from subskills', () => {
-    expect(extractTriggerSubskills([subskill.SKILL_TRIGGER_S])).toBe(1.18);
   });
 });
 

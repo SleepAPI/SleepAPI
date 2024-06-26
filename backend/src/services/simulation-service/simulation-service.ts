@@ -28,18 +28,24 @@ import {
   getHelperBoostEvents,
 } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { BerrySet, MEALS_IN_DAY, PokemonIngredientSet, mainskill, nature } from 'sleepapi-common';
-import { calculateNrOfBerriesPerDrop } from '../calculator/berry/berry-calculator';
+import {
+  BerrySet,
+  MEALS_IN_DAY,
+  PokemonIngredientSet,
+  calculateIngredientPercentage,
+  calculateNrOfBerriesPerDrop,
+  calculateSkillPercentage,
+  mainskill,
+  nature,
+} from 'sleepapi-common';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
 import {
   calculateAveragePokemonIngredientSet,
-  calculateIngredientPercentage,
   combineSameIngredientsInDrop,
 } from '../calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '../calculator/production/produce-calculator';
 import {
   calculateOddsAtLeastOneSkillProc,
-  calculateSkillPercentage,
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
@@ -167,7 +173,7 @@ export function setupAndRunProductionSimulation(params: {
     detailedProduce: {
       ...detailedProduce,
       produce: {
-        berries: {
+        berries: detailedProduce.produce.berries && {
           amount: detailedProduce.produce.berries.amount,
           berry: detailedProduce.produce.berries.berry,
         },

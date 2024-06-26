@@ -1,27 +1,6 @@
 import { CustomStats } from '@src/domain/combination/custom';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
-import { mainskill, nature, pokemon, subskill } from 'sleepapi-common';
-
-export function extractIngredientSubskills(subskills: subskill.SubSkill[]) {
-  const ingS = subskills.some(({ name }) => name === subskill.INGREDIENT_FINDER_S.name)
-    ? subskill.INGREDIENT_FINDER_S.amount
-    : 0;
-  const ingM = subskills.some(({ name }) => name === subskill.INGREDIENT_FINDER_M.name)
-    ? subskill.INGREDIENT_FINDER_M.amount
-    : 0;
-  return roundDown(1 + ingM + ingS, 2);
-}
-
-export function extractTriggerSubskills(subskills: subskill.SubSkill[]) {
-  const triggerS = subskills.some(({ name }) => name === subskill.SKILL_TRIGGER_S.name)
-    ? subskill.SKILL_TRIGGER_S.amount
-    : 0;
-  const triggerM = subskills.some(({ name }) => name === subskill.SKILL_TRIGGER_M.name)
-    ? subskill.SKILL_TRIGGER_M.amount
-    : 0;
-  return roundDown(1 + triggerM + triggerS, 2);
-}
+import { MathUtils, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 
 export function countErbUsers(erb: number, subskills: subskill.SubSkill[]) {
   const subskillErb = subskills.some(
@@ -54,17 +33,7 @@ export function calculateHelpSpeedSubskills(subskills: subskill.SubSkill[], nrOf
     ? subskill.HELPING_SPEED_S.amount
     : 0;
 
-  return roundDown(Math.max(0.65, 1 - helpM - helpS - helpBonus), 2);
-}
-
-export function invertNatureFrequecy(nature: nature.Nature) {
-  let result = 1;
-  if (nature.frequency === 0.9) {
-    result = 1.1;
-  } else if (nature.frequency === 1.1) {
-    result = 0.9;
-  }
-  return result;
+  return MathUtils.round(Math.max(0.65, 1 - helpM - helpS - helpBonus), 2);
 }
 
 export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): CustomStats {

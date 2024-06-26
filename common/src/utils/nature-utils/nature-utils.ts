@@ -11,3 +11,13 @@ export function getNature(name: string) {
 export function getNatureNames() {
   return NATURES.map((nature) => nature.name);
 }
+
+export function invertNatureFrequency(nature: Nature) {
+  let result = 1;
+  if (nature.frequency === 0.9) {
+    result = 1.1;
+  } else if (nature.frequency === 1.1) {
+    result = 0.9;
+  }
+  return result;
+}

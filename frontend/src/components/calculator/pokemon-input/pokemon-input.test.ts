@@ -2,10 +2,16 @@ import PokemonInput from '@/components/calculator/pokemon-input/pokemon-input.vu
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type { PokemonInstanceExt } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { ingredient, nature, pokemon, subskill, uuid } from 'sleepapi-common'
+import {
+  ingredient,
+  nature,
+  pokemon,
+  subskill,
+  uuid,
+  type PokemonInstanceExt
+} from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('PokemonInput', () => {
@@ -62,8 +68,6 @@ describe('PokemonInput', () => {
     )
     // TODO: this assert is lacking
     expect(wrapper.exists()).toBe(true)
-    expect(wrapper.find('h2').text()).toBe('0')
-    expect(wrapper.find('h5').text()).toBe('RP')
   })
 
   it('shall update data from cache on mount', () => {
@@ -76,7 +80,8 @@ describe('PokemonInput', () => {
         name: 'Mock team',
         camp: false,
         version: 0,
-        members: [preExistingMon.externalId]
+        members: [preExistingMon.externalId],
+        production: undefined
       }
     ]
     wrapper = mount(PokemonInput, {

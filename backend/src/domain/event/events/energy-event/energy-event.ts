@@ -1,7 +1,7 @@
 import { Time } from '@src/domain/time/time';
 import { energyFactorFromEnergy } from '@src/services/calculator/energy/energy-calculator';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { prettifyTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class EnergyEvent extends ScheduledEvent {
@@ -20,9 +20,9 @@ export class EnergyEvent extends ScheduledEvent {
     this.time = time;
     this.description = description;
 
-    this.delta = roundDown(delta, 2);
-    this.before = before !== undefined ? roundDown(before, 2) : undefined;
-    this.after = before !== undefined ? roundDown(before + delta, 2) : undefined;
+    this.delta = MathUtils.round(delta, 2);
+    this.before = before !== undefined ? MathUtils.round(before, 2) : undefined;
+    this.after = before !== undefined ? MathUtils.round(before + delta, 2) : undefined;
   }
 
   format(): string {
@@ -30,11 +30,11 @@ export class EnergyEvent extends ScheduledEvent {
 
     if (this.before !== undefined && this.after !== undefined) {
       return (
-        `[${prettifyTime(this.time)}][Energy] (${this.description}): Recovery: ${deltaSigned}, ` +
+        `[${TimeUtils.prettifyTime(this.time)}][Energy] (${this.description}): Recovery: ${deltaSigned}, ` +
         `Energy: ${this.before}% -> ${this.after}%, Energy coefficient: ${energyFactorFromEnergy(this.after)}`
       );
     } else {
-      return `[${prettifyTime(this.time)}][Energy] (${this.description}): ${deltaSigned}`;
+      return `[${TimeUtils.prettifyTime(this.time)}][Energy] (${this.description}): ${deltaSigned}`;
     }
   }
 }

@@ -311,7 +311,7 @@ describe('activateHelperBoost', () => {
     const result = activateHelperBoost(params);
 
     const expectedBerriesAmount =
-      pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 6);
+      pokemonWithAverageProduce.produce.berries!.amount * (mainskill.HELPER_BOOST.amount[5] + 6);
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
@@ -367,7 +367,7 @@ describe('activateHelperBoost', () => {
     const metronomeFactor = 15;
 
     const expectedBerriesAmount =
-      (pokemonWithAverageProduce.produce.berries.amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor;
+      (pokemonWithAverageProduce.produce.berries!.amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,

@@ -1,8 +1,8 @@
 import { Produce } from '@src/domain/combination/produce';
 import { Time } from '@src/domain/time/time';
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
 import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
-import { prettifyTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MathUtils } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class HelpEvent extends ScheduledEvent {
@@ -30,14 +30,14 @@ export class HelpEvent extends ScheduledEvent {
     const berries = this.produce.berries;
     const ings = this.produce.ingredients;
 
-    const prettifiedProduce = `${roundDown(berries.amount, 2)} ${berries.berry.name} ${
+    const prettifiedProduce = `${berries && MathUtils.round(berries.amount, 2) + ' ' + berries.berry.name} ${
       ings.length > 0 ? `+ ${prettifyIngredientDrop(ings)}` : ''
     }`;
     return (
-      `[${prettifyTime(this.time)}][${this.description}] ` +
+      `[${TimeUtils.prettifyTime(this.time)}][${this.description}] ` +
       `Frequency: ${Math.floor(this.frequency)}, ` +
       `produce: ${prettifiedProduce}, ` +
-      `next help: ${prettifyTime(this.nextHelp)}`
+      `next help: ${TimeUtils.prettifyTime(this.nextHelp)}`
     );
   }
 }

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { roundDown } from '@src/utils/calculator-utils/calculator-utils';
-import { nature, pokemon, subskill } from 'sleepapi-common';
+import { MathUtils, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
 import { energyFactorFromEnergy } from '../energy/energy-calculator';
-import { calculateHelpSpeedSubskills, invertNatureFrequecy } from '../stats/stats-calculator';
+import { calculateHelpSpeedSubskills } from '../stats/stats-calculator';
 
 export function calculateHelpSpeedBeforeEnergy(stats: {
   pokemon: pokemon.Pokemon;
@@ -31,10 +30,12 @@ export function calculateHelpSpeedBeforeEnergy(stats: {
 
   const helpSpeedSubskills = calculateHelpSpeedSubskills(subskills, helpingBonus);
   const levelFactor = 1 - 0.002 * (level - 1);
-  const natureFreq = invertNatureFrequecy(nature);
+  const natureFreq = invertNatureFrequency(nature);
   const campBonus = camp ? 1.2 : 1;
 
-  return Math.floor((roundDown(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency) / campBonus);
+  return Math.floor(
+    (MathUtils.round(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency) / campBonus
+  );
 }
 
 export function calculateFrequencyWithEnergy(helpSpeedInSeconds: number, energy: number) {

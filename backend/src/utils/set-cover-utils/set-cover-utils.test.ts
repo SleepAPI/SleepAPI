@@ -1,9 +1,9 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 import { prettifyIngredientDrop } from '../json/json-utils';
-import { getEmptyProduce } from '../production-utils/production-utils';
 import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import {
   calculateHelperBoostIngredientsIncrease,
@@ -50,7 +50,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           averageTotalSkillProcs: 0,
           skillActivations: [],
         },
-        averageProduce: getEmptyProduce(berry.YACHE),
+        averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
           level: 30,
           nature: nature.RASH,
@@ -88,7 +88,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           averageTotalSkillProcs: 0,
           skillActivations: [],
         },
-        averageProduce: getEmptyProduce(berry.LUM),
+        averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
           level: 30,
           nature: nature.RASH,
@@ -115,7 +115,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           averageTotalSkillProcs: 0,
           skillActivations: [],
         },
-        averageProduce: getEmptyProduce(berry.PAMTRE),
+        averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
           level: 30,
           nature: nature.RASH,
@@ -158,7 +158,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           averageTotalSkillProcs: 0,
           skillActivations: [],
         },
-        averageProduce: getEmptyProduce(berry.PAMTRE),
+        averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
           level: 30,
           nature: nature.RASH,
@@ -193,7 +193,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           averageTotalSkillProcs: 0,
           skillActivations: [],
         },
-        averageProduce: getEmptyProduce(berry.LUM),
+        averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
           level: 30,
           nature: nature.RASH,

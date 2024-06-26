@@ -1,12 +1,12 @@
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
-import { parseTime } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { pokemon } from 'sleepapi-common';
 import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from './input-event';
 
 describe('InputEvent', () => {
   it('pokemon input shall format correctly', () => {
     const event = new PokemonInputEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
       pokemon: pokemon.PINSIR,
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
@@ -18,7 +18,7 @@ describe('InputEvent', () => {
 
   it('team input shall format correctly', () => {
     const event = new TeamInputEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
     });
@@ -27,7 +27,7 @@ describe('InputEvent', () => {
 
   it('player input shall format correctly', () => {
     const event = new PlayerInputEvent({
-      time: parseTime('06:00'),
+      time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
     });
