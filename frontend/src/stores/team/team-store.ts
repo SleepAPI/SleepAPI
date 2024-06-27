@@ -3,7 +3,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstanceExt, TeamSettingsRequest } from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
@@ -42,21 +42,67 @@ export const useTeamStore = defineStore('team', {
   actions: {
     async populateTeams() {
       const userStore = useUserStore()
+      const pokemonStore = usePokemonStore()
+
       if (userStore.loggedIn) {
+        // TODO: very very messy
         try {
           this.loadingTeams = true
-          const teams = await TeamService.getTeams()
 
-          // TODO: should diff versions of this.teams and teams, all teams/members
-          // TODO: for teams/members that have diff in version we rerun team simulation
+          // grab previous teams so we may compare it to updated teams from server
+          const previousTeams = this.teams.map((team) => ({
+            ...team,
+            members: team.members.map((member) =>
+              member ? pokemonStore.getPokemon(member) : undefined
+            )
+          }))
+          // get updated teams from server
+          // this also already updates the pokemon in pokemonStore
+          const updatedTeams = await TeamService.getTeams()
 
           // overwrite cached teams with data from server
-          this.teams = teams
+          this.teams = updatedTeams
 
-          // TODO: loadingTeams can be used to skeleton load the results while simulations rerunning
+          // loop through each team from server and compare it to previously cached teams
+          for (const updatedTeam of updatedTeams) {
+            const previousTeam = previousTeams.find((team) => team.index === updatedTeam.index)
+            if (!previousTeam) {
+              console.error('Server returned more teams than expected, contact developer')
+              continue
+            }
+
+            let rerunCalculations = false
+            // if version of team mismatch, we re-sim
+            if (updatedTeam.version !== previousTeam.version) {
+              rerunCalculations = true
+            }
+
+            for (let i = 0; i < updatedTeam.members.length; i++) {
+              const updatedMember = updatedTeam.members[i]
+              const populatedUpdateMember = updatedMember
+                ? pokemonStore.getPokemon(updatedMember)
+                : undefined
+              // if the member of this member index is not the same pokemon, we re-sim
+              const previousMember = previousTeam.members.find(
+                (member, previousIndex) =>
+                  previousIndex === i && member?.externalId === populatedUpdateMember?.externalId
+              )
+              // the member is the same, but version mismatches we also re-sim
+              if (populatedUpdateMember?.version !== previousMember?.version) {
+                rerunCalculations = true
+              }
+            }
+
+            if (rerunCalculations) {
+              this.calculateProduction(updatedTeam.index)
+            } else {
+              this.teams[updatedTeam.index].production = previousTeam.production
+            }
+          }
+
           this.loadingTeams = false
         } catch (error) {
-          console.error('Error fetching teams: ')
+          console.error('Error fetching teams')
           const userStore = useUserStore()
           userStore.logout()
         }
@@ -88,8 +134,6 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
-      // TODO: probably should run team sim here first
-
       pokemonStore.upsertPokemon(updatedMember)
 
       if (userStore.loggedIn) {
@@ -105,6 +149,28 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
+      this.calculateProduction(this.currentIndex)
+    },
+    async calculateProduction(teamIndex: number) {
+      const pokemonStore = usePokemonStore()
+      this.loadingTeams = true
+
+      const members: PokemonInstanceExt[] = []
+      for (const member of this.teams[teamIndex].members) {
+        if (member) {
+          members.push(pokemonStore.getPokemon(member))
+        }
+      }
+      const settings: TeamSettingsRequest = {
+        camp: this.teams[teamIndex].camp,
+        // TODO: hard-coded sleep times for now
+        bedtime: '21:30',
+        wakeup: '06:00'
+      }
+      const production = await TeamService.calculateProduction({ members, settings })
+
+      this.teams[teamIndex].production = production
+      this.loadingTeams = false
     },
     async duplicateMember(memberIndex: number) {
       const existingMember = this.getPokemon(memberIndex)
@@ -144,6 +210,7 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = undefined
+      this.calculateProduction(this.currentIndex)
     },
     reset() {
       this.currentIndex = 0

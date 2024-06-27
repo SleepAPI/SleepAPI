@@ -183,6 +183,7 @@ describe('addHelps', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "0.8 BELUE",
+        "externalId": undefined,
         "ingredients": "0.2 Tail",
         "skillProcs": 0,
       }
@@ -197,6 +198,7 @@ describe('addHelps', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "0 BELUE",
+        "externalId": undefined,
         "ingredients": "0 Tail",
         "skillProcs": 0,
       }
@@ -237,6 +239,7 @@ describe('attemptDayHelp', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "0.8 BELUE",
+        "externalId": undefined,
         "ingredients": "0.2 Tail",
         "skillProcs": 0,
       }
@@ -257,6 +260,7 @@ describe('attemptDayHelp', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "no berries",
+        "externalId": undefined,
         "ingredients": "",
         "skillProcs": 0,
       }
@@ -347,12 +351,13 @@ describe('attemptNightHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
-          {
-            "berries": "no berries",
-            "ingredients": "",
-            "skillProcs": 0,
-          }
-      `);
+      {
+        "berries": "no berries",
+        "externalId": undefined,
+        "ingredients": "",
+        "skillProcs": 0,
+      }
+    `);
   });
 
   it('shall add 1 night help', () => {
@@ -363,6 +368,7 @@ describe('attemptNightHelp', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "0.8 BELUE",
+        "externalId": undefined,
         "ingredients": "0.2 Tail",
         "skillProcs": 0,
       }
@@ -378,6 +384,7 @@ describe('attemptNightHelp', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "81 BELUE",
+        "externalId": undefined,
         "ingredients": "20 Tail",
         "skillProcs": 0,
       }
@@ -400,6 +407,7 @@ describe('attemptNightHelp', () => {
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
         "berries": "0.8 BELUE",
+        "externalId": undefined,
         "ingredients": "0.2 Tail",
         "skillProcs": 1,
       }

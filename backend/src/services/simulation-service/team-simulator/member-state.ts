@@ -271,6 +271,7 @@ export class MemberState {
       berries,
       ingredients,
       skillProcs: this.skillProcs / iterations,
+      externalId: this.member.externalId,
     };
 
     return result;

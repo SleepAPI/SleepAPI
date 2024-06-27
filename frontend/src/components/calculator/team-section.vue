@@ -30,6 +30,33 @@
         </v-row>
       </v-window-item>
     </v-window>
+
+    <v-row class="pt-4">
+      <v-col cols="12">
+        <v-card height="400px" style="overflow: auto">
+          <v-tabs v-model="tab">
+            <v-tab value="team">Team</v-tab>
+            <v-tab value="members">Members</v-tab>
+          </v-tabs>
+
+          <v-card-text>
+            <v-tabs-window v-model="tab">
+              <v-tabs-window-item value="team">
+                <v-card-text style="white-space: pre-wrap">
+                  {{ teamProduction }}
+                </v-card-text>
+              </v-tabs-window-item>
+
+              <v-tabs-window-item value="members">
+                <v-card-text style="white-space: pre-wrap">
+                  {{ memberProduction }}
+                </v-card-text>
+              </v-tabs-window-item>
+            </v-tabs-window>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -39,6 +66,7 @@ import { defineComponent } from 'vue'
 import TeamName from '@/components/calculator/team-name.vue'
 import TeamSlot from '@/components/calculator/team-slot.vue'
 import { useNotificationStore } from '@/stores/notification-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 
@@ -50,12 +78,35 @@ export default defineComponent({
   setup() {
     const userStore = useUserStore()
     const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
     const notificationStore = useNotificationStore()
-    return { userStore, teamStore, notificationStore }
+    return { userStore, teamStore, pokemonStore, notificationStore }
   },
   data: () => ({
-    loadingTeams: true
+    loadingTeams: true,
+    tab: null
   }),
+  computed: {
+    teamProduction() {
+      const production = this.teamStore.getCurrentTeam.production
+      const berries = production?.team.berries
+      const ingredients = production?.team.ingredients
+      return berries && ingredients ? `${berries}\n${ingredients}` : 'No production'
+    },
+    memberProduction() {
+      const production = this.teamStore.getCurrentTeam.production
+
+      if (production?.members) {
+        let result = ''
+        for (const member of production.members) {
+          const pkmn = this.pokemonStore.getPokemon(member.externalId)
+          result += `${pkmn.pokemon.name} ${pkmn.name}\nBerries: ${member.berries}\nIngredients: ${member.ingredients}\nSkill procs: ${member.skillProcs}\n\n`
+        }
+        console.log(result)
+        return result
+      } else return 'No members'
+    }
+  },
   async mounted() {
     await this.teamStore.populateTeams()
   }

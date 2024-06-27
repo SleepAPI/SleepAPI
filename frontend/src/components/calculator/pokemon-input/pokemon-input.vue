@@ -320,7 +320,6 @@ export default defineComponent({
       this.$emit('cancel')
     },
     save() {
-      // TODO: need to start running simulations too asap, perhaps we can emit a promise so team section can show skeleton loader and await
       this.teamStore.updateTeamMember(this.pokemonInstance, this.memberIndex)
       this.$emit('cancel') // TODO: should probably be renamed to close
     }

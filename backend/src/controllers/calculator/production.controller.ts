@@ -2,12 +2,13 @@ import { TeamMember } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { CalculateTeamRequest, ProductionRequest } from '@src/routes/calculator-router/production-router';
+import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
+  CalculateTeamRequest,
   IngredientInstance,
   IngredientSet,
   getNature,
@@ -66,6 +67,7 @@ export default class ProductionController extends Controller {
         subskills: member.subskills
           .filter((subskill) => subskill.level <= member.level)
           .map((subskill) => getSubskill(subskill.subskill)),
+        externalId: member.externalId,
       });
     }
 

@@ -10,7 +10,8 @@ vi.mock('@/services/team/team-service', () => ({
   TeamService: {
     getTeams: vi.fn(),
     createOrUpdateTeam: vi.fn(),
-    createOrUpdateMember: vi.fn()
+    createOrUpdateMember: vi.fn(),
+    calculateProduction: vi.fn()
   }
 }))
 
@@ -54,25 +55,115 @@ describe('Team Store', () => {
       expiryDate: 10,
       refreshToken: 'token2'
     })
+
+    const updatedMemberId = 'Updated member 1'
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertPokemon({
+      name: 'Pokemon',
+      externalId: updatedMemberId
+    } as any)
+    teamStore.teams = [
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: true,
+        version: 0,
+        members: ['Old member 1', undefined, undefined, undefined, undefined],
+        production: undefined
+      },
+      {
+        index: 1,
+        name: 'Team 2',
+        camp: false,
+        version: 0,
+        members: [undefined, undefined, undefined, undefined, undefined],
+        production: undefined
+      }
+    ]
+
     TeamService.getTeams = vi.fn().mockResolvedValue([
-      { index: 0, name: 'Team 1', camp: true },
-      { index: 1, name: 'Team 2', camp: false }
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: true,
+        version: 1, // will cause re-sim to be called
+        members: [updatedMemberId, undefined, undefined, undefined, undefined],
+        production: undefined
+      },
+      {
+        index: 1,
+        name: 'Team 2',
+        camp: false,
+        version: 0,
+        members: [undefined, undefined, undefined, undefined, undefined],
+        production: undefined
+      }
     ])
+
+    TeamService.calculateProduction = vi.fn().mockResolvedValue({
+      team: {
+        berries: 'Some berries',
+        ingredients: 'Some ingredients'
+      },
+      members: [
+        {
+          berries: 'Member berry',
+          ingredients: 'Member ings',
+          skillProcs: 'Member procs',
+          externalId: 'Some id'
+        }
+      ]
+    })
 
     await teamStore.populateTeams()
 
     expect(TeamService.getTeams).toHaveBeenCalled()
+    expect(TeamService.calculateProduction).toHaveBeenCalledWith({
+      members: [{ externalId: updatedMemberId, name: 'Pokemon' }],
+      settings: { bedtime: '21:30', wakeup: '06:00', camp: true }
+    })
     expect(teamStore.$state.teams).toMatchInlineSnapshot(`
       [
         {
           "camp": true,
           "index": 0,
+          "members": [
+            "Updated member 1",
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+          ],
           "name": "Team 1",
+          "production": {
+            "members": [
+              {
+                "berries": "Member berry",
+                "externalId": "Some id",
+                "ingredients": "Member ings",
+                "skillProcs": "Member procs",
+              },
+            ],
+            "team": {
+              "berries": "Some berries",
+              "ingredients": "Some ingredients",
+            },
+          },
+          "version": 1,
         },
         {
           "camp": false,
           "index": 1,
+          "members": [
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+          ],
           "name": "Team 2",
+          "production": undefined,
+          "version": 0,
         },
       ]
     `)
