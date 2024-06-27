@@ -1,15 +1,24 @@
 import serverAxios from '@/router/server-axios'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
+import {
+  MAX_TEAM_MEMBERS,
+  type TeamCombinedProduction,
+  type TeamInstance,
+  type TeamProduction
+} from '@/types/member/instanced'
+import axios from 'axios'
 import {
   getIngredient,
   getNature,
   getPokemon,
   getSubskill,
+  type CalculateTeamResponse,
   type GetTeamsResponse,
   type PokemonInstanceExt,
+  type PokemonInstanceIdentity,
   type PokemonInstanceWithMeta,
+  type TeamSettingsRequest,
   type UpsertTeamMemberRequest,
   type UpsertTeamMemberResponse,
   type UpsertTeamMetaRequest,
@@ -93,6 +102,66 @@ class TeamServiceImpl {
   public async removeMember(params: { teamIndex: number; memberIndex: number }) {
     const { teamIndex, memberIndex } = params
     await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
+  }
+
+  public async calculateProduction(params: {
+    members: PokemonInstanceExt[]
+    settings: TeamSettingsRequest
+  }) {
+    const { members, settings } = params
+    if (members.length === 0) {
+      return undefined
+    }
+
+    const parsedMembers: PokemonInstanceIdentity[] = members.map((member) => ({
+      pokemon: member.pokemon.name,
+      nature: member.nature.name,
+      subskills: member.subskills.map((subskill) => ({
+        level: subskill.level,
+        subskill: subskill.subskill.name
+      })),
+      ingredients: member.ingredients.map((ingredient) => ({
+        level: ingredient.level,
+        ingredient: ingredient.ingredient.name
+      })),
+      carrySize: member.carrySize,
+      level: member.level,
+      skillLevel: member.skillLevel,
+      externalId: member.externalId
+    }))
+
+    const response = await axios.post<CalculateTeamResponse>('/api/calculator/team', {
+      members: parsedMembers,
+      settings
+    })
+
+    // TODO: fix result parsing, also move out to function
+    const teamProduction: TeamCombinedProduction = response.data.members.reduce(
+      (sum, cur) =>
+        (sum = {
+          berries: (sum.berries += `\n${cur.berries}`),
+          ingredients: (sum.ingredients += `\n${cur.ingredients}`)
+        }),
+      { berries: '', ingredients: '' }
+    )
+
+    const result: TeamProduction = {
+      members: response.data.members.map((member) => {
+        if (!member.externalId) {
+          console.error('Unidentified member in team calculation, contact developer')
+          throw new Error('Unidentified member in team calculation')
+        }
+        return {
+          berries: member.berries,
+          ingredients: member.ingredients,
+          skillProcs: member.skillProcs,
+          externalId: member.externalId
+        }
+      }),
+      team: teamProduction
+    }
+
+    return result
   }
 
   #toUpsertTeamMemberRequest(instancedPokemon: PokemonInstanceExt): UpsertTeamMemberRequest {

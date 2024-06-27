@@ -19,6 +19,7 @@ import { Time, TimePeriod } from '@src/domain/time/time';
 import { MemberState, TeamSkill } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { CalculateTeamResponse } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;
@@ -99,7 +100,7 @@ export class TeamSimulator {
     this.collectInventory();
   }
 
-  public results() {
+  public results(): CalculateTeamResponse {
     // TODO: return more info, total team's ingredients, each member's stats etc
 
     return { members: this.memberStates.map((m) => m.averageResults(this.run)) };

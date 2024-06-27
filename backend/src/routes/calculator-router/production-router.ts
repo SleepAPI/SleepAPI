@@ -3,7 +3,7 @@ import { Logger } from '@src/services/logger/logger';
 import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
-import { PokemonInstance } from 'sleepapi-common';
+import { CalculateTeamRequest, CalculateTeamResponse } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
@@ -26,15 +26,6 @@ export interface ProductionRequest {
   mainWakeup: string;
   ingredientSet: string[];
   nrOfEvolutions?: number;
-}
-export interface TeamSettingsRequest {
-  camp: boolean;
-  bedtime: string;
-  wakeup: string;
-}
-export interface CalculateTeamRequest {
-  settings: TeamSettingsRequest;
-  members: PokemonInstance[];
 }
 
 class ProductionRouterImpl {
@@ -62,7 +53,7 @@ class ProductionRouterImpl {
 
     BaseRouter.router.post(
       '/calculator/team',
-      async (req: Request<unknown, unknown, CalculateTeamRequest, unknown>, res: Response) => {
+      async (req: Request<unknown, unknown, CalculateTeamRequest, unknown>, res: Response<CalculateTeamResponse>) => {
         try {
           Logger.log('Entered /calculator/team');
 
