@@ -2,10 +2,10 @@ import OptimalController from '@src/controllers/optimal/optimal.controller';
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { ProductionStats } from '@src/domain/computed/production';
 import { Logger } from '@src/services/logger/logger';
-import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
+import { runWorkerFile } from '@src/services/worker/worker';
 import { ScoreResult } from '@src/utils/optimal-utils/optimal-utils';
-import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
+import path from 'path';
 import { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
@@ -65,17 +65,13 @@ class OptimalCombinationRouterImpl {
       ) => {
         try {
           Logger.log('Entered /optimal/ingredient/:name');
-          const { pretty } = req.query;
-          const mealName = req.params.name;
 
-          const data: IngredientRankerResult = controller.getOptimalPokemonForIngredientRaw(mealName, req.body);
-
-          if (queryAsBoolean(pretty)) {
-            const optimalData = WebsiteConverterService.toIngredientRanker(data);
-            res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
-          } else {
-            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
-          }
+          const data = await runWorkerFile(path.resolve(__dirname, './optimal-ingredient-worker.js'), {
+            name: req.params.name,
+            body: req.body,
+            pretty: req.query.pretty,
+          });
+          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
@@ -89,14 +85,11 @@ class OptimalCombinationRouterImpl {
         try {
           Logger.log('Entered /optimal/meal/flexible');
 
-          const data: OptimalFlexibleResult[] = controller.getFlexiblePokemon(req.body);
-
-          if (queryAsBoolean(req.query.pretty)) {
-            const optimalData = WebsiteConverterService.toOptimalFlexible(data);
-            res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
-          } else {
-            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
-          }
+          const data = await runWorkerFile(path.resolve(__dirname, './optimal-flexible-worker.js'), {
+            body: req.body,
+            pretty: req.query.pretty,
+          });
+          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
@@ -112,17 +105,13 @@ class OptimalCombinationRouterImpl {
       ) => {
         try {
           Logger.log('Entered /optimal/meal/:name');
-          const { pretty } = req.query;
-          const mealName = req.params.name;
 
-          const data: OptimalSetResult = controller.getOptimalPokemonForMealRaw(mealName, req.body);
-
-          if (queryAsBoolean(pretty)) {
-            const optimalData = WebsiteConverterService.toOptimalSet(data);
-            res.header('Content-Type', 'application/json').send(JSON.stringify(optimalData, null, 4));
-          } else {
-            res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
-          }
+          const data = await runWorkerFile(path.resolve(__dirname, './optimal-meal-worker.js'), {
+            name: req.params.name,
+            body: req.body,
+            pretty: req.query.pretty,
+          });
+          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
