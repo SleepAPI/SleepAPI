@@ -7,6 +7,191 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Nature": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"prettyName": {
+						"type": "string"
+					},
+					"frequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"type": "number",
+						"format": "double"
+					},
+					"skill": {
+						"type": "number",
+						"format": "double"
+					},
+					"energy": {
+						"type": "number",
+						"format": "double"
+					},
+					"exp": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"prettyName",
+					"frequency",
+					"ingredient",
+					"skill",
+					"energy",
+					"exp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubSkill": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"rarity": {
+						"type": "string",
+						"enum": [
+							"gold",
+							"silver",
+							"white"
+						]
+					}
+				},
+				"required": [
+					"name",
+					"amount",
+					"rarity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Time": {
+				"properties": {
+					"hour": {
+						"type": "number",
+						"format": "double"
+					},
+					"minute": {
+						"type": "number",
+						"format": "double"
+					},
+					"second": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"hour",
+					"minute",
+					"second"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductionStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"incense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"mainWakeup": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"level",
+					"e4eProcs",
+					"e4eLevel",
+					"cheer",
+					"extraHelpful",
+					"helperBoostProcs",
+					"helperBoostUnique",
+					"helperBoostLevel",
+					"helpingBonus",
+					"camp",
+					"erb",
+					"incense",
+					"mainBedtime",
+					"mainWakeup"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Berry": {
 				"properties": {
 					"name": {
@@ -197,516 +382,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PokemonIngredientSet": {
-				"properties": {
-					"ingredientList": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"pokemon": {
-						"$ref": "#/components/schemas/Pokemon"
-					}
-				},
-				"required": [
-					"ingredientList",
-					"pokemon"
-				],
-				"type": "object"
-			},
-			"RecipeType": {
-				"type": "string",
-				"enum": [
-					"curry",
-					"salad",
-					"dessert"
-				]
-			},
-			"Recipe": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"valueMax": {
-						"type": "number",
-						"format": "double"
-					},
-					"type": {
-						"$ref": "#/components/schemas/RecipeType"
-					},
-					"ingredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"bonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"nrOfIngredients": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"name",
-					"value",
-					"valueMax",
-					"type",
-					"ingredients",
-					"bonus",
-					"nrOfIngredients"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Contribution": {
-				"properties": {
-					"meal": {
-						"$ref": "#/components/schemas/Recipe"
-					},
-					"percentage": {
-						"type": "number",
-						"format": "double"
-					},
-					"contributedPower": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillValue": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"meal",
-					"percentage",
-					"contributedPower"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ScoreResult": {
-				"properties": {
-					"score": {
-						"type": "number",
-						"format": "double"
-					},
-					"contributions": {
-						"items": {
-							"$ref": "#/components/schemas/Contribution"
-						},
-						"type": "array"
-					},
-					"countedMeals": {
-						"items": {
-							"$ref": "#/components/schemas/Contribution"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"score",
-					"contributions",
-					"countedMeals"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Nature": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"prettyName": {
-						"type": "string"
-					},
-					"frequency": {
-						"type": "number",
-						"format": "double"
-					},
-					"ingredient": {
-						"type": "number",
-						"format": "double"
-					},
-					"skill": {
-						"type": "number",
-						"format": "double"
-					},
-					"energy": {
-						"type": "number",
-						"format": "double"
-					},
-					"exp": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"name",
-					"prettyName",
-					"frequency",
-					"ingredient",
-					"skill",
-					"energy",
-					"exp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SubSkill": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"amount": {
-						"type": "number",
-						"format": "double"
-					},
-					"rarity": {
-						"type": "string",
-						"enum": [
-							"gold",
-							"silver",
-							"white"
-						]
-					}
-				},
-				"required": [
-					"name",
-					"amount",
-					"rarity"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Time": {
-				"properties": {
-					"hour": {
-						"type": "number",
-						"format": "double"
-					},
-					"minute": {
-						"type": "number",
-						"format": "double"
-					},
-					"second": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"hour",
-					"minute",
-					"second"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductionStats": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"$ref": "#/components/schemas/Nature"
-					},
-					"subskills": {
-						"items": {
-							"$ref": "#/components/schemas/SubSkill"
-						},
-						"type": "array"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxCarrySize": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"incense": {
-						"type": "boolean"
-					},
-					"mainBedtime": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"mainWakeup": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"level",
-					"e4eProcs",
-					"e4eLevel",
-					"cheer",
-					"extraHelpful",
-					"helperBoostProcs",
-					"helperBoostUnique",
-					"helperBoostLevel",
-					"helpingBonus",
-					"camp",
-					"erb",
-					"incense",
-					"mainBedtime",
-					"mainWakeup"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OptimalFlexibleResult": {
-				"properties": {
-					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonIngredientSet"
-					},
-					"scoreResult": {
-						"$ref": "#/components/schemas/ScoreResult"
-					},
-					"input": {
-						"$ref": "#/components/schemas/ProductionStats"
-					}
-				},
-				"required": [
-					"pokemonCombination",
-					"scoreResult",
-					"input"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InputProductionStatsRequest": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"type": "string"
-					},
-					"subskills": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"island": {
-						"type": "string"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingbonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"recoveryIncense": {
-						"type": "boolean"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"mainBedtime": {
-						"type": "string"
-					},
-					"mainWakeup": {
-						"type": "string"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"legendary": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SetCoverProductionStats": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"$ref": "#/components/schemas/Nature"
-					},
-					"subskills": {
-						"items": {
-							"$ref": "#/components/schemas/SubSkill"
-						},
-						"type": "array"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxCarrySize": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"incense": {
-						"type": "boolean"
-					},
-					"mainBedtime": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"mainWakeup": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"berries": {
-						"items": {
-							"$ref": "#/components/schemas/Berry"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"level",
-					"e4eProcs",
-					"e4eLevel",
-					"cheer",
-					"extraHelpful",
-					"helperBoostProcs",
-					"helperBoostUnique",
-					"helperBoostLevel",
-					"helpingBonus",
-					"camp",
-					"erb",
-					"incense",
-					"mainBedtime",
-					"mainWakeup",
-					"berries"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"BerrySet": {
 				"properties": {
 					"amount": {
@@ -817,218 +492,6 @@
 					"nightHelpsBeforeSS",
 					"averageTotalSkillProcs",
 					"skillActivations"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CustomStats": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"$ref": "#/components/schemas/Nature"
-					},
-					"subskills": {
-						"items": {
-							"$ref": "#/components/schemas/SubSkill"
-						},
-						"type": "array"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxCarrySize": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"level",
-					"nature",
-					"subskills",
-					"skillLevel",
-					"maxCarrySize"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CustomPokemonCombinationWithProduce": {
-				"properties": {
-					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonIngredientSet"
-					},
-					"detailedProduce": {
-						"$ref": "#/components/schemas/DetailedProduce"
-					},
-					"averageProduce": {
-						"$ref": "#/components/schemas/Produce"
-					},
-					"customStats": {
-						"$ref": "#/components/schemas/CustomStats"
-					}
-				},
-				"required": [
-					"pokemonCombination",
-					"detailedProduce",
-					"averageProduce",
-					"customStats"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SurplusIngredients": {
-				"properties": {
-					"total": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"relevant": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"extra": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"total",
-					"relevant",
-					"extra"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OptimalTeamSolution": {
-				"properties": {
-					"team": {
-						"items": {
-							"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
-						},
-						"type": "array"
-					},
-					"surplus": {
-						"$ref": "#/components/schemas/SurplusIngredients"
-					},
-					"exhaustive": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"team",
-					"surplus",
-					"exhaustive"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CombinedContribution": {
-				"properties": {
-					"contributions": {
-						"items": {
-							"$ref": "#/components/schemas/Contribution"
-						},
-						"type": "array"
-					},
-					"averagePercentage": {
-						"type": "number",
-						"format": "double"
-					},
-					"score": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"contributions",
-					"averagePercentage",
-					"score"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PokemonCombinationCombinedContribution": {
-				"properties": {
-					"pokemonCombination": {
-						"$ref": "#/components/schemas/PokemonIngredientSet"
-					},
-					"combinedContribution": {
-						"$ref": "#/components/schemas/CombinedContribution"
-					}
-				},
-				"required": [
-					"pokemonCombination",
-					"combinedContribution"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TieredPokemonCombinationContribution": {
-				"properties": {
-					"tier": {
-						"type": "string"
-					},
-					"diff": {
-						"type": "number",
-						"format": "double"
-					},
-					"pokemonCombinationContribution": {
-						"$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
-					}
-				},
-				"required": [
-					"tier",
-					"pokemonCombinationContribution"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TierlistType": {
-				"type": "string",
-				"enum": [
-					"overall",
-					"curry",
-					"salad",
-					"dessert"
-				]
-			},
-			"GetTierListQueryParams": {
-				"properties": {
-					"tierlistType": {
-						"$ref": "#/components/schemas/TierlistType"
-					},
-					"limit50": {
-						"type": "boolean"
-					},
-					"potLimit": {
-						"type": "boolean"
-					},
-					"pretty": {
-						"type": "boolean"
-					},
-					"onlyBest": {
-						"type": "boolean"
-					},
-					"previous": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"tierlistType",
-					"limit50",
-					"potLimit",
-					"pretty",
-					"onlyBest",
-					"previous"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1265,6 +728,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"RecipeType": {
+				"type": "string",
+				"enum": [
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"Recipe": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"valueMax": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"$ref": "#/components/schemas/RecipeType"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"nrOfIngredients": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"valueMax",
+					"type",
+					"ingredients",
+					"bonus",
+					"nrOfIngredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MealNamesQueryParams": {
 				"properties": {
 					"curry": {
@@ -1288,6 +802,390 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PokemonIngredientSet": {
+				"properties": {
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"pokemon": {
+						"$ref": "#/components/schemas/Pokemon"
+					}
+				},
+				"required": [
+					"ingredientList",
+					"pokemon"
+				],
+				"type": "object"
+			},
+			"Contribution": {
+				"properties": {
+					"meal": {
+						"$ref": "#/components/schemas/Recipe"
+					},
+					"percentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"contributedPower": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillValue": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"meal",
+					"percentage",
+					"contributedPower"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ScoreResult": {
+				"properties": {
+					"score": {
+						"type": "number",
+						"format": "double"
+					},
+					"contributions": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
+					},
+					"countedMeals": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"score",
+					"contributions",
+					"countedMeals"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OptimalFlexibleResult": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonIngredientSet"
+					},
+					"scoreResult": {
+						"$ref": "#/components/schemas/ScoreResult"
+					},
+					"input": {
+						"$ref": "#/components/schemas/ProductionStats"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"scoreResult",
+					"input"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputProductionStatsRequest": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"type": "string"
+					},
+					"subskills": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"island": {
+						"type": "string"
+					},
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingbonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"recoveryIncense": {
+						"type": "boolean"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"mainBedtime": {
+						"type": "string"
+					},
+					"mainWakeup": {
+						"type": "string"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"legendary": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetCoverProductionStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"e4eLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"cheer": {
+						"type": "number",
+						"format": "double"
+					},
+					"extraHelpful": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostProcs": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostUnique": {
+						"type": "number",
+						"format": "double"
+					},
+					"helperBoostLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"helpingBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"camp": {
+						"type": "boolean"
+					},
+					"erb": {
+						"type": "number",
+						"format": "double"
+					},
+					"incense": {
+						"type": "boolean"
+					},
+					"mainBedtime": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"mainWakeup": {
+						"$ref": "#/components/schemas/Time"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"berries": {
+						"items": {
+							"$ref": "#/components/schemas/Berry"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"level",
+					"e4eProcs",
+					"e4eLevel",
+					"cheer",
+					"extraHelpful",
+					"helperBoostProcs",
+					"helperBoostUnique",
+					"helperBoostLevel",
+					"helpingBonus",
+					"camp",
+					"erb",
+					"incense",
+					"mainBedtime",
+					"mainWakeup",
+					"berries"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CustomStats": {
+				"properties": {
+					"level": {
+						"type": "number",
+						"format": "double"
+					},
+					"nature": {
+						"$ref": "#/components/schemas/Nature"
+					},
+					"subskills": {
+						"items": {
+							"$ref": "#/components/schemas/SubSkill"
+						},
+						"type": "array"
+					},
+					"skillLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxCarrySize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"level",
+					"nature",
+					"subskills",
+					"skillLevel",
+					"maxCarrySize"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CustomPokemonCombinationWithProduce": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonIngredientSet"
+					},
+					"detailedProduce": {
+						"$ref": "#/components/schemas/DetailedProduce"
+					},
+					"averageProduce": {
+						"$ref": "#/components/schemas/Produce"
+					},
+					"customStats": {
+						"$ref": "#/components/schemas/CustomStats"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"detailedProduce",
+					"averageProduce",
+					"customStats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SurplusIngredients": {
+				"properties": {
+					"total": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"relevant": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"extra": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"total",
+					"relevant",
+					"extra"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OptimalTeamSolution": {
+				"properties": {
+					"team": {
+						"items": {
+							"$ref": "#/components/schemas/CustomPokemonCombinationWithProduce"
+						},
+						"type": "array"
+					},
+					"surplus": {
+						"$ref": "#/components/schemas/SurplusIngredients"
+					},
+					"exhaustive": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"team",
+					"surplus",
+					"exhaustive"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetPokemonQueryParams": {
 				"properties": {
 					"cyan": {
@@ -1305,6 +1203,108 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CombinedContribution": {
+				"properties": {
+					"contributions": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
+					},
+					"averagePercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"score": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"contributions",
+					"averagePercentage",
+					"score"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonCombinationCombinedContribution": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonIngredientSet"
+					},
+					"combinedContribution": {
+						"$ref": "#/components/schemas/CombinedContribution"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"combinedContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TieredPokemonCombinationContribution": {
+				"properties": {
+					"tier": {
+						"type": "string"
+					},
+					"diff": {
+						"type": "number",
+						"format": "double"
+					},
+					"pokemonCombinationContribution": {
+						"$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
+					}
+				},
+				"required": [
+					"tier",
+					"pokemonCombinationContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TierlistType": {
+				"type": "string",
+				"enum": [
+					"overall",
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"GetTierListQueryParams": {
+				"properties": {
+					"tierlistType": {
+						"$ref": "#/components/schemas/TierlistType"
+					},
+					"limit50": {
+						"type": "boolean"
+					},
+					"potLimit": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"onlyBest": {
+						"type": "boolean"
+					},
+					"previous": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"tierlistType",
+					"limit50",
+					"potLimit",
+					"pretty",
+					"onlyBest",
+					"previous"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -1315,252 +1315,6 @@
 		"contact": {}
 	},
 	"paths": {
-		"/api/optimal/meal/flexible": {
-			"post": {
-				"operationId": "GetFlexiblePokemon",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/OptimalFlexibleResult"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"optimal"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/InputProductionStatsRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/optimal/meal/{name}": {
-			"post": {
-				"operationId": "GetOptimalPokemonForMealRaw",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"teams": {
-											"items": {
-												"$ref": "#/components/schemas/OptimalTeamSolution"
-											},
-											"type": "array"
-										},
-										"filter": {
-											"$ref": "#/components/schemas/SetCoverProductionStats"
-										},
-										"value": {
-											"type": "number",
-											"format": "double"
-										},
-										"recipe": {
-											"items": {
-												"$ref": "#/components/schemas/IngredientSet"
-											},
-											"type": "array"
-										},
-										"meal": {
-											"type": "string"
-										},
-										"bonus": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"teams",
-										"filter",
-										"value",
-										"recipe",
-										"meal",
-										"bonus"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"optimal"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/InputProductionStatsRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/optimal/ingredient/{name}": {
-			"post": {
-				"operationId": "GetOptimalPokemonForIngredientRaw",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"teams": {
-											"items": {
-												"$ref": "#/components/schemas/OptimalTeamSolution"
-											},
-											"type": "array"
-										},
-										"filter": {
-											"$ref": "#/components/schemas/SetCoverProductionStats"
-										},
-										"ingredient": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"teams",
-										"filter",
-										"ingredient"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"optimal"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/InputProductionStatsRequest"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/api/tierlist/cooking": {
-			"get": {
-				"operationId": "GetCookingTierlist",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/TieredPokemonCombinationContribution"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"tierlist"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "tierlistType",
-						"required": true,
-						"schema": {
-							"$ref": "#/components/schemas/TierlistType"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit50",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "potLimit",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "onlyBest",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"in": "query",
-						"name": "previous",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					}
-				]
-			}
-		},
 		"/api/calculator/production/{name}": {
 			"post": {
 				"operationId": "CalculatePokemonProduction",
@@ -1882,6 +1636,178 @@
 				"parameters": []
 			}
 		},
+		"/api/optimal/meal/flexible": {
+			"post": {
+				"operationId": "GetFlexiblePokemon",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OptimalFlexibleResult"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"optimal"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InputProductionStatsRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/optimal/meal/{name}": {
+			"post": {
+				"operationId": "GetOptimalPokemonForMealRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"teams": {
+											"items": {
+												"$ref": "#/components/schemas/OptimalTeamSolution"
+											},
+											"type": "array"
+										},
+										"filter": {
+											"$ref": "#/components/schemas/SetCoverProductionStats"
+										},
+										"value": {
+											"type": "number",
+											"format": "double"
+										},
+										"recipe": {
+											"items": {
+												"$ref": "#/components/schemas/IngredientSet"
+											},
+											"type": "array"
+										},
+										"meal": {
+											"type": "string"
+										},
+										"bonus": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"teams",
+										"filter",
+										"value",
+										"recipe",
+										"meal",
+										"bonus"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"optimal"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InputProductionStatsRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/optimal/ingredient/{name}": {
+			"post": {
+				"operationId": "GetOptimalPokemonForIngredientRaw",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"teams": {
+											"items": {
+												"$ref": "#/components/schemas/OptimalTeamSolution"
+											},
+											"type": "array"
+										},
+										"filter": {
+											"$ref": "#/components/schemas/SetCoverProductionStats"
+										},
+										"ingredient": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"teams",
+										"filter",
+										"ingredient"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"optimal"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InputProductionStatsRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/pokemon/{name}": {
 			"get": {
 				"operationId": "GetPokemonWithName",
@@ -2025,6 +1951,80 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/tierlist/cooking": {
+			"get": {
+				"operationId": "GetCookingTierlist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/TieredPokemonCombinationContribution"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"tierlist"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "tierlistType",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TierlistType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit50",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "potLimit",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "onlyBest",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "previous",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
 			}
 		}
 	},
