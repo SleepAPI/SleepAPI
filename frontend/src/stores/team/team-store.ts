@@ -67,7 +67,8 @@ export const useTeamStore = defineStore('team', {
           for (const updatedTeam of updatedTeams) {
             const previousTeam = previousTeams.find((team) => team.index === updatedTeam.index)
             if (!previousTeam) {
-              console.error('Server returned more teams than expected, contact developer')
+              // first time user refreshes page since logging in
+              this.calculateProduction(updatedTeam.index)
               continue
             }
 

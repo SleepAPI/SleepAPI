@@ -94,6 +94,7 @@ export default {
           const nrOfEvolutions = (newPokemon.maxCarrySize - newPokemon.carrySize) / 5
           this.mainskillLevel = 1 + nrOfEvolutions
         }
+        this.$emit('update-skill-level', this.mainskillLevel)
 
         this.defaultValues = Array.from(
           { length: newPokemon.skill.maxLevel },
