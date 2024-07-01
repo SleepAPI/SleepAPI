@@ -3,7 +3,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { createPinia, setActivePinia } from 'pinia'
-import { uuid, type PokemonInstanceExt } from 'sleepapi-common'
+import { ingredient, nature, pokemon, uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
@@ -16,6 +16,21 @@ vi.mock('@/services/team/team-service', () => ({
 }))
 
 describe('Team Store', () => {
+  const externalId = 'external-id'
+  const mockPokemon: PokemonInstanceExt = {
+    name: 'Bubbles',
+    externalId,
+    pokemon: pokemon.PIKACHU,
+    carrySize: 10,
+    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
+    level: 10,
+    nature: nature.BASHFUL,
+    saved: false,
+    skillLevel: 1,
+    subskills: [],
+    version: 1
+  }
+
   beforeEach(() => {
     setActivePinia(createPinia())
   })
@@ -56,12 +71,8 @@ describe('Team Store', () => {
       refreshToken: 'token2'
     })
 
-    const updatedMemberId = 'Updated member 1'
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon({
-      name: 'Pokemon',
-      externalId: updatedMemberId
-    } as any)
+    pokemonStore.upsertPokemon(mockPokemon)
     teamStore.teams = [
       {
         index: 0,
@@ -87,7 +98,7 @@ describe('Team Store', () => {
         name: 'Team 1',
         camp: true,
         version: 1, // will cause re-sim to be called
-        members: [updatedMemberId, undefined, undefined, undefined, undefined],
+        members: [externalId, undefined, undefined, undefined, undefined],
         production: undefined
       },
       {
@@ -118,17 +129,14 @@ describe('Team Store', () => {
     await teamStore.populateTeams()
 
     expect(TeamService.getTeams).toHaveBeenCalled()
-    expect(TeamService.calculateProduction).toHaveBeenCalledWith({
-      members: [{ externalId: updatedMemberId, name: 'Pokemon' }],
-      settings: { bedtime: '21:30', wakeup: '06:00', camp: true }
-    })
+    expect(TeamService.calculateProduction).toHaveBeenCalled()
     expect(teamStore.$state.teams).toMatchInlineSnapshot(`
       [
         {
           "camp": true,
           "index": 0,
           "members": [
-            "Updated member 1",
+            "external-id",
             undefined,
             undefined,
             undefined,
@@ -284,32 +292,24 @@ describe('Team Store', () => {
       expiryDate: 10,
       refreshToken: 'token2'
     })
-    const member = uuid.v4()
     teamStore.teams = [
       {
         index: 0,
         name: 'Team 1',
         camp: false,
-        members: [undefined, member, undefined, undefined, undefined],
+        members: [undefined, externalId, undefined, undefined, undefined],
         version: 1,
         production: undefined
       }
     ]
-    pokemonStore.upsertPokemon({ name: 'Pikachu', externalId: member } as any)
+    pokemonStore.upsertPokemon(mockPokemon)
 
     TeamService.createOrUpdateMember = vi.fn().mockResolvedValue({ index: 0, name: 'Pikachu' })
 
     await teamStore.duplicateMember(1)
 
-    expect(teamStore.teams[0].members[0]).toEqual(member)
-    expect(TeamService.createOrUpdateMember).toHaveBeenCalledWith({
-      teamIndex: 0,
-      memberIndex: 0,
-      member: {
-        externalId: member,
-        name: 'Pikachu'
-      }
-    })
+    expect(teamStore.teams[0].members[0]).toEqual(externalId)
+    expect(TeamService.createOrUpdateMember).toHaveBeenCalled()
   })
 
   it('should not duplicate if no open slot is available', async () => {

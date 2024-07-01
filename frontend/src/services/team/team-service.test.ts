@@ -163,6 +163,7 @@ describe('getTeams', () => {
     expect(pokemonStore.getPokemon('000000000000000000000000000000000000')).toEqual({
       version: 1,
       externalId: '000000000000000000000000000000000000',
+      rp: 463,
       saved: false,
       pokemon: pokemon.BULBASAUR,
       name: `Bubble`,

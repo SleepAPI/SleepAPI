@@ -4,7 +4,7 @@
       <v-row style="position: absolute; top: 0; width: 100%">
         <v-col class="flex-left">
           <h5 class="mr-1 text-primary">RP</h5>
-          <h2>{{ rp }}</h2>
+          <h2>{{ pokemonInstance.rp }}</h2>
         </v-col>
         <v-col class="flex-right pr-1">
           <v-btn
@@ -239,16 +239,16 @@ export default defineComponent({
       skillLevel: 0,
       nature: nature.BASHFUL,
       subskills: [],
-      ingredients: []
-    } as PokemonInstanceExt,
-    rp: 0
+      ingredients: [],
+      rp: 0
+    } as PokemonInstanceExt
   }),
   watch: {
     pokemonInstance: {
       deep: true,
       handler(newPokemon: PokemonInstanceExt) {
         const rp = new RP(newPokemon)
-        this.rp = rp.calc()
+        this.pokemonInstance.rp = rp.calc()
       }
     }
   },

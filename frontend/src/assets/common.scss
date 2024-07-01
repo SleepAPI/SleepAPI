@@ -33,3 +33,21 @@
 .debug-border {
   border: 1px solid red;
 }
+
+.responsive-text {
+  font-size: 0.875rem !important;
+}
+
+.responsive-text-small {
+  font-size: 0.8rem !important;
+}
+
+@media (max-width: 360px) {
+  .responsive-text {
+    font-size: 0.7rem !important;
+  }
+
+  .responsive-text-small {
+    font-size: 0.6rem !important;
+  }
+}

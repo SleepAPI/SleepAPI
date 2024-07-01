@@ -1,9 +1,24 @@
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createPinia, setActivePinia } from 'pinia'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import { ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('Pokemon Store', () => {
+  const externalId = 'external-id'
+  const mockPokemon: PokemonInstanceExt = {
+    name: 'Bubbles',
+    externalId,
+    pokemon: pokemon.PIKACHU,
+    carrySize: 10,
+    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
+    level: 10,
+    nature: nature.BASHFUL,
+    saved: false,
+    skillLevel: 1,
+    subskills: [],
+    version: 1
+  }
+
   beforeEach(() => {
     setActivePinia(createPinia())
   })
@@ -19,50 +34,43 @@ describe('Pokemon Store', () => {
 
   it('should upsert a pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    const pokemon = { externalId: '1', name: 'Pikachu' } as PokemonInstanceExt
-
-    pokemonStore.upsertPokemon(pokemon)
+    pokemonStore.upsertPokemon(mockPokemon)
 
     expect(pokemonStore.pokemon).toEqual({
-      '1': pokemon
+      'external-id': mockPokemon
     })
   })
 
   it('should update an existing pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    const pokemon = { externalId: '1', name: 'Pikachu' } as PokemonInstanceExt
+    pokemonStore.upsertPokemon(mockPokemon)
 
-    pokemonStore.upsertPokemon(pokemon)
-
-    const updatedPokemon = { externalId: '1', name: 'Raichu' } as PokemonInstanceExt
+    const updatedPokemon = { ...mockPokemon, name: 'Raichu' }
     pokemonStore.upsertPokemon(updatedPokemon)
 
     expect(pokemonStore.pokemon).toEqual({
-      '1': updatedPokemon
+      'external-id': updatedPokemon
     })
   })
 
   it('should remove a pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    const pokemon = { externalId: '1', name: 'Pikachu' } as PokemonInstanceExt
+    pokemonStore.upsertPokemon(mockPokemon)
 
-    pokemonStore.upsertPokemon(pokemon)
     expect(pokemonStore.pokemon).toEqual({
-      '1': pokemon
+      'external-id': mockPokemon
     })
 
-    pokemonStore.removePokemon('1')
+    pokemonStore.removePokemon(externalId)
     expect(pokemonStore.pokemon).toEqual({})
   })
 
   it('should get a pokemon by externalId correctly', () => {
     const pokemonStore = usePokemonStore()
-    const pokemon = { externalId: '1', name: 'Pikachu' } as PokemonInstanceExt
+    pokemonStore.upsertPokemon(mockPokemon)
 
-    pokemonStore.upsertPokemon(pokemon)
-
-    const retrievedPokemon = pokemonStore.getPokemon('1')
-    expect(retrievedPokemon).toEqual(pokemon)
+    const retrievedPokemon = pokemonStore.getPokemon(externalId)
+    expect(retrievedPokemon).toEqual(mockPokemon)
   })
 
   it('should return undefined for a non-existent pokemon', () => {
