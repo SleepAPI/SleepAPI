@@ -26,7 +26,7 @@
         ></v-textarea>
       </v-card-text>
       <v-card-actions class="pt-0">
-        <v-btn id="rerollButton" icon @click="editedName = rerollName()">
+        <v-btn id="rerollButton" icon @click="editedName = teamStore.randomName()">
           <v-icon>mdi-dice-multiple</v-icon>
         </v-btn>
         <v-spacer />
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { faker } from '@faker-js/faker/locale/en'
+import { useTeamStore } from '@/stores/team/team-store'
 
 export default {
   name: 'PokemonName',
@@ -56,6 +56,10 @@ export default {
     }
   },
   emits: ['update-name'],
+  setup() {
+    const teamStore = useTeamStore()
+    return { teamStore }
+  },
   data: () => ({
     isEditDialogOpen: false,
     maxNameLength: 12,
@@ -68,7 +72,7 @@ export default {
   },
   mounted() {
     if (this.name === '') {
-      this.$emit('update-name', this.rerollName())
+      this.$emit('update-name', this.teamStore.randomName())
     }
   },
   methods: {
@@ -94,14 +98,6 @@ export default {
       if (!regex.test(input.value)) {
         this.editedName = this.editedName.replace(/[^a-zA-Z0-9 ]/g, '')
       }
-    },
-    rerollName() {
-      let name = faker.person.firstName()
-      while (name.length > this.maxNameLength) {
-        // TODO: we could save possible genders on each mon and pass, some mons can only be one gender, some have higher likelihood
-        name = faker.person.firstName()
-      }
-      return name
     }
   }
 }

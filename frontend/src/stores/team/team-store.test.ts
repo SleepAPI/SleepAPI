@@ -308,7 +308,10 @@ describe('Team Store', () => {
 
     await teamStore.duplicateMember(1)
 
-    expect(teamStore.teams[0].members[0]).toEqual(externalId)
+    expect(teamStore.teams[0].members[0]).toBeDefined()
+    expect(teamStore.teams[0].members[2]).toBeUndefined()
+    expect(teamStore.teams[0].members[3]).toBeUndefined()
+    expect(teamStore.teams[0].members[4]).toBeUndefined()
     expect(TeamService.createOrUpdateMember).toHaveBeenCalled()
   })
 

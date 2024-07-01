@@ -2,8 +2,9 @@ import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
+import { faker } from '@faker-js/faker/locale/en'
 import { defineStore } from 'pinia'
-import type { PokemonInstanceExt, TeamSettingsRequest } from 'sleepapi-common'
+import { uuid, type PokemonInstanceExt, type TeamSettingsRequest } from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
@@ -116,6 +117,14 @@ export const useTeamStore = defineStore('team', {
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.teams.length) % this.teams.length
     },
+    randomName() {
+      let name = faker.person.firstName()
+      while (name.length > 12) {
+        // TODO: we could save possible genders on each mon and pass, some mons can only be one gender, some have higher likelihood
+        name = faker.person.firstName()
+      }
+      return name
+    },
     async updateTeamName(updatedName: string) {
       this.teams[this.currentIndex].name = updatedName
 
@@ -183,7 +192,14 @@ export const useTeamStore = defineStore('team', {
         return
       }
 
-      await this.updateTeamMember(existingMember, openSlotIndex)
+      const duplicatedMember: PokemonInstanceExt = {
+        ...existingMember,
+        version: 0,
+        saved: false,
+        externalId: uuid.v4(),
+        name: this.randomName()
+      }
+      await this.updateTeamMember(duplicatedMember, openSlotIndex)
     },
     async removeMember(memberIndex: number) {
       const userStore = useUserStore()
