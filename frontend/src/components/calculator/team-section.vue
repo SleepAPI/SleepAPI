@@ -21,10 +21,10 @@
       ></v-btn>
     </v-card-actions>
 
-    <v-window v-model="teamStore.currentIndex" continuous>
+    <v-window v-model="teamStore.currentIndex" continuous style="overflow: visible">
       <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
         <v-row class="flex-nowrap" dense>
-          <v-col v-for="member in 5" :key="member" class="team-slot">
+          <v-col v-for="member in 5" :key="member" class="team-slot" style="position: relative">
             <TeamSlot :member-index="member - 1" />
           </v-col>
         </v-row>
@@ -107,7 +107,7 @@ export default defineComponent({
 
 <style lang="scss">
 .team-slot {
-  aspect-ratio: 6 / 14;
+  aspect-ratio: 6 / 10;
   max-height: 25dvh;
 }
 

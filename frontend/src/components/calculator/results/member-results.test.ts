@@ -3,12 +3,26 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
+import { ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
 describe('TeamResults', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamResults>>
+  const externalId = 'external-id'
+  const mockPokemon: PokemonInstanceExt = {
+    name: 'Bubbles',
+    externalId,
+    pokemon: pokemon.PIKACHU,
+    carrySize: 10,
+    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
+    level: 10,
+    nature: nature.BASHFUL,
+    saved: false,
+    skillLevel: 1,
+    subskills: [],
+    version: 1
+  }
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -39,8 +53,6 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    const externalId = 'external-id'
-    const mockPokemon = { name: 'Pikachu', externalId, pokemon: pokemon.PIKACHU } as any
     pokemonStore.upsertPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
@@ -61,8 +73,6 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    const externalId = 'external-id'
-    const mockPokemon = { name: 'Pikachu', externalId, pokemon: pokemon.PIKACHU } as any
     pokemonStore.upsertPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
@@ -84,8 +94,6 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    const externalId = 'external-id'
-    const mockPokemon = { name: 'Pikachu', externalId, pokemon: pokemon.PIKACHU } as any
     pokemonStore.upsertPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
@@ -117,8 +125,6 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    const externalId = 'external-id'
-    const mockPokemon = { name: 'Pikachu', externalId, pokemon: pokemon.PIKACHU } as any
     pokemonStore.upsertPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
