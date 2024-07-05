@@ -100,11 +100,11 @@ export const HUSTLE_PROTEIN_SMOOTHIE = createDessert({
 export const HUGE_POWER_SOY_DONUTS = createDessert({
   name: 'HUGE_POWER_SOY_DONUTS',
   ingredients: [
-    { amount: 9, ingredient: PURE_OIL },
-    { amount: 6, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 12, ingredient: PURE_OIL },
+    { amount: 16, ingredient: GREENGRASS_SOYBEANS },
     { amount: 7, ingredient: SOOTHING_CACAO },
   ],
-  bonus: 17,
+  bonus: 35,
 });
 
 export const SWEET_SCENT_CHOCOLATE_CAKE = createDessert({

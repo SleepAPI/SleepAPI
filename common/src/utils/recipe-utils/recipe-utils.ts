@@ -90,5 +90,5 @@ export function calculateRecipeValue(params: { level: number; ingredients: Ingre
   const { level, ingredients, bonus } = params;
 
   const ingredientValue = ingredients.reduce((sum, cur) => sum + cur.amount * cur.ingredient.value, 0);
-  return ingredientValue * recipeLevelBonus[level] * (1 + bonus / 100);
+  return Math.round(ingredientValue * recipeLevelBonus[level] * (1 + bonus / 100));
 }

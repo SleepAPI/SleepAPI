@@ -143,12 +143,12 @@ export const SPICY_LEEK_CURRY = createCurry({
 export const NINJA_CURRY = createCurry({
   name: 'NINJA_CURRY',
   ingredients: [
-    { amount: 15, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 24, ingredient: GREENGRASS_SOYBEANS },
     { amount: 9, ingredient: BEAN_SAUSAGE },
-    { amount: 9, ingredient: LARGE_LEEK },
+    { amount: 12, ingredient: LARGE_LEEK },
     { amount: 5, ingredient: TASTY_MUSHROOM },
   ],
-  bonus: 25,
+  bonus: 48,
 });
 
 export const GRILLED_TAIL_CURRY = createCurry({

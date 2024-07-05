@@ -49,10 +49,10 @@ export const SNOW_CLOAK_CAESAR_SALAD = createSalad({
 export const WATER_VEIL_TOFU_SALAD = createSalad({
   name: 'WATER_VEIL_TOFU_SALAD',
   ingredients: [
-    { amount: 10, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 6, ingredient: SNOOZY_TOMATO },
+    { amount: 15, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 9, ingredient: SNOOZY_TOMATO },
   ],
-  bonus: 11,
+  bonus: 25,
 });
 
 export const HEAT_WAVE_TOFU_SALAD = createSalad({
@@ -177,11 +177,11 @@ export const NINJA_SALAD = createSalad({
   name: 'NINJA_SALAD',
   ingredients: [
     { amount: 15, ingredient: LARGE_LEEK },
-    { amount: 15, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 19, ingredient: GREENGRASS_SOYBEANS },
     { amount: 12, ingredient: TASTY_MUSHROOM },
     { amount: 11, ingredient: WARMING_GINGER },
   ],
-  bonus: 35,
+  bonus: 48,
 });
 
 export const GREENGRASS_SALAD = createSalad({

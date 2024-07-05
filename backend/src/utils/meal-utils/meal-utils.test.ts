@@ -73,11 +73,13 @@ describe('getMealsForFilter', () => {
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
+        "NINJA_CURRY",
         "DREAM_EATER_BUTTER_CURRY",
         "INFERNO_CORN_KEEMA_CURRY",
         "CALM_MIND_FRUIT_SALAD",
         "NINJA_SALAD",
         "GREENGRASS_SALAD",
+        "HUGE_POWER_SOY_DONUTS",
         "EXPLOSION_POPCORN",
         "JIGGLYPUFFS_FRUITY_FLAN",
         "TEATIME_CORN_SCONES",
