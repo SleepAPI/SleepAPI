@@ -444,11 +444,11 @@ describe('calculateContributedIngredientsValue', () => {
     const expectedContributedValue = Math.round(
       recipeLevelBonus[MAX_RECIPE_LEVEL] *
         (1 + meal.bonus / 100) *
-        (15 * ingredient.GREENGRASS_SOYBEANS.value + 6.5 * ingredient.LARGE_LEEK.value)
+        (17.4 * ingredient.GREENGRASS_SOYBEANS.value + 6.5 * ingredient.LARGE_LEEK.value)
     );
 
     const expectedFillerValue = Math.round(
-      4.4 * ingredient.SNOOZY_TOMATO.taxedValue + 2.4 * ingredient.GREENGRASS_SOYBEANS.taxedValue
+      4.4 * ingredient.SNOOZY_TOMATO.taxedValue + 0 * ingredient.GREENGRASS_SOYBEANS.taxedValue
     );
     const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
     expect(Math.round(contributedValue)).toBe(expectedContributedValue);
