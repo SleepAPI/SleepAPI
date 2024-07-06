@@ -24,29 +24,82 @@ describe('upsertTeam', () => {
   it('should create new team if team index does not previously exist', async () => {
     expect(await TeamDAO.findMultiple()).toEqual([]);
 
-    await upsertTeamMeta({ fk_user_id: 0, team_index: 0, name: 'some name', camp: false });
+    await upsertTeamMeta({
+      fk_user_id: 0,
+      team_index: 0,
+      name: 'some name',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     expect(await TeamDAO.findMultiple()).toEqual([
-      { camp: false, fk_user_id: 0, id: 1, name: 'some name', team_index: 0, version: 1 },
+      {
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        fk_user_id: 0,
+        id: 1,
+        name: 'some name',
+        team_index: 0,
+        version: 1,
+      },
     ]);
   });
 
   it('should update team if team index exists', async () => {
-    await TeamDAO.insert({ name: 'old name', camp: false, fk_user_id: 0, team_index: 0 });
-    await upsertTeamMeta({ fk_user_id: 0, team_index: 0, name: 'new name', camp: false });
+    await TeamDAO.insert({
+      name: 'old name',
+      camp: false,
+      fk_user_id: 0,
+      team_index: 0,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
+    await upsertTeamMeta({
+      fk_user_id: 0,
+      team_index: 0,
+      name: 'new name',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     expect(await TeamDAO.findMultiple()).toEqual([
-      { camp: false, fk_user_id: 0, id: 1, name: 'new name', team_index: 0, version: 2 },
+      {
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        fk_user_id: 0,
+        id: 1,
+        name: 'new name',
+        team_index: 0,
+        version: 2,
+      },
     ]);
   });
 
   it('should insert new team for same owner if team_index not found', async () => {
-    await TeamDAO.insert({ name: 'name', camp: false, fk_user_id: 0, team_index: 0 });
-    await upsertTeamMeta({ fk_user_id: 0, team_index: 1, name: 'name', camp: false });
+    await TeamDAO.insert({
+      name: 'name',
+      camp: false,
+      fk_user_id: 0,
+      team_index: 0,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
+    await upsertTeamMeta({
+      fk_user_id: 0,
+      team_index: 1,
+      name: 'name',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     expect(await TeamDAO.findMultiple()).toEqual([
-      { camp: false, fk_user_id: 0, id: 1, name: 'name', team_index: 0, version: 1 },
-      { camp: false, fk_user_id: 0, id: 2, name: 'name', team_index: 1, version: 1 },
+      { camp: false, bedtime: '21:30', wakeup: '06:00', fk_user_id: 0, id: 1, name: 'name', team_index: 0, version: 1 },
+      { camp: false, bedtime: '21:30', wakeup: '06:00', fk_user_id: 0, id: 2, name: 'name', team_index: 1, version: 1 },
     ]);
   });
 });
@@ -60,15 +113,29 @@ describe('getTeams', () => {
 
   it('should return teams for the user if teams exist', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'some name', sub: 'some sub', external_id: uuid.v4() };
-    await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
-    await TeamDAO.insert({ fk_user_id: user.id, team_index: 1, name: 'Team B', camp: true });
+    await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 0,
+      name: 'Team A',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
+    await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 1,
+      name: 'Team B',
+      camp: true,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     const response = await getTeams(user);
 
     expect(response).toEqual({
       teams: [
-        { index: 0, name: 'Team A', camp: false, members: [], version: 1 },
-        { index: 1, name: 'Team B', camp: true, members: [], version: 1 },
+        { index: 0, name: 'Team A', camp: false, members: [], bedtime: '21:30', wakeup: '06:00', version: 1 },
+        { index: 1, name: 'Team B', camp: true, bedtime: '21:30', wakeup: '06:00', members: [], version: 1 },
       ],
     });
   });
@@ -76,13 +143,27 @@ describe('getTeams', () => {
   it('should only return teams belonging to the specified user', async () => {
     const user1: DBUser = { id: 1, version: 1, name: 'user 1', sub: 'some sub', external_id: uuid.v4() };
     const user2: DBUser = { id: 2, version: 1, name: 'user 2', sub: 'some sub', external_id: uuid.v4() };
-    await TeamDAO.insert({ fk_user_id: user1.id, team_index: 0, name: 'Team A', camp: false });
-    await TeamDAO.insert({ fk_user_id: user2.id, team_index: 1, name: 'Team B', camp: true });
+    await TeamDAO.insert({
+      fk_user_id: user1.id,
+      team_index: 0,
+      name: 'Team A',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
+    await TeamDAO.insert({
+      fk_user_id: user2.id,
+      team_index: 1,
+      name: 'Team B',
+      camp: true,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     const response = await getTeams(user1);
 
     expect(response).toEqual({
-      teams: [{ index: 0, name: 'Team A', camp: false, members: [], version: 1 }],
+      teams: [{ index: 0, name: 'Team A', camp: false, members: [], bedtime: '21:30', wakeup: '06:00', version: 1 }],
     });
   });
 });
@@ -169,6 +250,8 @@ describe('upsertTeamMember', () => {
         id: 1,
         version: 1,
         name: 'Helper team 1',
+        bedtime: '21:30',
+        wakeup: '06:00',
       },
     ]);
   });
@@ -198,7 +281,14 @@ describe('upsertTeamMember', () => {
     };
 
     // should get updated to version 2
-    await TeamDAO.insert({ fk_user_id: user.id, camp: false, name: 'test team', team_index: 0 });
+    await TeamDAO.insert({
+      fk_user_id: user.id,
+      camp: false,
+      name: 'test team',
+      team_index: 0,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     await PokemonDAO.insert({
       external_id: request.externalId,
@@ -282,6 +372,8 @@ describe('upsertTeamMember', () => {
         id: 1,
         version: 2,
         name: 'test team',
+        bedtime: '21:30',
+        wakeup: '06:00',
       },
     ]);
   });
@@ -316,7 +408,14 @@ describe('upsertTeamMember', () => {
 describe('deleteMember', () => {
   it('should delete the member and its associated Pokemon if not saved and not in other teams', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
-    const team = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
+    const team = await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 0,
+      name: 'Team A',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     const pokemon = await PokemonDAO.insert({
       external_id: uuid.v4(),
@@ -348,7 +447,14 @@ describe('deleteMember', () => {
 
   it('should not delete the Pokemon if it is saved', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
-    const team = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
+    const team = await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 0,
+      name: 'Team A',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     const pokemon = await PokemonDAO.insert({
       external_id: uuid.v4(),
@@ -380,8 +486,22 @@ describe('deleteMember', () => {
 
   it('should not delete the Pokemon if it is in another team', async () => {
     const user: DBUser = { id: 1, version: 1, name: 'User', sub: 'sub', external_id: uuid.v4() };
-    const team1 = await TeamDAO.insert({ fk_user_id: user.id, team_index: 0, name: 'Team A', camp: false });
-    const team2 = await TeamDAO.insert({ fk_user_id: user.id, team_index: 1, name: 'Team B', camp: false });
+    const team1 = await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 0,
+      name: 'Team A',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
+    const team2 = await TeamDAO.insert({
+      fk_user_id: user.id,
+      team_index: 1,
+      name: 'Team B',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+    });
 
     const pokemon = await PokemonDAO.insert({
       external_id: uuid.v4(),

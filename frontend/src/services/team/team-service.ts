@@ -36,16 +36,15 @@ class TeamServiceImpl {
     teamIndex: number
     memberIndex: number
     member: PokemonInstanceExt
-  }): Promise<PokemonInstanceExt> {
+  }) {
     const { teamIndex, memberIndex, member } = params
 
     const request = this.#toUpsertTeamMemberRequest(member)
 
-    const response = await serverAxios.put<UpsertTeamMemberResponse>(
+    return await serverAxios.put<UpsertTeamMemberResponse>(
       `team/${teamIndex}/member/${memberIndex}`,
       request
     )
-    return this.#populateMember(response.data)
   }
 
   public async getTeams(): Promise<TeamInstance[]> {
@@ -63,6 +62,8 @@ class TeamServiceImpl {
           index: teamIndex,
           name: `Helper team ${teamIndex + 1}`,
           camp: false,
+          bedtime: '21:30',
+          wakeup: '06:00',
           version: 0,
           members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
           production: undefined
@@ -88,6 +89,8 @@ class TeamServiceImpl {
           index: existingTeam.index,
           name: existingTeam.name,
           camp: existingTeam.camp,
+          bedtime: existingTeam.bedtime,
+          wakeup: existingTeam.wakeup,
           version: existingTeam.version,
           members,
           production: undefined

@@ -1,7 +1,27 @@
 <template>
   <div v-if="pokemonInstance" class="w-100 fill-height transparent">
-    <v-card :loading="loading" class="w-100 fill-height frosted-glass" @click="openDetailsDialog">
+    <v-card
+      :loading="loading"
+      class="w-100 fill-height frosted-glass rounded-b-0"
+      @click="openDetailsDialog"
+    >
+      <div
+        class="text-center vertical-text"
+        style="position: absolute; top: 0%; width: 100%; height: 100%"
+      >
+        {{ pokemonInstance.name }}
+      </div>
       <v-img :src="imageUrl" class="pokemon-image" />
+
+      <div style="position: absolute; bottom: 0%; width: 100%">
+        <v-card
+          class="text-center responsive-text rounded-0"
+          color="subskillGold"
+          location="bottom center"
+        >
+          {{ subskillBadge }}
+        </v-card>
+      </div>
     </v-card>
 
     <v-card
@@ -12,25 +32,6 @@
       location="top center"
     >
       {{ level }}
-    </v-card>
-
-    <v-card
-      v-if="hb"
-      class="text-center"
-      rounded="lg"
-      style="position: absolute; bottom: 25%; left: 0%; width: 40%; font-size: 0.7rem"
-      color="subskillGold"
-    >
-      HB
-    </v-card>
-    <v-card
-      v-if="erb"
-      class="text-center"
-      rounded="lg"
-      style="position: absolute; bottom: 10%; left: 0%; width: 40%; font-size: 0.7rem"
-      color="subskillGold"
-    >
-      ERB
     </v-card>
   </div>
   <div v-else class="d-flex w-100 fill-height transparent">
@@ -101,6 +102,16 @@ export default defineComponent({
           (s) => s.subskill.name.toLowerCase() === subskill.HELPING_BONUS.name.toLowerCase()
         )
       )
+    },
+    subskillBadge() {
+      const subskills = []
+      if (this.hb) {
+        subskills.push('HB')
+      }
+      if (this.erb) {
+        subskills.push('ERB')
+      }
+      return subskills.join(' + ')
     }
   },
   methods: {
@@ -132,5 +143,14 @@ export default defineComponent({
   height: 100%;
   transform: scale(1.5);
   left: 10%;
+}
+
+.vertical-text {
+  color: rgba(white, 0.6) !important;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  text-align: center;
 }
 </style>

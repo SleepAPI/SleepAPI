@@ -11,6 +11,8 @@ const DBTeamSchema = Type.Composite([
     team_index: Type.Number(),
     name: Type.String(),
     camp: Type.Boolean(),
+    bedtime: Type.String(),
+    wakeup: Type.String(),
   }),
 ]);
 export type DBTeam = Static<typeof DBTeamSchema>;
@@ -80,6 +82,8 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
         index: team.team_index,
         name: team.name,
         camp: team.camp,
+        bedtime: team.bedtime,
+        wakeup: team.wakeup,
         version: team.version,
         members,
       });

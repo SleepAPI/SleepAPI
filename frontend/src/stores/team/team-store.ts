@@ -4,12 +4,18 @@ import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
 import { faker } from '@faker-js/faker/locale/en'
 import { defineStore } from 'pinia'
-import { uuid, type PokemonInstanceExt, type TeamSettingsRequest } from 'sleepapi-common'
+import {
+  DOMAIN_VERSION,
+  uuid,
+  type PokemonInstanceExt,
+  type TeamSettingsRequest
+} from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
   maxAvailableTeams: number
   loadingTeams: boolean
+  domainVersion: number
   teams: TeamInstance[]
 }
 
@@ -18,11 +24,14 @@ export const useTeamStore = defineStore('team', {
     currentIndex: 0,
     maxAvailableTeams: MAX_TEAMS,
     loadingTeams: true,
+    domainVersion: 0,
     teams: [
       {
         index: 0,
         name: 'Log in to save your teams',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
         production: undefined
@@ -74,6 +83,11 @@ export const useTeamStore = defineStore('team', {
             }
 
             let rerunCalculations = false
+            if (this.domainVersion < DOMAIN_VERSION) {
+              rerunCalculations = true
+              this.domainVersion = DOMAIN_VERSION
+            }
+
             // if version of team mismatch, we re-sim
             if (updatedTeam.version !== previousTeam.version) {
               rerunCalculations = true
@@ -127,13 +141,17 @@ export const useTeamStore = defineStore('team', {
     },
     async updateTeamName(updatedName: string) {
       this.teams[this.currentIndex].name = updatedName
-
+      this.updateTeam()
+    },
+    async updateTeam() {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
           await TeamService.createOrUpdateTeam(this.currentIndex, {
             name: this.getCurrentTeam.name,
-            camp: this.getCurrentTeam.camp
+            camp: this.getCurrentTeam.camp,
+            bedtime: this.getCurrentTeam.bedtime,
+            wakeup: this.getCurrentTeam.wakeup
           })
         } catch {
           console.error('Error updating teams')
@@ -174,12 +192,15 @@ export const useTeamStore = defineStore('team', {
       const settings: TeamSettingsRequest = {
         camp: this.teams[teamIndex].camp,
         // TODO: hard-coded sleep times for now
-        bedtime: '21:30',
-        wakeup: '06:00'
+        bedtime: this.teams[teamIndex].bedtime,
+        wakeup: this.teams[teamIndex].wakeup
       }
-      const production = await TeamService.calculateProduction({ members, settings })
-
-      this.teams[teamIndex].production = production
+      try {
+        const production = await TeamService.calculateProduction({ members, settings })
+        this.teams[teamIndex].production = production
+      } catch {
+        console.error('Could not calculate production, contact developer')
+      }
       this.loadingTeams = false
     },
     async duplicateMember(memberIndex: number) {
@@ -229,15 +250,31 @@ export const useTeamStore = defineStore('team', {
       this.teams[this.currentIndex].members[memberIndex] = undefined
       this.calculateProduction(this.currentIndex)
     },
+    toggleCamp() {
+      this.getCurrentTeam.camp = !this.getCurrentTeam.camp
+      this.updateTeam()
+      this.calculateProduction(this.currentIndex)
+    },
+    updateSleep(params: { bedtime: string; wakeup: string }) {
+      const { bedtime, wakeup } = params
+      this.getCurrentTeam.bedtime = bedtime
+      this.getCurrentTeam.wakeup = wakeup
+
+      this.updateTeam()
+      this.calculateProduction(this.currentIndex)
+    },
     reset() {
       this.currentIndex = 0
       this.maxAvailableTeams = MAX_TEAMS
       this.loadingTeams = true
+      this.domainVersion = 0
       this.teams = [
         {
           index: 0,
           name: 'Log in to save your teams',
           camp: false,
+          bedtime: '21:30',
+          wakeup: '06:00',
           version: 0,
           members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
           production: undefined

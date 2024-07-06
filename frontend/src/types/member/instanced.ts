@@ -11,6 +11,8 @@ export interface TeamInstance {
   index: number
   name: string
   camp: boolean
+  bedtime: string
+  wakeup: string
   version: number
   members: (string | undefined)[]
   production?: TeamProduction

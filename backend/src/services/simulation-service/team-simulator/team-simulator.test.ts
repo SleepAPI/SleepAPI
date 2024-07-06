@@ -1,7 +1,7 @@
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { PokemonIngredientSet, berry, ingredient, mainskill, nature } from 'sleepapi-common';
+import { PokemonIngredientSet, berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
 
 const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
@@ -53,6 +53,41 @@ describe('TeamSimulator', () => {
     expect(result.members[0].berries).toMatchInlineSnapshot(`"32.8 BELUE"`);
     expect(result.members[0].ingredients).toMatchInlineSnapshot(`"8.2 Tail"`);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`41`);
+  });
+
+  it('shall calculate production with uneven sleep times', () => {
+    const settings: TeamSettings = {
+      bedtime: TimeUtils.parseTime('21:30'),
+      wakeup: TimeUtils.parseTime('06:01'),
+      camp: false,
+    };
+
+    const members: TeamMember[] = [
+      {
+        pokemonSet: {
+          pokemon: pokemon.PINSIR,
+          ingredientList: [
+            { amount: 2, ingredient: ingredient.HONEY },
+            { amount: 5, ingredient: ingredient.HONEY },
+            { amount: 7, ingredient: ingredient.HONEY },
+          ],
+        },
+        carrySize: 24,
+        level: 60,
+        nature: nature.MILD,
+        skillLevel: 6,
+        subskills: [subskill.INGREDIENT_FINDER_M],
+      },
+    ];
+    const simulator = new TeamSimulator({ settings, members });
+
+    simulator.simulate();
+
+    const result = simulator.results();
+
+    expect(result.members).toHaveLength(1);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`"37.97286622975349 LUM"`);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"86.3 Honey"`);
   });
 
   it('shall calculate team with multiple members', () => {

@@ -122,12 +122,9 @@ export function calculatePokemonProduction(
   };
 }
 
-// TODO: test, but need to pull in iterations elsewhere, want to do that anyway
-export async function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }) {
+export function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }, iterations = 5000) {
   const { settings, members } = params;
   const teamSimulator = new TeamSimulator({ settings, members });
-
-  const iterations = 5000;
 
   for (let i = 0; i < iterations; i++) {
     teamSimulator.simulate();

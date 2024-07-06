@@ -37,13 +37,6 @@ export class TeamSimulator {
   constructor(params: { settings: TeamSettings; members: TeamMember[] }) {
     const { settings, members } = params;
 
-    let next5Minutes = settings.wakeup;
-    for (let i = 0; i < 12 * 24; i++) {
-      this.timeIntervals.push(next5Minutes);
-      next5Minutes = TimeUtils.addTime(next5Minutes, { hour: 0, minute: 5, second: 0 });
-    }
-    this.timeIntervals.push(next5Minutes); // final 06 is added since we use it for final collect
-
     const dayPeriod = {
       start: settings.wakeup,
       end: settings.bedtime,
@@ -54,6 +47,17 @@ export class TeamSimulator {
       end: settings.wakeup,
     };
     this.nightPeriod = nightPeriod;
+
+    let next5Minutes = settings.wakeup;
+    while (TimeUtils.timeWithinPeriod(next5Minutes, this.dayPeriod)) {
+      this.timeIntervals.push(next5Minutes);
+      next5Minutes = TimeUtils.addTime(next5Minutes, { hour: 0, minute: 5, second: 0 });
+    }
+    next5Minutes = settings.bedtime;
+    while (TimeUtils.timeWithinPeriod(next5Minutes, this.nightPeriod)) {
+      this.timeIntervals.push(next5Minutes);
+      next5Minutes = TimeUtils.addTime(next5Minutes, { hour: 0, minute: 5, second: 0 });
+    }
 
     this.mealTimes = getDefaultMealTimes(dayPeriod);
 

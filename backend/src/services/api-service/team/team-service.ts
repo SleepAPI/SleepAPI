@@ -21,6 +21,8 @@ export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<Upsert
     index: upsertedTeam.team_index,
     name: upsertedTeam.name,
     camp: upsertedTeam.camp,
+    bedtime: upsertedTeam.bedtime,
+    wakeup: upsertedTeam.wakeup,
     version: upsertedTeam.version,
   };
 }
@@ -40,13 +42,13 @@ export async function upsertTeamMember(params: {
       fk_user_id: user.id,
       team_index: teamIndex,
       camp: team?.camp ?? false,
+      bedtime: team?.bedtime ?? '21:30',
+      wakeup: team?.wakeup ?? '06:00',
       name: team?.name ?? `Helper team ${teamIndex + 1}`,
     },
     filter: { fk_user_id: user.id, team_index: teamIndex },
   });
 
-  // TODO: this will always update the mon even if no changes, which will bump version, which will cause resims
-  // TODO: this will happen for "duplicate" function in frontend and "add from saved"
   const upsertedMember = await PokemonDAO.upsert({
     updated: {
       external_id: request.externalId,

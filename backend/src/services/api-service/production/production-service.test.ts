@@ -1,6 +1,8 @@
+import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
-import { ingredient, pokemon } from 'sleepapi-common';
-import { calculatePokemonProduction } from './production-service';
+import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
+import { calculatePokemonProduction, calculateTeam } from './production-service';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
@@ -43,5 +45,39 @@ describe('calculatePokemonProduction', () => {
     expect(result).toHaveProperty('optimalSkillProduction');
 
     expect(result.filters).toEqual(MOCKED_OPTIMAL_PRODUCTION_STATS);
+  });
+});
+
+describe('calculateTeam', () => {
+  it('shall calculate production with uneven sleep times', () => {
+    const settings: TeamSettings = {
+      bedtime: TimeUtils.parseTime('21:30'),
+      wakeup: TimeUtils.parseTime('06:01'),
+      camp: false,
+    };
+
+    const members: TeamMember[] = [
+      {
+        pokemonSet: {
+          pokemon: pokemon.PINSIR,
+          ingredientList: [
+            { amount: 2, ingredient: ingredient.HONEY },
+            { amount: 5, ingredient: ingredient.HONEY },
+            { amount: 7, ingredient: ingredient.HONEY },
+          ],
+        },
+        carrySize: 24,
+        level: 60,
+        nature: nature.MILD,
+        skillLevel: 6,
+        subskills: [subskill.INGREDIENT_FINDER_M],
+      },
+    ];
+
+    const result = calculateTeam({ members, settings }, 5000);
+
+    expect(result.members).toHaveLength(1);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`"36.94389025534449 LUM"`);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"85 Honey"`);
   });
 });

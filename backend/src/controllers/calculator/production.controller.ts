@@ -40,16 +40,17 @@ export default class ProductionController extends Controller {
 
   public async calculateTeam(body: CalculateTeamRequest) {
     const parsedInput = this.#parseTeamInput(body);
-    return await calculateTeam(parsedInput);
+    return calculateTeam(parsedInput);
   }
 
   #parseTeamInput(body: CalculateTeamRequest) {
     const { settings, members } = body;
     const bedtime = TimeUtils.parseTime(settings.bedtime);
     const wakeup = TimeUtils.parseTime(settings.wakeup);
-    const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
-    if (duration.hour < 1) {
-      throw new SleepAPIError('Minimum sleep of 1 hour required');
+    const sleepDuration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
+    const dayDuration = TimeUtils.calculateDuration({ start: wakeup, end: bedtime });
+    if (sleepDuration.hour < 1 || dayDuration.hour < 1) {
+      throw new SleepAPIError('Minimum 1 hour of sleep and daytime required');
     }
 
     const parsedMembers: TeamMember[] = [];

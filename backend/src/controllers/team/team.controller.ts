@@ -10,6 +10,8 @@ export default class TeamController {
       team_index: index,
       name: request.name,
       camp: request.camp,
+      bedtime: request.bedtime,
+      wakeup: request.wakeup,
     };
     return upsertTeamMeta(team);
   }
