@@ -7,7 +7,8 @@
           <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
             >Add</v-list-item
           >
-          <v-list-item prepend-icon="mdi-bookmark-outline" @click="openCollection"
+          <!-- TODO: implement and then remove disabled -->
+          <v-list-item prepend-icon="mdi-bookmark-outline" disabled @click="openCollection"
             >Saved</v-list-item
           >
         </div>
@@ -15,13 +16,6 @@
           <!-- Filled team slot  -->
           <v-list-item id="editButton" prepend-icon="mdi-pencil" @click="handleEditClick"
             >Edit</v-list-item
-          >
-          <v-list-item
-            id="saveButton"
-            :disabled="!userStore.loggedIn"
-            :prepend-icon="savedState.state ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
-            @click="save"
-            >{{ savedState.state ? 'Unsave' : 'Save' }}</v-list-item
           >
           <v-list-item
             id="duplicateButton"
@@ -80,12 +74,7 @@ export default defineComponent({
   data: () => ({
     subDialog: false,
     currentDialogComponent: null as string | null,
-    currentDialogProps: {},
-    savedState: {
-      state: false,
-      serverState: false,
-      timer: null as ReturnType<typeof setTimeout> | null
-    }
+    currentDialogProps: {}
   }),
   computed: {
     internalShow: {
@@ -105,11 +94,6 @@ export default defineComponent({
     fullTeam() {
       return this.teamStore.getTeamSize === MAX_TEAM_MEMBERS
     }
-  },
-  mounted() {
-    const initialSavedState = this.maybePokemon?.saved ?? false
-    this.savedState.serverState = initialSavedState
-    this.savedState.state = initialSavedState
   },
   methods: {
     handleAddClick() {
@@ -137,30 +121,6 @@ export default defineComponent({
     },
     async duplicate() {
       await this.teamStore.duplicateMember(this.memberIndex)
-    },
-    save() {
-      this.savedState.state = !this.savedState.state
-      this.resetSaveTimer()
-    },
-    resetSaveTimer() {
-      if (this.savedState.timer) {
-        clearTimeout(this.savedState.timer)
-      }
-      this.savedState.timer = setTimeout(this.sendSaveRequest, 1000)
-    },
-    async sendSaveRequest() {
-      if (this.savedState.state !== this.savedState.serverState) {
-        const pokemonToUpdate = this.maybePokemon
-        if (!pokemonToUpdate) {
-          console.error("Can't find Pokémon to save")
-          return
-        }
-        this.savedState.serverState = this.savedState.state
-        await this.teamStore.updateTeamMember(
-          { ...pokemonToUpdate, saved: this.savedState.state },
-          this.memberIndex
-        )
-      }
     },
     async remove() {
       await this.teamStore.removeMember(this.memberIndex)
