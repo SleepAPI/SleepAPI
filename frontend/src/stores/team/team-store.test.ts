@@ -41,6 +41,13 @@ describe('Team Store', () => {
       {
         "currentIndex": 0,
         "domainVersion": 0,
+        "loadingMembers": [
+          false,
+          false,
+          false,
+          false,
+          false,
+        ],
         "loadingTeams": true,
         "maxAvailableTeams": 5,
         "teams": [
@@ -262,6 +269,13 @@ describe('Team Store', () => {
       {
         "currentIndex": 0,
         "domainVersion": 0,
+        "loadingMembers": [
+          false,
+          false,
+          false,
+          false,
+          false,
+        ],
         "loadingTeams": true,
         "maxAvailableTeams": 5,
         "teams": [

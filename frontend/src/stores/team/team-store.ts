@@ -15,6 +15,7 @@ export interface TeamState {
   currentIndex: number
   maxAvailableTeams: number
   loadingTeams: boolean
+  loadingMembers: boolean[]
   domainVersion: number
   teams: TeamInstance[]
 }
@@ -24,6 +25,7 @@ export const useTeamStore = defineStore('team', {
     currentIndex: 0,
     maxAvailableTeams: MAX_TEAMS,
     loadingTeams: true,
+    loadingMembers: [false, false, false, false, false],
     domainVersion: 0,
     teams: [
       {
@@ -47,7 +49,12 @@ export const useTeamStore = defineStore('team', {
         return pokemonExternalId != null ? pokemonStore.getPokemon(pokemonExternalId) : undefined
       }
     },
-    getTeamSize: (state) => state.teams[state.currentIndex].members.filter(Boolean).length
+    getTeamSize: (state) => state.teams[state.currentIndex].members.filter(Boolean).length,
+    getMemberLoading(state) {
+      return (memberIndex: number) => {
+        return state.loadingMembers[memberIndex]
+      }
+    }
   },
   actions: {
     async populateTeams() {
@@ -159,6 +166,8 @@ export const useTeamStore = defineStore('team', {
       }
     },
     async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
+      this.toggleMemberLoading(memberIndex)
+
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
@@ -177,6 +186,7 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
+      this.toggleMemberLoading(memberIndex)
       this.calculateProduction(this.currentIndex)
     },
     async calculateProduction(teamIndex: number) {
@@ -212,6 +222,7 @@ export const useTeamStore = defineStore('team', {
         console.error("No open slot or member can't be found")
         return
       }
+      this.toggleMemberLoading(memberIndex)
 
       const duplicatedMember: PokemonInstanceExt = {
         ...existingMember,
@@ -221,8 +232,11 @@ export const useTeamStore = defineStore('team', {
         name: this.randomName()
       }
       await this.updateTeamMember(duplicatedMember, openSlotIndex)
+      this.toggleMemberLoading(memberIndex)
     },
     async removeMember(memberIndex: number) {
+      this.toggleMemberLoading(memberIndex)
+
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
@@ -248,6 +262,7 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = undefined
+      this.toggleMemberLoading(memberIndex)
       this.calculateProduction(this.currentIndex)
     },
     toggleCamp() {
@@ -263,10 +278,14 @@ export const useTeamStore = defineStore('team', {
       this.updateTeam()
       this.calculateProduction(this.currentIndex)
     },
+    toggleMemberLoading(memberIndex: number) {
+      this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]
+    },
     reset() {
       this.currentIndex = 0
       this.maxAvailableTeams = MAX_TEAMS
       this.loadingTeams = true
+      this.loadingMembers = [false, false, false, false, false]
       this.domainVersion = 0
       this.teams = [
         {

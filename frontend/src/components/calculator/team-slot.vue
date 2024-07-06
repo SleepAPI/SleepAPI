@@ -1,7 +1,7 @@
 <template>
   <div v-if="pokemonInstance" class="w-100 fill-height transparent">
     <v-card
-      :loading="loading"
+      :loading="teamStore.getMemberLoading(memberIndex)"
       class="w-100 fill-height frosted-glass rounded-b-0"
       @click="openDetailsDialog"
     >
@@ -36,7 +36,7 @@
   </div>
   <div v-else class="d-flex w-100 fill-height transparent">
     <v-card
-      :loading="loading"
+      :loading="teamStore.getMemberLoading(memberIndex)"
       class="d-flex w-100 fill-height frosted-glass"
       @click="openDetailsDialog"
     >
@@ -70,7 +70,6 @@ export default defineComponent({
     return { teamStore }
   },
   data: () => ({
-    loading: false,
     showTeamSlotDialog: false
   }),
   computed: {
@@ -115,10 +114,6 @@ export default defineComponent({
     }
   },
   methods: {
-    fetch() {
-      this.loading = true
-      setTimeout(() => (this.loading = false), 2000)
-    },
     openDetailsDialog() {
       this.showTeamSlotDialog = true
     }
