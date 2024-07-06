@@ -33,7 +33,7 @@ beforeEach(() => {
 
 describe('createOrUpdateTeam', () => {
   it('should call server to create team', async () => {
-    const teamRequest = { name: 'some name', camp: false }
+    const teamRequest = { name: 'some name', camp: false, bedtime: '21:30', wakeup: '06:00' }
     const res = await TeamService.createOrUpdateTeam(0, teamRequest)
 
     expect(serverAxios.put).toHaveBeenCalledWith('team/meta/0', teamRequest)
@@ -64,6 +64,8 @@ describe('getTeams', () => {
         index,
         name: `Helper team ${index + 1}`,
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
       })
@@ -76,6 +78,8 @@ describe('getTeams', () => {
         index: 0,
         name: 'Team 1',
         camp: true,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 1,
         members: [
           {
@@ -108,6 +112,8 @@ describe('getTeams', () => {
       index: 0,
       name: 'Team 1',
       camp: true,
+      bedtime: '21:30',
+      wakeup: '06:00',
       version: 1,
       members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined]
     })
@@ -223,7 +229,7 @@ describe('createOrUpdateMember', () => {
       }
     })
 
-    const result = await TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })
+    await TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })
 
     expect(serverAxios.put).toHaveBeenCalledWith(`team/${teamIndex}/member/${memberIndex}`, {
       version: member.version,
@@ -244,7 +250,6 @@ describe('createOrUpdateMember', () => {
         ingredient: ingredient.ingredient.name
       }))
     })
-    expect(result).toEqual(member)
   })
 
   it('should handle server error when updating a member', async () => {

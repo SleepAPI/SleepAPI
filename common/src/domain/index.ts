@@ -8,3 +8,4 @@ export * as pokemon from './pokemon';
 export * from './recipe';
 export * as subskill from './subskill';
 export * from './types';
+export * from './version';

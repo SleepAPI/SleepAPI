@@ -19,6 +19,8 @@ describe('TeamDAO insert', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
     expect(team).toBeDefined();
 
@@ -26,12 +28,14 @@ describe('TeamDAO insert', () => {
     expect(data).toMatchInlineSnapshot(`
       [
         {
+          "bedtime": "21:30",
           "camp": false,
           "fk_user_id": 1,
           "id": 1,
           "name": "Team A",
           "team_index": 0,
           "version": 1,
+          "wakeup": "06:00",
         },
       ]
     `);
@@ -44,6 +48,8 @@ describe('TeamDAO insert', () => {
         team_index: 0,
         name: 'Team A',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.fk_user_id/);
   });
@@ -55,6 +61,8 @@ describe('TeamDAO insert', () => {
         team_index: undefined as any,
         name: 'Team A',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.team_index/);
   });
@@ -66,6 +74,8 @@ describe('TeamDAO insert', () => {
         team_index: 0,
         name: undefined as any,
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.name/);
   });
@@ -76,6 +86,8 @@ describe('TeamDAO insert', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
     await expect(
       TeamDAO.insert({
@@ -83,6 +95,8 @@ describe('TeamDAO insert', () => {
         team_index: 0,
         name: 'Team B',
         camp: true,
+        bedtime: '21:30',
+        wakeup: '06:00',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: UNIQUE constraint failed: team.fk_user_id, team.team_index/);
   });
@@ -95,6 +109,8 @@ describe('TeamDAO update', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
     expect(team.name).toEqual('Team A');
 
@@ -104,12 +120,14 @@ describe('TeamDAO update', () => {
     expect(data).toMatchInlineSnapshot(`
       [
         {
+          "bedtime": "21:30",
           "camp": false,
           "fk_user_id": 1,
           "id": 1,
           "name": "Updated Team A",
           "team_index": 0,
           "version": 2,
+          "wakeup": "06:00",
         },
       ]
     `);
@@ -121,12 +139,16 @@ describe('TeamDAO update', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
     const teamB = await TeamDAO.insert({
       fk_user_id: 1,
       team_index: 1,
       name: 'Team B',
       camp: true,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
 
     await expect(TeamDAO.update({ ...teamB, team_index: 0 })).rejects.toThrow(
@@ -142,6 +164,8 @@ describe('TeamDAO delete', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
 
     await TeamDAO.delete({ id: team.id });
@@ -158,6 +182,8 @@ describe('findTeamsWithMembers', () => {
       team_index: 0,
       name: 'Team A',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
     // should not be found
     await TeamDAO.insert({
@@ -165,6 +191,8 @@ describe('findTeamsWithMembers', () => {
       team_index: 0,
       name: 'Team B',
       camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
     });
 
     await PokemonDAO.insert({

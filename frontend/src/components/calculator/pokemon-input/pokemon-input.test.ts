@@ -79,6 +79,8 @@ describe('PokemonInput', () => {
         index: 0,
         name: 'Mock team',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 0,
         members: [preExistingMon.externalId],
         production: undefined

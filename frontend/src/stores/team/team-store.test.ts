@@ -40,10 +40,12 @@ describe('Team Store', () => {
     expect(teamStore.$state).toMatchInlineSnapshot(`
       {
         "currentIndex": 0,
+        "domainVersion": 0,
         "loadingTeams": true,
         "maxAvailableTeams": 5,
         "teams": [
           {
+            "bedtime": "21:30",
             "camp": false,
             "index": 0,
             "members": [
@@ -56,6 +58,7 @@ describe('Team Store', () => {
             "name": "Log in to save your teams",
             "production": undefined,
             "version": 0,
+            "wakeup": "06:00",
           },
         ],
       }
@@ -78,6 +81,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: true,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 0,
         members: ['Old member 1', undefined, undefined, undefined, undefined],
         production: undefined
@@ -86,6 +91,8 @@ describe('Team Store', () => {
         index: 1,
         name: 'Team 2',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         version: 0,
         members: [undefined, undefined, undefined, undefined, undefined],
         production: undefined
@@ -201,6 +208,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Old Team Name',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [],
         version: 1,
         production: undefined
@@ -213,15 +222,35 @@ describe('Team Store', () => {
     expect(teamStore.getCurrentTeam.name).toBe('New Team Name')
     expect(TeamService.createOrUpdateTeam).toHaveBeenCalledWith(0, {
       name: 'New Team Name',
-      camp: false
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00'
     })
   })
 
   it('should reset the state correctly', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      },
+      {
+        index: 1,
+        name: 'Team 2',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      }
     ]
     teamStore.currentIndex = 1
     teamStore.maxAvailableTeams = 4
@@ -232,10 +261,12 @@ describe('Team Store', () => {
     expect(teamStore.$state).toMatchInlineSnapshot(`
       {
         "currentIndex": 0,
+        "domainVersion": 0,
         "loadingTeams": true,
         "maxAvailableTeams": 5,
         "teams": [
           {
+            "bedtime": "21:30",
             "camp": false,
             "index": 0,
             "members": [
@@ -248,6 +279,7 @@ describe('Team Store', () => {
             "name": "Log in to save your teams",
             "production": undefined,
             "version": 0,
+            "wakeup": "06:00",
           },
         ],
       }
@@ -257,8 +289,26 @@ describe('Team Store', () => {
   it('should increment currentIndex correctly on next()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      },
+      {
+        index: 1,
+        name: 'Team 2',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      }
     ]
 
     teamStore.next()
@@ -271,8 +321,26 @@ describe('Team Store', () => {
   it('should decrement currentIndex correctly on prev()', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
-      { index: 0, name: 'Team 1', camp: false, members: [], version: 1, production: undefined },
-      { index: 1, name: 'Team 2', camp: false, members: [], version: 1, production: undefined }
+      {
+        index: 0,
+        name: 'Team 1',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      },
+      {
+        index: 1,
+        name: 'Team 2',
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        members: [],
+        version: 1,
+        production: undefined
+      }
     ]
 
     teamStore.prev()
@@ -297,6 +365,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [undefined, externalId, undefined, undefined, undefined],
         version: 1,
         production: undefined
@@ -324,6 +394,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [member, member, member, member, member],
         version: 1,
         production: undefined
@@ -345,6 +417,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [undefined, undefined, undefined, undefined, undefined],
         version: 1,
         production: undefined
@@ -376,6 +450,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [undefined, member2, undefined, member4, undefined],
         version: 1,
         production: undefined
@@ -408,6 +484,8 @@ describe('Team Store', () => {
         index: 0,
         name: 'Team 1',
         camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00',
         members: [undefined, member, null as any, member, '' as any],
         version: 1,
         production: undefined

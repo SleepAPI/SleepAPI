@@ -24,9 +24,6 @@ export async function up(knex: Knex) {
   await knex.schema.createTable(Tables.UserSettings, (table) => {
     table.increments('id');
     table.integer('version').defaultTo(1);
-
-    table.string('bedtime').defaultTo('21:30');
-    table.string('wakeup').defaultTo('06:00');
   });
 
   await knex.schema.createTable(Tables.Pokemon, (table) => {
@@ -78,6 +75,8 @@ export async function up(knex: Knex) {
     table.string('name', 255).notNullable();
 
     table.boolean('camp').defaultTo(false);
+    table.string('bedtime').defaultTo('21:30');
+    table.string('wakeup').defaultTo('06:00');
 
     table.unique([`fk_${Tables.User}_id`, 'team_index']);
   });

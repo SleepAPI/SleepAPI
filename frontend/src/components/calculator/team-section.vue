@@ -31,9 +31,11 @@
       </v-window-item>
     </v-window>
 
-    <v-row class="pt-4">
+    <TeamSettings class="pt-4" />
+
+    <v-row>
       <v-col cols="12">
-        <v-card>
+        <v-card :loading="teamStore.loadingTeams">
           <v-tabs v-model="tab" fixed-tabs bg-color="surface">
             <v-tab value="team">Team</v-tab>
             <v-tab value="members">Members</v-tab>
@@ -66,6 +68,7 @@ import MemberComparison from '@/components/calculator/results/member-comparison.
 import MemberResults from '@/components/calculator/results/member-results.vue'
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
+import TeamSettings from '@/components/calculator/team-settings.vue'
 import TeamSlot from '@/components/calculator/team-slot.vue'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -76,6 +79,7 @@ export default defineComponent({
   components: {
     TeamSlot,
     TeamName,
+    TeamSettings,
     TeamResults,
     MemberResults,
     MemberComparison

@@ -7,6 +7,7 @@ import vue3GoogleLogin from 'vue3-google-login'
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify } from 'vuetify'
+import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import 'vuetify/styles'
 
 import '@/assets/main.scss'
@@ -41,6 +42,9 @@ const vuetify = createVuetify({
     themes: {
       darkTheme
     }
+  },
+  components: {
+    VTimePicker
   }
 })
 

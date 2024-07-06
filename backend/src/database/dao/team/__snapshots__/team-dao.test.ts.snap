@@ -3,6 +3,7 @@
 exports[`findTeamsWithMembers shall get team with members 1`] = `
 [
   {
+    "bedtime": "21:30",
     "camp": false,
     "index": 0,
     "members": [
@@ -153,6 +154,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
     ],
     "name": "Team A",
     "version": 1,
+    "wakeup": "06:00",
   },
 ]
 `;

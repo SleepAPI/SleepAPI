@@ -8,6 +8,8 @@ export interface GetTeamResponse {
   index: number;
   name: string;
   camp: boolean;
+  bedtime: string;
+  wakeup: string;
   version: number;
 
   members: MemberInstance[];

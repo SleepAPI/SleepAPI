@@ -320,8 +320,8 @@ export default defineComponent({
       this.$emit('cancel')
     },
     save() {
-      this.teamStore.updateTeamMember(this.pokemonInstance, this.memberIndex)
       this.$emit('cancel') // TODO: should probably be renamed to close
+      this.teamStore.updateTeamMember(this.pokemonInstance, this.memberIndex)
     }
   }
 })
