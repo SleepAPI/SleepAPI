@@ -1,3 +1,4 @@
+export * from './async-utils';
 export * from './ingredient-utils';
 export * from './math-utils';
 export * from './nature-utils';
