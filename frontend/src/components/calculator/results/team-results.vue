@@ -29,7 +29,7 @@
           class="custom-tab"
         >
           <v-tab value="overview"><v-icon icon="mdi-view-dashboard"></v-icon>Overview</v-tab>
-          <v-tab value="cooking"><v-icon icon="mdi-magnify"></v-icon>Cooking</v-tab>
+          <v-tab value="cooking"><v-icon icon="mdi-pot-mix"></v-icon>Cooking</v-tab>
           <v-tab value="analysis"><v-icon icon="mdi-poll"></v-icon>Analysis</v-tab>
         </v-tabs>
       </v-card>
