@@ -139,7 +139,7 @@
         ></SubskillButton>
       </v-col>
       <v-col cols="6" class="flex-center">
-        <v-btn variant="text" text="edit" append-icon="mdi-pencil"></v-btn>
+        <v-btn variant="text" text="clear" append-icon="mdi-close" @click="resetSubskills"></v-btn>
       </v-col>
     </v-row>
 
@@ -315,6 +315,9 @@ export default defineComponent({
     },
     updateNature(newNature: nature.Nature) {
       this.pokemonInstance.nature = newNature
+    },
+    resetSubskills() {
+      this.pokemonInstance.subskills = []
     },
     cancel() {
       this.$emit('cancel')
