@@ -150,11 +150,11 @@ export const useTeamStore = defineStore('team', {
       this.teams[this.currentIndex].name = updatedName
       this.updateTeam()
     },
-    async updateTeam() {
+    updateTeam() {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          await TeamService.createOrUpdateTeam(this.currentIndex, {
+          TeamService.createOrUpdateTeam(this.currentIndex, {
             name: this.getCurrentTeam.name,
             camp: this.getCurrentTeam.camp,
             bedtime: this.getCurrentTeam.bedtime,
@@ -165,7 +165,7 @@ export const useTeamStore = defineStore('team', {
         }
       }
     },
-    async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
+    updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
       this.toggleMemberLoading(memberIndex)
 
       const userStore = useUserStore()
@@ -175,7 +175,7 @@ export const useTeamStore = defineStore('team', {
 
       if (userStore.loggedIn) {
         try {
-          await TeamService.createOrUpdateMember({
+          TeamService.createOrUpdateMember({
             teamIndex: this.currentIndex,
             memberIndex,
             member: updatedMember
@@ -231,10 +231,10 @@ export const useTeamStore = defineStore('team', {
         externalId: uuid.v4(),
         name: this.randomName()
       }
-      await this.updateTeamMember(duplicatedMember, openSlotIndex)
+      this.updateTeamMember(duplicatedMember, openSlotIndex)
       this.toggleMemberLoading(memberIndex)
     },
-    async removeMember(memberIndex: number) {
+    removeMember(memberIndex: number) {
       this.toggleMemberLoading(memberIndex)
 
       const userStore = useUserStore()
@@ -242,7 +242,7 @@ export const useTeamStore = defineStore('team', {
 
       if (userStore.loggedIn) {
         try {
-          await TeamService.removeMember({
+          TeamService.removeMember({
             teamIndex: this.currentIndex,
             memberIndex
           })
