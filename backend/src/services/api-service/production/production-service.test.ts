@@ -77,7 +77,7 @@ describe('calculateTeam', () => {
     const result = calculateTeam({ members, settings }, 5000);
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries).toMatchInlineSnapshot(`"36.94389025534449 LUM"`);
-    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"85 Honey"`);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`"40.51834916094541 LUM"`);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"90.9 Honey"`);
   });
 });

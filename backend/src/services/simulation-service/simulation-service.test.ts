@@ -14,8 +14,8 @@ describe('setupAndRunProductionSimulation', () => {
     expect(skillActivations).toMatchInlineSnapshot(`
       [
         {
-          "adjustedAmount": 1255.6155621865146,
-          "fractionOfProc": 0.2762022794075043,
+          "adjustedAmount": 1511.0541604013417,
+          "fractionOfProc": 0.33239202824490577,
           "nrOfHelpsToActivate": 0,
           "skill": {
             "RP": [
@@ -72,9 +72,9 @@ describe('setupAndRunProductionSimulation', () => {
           },
         },
         {
-          "adjustedAmount": 181.84000000000017,
-          "fractionOfProc": 0.040000000000000036,
-          "nrOfHelpsToActivate": 52,
+          "adjustedAmount": 363.68000000000035,
+          "fractionOfProc": 0.08000000000000007,
+          "nrOfHelpsToActivate": 54,
           "skill": {
             "RP": [
               880,
@@ -113,13 +113,13 @@ describe('setupAndRunProductionSimulation', () => {
 
     expect(detailedProduce).toMatchInlineSnapshot(`
       {
-        "averageTotalSkillProcs": 1.3162022794075043,
-        "dayHelps": 52,
-        "nightHelps": 16,
-        "nightHelpsBeforeSS": 16,
+        "averageTotalSkillProcs": 1.4123920282449058,
+        "dayHelps": 54,
+        "nightHelps": 20,
+        "nightHelpsBeforeSS": 20,
         "produce": {
           "berries": {
-            "amount": 42.8672,
+            "amount": 46.64959999999999,
             "berry": {
               "name": "BELUE",
               "type": "steel",
@@ -128,7 +128,7 @@ describe('setupAndRunProductionSimulation', () => {
           },
           "ingredients": [
             {
-              "amount": 8.377600000000003,
+              "amount": 9.116800000000003,
               "ingredient": {
                 "longName": "Fancy Apple",
                 "name": "Apple",
@@ -140,8 +140,8 @@ describe('setupAndRunProductionSimulation', () => {
         },
         "skillActivations": [
           {
-            "adjustedAmount": 1255.6155621865146,
-            "fractionOfProc": 0.2762022794075043,
+            "adjustedAmount": 1511.0541604013417,
+            "fractionOfProc": 0.33239202824490577,
             "nrOfHelpsToActivate": 0,
             "skill": {
               "RP": [
@@ -198,9 +198,9 @@ describe('setupAndRunProductionSimulation', () => {
             },
           },
           {
-            "adjustedAmount": 181.84000000000017,
-            "fractionOfProc": 0.040000000000000036,
-            "nrOfHelpsToActivate": 52,
+            "adjustedAmount": 363.68000000000035,
+            "fractionOfProc": 0.08000000000000007,
+            "nrOfHelpsToActivate": 54,
             "skill": {
               "RP": [
                 880,
@@ -235,7 +235,17 @@ describe('setupAndRunProductionSimulation', () => {
             "value": 33,
           },
         },
-        "spilledIngredients": [],
+        "spilledIngredients": [
+          {
+            "amount": 0,
+            "ingredient": {
+              "longName": "Fancy Apple",
+              "name": "Apple",
+              "taxedValue": 23.7,
+              "value": 90,
+            },
+          },
+        ],
       }
     `);
   });

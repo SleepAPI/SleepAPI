@@ -232,6 +232,15 @@ describe('attemptDayHelp', () => {
       camp: false,
     };
 
+    const member: TeamMember = {
+      pokemonSet: { ...mockPokemonSet, pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 0 } },
+      carrySize: 10,
+      level: 60,
+      nature: nature.BASHFUL,
+      skillLevel: 6,
+      subskills: [],
+    };
+
     const memberState = new MemberState({ member, settings, team: [member] });
     memberState.attemptDayHelp(TimeUtils.parseTime('06:01'));
     memberState.collectInventory();

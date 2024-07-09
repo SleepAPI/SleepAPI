@@ -35,14 +35,14 @@ describe('findOptimalSetsForMeal', () => {
     ).toMatchInlineSnapshot(`
       [
         {
-          "surplus": "3.6 Cacao, 2.8 Apple, 3.6 Mushroom, 6.1 Ginger",
+          "surplus": "3.7 Cacao, 3.5 Apple, 4.1 Mushroom, 6.6 Ginger",
           "team": [
             "ABSOL",
             "RAICHU",
           ],
         },
         {
-          "surplus": "3.6 Cacao, 2 Apple, 3.6 Mushroom, 2.2 Ginger",
+          "surplus": "3.7 Cacao, 2.7 Apple, 4.1 Mushroom, 2.7 Ginger",
           "team": [
             "ABSOL",
             "PIKACHU_HALLOWEEN",
