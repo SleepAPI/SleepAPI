@@ -88,7 +88,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
-    expect(contribution.contributedPower).toBe(6828.410152294876);
+    expect(contribution.contributedPower).toBe(6873.912101094876);
   });
 
   it('shall calculate Gengars level 50 contribution and divide by 2 for spore mushroom curry with size 2 team size', () => {
@@ -120,8 +120,8 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
-    expect(Math.round(contribution.contributedPower)).toBe(7368);
-    expect(Math.round(contribution.contributedPower * 1.5)).toBe(11052); // expected value in overall 50 tier list
+    expect(Math.round(contribution.contributedPower)).toBe(7431);
+    expect(Math.round(contribution.contributedPower * 1.5)).toBe(11147); // expected value in overall 50 tier list
   });
 
   it('shall calculate an extra helpful mon that solos recipe, but needs support produce to do so', () => {

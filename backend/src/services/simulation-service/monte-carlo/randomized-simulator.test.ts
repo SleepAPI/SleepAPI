@@ -18,8 +18,8 @@ describe('randomizedSimulation', () => {
       skillLevel: 6,
     });
 
-    expect(result.dayHelps).toBe(95);
-    expect(result.nightHelpsBeforeSS).toBe(31);
+    expect(result.dayHelps).toBe(102);
+    expect(result.nightHelpsBeforeSS).toBe(33);
     expect(result.endingEnergy).toBe(0);
   });
 
@@ -37,7 +37,7 @@ describe('randomizedSimulation', () => {
       skillLevel: 6,
     });
 
-    expect(result.dayHelps).toBe(95);
+    expect(result.dayHelps).toBe(102);
     expect(result.nightHelpsBeforeSS).toBe(2);
     expect(result.endingEnergy).toBe(0);
   });

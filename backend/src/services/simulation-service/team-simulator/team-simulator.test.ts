@@ -50,9 +50,9 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries).toMatchInlineSnapshot(`"32.8 BELUE"`);
-    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"8.2 Tail"`);
-    expect(result.members[0].skillProcs).toMatchInlineSnapshot(`41`);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`"34.4 BELUE"`);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"8.6 Tail"`);
+    expect(result.members[0].skillProcs).toMatchInlineSnapshot(`44`);
   });
 
   it('shall calculate production with uneven sleep times', () => {
@@ -86,8 +86,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries).toMatchInlineSnapshot(`"37.97286622975349 LUM"`);
-    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"86.3 Honey"`);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`"41.562818229753496 LUM"`);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"92.9 Honey"`);
   });
 
   it('shall calculate team with multiple members', () => {
@@ -116,9 +116,9 @@ describe('TeamSimulator', () => {
     expect(result.members).toHaveLength(5);
 
     for (const member of result.members) {
-      expect(member.berries).toMatchInlineSnapshot(`"32.8 BELUE"`);
-      expect(member.ingredients).toMatchInlineSnapshot(`"8.2 Tail"`);
-      expect(member.skillProcs).toMatchInlineSnapshot(`41`);
+      expect(member.berries).toMatchInlineSnapshot(`"34.4 BELUE"`);
+      expect(member.ingredients).toMatchInlineSnapshot(`"8.6 Tail"`);
+      expect(member.skillProcs).toMatchInlineSnapshot(`44`);
     }
   });
 

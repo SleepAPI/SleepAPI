@@ -120,9 +120,9 @@ export function energyFactorFromEnergy(energy: number) {
   } else if (energy >= 60) {
     return 0.52;
   } else if (energy >= 40) {
-    return 0.62;
-  } else if (energy >= 20) {
-    return 0.71;
+    return 0.58;
+  } else if (energy >= 1) {
+    return 0.66;
   } else {
     return 1;
   }

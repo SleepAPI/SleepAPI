@@ -17,7 +17,7 @@ describe('monteCarlo', () => {
       monteCarloIterations: 50,
     });
 
-    expect(dayHelps).toBe(95);
+    expect(dayHelps).toBe(102);
     expect(averageDailySkillProcs).toBeGreaterThan(0);
     expect(averageDailySkillProcs).toBeLessThan(3);
     expect(averageNightlySkillProcOdds).toBeGreaterThan(0);

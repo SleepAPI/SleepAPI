@@ -57,12 +57,12 @@ describe('simulator', () => {
     expect(detailedProduce).toMatchInlineSnapshot(`
       {
         "averageTotalSkillProcs": 1,
-        "dayHelps": 104,
-        "nightHelps": 30,
+        "dayHelps": 106,
+        "nightHelps": 37,
         "nightHelpsBeforeSS": 7,
         "produce": {
           "berries": {
-            "amount": 225.33333333333334,
+            "amount": 229.33333333333334,
             "berry": {
               "name": "BELUE",
               "type": "steel",
@@ -71,7 +71,7 @@ describe('simulator', () => {
           },
           "ingredients": [
             {
-              "amount": 112.66666666666667,
+              "amount": 114.66666666666667,
               "ingredient": {
                 "longName": "Bean Sausage",
                 "name": "Sausage",
@@ -120,7 +120,7 @@ describe('simulator', () => {
         },
         "spilledIngredients": [
           {
-            "amount": 23.333333333333332,
+            "amount": 30.333333333333332,
             "ingredient": {
               "longName": "Bean Sausage",
               "name": "Sausage",
