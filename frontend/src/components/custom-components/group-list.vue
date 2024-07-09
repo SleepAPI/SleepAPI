@@ -6,6 +6,7 @@
           v-model="searchQuery"
           label="Search for your Pokémon"
           hide-details
+          no-resize
           autofocus
           @keydown.enter="selectFirstOption"
         ></v-text-field>
