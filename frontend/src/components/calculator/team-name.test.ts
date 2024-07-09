@@ -1,10 +1,8 @@
 import TeamName from '@/components/calculator/team-name.vue' // Adjust the import path as needed
-import { TeamService } from '@/services/team/team-service'
-import { useNotificationStore } from '@/stores/notification-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('TeamSlotName', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamName>>
@@ -23,11 +21,11 @@ describe('TeamSlotName', () => {
   it('displays team name correctly', async () => {
     const teamStore = useTeamStore()
     teamStore.loadingTeams = false
+    teamStore.teams[0].name = 'Log in to save your teams'
     wrapper = mount(TeamName)
 
-    const teamNameSpan = wrapper.find('#teamNameText')
-    expect(teamNameSpan.exists()).toBe(true)
-    expect(teamNameSpan.text()).toBe('Log in to save your teams')
+    const teamNameSpan = wrapper.vm.editedTeamName
+    expect(teamNameSpan).toBe('Log in to save your teams')
   })
 
   it('displays skeleton loader while team is loading', async () => {
@@ -40,86 +38,45 @@ describe('TeamSlotName', () => {
     expect(skeletonLoader.exists()).toBe(true)
   })
 
-  it('opens edit dialog on click', async () => {
-    const card = wrapper.find('.v-card')
-    await card.trigger('click')
-
-    expect(wrapper.vm.isEditDialogOpen).toBe(true)
-    const editTeamNameDialog = document.querySelector('#editTeamNameDialog')
-    expect(editTeamNameDialog).not.toBeNull()
-
-    if (editTeamNameDialog) {
-      const style = window.getComputedStyle(editTeamNameDialog)
-      expect(style.display).not.toBe('none')
-    }
-  })
-
-  it('filters input correctly', async () => {
-    await wrapper.setData({ isEditDialogOpen: true })
-
-    const textarea = document.querySelector('textarea') as HTMLTextAreaElement
-    textarea.value = 'Team123!'
-    textarea.dispatchEvent(new Event('input'))
-
-    expect(wrapper.vm.editedTeamName).toBe('Team123!')
-  })
-
-  it('saves edited team name', async () => {
+  it('updates team name correctly when input changes', async () => {
     const teamStore = useTeamStore()
-    teamStore.updateTeamName = vi.fn()
-    await wrapper.setData({ isEditDialogOpen: true, editedTeamName: 'New Team Name' })
-    TeamService.createOrUpdateTeam = vi.fn()
+    teamStore.loadingTeams = false
+    teamStore.teams[0].name = 'Old Team Name'
+    wrapper = mount(TeamName)
 
-    const saveButton = document.querySelector('#saveButton') as HTMLElement
-    expect(saveButton).not.toBeNull()
-    saveButton.click()
+    const input = wrapper.find('input')
+    await input.setValue('New Team Name')
 
-    expect(teamStore.updateTeamName).toHaveBeenCalledWith('New Team Name')
+    expect(wrapper.vm.editedTeamName).toBe('New Team Name')
+    wrapper.vm.updateTeamName()
+    expect(teamStore.getCurrentTeam.name).toBe('New Team Name')
   })
 
-  it('handles notification correctly when opening dialog', async () => {
-    const notificationStore = useNotificationStore()
-    notificationStore.showTeamNameNotification = true
-
-    const card = wrapper.find('.v-card')
-    await card.trigger('click')
-
-    expect(notificationStore.showTeamNameNotification).toBe(false)
-  })
-
-  it('closes edit dialog on cancel', async () => {
-    await wrapper.setData({ isEditDialogOpen: true })
-
-    const cancelButton = document.querySelector('#cancelButton')
-    expect(cancelButton).not.toBeNull()
-    ;(cancelButton as HTMLElement).click()
-
-    expect(wrapper.vm.isEditDialogOpen).toBe(false)
-  })
-
-  it('rerolls team name correctly', async () => {
-    await wrapper.setData({ isEditDialogOpen: true })
-
-    const rerollButton = document.querySelector('#rerollButton') as HTMLElement
-    expect(rerollButton).not.toBeNull()
-    rerollButton.click()
-
-    const newTeamName = wrapper.vm.editedTeamName
-    expect(newTeamName).not.toBe('')
-    expect(newTeamName.length).toBeLessThanOrEqual(wrapper.vm.maxTeamNameLength)
-  })
-
-  it('saves default team name when edited name is empty', async () => {
+  it('restricts input value length to maxTeamNameLength', async () => {
     const teamStore = useTeamStore()
-    teamStore.updateTeamName = vi.fn()
-    await wrapper.setData({ isEditDialogOpen: true, editedTeamName: '' })
-    TeamService.createOrUpdateTeam = vi.fn()
+    teamStore.loadingTeams = false
+    teamStore.teams[0].name = 'Short Name'
+    wrapper = mount(TeamName)
 
-    const saveButton = document.querySelector('#saveButton') as HTMLElement
-    expect(saveButton).not.toBeNull()
-    saveButton.click()
+    const input = wrapper.find('input')
+    const longName = 'A'.repeat(wrapper.vm.maxTeamNameLength + 1)
+    await input.setValue(longName)
 
-    const expectedDefaultName = `Helper team ${teamStore.currentIndex + 1}`
-    expect(teamStore.updateTeamName).toHaveBeenCalledWith(expectedDefaultName)
+    expect(wrapper.vm.editedTeamName.length).toBe(wrapper.vm.maxTeamNameLength)
+  })
+
+  it('filters invalid characters in input', async () => {
+    const teamStore = useTeamStore()
+    teamStore.loadingTeams = false
+    teamStore.teams[0].name = 'Valid Name'
+    wrapper = mount(TeamName)
+
+    const input = wrapper.find('input')
+    await input.setValue('Invalid#Name!')
+
+    const event = { target: input.element } as unknown as Event
+    wrapper.vm.filterInput(event)
+
+    expect(wrapper.vm.editedTeamName).toBe('InvalidName')
   })
 })

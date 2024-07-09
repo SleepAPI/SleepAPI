@@ -1,72 +1,39 @@
 <template>
-  <v-badge
-    :model-value="!teamStore.loadingTeams && notificationStore.showTeamNameNotification"
-    dot
-    color="primary"
-    class="flex-grow-1"
-  >
-    <v-card id="teamNameCard" class="flex-grow-1 text-center" rounded="xl" @click="openEditDialog">
-      <v-row>
-        <v-col class="team-name">
-          <v-skeleton-loader
-            v-if="teamStore.loadingTeams"
-            type="card"
-            style="width: 100%"
-          ></v-skeleton-loader>
-          <template v-else>
-            <span id="teamNameText" style="width: 100%; font-size: 0.875rem; margin: 24px">{{
-              teamStore.getCurrentTeam.name
-            }}</span>
-          </template>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-badge>
-
-  <v-dialog id="editTeamNameDialog" v-model="isEditDialogOpen" max-width="600px">
-    <v-card title="Change Team Name">
-      <v-card-text class="pt-4 pb-0">
-        <v-textarea
-          v-model="editedTeamName"
-          :rules="[
-            (v) =>
-              (v || '').length <= maxTeamNameLength ||
-              `Description must be ${maxTeamNameLength} characters or less`
-          ]"
-          :counter="maxTeamNameLength"
-          clearable
-          rows="2"
-          no-resize
-          label="Team Name"
-          class="compact-control"
-          @input="filterInput"
-          @keydown.enter="saveEditDialog"
-        ></v-textarea>
-      </v-card-text>
-      <v-card-actions class="pt-0">
-        <v-btn id="rerollButton" icon @click="reroll">
-          <v-icon>mdi-dice-multiple</v-icon>
-        </v-btn>
-        <v-spacer />
-        <v-btn id="cancelButton" @click="closeEditDialog">Cancel</v-btn>
-        <v-btn
-          id="saveButton"
-          :disabled="remainingChars < 0"
-          rounded="lg"
-          color="primary"
-          @click="saveEditDialog"
-          >Save</v-btn
-        >
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-card id="teamNameCard" class="flex-grow-1 text-center" rounded="xl">
+    <v-row>
+      <v-col class="team-name">
+        <v-skeleton-loader
+          v-if="teamStore.loadingTeams"
+          type="card"
+          style="width: 100%"
+        ></v-skeleton-loader>
+        <template v-else>
+          <v-text-field
+            v-model="editedTeamName"
+            :rules="[
+              (v) =>
+                (v || '').length <= maxTeamNameLength ||
+                `Description must be ${maxTeamNameLength} characters or less`
+            ]"
+            append-inner-icon="mdi-pencil"
+            label="Team name"
+            density="compact"
+            variant="solo"
+            hide-details
+            single-line
+            @input="filterInput"
+            @update:focused="updateTeamName"
+          ></v-text-field>
+        </template>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script lang="ts">
 import { useNotificationStore } from '@/stores/notification-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { faker } from '@faker-js/faker/locale/en'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -87,39 +54,29 @@ export default defineComponent({
       return this.maxTeamNameLength - (this.editedTeamName?.length || 0)
     }
   },
+  mounted() {
+    this.editedTeamName = this.teamStore.getCurrentTeam.name
+  },
   methods: {
-    openEditDialog() {
-      this.editedTeamName = this.teamStore.getCurrentTeam.name
-      this.isEditDialogOpen = true
-
-      if (this.notificationStore.showTeamNameNotification) {
-        this.notificationStore.hideTeamNameNotification()
-      }
-    },
-    closeEditDialog() {
-      this.isEditDialogOpen = false
-    },
-    async saveEditDialog() {
-      if (this.remainingChars >= 0) {
-        if (this.remainingChars === this.maxTeamNameLength) {
-          this.editedTeamName = `Helper team ${this.teamStore.currentIndex + 1}`
+    updateTeamName() {
+      if (this.editedTeamName !== this.teamStore.getCurrentTeam.name) {
+        if (this.remainingChars >= 0) {
+          if (this.remainingChars === this.maxTeamNameLength) {
+            this.editedTeamName = `Helper team ${this.teamStore.currentIndex + 1}`
+          }
+          this.teamStore.updateTeamName(this.editedTeamName)
+          this.isEditDialogOpen = false
         }
-        this.teamStore.updateTeamName(this.editedTeamName)
-        this.isEditDialogOpen = false
       }
-    },
-    reroll() {
-      let name = faker.music.songName().replace(/[^a-zA-Z0-9 ]/g, '')
-      while (name.length > this.maxTeamNameLength) {
-        name = faker.music.songName().replace(/[^a-zA-Z0-9 ]/g, '')
-      }
-      this.editedTeamName = name
     },
     filterInput(event: Event) {
       const input = event.target as HTMLInputElement
       const regex = /^[a-zA-Z0-9 ]*$/
       if (!regex.test(input.value)) {
         this.editedTeamName = this.editedTeamName.replace(/[^a-zA-Z0-9 ]/g, '')
+      }
+      if (input.value.length > this.maxTeamNameLength) {
+        this.editedTeamName = this.editedTeamName.slice(0, -1)
       }
     }
   }
@@ -132,5 +89,9 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   height: 50px;
+}
+
+.text-center input {
+  text-align: center;
 }
 </style>
