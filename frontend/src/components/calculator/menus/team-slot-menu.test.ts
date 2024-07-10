@@ -2,11 +2,12 @@
 import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi, vitest } from 'vitest'
 
 vi.mock('@/services/team/team-service', () => ({
   TeamService: {
@@ -21,6 +22,7 @@ describe('TeamSlotMenu', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamSlotMenu>>
   let teamStore: ReturnType<typeof useTeamStore>
   let pokemonStore: ReturnType<typeof usePokemonStore>
+  let userStore: ReturnType<typeof useUserStore>
 
   const externalId = 'external-id'
   const mockPokemon: PokemonInstanceExt = {
@@ -46,6 +48,7 @@ describe('TeamSlotMenu', () => {
       }
     })
     teamStore = useTeamStore()
+    userStore = useUserStore()
     pokemonStore = usePokemonStore()
   })
 
@@ -70,6 +73,36 @@ describe('TeamSlotMenu', () => {
     expect(wrapper.vm.emptySlot).toBe(false)
     expect(document.querySelector('#emptyMenu')).toBeNull()
     expect(document.querySelector('#filledMenu')).not.toBeNull()
+  })
+
+  it('disables save button when user is not logged in', async () => {
+    userStore.tokens = null
+    pokemonStore.upsertPokemon(mockPokemon)
+    teamStore.teams[0].members[0] = externalId // so isEmpty is false and we can see button
+    await wrapper.setProps({ show: true, memberIndex: 0 })
+
+    const saveButton = document.querySelector('#saveButton') as HTMLElement
+    expect(saveButton).not.toBeNull()
+    expect(saveButton.classList).toContain('v-list-item--disabled')
+  })
+
+  it('toggles save and calls server', async () => {
+    vitest.useFakeTimers()
+    pokemonStore.upsertPokemon(mockPokemon)
+
+    teamStore.teams[0].members[0] = externalId
+    teamStore.updateTeamMember = vi.fn()
+    await wrapper.setProps({ show: true, memberIndex: 0 })
+
+    const saveButton = document.querySelector('#saveButton') as HTMLElement
+    expect(saveButton).not.toBeNull()
+    saveButton.click()
+
+    // skip past debounce
+    vitest.advanceTimersByTime(2000)
+
+    expect(teamStore.updateTeamMember).toHaveBeenCalledWith({ ...mockPokemon, saved: true }, 0)
+    vitest.useRealTimers()
   })
 
   it('opens PokemonSearch on add click', async () => {
