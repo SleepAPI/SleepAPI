@@ -24,7 +24,7 @@ describe('TeamSlotName', () => {
     teamStore.teams[0].name = 'Log in to save your teams'
     wrapper = mount(TeamName)
 
-    const teamNameSpan = wrapper.vm.editedTeamName
+    const teamNameSpan = teamStore.getCurrentTeam.name
     expect(teamNameSpan).toBe('Log in to save your teams')
   })
 
@@ -47,7 +47,7 @@ describe('TeamSlotName', () => {
     const input = wrapper.find('input')
     await input.setValue('New Team Name')
 
-    expect(wrapper.vm.editedTeamName).toBe('New Team Name')
+    expect(teamStore.getCurrentTeam.name).toBe('New Team Name')
     wrapper.vm.updateTeamName()
     expect(teamStore.getCurrentTeam.name).toBe('New Team Name')
   })
@@ -62,7 +62,7 @@ describe('TeamSlotName', () => {
     const longName = 'A'.repeat(wrapper.vm.maxTeamNameLength + 1)
     await input.setValue(longName)
 
-    expect(wrapper.vm.editedTeamName.length).toBe(wrapper.vm.maxTeamNameLength)
+    expect(teamStore.getCurrentTeam.name.length).toBe(wrapper.vm.maxTeamNameLength)
   })
 
   it('filters invalid characters in input', async () => {
@@ -77,6 +77,6 @@ describe('TeamSlotName', () => {
     const event = { target: input.element } as unknown as Event
     wrapper.vm.filterInput(event)
 
-    expect(wrapper.vm.editedTeamName).toBe('InvalidName')
+    expect(teamStore.getCurrentTeam.name).toBe('InvalidName')
   })
 })

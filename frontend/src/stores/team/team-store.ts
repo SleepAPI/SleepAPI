@@ -146,10 +146,6 @@ export const useTeamStore = defineStore('team', {
       }
       return name
     },
-    async updateTeamName(updatedName: string) {
-      this.teams[this.currentIndex].name = updatedName
-      this.updateTeam()
-    },
     updateTeam() {
       const userStore = useUserStore()
       if (userStore.loggedIn) {

@@ -1,7 +1,7 @@
 <template>
   <v-row dense>
     <v-col cols="8" class="d-flex align-center">
-      Click a mon above to edit, save, or remove it.
+      Click a mon above to edit, save, duplicate or remove it.
     </v-col>
     <v-col cols="2" class="flex-center">
       <v-btn
