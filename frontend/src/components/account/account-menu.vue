@@ -54,7 +54,7 @@
         <v-list>
           <v-list-item v-if="!userStore.loggedIn">
             <GoogleLogin :callback="callback" style="width: 100%">
-              <!-- should not hard code color -->
+              <!-- TODO: should not hard code color -->
               <v-card
                 title="Login"
                 class="text-center"

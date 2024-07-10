@@ -15,7 +15,7 @@
 
       <div style="position: absolute; bottom: 0%; width: 100%">
         <v-card
-          class="text-center responsive-text rounded-0"
+          class="text-center responsive-text rounded-t-0"
           color="subskillGold"
           location="bottom center"
         >

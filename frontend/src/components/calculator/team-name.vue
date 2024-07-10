@@ -9,7 +9,7 @@
         ></v-skeleton-loader>
         <template v-else>
           <v-text-field
-            v-model="editedTeamName"
+            v-model="teamStore.getCurrentTeam.name"
             :rules="[
               (v) =>
                 (v || '').length <= maxTeamNameLength ||
@@ -46,37 +46,37 @@ export default defineComponent({
   },
   data: () => ({
     isEditDialogOpen: false,
-    maxTeamNameLength: 24,
-    editedTeamName: ''
+    maxTeamNameLength: 24
   }),
   computed: {
     remainingChars() {
-      return this.maxTeamNameLength - (this.editedTeamName?.length || 0)
+      return this.maxTeamNameLength - (this.currentTeamName.length || 0)
+    },
+    currentTeamName() {
+      return this.teamStore.getCurrentTeam.name
     }
-  },
-  mounted() {
-    this.editedTeamName = this.teamStore.getCurrentTeam.name
   },
   methods: {
     updateTeamName() {
-      if (this.editedTeamName !== this.teamStore.getCurrentTeam.name) {
-        if (this.remainingChars >= 0) {
-          if (this.remainingChars === this.maxTeamNameLength) {
-            this.editedTeamName = `Helper team ${this.teamStore.currentIndex + 1}`
-          }
-          this.teamStore.updateTeamName(this.editedTeamName)
-          this.isEditDialogOpen = false
+      if (this.remainingChars >= 0) {
+        if (this.remainingChars === this.maxTeamNameLength) {
+          this.currentTeamName = `Helper team ${this.teamStore.currentIndex + 1}`
         }
+        this.teamStore.updateTeam()
+        this.isEditDialogOpen = false
       }
     },
     filterInput(event: Event) {
       const input = event.target as HTMLInputElement
       const regex = /^[a-zA-Z0-9 ]*$/
       if (!regex.test(input.value)) {
-        this.editedTeamName = this.editedTeamName.replace(/[^a-zA-Z0-9 ]/g, '')
+        this.teamStore.getCurrentTeam.name = this.teamStore.getCurrentTeam.name.replace(
+          /[^a-zA-Z0-9 ]/g,
+          ''
+        )
       }
       if (input.value.length > this.maxTeamNameLength) {
-        this.editedTeamName = this.editedTeamName.slice(0, -1)
+        this.teamStore.getCurrentTeam.name = this.teamStore.getCurrentTeam.name.slice(0, -1)
       }
     }
   }

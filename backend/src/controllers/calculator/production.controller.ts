@@ -4,6 +4,7 @@ import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
+import { calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
@@ -56,18 +57,20 @@ export default class ProductionController extends Controller {
     const parsedMembers: TeamMember[] = [];
     for (const member of members) {
       const pokemon = getPokemon(member.pokemon);
+      const subskills = member.subskills
+        .filter((subskill) => subskill.level <= member.level)
+        .map((subskill) => getSubskill(subskill.subskill));
+
       parsedMembers.push({
         pokemonSet: {
           pokemon,
           ingredientList: this.#getIngredientSet({ pokemon, level: member.level, ingredients: member.ingredients }),
         },
         level: member.level,
-        carrySize: member.carrySize,
+        carrySize: member.carrySize + calculateSubskillCarrySize(subskills),
         nature: getNature(member.nature),
         skillLevel: member.skillLevel,
-        subskills: member.subskills
-          .filter((subskill) => subskill.level <= member.level)
-          .map((subskill) => getSubskill(subskill.subskill)),
+        subskills,
         externalId: member.externalId,
       });
     }

@@ -26,7 +26,7 @@ describe('TeamSettings', () => {
   it('displays the correct initial text content', () => {
     const textContent = wrapper.find('.v-col')
     expect(textContent.exists()).toBe(true)
-    expect(textContent.text()).toBe('Click a mon above to edit, save, or remove it.')
+    expect(textContent.text()).toBe('Click a mon above to edit, save, duplicate or remove it.')
   })
 
   it('toggles camp button correctly', async () => {

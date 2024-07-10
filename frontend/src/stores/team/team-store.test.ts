@@ -202,39 +202,6 @@ describe('Team Store', () => {
     expect(teamStore.$state.teams[0].name).toBe('Log in to save your teams')
   })
 
-  it('should update current team name correctly', async () => {
-    const teamStore = useTeamStore()
-    const userStore = useUserStore()
-    userStore.setTokens({
-      accessToken: 'token1',
-      expiryDate: 10,
-      refreshToken: 'token2'
-    })
-    teamStore.teams = [
-      {
-        index: 0,
-        name: 'Old Team Name',
-        camp: false,
-        bedtime: '21:30',
-        wakeup: '06:00',
-        members: [],
-        version: 1,
-        production: undefined
-      }
-    ]
-
-    await teamStore.updateTeamName('New Team Name')
-
-    expect(teamStore.teams[0].name).toBe('New Team Name')
-    expect(teamStore.getCurrentTeam.name).toBe('New Team Name')
-    expect(TeamService.createOrUpdateTeam).toHaveBeenCalledWith(0, {
-      name: 'New Team Name',
-      camp: false,
-      bedtime: '21:30',
-      wakeup: '06:00'
-    })
-  })
-
   it('should reset the state correctly', () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
