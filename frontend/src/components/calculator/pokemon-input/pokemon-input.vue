@@ -6,17 +6,21 @@
           <h5 class="mr-1 text-primary">RP</h5>
           <h2>{{ pokemonInstance.rp }}</h2>
         </v-col>
-        <v-col class="flex-right pr-1">
-          <v-btn
-            id="saveIcon"
-            icon
-            color="background"
-            :class="{ nudge: !userStore.loggedIn }"
-            @click="toggleSave"
-          >
-            <v-icon v-if="pokemonInstance.saved" size="30">mdi-bookmark</v-icon>
-            <v-icon v-else size="30">mdi-bookmark-outline</v-icon>
-          </v-btn>
+        <v-col class="flex-right pr-0 pt-4">
+          <div class="save-container">
+            <span style="font-size: 0.7rem">Save</span>
+            <v-btn
+              id="saveIcon"
+              icon
+              color="background"
+              :class="{ nudge: !userStore.loggedIn }"
+              style="margin-top: -4px"
+              @click="toggleSave"
+            >
+              <v-icon v-if="pokemonInstance.saved" color="accent" size="40">mdi-bookmark</v-icon>
+              <v-icon v-else size="40">mdi-bookmark-outline</v-icon>
+            </v-btn>
+          </div>
         </v-col>
       </v-row>
     </div>
@@ -354,5 +358,11 @@ export default defineComponent({
   .responsive-icon {
     font-size: 0.7rem !important;
   }
+}
+
+.save-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
