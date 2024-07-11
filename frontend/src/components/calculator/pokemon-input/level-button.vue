@@ -1,31 +1,43 @@
 <template>
-  <v-menu v-model="menu" :close-on-content-click="false" offset-y>
+  <v-menu v-model="menu" :close-on-content-click="true" offset-y>
     <template #activator="{ props }">
-      <v-btn class="w-100" v-bind="props">
-        <span class="text-body-1"> Level {{ level }} </span>
-      </v-btn>
+      <v-text-field
+        v-bind="props"
+        v-model.number="customValue"
+        class="w-100 text-center"
+        label="Level"
+        density="compact"
+        persistent-hint
+        variant="outlined"
+        hide-details
+        hide-spin-buttons
+        type="number"
+        @keydown.enter="menu = false"
+      ></v-text-field>
     </template>
 
-    <v-card>
-      <v-list density="compact">
-        <v-list-item v-for="value in defaultValues" :key="value" @click="selectValue(value)">
-          <v-list-item-title>{{ value }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-      <v-divider></v-divider>
-      <v-text-field
-        v-model.number="customValue"
-        label="Custom Level"
-        type="number"
-        hide-details
-        @keydown.enter="selectCustomValue"
-      ></v-text-field>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="menu = !menu">Cancel</v-btn>
-        <v-btn color="primary" @click="selectCustomValue">Save</v-btn>
-      </v-card-actions>
-    </v-card>
+    <v-btn-toggle v-model="customValue">
+      <v-btn
+        v-for="value in firstRowValues"
+        :key="value"
+        :value="value"
+        color="primary"
+        @click="selectValue(value)"
+      >
+        {{ value }}
+      </v-btn>
+    </v-btn-toggle>
+    <v-btn-toggle v-model="customValue">
+      <v-btn
+        v-for="value in secondRowValues"
+        :key="value"
+        :value="value"
+        color="primary"
+        @click="selectValue(value)"
+      >
+        {{ value }}
+      </v-btn>
+    </v-btn-toggle>
   </v-menu>
 </template>
 
@@ -42,11 +54,28 @@ export default {
   data: () => ({
     menu: false,
     customValue: 50,
-    defaultValues: [10, 25, 30, 50, 60]
+    defaultValues: [10, 25, 30, 50, 55, 60, 75, 100]
   }),
+  computed: {
+    firstRowValues() {
+      return this.defaultValues.slice(0, Math.ceil(this.defaultValues.length / 2))
+    },
+    secondRowValues() {
+      return this.defaultValues.slice(Math.ceil(this.defaultValues.length / 2))
+    }
+  },
   watch: {
     level(newValue) {
       this.customValue = newValue
+    },
+    menu(state) {
+      if (!state) {
+        if (this.customValue >= 1 && this.customValue <= 100) {
+          this.updateLevel(this.customValue)
+        } else {
+          this.customValue = this.level
+        }
+      }
     }
   },
   mounted() {
@@ -57,15 +86,15 @@ export default {
       this.updateLevel(value)
       this.menu = false
     },
-    selectCustomValue() {
-      if (this.customValue >= 1 && this.customValue <= 100) {
-        this.updateLevel(this.customValue)
-        this.menu = false
-      }
-    },
     updateLevel(newLevel: number) {
       this.$emit('update-level', newLevel)
     }
   }
 }
 </script>
+
+<style lang="scss">
+.text-center input {
+  text-align: center;
+}
+</style>
