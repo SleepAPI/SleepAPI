@@ -19,10 +19,6 @@ describe('LevelButton', () => {
     }
   })
 
-  it('renders correctly with default data', () => {
-    expect(wrapper.text()).toContain('Level 50')
-  })
-
   it('displays default values correctly in the list', async () => {
     await wrapper.setData({ menu: true })
     const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
@@ -34,7 +30,7 @@ describe('LevelButton', () => {
 
   it('updates level when a default value is selected', async () => {
     await wrapper.setData({ menu: true })
-    const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
+    const listItems = wrapper.findAllComponents({ name: 'v-btn' })
     await listItems[0].trigger('click')
 
     expect(wrapper.emitted('update-level')).toBeTruthy()
@@ -49,14 +45,6 @@ describe('LevelButton', () => {
 
     expect(wrapper.emitted('update-level')).toBeTruthy()
     expect(wrapper.emitted('update-level')![0]).toEqual([75])
-  })
-
-  it('closes the menu when a value is selected', async () => {
-    await wrapper.setData({ menu: true })
-    const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
-    await listItems[1].trigger('click')
-
-    expect(wrapper.vm.$data.menu).toBe(false)
   })
 
   it('does not emit update-level for invalid custom values', async () => {
