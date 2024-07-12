@@ -3,17 +3,22 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 describe('CustomLabel', () => {
-  it('renders correctly with given label', () => {
+  it('renders correctly with given label and badge', () => {
     const wrapper = mount(CustomLabel, {
       props: {
-        label: 'Test Label'
+        label: 'Test Label',
+        badge: 'Test Badge'
       }
     })
 
     expect(wrapper.exists()).toBe(true)
-    const labelText = wrapper.find('span')
+    const labelText = wrapper.find('.v-container')
     expect(labelText.exists()).toBe(true)
     expect(labelText.text()).toBe('Test Label')
+
+    const badge = wrapper.find('.v-badge__badge')
+    expect(badge.exists()).toBe(true)
+    expect(badge.text()).toBe('Test Badge')
   })
 
   it('has the correct styles and classes', () => {

@@ -1,12 +1,13 @@
 <template>
   <v-card class="pa-4">
     <v-row>
-      <v-col cols="12" style="height: 75px" class="py-5">
-        <CustomLabel
-          v-if="lowestAvailableLevel"
-          :label="`Choose the level ${lowestAvailableLevel} subskill`"
-        />
-        <CustomLabel v-else :label="`Click on a selected subskill to replace it`" />
+      <v-col cols="12" class="py-5">
+        <div v-if="lowestAvailableLevel" style="height: 50px">
+          <CustomLabel label="Choose the subskill for level" :badge="`${lowestAvailableLevel}`" />
+        </div>
+        <div v-else style="height: 50px">
+          <CustomLabel :label="`Click on a selected subskill to replace it`" />
+        </div>
       </v-col>
     </v-row>
     <v-row dense>
