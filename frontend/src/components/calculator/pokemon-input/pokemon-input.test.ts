@@ -149,7 +149,7 @@ describe('PokemonInput', () => {
 
   it('updates subskill correctly', async () => {
     const ss = subskill.INVENTORY_S
-    wrapper.vm.updateSubskill({ subskill: ss, subskillLevel: 10 })
+    wrapper.vm.updateSubskills([{ subskill: ss, level: 10 }])
     expect(wrapper.vm.pokemonInstance.subskills).toEqual([{ level: 10, subskill: ss }])
   })
 

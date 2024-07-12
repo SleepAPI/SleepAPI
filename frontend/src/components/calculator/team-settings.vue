@@ -201,10 +201,10 @@ export default defineComponent({
     }
   },
   methods: {
-    toggleCamp() {
+    async toggleCamp() {
       if (!this.isCampButtonDisabled) {
         this.isCampButtonDisabled = true
-        this.teamStore.toggleCamp()
+        await this.teamStore.toggleCamp()
         setTimeout(() => {
           this.isCampButtonDisabled = false
         }, 1000)
@@ -233,8 +233,8 @@ export default defineComponent({
         this.updatedBedtime = null
       }
     },
-    updateSleep() {
-      this.teamStore.updateSleep({ bedtime: this.bedtime, wakeup: this.wakeup })
+    async updateSleep() {
+      await this.teamStore.updateSleep({ bedtime: this.bedtime, wakeup: this.wakeup })
     },
     allowedStep(minute: number) {
       return minute % 5 === 0

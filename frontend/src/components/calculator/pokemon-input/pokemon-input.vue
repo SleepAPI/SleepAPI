@@ -101,51 +101,11 @@
       </v-col>
     </v-row>
 
-    <v-row id="subskills" dense class="mt-3">
-      <v-col cols="6" class="flex-center">
-        <SubskillButton
-          :subskill-level="10"
-          :pokemon-level="pokemonInstance.level"
-          :selected-subskills="pokemonInstance.subskills"
-          @update-subskill="updateSubskill"
-        ></SubskillButton>
-      </v-col>
-      <v-col cols="6" class="flex-center">
-        <SubskillButton
-          :subskill-level="25"
-          :pokemon-level="pokemonInstance.level"
-          :selected-subskills="pokemonInstance.subskills"
-          @update-subskill="updateSubskill"
-        ></SubskillButton>
-      </v-col>
-      <v-col cols="6" class="flex-center">
-        <SubskillButton
-          :subskill-level="50"
-          :pokemon-level="pokemonInstance.level"
-          :selected-subskills="pokemonInstance.subskills"
-          @update-subskill="updateSubskill"
-        ></SubskillButton>
-      </v-col>
-      <v-col cols="6" class="flex-center">
-        <SubskillButton
-          :subskill-level="75"
-          :pokemon-level="pokemonInstance.level"
-          :selected-subskills="pokemonInstance.subskills"
-          @update-subskill="updateSubskill"
-        ></SubskillButton>
-      </v-col>
-      <v-col cols="6" class="flex-center">
-        <SubskillButton
-          :subskill-level="100"
-          :pokemon-level="pokemonInstance.level"
-          :selected-subskills="pokemonInstance.subskills"
-          @update-subskill="updateSubskill"
-        ></SubskillButton>
-      </v-col>
-      <v-col cols="6" class="flex-center">
-        <v-btn variant="text" text="clear" append-icon="mdi-close" @click="resetSubskills"></v-btn>
-      </v-col>
-    </v-row>
+    <SubskillButtons
+      :pokemon-level="pokemonInstance.level"
+      :selected-subskills="pokemonInstance.subskills"
+      @update-subskills="updateSubskills"
+    />
 
     <v-row id="nature">
       <v-col cols="12">
@@ -181,6 +141,7 @@
 </template>
 
 <script lang="ts">
+import SubskillButtons from '@/components/calculator/menus/subskill-buttons.vue'
 import CarrySizeButton from '@/components/calculator/pokemon-input/carry-size-button.vue'
 import IngredientButton from '@/components/calculator/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/calculator/pokemon-input/level-button.vue'
@@ -188,7 +149,6 @@ import MainskillButton from '@/components/calculator/pokemon-input/mainskill-but
 import NatureButton from '@/components/calculator/pokemon-input/nature-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
-import SubskillButton from '@/components/calculator/pokemon-input/subskill-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
@@ -198,14 +158,14 @@ import {
   pokemon,
   uuid,
   type PokemonInstanceExt,
-  type subskill
+  type SubskillInstanceExt
 } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'PokemonInput',
   components: {
-    SubskillButton,
+    SubskillButtons,
     PokemonButton,
     PokemonName,
     LevelButton,
@@ -274,19 +234,8 @@ export default defineComponent({
         this.pokemonInstance.saved = !this.pokemonInstance.saved
       }
     },
-    updateSubskill(params: { subskill: subskill.SubSkill; subskillLevel: number }) {
-      const subskillToUpdate = this.pokemonInstance.subskills.find(
-        (sub) => sub.level === params.subskillLevel
-      )
-      if (subskillToUpdate) {
-        subskillToUpdate.subskill = params.subskill
-      } else {
-        this.pokemonInstance.subskills.push({
-          level: params.subskillLevel,
-          subskill: params.subskill
-        })
-        this.pokemonInstance
-      }
+    updateSubskills(updatedSubskills: SubskillInstanceExt[]) {
+      this.pokemonInstance.subskills = updatedSubskills
       this.pokemonInstance.subskills.sort((a, b) => a.level - b.level)
     },
     updatePokemon(pokemon: pokemon.Pokemon) {
