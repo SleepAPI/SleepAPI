@@ -30,7 +30,10 @@ describe('SubskillMenu', () => {
 
     const customLabels = wrapper.findAllComponents({ name: 'CustomLabel' })
     expect(customLabels.length).toBeGreaterThan(0)
-    expect(customLabels[0].props('label')).toBe('Choose the level 50 subskill')
+    expect(customLabels[0].props('label')).toBe('Choose the subskill for level')
+    const badge = wrapper.find('.v-badge__badge')
+    expect(badge.exists()).toBe(true)
+    expect(badge.text()).toBe('50')
 
     const subskillButtons = wrapper.findAllComponents({ name: 'SubskillButton' })
     expect(subskillButtons.length).toBe(subskill.SUBSKILLS.length)
@@ -47,7 +50,10 @@ describe('SubskillMenu', () => {
     await nextTick()
 
     const customLabels = wrapper.findAllComponents({ name: 'CustomLabel' })
-    expect(customLabels[0].props('label')).toBe('Choose the level 50 subskill')
+    expect(customLabels[0].props('label')).toBe('Choose the subskill for level')
+    const badge = wrapper.find('.v-badge__badge')
+    expect(badge.exists()).toBe(true)
+    expect(badge.text()).toBe('50')
   })
 
   it('computes lowest available level correctly', () => {
