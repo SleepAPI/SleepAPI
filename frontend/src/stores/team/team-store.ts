@@ -85,7 +85,7 @@ export const useTeamStore = defineStore('team', {
             const previousTeam = previousTeams.find((team) => team.index === updatedTeam.index)
             if (!previousTeam) {
               // first time user refreshes page since logging in
-              this.calculateProduction(updatedTeam.index)
+              await this.calculateProduction(updatedTeam.index)
               continue
             }
 
@@ -117,7 +117,7 @@ export const useTeamStore = defineStore('team', {
             }
 
             if (rerunCalculations) {
-              this.calculateProduction(updatedTeam.index)
+              await this.calculateProduction(updatedTeam.index)
             } else {
               this.teams[updatedTeam.index].production = previousTeam.production
             }
@@ -161,7 +161,7 @@ export const useTeamStore = defineStore('team', {
         }
       }
     },
-    updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
+    async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
       this.toggleMemberLoading(memberIndex)
 
       const userStore = useUserStore()
@@ -183,7 +183,7 @@ export const useTeamStore = defineStore('team', {
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
       this.toggleMemberLoading(memberIndex)
-      this.calculateProduction(this.currentIndex)
+      await this.calculateProduction(this.currentIndex)
     },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
@@ -218,7 +218,7 @@ export const useTeamStore = defineStore('team', {
         console.error("No open slot or member can't be found")
         return
       }
-      this.toggleMemberLoading(memberIndex)
+      this.toggleMemberLoading(openSlotIndex)
 
       const duplicatedMember: PokemonInstanceExt = {
         ...existingMember,
@@ -227,10 +227,10 @@ export const useTeamStore = defineStore('team', {
         externalId: uuid.v4(),
         name: this.randomName()
       }
-      this.updateTeamMember(duplicatedMember, openSlotIndex)
-      this.toggleMemberLoading(memberIndex)
+      await this.updateTeamMember(duplicatedMember, openSlotIndex)
+      this.toggleMemberLoading(openSlotIndex)
     },
-    removeMember(memberIndex: number) {
+    async removeMember(memberIndex: number) {
       this.toggleMemberLoading(memberIndex)
 
       const userStore = useUserStore()
@@ -259,20 +259,20 @@ export const useTeamStore = defineStore('team', {
 
       this.teams[this.currentIndex].members[memberIndex] = undefined
       this.toggleMemberLoading(memberIndex)
-      this.calculateProduction(this.currentIndex)
+      await this.calculateProduction(this.currentIndex)
     },
-    toggleCamp() {
+    async toggleCamp() {
       this.getCurrentTeam.camp = !this.getCurrentTeam.camp
       this.updateTeam()
-      this.calculateProduction(this.currentIndex)
+      await this.calculateProduction(this.currentIndex)
     },
-    updateSleep(params: { bedtime: string; wakeup: string }) {
+    async updateSleep(params: { bedtime: string; wakeup: string }) {
       const { bedtime, wakeup } = params
       this.getCurrentTeam.bedtime = bedtime
       this.getCurrentTeam.wakeup = wakeup
 
       this.updateTeam()
-      this.calculateProduction(this.currentIndex)
+      await this.calculateProduction(this.currentIndex)
     },
     toggleMemberLoading(memberIndex: number) {
       this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]

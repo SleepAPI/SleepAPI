@@ -44,7 +44,6 @@ describe('TeamSettings', () => {
   })
 
   it('opens sleep menu correctly', async () => {
-    console.log(wrapper.html())
     const sleepButton = wrapper.find('button[aria-label="sleep score"]')
     await sleepButton.trigger('click')
     expect(wrapper.vm.isSleepScoreButtonDisabled).toBe(true)
