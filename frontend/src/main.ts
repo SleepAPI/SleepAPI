@@ -25,6 +25,8 @@ const darkTheme: ThemeDefinition = {
     primary: '#E63946',
     secondary: '#5E5A7F',
     accent: '#FFB81F',
+    natureUp: 'FF683A',
+    natureDown: '2BA0ED',
     subskillWhite: '#FAFAFA',
     subskillSilver: '#DCF2FF',
     subskillGold: '#FFE570',

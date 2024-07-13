@@ -15,15 +15,15 @@
             }}</v-btn>
           </v-badge>
         </template>
-        <v-card>
-          <GroupList
-            :data="filteredNatures"
-            :selected-options="nature ? [nature.name] : []"
-            @select-option="selectNature"
-          />
-        </v-card>
+
+        <NatureMenu
+          :current-nature="nature"
+          @update-nature="selectNature"
+          @cancel="natureMenu = false"
+        />
       </v-dialog>
     </v-col>
+
     <v-col cols="6" class="flex-colum px-0" style="align-content: center">
       <div v-if="nature && !nature.prettyName.includes('neutral')">
         <div class="nowrap responsive-text">
@@ -45,14 +45,14 @@
 </template>
 
 <script lang="ts">
-import GroupList from '@/components/custom-components/group-list.vue'
+import NatureMenu from '@/components/calculator/menus/nature-menu.vue'
 import { nature } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'NatureButton',
   components: {
-    GroupList
+    NatureMenu
   },
   props: {
     nature: {
@@ -96,14 +96,9 @@ export default {
     }
   },
   methods: {
-    selectNature(name: string) {
-      const nat = nature.NATURES.find((s) => s.name.toLowerCase() === name.toLowerCase())
-      if (!nat) {
-        console.error('Error selecting nature')
-        return
-      }
+    selectNature(nature: nature.Nature) {
       this.natureMenu = false
-      this.$emit('update-nature', nat)
+      this.$emit('update-nature', nature)
     },
     getModifiedStat(modifier: 'positive' | 'negative') {
       const modifiers: { [key: string]: { value: number; message: string } } = {

@@ -3,10 +3,21 @@
     <v-row>
       <v-col cols="12" class="py-5">
         <div v-if="lowestAvailableLevel" style="height: 50px">
-          <CustomLabel label="Choose the subskill for level" :badge="`${lowestAvailableLevel}`" />
+          <CustomLabel>
+            <v-badge
+              location="right center"
+              color="primary"
+              rounded="lg"
+              :content="lowestAvailableLevel"
+            >
+              <v-container>
+                <span>Choose the subskill for level</span>
+              </v-container>
+            </v-badge>
+          </CustomLabel>
         </div>
         <div v-else style="height: 50px">
-          <CustomLabel :label="`Click on a selected subskill to replace it`" />
+          <CustomLabel> Click on a selected subskill to replace it </CustomLabel>
         </div>
       </v-col>
     </v-row>
@@ -62,7 +73,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel label="Helping Speed" /> </v-col>
+      <v-col cols="6"> <CustomLabel> Helping Speed </CustomLabel> </v-col>
       <v-col cols="3" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.HELPING_SPEED_S"
@@ -84,7 +95,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel label="Ingredient Finding" /> </v-col>
+      <v-col cols="6"> <CustomLabel> Ingredient Finding </CustomLabel> </v-col>
       <v-col cols="3" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.INGREDIENT_FINDER_S"
@@ -106,7 +117,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel label="Skill Trigger" /> </v-col>
+      <v-col cols="6"> <CustomLabel> Skill Trigger </CustomLabel> </v-col>
       <v-col cols="3" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.SKILL_TRIGGER_S"
@@ -128,7 +139,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel label="Inventory Up" /> </v-col>
+      <v-col cols="6"> <CustomLabel> Inventory Up </CustomLabel> </v-col>
       <v-col cols="2" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.INVENTORY_S"
@@ -159,7 +170,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel label="Skill Level Up" /> </v-col>
+      <v-col cols="6"> <CustomLabel> Skill Level Up </CustomLabel> </v-col>
       <v-col cols="3" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.SKILL_LEVEL_UP_S"

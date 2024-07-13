@@ -41,20 +41,20 @@ describe('NatureButton', () => {
   })
 
   it('updates nature and emits update-nature event when selectNature is called', () => {
-    const newNatureName = nature.BRAVE.name
+    const newNatureName = nature.BRAVE
     wrapper.vm.selectNature(newNatureName)
     const emitted = wrapper.emitted('update-nature') as Array<Array<nature.Nature>>
     expect(emitted).toHaveLength(1)
 
     const emittedEvent = emitted[0][0]
-    expect(emittedEvent.name).toBe(newNatureName)
+    expect(emittedEvent.name).toBe(newNatureName.name)
   })
 
   it('opens the dialog when the button is clicked', async () => {
     const button = wrapper.find('button')
     await button.trigger('click')
     expect(wrapper.vm.natureMenu).toBe(true)
-    expect(wrapper.findComponent({ name: 'GroupList' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'NatureMenu' }).exists()).toBe(true)
   })
 
   it('displays correct positive and negative stats for non-neutral nature', async () => {

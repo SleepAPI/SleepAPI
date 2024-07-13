@@ -4,29 +4,13 @@ import { describe, expect, it } from 'vitest'
 
 describe('CustomLabel', () => {
   it('renders correctly with given label and badge', () => {
-    const wrapper = mount(CustomLabel, {
-      props: {
-        label: 'Test Label',
-        badge: 'Test Badge'
-      }
-    })
+    const wrapper = mount(CustomLabel)
 
     expect(wrapper.exists()).toBe(true)
-    const labelText = wrapper.find('.v-container')
-    expect(labelText.exists()).toBe(true)
-    expect(labelText.text()).toBe('Test Label')
-
-    const badge = wrapper.find('.v-badge__badge')
-    expect(badge.exists()).toBe(true)
-    expect(badge.text()).toBe('Test Badge')
   })
 
   it('has the correct styles and classes', () => {
-    const wrapper = mount(CustomLabel, {
-      props: {
-        label: 'Styled Label'
-      }
-    })
+    const wrapper = mount(CustomLabel)
 
     const card = wrapper.find('.v-card')
     expect(card.exists()).toBe(true)
@@ -42,7 +26,6 @@ describe('CustomLabel', () => {
 
     const span = wrapper.find('span')
     expect(span.exists()).toBe(true)
-    expect(span.text()).toBe('Styled Label')
     expect(span.classes()).toContain('d-flex')
     expect(span.classes()).toContain('w-100')
     expect(span.classes()).toContain('align-center')

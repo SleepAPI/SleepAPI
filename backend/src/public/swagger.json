@@ -7,6 +7,17 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"NatureModifier": {
+				"type": "string",
+				"enum": [
+					"speed",
+					"ingredient",
+					"skill",
+					"energy",
+					"exp",
+					"neutral"
+				]
+			},
 			"Nature": {
 				"properties": {
 					"name": {
@@ -14,6 +25,12 @@
 					},
 					"prettyName": {
 						"type": "string"
+					},
+					"positiveModifier": {
+						"$ref": "#/components/schemas/NatureModifier"
+					},
+					"negativeModifier": {
+						"$ref": "#/components/schemas/NatureModifier"
 					},
 					"frequency": {
 						"type": "number",
@@ -39,6 +56,8 @@
 				"required": [
 					"name",
 					"prettyName",
+					"positiveModifier",
+					"negativeModifier",
 					"frequency",
 					"ingredient",
 					"skill",
