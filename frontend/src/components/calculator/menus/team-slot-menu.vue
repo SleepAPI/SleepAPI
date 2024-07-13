@@ -168,6 +168,7 @@ export default defineComponent({
       this.closeTeamSlotMenuDialog()
     },
     openCollection() {
+      // TODO: call backend for all pokemon for this user that are saved
       console.log('Not implemented..') // TODO:
 
       // TODO: this should load generic collection component, in dialog

@@ -261,29 +261,35 @@ export default {
       this.$emit('cancel')
     },
     save() {
-      console.log('saving')
       if (this.selectedNature) {
-        console.log('emit')
         this.$emit('update-nature', this.selectedNature)
       }
     },
     changePositiveModifier(newModifier: nature.NatureModifier) {
-      if (this.positiveModifier !== newModifier) {
+      if (this.positiveModifier !== newModifier && newModifier !== this.negativeModifier) {
         this.positiveModifier = newModifier
         if (this.positiveModifier && this.negativeModifier) {
           this.selectedNature = this.filteredNatures[0]
         }
+      } else if (newModifier === this.negativeModifier) {
+        this.positiveModifier = newModifier
+        this.negativeModifier = undefined
+        this.selectedNature = undefined
       } else {
         this.positiveModifier = undefined
         this.selectedNature = undefined
       }
     },
     changeNegativeModifier(newModifier: nature.NatureModifier) {
-      if (newModifier !== this.negativeModifier) {
+      if (newModifier !== this.negativeModifier && newModifier !== this.positiveModifier) {
         this.negativeModifier = newModifier
         if (this.positiveModifier && this.negativeModifier) {
           this.selectedNature = this.filteredNatures[0]
         }
+      } else if (newModifier === this.positiveModifier) {
+        this.negativeModifier = newModifier
+        this.positiveModifier = undefined
+        this.selectedNature = undefined
       } else {
         this.negativeModifier = undefined
         this.selectedNature = undefined
