@@ -30,7 +30,6 @@ describe('SubskillMenu', () => {
 
     const customLabels = wrapper.findAllComponents({ name: 'CustomLabel' })
     expect(customLabels.length).toBeGreaterThan(0)
-    expect(customLabels[0].props('label')).toBe('Choose the subskill for level')
     const badge = wrapper.find('.v-badge__badge')
     expect(badge.exists()).toBe(true)
     expect(badge.text()).toBe('50')
@@ -49,8 +48,6 @@ describe('SubskillMenu', () => {
 
     await nextTick()
 
-    const customLabels = wrapper.findAllComponents({ name: 'CustomLabel' })
-    expect(customLabels[0].props('label')).toBe('Choose the subskill for level')
     const badge = wrapper.find('.v-badge__badge')
     expect(badge.exists()).toBe(true)
     expect(badge.text()).toBe('50')

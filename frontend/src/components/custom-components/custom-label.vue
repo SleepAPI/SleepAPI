@@ -6,33 +6,13 @@
   >
     <v-divider vertical class="ps-2 border-opacity-100" color="surface" :thickness="8" />
     <span class="d-flex w-100 align-center justify-center text-center" style="font-size: small">
-      <div v-if="badge !== undefined">
-        <v-badge location="right center" color="primary" rounded="lg" :content="badge">
-          <v-container>
-            {{ label }}
-          </v-container>
-        </v-badge>
-      </div>
-      <div v-else>
-        {{ label }}
-      </div>
+      <slot></slot>
     </span>
   </v-card>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'CustomLabel',
-  props: {
-    label: {
-      type: String,
-      required: true
-    },
-    badge: {
-      type: String,
-      required: false,
-      default: undefined
-    }
-  }
+  name: 'CustomLabel'
 }
 </script>
