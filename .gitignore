@@ -54,3 +54,4 @@ secrets
 coverage
 .vscode
 *.tsbuildinfo
+*.sh
