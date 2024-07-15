@@ -60,4 +60,22 @@ app.use(vue3GoogleLogin, {
   clientId: '983013278971-m60s443rk30e8sjk04aof0ltaanogck0.apps.googleusercontent.com'
 })
 
+// Service Worker registration and update handling
+// if ('serviceWorker' in navigator) {
+//   const swUrl = import.meta.env.DEV ? '/dev-dist/sw.js' : '/sw.js'
+//   navigator.serviceWorker
+//     .register(swUrl)
+//     .then((reg) => {
+//       console.log('Page loaded')
+
+//       reg.onupdatefound = () => {
+//         console.log('Update found') // TODO: this isn't triggered until manual refresh
+//         window.location.reload() // TODO: this reloads, but doesn't let service worker update to latest, so needs a 2nd manual refresh by user
+//       }
+//     })
+//     .catch((error) => {
+//       console.error('Error during service worker registration:', error)
+//     })
+// }
+
 app.mount('#app')
