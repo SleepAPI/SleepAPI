@@ -37,8 +37,10 @@ import {
 } from '../ingredient/ingredient';
 import {
   CHARGE_ENERGY_S,
+  CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S,
   CHARGE_STRENGTH_S_RANGE,
+  COOKING_POWER_UP_S,
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   TASTY_CHANCE_S,
@@ -694,6 +696,135 @@ export const CRAMORANT: Pokemon = {
   skill: TASTY_CHANCE_S,
 };
 
+export const SPRIGATITO: Pokemon = {
+  name: 'SPRIGATITO',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 16, 40),
+  ingredientPercentage: 20.8,
+  skillPercentage: 2.3,
+  berry: DURIN,
+  carrySize: 10,
+  maxCarrySize: 10,
+  ingredient0: { amount: 2, ingredient: SOFT_POTATO },
+  ingredient30: [
+    { amount: 5, ingredient: SOFT_POTATO },
+    { amount: 6, ingredient: MOOMOO_MILK },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: SOFT_POTATO },
+    { amount: 9, ingredient: MOOMOO_MILK },
+    { amount: 8, ingredient: WARMING_GINGER },
+  ],
+  skill: COOKING_POWER_UP_S,
+};
+
+export const FLORAGATO: Pokemon = {
+  ...SPRIGATITO,
+  name: 'FLORAGATO',
+  frequency: toSeconds(0, 58, 20),
+  ingredientPercentage: 20.9,
+  skillPercentage: 2.3,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const MEOWSCARADA: Pokemon = {
+  ...SPRIGATITO,
+  name: 'MEOWSCARADA',
+  frequency: toSeconds(0, 43, 20),
+  ingredientPercentage: 19,
+  skillPercentage: 2.2,
+  berry: WIKI,
+  carrySize: 18,
+  maxCarrySize: 28,
+};
+
+export const FUECOCO: Pokemon = {
+  name: 'FUECOCO',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 10, 0),
+  ingredientPercentage: 25.4,
+  skillPercentage: 5.3,
+  berry: LEPPA,
+  carrySize: 11,
+  maxCarrySize: 11,
+  ingredient0: { amount: 2, ingredient: FANCY_APPLE },
+  ingredient30: [
+    { amount: 5, ingredient: FANCY_APPLE },
+    { amount: 4, ingredient: BEAN_SAUSAGE },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: FANCY_APPLE },
+    { amount: 6, ingredient: BEAN_SAUSAGE },
+    { amount: 5, ingredient: FIERY_HERB },
+  ],
+  skill: CHARGE_ENERGY_S,
+};
+
+export const CROCALOR: Pokemon = {
+  ...FUECOCO,
+  name: 'CROCALOR',
+  frequency: toSeconds(0, 51, 40),
+  ingredientPercentage: 24.7,
+  skillPercentage: 5,
+  carrySize: 16,
+  maxCarrySize: 21,
+};
+
+export const SKELEDIRGE: Pokemon = {
+  ...FUECOCO,
+  name: 'SKELEDIRGE',
+  frequency: toSeconds(0, 45, 0),
+  ingredientPercentage: 26.8,
+  skillPercentage: 6.3,
+  berry: BLUK,
+  carrySize: 19,
+  maxCarrySize: 29,
+};
+
+export const QUAXLY: Pokemon = {
+  name: 'QUAXLY',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 20, 0),
+  ingredientPercentage: 26.1,
+  skillPercentage: 2.8,
+  berry: ORAN,
+  carrySize: 10,
+  maxCarrySize: 10,
+  ingredient0: { amount: 2, ingredient: GREENGRASS_SOYBEANS },
+  ingredient30: [
+    { amount: 5, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 2, ingredient: LARGE_LEEK },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 4, ingredient: LARGE_LEEK },
+    { amount: 6, ingredient: PURE_OIL },
+  ],
+  skill: CHARGE_STRENGTH_M,
+};
+
+export const QUAXWELL: Pokemon = {
+  ...QUAXLY,
+  name: 'QUAXWELL',
+  frequency: toSeconds(1, 0, 0),
+  ingredientPercentage: 25.9,
+  skillPercentage: 2.7,
+  carrySize: 14,
+  maxCarrySize: 19,
+};
+
+export const QUAQUAVAL: Pokemon = {
+  ...QUAXLY,
+  name: 'QUAQUAVAL',
+  frequency: toSeconds(0, 43, 20),
+  ingredientPercentage: 23.2,
+  skillPercentage: 2.4,
+  berry: CHERI,
+  carrySize: 19,
+  maxCarrySize: 29,
+};
+
 export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   VENUSAUR,
   CHARIZARD,
@@ -716,6 +847,9 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   BEWEAR,
   COMFEY,
   CRAMORANT,
+  MEOWSCARADA,
+  SKELEDIRGE,
+  QUAQUAVAL,
 ];
 
 export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
@@ -739,6 +873,12 @@ export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
   CROAGUNK,
   SNOVER,
   STUFFUL,
+  SPRIGATITO,
+  FLORAGATO,
+  FUECOCO,
+  CROCALOR,
+  QUAXLY,
+  QUAXWELL,
 ];
 
 export const ALL_INGREDIENT_SPECIALISTS: Pokemon[] = [
