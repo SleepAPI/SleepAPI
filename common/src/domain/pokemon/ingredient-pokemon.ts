@@ -776,7 +776,7 @@ export const SKELEDIRGE: Pokemon = {
   name: 'SKELEDIRGE',
   frequency: toSeconds(0, 45, 0),
   ingredientPercentage: 26.8,
-  skillPercentage: 6.3,
+  skillPercentage: 6.2,
   berry: BLUK,
   carrySize: 19,
   maxCarrySize: 29,
