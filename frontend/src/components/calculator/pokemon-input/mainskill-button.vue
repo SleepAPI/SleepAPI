@@ -86,9 +86,8 @@ export default {
   },
   watch: {
     pokemon: {
-      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
-        // only grab from cache on initial setup, if pre-existing value exists
-        if (oldPokemon.name === pokemon.MOCK_POKEMON.name && this.pokemonInstance.skillLevel > 0) {
+      handler(newPokemon: pokemon.Pokemon) {
+        if (this.pokemonInstance.skillLevel > 0) {
           this.mainskillLevel = this.pokemonInstance.skillLevel
         } else {
           const nrOfEvolutions = (newPokemon.maxCarrySize - newPokemon.carrySize) / 5
