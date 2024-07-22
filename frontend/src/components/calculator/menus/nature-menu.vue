@@ -247,6 +247,8 @@ export default {
   methods: {
     setNeutralNature() {
       this.selectedNature = nature.BASHFUL
+      this.positiveModifier = 'neutral'
+      this.negativeModifier = 'neutral'
     },
     toggleChip(toggled: nature.Nature) {
       if (toggled !== this.selectedNature) {
