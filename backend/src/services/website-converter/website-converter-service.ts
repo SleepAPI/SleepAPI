@@ -9,7 +9,6 @@ import {
   OptimalSetResult,
 } from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
-import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
 import {
   IngredientSet,
   MEALS_IN_DAY,
@@ -17,6 +16,8 @@ import {
   PokemonIngredientSet,
   mainskill,
   nature,
+  prettifyIngredientDrop,
+  shortPrettifyIngredientDrop,
   subskill,
 } from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';

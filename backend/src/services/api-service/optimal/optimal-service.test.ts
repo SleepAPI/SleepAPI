@@ -1,6 +1,5 @@
 import { SetCoverProductionStats } from '@src/domain/computed/production';
-import { berry, dessert, ingredient, nature, subskill } from 'sleepapi-common';
-import { prettifyIngredientDrop } from '../../../utils/json/json-utils';
+import { berry, dessert, ingredient, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 import { findOptimalMonsForIngredient, findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {

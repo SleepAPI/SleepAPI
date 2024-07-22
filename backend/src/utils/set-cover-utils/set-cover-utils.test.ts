@@ -2,8 +2,7 @@ import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/cus
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
-import { prettifyIngredientDrop } from '../json/json-utils';
+import { berry, ingredient, mainskill, nature, pokemon, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import {
   calculateHelperBoostIngredientsIncrease,

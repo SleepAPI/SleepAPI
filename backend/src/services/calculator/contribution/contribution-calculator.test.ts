@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils';
 import {
@@ -13,6 +12,7 @@ import {
   ingredient,
   nature,
   pokemon,
+  prettifyIngredientDrop,
   recipeLevelBonus,
   salad,
   subskill,

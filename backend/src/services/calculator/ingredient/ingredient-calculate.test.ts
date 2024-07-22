@@ -17,62 +17,10 @@ import {
   calculatePercentageCoveredByCombination,
   calculateRemainingIngredients,
   combineIngredientDrops,
-  combineSameIngredientsInDrop,
   extractRelevantSurplus,
   getAllIngredientCombinationsForLevel,
   sortByMinimumFiller,
 } from './ingredient-calculate';
-
-describe('combineSameIngredientsInDrop', () => {
-  it('shall combine ingredients and leave unique ingredients as is', () => {
-    const pinsir: IngredientSet[] = [
-      {
-        amount: 2,
-        ingredient: ingredient.HONEY,
-      },
-      { amount: 5, ingredient: ingredient.FANCY_APPLE },
-    ];
-    const absol: IngredientSet[] = [
-      {
-        amount: 2,
-        ingredient: ingredient.SOOTHING_CACAO,
-      },
-      { amount: 8, ingredient: ingredient.FANCY_APPLE },
-    ];
-
-    expect(combineSameIngredientsInDrop([...pinsir, ...absol])).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Honey",
-            "name": "Honey",
-            "taxedValue": 29.8,
-            "value": 101,
-          },
-        },
-        {
-          "amount": 13,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Soothing Cacao",
-            "name": "Cacao",
-            "taxedValue": 66.7,
-            "value": 151,
-          },
-        },
-      ]
-    `);
-  });
-});
 
 describe('calculatePercentageCoveredByCombination', () => {
   it('shall successfully calculate expected percentage', () => {

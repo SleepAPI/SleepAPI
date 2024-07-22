@@ -77,7 +77,28 @@ describe('calculateTeam', () => {
     const result = calculateTeam({ members, settings }, 5000);
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries).toMatchInlineSnapshot(`"40.51834916094541 LUM"`);
-    expect(result.members[0].ingredients).toMatchInlineSnapshot(`"90.9 Honey"`);
+    expect(result.members[0].berries).toMatchInlineSnapshot(`
+      {
+        "amount": 40.51834916094541,
+        "berry": {
+          "name": "LUM",
+          "type": "bug",
+          "value": 24,
+        },
+      }
+    `);
+    expect(result.members[0].ingredients).toMatchInlineSnapshot(`
+      [
+        {
+          "amount": 90.91586142467838,
+          "ingredient": {
+            "longName": "Honey",
+            "name": "Honey",
+            "taxedValue": 29.8,
+            "value": 101,
+          },
+        },
+      ]
+    `);
   });
 });

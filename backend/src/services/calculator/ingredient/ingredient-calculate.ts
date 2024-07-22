@@ -25,28 +25,6 @@ import {
 } from 'sleepapi-common';
 
 /**
- * Combines same ingredients in drop, for example [2 honey, 4 honey, 5 milk] becomes [6 honey, 5 milk]
- * @param ingredients
- * @returns
- */
-export function combineSameIngredientsInDrop(ingredients: IngredientSet[]): IngredientSet[] {
-  const combined = new Map<string, IngredientSet>();
-
-  for (const drop of ingredients) {
-    const { name } = drop.ingredient;
-    const existingDrop = combined.get(name);
-
-    if (existingDrop) {
-      existingDrop.amount += drop.amount;
-    } else {
-      combined.set(name, { ...drop });
-    }
-  }
-
-  return Array.from(combined.values());
-}
-
-/**
  * Calculates percentage covered of given meal by given ingredient list
  * @param meal
  * @param combination

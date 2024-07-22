@@ -129,7 +129,11 @@ export const useTeamStore = defineStore('team', {
           const userStore = useUserStore()
           userStore.logout()
         }
+      } else if (this.domainVersion < DOMAIN_VERSION) {
+        await this.calculateProduction(this.currentIndex)
+        this.domainVersion = DOMAIN_VERSION
       }
+
       this.loadingTeams = false
     },
     next() {

@@ -1,7 +1,9 @@
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import { useTeamStore } from '@/stores/team/team-store'
+import type { TeamCombinedProduction } from '@/types/member/instanced'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { berry, ingredient } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -36,16 +38,24 @@ describe('TeamResults', () => {
   it('displays team production when data is available', () => {
     const teamStore = useTeamStore()
     teamStore.currentIndex = 0
+    const teamProduction: TeamCombinedProduction = {
+      berries: [
+        {
+          amount: 10,
+          berry: berry.BELUE
+        }
+      ],
+      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }]
+    }
+
     teamStore.teams[0] = {
       production: {
-        team: {
-          berries: '10 Berries',
-          ingredients: '5 Ingredients'
-        }
+        team: teamProduction,
+        members: []
       }
     } as any
 
-    expect(wrapper.vm.teamProduction).toBe('10 Berries\n5 Ingredients')
+    expect(wrapper.vm.teamProduction).toBe('10 BELUE\n5 Sausage')
   })
 
   it('changes tab correctly', async () => {
@@ -64,18 +74,26 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
 
     teamStore.currentIndex = 0
+    const teamProduction: TeamCombinedProduction = {
+      berries: [
+        {
+          amount: 10,
+          berry: berry.BELUE
+        }
+      ],
+      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }]
+    }
+
     teamStore.teams[0] = {
       production: {
-        team: {
-          berries: '10 Berries',
-          ingredients: '5 Ingredients'
-        }
+        team: teamProduction,
+        members: []
       }
     } as any
 
     await tabs[0].trigger('click')
     await nextTick()
     const overviewTabContent = wrapper.find('.v-window-item.v-tabs-window-item .v-card-text')
-    expect(overviewTabContent.text()).toBe('10 Berries\n5 Ingredients')
+    expect(overviewTabContent.text()).toBe('10 BELUE\n5 Sausage')
   })
 })

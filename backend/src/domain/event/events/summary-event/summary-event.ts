@@ -1,8 +1,7 @@
 import { Produce } from '@src/domain/combination/produce';
 import { Time } from '@src/domain/time/time';
-import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { IngredientSet, MathUtils, mainskill } from 'sleepapi-common';
+import { IngredientSet, MathUtils, mainskill, prettifyIngredientDrop } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export interface Summary {

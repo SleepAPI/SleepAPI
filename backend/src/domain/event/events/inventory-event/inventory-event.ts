@@ -1,8 +1,7 @@
 import { Produce } from '@src/domain/combination/produce';
 import { Time } from '@src/domain/time/time';
-import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils } from 'sleepapi-common';
+import { MathUtils, prettifyIngredientDrop } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class InventoryEvent extends ScheduledEvent {

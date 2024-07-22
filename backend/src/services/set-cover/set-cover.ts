@@ -18,7 +18,7 @@ import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
-import { IngredientSet, MEALS_IN_DAY, mainskill } from 'sleepapi-common';
+import { IngredientSet, MEALS_IN_DAY, combineSameIngredientsInDrop, mainskill } from 'sleepapi-common';
 import {
   calculateHelperBoostIngredientsIncrease,
   calculateRemainingSimplifiedIngredients,
@@ -31,7 +31,6 @@ import {
 import {
   addIngredientSet,
   calculateRemainingIngredients,
-  combineSameIngredientsInDrop,
   extractRelevantSurplus,
   sortByMinimumFiller,
 } from '../calculator/ingredient/ingredient-calculate';
