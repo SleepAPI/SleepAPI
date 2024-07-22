@@ -2,9 +2,17 @@ import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { DetailedProduce } from '@src/domain/combination/produce';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
-import { PokemonIngredientSet, berry, dessert, ingredient, nature, pokemon, subskill } from 'sleepapi-common';
+import {
+  PokemonIngredientSet,
+  berry,
+  dessert,
+  ingredient,
+  nature,
+  pokemon,
+  prettifyIngredientDrop,
+  subskill,
+} from 'sleepapi-common';
 import { emptyBerrySet } from '../calculator/berry/berry-calculator';
 import { addIngredientSet } from '../calculator/ingredient/ingredient-calculate';
 import { SetCover } from './set-cover';

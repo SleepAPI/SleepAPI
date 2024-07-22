@@ -5,7 +5,7 @@ import {
   MAX_TEAM_MEMBERS,
   type TeamCombinedProduction,
   type TeamInstance,
-  type TeamProduction
+  type TeamProductionExt
 } from '@/types/member/instanced'
 import axios from 'axios'
 import {
@@ -13,8 +13,10 @@ import {
   getNature,
   getPokemon,
   getSubskill,
+  type BerrySet,
   type CalculateTeamResponse,
   type GetTeamsResponse,
+  type IngredientSet,
   type PokemonInstanceExt,
   type PokemonInstanceIdentity,
   type PokemonInstanceWithMeta,
@@ -138,17 +140,19 @@ class TeamServiceImpl {
       settings
     })
 
-    // TODO: fix result parsing, also move out to function
-    const teamProduction: TeamCombinedProduction = response.data.members.reduce(
-      (sum, cur) =>
-        (sum = {
-          berries: (sum.berries += `\n${cur.berries}`),
-          ingredients: (sum.ingredients += `\n${cur.ingredients}`)
-        }),
-      { berries: '', ingredients: '' }
+    const teamBerries: BerrySet[] = response.data.members.flatMap((member) =>
+      member.berries ? member.berries : []
     )
+    const teamIngredients: IngredientSet[] = response.data.members.flatMap(
+      (member) => member.ingredients
+    )
+    const teamProduction: TeamCombinedProduction = {
+      berries: teamBerries,
+      ingredients: teamIngredients
+    }
 
-    const result: TeamProduction = {
+    const pokemonStore = usePokemonStore()
+    const result: TeamProductionExt = {
       members: response.data.members.map((member) => {
         if (!member.externalId) {
           console.error('Unidentified member in team calculation, contact developer')
@@ -158,7 +162,7 @@ class TeamServiceImpl {
           berries: member.berries,
           ingredients: member.ingredients,
           skillProcs: member.skillProcs,
-          externalId: member.externalId
+          member: pokemonStore.getPokemon(member.externalId)
         }
       }),
       team: teamProduction

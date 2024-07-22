@@ -1,11 +1,10 @@
 import { ShareParams } from '@src/routes/share-router/share-router';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
-import { prettifyIngredientDrop, shortPrettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { Request as Protocol } from 'express';
 import { readFileSync } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import { getIngredient } from 'sleepapi-common';
+import { getIngredient, prettifyIngredientDrop, shortPrettifyIngredientDrop } from 'sleepapi-common';
 import { Controller, Get, Hidden, Queries, Request, Route } from 'tsoa';
 
 export default class ShareController extends Controller {

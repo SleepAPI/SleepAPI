@@ -9,11 +9,10 @@ import { calculateAverageProduce, clampHelp } from '@src/services/calculator/pro
 import { SkillValue } from '@src/services/simulation-service/team-simulator/skill-value';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { prettifyIngredientDrop } from '@src/utils/json/json-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
 import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { IngredientSet, MathUtils, ingredient, mainskill, subskill } from 'sleepapi-common';
+import { IngredientSet, MathUtils, MemberProduction, ingredient, mainskill, subskill } from 'sleepapi-common';
 
 export interface TeamSkill {
   energy: number;
@@ -253,23 +252,16 @@ export class MemberState {
     this.currentEnergy = Math.max(0, MathUtils.round(this.currentEnergy - energyToDegrade, 2));
   }
 
-  public averageResults(iterations: number) {
-    const berries = `${
-      this.totalProduce.berries
-        ? `${this.totalProduce.berries.amount / iterations} ${this.totalProduce.berries.berry.name}`
-        : 'no berries'
-    }`;
-
-    const ingredients = prettifyIngredientDrop(
-      this.totalProduce.ingredients.map(({ amount, ingredient }) => ({
+  public averageResults(iterations: number): MemberProduction {
+    const result: MemberProduction = {
+      berries: this.totalProduce.berries && {
+        amount: this.totalProduce.berries.amount / iterations,
+        berry: this.totalProduce.berries.berry,
+      },
+      ingredients: this.totalProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: amount / iterations,
         ingredient,
-      }))
-    );
-
-    const result = {
-      berries,
-      ingredients,
+      })),
       skillProcs: this.skillProcs / iterations,
       externalId: this.member.externalId,
     };

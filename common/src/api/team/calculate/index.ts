@@ -1,4 +1,6 @@
 import { PokemonInstance } from '../../../api/pokemon/pokemon-instance';
+import { BerrySet } from '../../../domain/types/berry-drop';
+import { IngredientSet } from '../../../domain/types/ingredient-set';
 
 export interface TeamSettingsRequest {
   camp: boolean;
@@ -13,7 +15,12 @@ export interface CalculateTeamRequest {
   members: PokemonInstanceIdentity[];
 }
 
-// TODO: fix
+export interface MemberProduction {
+  berries?: BerrySet;
+  ingredients: IngredientSet[];
+  skillProcs: number;
+  externalId?: string;
+}
 export interface CalculateTeamResponse {
-  members: { berries: string; ingredients: string; skillProcs: number; externalId?: string }[];
+  members: MemberProduction[];
 }

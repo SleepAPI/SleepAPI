@@ -35,14 +35,12 @@ import {
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentage,
+  combineSameIngredientsInDrop,
   mainskill,
   nature,
 } from 'sleepapi-common';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
-import {
-  calculateAveragePokemonIngredientSet,
-  combineSameIngredientsInDrop,
-} from '../calculator/ingredient/ingredient-calculate';
+import { calculateAveragePokemonIngredientSet } from '../calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '../calculator/production/produce-calculator';
 import {
   calculateOddsAtLeastOneSkillProc,

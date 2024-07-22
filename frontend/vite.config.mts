@@ -50,6 +50,7 @@ export default defineConfig({
       manifest,
       strategies: 'generateSW',
       injectRegister: 'auto',
+      mode: 'production',
       workbox: {
         globPatterns: ['**/*.{js,css,ico,png,svg}'],
         navigateFallback: null,
@@ -83,7 +84,9 @@ export default defineConfig({
               }
             }
           }
-        ]
+        ],
+        mode: 'production',
+        disableDevLogs: true
       },
       includeAssets: ['apple-touch-icon.png', 'favicon.ico'],
       devOptions: {

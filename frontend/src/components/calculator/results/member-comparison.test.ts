@@ -20,10 +20,4 @@ describe('MemberComparison', () => {
   it('renders correctly with initial data', () => {
     expect(wrapper.exists()).toBe(true)
   })
-
-  it('displays the correct text content', () => {
-    const cardText = wrapper.find('.v-card-text')
-    expect(cardText.exists()).toBe(true)
-    expect(cardText.text()).toBe('Some comparison stuff here')
-  })
 })

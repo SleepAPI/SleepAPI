@@ -182,9 +182,26 @@ describe('addHelps', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "0.8 BELUE",
+        "berries": {
+          "amount": 0.8,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "0.2 Tail",
+        "ingredients": [
+          {
+            "amount": 0.2,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -197,9 +214,26 @@ describe('addHelps', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "0 BELUE",
+        "berries": {
+          "amount": 0,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "0 Tail",
+        "ingredients": [
+          {
+            "amount": 0,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -247,9 +281,26 @@ describe('attemptDayHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "0.8 BELUE",
+        "berries": {
+          "amount": 0.8,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "0.2 Tail",
+        "ingredients": [
+          {
+            "amount": 0.2,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -268,9 +319,9 @@ describe('attemptDayHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "no berries",
+        "berries": undefined,
         "externalId": undefined,
-        "ingredients": "",
+        "ingredients": [],
         "skillProcs": 0,
       }
     `);
@@ -287,7 +338,16 @@ describe('attemptDayHelp', () => {
     memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`"0.8 BELUE"`);
+    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
+      {
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+      }
+    `);
 
     const frequencyBeforeEnergy = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member,
@@ -301,11 +361,29 @@ describe('attemptDayHelp', () => {
 
     memberState.attemptDayHelp(justBeforeNextHelp);
     memberState.collectInventory();
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`"0.8 BELUE"`);
+    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
+      {
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+      }
+    `);
 
     memberState.attemptDayHelp(nextHelp);
     memberState.collectInventory();
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`"1.6 BELUE"`);
+    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
+      {
+        "amount": 1.6,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+      }
+    `);
   });
 
   it('shall empty inventory if full', () => {
@@ -314,7 +392,16 @@ describe('attemptDayHelp', () => {
     memberState.addHelps(100);
 
     memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`"80.8 BELUE"`);
+    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
+      {
+        "amount": 80.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+      }
+    `);
   });
 
   it('shall attempt and proc skill', () => {
@@ -361,9 +448,9 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "no berries",
+        "berries": undefined,
         "externalId": undefined,
-        "ingredients": "",
+        "ingredients": [],
         "skillProcs": 0,
       }
     `);
@@ -376,9 +463,26 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "0.8 BELUE",
+        "berries": {
+          "amount": 0.8,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "0.2 Tail",
+        "ingredients": [
+          {
+            "amount": 0.2,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -392,9 +496,26 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "81 BELUE",
+        "berries": {
+          "amount": 81,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "20 Tail",
+        "ingredients": [
+          {
+            "amount": 20,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -415,9 +536,26 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
-        "berries": "0.8 BELUE",
+        "berries": {
+          "amount": 0.8,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": "0.2 Tail",
+        "ingredients": [
+          {
+            "amount": 0.2,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 1,
       }
     `);

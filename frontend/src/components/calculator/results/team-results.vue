@@ -42,6 +42,7 @@ import { defineComponent } from 'vue'
 
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { MathUtils, prettifyIngredientDrop } from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   setup() {
@@ -54,10 +55,19 @@ export default defineComponent({
   }),
   computed: {
     teamProduction() {
+      // TODO: remove the entire teamproduction thing, it's just a prettified string for now
       const production = this.teamStore.getCurrentTeam.production
       const berries = production?.team.berries
       const ingredients = production?.team.ingredients
-      return berries && ingredients ? `${berries}\n${ingredients}` : 'No production'
+
+      let resultString = ''
+      if (berries && ingredients) {
+        for (const memberBerry of berries) {
+          resultString += `${MathUtils.round(memberBerry.amount, 1)} ${memberBerry.berry.name}\n`
+        }
+        resultString += `${prettifyIngredientDrop(ingredients, '\n')}`
+      } else resultString = 'No production'
+      return resultString
     }
   }
 })

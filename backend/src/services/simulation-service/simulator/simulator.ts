@@ -34,10 +34,9 @@ import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simu
 
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { BerrySet, MathUtils, mainskill } from 'sleepapi-common';
+import { BerrySet, MathUtils, combineSameIngredientsInDrop, mainskill } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
-import { combineSameIngredientsInDrop } from '../../calculator/ingredient/ingredient-calculate';
 import { clampHelp } from '../../calculator/production/produce-calculator';
 
 /**

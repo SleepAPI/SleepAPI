@@ -1,11 +1,22 @@
+import type { BerrySet, IngredientSet, PokemonInstanceExt } from 'sleepapi-common'
+
 export interface TeamCombinedProduction {
   // TODO: expand
-  berries: string
-  ingredients: string
+  // TODO: probably like a skill proc array with procs and skill?
+  berries: BerrySet[]
+  ingredients: IngredientSet[]
 }
-export interface TeamProduction {
+
+// TODO: expand
+export interface MemberProductionExt {
+  berries?: BerrySet
+  ingredients: IngredientSet[]
+  skillProcs: number
+  member: PokemonInstanceExt
+}
+export interface TeamProductionExt {
   team: TeamCombinedProduction
-  members: { berries: string; ingredients: string; skillProcs: number; externalId: string }[] // TODO: expand
+  members: MemberProductionExt[]
 }
 export interface TeamInstance {
   index: number
@@ -15,7 +26,7 @@ export interface TeamInstance {
   wakeup: string
   version: number
   members: (string | undefined)[]
-  production?: TeamProduction
+  production?: TeamProductionExt
 }
 
 export const MAX_TEAM_MEMBERS = 5

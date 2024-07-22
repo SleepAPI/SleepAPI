@@ -5,7 +5,9 @@
         <v-tabs-window v-model="tab" class="flex-grow-1">
           <v-tabs-window-item v-for="(member, index) in members" :key="index" :value="index">
             <v-card-text style="white-space: pre-wrap" class="text-center">
-              {{ member.production }}
+              <div>{{ prettifiedMemberBerries(member) }}</div>
+              <div>{{ prettifiedMemberIngredients(member) }}</div>
+              <div>{{ prettifiedSkillProcs(member) }}</div>
             </v-card-text>
           </v-tabs-window-item>
         </v-tabs-window>
@@ -28,6 +30,8 @@ import { defineComponent } from 'vue'
 
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import type { MemberProductionExt } from '@/types/member/instanced'
+import { MathUtils, prettifyIngredientDrop } from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   setup() {
@@ -40,24 +44,25 @@ export default defineComponent({
   }),
   computed: {
     members() {
-      const currentTeam = this.teamStore.getCurrentTeam
-      const members = []
-      for (const member of currentTeam.members) {
-        if (member) {
-          members.push({
-            member: this.pokemonStore.getPokemon(member),
-            production: this.teamStore.getCurrentTeam.production?.members.find(
-              (m) => m.externalId === member
-            )
-          })
-        }
-      }
-      return members
+      return this.teamStore.getCurrentTeam.production?.members ?? []
     }
   },
   methods: {
     getMemberImage(name: string) {
       return `/images/pokemon/${name.toLowerCase()}.png`
+    },
+    prettifiedMemberBerries(member: MemberProductionExt) {
+      return `Berries: ${MathUtils.round(member.berries?.amount ?? 0, 1)} ${member.berries?.berry.name}`
+    },
+    prettifiedMemberIngredients(member: MemberProductionExt) {
+      return `Ingredients: ${prettifyIngredientDrop(member.ingredients)}`
+    },
+    prettifiedSkillProcs(member: MemberProductionExt) {
+      const skillValue = MathUtils.round(
+        member.skillProcs * member.member.pokemon.skill.amount[member.member.skillLevel - 1],
+        1
+      )
+      return `Skill procs: ${member.skillProcs} x ${member.member.pokemon.skill.amount[member.member.skillLevel - 1]} = ${skillValue} ${member.member.pokemon.skill.unit}`
     }
   }
 })
