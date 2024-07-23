@@ -5,6 +5,7 @@ import { parentPort, workerData } from 'worker_threads';
 
 const { body, pretty } = workerData.params;
 
+// TODO: remove
 async function calculateOptimalFlexible() {
   const controller = new OptimalController();
   const data: OptimalFlexibleResult[] = controller.getFlexiblePokemon(body);

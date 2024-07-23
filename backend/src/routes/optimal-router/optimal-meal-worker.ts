@@ -1,21 +1,15 @@
 import OptimalController from '@src/controllers/optimal/optimal.controller';
 import { OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
 import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
-import { parentPort, workerData } from 'worker_threads';
+import workerpool from 'workerpool';
 
-const { name, body, pretty } = workerData.params;
-
-async function calculateOptimalMeal() {
+async function calculateOptimalMeal(name: string, body: any, pretty: boolean) {
   const controller = new OptimalController();
   const data: OptimalSetResult = controller.getOptimalPokemonForMealRaw(name, body);
 
   return pretty ? WebsiteConverterService.toOptimalSet(data) : data;
 }
 
-calculateOptimalMeal()
-  .then((result) => {
-    parentPort?.postMessage(result);
-  })
-  .catch((err) => {
-    parentPort?.postMessage({ error: err.message });
-  });
+workerpool.worker({
+  calculateOptimalMeal,
+});
