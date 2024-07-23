@@ -16,7 +16,6 @@ import IngredientController from './controllers/ingredient/ingredient.controller
 import MainskillController from './controllers/mainskill/mainskill.controller';
 import MealController from './controllers/meal/meal.controller';
 import NatureController from './controllers/nature/nature.controller';
-import OptimalController from './controllers/optimal/optimal.controller';
 import PokemonController from './controllers/pokemon/pokemon.controller';
 import ShareController from './controllers/share/share.controller';
 import SubskillController from './controllers/subskill/subskill.controller';
@@ -87,7 +86,7 @@ async function main() {
   HealthRouter.register(new HealthController());
   MealRouter.register(new MealController());
   PokemonRouter.register(new PokemonController());
-  OptimalCombinationRouter.register(new OptimalController());
+  OptimalCombinationRouter.register();
   ProductionRouter.register(new ProductionController());
   TierlistRouter.register(new TierlistController());
   IngredientRouter.register(new IngredientController());
