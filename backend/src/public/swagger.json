@@ -135,7 +135,7 @@
 						"type": "number",
 						"format": "double"
 					},
-					"maxCarrySize": {
+					"inventoryLimit": {
 						"type": "number",
 						"format": "double"
 					},
@@ -361,10 +361,6 @@
 						"type": "number",
 						"format": "double"
 					},
-					"maxCarrySize": {
-						"type": "number",
-						"format": "double"
-					},
 					"previousEvolutions": {
 						"type": "number",
 						"format": "double"
@@ -400,7 +396,6 @@
 					"skillPercentage",
 					"berry",
 					"carrySize",
-					"maxCarrySize",
 					"previousEvolutions",
 					"remainingEvolutions",
 					"ingredient0",

@@ -59,7 +59,6 @@ export const PIKACHU_CHRISTMAS: Pokemon = {
   skillPercentage: 4.2,
   berry: GREPA,
   carrySize: 16,
-  maxCarrySize: 16,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
@@ -83,7 +82,6 @@ export const JIGGLYPUFF: Pokemon = {
   skillPercentage: 4.3,
   berry: PECHA,
   carrySize: 9,
-  maxCarrySize: 14,
   previousEvolutions: 1,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: HONEY },
@@ -106,7 +104,6 @@ export const WIGGLYTUFF: Pokemon = {
   ingredientPercentage: 17.4,
   skillPercentage: 4.0,
   carrySize: 13,
-  maxCarrySize: 23,
 };
 
 export const MEOWTH: Pokemon = {
@@ -117,7 +114,6 @@ export const MEOWTH: Pokemon = {
   skillPercentage: 4.2,
   berry: PERSIM,
   carrySize: 9,
-  maxCarrySize: 9,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: MOOMOO_MILK },
@@ -139,7 +135,6 @@ export const PERSIAN: Pokemon = {
   ingredientPercentage: 16.9,
   skillPercentage: 4.4,
   carrySize: 12,
-  maxCarrySize: 17,
 };
 
 export const PSYDUCK: Pokemon = {
@@ -150,7 +145,6 @@ export const PSYDUCK: Pokemon = {
   skillPercentage: 12.6,
   berry: ORAN,
   carrySize: 8,
-  maxCarrySize: 8,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
@@ -173,7 +167,6 @@ export const GOLDUCK: Pokemon = {
   ingredientPercentage: 16.2,
   skillPercentage: 12.5,
   carrySize: 14,
-  maxCarrySize: 19,
 };
 
 export const GROWLITHE: Pokemon = {
@@ -184,7 +177,6 @@ export const GROWLITHE: Pokemon = {
   skillPercentage: 5.0,
   berry: LEPPA,
   carrySize: 8,
-  maxCarrySize: 8,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
@@ -207,7 +199,6 @@ export const ARCANINE: Pokemon = {
   ingredientPercentage: 13.6,
   skillPercentage: 4.9,
   carrySize: 16,
-  maxCarrySize: 21,
 };
 
 export const SLOWPOKE: Pokemon = {
@@ -218,7 +209,6 @@ export const SLOWPOKE: Pokemon = {
   skillPercentage: 6.7,
   berry: ORAN,
   carrySize: 9,
-  maxCarrySize: 9,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
@@ -241,7 +231,6 @@ export const SLOWBRO: Pokemon = {
   ingredientPercentage: 19.7,
   skillPercentage: 6.8,
   carrySize: 16,
-  maxCarrySize: 21,
 };
 
 export const MAGNEMITE: Pokemon = {
@@ -252,7 +241,6 @@ export const MAGNEMITE: Pokemon = {
   skillPercentage: 6.4,
   berry: BELUE,
   carrySize: 8,
-  maxCarrySize: 8,
   previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
@@ -274,7 +262,6 @@ export const MAGNETON: Pokemon = {
   ingredientPercentage: 18.2,
   skillPercentage: 6.3,
   carrySize: 11,
-  maxCarrySize: 16,
 };
 
 export const EEVEE: Pokemon = {
@@ -285,7 +272,6 @@ export const EEVEE: Pokemon = {
   skillPercentage: 5.5,
   berry: PERSIM,
   carrySize: 12,
-  maxCarrySize: 12,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: MOOMOO_MILK },
@@ -309,7 +295,6 @@ export const VAPOREON: Pokemon = {
   skillPercentage: 6.1,
   berry: ORAN,
   carrySize: 13,
-  maxCarrySize: 18,
   skill: INGREDIENT_MAGNET_S,
 };
 
@@ -321,7 +306,6 @@ export const JOLTEON: Pokemon = {
   skillPercentage: 3.9,
   berry: GREPA,
   carrySize: 17,
-  maxCarrySize: 22,
   skill: EXTRA_HELPFUL_S,
 };
 
@@ -333,7 +317,6 @@ export const FLAREON: Pokemon = {
   skillPercentage: 5.2,
   berry: LEPPA,
   carrySize: 14,
-  maxCarrySize: 19,
   skill: COOKING_POWER_UP_S,
 };
 
@@ -344,7 +327,6 @@ export const IGGLYBUFF: Pokemon = {
   ingredientPercentage: 17.0,
   skillPercentage: 3.8,
   carrySize: 8,
-  maxCarrySize: 8,
 };
 
 export const TOGEPI: Pokemon = {
@@ -355,7 +337,6 @@ export const TOGEPI: Pokemon = {
   skillPercentage: 4.9,
   berry: PECHA,
   carrySize: 8,
-  maxCarrySize: 8,
   previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FANCY_EGG },
@@ -378,7 +359,6 @@ export const TOGETIC: Pokemon = {
   ingredientPercentage: 16.3,
   skillPercentage: 5.6,
   carrySize: 10,
-  maxCarrySize: 15,
 };
 
 export const MAREEP: Pokemon = {
@@ -389,7 +369,6 @@ export const MAREEP: Pokemon = {
   skillPercentage: 4.7,
   berry: GREPA,
   carrySize: 9,
-  maxCarrySize: 9,
   previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
@@ -411,7 +390,6 @@ export const FLAAFFY: Pokemon = {
   ingredientPercentage: 12.7,
   skillPercentage: 4.6,
   carrySize: 11,
-  maxCarrySize: 16,
 };
 
 export const AMPHAROS: Pokemon = {
@@ -421,7 +399,6 @@ export const AMPHAROS: Pokemon = {
   ingredientPercentage: 13.0,
   skillPercentage: 4.7,
   carrySize: 15,
-  maxCarrySize: 25,
 };
 
 export const SUDOWOODO: Pokemon = {
@@ -432,7 +409,6 @@ export const SUDOWOODO: Pokemon = {
   skillPercentage: 7.2,
   berry: SITRUS,
   carrySize: 16,
-  maxCarrySize: 21,
   previousEvolutions: 1,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
@@ -456,7 +432,6 @@ export const ESPEON: Pokemon = {
   skillPercentage: 4.4,
   berry: MAGO,
   carrySize: 16,
-  maxCarrySize: 21,
   skill: CHARGE_STRENGTH_M,
 };
 
@@ -468,7 +443,6 @@ export const UMBREON: Pokemon = {
   skillPercentage: 14.1,
   berry: WIKI,
   carrySize: 14,
-  maxCarrySize: 19,
   skill: CHARGE_ENERGY_S,
 };
 
@@ -479,7 +453,6 @@ export const SLOWKING: Pokemon = {
   ingredientPercentage: 16.6,
   skillPercentage: 7.4,
   carrySize: 17,
-  maxCarrySize: 22,
 };
 
 export const WOBBUFFET: Pokemon = {
@@ -490,7 +463,6 @@ export const WOBBUFFET: Pokemon = {
   skillPercentage: 6.4,
   berry: MAGO,
   carrySize: 13,
-  maxCarrySize: 18,
   previousEvolutions: 1,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
@@ -514,7 +486,6 @@ export const HERACROSS: Pokemon = {
   skillPercentage: 4.7,
   berry: LUM,
   carrySize: 20,
-  maxCarrySize: 20,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: HONEY },
@@ -538,7 +509,6 @@ export const RAIKOU: Pokemon = {
   skillPercentage: 1.9,
   berry: GREPA,
   carrySize: 22,
-  maxCarrySize: 22,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
@@ -562,7 +532,6 @@ export const ENTEI: Pokemon = {
   skillPercentage: 2.3,
   berry: LEPPA,
   carrySize: 19,
-  maxCarrySize: 19,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
@@ -586,7 +555,6 @@ export const RALTS: Pokemon = {
   skillPercentage: 4.3,
   berry: MAGO,
   carrySize: 9,
-  maxCarrySize: 9,
   previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
@@ -609,7 +577,6 @@ export const KIRLIA: Pokemon = {
   ingredientPercentage: 14.6,
   skillPercentage: 4.3,
   carrySize: 13,
-  maxCarrySize: 18,
 };
 
 export const GARDEVOIR: Pokemon = {
@@ -619,7 +586,6 @@ export const GARDEVOIR: Pokemon = {
   ingredientPercentage: 14.4,
   skillPercentage: 4.2,
   carrySize: 18,
-  maxCarrySize: 28,
 };
 
 export const SABLEYE: Pokemon = {
@@ -630,7 +596,6 @@ export const SABLEYE: Pokemon = {
   skillPercentage: 6.8,
   berry: WIKI,
   carrySize: 16,
-  maxCarrySize: 16,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
@@ -654,7 +619,6 @@ export const GULPIN: Pokemon = {
   skillPercentage: 6.3,
   berry: CHESTO,
   carrySize: 8,
-  maxCarrySize: 8,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
@@ -677,7 +641,6 @@ export const SWALOT: Pokemon = {
   ingredientPercentage: 21,
   skillPercentage: 7,
   carrySize: 19,
-  maxCarrySize: 24,
 };
 
 export const WYNAUT: Pokemon = {
@@ -687,7 +650,6 @@ export const WYNAUT: Pokemon = {
   ingredientPercentage: 21.3,
   skillPercentage: 5.9,
   carrySize: 7,
-  maxCarrySize: 7,
 };
 
 export const BONSLY: Pokemon = {
@@ -697,7 +659,6 @@ export const BONSLY: Pokemon = {
   ingredientPercentage: 18.9,
   skillPercentage: 6.1,
   carrySize: 8,
-  maxCarrySize: 8,
 };
 
 export const RIOLU: Pokemon = {
@@ -708,7 +669,6 @@ export const RIOLU: Pokemon = {
   skillPercentage: 3.8,
   berry: CHERI,
   carrySize: 9,
-  maxCarrySize: 9,
   previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
@@ -731,7 +691,6 @@ export const LUCARIO: Pokemon = {
   ingredientPercentage: 15.0,
   skillPercentage: 5.1,
   carrySize: 14,
-  maxCarrySize: 19,
 };
 
 export const MAGNEZONE: Pokemon = {
@@ -741,7 +700,6 @@ export const MAGNEZONE: Pokemon = {
   ingredientPercentage: 17.9,
   skillPercentage: 6.2,
   carrySize: 13,
-  maxCarrySize: 23,
 };
 
 export const TOGEKISS: Pokemon = {
@@ -751,7 +709,6 @@ export const TOGEKISS: Pokemon = {
   ingredientPercentage: 15.8,
   skillPercentage: 5.3,
   carrySize: 16,
-  maxCarrySize: 26,
 };
 
 export const LEAFEON: Pokemon = {
@@ -762,7 +719,6 @@ export const LEAFEON: Pokemon = {
   skillPercentage: 5.9,
   berry: DURIN,
   carrySize: 13,
-  maxCarrySize: 18,
   skill: ENERGIZING_CHEER_S,
 };
 
@@ -774,7 +730,6 @@ export const GLACEON: Pokemon = {
   skillPercentage: 6.3,
   berry: RAWST,
   carrySize: 12,
-  maxCarrySize: 17,
   skill: COOKING_POWER_UP_S,
 };
 
@@ -785,7 +740,6 @@ export const GALLADE: Pokemon = {
   ingredientPercentage: 14.7,
   skillPercentage: 5.4,
   carrySize: 19,
-  maxCarrySize: 29,
   berry: CHERI,
   skill: EXTRA_HELPFUL_S,
 };
@@ -798,7 +752,6 @@ export const SYLVEON: Pokemon = {
   skillPercentage: 4.0,
   berry: PECHA,
   carrySize: 15,
-  maxCarrySize: 20,
   skill: ENERGY_FOR_EVERYONE,
 };
 
@@ -810,7 +763,6 @@ export const DEDENNE: Pokemon = {
   skillPercentage: 4.5,
   berry: GREPA,
   carrySize: 19,
-  maxCarrySize: 19,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },

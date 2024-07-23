@@ -1,6 +1,6 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
-import { berry, ingredient, nature } from 'sleepapi-common';
+import { berry, ingredient, maxCarrySize, nature } from 'sleepapi-common';
 import { monteCarlo } from './monte-carlo';
 
 describe('monteCarlo', () => {
@@ -10,7 +10,7 @@ describe('monteCarlo', () => {
       helpFrequency: 1000,
       mealTimes: [],
       pokemonWithAverageProduce,
-      inventoryLimit: MOCKED_POKEMON.maxCarrySize,
+      inventoryLimit: maxCarrySize(MOCKED_POKEMON),
       recoveryEvents: [],
       skillPercentage: MOCKED_POKEMON.skillPercentage / 100,
       skillLevel: 6,

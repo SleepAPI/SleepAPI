@@ -1,6 +1,6 @@
 import { CustomStats } from '@src/domain/combination/custom';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
-import { MathUtils, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
+import { MathUtils, mainskill, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 
 export function countErbUsers(erb: number, subskills: subskill.SubSkill[]) {
   const subskillErb = subskills.some(
@@ -53,7 +53,7 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
       nature: nature.SASSY,
       subskills: subskillsForFilter('skill', level, pokemon),
       skillLevel: pokemon.skill.maxLevel,
-      maxCarrySize: pokemon.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemon),
     };
   }
 
@@ -62,6 +62,6 @@ export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): Custom
     nature: nature.QUIET,
     subskills: subskillsForFilter('ingredient', level, pokemon),
     skillLevel: pokemon.skill.maxLevel,
-    maxCarrySize: pokemon.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon),
   };
 }

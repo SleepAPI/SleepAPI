@@ -37,6 +37,7 @@ import {
   calculateSkillPercentage,
   combineSameIngredientsInDrop,
   mainskill,
+  maxCarrySize,
   nature,
 } from 'sleepapi-common';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
@@ -111,7 +112,7 @@ export function setupAndRunProductionSimulation(params: {
   };
 
   const inventoryLimit =
-    (input.maxCarrySize ?? averagedPokemonCombination.pokemon.maxCarrySize) +
+    (input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon)) +
     calculateSubskillCarrySize(input.subskills ?? []);
 
   const pokemonWithAverageProduce: PokemonProduce = {

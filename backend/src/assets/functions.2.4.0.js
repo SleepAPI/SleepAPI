@@ -317,7 +317,7 @@ function getPokemonData(pokemonName) {
       ingredients.push(`${ing0}/${ing30_2}/${ing60_3}`); // ABC
     }
 
-    var nrOfEvolutions = (pokemonInfo.maxCarrySize - pokemonInfo.carrySize) / 5;
+    var nrOfEvolutions = pokemonInfo.previousEvolutions;
 
     populateIngredientOptions(ingredients);
     populateEvolutionData(nrOfEvolutions);

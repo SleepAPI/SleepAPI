@@ -7,3 +7,7 @@ export function getPokemon(name: string): Pokemon {
   }
   return pkmn;
 }
+
+export function maxCarrySize(pokemon: Pokemon): number {
+  return pokemon.carrySize + 5 * pokemon.previousEvolutions;
+}

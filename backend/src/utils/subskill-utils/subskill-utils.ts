@@ -94,7 +94,7 @@ export function subskillsForFilter(
     );
   }
 
-  const singleStageLevel60 = pokemon.carrySize === pokemon.maxCarrySize && level >= 60;
+  const singleStageLevel60 = pokemon.previousEvolutions === 0 && level >= 60;
   const subskills = singleStageLevel60 ? singleStageSubskillsLevel60 : optimalSubskills;
 
   return limitSubSkillsToLevel(subskills, level);

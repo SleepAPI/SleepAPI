@@ -13,7 +13,6 @@ const MOCK_POKEMON: Pokemon = {
   skillPercentage: 0,
   berry: BELUE,
   carrySize: 0,
-  maxCarrySize: 5,
   previousEvolutions: 1,
   remainingEvolutions: 1,
   ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },

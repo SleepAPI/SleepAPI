@@ -2,7 +2,16 @@ import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/cus
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { berry, ingredient, mainskill, nature, pokemon, prettifyIngredientDrop, subskill } from 'sleepapi-common';
+import {
+  berry,
+  ingredient,
+  mainskill,
+  maxCarrySize,
+  nature,
+  pokemon,
+  prettifyIngredientDrop,
+  subskill,
+} from 'sleepapi-common';
 import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import {
   calculateHelperBoostIngredientsIncrease,
@@ -55,7 +64,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          maxCarrySize: pokemon.DRATINI.maxCarrySize,
+          inventoryLimit: maxCarrySize(pokemon.DRATINI),
         },
       },
     ];
@@ -93,7 +102,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          maxCarrySize: pokemon.PINSIR.maxCarrySize,
+          inventoryLimit: maxCarrySize(pokemon.PINSIR),
         },
       },
       {
@@ -120,7 +129,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          maxCarrySize: pokemon.DELIBIRD.maxCarrySize,
+          inventoryLimit: maxCarrySize(pokemon.DELIBIRD),
         },
       },
     ];
@@ -163,7 +172,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          maxCarrySize: pokemon.DELIBIRD.maxCarrySize,
+          inventoryLimit: maxCarrySize(pokemon.DELIBIRD),
         },
       },
     ];
@@ -198,7 +207,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          maxCarrySize: pokemon.RAIKOU.maxCarrySize,
+          inventoryLimit: maxCarrySize(pokemon.RAIKOU),
         },
       },
     ];
@@ -601,7 +610,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    maxCarrySize: pokemon.RAICHU.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.RAICHU),
   },
   detailedProduce: {
     produce: {
@@ -670,7 +679,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    maxCarrySize: pokemon.RAIKOU.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.RAIKOU),
   },
   detailedProduce: {
     produce: {

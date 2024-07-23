@@ -3,7 +3,7 @@ import { Produce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { TimePeriod } from '@src/domain/time/time';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
+import { berry, ingredient, mainskill, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 
 export const MOCKED_MAIN_SLEEP: TimePeriod = {
   start: {
@@ -72,7 +72,6 @@ export const MOCKED_POKEMON: pokemon.Pokemon = {
     },
   ],
   ingredientPercentage: 20,
-  maxCarrySize: 20,
   previousEvolutions: 0,
   remainingEvolutions: 0,
   name: 'MOCK_POKEMON',
@@ -117,6 +116,6 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     nature: nature.RASH,
     subskills: [],
     skillLevel: 6,
-    maxCarrySize: pokemon.PINSIR.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.PINSIR),
   },
 };

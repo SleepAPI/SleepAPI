@@ -90,7 +90,7 @@ export default {
         if (this.pokemonInstance.skillLevel > 0) {
           this.mainskillLevel = this.pokemonInstance.skillLevel
         } else {
-          const nrOfEvolutions = (newPokemon.maxCarrySize - newPokemon.carrySize) / 5
+          const nrOfEvolutions = newPokemon.previousEvolutions
           this.mainskillLevel = 1 + nrOfEvolutions
         }
         this.$emit('update-skill-level', this.mainskillLevel)

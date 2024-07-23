@@ -6,6 +6,7 @@ import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import {
   ingredient,
+  maxCarrySize,
   nature,
   pokemon,
   subskill,
@@ -108,7 +109,7 @@ describe('PokemonInput', () => {
     expect(updatedPokemonInstance.pokemon).not.toEqual(pokemon.MOCK_POKEMON)
 
     expect(updatedPokemonInstance.pokemon).toEqual(pokemon.GALLADE)
-    expect(updatedPokemonInstance.carrySize).toBe(pokemon.GALLADE.maxCarrySize)
+    expect(updatedPokemonInstance.carrySize).toBe(maxCarrySize(pokemon.GALLADE))
   })
 
   it('renders child components correctly', () => {

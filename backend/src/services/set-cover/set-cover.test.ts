@@ -8,6 +8,7 @@ import {
   berry,
   dessert,
   ingredient,
+  maxCarrySize,
   nature,
   pokemon,
   prettifyIngredientDrop,
@@ -36,7 +37,7 @@ describe('processOptimalTeamSolutions', () => {
       nature: nature.RASH,
       subskills: [],
       skillLevel: 6,
-      maxCarrySize: pokemon.PINSIR.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemon.PINSIR),
     };
 
     const detailedProduce: DetailedProduce = {
@@ -316,7 +317,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    maxCarrySize: pokemon.RAICHU.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.RAICHU),
   },
   detailedProduce: {
     produce: {
@@ -385,7 +386,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    maxCarrySize: pokemon.RAIKOU.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.RAIKOU),
   },
   detailedProduce: {
     produce: {
@@ -439,7 +440,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    maxCarrySize: pokemon.VAPOREON.maxCarrySize,
+    inventoryLimit: maxCarrySize(pokemon.VAPOREON),
   },
   detailedProduce: {
     produce: {

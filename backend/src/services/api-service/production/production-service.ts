@@ -5,7 +5,7 @@ import { setupAndRunProductionSimulation } from '@src/services/simulation-servic
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { nature, pokemon, subskill } from 'sleepapi-common';
+import { maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
@@ -59,7 +59,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.QUIET,
         skillLevel: pokemon.skill.maxLevel,
-        maxCarrySize: pokemon.maxCarrySize,
+        inventoryLimit: maxCarrySize(pokemon),
       },
       monteCarloIterations,
     }).detailedProduce;
@@ -80,7 +80,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.ADAMANT,
         skillLevel: pokemon.skill.maxLevel,
-        maxCarrySize: pokemon.maxCarrySize,
+        inventoryLimit: pokemon.carrySize,
       },
       monteCarloIterations,
     }).detailedProduce;
@@ -101,7 +101,7 @@ export function calculatePokemonProduction(
         ),
         nature: nature.SASSY,
         skillLevel: pokemon.skill.maxLevel,
-        maxCarrySize: pokemon.maxCarrySize,
+        inventoryLimit: maxCarrySize(pokemon),
       },
       monteCarloIterations,
     }).detailedProduce;
