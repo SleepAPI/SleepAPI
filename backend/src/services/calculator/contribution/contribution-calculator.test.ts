@@ -10,6 +10,7 @@ import {
   curry,
   dessert,
   ingredient,
+  maxCarrySize,
   nature,
   pokemon,
   prettifyIngredientDrop,
@@ -919,7 +920,7 @@ function generateProducingPokemon(params: {
       nature: nature.QUIET,
       skillLevel: pokemon.skill.maxLevel,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-      maxCarrySize: pokemon.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemon),
     },
     detailedProduce: {
       produce: {

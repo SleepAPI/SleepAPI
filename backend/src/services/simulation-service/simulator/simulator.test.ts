@@ -5,7 +5,7 @@ import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-eve
 import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { berry, ingredient, mainskill, nature } from 'sleepapi-common';
+import { berry, ingredient, mainskill, maxCarrySize, nature } from 'sleepapi-common';
 import { simulation } from './simulator';
 
 describe('simulator', () => {
@@ -15,7 +15,7 @@ describe('simulator', () => {
       helpFrequency: 1000,
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       pokemonWithAverageProduce,
-      inventoryLimit: pokemonWithAverageProduce.pokemon.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemonWithAverageProduce.pokemon),
       recoveryEvents: [new EnergyEvent({ delta: 10, description: 'some-desc', time: TimeUtils.parseTime('08:00') })],
       extraHelpfulEvents: [
         new SkillEvent({

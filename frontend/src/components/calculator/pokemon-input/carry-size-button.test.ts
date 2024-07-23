@@ -1,7 +1,7 @@
 import CarrySizeButton from '@/components/calculator/pokemon-input/carry-size-button.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { maxCarrySize, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('CarrySizeButton', () => {
@@ -42,7 +42,7 @@ describe('CarrySizeButton', () => {
   it('displays carry size options correctly in the list', async () => {
     await wrapper.setData({ menu: true })
     const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
-    const expectedValues = [pokemon.PIKACHU.carrySize, pokemon.PIKACHU.maxCarrySize]
+    const expectedValues = [pokemon.PIKACHU.carrySize, maxCarrySize(pokemon.PIKACHU)]
     listItems.forEach((item, index) => {
       expect(item.text()).toBe(expectedValues[index].toString())
     })
@@ -68,7 +68,7 @@ describe('CarrySizeButton', () => {
 
   it('updates carry limit when the pokemon prop changes', async () => {
     const newPokemon = {
-      pokemon: { name: 'Bulbasaur', carrySize: 5, maxCarrySize: 15 },
+      pokemon: { name: 'Bulbasaur', carrySize: 5, previousEvolutions: 2 },
       carrySize: 10
     } as PokemonInstanceExt
     await wrapper.setProps({ pokemonInstance: newPokemon })

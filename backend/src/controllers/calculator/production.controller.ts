@@ -128,17 +128,18 @@ export default class ProductionController extends Controller {
     const uniqueHelperBoost = rawUniqueHelperBoost === 0 && canRollHelperBoost ? 1 : rawUniqueHelperBoost;
 
     const inputNrOfEvos = queryAsNumber(input.nrOfEvolutions);
-    const maxCarrySize = inputNrOfEvos !== undefined ? pkmn.carrySize + inputNrOfEvos * 5 : pkmn.maxCarrySize;
-    if (maxCarrySize > pkmn.maxCarrySize) {
+    const nrOfEvos = inputNrOfEvos !== undefined ? inputNrOfEvos : pkmn.previousEvolutions;
+    if (nrOfEvos > pkmn.previousEvolutions) {
       throw new PokemonError(`${pkmn.name} doesn't evolve ${inputNrOfEvos} times`);
     }
+    const inventoryLimit = pkmn.carrySize + nrOfEvos * 5;
 
     const parsedInput: ProductionStats = {
       level,
       nature: getNature(input.nature),
       subskills: extractSubskillsBasedOnLevel(level, input.subskills),
       skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pkmn.skill.maxLevel, pkmn.skill.maxLevel),
-      maxCarrySize,
+      inventoryLimit,
       e4eProcs: queryAsNumber(input.e4eProcs) ?? 0,
       e4eLevel: queryAsNumber(input.e4eLevel) ?? mainskill.ENERGY_FOR_EVERYONE.maxLevel,
       cheer: queryAsNumber(input.cheer) ?? 0,

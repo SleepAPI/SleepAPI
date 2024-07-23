@@ -1,4 +1,4 @@
-import { nature, pokemon, subskill } from 'sleepapi-common';
+import { maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 import {
   calculateHelpSpeedSubskills,
   calculateSubskillCarrySize,
@@ -50,7 +50,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
-      maxCarrySize: pokemon.BLASTOISE.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemon.BLASTOISE),
     });
   });
 
@@ -61,7 +61,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.SASSY,
       subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
-      maxCarrySize: pokemon.SYLVEON.maxCarrySize,
+      inventoryLimit: maxCarrySize(pokemon.SYLVEON),
     });
   });
 });

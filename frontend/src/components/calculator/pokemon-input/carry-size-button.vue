@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { maxCarrySize, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -34,20 +34,17 @@ export default {
   }),
   computed: {
     carrySizeOptions() {
-      const { carrySize, maxCarrySize } = this.pokemonInstance.pokemon
+      const { carrySize, previousEvolutions } = this.pokemonInstance.pokemon
       const values = [carrySize]
 
-      if (maxCarrySize > carrySize) {
-        values.push(carrySize + 5)
-        if (maxCarrySize === carrySize + 10) {
-          values.push(maxCarrySize)
-        }
+      for (let i = 1; i <= previousEvolutions; ++i) {
+        values.push(carrySize + i * 5)
       }
 
       return values
     },
     singleStageMon() {
-      return this.pokemonInstance.pokemon.carrySize === this.pokemonInstance.pokemon.maxCarrySize
+      return this.pokemonInstance.pokemon.previousEvolutions === 0
     },
     pokemon() {
       return this.pokemonInstance.pokemon
@@ -62,7 +59,7 @@ export default {
 
         const newCarrySize = loadFromExisting
           ? this.pokemonInstance.carrySize
-          : newPokemon.maxCarrySize
+          : maxCarrySize(newPokemon)
         this.$emit('update-carry', newCarrySize)
       }
     }

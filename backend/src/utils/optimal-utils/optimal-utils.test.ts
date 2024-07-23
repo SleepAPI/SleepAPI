@@ -9,6 +9,7 @@ import {
   curry,
   dessert,
   ingredient,
+  maxCarrySize,
   nature,
   pokemon,
   salad,
@@ -40,7 +41,7 @@ describe('calculateCombinedContributions', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
-        maxCarrySize: pokemon.PINSIR.maxCarrySize,
+        inventoryLimit: maxCarrySize(pokemon.PINSIR),
       },
     };
 
@@ -215,7 +216,7 @@ describe('removeDuplicatePokemonCombinations', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
-        maxCarrySize: pokemon.PINSIR.maxCarrySize,
+        inventoryLimit: maxCarrySize(pokemon.PINSIR),
       },
       detailedProduce: {
         produce: {

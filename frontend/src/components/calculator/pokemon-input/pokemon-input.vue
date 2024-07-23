@@ -154,6 +154,7 @@ import { useUserStore } from '@/stores/user-store'
 import {
   RP,
   ingredient,
+  maxCarrySize,
   nature,
   pokemon,
   uuid,
@@ -222,7 +223,7 @@ export default defineComponent({
       this.pokemonInstance = JSON.parse(JSON.stringify(existingPokemon))
     } else if (this.selectedPokemon) {
       this.pokemonInstance.pokemon = this.selectedPokemon
-      this.pokemonInstance.carrySize = this.selectedPokemon.maxCarrySize
+      this.pokemonInstance.carrySize = maxCarrySize(this.selectedPokemon)
       this.pokemonInstance.externalId = uuid.v4()
     } else console.error('Missing both cached and search input mon, contact developer')
 
