@@ -16,6 +16,7 @@ const mockPokemonSet: PokemonIngredientSet = {
     ingredient60: [{ amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }],
     ingredientPercentage: 20,
     maxCarrySize: 10,
+    previousEvolutions: 0,
     remainingEvolutions: 0,
     skill: mainskill.CHARGE_STRENGTH_S,
     skillPercentage: 2,

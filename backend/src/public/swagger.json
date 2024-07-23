@@ -365,6 +365,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"previousEvolutions": {
+						"type": "number",
+						"format": "double"
+					},
 					"remainingEvolutions": {
 						"type": "number",
 						"format": "double"
@@ -397,6 +401,7 @@
 					"berry",
 					"carrySize",
 					"maxCarrySize",
+					"previousEvolutions",
 					"remainingEvolutions",
 					"ingredient0",
 					"ingredient30",
