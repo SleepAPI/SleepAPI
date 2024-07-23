@@ -73,6 +73,7 @@ export const MOCKED_POKEMON: pokemon.Pokemon = {
   ],
   ingredientPercentage: 20,
   maxCarrySize: 20,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   name: 'MOCK_POKEMON',
   skill: mainskill.CHARGE_STRENGTH_M,

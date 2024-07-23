@@ -60,6 +60,7 @@ export const PIKACHU_CHRISTMAS: Pokemon = {
   berry: GREPA,
   carrySize: 16,
   maxCarrySize: 16,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
@@ -83,6 +84,7 @@ export const JIGGLYPUFF: Pokemon = {
   berry: PECHA,
   carrySize: 9,
   maxCarrySize: 14,
+  previousEvolutions: 1,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
@@ -116,6 +118,7 @@ export const MEOWTH: Pokemon = {
   berry: PERSIM,
   carrySize: 9,
   maxCarrySize: 9,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: MOOMOO_MILK },
   ingredient30: [
@@ -148,6 +151,7 @@ export const PSYDUCK: Pokemon = {
   berry: ORAN,
   carrySize: 8,
   maxCarrySize: 8,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
   ingredient30: [
@@ -181,6 +185,7 @@ export const GROWLITHE: Pokemon = {
   berry: LEPPA,
   carrySize: 8,
   maxCarrySize: 8,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
   ingredient30: [
@@ -214,6 +219,7 @@ export const SLOWPOKE: Pokemon = {
   berry: ORAN,
   carrySize: 9,
   maxCarrySize: 9,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
   ingredient30: [
@@ -247,6 +253,7 @@ export const MAGNEMITE: Pokemon = {
   berry: BELUE,
   carrySize: 8,
   maxCarrySize: 8,
+  previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
@@ -279,6 +286,7 @@ export const EEVEE: Pokemon = {
   berry: PERSIM,
   carrySize: 12,
   maxCarrySize: 12,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: MOOMOO_MILK },
   ingredient30: [
@@ -348,6 +356,7 @@ export const TOGEPI: Pokemon = {
   berry: PECHA,
   carrySize: 8,
   maxCarrySize: 8,
+  previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FANCY_EGG },
   ingredient30: [
@@ -381,6 +390,7 @@ export const MAREEP: Pokemon = {
   berry: GREPA,
   carrySize: 9,
   maxCarrySize: 9,
+  previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
   ingredient30: [
@@ -423,6 +433,7 @@ export const SUDOWOODO: Pokemon = {
   berry: SITRUS,
   carrySize: 16,
   maxCarrySize: 21,
+  previousEvolutions: 1,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
@@ -480,6 +491,7 @@ export const WOBBUFFET: Pokemon = {
   berry: MAGO,
   carrySize: 13,
   maxCarrySize: 18,
+  previousEvolutions: 1,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
@@ -503,6 +515,7 @@ export const HERACROSS: Pokemon = {
   berry: LUM,
   carrySize: 20,
   maxCarrySize: 20,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
@@ -526,6 +539,7 @@ export const RAIKOU: Pokemon = {
   berry: GREPA,
   carrySize: 22,
   maxCarrySize: 22,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
@@ -549,6 +563,7 @@ export const ENTEI: Pokemon = {
   berry: LEPPA,
   carrySize: 19,
   maxCarrySize: 19,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
@@ -572,6 +587,7 @@ export const RALTS: Pokemon = {
   berry: MAGO,
   carrySize: 9,
   maxCarrySize: 9,
+  previousEvolutions: 0,
   remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
@@ -615,6 +631,7 @@ export const SABLEYE: Pokemon = {
   berry: WIKI,
   carrySize: 16,
   maxCarrySize: 16,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
@@ -638,6 +655,7 @@ export const GULPIN: Pokemon = {
   berry: CHESTO,
   carrySize: 8,
   maxCarrySize: 8,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
@@ -691,6 +709,7 @@ export const RIOLU: Pokemon = {
   berry: CHERI,
   carrySize: 9,
   maxCarrySize: 9,
+  previousEvolutions: 0,
   remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
@@ -792,6 +811,7 @@ export const DEDENNE: Pokemon = {
   berry: GREPA,
   carrySize: 19,
   maxCarrySize: 19,
+  previousEvolutions: 0,
   remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
