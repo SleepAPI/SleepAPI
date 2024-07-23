@@ -1,3 +1,4 @@
+import { evolvesFrom, evolvesInto } from '../../utils/pokemon-utils/evolution-utils';
 import { toSeconds } from '../../utils/time-utils/frequency-utils';
 import {
   BELUE,
@@ -53,6 +54,7 @@ export const CATERPIE: Pokemon = {
   berry: LUM,
   carrySize: 11,
   maxCarrySize: 11,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
     { amount: 2, ingredient: HONEY },
@@ -67,7 +69,7 @@ export const CATERPIE: Pokemon = {
 };
 
 export const METAPOD: Pokemon = {
-  ...CATERPIE,
+  ...evolvesFrom(CATERPIE),
   name: 'METAPOD',
   frequency: toSeconds(1, 10, 0),
   ingredientPercentage: 20.8,
@@ -77,7 +79,7 @@ export const METAPOD: Pokemon = {
 };
 
 export const BUTTERFREE: Pokemon = {
-  ...CATERPIE,
+  ...evolvesFrom(METAPOD),
   name: 'BUTTERFREE',
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 19.7,
@@ -95,6 +97,7 @@ export const RATTATA: Pokemon = {
   berry: PERSIM,
   carrySize: 10,
   maxCarrySize: 10,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
@@ -109,7 +112,7 @@ export const RATTATA: Pokemon = {
 };
 
 export const RATICATE: Pokemon = {
-  ...RATTATA,
+  ...evolvesFrom(RATTATA),
   name: 'RATICATE',
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 23.7,
@@ -127,6 +130,7 @@ export const EKANS: Pokemon = {
   berry: CHESTO,
   carrySize: 10,
   maxCarrySize: 10,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
@@ -141,7 +145,7 @@ export const EKANS: Pokemon = {
 };
 
 export const ARBOK: Pokemon = {
-  ...EKANS,
+  ...evolvesFrom(EKANS),
   name: 'ARBOK',
   frequency: toSeconds(1, 1, 40),
   ingredientPercentage: 26.4,
@@ -159,6 +163,7 @@ export const PIKACHU: Pokemon = {
   berry: GREPA,
   carrySize: 17,
   maxCarrySize: 22,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
@@ -181,6 +186,7 @@ export const PIKACHU_HALLOWEEN: Pokemon = {
   berry: GREPA,
   carrySize: 18,
   maxCarrySize: 18,
+  remainingEvolutions: 0,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
@@ -195,7 +201,7 @@ export const PIKACHU_HALLOWEEN: Pokemon = {
 };
 
 export const RAICHU: Pokemon = {
-  ...PIKACHU,
+  ...evolvesFrom(PIKACHU),
   name: 'RAICHU',
   frequency: toSeconds(0, 36, 40),
   ingredientPercentage: 22.4,
@@ -213,6 +219,7 @@ export const CLEFAIRY: Pokemon = {
   berry: PECHA,
   carrySize: 16,
   maxCarrySize: 21,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
@@ -227,7 +234,7 @@ export const CLEFAIRY: Pokemon = {
 };
 
 export const CLEFABLE: Pokemon = {
-  ...CLEFAIRY,
+  ...evolvesFrom(CLEFAIRY),
   name: 'CLEFABLE',
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 16.8,
@@ -245,6 +252,7 @@ export const VULPIX: Pokemon = {
   berry: LEPPA,
   carrySize: 13,
   maxCarrySize: 13,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
     { amount: 2, ingredient: GREENGRASS_SOYBEANS },
@@ -259,7 +267,7 @@ export const VULPIX: Pokemon = {
 };
 
 export const NINETALES: Pokemon = {
-  ...VULPIX,
+  ...evolvesFrom(VULPIX),
   name: 'NINETALES',
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 16.4,
@@ -277,6 +285,7 @@ export const MANKEY: Pokemon = {
   berry: CHERI,
   carrySize: 7,
   maxCarrySize: 7,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
@@ -291,7 +300,7 @@ export const MANKEY: Pokemon = {
 };
 
 export const PRIMEAPE: Pokemon = {
-  ...MANKEY,
+  ...evolvesFrom(MANKEY),
   name: 'PRIMEAPE',
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 20.0,
@@ -309,6 +318,7 @@ export const DODUO: Pokemon = {
   berry: PAMTRE,
   carrySize: 13,
   maxCarrySize: 13,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
     { amount: 2, ingredient: GREENGRASS_SOYBEANS },
@@ -323,7 +333,7 @@ export const DODUO: Pokemon = {
 };
 
 export const DODRIO: Pokemon = {
-  ...DODUO,
+  ...evolvesFrom(DODUO),
   name: 'DODRIO',
   frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 18.4,
@@ -341,6 +351,7 @@ export const ONIX: Pokemon = {
   berry: SITRUS,
   carrySize: 22,
   maxCarrySize: 22,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 2, ingredient: SNOOZY_TOMATO },
@@ -363,6 +374,7 @@ export const CUBONE: Pokemon = {
   berry: FIGY,
   carrySize: 10,
   maxCarrySize: 10,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 2, ingredient: WARMING_GINGER },
@@ -376,7 +388,7 @@ export const CUBONE: Pokemon = {
 };
 
 export const MAROWAK: Pokemon = {
-  ...CUBONE,
+  ...evolvesFrom(CUBONE),
   name: 'MAROWAK',
   frequency: toSeconds(0, 58, 20),
   ingredientPercentage: 22.5,
@@ -394,6 +406,7 @@ export const CHIKORITA: Pokemon = {
   berry: DURIN,
   carrySize: 12,
   maxCarrySize: 12,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
   ingredient30: [
     { amount: 2, ingredient: SOOTHING_CACAO },
@@ -408,7 +421,7 @@ export const CHIKORITA: Pokemon = {
 };
 
 export const BAYLEEF: Pokemon = {
-  ...CHIKORITA,
+  ...evolvesFrom(CHIKORITA),
   name: 'BAYLEEF',
   frequency: toSeconds(0, 55, 0),
   ingredientPercentage: 16.8,
@@ -418,7 +431,7 @@ export const BAYLEEF: Pokemon = {
 };
 
 export const MEGANIUM: Pokemon = {
-  ...CHIKORITA,
+  ...evolvesFrom(BAYLEEF),
   name: 'MEGANIUM',
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 17.5,
@@ -436,6 +449,7 @@ export const CYNDAQUIL: Pokemon = {
   berry: LEPPA,
   carrySize: 14,
   maxCarrySize: 14,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 2, ingredient: WARMING_GINGER },
@@ -450,7 +464,7 @@ export const CYNDAQUIL: Pokemon = {
 };
 
 export const QUILAVA: Pokemon = {
-  ...CYNDAQUIL,
+  ...evolvesFrom(CYNDAQUIL),
   name: 'QUILAVA',
   frequency: toSeconds(0, 50, 0),
   ingredientPercentage: 21.1,
@@ -460,7 +474,7 @@ export const QUILAVA: Pokemon = {
 };
 
 export const TYPHLOSION: Pokemon = {
-  ...CYNDAQUIL,
+  ...evolvesFrom(QUILAVA),
   name: 'TYPHLOSION',
   frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 20.8,
@@ -478,6 +492,7 @@ export const TOTODILE: Pokemon = {
   berry: ORAN,
   carrySize: 11,
   maxCarrySize: 11,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
@@ -491,7 +506,7 @@ export const TOTODILE: Pokemon = {
 };
 
 export const CROCONAW: Pokemon = {
-  ...TOTODILE,
+  ...evolvesFrom(TOTODILE),
   name: 'CROCONAW',
   frequency: toSeconds(0, 56, 40),
   ingredientPercentage: 25.3,
@@ -501,7 +516,7 @@ export const CROCONAW: Pokemon = {
 };
 
 export const FERALIGATR: Pokemon = {
-  ...TOTODILE,
+  ...evolvesFrom(CROCONAW),
   name: 'FERALIGATR',
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 25.7,
@@ -511,7 +526,7 @@ export const FERALIGATR: Pokemon = {
 };
 
 export const PICHU: Pokemon = {
-  ...PIKACHU,
+  ...evolvesInto(PIKACHU),
   name: 'PICHU',
   frequency: toSeconds(1, 11, 40),
   ingredientPercentage: 21.0,
@@ -521,7 +536,7 @@ export const PICHU: Pokemon = {
 };
 
 export const CLEFFA: Pokemon = {
-  ...CLEFAIRY,
+  ...evolvesInto(CLEFAIRY),
   name: 'CLEFFA',
   frequency: toSeconds(1, 33, 20),
   ingredientPercentage: 16.4,
@@ -531,7 +546,7 @@ export const CLEFFA: Pokemon = {
 };
 
 export const STEELIX: Pokemon = {
-  ...ONIX,
+  ...evolvesFrom(ONIX),
   name: 'STEELIX',
   frequency: toSeconds(0, 50, 0),
   ingredientPercentage: 15.4,
@@ -550,6 +565,7 @@ export const HOUNDOUR: Pokemon = {
   berry: WIKI,
   carrySize: 10,
   maxCarrySize: 10,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
   ingredient30: [
     { amount: 2, ingredient: FIERY_HERB },
@@ -564,7 +580,7 @@ export const HOUNDOUR: Pokemon = {
 };
 
 export const HOUNDOOM: Pokemon = {
-  ...HOUNDOUR,
+  ...evolvesFrom(HOUNDOUR),
   name: 'HOUNDOOM',
   frequency: toSeconds(0, 55, 0),
   ingredientPercentage: 20.3,
@@ -582,6 +598,7 @@ export const SLAKOTH: Pokemon = {
   berry: PERSIM,
   carrySize: 7,
   maxCarrySize: 7,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 2, ingredient: SNOOZY_TOMATO },
@@ -596,7 +613,7 @@ export const SLAKOTH: Pokemon = {
 };
 
 export const VIGOROTH: Pokemon = {
-  ...SLAKOTH,
+  ...evolvesFrom(SLAKOTH),
   name: 'VIGOROTH',
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 20.4,
@@ -606,7 +623,7 @@ export const VIGOROTH: Pokemon = {
 };
 
 export const SLAKING: Pokemon = {
-  ...SLAKOTH,
+  ...evolvesFrom(VIGOROTH),
   name: 'SLAKING',
   frequency: toSeconds(1, 3, 20),
   ingredientPercentage: 33.9,
@@ -624,6 +641,7 @@ export const SWABLU: Pokemon = {
   berry: PAMTRE,
   carrySize: 12,
   maxCarrySize: 12,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: FANCY_EGG },
   ingredient30: [
     { amount: 2, ingredient: FANCY_EGG },
@@ -638,7 +656,7 @@ export const SWABLU: Pokemon = {
 };
 
 export const ALTARIA: Pokemon = {
-  ...SWABLU,
+  ...evolvesFrom(SWABLU),
   name: 'ALTARIA',
   frequency: toSeconds(1, 1, 40),
   ingredientPercentage: 25.8,
@@ -657,6 +675,7 @@ export const SHUPPET: Pokemon = {
   berry: BLUK,
   carrySize: 11,
   maxCarrySize: 11,
+  remainingEvolutions: 1,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 2, ingredient: PURE_OIL },
@@ -671,7 +690,7 @@ export const SHUPPET: Pokemon = {
 };
 
 export const BANETTE: Pokemon = {
-  ...SHUPPET,
+  ...evolvesFrom(SHUPPET),
   name: 'BANETTE',
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 17.9,
@@ -689,6 +708,7 @@ export const SPHEAL: Pokemon = {
   berry: RAWST,
   carrySize: 9,
   maxCarrySize: 9,
+  remainingEvolutions: 2,
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 2, ingredient: PURE_OIL },
@@ -703,7 +723,7 @@ export const SPHEAL: Pokemon = {
 };
 
 export const SEALEO: Pokemon = {
-  ...SPHEAL,
+  ...evolvesFrom(SPHEAL),
   name: 'SEALEO',
   frequency: toSeconds(1, 6, 40),
   ingredientPercentage: 22.1,
@@ -713,7 +733,7 @@ export const SEALEO: Pokemon = {
 };
 
 export const WALREIN: Pokemon = {
-  ...SPHEAL,
+  ...evolvesFrom(SEALEO),
   name: 'WALREIN',
   frequency: toSeconds(0, 50, 0),
   ingredientPercentage: 22.3,

@@ -23,6 +23,7 @@ export interface Pokemon {
   berry: Berry;
   carrySize: number;
   maxCarrySize: number;
+  remainingEvolutions: number;
   ingredient0: IngredientSet;
   ingredient30: IngredientSet[];
   ingredient60: IngredientSet[];
@@ -38,6 +39,7 @@ export const MOCK_POKEMON: Pokemon = {
   berry: BELUE,
   carrySize: 0,
   maxCarrySize: 0,
+  remainingEvolutions: 0,
   ingredient0: { amount: 0, ingredient: SLOWPOKE_TAIL },
   ingredient30: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],
   ingredient60: [{ amount: 0, ingredient: SLOWPOKE_TAIL }],

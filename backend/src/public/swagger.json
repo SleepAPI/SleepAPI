@@ -365,6 +365,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"remainingEvolutions": {
+						"type": "number",
+						"format": "double"
+					},
 					"ingredient0": {
 						"$ref": "#/components/schemas/IngredientSet"
 					},
@@ -393,6 +397,7 @@
 					"berry",
 					"carrySize",
 					"maxCarrySize",
+					"remainingEvolutions",
 					"ingredient0",
 					"ingredient30",
 					"ingredient60",
