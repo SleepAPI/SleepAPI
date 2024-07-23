@@ -14,3 +14,25 @@ describe('remainingEvolutions', () => {
     });
   });
 });
+
+describe('previousEvolutions', () => {
+  it('shall never be negative', () => {
+    COMPLETE_POKEDEX.forEach((pokemon: Pokemon) => {
+      expect(pokemon.previousEvolutions).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  it('shall not exceed 2', () => {
+    COMPLETE_POKEDEX.forEach((pokemon: Pokemon) => {
+      expect(pokemon.previousEvolutions).toBeLessThanOrEqual(2);
+    });
+  });
+});
+
+describe('maxCarrySize', () => {
+  it('shall match computed max', () => {
+    COMPLETE_POKEDEX.forEach((pokemon: Pokemon) => {
+      expect(pokemon.maxCarrySize).toEqual(pokemon.carrySize + 5 * pokemon.previousEvolutions);
+    });
+  });
+});
