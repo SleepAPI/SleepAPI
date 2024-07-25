@@ -29,7 +29,9 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
         "name": "Sparky",
         "nature": "Brave",
         "pokemon": "Pikachu",
+        "ribbon": 0,
         "saved": true,
+        "shiny": false,
         "skillLevel": 5,
         "subskills": [
           {
@@ -77,7 +79,9 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
         "name": "Sparky",
         "nature": "Brave",
         "pokemon": "Pikachu",
+        "ribbon": 0,
         "saved": true,
+        "shiny": false,
         "skillLevel": 5,
         "subskills": [
           {
@@ -125,7 +129,9 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
         "name": "Bubble",
         "nature": "Brave",
         "pokemon": "Bulbasaur",
+        "ribbon": 0,
         "saved": true,
+        "shiny": false,
         "skillLevel": 5,
         "subskills": [
           {

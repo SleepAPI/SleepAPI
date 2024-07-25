@@ -6,6 +6,7 @@ describe('findOptimalSetsForMeal', () => {
   it('shall find all optimal solutions for a recipe', () => {
     const input: SetCoverProductionStats = {
       level: 60,
+      ribbon: 0,
       nature: nature.RASH,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
       berries: berry.BERRIES,
@@ -56,6 +57,7 @@ describe('findOptimalMonsForIngredient', () => {
   it('shall find all optimal mons for an ingredient', () => {
     const input: SetCoverProductionStats = {
       level: 30,
+      ribbon: 0,
       nature: nature.RASH,
       subskills: [],
       berries: berry.BERRIES,
@@ -88,6 +90,7 @@ describe('getOptimalFlexiblePokemon', () => {
   it('shall rank optimal flexible pokemon', () => {
     const input: SetCoverProductionStats = {
       level: 30,
+      ribbon: 0,
       berries: berry.LAPIS_BERRIES,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       e4eProcs: 5,

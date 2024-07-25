@@ -38,6 +38,7 @@ describe('calculateCombinedContributions', () => {
       ],
       stats: {
         level: 60,
+        ribbon: 0,
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
@@ -213,6 +214,7 @@ describe('removeDuplicatePokemonCombinations', () => {
     const pokemonCombination: CustomPokemonCombinationWithProduce = {
       customStats: {
         level: 0,
+        ribbon: 0,
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,

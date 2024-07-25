@@ -16,10 +16,12 @@ export interface SubskillInstanceExt {
 export interface PokemonInstanceExt {
   version: number;
   saved: boolean;
+  shiny: boolean;
   externalId: string;
   pokemon: Pokemon;
   name: string;
   level: number;
+  ribbon: number;
   carrySize: number;
   skillLevel: number;
   nature: Nature;

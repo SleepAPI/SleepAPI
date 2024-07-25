@@ -26,6 +26,7 @@ describe('RP', () => {
       name: 'Paris',
       carrySize: 24,
       level: 50,
+      ribbon: 0,
       nature: QUIET,
       skillLevel: 1,
       subskills: [
@@ -43,6 +44,7 @@ describe('RP', () => {
       externalId: uuid.v4(),
       version: 0,
       saved: true,
+      shiny: false,
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.helpFactor).toBe(8.299999999999999);
@@ -59,6 +61,7 @@ describe('RP', () => {
       name: 'Paris',
       carrySize: 24,
       level: 60,
+      ribbon: 0,
       nature: QUIET,
       skillLevel: 1,
       subskills: [
@@ -76,6 +79,7 @@ describe('RP', () => {
       externalId: uuid.v4(),
       version: 0,
       saved: true,
+      shiny: false,
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(4281);
@@ -87,6 +91,7 @@ describe('RP', () => {
       name: 'Golduck',
       carrySize: 19,
       level: 38,
+      ribbon: 0,
       nature: LONELY,
       skillLevel: 7,
       subskills: [
@@ -104,6 +109,7 @@ describe('RP', () => {
       externalId: uuid.v4(),
       version: 0,
       saved: true,
+      shiny: false,
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3726);
@@ -115,6 +121,7 @@ describe('RP', () => {
       name: 'Thor',
       carrySize: 31,
       level: 53,
+      ribbon: 0,
       nature: NAUGHTY,
       skillLevel: 4,
       subskills: [
@@ -132,6 +139,7 @@ describe('RP', () => {
       externalId: uuid.v4(),
       version: 0,
       saved: true,
+      shiny: false,
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3555);

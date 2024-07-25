@@ -32,8 +32,10 @@ describe('TeamSlotMenu', () => {
     carrySize: 10,
     ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
     level: 10,
+    ribbon: 0,
     nature: nature.BASHFUL,
     saved: false,
+    shiny: false,
     skillLevel: 1,
     subskills: [],
     version: 1

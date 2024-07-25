@@ -185,6 +185,7 @@ function goToProductionCalculator() {
 
   var body = {
     level: +document.querySelector('input[name="level"]:checked').value,
+    ribbon: document.getElementById('ribbonLevel').value,
     nature: document.getElementById('nature').value || 'bashful',
     subskills: getCurrentSubskills(),
     skillLevel: +document.querySelector('input[name="skillLevel"]:checked').value,

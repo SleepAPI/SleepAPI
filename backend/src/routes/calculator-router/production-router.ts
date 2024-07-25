@@ -1,4 +1,3 @@
-import ProductionController from '@src/controllers/calculator/production.controller';
 import { Logger } from '@src/services/logger/logger';
 import { runWorkerFile } from '@src/services/worker/worker';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
@@ -9,6 +8,7 @@ import { BaseRouter } from '../base-router';
 
 export interface ProductionRequest {
   level: number;
+  ribbon: number;
   nature: string;
   subskills: string[];
   e4eProcs: number;
@@ -30,7 +30,7 @@ export interface ProductionRequest {
 }
 
 class ProductionRouterImpl {
-  public async register(controller: ProductionController) {
+  public async register() {
     BaseRouter.router.post(
       '/calculator/production/:name',
       async (req: Request<{ name: string }, unknown, ProductionRequest, { pretty?: boolean }>, res: Response) => {

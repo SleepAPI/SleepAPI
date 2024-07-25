@@ -89,7 +89,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
-    expect(contribution.contributedPower).toBe(6873.912101094876);
+    expect(contribution.contributedPower).toBe(6957.016433293412);
   });
 
   it('shall calculate Gengars level 50 contribution and divide by 2 for spore mushroom curry with size 2 team size', () => {
@@ -121,8 +121,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
-    expect(Math.round(contribution.contributedPower)).toBe(7431);
-    expect(Math.round(contribution.contributedPower * 1.5)).toBe(11147); // expected value in overall 50 tier list
+    expect(Math.round(contribution.contributedPower)).toBe(7525);
   });
 
   it('shall calculate an extra helpful mon that solos recipe, but needs support produce to do so', () => {
@@ -917,6 +916,7 @@ function generateProducingPokemon(params: {
     // not used
     customStats: {
       level: 60,
+      ribbon: 0,
       nature: nature.QUIET,
       skillLevel: pokemon.skill.maxLevel,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],

@@ -43,20 +43,21 @@ export function calculatePokemonProduction(
       monteCarloIterations,
     }).detailedProduce;
 
+    const optimalIngredientSubskills = limitSubSkillsToLevel(
+      [
+        subskill.INGREDIENT_FINDER_M,
+        subskill.HELPING_SPEED_M,
+        subskill.INGREDIENT_FINDER_S,
+        subskill.INVENTORY_L,
+        subskill.HELPING_SPEED_S,
+      ],
+      input.level
+    );
     optimalIngredientProduction = setupAndRunProductionSimulation({
       pokemonCombination,
       input: {
         ...input,
-        subskills: limitSubSkillsToLevel(
-          [
-            subskill.INGREDIENT_FINDER_M,
-            subskill.HELPING_SPEED_M,
-            subskill.INGREDIENT_FINDER_S,
-            subskill.INVENTORY_L,
-            subskill.HELPING_SPEED_S,
-          ],
-          input.level
-        ),
+        subskills: optimalIngredientSubskills,
         nature: nature.QUIET,
         skillLevel: pokemon.skill.maxLevel,
         inventoryLimit: maxCarrySize(pokemon),

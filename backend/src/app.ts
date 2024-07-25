@@ -10,7 +10,6 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './public/swagger.json';
 
-import ProductionController from './controllers/calculator/production.controller';
 import HealthController from './controllers/health/health.controller';
 import IngredientController from './controllers/ingredient/ingredient.controller';
 import MainskillController from './controllers/mainskill/mainskill.controller';
@@ -87,7 +86,7 @@ async function main() {
   MealRouter.register(new MealController());
   PokemonRouter.register(new PokemonController());
   OptimalCombinationRouter.register();
-  ProductionRouter.register(new ProductionController());
+  ProductionRouter.register();
   TierlistRouter.register(new TierlistController());
   IngredientRouter.register(new IngredientController());
   NatureRouter.register(new NatureController());

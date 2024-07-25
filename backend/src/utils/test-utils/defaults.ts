@@ -20,6 +20,7 @@ export const MOCKED_MAIN_SLEEP: TimePeriod = {
 
 export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
   level: 60,
+  ribbon: 0,
   nature: nature.QUIET,
   subskills: [subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_M, subskill.INGREDIENT_FINDER_S],
   e4eProcs: 0,
@@ -113,6 +114,7 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
   averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
     level: 30,
+    ribbon: 0,
     nature: nature.RASH,
     subskills: [],
     skillLevel: 6,

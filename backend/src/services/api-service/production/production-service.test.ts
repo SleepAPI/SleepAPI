@@ -68,6 +68,7 @@ describe('calculateTeam', () => {
         },
         carrySize: 24,
         level: 60,
+        ribbon: 0,
         nature: nature.MILD,
         skillLevel: 6,
         subskills: [subskill.INGREDIENT_FINDER_M],

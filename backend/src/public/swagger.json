@@ -7,274 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"NatureModifier": {
-				"type": "string",
-				"enum": [
-					"speed",
-					"ingredient",
-					"skill",
-					"energy",
-					"exp",
-					"neutral"
-				]
-			},
-			"Nature": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"prettyName": {
-						"type": "string"
-					},
-					"positiveModifier": {
-						"$ref": "#/components/schemas/NatureModifier"
-					},
-					"negativeModifier": {
-						"$ref": "#/components/schemas/NatureModifier"
-					},
-					"frequency": {
-						"type": "number",
-						"format": "double"
-					},
-					"ingredient": {
-						"type": "number",
-						"format": "double"
-					},
-					"skill": {
-						"type": "number",
-						"format": "double"
-					},
-					"energy": {
-						"type": "number",
-						"format": "double"
-					},
-					"exp": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"name",
-					"prettyName",
-					"positiveModifier",
-					"negativeModifier",
-					"frequency",
-					"ingredient",
-					"skill",
-					"energy",
-					"exp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SubSkill": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"amount": {
-						"type": "number",
-						"format": "double"
-					},
-					"rarity": {
-						"type": "string",
-						"enum": [
-							"gold",
-							"silver",
-							"white"
-						]
-					}
-				},
-				"required": [
-					"name",
-					"amount",
-					"rarity"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Time": {
-				"properties": {
-					"hour": {
-						"type": "number",
-						"format": "double"
-					},
-					"minute": {
-						"type": "number",
-						"format": "double"
-					},
-					"second": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"hour",
-					"minute",
-					"second"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductionStats": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"$ref": "#/components/schemas/Nature"
-					},
-					"subskills": {
-						"items": {
-							"$ref": "#/components/schemas/SubSkill"
-						},
-						"type": "array"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"inventoryLimit": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"incense": {
-						"type": "boolean"
-					},
-					"mainBedtime": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"mainWakeup": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"level",
-					"e4eProcs",
-					"e4eLevel",
-					"cheer",
-					"extraHelpful",
-					"helperBoostProcs",
-					"helperBoostUnique",
-					"helperBoostLevel",
-					"helpingBonus",
-					"camp",
-					"erb",
-					"incense",
-					"mainBedtime",
-					"mainWakeup"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Berry": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"type": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"value",
-					"type"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Ingredient": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"taxedValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"longName": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"value",
-					"taxedValue",
-					"longName"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IngredientSet": {
-				"properties": {
-					"amount": {
-						"type": "number",
-						"format": "double"
-					},
-					"ingredient": {
-						"$ref": "#/components/schemas/Ingredient"
-					}
-				},
-				"required": [
-					"amount",
-					"ingredient"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"MainSkillType": {
 				"type": "string",
 				"enum": [
@@ -325,6 +57,144 @@
 					"maxLevel",
 					"description",
 					"RP"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RecipeType": {
+				"type": "string",
+				"enum": [
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"Ingredient": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"taxedValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"longName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"taxedValue",
+					"longName"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IngredientSet": {
+				"properties": {
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"$ref": "#/components/schemas/Ingredient"
+					}
+				},
+				"required": [
+					"amount",
+					"ingredient"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Recipe": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"valueMax": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"$ref": "#/components/schemas/RecipeType"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"nrOfIngredients": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"valueMax",
+					"type",
+					"ingredients",
+					"bonus",
+					"nrOfIngredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MealNamesQueryParams": {
+				"properties": {
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"minRecipeBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Berry": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"type"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -406,426 +276,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BerrySet": {
-				"properties": {
-					"amount": {
-						"type": "number",
-						"format": "double"
-					},
-					"berry": {
-						"$ref": "#/components/schemas/Berry"
-					}
-				},
-				"required": [
-					"amount",
-					"berry"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Produce": {
-				"properties": {
-					"berries": {
-						"$ref": "#/components/schemas/BerrySet"
-					},
-					"ingredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"ingredients"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SkillActivation": {
-				"properties": {
-					"skill": {
-						"$ref": "#/components/schemas/MainSkill"
-					},
-					"nrOfHelpsToActivate": {
-						"type": "number",
-						"format": "double"
-					},
-					"adjustedAmount": {
-						"type": "number",
-						"format": "double"
-					},
-					"fractionOfProc": {
-						"type": "number",
-						"format": "double"
-					},
-					"adjustedProduce": {
-						"$ref": "#/components/schemas/Produce"
-					}
-				},
-				"required": [
-					"skill",
-					"nrOfHelpsToActivate",
-					"adjustedAmount",
-					"fractionOfProc"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"DetailedProduce": {
-				"properties": {
-					"produce": {
-						"$ref": "#/components/schemas/Produce"
-					},
-					"spilledIngredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"sneakySnack": {
-						"$ref": "#/components/schemas/BerrySet"
-					},
-					"dayHelps": {
-						"type": "number",
-						"format": "double"
-					},
-					"nightHelps": {
-						"type": "number",
-						"format": "double"
-					},
-					"nightHelpsBeforeSS": {
-						"type": "number",
-						"format": "double"
-					},
-					"averageTotalSkillProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillActivations": {
-						"items": {
-							"$ref": "#/components/schemas/SkillActivation"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"produce",
-					"spilledIngredients",
-					"dayHelps",
-					"nightHelps",
-					"nightHelpsBeforeSS",
-					"averageTotalSkillProcs",
-					"skillActivations"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"EventType": {
-				"type": "string",
-				"enum": [
-					"sleep",
-					"energy",
-					"help",
-					"inventory",
-					"info",
-					"skill"
-				]
-			},
-			"ScheduledEvent": {
-				"properties": {
-					"time": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"type": {
-						"$ref": "#/components/schemas/EventType"
-					},
-					"description": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"time",
-					"type",
-					"description"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Summary": {
-				"properties": {
-					"skill": {
-						"$ref": "#/components/schemas/MainSkill"
-					},
-					"skillProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillEnergySelfValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillEnergyOthersValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillProduceValue": {
-						"$ref": "#/components/schemas/Produce"
-					},
-					"skillStrengthValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillDreamShardValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillPotSizeValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillHelpsValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"skillTastyChanceValue": {
-						"type": "number",
-						"format": "double"
-					},
-					"nrOfHelps": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpsBeforeSS": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpsAfterSS": {
-						"type": "number",
-						"format": "double"
-					},
-					"totalProduce": {
-						"$ref": "#/components/schemas/Produce"
-					},
-					"averageEnergy": {
-						"type": "number",
-						"format": "double"
-					},
-					"averageFrequency": {
-						"type": "number",
-						"format": "double"
-					},
-					"spilledIngredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"collectFrequency": {
-						"$ref": "#/components/schemas/Time"
-					},
-					"totalRecovery": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"skill",
-					"skillProcs",
-					"skillEnergySelfValue",
-					"skillEnergyOthersValue",
-					"skillProduceValue",
-					"skillStrengthValue",
-					"skillDreamShardValue",
-					"skillPotSizeValue",
-					"skillHelpsValue",
-					"skillTastyChanceValue",
-					"nrOfHelps",
-					"helpsBeforeSS",
-					"helpsAfterSS",
-					"totalProduce",
-					"averageEnergy",
-					"averageFrequency",
-					"spilledIngredients",
-					"totalRecovery"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductionRequest": {
-				"properties": {
-					"level": {
-						"type": "number",
-						"format": "double"
-					},
-					"nature": {
-						"type": "string"
-					},
-					"subskills": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"e4eProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"e4eLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"cheer": {
-						"type": "number",
-						"format": "double"
-					},
-					"extraHelpful": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostProcs": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostUnique": {
-						"type": "number",
-						"format": "double"
-					},
-					"helperBoostLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"helpingbonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"camp": {
-						"type": "boolean"
-					},
-					"erb": {
-						"type": "number",
-						"format": "double"
-					},
-					"recoveryIncense": {
-						"type": "boolean"
-					},
-					"skillLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"mainBedtime": {
-						"type": "string"
-					},
-					"mainWakeup": {
-						"type": "string"
-					},
-					"ingredientSet": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"nrOfEvolutions": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"level",
-					"nature",
-					"subskills",
-					"e4eProcs",
-					"e4eLevel",
-					"cheer",
-					"extraHelpful",
-					"helperBoostProcs",
-					"helperBoostUnique",
-					"helperBoostLevel",
-					"helpingbonus",
-					"camp",
-					"erb",
-					"recoveryIncense",
-					"skillLevel",
-					"mainBedtime",
-					"mainWakeup",
-					"ingredientSet"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RecipeType": {
-				"type": "string",
-				"enum": [
-					"curry",
-					"salad",
-					"dessert"
-				]
-			},
-			"Recipe": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"value": {
-						"type": "number",
-						"format": "double"
-					},
-					"valueMax": {
-						"type": "number",
-						"format": "double"
-					},
-					"type": {
-						"$ref": "#/components/schemas/RecipeType"
-					},
-					"ingredients": {
-						"items": {
-							"$ref": "#/components/schemas/IngredientSet"
-						},
-						"type": "array"
-					},
-					"bonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"nrOfIngredients": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"name",
-					"value",
-					"valueMax",
-					"type",
-					"ingredients",
-					"bonus",
-					"nrOfIngredients"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MealNamesQueryParams": {
-				"properties": {
-					"curry": {
-						"type": "boolean"
-					},
-					"salad": {
-						"type": "boolean"
-					},
-					"dessert": {
-						"type": "boolean"
-					},
-					"minRecipeBonus": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxPotSize": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"GetPokemonQueryParams": {
 				"properties": {
 					"cyan": {
@@ -841,6 +291,32 @@
 						"type": "boolean"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubSkill": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"rarity": {
+						"type": "string",
+						"enum": [
+							"gold",
+							"silver",
+							"white"
+						]
+					}
+				},
+				"required": [
+					"name",
+					"amount",
+					"rarity"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -999,121 +475,6 @@
 		"contact": {}
 	},
 	"paths": {
-		"/api/calculator/production/{name}": {
-			"post": {
-				"operationId": "CalculatePokemonProduction",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"optimalSkillProduction": {
-											"$ref": "#/components/schemas/DetailedProduce"
-										},
-										"optimalBerryProduction": {
-											"$ref": "#/components/schemas/DetailedProduce"
-										},
-										"optimalIngredientProduction": {
-											"$ref": "#/components/schemas/DetailedProduce"
-										},
-										"neutralProduction": {
-											"$ref": "#/components/schemas/DetailedProduce"
-										},
-										"summary": {
-											"$ref": "#/components/schemas/Summary"
-										},
-										"log": {
-											"items": {
-												"$ref": "#/components/schemas/ScheduledEvent"
-											},
-											"type": "array"
-										},
-										"production": {
-											"properties": {
-												"detailedProduce": {
-													"$ref": "#/components/schemas/DetailedProduce"
-												},
-												"pokemonCombination": {
-													"properties": {
-														"ingredientList": {
-															"items": {
-																"$ref": "#/components/schemas/IngredientSet"
-															},
-															"type": "array"
-														},
-														"pokemon": {
-															"$ref": "#/components/schemas/Pokemon"
-														}
-													},
-													"required": [
-														"ingredientList",
-														"pokemon"
-													],
-													"type": "object"
-												}
-											},
-											"required": [
-												"detailedProduce",
-												"pokemonCombination"
-											],
-											"type": "object"
-										},
-										"filters": {
-											"$ref": "#/components/schemas/ProductionStats"
-										}
-									},
-									"required": [
-										"optimalSkillProduction",
-										"optimalBerryProduction",
-										"optimalIngredientProduction",
-										"neutralProduction",
-										"summary",
-										"log",
-										"production",
-										"filters"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"calculator"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pretty",
-						"required": false,
-						"schema": {
-							"type": "boolean"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ProductionRequest"
-							}
-						}
-					}
-				}
-			}
-		},
 		"/api/ingredient": {
 			"get": {
 				"operationId": "GetIngredients",

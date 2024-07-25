@@ -26,6 +26,7 @@ import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-c
 // --- production calculator
 interface ProductionFilters {
   level: number;
+  ribbon: number;
   nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
   skillLevel?: number;
@@ -335,6 +336,9 @@ class WebsiteConverterServiceImpl {
       }\n`;
 
     const teamInput: string[] = [];
+    if (filters.ribbon > 0) {
+      teamInput.push(`Ribbon level: ${filters.ribbon}`);
+    }
     if (filters.e4eProcs > 0) {
       teamInput.push(`E4E: ${filters.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[filters.e4eLevel - 1]} energy`);
     }
@@ -480,6 +484,9 @@ class WebsiteConverterServiceImpl {
     prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
 
     const teamInput: string[] = [];
+    if (details.ribbon > 0) {
+      teamInput.push(`Ribbon level: ${details.ribbon}`);
+    }
     if (details.e4eProcs > 0) {
       teamInput.push(`E4E: ${details.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[details.e4eLevel - 1]} energy`);
     }

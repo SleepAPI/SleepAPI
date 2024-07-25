@@ -131,6 +131,7 @@ class TeamServiceImpl {
       })),
       carrySize: member.carrySize,
       level: member.level,
+      ribbon: member.ribbon,
       skillLevel: member.skillLevel,
       externalId: member.externalId
     }))
@@ -181,10 +182,12 @@ class TeamServiceImpl {
     return {
       version: instancedPokemon.version,
       saved: instancedPokemon.saved,
+      shiny: instancedPokemon.shiny,
       externalId: instancedPokemon.externalId,
       pokemon: instancedPokemon.pokemon.name,
       name: instancedPokemon.name,
       level: instancedPokemon.level,
+      ribbon: instancedPokemon.ribbon,
       carrySize: instancedPokemon.carrySize,
       skillLevel: instancedPokemon.skillLevel,
       nature: instancedPokemon.nature.name,
@@ -209,10 +212,12 @@ class TeamServiceImpl {
     return {
       version: instancedPokemon.version,
       saved: instancedPokemon.saved,
+      shiny: instancedPokemon.shiny,
       externalId: instancedPokemon.externalId,
       pokemon: getPokemon(instancedPokemon.pokemon),
       name: instancedPokemon.name,
       level: instancedPokemon.level,
+      ribbon: instancedPokemon.ribbon,
       carrySize: instancedPokemon.carrySize,
       skillLevel: instancedPokemon.skillLevel,
       nature: getNature(instancedPokemon.nature),

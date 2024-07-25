@@ -4,7 +4,7 @@ import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
-import { calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
+import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
@@ -30,13 +30,8 @@ export default class ProductionController extends Controller {
     @Query() pretty?: boolean
   ) {
     const pokemon = getPokemon(name);
-    return calculatePokemonProduction(
-      pokemon,
-      this.#parseSingleProductionInput(pokemon, body),
-      body.ingredientSet,
-      queryAsBoolean(pretty),
-      5000
-    );
+    const parsedInput = this.#parseSingleProductionInput(pokemon, body);
+    return calculatePokemonProduction(pokemon, parsedInput, body.ingredientSet, queryAsBoolean(pretty), 5000);
   }
 
   public async calculateTeam(body: CalculateTeamRequest) {
@@ -67,7 +62,8 @@ export default class ProductionController extends Controller {
           ingredientList: this.#getIngredientSet({ pokemon, level: member.level, ingredients: member.ingredients }),
         },
         level: member.level,
-        carrySize: member.carrySize + calculateSubskillCarrySize(subskills),
+        ribbon: member.ribbon,
+        carrySize: member.carrySize + calculateSubskillCarrySize(subskills) + calculateRibbonCarrySize(member.ribbon),
         nature: getNature(member.nature),
         skillLevel: member.skillLevel,
         subskills,
@@ -136,6 +132,7 @@ export default class ProductionController extends Controller {
 
     const parsedInput: ProductionStats = {
       level,
+      ribbon: queryAsNumber(input.ribbon) ?? 0,
       nature: getNature(input.nature),
       subskills: extractSubskillsBasedOnLevel(level, input.subskills),
       skillLevel: Math.min(queryAsNumber(input.skillLevel) ?? pkmn.skill.maxLevel, pkmn.skill.maxLevel),

@@ -38,14 +38,17 @@ export async function up(knex: Knex) {
       .inTable(Tables.User)
       .onDelete('CASCADE');
 
-    table.boolean('saved').index().defaultTo(false);
+    table.boolean('saved').index().notNullable().defaultTo(false);
     table.uuid('external_id').notNullable().unique();
 
     table.string('pokemon', 255).notNullable();
     table.string('name', 255).notNullable();
+    table.boolean('shiny').notNullable().defaultTo(false);
+
     table.integer('skill_level').notNullable();
     table.integer('carry_size').notNullable();
     table.integer('level').notNullable();
+    table.integer('ribbon').notNullable();
     table.string('nature', 255).notNullable();
 
     table.string('subskill_10', 255);

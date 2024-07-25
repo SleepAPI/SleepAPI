@@ -28,6 +28,7 @@ import {
   getHelperBoostEvents,
 } from '@src/utils/event-utils/event-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
+import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
 import {
   BerrySet,
   MEALS_IN_DAY,
@@ -48,7 +49,11 @@ import {
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
-import { calculateSubskillCarrySize, countErbUsers } from '../calculator/stats/stats-calculator';
+import {
+  calculateRibbonCarrySize,
+  calculateSubskillCarrySize,
+  countErbUsers,
+} from '../calculator/stats/stats-calculator';
 import { monteCarlo } from './monte-carlo/monte-carlo';
 import { simulation } from './simulator/simulator';
 
@@ -113,7 +118,8 @@ export function setupAndRunProductionSimulation(params: {
 
   const inventoryLimit =
     (input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon)) +
-    calculateSubskillCarrySize(input.subskills ?? []);
+    calculateSubskillCarrySize(limitSubSkillsToLevel(input.subskills ?? [], input.level)) +
+    calculateRibbonCarrySize(input.ribbon);
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
@@ -126,6 +132,7 @@ export function setupAndRunProductionSimulation(params: {
     nature: maybeNature,
     subskills,
     camp,
+    ribbonLevel: input.ribbon,
     helpingBonus,
   });
 

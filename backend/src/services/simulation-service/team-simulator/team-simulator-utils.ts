@@ -33,6 +33,7 @@ class TeamSimulatorUtilsImpl {
       nature: member.nature,
       subskills: member.subskills,
       camp: settings.camp,
+      ribbonLevel: member.ribbon,
       helpingBonus,
     });
   }
