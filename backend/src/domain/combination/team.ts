@@ -10,6 +10,7 @@ export interface TeamSettings {
 export interface TeamMember {
   pokemonSet: PokemonIngredientSet;
   level: number;
+  ribbon: number;
   carrySize: number;
   skillLevel: number;
   nature: nature.Nature;

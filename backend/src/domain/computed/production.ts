@@ -4,6 +4,7 @@ import { Time } from '../time/time';
 
 export interface ProductionStats {
   level: number;
+  ribbon: number;
   nature?: nature.Nature;
   subskills?: subskill.SubSkill[];
   skillLevel?: number;

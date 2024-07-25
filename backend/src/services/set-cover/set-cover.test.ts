@@ -34,6 +34,7 @@ describe('processOptimalTeamSolutions', () => {
 
     const customStats: CustomStats = {
       level: 60,
+      ribbon: 0,
       nature: nature.RASH,
       subskills: [],
       skillLevel: 6,
@@ -314,6 +315,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
   },
   customStats: {
     level: 60,
+    ribbon: 0,
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
@@ -383,6 +385,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
   },
   customStats: {
     level: 60,
+    ribbon: 0,
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
@@ -437,6 +440,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
   averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
     level: 60,
+    ribbon: 0,
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],

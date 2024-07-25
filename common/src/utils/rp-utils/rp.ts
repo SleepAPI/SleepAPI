@@ -92,8 +92,8 @@ export class RP {
   }
 
   get ingredientFactor() {
-    // TODO: We make assumption regarding ingredient growth past 55
-    // TODO: We make assumption regarding ingredientsValue being same value for 60 ingredient and divide by 3 then
+    // We make assumption regarding ingredient growth past 55
+    // We make assumption regarding ingredientsValue being same value for 60 ingredient and divide by 3 then
     const ingredientGrowth =
       this.ingGrowth[this.level] ??
       0.000000398 * Math.pow(this.level, 3) + 0.000159 * Math.pow(this.level, 2) + 0.00367 * this.level - 0.00609 + 1;

@@ -47,6 +47,7 @@ describe('getOptimalIngredientStats', () => {
     const level = 42;
     expect(getOptimalStats(level, pokemon.BLASTOISE)).toEqual({
       level,
+      ribbon: 4,
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
@@ -58,6 +59,7 @@ describe('getOptimalIngredientStats', () => {
     const level = 42;
     expect(getOptimalStats(level, pokemon.SYLVEON)).toEqual({
       level,
+      ribbon: 4,
       nature: nature.SASSY,
       subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,

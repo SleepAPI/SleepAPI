@@ -6,6 +6,7 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
     const result = calculateHelpSpeedBeforeEnergy({
       pokemon: pokemon.VICTREEBEL,
       level: 30,
+      ribbonLevel: 0,
       nature: nature.RASH,
       subskills: [subskill.HELPING_SPEED_M],
       camp: false,
@@ -19,6 +20,7 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
     const result = calculateHelpSpeedBeforeEnergy({
       pokemon: pokemon.VICTREEBEL,
       level: 30,
+      ribbonLevel: 0,
       nature: nature.RASH,
       subskills: [subskill.HELPING_SPEED_M],
       camp: true,
@@ -32,6 +34,7 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
     const result4hb = calculateHelpSpeedBeforeEnergy({
       pokemon: pokemon.VICTREEBEL,
       level: 30,
+      ribbonLevel: 0,
       nature: nature.RASH,
       subskills: [subskill.HELPING_SPEED_M, subskill.HELPING_SPEED_S],
       camp: false,
@@ -40,6 +43,7 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
     const result5hb = calculateHelpSpeedBeforeEnergy({
       pokemon: pokemon.VICTREEBEL,
       level: 30,
+      ribbonLevel: 0,
       nature: nature.RASH,
       subskills: [subskill.HELPING_SPEED_M, subskill.HELPING_SPEED_S],
       camp: false,
@@ -48,6 +52,76 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
 
     expect(result4hb).toBe(1714);
     expect(result5hb).toBe(1714);
+  });
+
+  it('shall skip ribbon frequency for last evolution stage mon', () => {
+    const result = calculateHelpSpeedBeforeEnergy({
+      pokemon: pokemon.VICTREEBEL,
+      level: 30,
+      ribbonLevel: 4,
+      nature: nature.RASH,
+      subskills: [subskill.HELPING_SPEED_M],
+      camp: false,
+      helpingBonus: 0,
+    });
+
+    expect(result).toBe(2268);
+  });
+
+  it('shall add 12% ribbon frequency to Onix at max ribbon', () => {
+    const result = calculateHelpSpeedBeforeEnergy({
+      pokemon: pokemon.ONIX,
+      level: 1,
+      ribbonLevel: 4,
+      nature: nature.BASHFUL,
+      subskills: [],
+      camp: false,
+      helpingBonus: 0,
+    });
+
+    expect(result).toBe(pokemon.ONIX.frequency * 0.88);
+  });
+
+  it('shall add 5% ribbon frequency to Onix at level 2 ribbon', () => {
+    const result = calculateHelpSpeedBeforeEnergy({
+      pokemon: pokemon.ONIX,
+      level: 1,
+      ribbonLevel: 2,
+      nature: nature.BASHFUL,
+      subskills: [],
+      camp: false,
+      helpingBonus: 0,
+    });
+
+    expect(result).toBe(pokemon.ONIX.frequency * 0.95);
+  });
+
+  it('shall add 11% ribbon frequency to Pichu at level 2 ribbon', () => {
+    const result = calculateHelpSpeedBeforeEnergy({
+      pokemon: pokemon.PICHU,
+      level: 1,
+      ribbonLevel: 2,
+      nature: nature.BASHFUL,
+      subskills: [],
+      camp: false,
+      helpingBonus: 0,
+    });
+
+    expect(result).toBe(pokemon.PICHU.frequency * 0.89);
+  });
+
+  it('shall add 25% ribbon frequency to Pichu at max ribbon', () => {
+    const result = calculateHelpSpeedBeforeEnergy({
+      pokemon: pokemon.PICHU,
+      level: 1,
+      ribbonLevel: 4,
+      nature: nature.BASHFUL,
+      subskills: [],
+      camp: false,
+      helpingBonus: 0,
+    });
+
+    expect(result).toBe(pokemon.PICHU.frequency * 0.75);
   });
 });
 

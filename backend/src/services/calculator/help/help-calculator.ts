@@ -16,7 +16,7 @@
 
 import { MathUtils, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
 import { energyFactorFromEnergy } from '../energy/energy-calculator';
-import { calculateHelpSpeedSubskills } from '../stats/stats-calculator';
+import { calculateHelpSpeedSubskills, calculateRibbonFrequency } from '../stats/stats-calculator';
 
 export function calculateHelpSpeedBeforeEnergy(stats: {
   pokemon: pokemon.Pokemon;
@@ -24,17 +24,20 @@ export function calculateHelpSpeedBeforeEnergy(stats: {
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
   helpingBonus: number;
+  ribbonLevel: number;
   camp: boolean;
 }): number {
-  const { pokemon, level, nature, subskills, helpingBonus, camp } = stats;
+  const { pokemon, level, nature, subskills, helpingBonus, ribbonLevel, camp } = stats;
 
   const helpSpeedSubskills = calculateHelpSpeedSubskills(subskills, helpingBonus);
   const levelFactor = 1 - 0.002 * (level - 1);
   const natureFreq = invertNatureFrequency(nature);
+  const ribbonFrequency = calculateRibbonFrequency(pokemon, ribbonLevel);
   const campBonus = camp ? 1.2 : 1;
 
   return Math.floor(
-    (MathUtils.round(natureFreq * helpSpeedSubskills * levelFactor, 4) * pokemon.frequency) / campBonus
+    (MathUtils.round(natureFreq * helpSpeedSubskills * levelFactor * ribbonFrequency, 4) * pokemon.frequency) /
+      campBonus
   );
 }
 

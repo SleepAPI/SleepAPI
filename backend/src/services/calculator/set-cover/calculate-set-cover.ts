@@ -16,6 +16,7 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
     const optimalStats: CustomStats = getOptimalStats(level, pokemon);
     const customStats: CustomStats = {
       level,
+      ribbon: input.ribbon ?? optimalStats.ribbon,
       nature: nature ?? optimalStats.nature,
       subskills: input.subskills ?? optimalStats.subskills,
       skillLevel: input.skillLevel ?? pokemon.skill.maxLevel,

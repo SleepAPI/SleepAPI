@@ -35,6 +35,7 @@ export default class OptimalController extends Controller {
 
     return {
       level,
+      ribbon: 4,
       nature: input.nature ? getNature(input.nature) : undefined,
       subskills: input.subskills && extractSubskillsBasedOnLevel(level, input.subskills),
       skillLevel: input.skillLevel,

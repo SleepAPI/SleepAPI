@@ -25,14 +25,23 @@
       </v-row>
     </div>
 
+    <!-- TODO: can we just class flex-end or flex-right or whatever its called -->
     <v-sheet
       color="surface"
       width="100%"
       :height="90"
       location="top left"
       position="absolute"
-      style="margin-top: 70px"
-    ></v-sheet>
+      style="
+        margin-top: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+      "
+    >
+      <RibbonButton :ribbon="pokemonInstance.ribbon" @update-ribbon="updateRibbon" />
+    </v-sheet>
 
     <v-row no-gutters>
       <v-col class="flex-center">
@@ -149,6 +158,7 @@ import MainskillButton from '@/components/calculator/pokemon-input/mainskill-but
 import NatureButton from '@/components/calculator/pokemon-input/nature-button.vue'
 import PokemonButton from '@/components/calculator/pokemon-input/pokemon-button.vue'
 import PokemonName from '@/components/calculator/pokemon-input/pokemon-name.vue'
+import RibbonButton from '@/components/calculator/pokemon-input/ribbon-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
@@ -173,7 +183,8 @@ export default defineComponent({
     CarrySizeButton,
     IngredientButton,
     MainskillButton,
-    NatureButton
+    NatureButton,
+    RibbonButton
   },
   props: {
     selectedPokemon: {
@@ -197,9 +208,11 @@ export default defineComponent({
       version: 0,
       externalId: '',
       saved: false,
+      shiny: false,
       pokemon: pokemon.MOCK_POKEMON,
       name: '',
       level: 50,
+      ribbon: 0,
       carrySize: 0,
       skillLevel: 0,
       nature: nature.BASHFUL,
@@ -269,6 +282,9 @@ export default defineComponent({
     },
     updateNature(newNature: nature.Nature) {
       this.pokemonInstance.nature = newNature
+    },
+    updateRibbon(newRibbon: number) {
+      this.pokemonInstance.ribbon = newRibbon
     },
     resetSubskills() {
       this.pokemonInstance.subskills = []

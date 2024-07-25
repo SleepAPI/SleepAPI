@@ -23,9 +23,11 @@ describe('PokemonInput', () => {
     version: 1,
     externalId: uuid.v4(),
     saved: false,
+    shiny: false,
     pokemon: pokemon.PIKACHU,
     name: 'Spike',
     level: 60,
+    ribbon: 0,
     carrySize: pokemon.PIKACHU.carrySize,
     skillLevel: 2,
     nature: nature.LONELY,
@@ -172,6 +174,11 @@ describe('PokemonInput', () => {
   it('updates carry size correctly', async () => {
     wrapper.vm.updateCarry(5)
     expect(wrapper.vm.pokemonInstance.carrySize).toBe(5)
+  })
+
+  it('updates ribbon level correctly', async () => {
+    wrapper.vm.updateRibbon(4)
+    expect(wrapper.vm.pokemonInstance.ribbon).toBe(4)
   })
 
   it('updates ingredient correctly', async () => {

@@ -29,6 +29,7 @@ const member: TeamMember = {
   pokemonSet: mockPokemonSet,
   carrySize: 10,
   level: 60,
+  ribbon: 0,
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],

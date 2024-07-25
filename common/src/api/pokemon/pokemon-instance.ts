@@ -11,6 +11,7 @@ export interface IngredientInstance {
 export interface PokemonInstance {
   pokemon: string;
   level: number;
+  ribbon: number;
   carrySize: number;
   skillLevel: number;
   nature: string;
@@ -22,5 +23,6 @@ export interface PokemonInstanceWithMeta extends PokemonInstance {
   version: number;
   externalId: string;
   saved: boolean;
+  shiny: boolean;
   name: string;
 }

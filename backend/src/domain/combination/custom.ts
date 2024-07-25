@@ -3,6 +3,7 @@ import { DetailedProduce, Produce } from './produce';
 
 export interface CustomStats {
   level: number;
+  ribbon: number;
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
   skillLevel: number;
