@@ -1,5 +1,5 @@
 import { SetCoverProductionStats } from '@src/domain/computed/production';
-import { berry, dessert, ingredient, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
+import { berry, dessert, ingredient, mainskill, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 import { findOptimalMonsForIngredient, findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {
@@ -79,10 +79,14 @@ describe('findOptimalMonsForIngredient', () => {
     const teams = findOptimalMonsForIngredient(ingredient.SLOWPOKE_TAIL.name, input, 1).teams.filter(
       (team) => team.surplus.relevant[0].amount >= 0.999
     );
-    expect(teams).toHaveLength(2);
-    const pokemonNames = teams.map((team) => team.team.map((member) => member.pokemonCombination.pokemon.name));
-    expect(pokemonNames).toContainEqual(['SLOWBRO']);
-    expect(pokemonNames).toContainEqual(['SLOWKING']);
+    const pokemonNames = teams.flatMap((team) =>
+      team.team
+        .filter((member) => member.pokemonCombination.pokemon.skill !== mainskill.INGREDIENT_MAGNET_S)
+        .map((member) => member.pokemonCombination.pokemon.name)
+    );
+    expect(pokemonNames).toHaveLength(2);
+    expect(pokemonNames).toContainEqual('SLOWBRO');
+    expect(pokemonNames).toContainEqual('SLOWKING');
   });
 });
 

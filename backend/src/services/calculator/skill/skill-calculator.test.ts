@@ -1,9 +1,9 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
 import {
+  calculateAverageNumberOfSkillProcsForHelps,
   calculateHelperBoostHelpsFromUnique,
   calculateHelpsToProcSchedule,
-  calculateOddsAtLeastOneSkillProc,
   calculateSkillProcs,
   scheduleSkillEvents,
 } from './skill-calculator';
@@ -20,38 +20,139 @@ describe('calculate procs from start', () => {
   });
 });
 
-describe('calculateOddsAtLeastOneSkillProc', () => {
-  it('shall return 0 for 0 helps regardless of skill percentage', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 0.5, helps: 0 });
-    expect(odds).toBe(0);
+describe('calculateAverageNumberOfSkillProcsForHelps', () => {
+  describe('non-skill specialists', () => {
+    it('shall return 0 for 0 helps regardless of skill percentage', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.5,
+        helps: 0,
+        pokemonSpecialty: 'berry',
+      });
+      expect(odds).toBe(0);
+    });
+
+    it('shall return 1 for 100% skill percentage regardless of helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 1,
+        helps: 5,
+        pokemonSpecialty: 'berry',
+      });
+      expect(odds).toBe(1);
+    });
+
+    it('shall calculate correct odds for given skill percentage and helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.25,
+        helps: 4,
+        pokemonSpecialty: 'berry',
+      });
+      const expectedOdds = 1 - Math.pow(0.75, 4);
+      expect(odds).toBeCloseTo(expectedOdds);
+    });
+
+    it('shall return 0 for 0% skill percentage regardless of helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0,
+        helps: 5,
+        pokemonSpecialty: 'berry',
+      });
+      expect(odds).toBe(0);
+    });
+
+    it('shall return values between 0 and 1 for non-edge cases', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.5,
+        helps: 3,
+        pokemonSpecialty: 'berry',
+      });
+      expect(odds).toBeGreaterThan(0);
+      expect(odds).toBeLessThan(1);
+    });
+
+    it('shall handle large numbers of helps correctly', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.1,
+        helps: 50,
+        pokemonSpecialty: 'berry',
+      });
+      expect(odds).toBeGreaterThan(0);
+      expect(odds).toBeLessThan(1);
+    });
   });
 
-  it('shall return 1 for 100% skill percentage regardless of helps', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 1, helps: 5 });
-    expect(odds).toBe(1);
-  });
+  describe('skill specialists', () => {
+    it('shall return 0 for 0 helps regardless of skill percentage', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.5,
+        helps: 0,
+        pokemonSpecialty: 'skill',
+      });
+      expect(odds).toBe(0);
+    });
 
-  it('shall calculate correct odds for given skill percentage and helps', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 0.25, helps: 4 });
-    const expectedOdds = 1 - Math.pow(0.75, 4);
-    expect(odds).toBeCloseTo(expectedOdds);
-  });
+    it('shall return 2 for 100% skill percentage regardless of helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 1,
+        helps: 5,
+        pokemonSpecialty: 'skill',
+      });
+      expect(odds).toBe(2);
+    });
 
-  it('shall return 0 for 0% skill percentage regardless of helps', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 0, helps: 5 });
-    expect(odds).toBe(0);
-  });
+    it('shall calculate correct odds for given skill percentage and helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.25,
+        helps: 4,
+        pokemonSpecialty: 'skill',
+      });
+      const oddsZero = Math.pow(0.75, 4);
+      const oddsOne = Math.pow(0.75, 3) * 0.25 * 4;
+      const oddsTwo = 1 - oddsZero - oddsOne;
+      const expectedOdds = oddsOne + 2 * oddsTwo;
+      expect(odds).toBeCloseTo(expectedOdds);
+    });
 
-  it('shall return values between 0 and 1 for non-edge cases', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 0.5, helps: 3 });
-    expect(odds).toBeGreaterThan(0);
-    expect(odds).toBeLessThan(1);
-  });
+    it('shall calculate odds above 1 for realistic high skill percentage mons', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.25,
+        helps: 10,
+        pokemonSpecialty: 'skill',
+      });
+      const oddsZero = Math.pow(0.75, 10);
+      const oddsOne = Math.pow(0.75, 9) * 0.25 * 10;
+      const oddsTwo = 1 - oddsZero - oddsOne;
+      const expectedOdds = oddsOne + 2 * oddsTwo;
+      expect(odds).toBeCloseTo(expectedOdds);
+    });
 
-  it('shall handle large numbers of helps correctly', () => {
-    const odds = calculateOddsAtLeastOneSkillProc({ skillPercentage: 0.1, helps: 50 });
-    expect(odds).toBeGreaterThan(0);
-    expect(odds).toBeLessThan(1);
+    it('shall return 0 for 0% skill percentage regardless of helps', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0,
+        helps: 5,
+        pokemonSpecialty: 'skill',
+      });
+      expect(odds).toBe(0);
+    });
+
+    it('shall return values between 0 and 2 for non-edge cases', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.5,
+        helps: 3,
+        pokemonSpecialty: 'skill',
+      });
+      expect(odds).toBeGreaterThan(0);
+      expect(odds).toBeLessThan(2);
+    });
+
+    it('shall handle large numbers of helps correctly', () => {
+      const odds = calculateAverageNumberOfSkillProcsForHelps({
+        skillPercentage: 0.1,
+        helps: 50,
+        pokemonSpecialty: 'skill',
+      });
+      expect(odds).toBeGreaterThan(0);
+      expect(odds).toBeLessThan(2);
+    });
   });
 });
 

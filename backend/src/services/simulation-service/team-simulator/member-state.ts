@@ -14,9 +14,10 @@ import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { IngredientSet, MathUtils, MemberProduction, ingredient, mainskill, subskill } from 'sleepapi-common';
 
-export interface TeamSkill {
-  energy: number;
-  helps: number;
+export interface SkillActivation {
+  energyTeam: number;
+  helpsTeam: number;
+  other: number; // TODO: fix strength, pot etc later, not functional now
 }
 
 export class MemberState {
@@ -41,10 +42,12 @@ export class MemberState {
   private averageProduce: Produce;
   private averageProduceAmount: number;
   private currentNightHelps = 0;
+  private currentNightSkillProcs = 0;
 
   // summary
   private skillProcs = 0;
   private skillValue = new SkillValue();
+  private morningProcs = 0;
   private nrOfHelps = 0;
   private dayHelps = 0;
   private totalNightHelps = 0;
@@ -135,6 +138,8 @@ export class MemberState {
     const missingEnergy = Math.max(0, 100 - this.currentEnergy);
     const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo));
     this.currentEnergy += recoveredEnergy;
+
+    return this.collectInventory();
   }
 
   public recoverEnergy(recovered: number) {
@@ -166,7 +171,7 @@ export class MemberState {
     this.currentEnergy += getMealRecoveryAmount(this.currentEnergy);
   }
 
-  public attemptDayHelp(currentTime: Time): TeamSkill | undefined {
+  public attemptDayHelp(currentTime: Time): SkillActivation | undefined {
     if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: this.nextHelp, period: this.dayPeriod })) {
       const frequency = calculateFrequencyWithEnergy(this.frequency, this.currentEnergy);
 
@@ -230,21 +235,29 @@ export class MemberState {
     }
   }
 
-  public collectInventory() {
+  public collectInventory(): SkillActivation[] {
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentSneakySnack);
     this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
 
     // roll skill proc on each stored help, stop after if we get a successful roll
+    const bankedSkillProcs: SkillActivation[] = [];
     for (let i = 0; i < this.currentNightHelps; i++) {
-      if (this.attemptSkill()) {
-        break;
+      const activatedSkill = this.attemptSkill();
+      if (activatedSkill) {
+        bankedSkillProcs.push(activatedSkill);
+        this.morningProcs += 1;
+        if (bankedSkillProcs.length === 2 || this.member.pokemonSet.pokemon.specialty !== 'skill') {
+          break;
+        }
       }
     }
 
     this.currentNightHelps = 0;
+    this.currentNightSkillProcs = 0;
     this.currentInventory = InventoryUtils.getEmptyInventory();
     this.currentSneakySnack = InventoryUtils.getEmptyInventory();
+    return bankedSkillProcs;
   }
 
   public degradeEnergy() {
@@ -279,17 +292,17 @@ export class MemberState {
     }
   }
 
-  private attemptSkill(): TeamSkill | undefined {
+  private attemptSkill(): SkillActivation | undefined {
     if (rollRandomChance(this.skillPercentage)) {
       this.skillProcs += 1;
 
       if (this.member.pokemonSet.pokemon.skill === mainskill.METRONOME) {
-        const result: TeamSkill = { energy: 0, helps: 0 };
+        const result: SkillActivation = { energyTeam: 0, helpsTeam: 0, other: 0 };
         for (const skill of this.skillsWithoutMetronome) {
           const activationResult = this.activateSkill(skill);
           if (activationResult) {
-            result.energy += activationResult.energy;
-            result.helps += activationResult.helps;
+            result.energyTeam += activationResult.energyTeam;
+            result.helpsTeam += activationResult.helpsTeam;
           }
         }
         return result;
@@ -299,17 +312,14 @@ export class MemberState {
     }
   }
 
-  private activateSkill(skill: mainskill.MainSkill): TeamSkill | undefined {
+  private activateSkill(skill: mainskill.MainSkill): SkillActivation {
     return this.skillActivators[skill.unit](skill);
   }
 
-  private skillActivators: Record<mainskill.MainSkillType, (skill: mainskill.MainSkill) => TeamSkill | undefined> = {
+  private skillActivators: Record<mainskill.MainSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
     energy: (skill) => this.#activateEnergySkill(skill),
     helps: (skill) => this.#activateHelpSkill(skill),
-    ingredients: () => {
-      this.#activateIngredientMagnet();
-      return undefined;
-    },
+    ingredients: () => this.#activateIngredientMagnet(),
     'dream shards': (skill) => this.#activateValueSkills(skill),
     'pot size': (skill) => this.#activateValueSkills(skill),
     chance: (skill) => this.#activateValueSkills(skill),
@@ -317,7 +327,7 @@ export class MemberState {
     strength: (skill) => this.#activateValueSkills(skill),
   };
 
-  #activateEnergySkill(skill: mainskill.MainSkill): TeamSkill | undefined {
+  #activateEnergySkill(skill: mainskill.MainSkill): SkillActivation {
     if (skill === mainskill.CHARGE_ENERGY_S) {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
@@ -325,25 +335,28 @@ export class MemberState {
       this.skillValue.addValue(clampedEnergyRecovered);
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
+      return { energyTeam: 0, helpsTeam: 0, other: 0 };
     } else if (skill === mainskill.ENERGIZING_CHEER_S) {
       this.skillValue.addValue(this.skillAmount(skill));
       const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
 
       return {
-        energy: averageRecoveredEnergy,
-        helps: 0,
+        energyTeam: averageRecoveredEnergy,
+        helpsTeam: 0,
+        other: 0,
       };
     } else {
       this.skillValue.addValue(this.skillAmount(skill));
 
       return {
-        energy: this.skillAmount(skill),
-        helps: 0,
+        energyTeam: this.skillAmount(skill),
+        helpsTeam: 0,
+        other: 0,
       };
     }
   }
 
-  #activateHelpSkill(skill: mainskill.MainSkill): TeamSkill | undefined {
+  #activateHelpSkill(skill: mainskill.MainSkill): SkillActivation {
     if (skill === mainskill.HELPER_BOOST) {
       const unique = TeamSimulatorUtils.uniqueMembersWithBerry({
         berry: this.berry,
@@ -354,21 +367,23 @@ export class MemberState {
         this.skillAmount(skill) + mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
 
       return {
-        energy: 0,
-        helps,
+        energyTeam: 0,
+        helpsTeam: helps,
+        other: 0,
       };
     } else {
       // extra helpful
       this.skillValue.addValue(this.skillAmount(skill));
 
       return {
-        energy: 0,
-        helps: this.skillAmount(skill) / this.teamSize,
+        energyTeam: 0,
+        helpsTeam: this.skillAmount(skill) / this.teamSize,
+        other: 0,
       };
     }
   }
 
-  #activateIngredientMagnet() {
+  #activateIngredientMagnet(): SkillActivation {
     const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
       amount: this.skillAmount(mainskill.INGREDIENT_MAGNET_S) / ingredient.INGREDIENTS.length,
@@ -377,11 +392,20 @@ export class MemberState {
 
     this.skillValue.addProduce(magnetProduce);
     this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, magnetProduce);
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+      other: 0, // TODO: fix
+    };
   }
 
-  #activateValueSkills(skill: mainskill.MainSkill): TeamSkill | undefined {
+  #activateValueSkills(skill: mainskill.MainSkill): SkillActivation {
     this.skillValue.addValue(this.skillAmount(skill));
-    return undefined;
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+      other: 0, // TODO: fix
+    };
   }
 
   private skillAmount(skill: mainskill.MainSkill) {

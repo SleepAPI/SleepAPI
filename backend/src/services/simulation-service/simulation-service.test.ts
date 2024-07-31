@@ -14,8 +14,8 @@ describe('setupAndRunProductionSimulation', () => {
     expect(skillActivations).toMatchInlineSnapshot(`
       [
         {
-          "adjustedAmount": 1511.0541604013417,
-          "fractionOfProc": 0.33239202824490577,
+          "adjustedAmount": 1783.3549168848635,
+          "fractionOfProc": 0.3922910067938547,
           "nrOfHelpsToActivate": 0,
           "skill": {
             "RP": [
@@ -113,7 +113,7 @@ describe('setupAndRunProductionSimulation', () => {
 
     expect(detailedProduce).toMatchInlineSnapshot(`
       {
-        "averageTotalSkillProcs": 1.4123920282449058,
+        "averageTotalSkillProcs": 1.4722910067938548,
         "dayHelps": 54,
         "nightHelps": 20,
         "nightHelpsBeforeSS": 20,
@@ -140,8 +140,8 @@ describe('setupAndRunProductionSimulation', () => {
         },
         "skillActivations": [
           {
-            "adjustedAmount": 1511.0541604013417,
-            "fractionOfProc": 0.33239202824490577,
+            "adjustedAmount": 1783.3549168848635,
+            "fractionOfProc": 0.3922910067938547,
             "nrOfHelpsToActivate": 0,
             "skill": {
               "RP": [

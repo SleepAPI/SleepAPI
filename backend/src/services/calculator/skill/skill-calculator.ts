@@ -1,19 +1,32 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { mainskill } from 'sleepapi-common';
+import { mainskill, pokemon } from 'sleepapi-common';
 import { createSkillEvent } from './activation/skill-activation';
 
 export function calculateSkillProcs(nrOfHelps: number, skillPercentage: number) {
   return nrOfHelps * skillPercentage;
 }
 
-export function calculateOddsAtLeastOneSkillProc(params: { skillPercentage: number; helps: number }): number {
-  const { skillPercentage, helps } = params;
-  const probabilityOfNoSuccess = Math.pow(1 - skillPercentage, helps);
-  const probabilityOfAtLeastOneSuccess = 1 - probabilityOfNoSuccess;
+export function calculateAverageNumberOfSkillProcsForHelps(params: {
+  skillPercentage: number;
+  helps: number;
+  pokemonSpecialty: pokemon.PokemonSpecialty;
+}): number {
+  const { skillPercentage, helps, pokemonSpecialty } = params;
 
-  return probabilityOfAtLeastOneSuccess;
+  // Calculate chance of zero procs
+  const chanceOfZeroProcs = Math.pow(1 - skillPercentage, helps);
+
+  // Skill specialists can bank 2 procs
+  if (pokemonSpecialty !== 'skill') {
+    return 1 - chanceOfZeroProcs;
+  } else {
+    const chanceOfOneProc = Math.pow(1 - skillPercentage, helps - 1) * skillPercentage * helps;
+    const chanceOfTwoProcs = 1 - chanceOfZeroProcs - chanceOfOneProc;
+
+    return 0 * chanceOfZeroProcs + 1 * chanceOfOneProc + 2 * chanceOfTwoProcs;
+  }
 }
 
 export function scheduleSkillEvents(params: {
