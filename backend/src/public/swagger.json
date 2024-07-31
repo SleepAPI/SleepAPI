@@ -178,6 +178,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PokemonSpecialty": {
+				"type": "string",
+				"enum": [
+					"berry",
+					"ingredient",
+					"skill"
+				]
+			},
 			"Berry": {
 				"properties": {
 					"name": {
@@ -205,12 +213,7 @@
 						"type": "string"
 					},
 					"specialty": {
-						"type": "string",
-						"enum": [
-							"berry",
-							"ingredient",
-							"skill"
-						]
+						"$ref": "#/components/schemas/PokemonSpecialty"
 					},
 					"frequency": {
 						"type": "number",
@@ -471,7 +474,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "2.5.0",
+		"version": "2.6.0",
 		"contact": {}
 	},
 	"paths": {

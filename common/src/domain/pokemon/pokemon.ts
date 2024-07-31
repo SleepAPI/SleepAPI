@@ -14,9 +14,10 @@ import {
 } from './ingredient-pokemon';
 import { ALL_SKILL_SPECIALISTS, INFERIOR_SKILL_SPECIALISTS, OPTIMAL_SKILL_SPECIALISTS } from './skill-pokemon';
 
+export type PokemonSpecialty = 'berry' | 'ingredient' | 'skill';
 export interface Pokemon {
   name: string;
-  specialty: 'berry' | 'ingredient' | 'skill';
+  specialty: PokemonSpecialty;
   frequency: number;
   ingredientPercentage: number;
   skillPercentage: number;

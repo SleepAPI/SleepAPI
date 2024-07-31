@@ -45,7 +45,7 @@ import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculat
 import { calculateAveragePokemonIngredientSet } from '../calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '../calculator/production/produce-calculator';
 import {
-  calculateOddsAtLeastOneSkillProc,
+  calculateAverageNumberOfSkillProcsForHelps,
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
@@ -264,7 +264,11 @@ export function generateSkillActivations(params: {
     });
     const { dayHelps, nightHelpsBeforeSS } = detailedProduce;
     nrOfDaySkillProcs = calculateSkillProcs(dayHelps ?? 0, skillPercentage);
-    oddsOfNightSkillProc = calculateOddsAtLeastOneSkillProc({ skillPercentage, helps: nightHelpsBeforeSS });
+    oddsOfNightSkillProc = calculateAverageNumberOfSkillProcsForHelps({
+      skillPercentage,
+      helps: nightHelpsBeforeSS,
+      pokemonSpecialty: pokemonWithAverageProduce.pokemon.specialty,
+    });
     nrOfDayHelps = dayHelps;
   }
 

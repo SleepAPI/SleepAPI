@@ -93,7 +93,7 @@ export function randomizedSimulation(params: {
   let currentTime = dayInfo.period.start;
   let chunksOf5Minutes = 0;
 
-  // check if we proc'd skill at night
+  // check skill procs at night
   for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
     const skillActivated = rollRandomChance(skillPercentage);
     if (skillActivated) {
@@ -108,7 +108,9 @@ export function randomizedSimulation(params: {
         currentEnergy = Math.min(currentEnergy + energyAmount, 150);
       }
       skillProcsNight += 1;
-      break;
+      if (skillProcsNight === 2 || pokemon.specialty !== 'skill') {
+        break;
+      }
     }
   }
 

@@ -16,7 +16,7 @@
 
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { Time, TimePeriod } from '@src/domain/time/time';
-import { MemberState, TeamSkill } from '@src/services/simulation-service/team-simulator/member-state';
+import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { CalculateTeamResponse } from 'sleepapi-common';
@@ -68,6 +68,7 @@ export class TeamSimulator {
   }
 
   public simulate() {
+    // TODO: init starts day which collects inventory and banked procs, doing this at start of day means last night doesn't get counted
     this.init();
 
     while (this.daytime()) {
@@ -100,8 +101,6 @@ export class TeamSimulator {
 
       this.currentTimeIndex += 1;
     }
-
-    this.collectInventory();
   }
 
   public results(): CalculateTeamResponse {
@@ -112,7 +111,10 @@ export class TeamSimulator {
 
   private init() {
     for (const member of this.memberStates) {
-      member.startDay();
+      const morningSkills = member.startDay();
+      for (const proc of morningSkills) {
+        this.activateTeamSkill(proc);
+      }
     }
 
     this.currentTimeIndex = 0;
@@ -154,10 +156,10 @@ export class TeamSimulator {
     }
   }
 
-  private activateTeamSkill(result: TeamSkill) {
+  private activateTeamSkill(result: SkillActivation) {
     for (const mem of this.memberStates) {
-      mem.addHelps(result.helps);
-      mem.recoverEnergy(result.energy);
+      mem.addHelps(result.helpsTeam);
+      mem.recoverEnergy(result.energyTeam);
     }
   }
 
