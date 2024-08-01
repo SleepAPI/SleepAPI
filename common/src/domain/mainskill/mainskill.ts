@@ -19,11 +19,11 @@ export const MAX_SKILL_LEVEL = 7;
 
 export const INGREDIENT_MAGNET_S: MainSkill = {
   name: 'Ingredient Magnet S',
-  amount: [6, 8, 11, 14, 17, 21],
+  amount: [6, 8, 11, 14, 17, 21, 24],
   unit: 'ingredients',
-  maxLevel: MAX_SKILL_LEVEL - 1,
+  maxLevel: MAX_SKILL_LEVEL,
   description: 'Gets you ? ingredients chosen at random.',
-  RP: [880, 1251, 1726, 2383, 3290, 4546],
+  RP: [880, 1251, 1726, 2383, 3290, 4546, 4546],
 };
 
 export const CHARGE_STRENGTH_S: MainSkill = {
@@ -116,20 +116,20 @@ export const ENERGY_FOR_EVERYONE: MainSkill = {
 
 export const EXTRA_HELPFUL_S: MainSkill = {
   name: 'Extra Helpful S',
-  amount: [5, 6, 7, 8, 9, 10],
+  amount: [5, 6, 7, 8, 9, 10, 11],
   unit: 'helps',
-  maxLevel: MAX_SKILL_LEVEL - 1,
+  maxLevel: MAX_SKILL_LEVEL,
   description: 'Instantly gets you x? the usual help from a helper Pokémon.',
-  RP: [880, 1251, 1726, 2383, 3290, 4546],
+  RP: [880, 1251, 1726, 2383, 3290, 4546, 4546],
 };
 
 export const COOKING_POWER_UP_S: MainSkill = {
   name: 'Cooking Power-up S',
-  amount: [7, 10, 12, 17, 22, 27],
+  amount: [7, 10, 12, 17, 22, 27, 32],
   unit: 'pot size',
-  maxLevel: MAX_SKILL_LEVEL - 1,
+  maxLevel: MAX_SKILL_LEVEL,
   description: 'Gives your pot room for ? more ingredients next time you cook.',
-  RP: [880, 1251, 1726, 2383, 3290, 4546],
+  RP: [880, 1251, 1726, 2383, 3290, 4546, 4546],
 };
 
 export const METRONOME: MainSkill = {
