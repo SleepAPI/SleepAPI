@@ -18,19 +18,19 @@ import { Recipe } from './recipe';
 export const WARM_MOOMOO_MILK = createDessert({
   name: 'WARM_MOOMOO_MILK',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const FANCY_APPLE_JUICE = createDessert({
   name: 'FANCY_APPLE_JUICE',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const CRAFT_SODA_POP = createDessert({
   name: 'CRAFT_SODA_POP',
   ingredients: [{ amount: 9, ingredient: HONEY }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const LUCKY_CHANT_APPLE_PIE = createDessert({
@@ -39,7 +39,7 @@ export const LUCKY_CHANT_APPLE_PIE = createDessert({
     { amount: 12, ingredient: FANCY_APPLE },
     { amount: 4, ingredient: MOOMOO_MILK },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const FLUFFY_SWEET_POTATOES = createDessert({
@@ -48,7 +48,7 @@ export const FLUFFY_SWEET_POTATOES = createDessert({
     { amount: 9, ingredient: SOFT_POTATO },
     { amount: 5, ingredient: MOOMOO_MILK },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const EMBER_GINGER_TEA = createDessert({
@@ -57,7 +57,7 @@ export const EMBER_GINGER_TEA = createDessert({
     { amount: 9, ingredient: WARMING_GINGER },
     { amount: 7, ingredient: FANCY_APPLE },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const CLOUD_NINE_SOY_CAKE = createDessert({
@@ -66,7 +66,7 @@ export const CLOUD_NINE_SOY_CAKE = createDessert({
     { amount: 8, ingredient: FANCY_EGG },
     { amount: 7, ingredient: GREENGRASS_SOYBEANS },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const STALWART_VEGETABLE_JUICE = createDessert({
@@ -75,7 +75,7 @@ export const STALWART_VEGETABLE_JUICE = createDessert({
     { amount: 9, ingredient: SNOOZY_TOMATO },
     { amount: 7, ingredient: FANCY_APPLE },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const BIG_MALASADA = createDessert({
@@ -85,7 +85,7 @@ export const BIG_MALASADA = createDessert({
     { amount: 7, ingredient: MOOMOO_MILK },
     { amount: 6, ingredient: HONEY },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const HUSTLE_PROTEIN_SMOOTHIE = createDessert({
@@ -94,7 +94,7 @@ export const HUSTLE_PROTEIN_SMOOTHIE = createDessert({
     { amount: 15, ingredient: GREENGRASS_SOYBEANS },
     { amount: 8, ingredient: SOOTHING_CACAO },
   ],
-  bonus: 17,
+  bonus: 20,
 });
 
 export const HUGE_POWER_SOY_DONUTS = createDessert({
@@ -114,7 +114,7 @@ export const SWEET_SCENT_CHOCOLATE_CAKE = createDessert({
     { amount: 8, ingredient: SOOTHING_CACAO },
     { amount: 7, ingredient: MOOMOO_MILK },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const PETAL_DANCE_CHOCOLATE_TART = createDessert({
