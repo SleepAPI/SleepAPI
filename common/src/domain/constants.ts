@@ -2,7 +2,7 @@
 export const TASTY_CHANCE_S_CAP = 0.7;
 
 // recipe
-export const MAX_RECIPE_LEVEL = 55;
+export const MAX_RECIPE_LEVEL = 60;
 
 // cooking
 export const MAX_POT_SIZE = 57;

@@ -84,6 +84,11 @@ export const recipeLevelBonus: { [level: number]: number } = {
   53: 2.59,
   54: 2.65,
   55: 2.71,
+  56: 2.77,
+  57: 2.83,
+  58: 2.9,
+  59: 2.97,
+  60: 3.03,
 };
 
 export function calculateRecipeValue(params: { level: number; ingredients: IngredientSet[]; bonus: number }) {
