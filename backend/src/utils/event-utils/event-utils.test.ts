@@ -37,10 +37,10 @@ describe('getExtraHelpfulEvents', () => {
         SkillEvent {
           "description": "Team Extra Helpful",
           "skillActivation": {
-            "adjustedAmount": 2,
+            "adjustedAmount": 2.2,
             "adjustedProduce": {
               "berries": {
-                "amount": 4,
+                "amount": 4.4,
                 "berry": {
                   "name": "GREPA",
                   "type": "electric",
@@ -49,7 +49,7 @@ describe('getExtraHelpfulEvents', () => {
               },
               "ingredients": [
                 {
-                  "amount": 2,
+                  "amount": 2.2,
                   "ingredient": {
                     "longName": "Fancy Apple",
                     "name": "Apple",
@@ -69,6 +69,7 @@ describe('getExtraHelpfulEvents', () => {
                 2383,
                 3290,
                 4546,
+                4546,
               ],
               "amount": [
                 5,
@@ -77,9 +78,10 @@ describe('getExtraHelpfulEvents', () => {
                 8,
                 9,
                 10,
+                11,
               ],
               "description": "Instantly gets you x? the usual help from a helper Pokémon.",
-              "maxLevel": 6,
+              "maxLevel": 7,
               "name": "Extra Helpful S",
               "unit": "helps",
             },
@@ -94,10 +96,10 @@ describe('getExtraHelpfulEvents', () => {
         SkillEvent {
           "description": "Team Extra Helpful",
           "skillActivation": {
-            "adjustedAmount": 1,
+            "adjustedAmount": 1.1,
             "adjustedProduce": {
               "berries": {
-                "amount": 2,
+                "amount": 2.2,
                 "berry": {
                   "name": "GREPA",
                   "type": "electric",
@@ -106,7 +108,7 @@ describe('getExtraHelpfulEvents', () => {
               },
               "ingredients": [
                 {
-                  "amount": 1,
+                  "amount": 1.1,
                   "ingredient": {
                     "longName": "Fancy Apple",
                     "name": "Apple",
@@ -126,6 +128,7 @@ describe('getExtraHelpfulEvents', () => {
                 2383,
                 3290,
                 4546,
+                4546,
               ],
               "amount": [
                 5,
@@ -134,9 +137,10 @@ describe('getExtraHelpfulEvents', () => {
                 8,
                 9,
                 10,
+                11,
               ],
               "description": "Instantly gets you x? the usual help from a helper Pokémon.",
-              "maxLevel": 6,
+              "maxLevel": 7,
               "name": "Extra Helpful S",
               "unit": "helps",
             },

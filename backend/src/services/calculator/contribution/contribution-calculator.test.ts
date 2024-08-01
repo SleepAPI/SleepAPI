@@ -89,7 +89,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
-    expect(contribution.contributedPower).toBe(6957.016433293412);
+    expect(contribution.contributedPower).toBeCloseTo(7704.616433293411, 5);
   });
 
   it('shall calculate Gengars level 50 contribution and divide by 2 for spore mushroom curry with size 2 team size', () => {
@@ -121,7 +121,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
-    expect(Math.round(contribution.contributedPower)).toBe(7525);
+    expect(Math.round(contribution.contributedPower)).toBe(8344);
   });
 });
 
@@ -147,7 +147,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(100);
-    expect(data.contributedPower).toBe(expectedContribution);
+    expect(data.contributedPower).toBeCloseTo(expectedContribution, 5);
   });
 
   it('shall punish by by 20% per additional team member for solution with size 3', () => {
@@ -173,7 +173,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(50);
-    expect(data.contributedPower).toBe(expectedContribution * expectedPunishment);
+    expect(data.contributedPower).toBeCloseTo(expectedContribution * expectedPunishment, 5);
   });
 
   it('shall not punish filler ingredients with team size', () => {
@@ -201,7 +201,7 @@ describe('calculateContributionForMealWithPunishment', () => {
 
     expect(data.meal).toBe(salad.SNOOZY_TOMATO_SALAD);
     expect(data.percentage).toBe(50);
-    expect(data.contributedPower).toBe(expectedContribution * expectedPunishment + expectedFiller);
+    expect(data.contributedPower).toBeCloseTo(expectedContribution * expectedPunishment + expectedFiller, 5);
   });
 
   it('shall only count filler value if no relevant ingredients were produced', () => {
