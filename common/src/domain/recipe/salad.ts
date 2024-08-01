@@ -22,19 +22,19 @@ import { Recipe } from './recipe';
 export const FANCY_APPLE_SALAD = createSalad({
   name: 'FANCY_APPLE_SALAD',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const BEAN_HAM_SALAD = createSalad({
   name: 'BEAN_HAM_SALAD',
   ingredients: [{ amount: 8, ingredient: BEAN_SAUSAGE }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const SNOOZY_TOMATO_SALAD = createSalad({
   name: 'SNOOZY_TOMATO_SALAD',
   ingredients: [{ amount: 8, ingredient: SNOOZY_TOMATO }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const SNOW_CLOAK_CAESAR_SALAD = createSalad({
@@ -43,7 +43,7 @@ export const SNOW_CLOAK_CAESAR_SALAD = createSalad({
     { amount: 10, ingredient: MOOMOO_MILK },
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const WATER_VEIL_TOFU_SALAD = createSalad({
@@ -61,7 +61,7 @@ export const HEAT_WAVE_TOFU_SALAD = createSalad({
     { amount: 10, ingredient: GREENGRASS_SOYBEANS },
     { amount: 6, ingredient: FIERY_HERB },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const DAZZLING_APPLE_CHEESE_SALAD = createSalad({
@@ -71,7 +71,7 @@ export const DAZZLING_APPLE_CHEESE_SALAD = createSalad({
     { amount: 5, ingredient: MOOMOO_MILK },
     { amount: 3, ingredient: PURE_OIL },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const FURY_ATTACK_CORN_SALAD = createSalad({
@@ -90,7 +90,7 @@ export const MOOMOO_CAPRESE_SALAD = createSalad({
     { amount: 6, ingredient: SNOOZY_TOMATO },
     { amount: 5, ingredient: PURE_OIL },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const IMMUNITY_LEEK_SALAD = createSalad({
@@ -99,7 +99,7 @@ export const IMMUNITY_LEEK_SALAD = createSalad({
     { amount: 10, ingredient: LARGE_LEEK },
     { amount: 5, ingredient: WARMING_GINGER },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const SUPERPOWER_EXTREME_SALAD = createSalad({
@@ -110,7 +110,7 @@ export const SUPERPOWER_EXTREME_SALAD = createSalad({
     { amount: 5, ingredient: FANCY_EGG },
     { amount: 3, ingredient: SOFT_POTATO },
   ],
-  bonus: 17,
+  bonus: 20,
 });
 
 export const CONTRARY_CHOCOLATE_MEAT_SALAD = createSalad({
@@ -119,7 +119,7 @@ export const CONTRARY_CHOCOLATE_MEAT_SALAD = createSalad({
     { amount: 14, ingredient: SOOTHING_CACAO },
     { amount: 9, ingredient: BEAN_SAUSAGE },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const GLUTTONY_POTATO_SALAD = createSalad({
