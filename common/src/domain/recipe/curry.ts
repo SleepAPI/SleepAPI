@@ -22,34 +22,34 @@ import { Recipe } from './recipe';
 export const FANCY_APPLE_CURRY = createCurry({
   name: 'FANCY_APPLE_CURRY',
   ingredients: [{ amount: 7, ingredient: FANCY_APPLE }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const SIMPLE_CHOWDER = createCurry({
   name: 'SIMPLE_CHOWDER',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const MILD_HONEY_CURRY = createCurry({
   name: 'MILD_HONEY_CURRY',
   ingredients: [{ amount: 7, ingredient: HONEY }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const BEANBURGER_CURRY = createCurry({
   name: 'BEANBURGER_CURRY',
   ingredients: [{ amount: 7, ingredient: BEAN_SAUSAGE }],
-  bonus: 6,
+  bonus: 19,
 });
 
 export const HEARTY_CHEESEBURGER_CURRY = createCurry({
   name: 'HEARTY_CHEESEBURGER_CURRY',
-  bonus: 11,
   ingredients: [
     { amount: 8, ingredient: MOOMOO_MILK },
     { amount: 6, ingredient: BEAN_SAUSAGE },
   ],
+  bonus: 19,
 });
 
 export const DROUGHT_KATSU_CURRY = createCurry({
@@ -58,7 +58,7 @@ export const DROUGHT_KATSU_CURRY = createCurry({
     { amount: 10, ingredient: BEAN_SAUSAGE },
     { amount: 5, ingredient: PURE_OIL },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const SOLAR_POWER_TOMATO_CURRY = createCurry({
@@ -67,7 +67,7 @@ export const SOLAR_POWER_TOMATO_CURRY = createCurry({
     { amount: 10, ingredient: SNOOZY_TOMATO },
     { amount: 5, ingredient: FIERY_HERB },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const MELTY_OMELETTE_CURRY = createCurry({
@@ -76,7 +76,7 @@ export const MELTY_OMELETTE_CURRY = createCurry({
     { amount: 10, ingredient: FANCY_EGG },
     { amount: 6, ingredient: SNOOZY_TOMATO },
   ],
-  bonus: 11,
+  bonus: 19,
 });
 
 export const SOFT_POTATO_CHOWDER = createCurry({
@@ -86,7 +86,7 @@ export const SOFT_POTATO_CHOWDER = createCurry({
     { amount: 8, ingredient: SOFT_POTATO },
     { amount: 4, ingredient: TASTY_MUSHROOM },
   ],
-  bonus: 17,
+  bonus: 20,
 });
 
 export const BULK_UP_BEAN_CURRY = createCurry({
@@ -97,7 +97,7 @@ export const BULK_UP_BEAN_CURRY = createCurry({
     { amount: 4, ingredient: FIERY_HERB },
     { amount: 4, ingredient: FANCY_EGG },
   ],
-  bonus: 17,
+  bonus: 21,
 });
 
 export const SPORE_MUSHROOM_CURRY = createCurry({
@@ -106,7 +106,7 @@ export const SPORE_MUSHROOM_CURRY = createCurry({
     { amount: 14, ingredient: TASTY_MUSHROOM },
     { amount: 9, ingredient: SOFT_POTATO },
   ],
-  bonus: 17,
+  bonus: 20,
 });
 
 export const EGG_BOMB_CURRY = createCurry({
