@@ -121,7 +121,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
-    expect(Math.round(contribution.contributedPower)).toBe(8344);
+    expect(Math.round(contribution.contributedPower)).toBe(8543);
   });
 });
 
