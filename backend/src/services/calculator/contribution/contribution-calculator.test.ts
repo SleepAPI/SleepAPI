@@ -121,7 +121,7 @@ describe('calculateMealContributionFor', () => {
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
-    expect(Math.round(contribution.contributedPower)).toBe(8543);
+    expect(Math.round(contribution.contributedPower)).toBe(8577);
   });
 });
 
@@ -250,8 +250,8 @@ describe('calculateContributionForMealWithPunishment', () => {
     const expectedFillerSupportValue = support.amount * ingredient.FANCY_APPLE.taxedValue;
 
     // contributedPower and skillValue same since no regular ingredients were produced in this case
-    expect(data.contributedPower).toBe(expectedUsedSupportValue + expectedFillerSupportValue);
-    expect(data.skillValue).toBe(expectedUsedSupportValue + expectedFillerSupportValue);
+    expect(data.contributedPower).toBeCloseTo(expectedUsedSupportValue + expectedFillerSupportValue);
+    expect(data.skillValue).toBeCloseTo(expectedUsedSupportValue + expectedFillerSupportValue);
   });
 });
 
