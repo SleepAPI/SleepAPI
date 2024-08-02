@@ -1,11 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { FANCY_APPLE, HONEY, SOOTHING_CACAO } from '../../domain/ingredient';
-import { LONELY, NAUGHTY, QUIET } from '../../domain/nature';
-import { GOLDUCK, PINSIR, RAICHU } from '../../domain/pokemon';
+import {
+  BEAN_SAUSAGE,
+  FANCY_APPLE,
+  GREENGRASS_SOYBEANS,
+  HONEY,
+  MOOMOO_MILK,
+  SOOTHING_CACAO,
+  WARMING_GINGER,
+} from '../../domain/ingredient';
+import { JOLLY, LONELY, MILD, NAUGHTY, QUIET, SASSY } from '../../domain/nature';
+import { EEVEE, ESPEON, GOLDUCK, PINSIR, PUPITAR, RAICHU } from '../../domain/pokemon';
 import {
   BERRY_FINDING_S,
   DREAM_SHARD_BONUS,
   HELPING_BONUS,
+  HELPING_SPEED_M,
   HELPING_SPEED_S,
   INGREDIENT_FINDER_M,
   INGREDIENT_FINDER_S,
@@ -13,6 +22,7 @@ import {
   SKILL_LEVEL_UP_M,
   SKILL_LEVEL_UP_S,
   SKILL_TRIGGER_M,
+  SKILL_TRIGGER_S,
   SLEEP_EXP_BONUS,
 } from '../../domain/subskill';
 import { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
@@ -55,6 +65,89 @@ describe('RP', () => {
     expect(rpUtils.calc()).toBe(2753);
   });
 
+  it('shall calculate realistic level 60 Pokémon', () => {
+    const pokemonInstance: PokemonInstanceExt = {
+      pokemon: ESPEON,
+      name: 'Espeon',
+      carrySize: 21,
+      level: 60,
+      ribbon: 0,
+      nature: JOLLY,
+      skillLevel: 7,
+      subskills: [
+        { level: 10, subskill: BERRY_FINDING_S },
+        { level: 25, subskill: SKILL_TRIGGER_M },
+        { level: 50, subskill: SKILL_TRIGGER_S },
+      ],
+      ingredients: [
+        { level: 0, ingredient: MOOMOO_MILK },
+        { level: 30, ingredient: SOOTHING_CACAO },
+        { level: 60, ingredient: MOOMOO_MILK },
+      ],
+      externalId: uuid.v4(),
+      version: 0,
+      saved: true,
+      shiny: false,
+    };
+    const rpUtils = new RP(pokemonInstance);
+    expect(rpUtils.calc()).toBe(5463);
+  });
+
+  it('shall calculate realistic ribbon 500 hours Pokémon', () => {
+    const pokemonInstance: PokemonInstanceExt = {
+      pokemon: PUPITAR,
+      name: 'Pupitar',
+      carrySize: 18,
+      level: 33,
+      ribbon: 2,
+      nature: MILD,
+      skillLevel: 2,
+      subskills: [
+        { level: 10, subskill: HELPING_BONUS },
+        { level: 25, subskill: SKILL_TRIGGER_S },
+      ],
+      ingredients: [
+        { level: 0, ingredient: WARMING_GINGER },
+        { level: 30, ingredient: GREENGRASS_SOYBEANS },
+        { level: 60, ingredient: BEAN_SAUSAGE },
+      ],
+      externalId: uuid.v4(),
+      version: 0,
+      saved: true,
+      shiny: false,
+    };
+    const rpUtils = new RP(pokemonInstance);
+    expect(rpUtils.calc()).toBe(1350);
+  });
+
+  it('shall calculate realistic ribbon 2000 hours Pokémon', () => {
+    const pokemonInstance: PokemonInstanceExt = {
+      pokemon: EEVEE,
+      name: 'Eevee',
+      carrySize: 12,
+      level: 55,
+      ribbon: 4,
+      nature: SASSY,
+      skillLevel: 6,
+      subskills: [
+        { level: 10, subskill: HELPING_BONUS },
+        { level: 25, subskill: SKILL_TRIGGER_M },
+        { level: 50, subskill: HELPING_SPEED_M },
+      ],
+      ingredients: [
+        { level: 0, ingredient: MOOMOO_MILK },
+        { level: 30, ingredient: SOOTHING_CACAO },
+        { level: 60, ingredient: SOOTHING_CACAO },
+      ],
+      externalId: uuid.v4(),
+      version: 0,
+      saved: true,
+      shiny: false,
+    };
+    const rpUtils = new RP(pokemonInstance);
+    expect(rpUtils.calc()).toBe(4699);
+  });
+
   it('shall calculate level 60 Pokémon', () => {
     const pokemonInstance: PokemonInstanceExt = {
       pokemon: PINSIR,
@@ -82,7 +175,7 @@ describe('RP', () => {
       shiny: false,
     };
     const rpUtils = new RP(pokemonInstance);
-    expect(rpUtils.calc()).toBe(4281);
+    expect(rpUtils.calc()).toBe(4295);
   });
 
   it('shall calculate skill Pokémon', () => {

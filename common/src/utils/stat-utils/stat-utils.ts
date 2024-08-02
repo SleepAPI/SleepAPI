@@ -39,8 +39,30 @@ export function calculateNrOfBerriesPerDrop(pokemon: Pokemon, subskills: SubSkil
   if (pokemon.specialty === 'berry') {
     base += 1;
   }
-  if (subskills.includes(BERRY_FINDING_S)) {
+  if (subskills.some((ss) => ss.name.toLowerCase() === BERRY_FINDING_S.name.toLowerCase())) {
     base += 1;
   }
   return base;
+}
+
+export function calculateRibbonFrequency(pokemon: Pokemon, ribbonLevel: number) {
+  let ribbonFrequency = 1;
+
+  if (ribbonLevel >= 2) {
+    if (pokemon.remainingEvolutions === 1) {
+      ribbonFrequency -= 0.05;
+    } else if (pokemon.remainingEvolutions === 2) {
+      ribbonFrequency -= 0.11;
+    }
+  }
+
+  if (ribbonLevel >= 4) {
+    if (pokemon.remainingEvolutions === 1) {
+      ribbonFrequency -= 0.07;
+    } else if (pokemon.remainingEvolutions === 2) {
+      ribbonFrequency -= 0.14;
+    }
+  }
+
+  return ribbonFrequency;
 }
