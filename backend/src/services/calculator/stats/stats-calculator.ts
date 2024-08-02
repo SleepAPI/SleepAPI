@@ -55,28 +55,6 @@ export function calculateHelpSpeedSubskills(subskills: subskill.SubSkill[], nrOf
   return MathUtils.round(Math.max(0.65, 1 - helpM - helpS - helpBonus), 2);
 }
 
-export function calculateRibbonFrequency(pokemon: pokemon.Pokemon, ribbonLevel: number) {
-  let ribbonFrequency = 1;
-
-  if (ribbonLevel >= 2) {
-    if (pokemon.remainingEvolutions === 1) {
-      ribbonFrequency -= 0.05;
-    } else if (pokemon.remainingEvolutions === 2) {
-      ribbonFrequency -= 0.11;
-    }
-  }
-
-  if (ribbonLevel >= 4) {
-    if (pokemon.remainingEvolutions === 1) {
-      ribbonFrequency -= 0.07;
-    } else if (pokemon.remainingEvolutions === 2) {
-      ribbonFrequency -= 0.14;
-    }
-  }
-
-  return ribbonFrequency;
-}
-
 export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
   const supportSkills: mainskill.MainSkill[] = [
     // mainskill.COOKING_POWER_UP_S // in the future maybe

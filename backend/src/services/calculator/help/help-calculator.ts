@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { MathUtils, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
+import { MathUtils, calculateRibbonFrequency, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
 import { energyFactorFromEnergy } from '../energy/energy-calculator';
-import { calculateHelpSpeedSubskills, calculateRibbonFrequency } from '../stats/stats-calculator';
+import { calculateHelpSpeedSubskills } from '../stats/stats-calculator';
 
 export function calculateHelpSpeedBeforeEnergy(stats: {
   pokemon: pokemon.Pokemon;

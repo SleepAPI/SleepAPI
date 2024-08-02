@@ -36,6 +36,7 @@ import { invertNatureFrequency } from '../../utils/nature-utils';
 import {
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
+  calculateRibbonFrequency,
   calculateSkillPercentage,
 } from '../../utils/stat-utils';
 
@@ -46,6 +47,7 @@ export class RP {
   private skillLevel: number;
   private nature: Nature;
   private subskills: SubSkill[];
+  private ribbon: number;
 
   constructor(pokemonInstance: PokemonInstanceExt) {
     this.ingredientSet = [];
@@ -55,6 +57,7 @@ export class RP {
     this.nature = pokemonInstance.nature;
     this.ingredientSet = this.filteredIngredientSet(pokemonInstance);
     this.subskills = this.filteredSubskills(pokemonInstance);
+    this.ribbon = pokemonInstance.ribbon;
   }
 
   calc() {
@@ -70,11 +73,13 @@ export class RP {
     const levelFactor = 1 - 0.002 * (this.level - 1);
     const natureFreq = invertNatureFrequency(this.nature);
     const helpSpeedSubskills = this.frequencySubskills;
+    const ribbonFactor = calculateRibbonFrequency(this.pokemon, this.ribbon);
 
     return (
       5 *
       MathUtils.floor(
-        3600 / (this.pokemon.frequency * MathUtils.floor(levelFactor * natureFreq * helpSpeedSubskills, 4)),
+        3600 /
+          (this.pokemon.frequency * MathUtils.floor(levelFactor * natureFreq * helpSpeedSubskills * ribbonFactor, 4)),
         2,
       )
     );
@@ -208,6 +213,11 @@ export class RP {
     53: 1.696,
     54: 1.72,
     55: 1.745,
+    56: 1.771,
+    57: 1.798,
+    58: 1.824,
+    59: 1.852,
+    60: 1.88,
   };
 
   private filteredSubskills(pokemonInstance: PokemonInstanceExt) {
