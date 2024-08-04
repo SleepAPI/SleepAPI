@@ -75,7 +75,7 @@ describe('User Store', () => {
       refreshToken: 'some refresh token',
       expiryDate: 10
     })
-    userStore.reset()
+    userStore.$reset()
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
@@ -154,13 +154,13 @@ describe('User Store', () => {
 
   it('should clear user data if no tokens are available', async () => {
     const userStore = useUserStore()
-    userStore.reset = vi.fn()
+    userStore.$reset = vi.fn()
 
     userStore.tokens = null
 
     await userStore.refresh()
 
-    expect(userStore.reset).toHaveBeenCalled()
+    expect(userStore.$reset).toHaveBeenCalled()
   })
 
   it('should logout on refresh error', async () => {

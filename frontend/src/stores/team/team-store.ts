@@ -64,6 +64,7 @@ export const useTeamStore = defineStore('team', {
       if (userStore.loggedIn) {
         // TODO: very very messy
         try {
+          // TODO: we could change loadingTeams to a loading for each team. that way as soon as first team is finished loading we can remove loading bar, then when user swipes to team 2 if that hasnt finished loading yet then loading bar shows up again
           this.loadingTeams = true
 
           // grab previous teams so we may compare it to updated teams from server
@@ -280,25 +281,6 @@ export const useTeamStore = defineStore('team', {
     },
     toggleMemberLoading(memberIndex: number) {
       this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]
-    },
-    reset() {
-      this.currentIndex = 0
-      this.maxAvailableTeams = MAX_TEAMS
-      this.loadingTeams = true
-      this.loadingMembers = [false, false, false, false, false]
-      this.domainVersion = 0
-      this.teams = [
-        {
-          index: 0,
-          name: 'Log in to save your teams',
-          camp: false,
-          bedtime: '21:30',
-          wakeup: '06:00',
-          version: 0,
-          members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
-          production: undefined
-        }
-      ]
     }
   },
   persist: true

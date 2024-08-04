@@ -1,3 +1,4 @@
+import serverAxios from '@/router/server-axios'
 import { GoogleService } from '@/services/login/google-service'
 import axios from 'axios'
 import type { LoginResponse, RefreshResponse } from 'sleepapi-common'
@@ -8,6 +9,11 @@ vi.mock('axios')
 const mockedAxios = axios as unknown as {
   post: ReturnType<typeof vi.fn>
 }
+vi.mock('@/router/server-axios', () => ({
+  default: {
+    delete: vi.fn(() => undefined)
+  }
+}))
 
 describe('login', () => {
   it('should login user', async () => {
@@ -49,5 +55,12 @@ describe('refresh', () => {
     mockedAxios.post.mockRejectedValue(new Error('Request failed'))
 
     await expect(GoogleService.refresh('something')).rejects.toThrow('Request failed')
+  })
+})
+
+describe('delete', () => {
+  it('should call user delete on server', async () => {
+    await GoogleService.delete()
+    expect(serverAxios.delete).toHaveBeenCalledWith('/user')
   })
 })

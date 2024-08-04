@@ -1,7 +1,7 @@
 import { config } from '@src/config/config';
 import { UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
-import { client, refresh, signup, verify } from '@src/services/api-service/login/login-service';
+import { client, deleteUser, refresh, signup, verify } from '@src/services/api-service/login/login-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
 import { uuid } from 'sleepapi-common';
@@ -228,5 +228,16 @@ describe('verify', () => {
     await expect(verify(accessToken)).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Unable to find entry in user with filter [{"sub":"some-sub"}]"`
     );
+  });
+});
+
+describe('delete', () => {
+  it('should delete user from database', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+
+    expect((await UserDAO.findMultiple()).map((user) => user.id)).toEqual([1]);
+    await deleteUser(user);
+
+    expect(await UserDAO.findMultiple()).toEqual([]);
   });
 });

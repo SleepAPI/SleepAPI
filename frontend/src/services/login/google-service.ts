@@ -1,3 +1,4 @@
+import serverAxios from '@/router/server-axios'
 import axios from 'axios'
 import type { LoginResponse, RefreshResponse } from 'sleepapi-common'
 
@@ -16,6 +17,10 @@ class GoogleServiceImpl {
     })
 
     return response.data
+  }
+
+  public async delete() {
+    await serverAxios.delete('/user')
   }
 }
 export const GoogleService = new GoogleServiceImpl()

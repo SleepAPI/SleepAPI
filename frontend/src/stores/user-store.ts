@@ -1,6 +1,6 @@
 import router from '@/router/router'
 import { GoogleService } from '@/services/login/google-service'
-import { useTeamStore } from '@/stores/team/team-store'
+import { clearCacheAndLogout } from '@/stores/store-service'
 import { defineStore } from 'pinia'
 import type { LoginResponse } from 'sleepapi-common'
 import { googleLogout } from 'vue3-google-login'
@@ -34,13 +34,6 @@ export const useUserStore = defineStore('user', {
       this.name = userData.name
       this.avatar = userData.avatar ?? 'default'
     },
-    reset() {
-      this.name = 'Guest'
-      this.avatar = null
-      this.tokens = null
-      const teamStore = useTeamStore()
-      teamStore.reset()
-    },
     setTokens(tokens: TokenInfo) {
       this.tokens = tokens
     },
@@ -73,14 +66,14 @@ export const useUserStore = defineStore('user', {
             })
           }
         } else {
-          this.reset()
+          this.logout()
         }
       } catch {
         this.logout()
       }
     },
     logout() {
-      this.reset()
+      clearCacheAndLogout()
       googleLogout()
       router.push('/')
     }
