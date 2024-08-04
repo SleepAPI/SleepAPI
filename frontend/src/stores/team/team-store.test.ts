@@ -232,7 +232,7 @@ describe('Team Store', () => {
     teamStore.maxAvailableTeams = 4
     teamStore.loadingTeams = false
 
-    teamStore.reset()
+    teamStore.$reset()
 
     expect(teamStore.$state).toMatchInlineSnapshot(`
       {

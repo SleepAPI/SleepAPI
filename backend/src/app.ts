@@ -23,8 +23,10 @@ import DatabaseMigration from './database/migration/database-migration';
 
 import LoginController from '@src/controllers/login/login.controller';
 import TeamController from '@src/controllers/team/team.controller';
+import UserController from '@src/controllers/user/user.controller';
 import { LoginRouter } from '@src/routes/login-router/login-router';
 import { TeamRouter } from '@src/routes/team-router/team-router';
+import { UserRouter } from '@src/routes/user-router/user-router';
 import { BaseRouter } from './routes/base-router';
 import { ProductionRouter } from './routes/calculator-router/production-router';
 import { HealthRouter } from './routes/health-router/health-router';
@@ -95,6 +97,7 @@ async function main() {
   ShareRouter.register(new ShareController());
   LoginRouter.register(new LoginController());
   TeamRouter.register(new TeamController());
+  UserRouter.register(new UserController());
 
   app.listen(config.PORT, async () => {
     Logger.log(`Server is running at ${config.PORT}`);

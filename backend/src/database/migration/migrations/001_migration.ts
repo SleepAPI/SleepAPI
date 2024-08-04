@@ -24,6 +24,14 @@ export async function up(knex: Knex) {
   await knex.schema.createTable(Tables.UserSettings, (table) => {
     table.increments('id');
     table.integer('version').defaultTo(1);
+
+    table
+      .integer(`fk_${Tables.User}_id`)
+      .unsigned()
+      .notNullable()
+      .references('id')
+      .inTable(Tables.User)
+      .onDelete('CASCADE');
   });
 
   await knex.schema.createTable(Tables.Pokemon, (table) => {

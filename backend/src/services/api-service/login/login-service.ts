@@ -1,5 +1,5 @@
 import { config } from '@src/config/config';
-import { UserDAO } from '@src/database/dao/user/user-dao';
+import { DBUser, UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
 import { OAuth2Client, TokenInfo } from 'google-auth-library';
 import { LoginResponse, RefreshResponse, uuid } from 'sleepapi-common';
@@ -74,4 +74,8 @@ export async function verify(access_token: string) {
   }
 
   return UserDAO.get({ sub: tokenInfo.sub });
+}
+
+export async function deleteUser(user: DBUser) {
+  return UserDAO.delete(user);
 }
