@@ -12,6 +12,7 @@
         hide-details
         hide-spin-buttons
         type="number"
+        :rules="[(v) => (v <= 100 && v >= 1) || `Level must be 1-100`]"
         @keydown.enter="menu = false"
       ></v-text-field>
     </template>
@@ -68,13 +69,9 @@ export default {
     level(newValue) {
       this.customValue = newValue
     },
-    menu(state) {
-      if (!state) {
-        if (this.customValue >= 1 && this.customValue <= 100) {
-          this.updateLevel(this.customValue)
-        } else {
-          this.customValue = this.level
-        }
+    customValue() {
+      if (this.customValue >= 1 && this.customValue <= 100) {
+        this.updateLevel(this.customValue)
       }
     }
   },
