@@ -1,4 +1,4 @@
-import { berry, nature, Recipe, subskill } from 'sleepapi-common';
+import { Event, Recipe, berry, nature, subskill } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '../combination/custom';
 import { Time } from '../time/time';
 
@@ -23,6 +23,7 @@ export interface ProductionStats {
   mainBedtime: Time;
   mainWakeup: Time;
   maxPotSize?: number;
+  event?: Event;
 }
 
 export interface SetCoverProductionStats extends ProductionStats {
