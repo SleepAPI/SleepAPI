@@ -1,5 +1,4 @@
-import { Produce } from '@src/domain/combination/produce';
-import { PokemonIngredientSet, ingredient, pokemon } from 'sleepapi-common';
+import { PokemonIngredientSet, Produce, ingredient, pokemon } from 'sleepapi-common';
 import { calculateAverageProduce, clampHelp } from './produce-calculator';
 
 describe('calculateAverageProduce', () => {

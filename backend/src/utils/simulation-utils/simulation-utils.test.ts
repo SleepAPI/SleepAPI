@@ -1,10 +1,8 @@
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { mainskill, maxCarrySize, nature, pokemon } from 'sleepapi-common';
+import { SkillActivation, Summary, mainskill, maxCarrySize, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_PRODUCE } from '../test-utils/defaults';
 import { finishSimulation, rollRandomChance, startDayAndEnergy, startNight } from './simulation-utils';
 

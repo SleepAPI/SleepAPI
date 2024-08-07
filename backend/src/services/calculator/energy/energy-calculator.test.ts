@@ -1,10 +1,8 @@
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time } from '@src/domain/time/time';
 import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults';
-import { mainskill, nature } from 'sleepapi-common';
+import { SkillActivation, Time, mainskill, nature } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, calculateStartingEnergy, maybeDegradeEnergy } from './energy-calculator';
 
 describe('calculateStartingEnergy', () => {

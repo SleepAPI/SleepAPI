@@ -5,3 +5,8 @@ $background: #191224;
 $surface: #403d58;
 $on-surface: #ffffff;
 $on-primary: #000000;
+
+.frosted-glass {
+  background: rgba($surface, 0.4) !important;
+  backdrop-filter: blur(10px);
+}

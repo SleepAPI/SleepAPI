@@ -109,6 +109,7 @@ class TeamServiceImpl {
     await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
   }
 
+  // TODO: not tested?
   public async calculateProduction(params: {
     members: PokemonInstanceExt[]
     settings: TeamSettingsRequest

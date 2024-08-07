@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import { DetailedProduce, PokemonProduce, Produce } from '@src/domain/combination/produce';
+import { PokemonProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time } from '@src/domain/time/time';
 import {
   getDefaultRecoveryEvents,
   getExtraHelpfulEvents,
@@ -31,8 +28,13 @@ import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
 import {
   BerrySet,
+  DetailedProduce,
   MEALS_IN_DAY,
   PokemonIngredientSet,
+  Produce,
+  SkillActivation,
+  Summary,
+  Time,
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentage,

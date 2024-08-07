@@ -1,5 +1,4 @@
-import { Time } from '@src/domain/time/time';
-import { PokemonIngredientSet, nature, subskill } from 'sleepapi-common';
+import { PokemonIngredientSet, Time, nature, subskill } from 'sleepapi-common';
 
 export interface TeamSettings {
   camp: boolean;

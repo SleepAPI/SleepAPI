@@ -2,7 +2,6 @@ import { TeamMember } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { ProductionRequest } from '@src/routes/calculator-router/production-router';
 import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
 import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
@@ -12,6 +11,7 @@ import {
   CalculateTeamRequest,
   IngredientInstance,
   IngredientSet,
+  SingleProductionRequest,
   getNature,
   getPokemon,
   getSubskill,
@@ -26,7 +26,7 @@ export default class ProductionController extends Controller {
   @Post('production/{name}')
   public async calculatePokemonProduction(
     @Path() name: string,
-    @Body() body: ProductionRequest,
+    @Body() body: SingleProductionRequest,
     @Query() pretty?: boolean
   ) {
     const pokemon = getPokemon(name);
@@ -109,7 +109,7 @@ export default class ProductionController extends Controller {
     return ingredientSet;
   }
 
-  #parseSingleProductionInput(pkmn: pokemon.Pokemon, input: ProductionRequest): ProductionStats {
+  #parseSingleProductionInput(pkmn: pokemon.Pokemon, input: SingleProductionRequest): ProductionStats {
     const level = queryAsNumber(input.level) ?? 60;
 
     const mainBedtime = TimeUtils.parseTime(input.mainBedtime);

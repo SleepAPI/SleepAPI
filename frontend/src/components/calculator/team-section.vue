@@ -35,11 +35,16 @@
 
     <v-row>
       <v-col cols="12">
-        <v-card :loading="teamStore.loadingTeams">
-          <v-tabs v-model="tab" fixed-tabs bg-color="surface">
-            <v-tab value="team">Team</v-tab>
-            <v-tab value="members">Members</v-tab>
-            <v-tab value="comparison">Compare</v-tab>
+        <v-card :loading="teamStore.loadingTeams" color="transparent">
+          <v-tabs v-model="tab" fixed-tabs class="d-flex justify-space-around">
+            <v-tab
+              v-for="tabItem in tabs"
+              :key="tabItem.value"
+              :value="tabItem.value"
+              :class="[tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
+            >
+              {{ tabItem.label }}
+            </v-tab>
           </v-tabs>
 
           <v-tabs-window v-model="tab">
@@ -51,8 +56,8 @@
               <MemberResults />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="comparison">
-              <MemberComparison />
+            <v-tabs-window-item value="todo">
+              <TeamResults />
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>
@@ -64,7 +69,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import MemberComparison from '@/components/calculator/results/member-comparison.vue'
 import MemberResults from '@/components/calculator/results/member-results.vue'
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
@@ -81,8 +85,7 @@ export default defineComponent({
     TeamName,
     TeamSettings,
     TeamResults,
-    MemberResults,
-    MemberComparison
+    MemberResults
   },
   setup() {
     const userStore = useUserStore()
@@ -93,6 +96,11 @@ export default defineComponent({
   },
   data: () => ({
     tab: null,
+    tabs: [
+      { value: 'team', label: 'Team' },
+      { value: 'members', label: 'Members' },
+      { value: 'todo', label: 'TODO' }
+    ],
     currentMemberIndex: 0
   }),
   computed: {
@@ -110,6 +118,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '@/assets/main';
+
+.frosted-tab {
+  background: rgba($surface, 0.8) !important;
+  backdrop-filter: blur(10px);
+}
+.frosted-glass {
+  background: rgba($surface, 0.4) !important;
+  backdrop-filter: blur(10px);
+}
+
+.tab-item {
+  flex: 1;
+}
+
 .team-slot {
   aspect-ratio: 6 / 10;
   max-height: 25dvh;

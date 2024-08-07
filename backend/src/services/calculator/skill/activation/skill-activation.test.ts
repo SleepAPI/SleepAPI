@@ -1,6 +1,5 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
+import { SkillActivation, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
 import { emptyBerrySet } from '../../berry/berry-calculator';
 import {
   activateEnergizingCheer,

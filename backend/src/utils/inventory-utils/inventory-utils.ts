@@ -1,4 +1,4 @@
-import { Produce as Inventory } from '@src/domain/combination/produce';
+import { Produce as Inventory } from 'sleepapi-common';
 
 class InventoryUtilsImpl {
   public addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {

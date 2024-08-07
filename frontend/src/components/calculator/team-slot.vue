@@ -35,23 +35,27 @@
     </v-card>
   </div>
   <div v-else class="d-flex w-100 fill-height transparent">
-    <v-card
-      :loading="teamStore.getMemberLoading(memberIndex)"
-      class="d-flex w-100 fill-height frosted-glass"
-      @click="openDetailsDialog"
-    >
+    <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDetailsDialog">
       <v-icon size="48" color="secondary" class="fill-height w-100 frosted-text">mdi-plus</v-icon>
     </v-card>
   </div>
 
-  <!-- TODO: this will cause mount instantly instead of when slot is clicked, it's just hidden until clicked -->
-  <TeamSlotMenu v-model:show="showTeamSlotDialog" :member-index="memberIndex" />
+  <TeamSlotMenu
+    v-model:show="showTeamSlotDialog"
+    :pokemon-from-pre-exist="pokemonInstance"
+    :full-team="fullTeam"
+    @update-pokemon="updateTeamMember"
+    @duplicate-pokemon="duplicateTeamMember"
+    @toggle-saved-pokemon="toggleSavedState"
+    @remove-pokemon="removeTeamMember"
+  />
 </template>
 
 <script lang="ts">
-import TeamSlotMenu from '@/components/calculator/menus/team-slot-menu.vue'
+import TeamSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { useTeamStore } from '@/stores/team/team-store'
-import { subskill } from 'sleepapi-common'
+import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
+import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -111,11 +115,31 @@ export default defineComponent({
         subskills.push('ERB')
       }
       return subskills.join(' + ')
+    },
+    fullTeam() {
+      return this.teamStore.getTeamSize === MAX_TEAM_MEMBERS
     }
   },
   methods: {
     openDetailsDialog() {
       this.showTeamSlotDialog = true
+    },
+    updateTeamMember(pokemonInstance: PokemonInstanceExt) {
+      this.teamStore.updateTeamMember(pokemonInstance, this.memberIndex)
+    },
+    duplicateTeamMember() {
+      this.teamStore.duplicateMember(this.memberIndex)
+    },
+    removeTeamMember() {
+      this.teamStore.removeMember(this.memberIndex)
+    },
+    async toggleSavedState(state: boolean) {
+      const pokemonToUpdate = this.pokemonInstance
+      if (!pokemonToUpdate) {
+        console.error("Can't find Pokémon to save")
+        return
+      }
+      this.teamStore.updateTeamMember({ ...pokemonToUpdate, saved: state }, this.memberIndex)
     }
   }
 })
@@ -123,11 +147,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import '@/assets/main';
-
-.frosted-glass {
-  background: rgba($surface, 0.4) !important;
-  backdrop-filter: blur(10px);
-}
 
 .transparent {
   background: rgba($surface, 0) !important;

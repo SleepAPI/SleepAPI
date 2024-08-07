@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import { Produce } from '@src/domain/combination/produce';
-import { PokemonIngredientSet } from 'sleepapi-common';
+import { PokemonIngredientSet, Produce } from 'sleepapi-common';
 
 export function calculateAverageProduce(
   averagePokemonCombination: PokemonIngredientSet,

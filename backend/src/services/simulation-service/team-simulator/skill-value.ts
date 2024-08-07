@@ -1,5 +1,5 @@
-import { Produce } from '@src/domain/combination/produce';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { Produce } from 'sleepapi-common';
 
 export class SkillValue {
   private skillValue = 0;

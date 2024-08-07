@@ -16,11 +16,9 @@
 
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time, TimePeriod } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { subskill } from 'sleepapi-common';
+import { SkillActivation, Time, TimePeriod, subskill } from 'sleepapi-common';
 
 /**
  * Calculates a delta left at the end of the day and how that translates into tomorrow's starting energy

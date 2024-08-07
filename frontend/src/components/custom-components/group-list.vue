@@ -33,7 +33,7 @@
           class="w-100 responsive-text"
           size="large"
           rounded="lg"
-          color="surface"
+          color="secondary"
           @click="cancel"
           >Cancel</v-btn
         >

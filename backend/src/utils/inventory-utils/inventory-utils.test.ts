@@ -1,6 +1,5 @@
-import { Produce } from '@src/domain/combination/produce';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { berry, ingredient, prettifyIngredientDrop } from 'sleepapi-common';
+import { Produce, berry, ingredient, prettifyIngredientDrop } from 'sleepapi-common';
 
 describe('emptyInventory', () => {
   it('shall empty inventory', () => {

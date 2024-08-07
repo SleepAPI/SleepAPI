@@ -5,12 +5,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 export enum RouteName {
   Home = 'Home',
   Calculator = 'Calculator',
+  Compare = 'Compare',
   Profile = 'Profile',
   Settings = 'Settings',
   NotFound = 'NotFound'
 }
 
 const CalculatorPage = () => import('@/pages/calculator-page.vue')
+const ComparisonPage = () => import('@/pages/compare/comparison-page.vue')
 const ProfilePage = () => import('@/pages/profile-page.vue')
 const SettingsPage = () => import('@/pages/settings-page.vue')
 const NotFoundPage = () => import('@/pages/not-found/not-found-page.vue')
@@ -27,6 +29,11 @@ const router = createRouter({
       path: '/calculator',
       name: RouteName.Calculator,
       component: CalculatorPage
+    },
+    {
+      path: '/compare',
+      name: RouteName.Compare,
+      component: ComparisonPage
     },
     {
       path: '/profile',

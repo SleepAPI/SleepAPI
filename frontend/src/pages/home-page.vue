@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: Use screenshots from in game / site instead of anime screenshots for the tool images below -->
   <v-container class="pt-12">
     <v-row class="flex-center">
       <v-col cols="auto">
@@ -65,6 +66,13 @@ export default defineComponent({
         src: '/images/home-page/calculator.png',
         icon: 'mdi-square-root',
         to: '/calculator'
+      },
+      {
+        description: 'Compare your Pokémon to each other before deciding your investments.',
+        title: 'Compare',
+        src: '/images/home-page/tierlists.png',
+        icon: 'mdi-compare-horizontal',
+        to: '/compare'
       },
       {
         description: 'Cooking tier lists based on millions of simulated recipe solutions.',

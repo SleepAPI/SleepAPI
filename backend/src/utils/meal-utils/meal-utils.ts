@@ -1,5 +1,3 @@
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
-import { Time, TimePeriod } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
   MEALS_IN_DAY,
@@ -8,7 +6,10 @@ import {
   Recipe,
   SUNDAY_CRIT_CHANCE,
   SUNDAY_CRIT_MULTIPLIER,
+  SkillActivation,
   TASTY_CHANCE_S_CAP,
+  Time,
+  TimePeriod,
   WEEKDAY_CRIT_CHANCE,
   WEEKDAY_CRIT_MULTIPLIER,
   mainskill,

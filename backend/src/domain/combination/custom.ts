@@ -1,5 +1,4 @@
-import { nature, PokemonIngredientSet, subskill } from 'sleepapi-common';
-import { DetailedProduce, Produce } from './produce';
+import { DetailedProduce, nature, PokemonIngredientSet, Produce, subskill } from 'sleepapi-common';
 
 export interface CustomStats {
   level: number;
