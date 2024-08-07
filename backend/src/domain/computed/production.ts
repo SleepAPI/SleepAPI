@@ -1,6 +1,5 @@
-import { berry, nature, Recipe, subskill } from 'sleepapi-common';
+import { berry, nature, Recipe, subskill, Time } from 'sleepapi-common';
 import { CustomPokemonCombinationWithProduce } from '../combination/custom';
-import { Time } from '../time/time';
 
 export interface ProductionStats {
   level: number;

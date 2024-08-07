@@ -1,6 +1,5 @@
 import { ScheduledEvent } from '@src/domain/event/event';
-import { Time, TimePeriod } from '@src/domain/time/time';
-import { MathUtils } from 'sleepapi-common';
+import { MathUtils, Time, TimePeriod } from 'sleepapi-common';
 
 class TimeUtilsImpl {
   public toMinutes(time: Time) {

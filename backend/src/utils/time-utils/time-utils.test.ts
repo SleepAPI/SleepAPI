@@ -1,6 +1,6 @@
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { Time, TimePeriod } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { Time, TimePeriod } from 'sleepapi-common';
 
 describe('toMinutes', () => {
   it('shall convert Time to minutes', () => {

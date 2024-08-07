@@ -32,6 +32,10 @@ describe('HomePage.vue', () => {
         description: "Simulate your Pokémon's production with in-depth data analysis."
       },
       {
+        title: 'Compare',
+        description: 'Compare your Pokémon to each other before deciding your investments.'
+      },
+      {
         title: 'Tier lists',
         description: 'Cooking tier lists based on millions of simulated recipe solutions.'
       },

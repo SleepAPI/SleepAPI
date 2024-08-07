@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-import { PokemonProduce, Produce } from '@src/domain/combination/produce';
+import { PokemonProduce } from '@src/domain/combination/produce';
 import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time } from '@src/domain/time/time';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, mainskill } from 'sleepapi-common';
+import { MathUtils, Produce, Time, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';

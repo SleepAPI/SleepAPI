@@ -1,7 +1,6 @@
-import { Time } from '@src/domain/time/time';
 import { energyFactorFromEnergy } from '@src/services/calculator/energy/energy-calculator';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils } from 'sleepapi-common';
+import { MathUtils, Time } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class EnergyEvent extends ScheduledEvent {

@@ -1,16 +1,6 @@
-import { Produce } from '@src/domain/combination/produce';
-import { Time } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, mainskill } from 'sleepapi-common';
+import { MathUtils, SkillActivation, Time } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
-
-export interface SkillActivation {
-  skill: mainskill.MainSkill;
-  nrOfHelpsToActivate: number;
-  adjustedAmount: number;
-  fractionOfProc: number;
-  adjustedProduce?: Produce;
-}
 
 export class SkillEvent extends ScheduledEvent {
   time: Time;

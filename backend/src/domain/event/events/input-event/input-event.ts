@@ -1,7 +1,6 @@
 import { ProductionStats } from '@src/domain/computed/production';
-import { Time } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { pokemon } from 'sleepapi-common';
+import { Time, pokemon } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export abstract class InputEvent extends ScheduledEvent {

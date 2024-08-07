@@ -1,9 +1,8 @@
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { SetCoverProductionStats } from '@src/domain/computed/production';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { IngredientSet, mainskill, pokemon } from 'sleepapi-common';
+import { IngredientSet, SkillActivation, mainskill, pokemon } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
 

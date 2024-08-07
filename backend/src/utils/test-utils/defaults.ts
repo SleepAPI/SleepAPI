@@ -1,9 +1,17 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { Produce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
-import { TimePeriod } from '@src/domain/time/time';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { berry, ingredient, mainskill, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
+import {
+  Produce,
+  TimePeriod,
+  berry,
+  ingredient,
+  mainskill,
+  maxCarrySize,
+  nature,
+  pokemon,
+  subskill,
+} from 'sleepapi-common';
 
 export const MOCKED_MAIN_SLEEP: TimePeriod = {
   start: {

@@ -3,37 +3,14 @@ import { runWorkerFile } from '@src/services/worker/worker';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
 import path from 'path';
-import { CalculateTeamRequest, CalculateTeamResponse } from 'sleepapi-common';
+import { CalculateTeamRequest, CalculateTeamResponse, SingleProductionRequest } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
-
-export interface ProductionRequest {
-  level: number;
-  ribbon: number;
-  nature: string;
-  subskills: string[];
-  e4eProcs: number;
-  e4eLevel: number;
-  cheer: number;
-  extraHelpful: number;
-  helperBoostProcs: number;
-  helperBoostUnique: number;
-  helperBoostLevel: number;
-  helpingbonus: number;
-  camp: boolean;
-  erb: number;
-  recoveryIncense: boolean;
-  skillLevel: number;
-  mainBedtime: string;
-  mainWakeup: string;
-  ingredientSet: string[];
-  nrOfEvolutions?: number;
-}
 
 class ProductionRouterImpl {
   public async register() {
     BaseRouter.router.post(
       '/calculator/production/:name',
-      async (req: Request<{ name: string }, unknown, ProductionRequest, { pretty?: boolean }>, res: Response) => {
+      async (req: Request<{ name: string }, unknown, SingleProductionRequest, { pretty?: boolean }>, res: Response) => {
         try {
           Logger.log('Entered /calculator/production/:name');
           const { name } = req.params;

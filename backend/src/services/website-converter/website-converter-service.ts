@@ -1,8 +1,6 @@
 import { SurplusIngredients } from '@src/domain/combination/combination';
-import { DetailedProduce } from '@src/domain/combination/produce';
 import { ProductionStats } from '@src/domain/computed/production';
 import { ScheduledEvent } from '@src/domain/event/event';
-import { Summary } from '@src/domain/event/events/summary-event/summary-event';
 import {
   IngredientRankerResult,
   OptimalFlexibleResult,
@@ -10,10 +8,12 @@ import {
 } from '@src/routes/optimal-router/optimal-router';
 import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
 import {
+  DetailedProduce,
   IngredientSet,
   MEALS_IN_DAY,
   MathUtils,
   PokemonIngredientSet,
+  Summary,
   mainskill,
   nature,
   prettifyIngredientDrop,

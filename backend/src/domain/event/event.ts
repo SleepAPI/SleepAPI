@@ -1,4 +1,4 @@
-import { Time } from '../time/time';
+import { Time } from 'sleepapi-common';
 
 export type EventType = 'sleep' | 'energy' | 'help' | 'inventory' | 'info' | 'skill';
 export abstract class ScheduledEvent {

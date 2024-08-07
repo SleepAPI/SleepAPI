@@ -1,11 +1,10 @@
-import { DetailedProduce } from '@src/domain/combination/produce';
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
+import { DetailedProduce, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
@@ -108,6 +107,7 @@ export function calculatePokemonProduction(
     }).detailedProduce;
   }
 
+  // TODO: the filters, the log and the pokemonCombination can we removed with Sleep API 2
   return {
     filters: input,
     production: {

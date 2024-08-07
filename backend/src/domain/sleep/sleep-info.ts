@@ -1,5 +1,4 @@
-import { nature } from 'sleepapi-common';
-import { TimePeriod } from '../time/time';
+import { TimePeriod, nature } from 'sleepapi-common';
 
 export interface SleepInfo {
   period: TimePeriod;

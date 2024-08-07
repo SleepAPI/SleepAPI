@@ -17,7 +17,7 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time } from '@src/domain/time/time';
+import { Time } from 'sleepapi-common';
 import { randomizedSimulation } from './randomized-simulator';
 
 export interface MonteCarloResult {

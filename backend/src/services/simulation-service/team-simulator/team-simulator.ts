@@ -15,11 +15,10 @@
  */
 
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
-import { Time, TimePeriod } from '@src/domain/time/time';
 import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse } from 'sleepapi-common';
+import { CalculateTeamResponse, Time, TimePeriod } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;

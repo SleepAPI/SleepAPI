@@ -1,9 +1,9 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
-import { DetailedProduce } from '@src/domain/combination/produce';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 import {
+  DetailedProduce,
   PokemonIngredientSet,
   berry,
   dessert,

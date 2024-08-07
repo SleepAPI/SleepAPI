@@ -7,12 +7,12 @@ import {
   Recipe,
   recipeLevelBonus,
   RecipeType,
+  SkillActivation,
 } from 'sleepapi-common';
 
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { Contribution } from '@src/domain/computed/contribution';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';

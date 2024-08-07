@@ -1,36 +1,6 @@
-import { Produce } from '@src/domain/combination/produce';
-import { Time } from '@src/domain/time/time';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { IngredientSet, MathUtils, mainskill, prettifyIngredientDrop } from 'sleepapi-common';
+import { MathUtils, Summary, Time, prettifyIngredientDrop } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
-
-export interface Summary {
-  skill: mainskill.MainSkill;
-  skillProcs: number;
-  skillEnergySelfValue: number;
-  skillEnergyOthersValue: number;
-  skillProduceValue: Produce;
-  skillStrengthValue: number;
-  skillDreamShardValue: number;
-  skillPotSizeValue: number;
-  skillHelpsValue: number;
-  skillTastyChanceValue: number;
-
-  nrOfHelps: number;
-  helpsBeforeSS: number;
-  helpsAfterSS: number;
-
-  totalProduce: Produce;
-
-  averageEnergy: number;
-  averageFrequency: number;
-
-  spilledIngredients: IngredientSet[];
-
-  collectFrequency?: Time;
-
-  totalRecovery: number;
-}
 
 export class SummaryEvent extends ScheduledEvent {
   time: Time;

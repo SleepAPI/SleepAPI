@@ -5,7 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "prebuild": "npm install && npm run clean",
+    "prebuild": "npm run clean",
     "build": "tsc && tsc-alias && tsoa spec",
     "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
     "prebuild-watch": "npm run build",

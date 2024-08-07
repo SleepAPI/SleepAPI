@@ -1,7 +1,6 @@
 import { MealError } from '@src/domain/error/meal/meal-error';
-import { SkillActivation } from '@src/domain/event/events/skill-event/skill-event';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
+import { MathUtils, RECIPES, SkillActivation, curry, dessert, mainskill, salad } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
 import {
   CritInfo,

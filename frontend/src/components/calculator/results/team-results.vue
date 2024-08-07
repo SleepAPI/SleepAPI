@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="d-flex flex-column">
+      <v-card class="d-flex flex-column frosted-glass" rounded="0">
         <v-tabs-window v-model="tab" class="flex-grow-1">
           <v-tabs-window-item value="overview">
             <v-card-text style="white-space: pre-wrap" class="text-center">
@@ -20,14 +20,7 @@
           </v-tabs-window-item>
         </v-tabs-window>
 
-        <v-tabs
-          v-model="tab"
-          fixed-tabs
-          stacked
-          bg-color="surface"
-          density="compact"
-          class="custom-tab"
-        >
+        <v-tabs v-model="tab" fixed-tabs stacked density="compact" class="custom-tab">
           <v-tab value="overview"><v-icon icon="mdi-view-dashboard"></v-icon>Overview</v-tab>
           <v-tab value="cooking"><v-icon icon="mdi-pot-mix"></v-icon>Cooking</v-tab>
           <v-tab value="analysis"><v-icon icon="mdi-poll"></v-icon>Analysis</v-tab>
@@ -74,6 +67,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '@/assets/main.scss';
+
 .custom-tab .v-tab__slider {
   top: 0;
 }
