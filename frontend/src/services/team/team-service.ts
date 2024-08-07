@@ -1,4 +1,5 @@
 import serverAxios from '@/router/server-axios'
+import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import {
@@ -9,19 +10,13 @@ import {
 } from '@/types/member/instanced'
 import axios from 'axios'
 import {
-  getIngredient,
-  getNature,
-  getPokemon,
-  getSubskill,
   type BerrySet,
   type CalculateTeamResponse,
   type GetTeamsResponse,
   type IngredientSet,
   type PokemonInstanceExt,
   type PokemonInstanceIdentity,
-  type PokemonInstanceWithMeta,
   type TeamSettingsRequest,
-  type UpsertTeamMemberRequest,
   type UpsertTeamMemberResponse,
   type UpsertTeamMetaRequest,
   type UpsertTeamMetaResponse
@@ -41,7 +36,7 @@ class TeamServiceImpl {
   }) {
     const { teamIndex, memberIndex, member } = params
 
-    const request = this.#toUpsertTeamMemberRequest(member)
+    const request = PokemonInstanceUtils.toUpsertTeamMemberRequest(member)
 
     return await serverAxios.put<UpsertTeamMemberResponse>(
       `team/${teamIndex}/member/${memberIndex}`,
@@ -81,8 +76,8 @@ class TeamServiceImpl {
           if (!existingMember) {
             members.push(undefined)
           } else {
-            const cachedMember = this.#populateMember(existingMember)
-            pokemonStore.upsertPokemon(cachedMember)
+            const cachedMember = PokemonInstanceUtils.toPokemonInstanceExt(existingMember)
+            pokemonStore.upsertLocalPokemon(cachedMember)
             members.push(cachedMember.externalId)
           }
         }
@@ -171,66 +166,6 @@ class TeamServiceImpl {
     }
 
     return result
-  }
-
-  #toUpsertTeamMemberRequest(instancedPokemon: PokemonInstanceExt): UpsertTeamMemberRequest {
-    if (instancedPokemon.ingredients.length !== 3) {
-      throw new Error('Received corrupt ingredient data')
-    } else if (instancedPokemon.subskills.length > 5) {
-      throw new Error('Received corrupt subskill data')
-    }
-
-    return {
-      version: instancedPokemon.version,
-      saved: instancedPokemon.saved,
-      shiny: instancedPokemon.shiny,
-      externalId: instancedPokemon.externalId,
-      pokemon: instancedPokemon.pokemon.name,
-      name: instancedPokemon.name,
-      level: instancedPokemon.level,
-      ribbon: instancedPokemon.ribbon,
-      carrySize: instancedPokemon.carrySize,
-      skillLevel: instancedPokemon.skillLevel,
-      nature: instancedPokemon.nature.name,
-      subskills: instancedPokemon.subskills.map((instancedSubskill) => ({
-        level: instancedSubskill.level,
-        subskill: instancedSubskill.subskill.name
-      })),
-      ingredients: instancedPokemon.ingredients.map((instancedIngredient) => ({
-        level: instancedIngredient.level,
-        ingredient: instancedIngredient.ingredient.name
-      }))
-    }
-  }
-
-  #populateMember(instancedPokemon: PokemonInstanceWithMeta): PokemonInstanceExt {
-    if (instancedPokemon.ingredients.length !== 3) {
-      throw new Error('Received corrupt ingredient data')
-    } else if (instancedPokemon.subskills.length > 5) {
-      throw new Error('Received corrupt subskill data')
-    }
-
-    return {
-      version: instancedPokemon.version,
-      saved: instancedPokemon.saved,
-      shiny: instancedPokemon.shiny,
-      externalId: instancedPokemon.externalId,
-      pokemon: getPokemon(instancedPokemon.pokemon),
-      name: instancedPokemon.name,
-      level: instancedPokemon.level,
-      ribbon: instancedPokemon.ribbon,
-      carrySize: instancedPokemon.carrySize,
-      skillLevel: instancedPokemon.skillLevel,
-      nature: getNature(instancedPokemon.nature),
-      subskills: instancedPokemon.subskills.map((instancedSubskill) => ({
-        level: instancedSubskill.level,
-        subskill: getSubskill(instancedSubskill.subskill)
-      })),
-      ingredients: instancedPokemon.ingredients.map((instancedIngredient) => ({
-        level: instancedIngredient.level,
-        ingredient: getIngredient(instancedIngredient.ingredient)
-      }))
-    }
   }
 }
 

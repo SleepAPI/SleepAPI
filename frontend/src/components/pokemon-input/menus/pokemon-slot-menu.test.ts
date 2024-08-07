@@ -53,7 +53,7 @@ describe('TeamSlotMenu', () => {
   })
 
   it('renders correctly when the slot is filled', async () => {
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     await wrapper.setProps({ show: true, pokemonFromPreExist: mockPokemon })
     expect(wrapper.vm.emptySlot).toBe(false)
     expect(document.querySelector('#emptyMenu')).toBeNull()
@@ -62,7 +62,7 @@ describe('TeamSlotMenu', () => {
 
   it('disables save button when user is not logged in', async () => {
     userStore.tokens = null
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     teamStore.teams[0].members[0] = mockPokemon.externalId // so isEmpty is false and we can see button
     await wrapper.setProps({ show: true, pokemonFromPreExist: mockPokemon })
 
@@ -102,7 +102,7 @@ describe('TeamSlotMenu', () => {
   })
 
   it('opens PokemonInput on edit click', async () => {
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     teamStore.teams[0].members[0] = mockPokemon.externalId
     await wrapper.setProps({ show: true, pokemonFromPreExist: mockPokemon })
 
@@ -135,7 +135,7 @@ describe('TeamSlotMenu', () => {
   })
 
   it('disables duplicate button when team is full', async () => {
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     await wrapper.setProps({ show: true, pokemonFromPreExist: mockPokemon, fullTeam: true })
     const duplicateButton = document.querySelector('#duplicateButton') as HTMLElement
     expect(duplicateButton).not.toBeNull()

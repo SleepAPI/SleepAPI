@@ -1,25 +1,10 @@
 <template>
   <v-menu id="ribbon-menu" v-model="menu" :close-on-content-click="true" offset-y>
     <template #activator="{ props }">
-      <!-- TODO: why does this have -4px inside the compoennt? -->
-      <v-btn
-        v-bind="props"
-        color="surface"
-        icon
-        style="margin-top: -4px; overflow: visible"
-        elevation="0"
-      >
-        <v-badge
-          :content="badgeLabel()"
-          :model-value="ribbon > 0"
-          location="top center"
-          offset-y="-12"
-          color="subskillWhite"
-        >
-          <v-avatar style="overflow: visible">
-            <v-img src="/images/misc/ribbon.png" :class="ribbon === 0 ? 'greyScale' : ''"></v-img>
-          </v-avatar>
-        </v-badge>
+      <v-btn v-bind="props" icon style="overflow: visible" elevation="0" color="transparent">
+        <v-avatar style="overflow: visible" size="32">
+          <v-img :src="ribbonImage" :class="ribbon === 0 ? 'greyScale' : ''"></v-img>
+        </v-avatar>
       </v-btn>
     </template>
 
@@ -47,6 +32,12 @@ export default {
     menu: false,
     ribbonLevels: [0, 1, 2, 3, 4]
   }),
+  computed: {
+    ribbonImage() {
+      const ribbonLevel = Math.max(this.ribbon, 1)
+      return `/images/misc/ribbon${ribbonLevel}.png`
+    }
+  },
   methods: {
     selectValue(value: number) {
       this.updateRibbon(value)
@@ -58,10 +49,6 @@ export default {
     ribbonLabel(level: number) {
       const labels = ['No ribbon', '200 hours', '500 hours', '1000 hours', '2000 hours']
       return labels[level]
-    },
-    badgeLabel() {
-      const labels = ['0', '200', '500', '1000', '2000']
-      return labels[this.ribbon]
     }
   }
 }

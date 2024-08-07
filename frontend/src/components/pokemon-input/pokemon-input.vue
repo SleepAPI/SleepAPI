@@ -6,44 +6,34 @@
           <h5 class="mr-1 text-primary">RP</h5>
           <h2>{{ pokemonInstance.rp }}</h2>
         </v-col>
-        <v-col class="flex-right pr-0 pt-4">
-          <div class="save-container">
-            <span style="font-size: 0.7rem">Save</span>
-            <v-btn
-              id="saveIcon"
-              icon
-              color="background"
-              :class="{ nudge: !userStore.loggedIn }"
-              style="margin-top: -4px"
-              @click="toggleSave"
-            >
-              <v-icon v-if="pokemonInstance.saved" color="accent" size="40">mdi-bookmark</v-icon>
-              <v-icon v-else size="40">mdi-bookmark-outline</v-icon>
-            </v-btn>
-          </div>
+        <v-col class="flex-right pr-0">
+          <RibbonButton :ribbon="pokemonInstance.ribbon" @update-ribbon="updateRibbon" />
+
+          <v-btn
+            id="saveIcon"
+            icon
+            color="background"
+            :class="{ nudge: !userStore.loggedIn }"
+            @click="toggleSave"
+          >
+            <v-icon v-if="pokemonInstance.saved" color="accent" size="32">mdi-star</v-icon>
+            <v-icon v-else size="32">mdi-star-outline</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </div>
 
-    <!-- TODO: can we just class flex-end or flex-right or whatever its called -->
     <v-sheet
       color="surface"
       width="100%"
-      :height="90"
+      :height="85"
       location="top left"
       position="absolute"
-      style="
-        margin-top: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 10px;
-      "
+      style="margin-top: 60px"
     >
-      <RibbonButton :ribbon="pokemonInstance.ribbon" @update-ribbon="updateRibbon" />
     </v-sheet>
 
-    <v-row no-gutters>
+    <v-row no-gutters class="pt-2 pb-2">
       <v-col class="flex-center">
         <PokemonButton :pokemon="pokemonInstance.pokemon" @update-pokemon="updatePokemon" />
       </v-col>
@@ -321,11 +311,5 @@ export default defineComponent({
   .responsive-icon {
     font-size: 0.7rem !important;
   }
-}
-
-.save-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 </style>

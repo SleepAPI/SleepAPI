@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
@@ -68,7 +69,12 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['edit-pokemon', 'duplicate-pokemon', 'remove-pokemon'],
+  emits: ['edit-pokemon', 'duplicate-pokemon', 'remove-pokemon', 'toggle-save-state'],
+  setup() {
+    const pokemonStore = usePokemonStore()
+
+    return { pokemonStore }
+  },
   data: () => ({
     showDialog: false
   }),
@@ -122,8 +128,14 @@ export default defineComponent({
       this.$emit('remove-pokemon', pokemonInstance)
     },
     async toggleSavedState(state: boolean) {
-      console.log('Save from comparison view not implemented')
-      // TODO: implement, look at how team slot implements this
+      const updatedMon = { ...this.pokemonInstance.member, saved: state }
+      if (state) {
+        this.pokemonStore.upsertServerPokemon(updatedMon)
+      } else {
+        this.pokemonStore.deleteServerPokemon(this.pokemonInstance.member.externalId)
+      }
+
+      this.$emit('toggle-save-state', updatedMon)
     }
   }
 })

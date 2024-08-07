@@ -1,8 +1,9 @@
 import { config } from '@src/config/config';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
 import { DBUser, UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
 import { OAuth2Client, TokenInfo } from 'google-auth-library';
-import { LoginResponse, RefreshResponse, uuid } from 'sleepapi-common';
+import { LoginResponse, PokemonInstanceWithMeta, RefreshResponse, uuid } from 'sleepapi-common';
 
 interface DecodedUserData {
   sub: string;
@@ -77,5 +78,73 @@ export async function verify(access_token: string) {
 }
 
 export async function deleteUser(user: DBUser) {
-  return UserDAO.delete(user);
+  UserDAO.delete(user);
+}
+
+export async function getSavedPokemon(user: DBUser): Promise<PokemonInstanceWithMeta[]> {
+  const userPokemon = await PokemonDAO.findMultiple({ fk_user_id: user.id, saved: true });
+
+  return userPokemon.map((pkmn) => ({
+    externalId: pkmn.external_id,
+    version: pkmn.version,
+    saved: pkmn.saved,
+    shiny: pkmn.shiny,
+    pokemon: pkmn.pokemon,
+    name: pkmn.name,
+    level: pkmn.level,
+    ribbon: pkmn.ribbon,
+    carrySize: pkmn.carry_size,
+    skillLevel: pkmn.skill_level,
+    nature: pkmn.nature,
+    subskills: PokemonDAO.filterFilledSubskills(pkmn),
+    ingredients: [
+      {
+        level: 0,
+        ingredient: pkmn.ingredient_0,
+      },
+      {
+        level: 30,
+        ingredient: pkmn.ingredient_30,
+      },
+      {
+        level: 60,
+        ingredient: pkmn.ingredient_60,
+      },
+    ],
+  }));
+}
+
+export async function upsertPokemon(params: { user: DBUser; pokemonInstance: PokemonInstanceWithMeta }) {
+  const { user, pokemonInstance } = params;
+
+  PokemonDAO.upsert({
+    updated: {
+      external_id: pokemonInstance.externalId,
+      fk_user_id: user.id,
+      saved: pokemonInstance.saved,
+      shiny: pokemonInstance.shiny,
+      pokemon: pokemonInstance.pokemon,
+      name: pokemonInstance.name,
+      level: pokemonInstance.level,
+      ribbon: pokemonInstance.ribbon,
+      carry_size: pokemonInstance.carrySize,
+      skill_level: pokemonInstance.skillLevel,
+      nature: pokemonInstance.nature,
+      subskill_10: PokemonDAO.subskillForLevel(10, pokemonInstance.subskills),
+      subskill_25: PokemonDAO.subskillForLevel(25, pokemonInstance.subskills),
+      subskill_50: PokemonDAO.subskillForLevel(50, pokemonInstance.subskills),
+      subskill_75: PokemonDAO.subskillForLevel(75, pokemonInstance.subskills),
+      subskill_100: PokemonDAO.subskillForLevel(100, pokemonInstance.subskills),
+      ingredient_0: PokemonDAO.ingredientForLevel(0, pokemonInstance.ingredients),
+      ingredient_30: PokemonDAO.ingredientForLevel(30, pokemonInstance.ingredients),
+      ingredient_60: PokemonDAO.ingredientForLevel(60, pokemonInstance.ingredients),
+    },
+    filter: { external_id: pokemonInstance.externalId },
+  });
+}
+
+export async function deletePokemon(params: { user: DBUser; externalId: string }) {
+  const { user, externalId } = params;
+
+  PokemonDAO.delete({ fk_user_id: user.id, external_id: externalId });
 }

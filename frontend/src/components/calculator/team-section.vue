@@ -36,7 +36,7 @@
     <v-row>
       <v-col cols="12">
         <v-card :loading="teamStore.loadingTeams" color="transparent">
-          <v-tabs v-model="tab" fixed-tabs class="d-flex justify-space-around">
+          <v-tabs v-model="tab" class="d-flex justify-space-around">
             <v-tab
               v-for="tabItem in tabs"
               :key="tabItem.value"

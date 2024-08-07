@@ -40,7 +40,7 @@
     </v-card>
   </div>
 
-  <TeamSlotMenu
+  <PokemonSlotMenu
     v-model:show="showTeamSlotDialog"
     :pokemon-from-pre-exist="pokemonInstance"
     :full-team="fullTeam"
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import TeamSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
+import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
@@ -61,7 +61,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'TeamSlot',
   components: {
-    TeamSlotMenu
+    PokemonSlotMenu
   },
   props: {
     memberIndex: {

@@ -7,10 +7,7 @@
           <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
             >Add</v-list-item
           >
-          <!-- TODO: implement and then remove disabled -->
-          <v-list-item prepend-icon="mdi-bookmark-outline" disabled @click="openCollection"
-            >Saved</v-list-item
-          >
+          <v-list-item prepend-icon="mdi-import" @click="handleSavedClick">Pokebox</v-list-item>
         </div>
         <div v-else id="filledMenu">
           <!-- Filled slot  -->
@@ -20,9 +17,11 @@
           <v-list-item
             id="saveButton"
             :disabled="!userStore.loggedIn"
-            :prepend-icon="savedState.state ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+            :prepend-icon="
+              savedState.state ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'
+            "
             @click="save"
-            >{{ savedState.state ? 'Unsave' : 'Save' }}</v-list-item
+            >{{ savedState.state ? 'Remove from Pokebox' : 'Save to Pokebox' }}</v-list-item
           >
           <v-list-item
             id="duplicateButton"
@@ -50,6 +49,7 @@
 </template>
 
 <script lang="ts">
+import PokeboxList from '@/components/pokemon-input/menus/pokebox-list.vue'
 import PokemonInput from '@/components/pokemon-input/pokemon-input.vue'
 import PokemonSearch from '@/components/pokemon-input/pokemon-search.vue'
 import { useUserStore } from '@/stores/user-store'
@@ -60,7 +60,8 @@ export default defineComponent({
   name: 'PokemonSlotMenu',
   components: {
     PokemonSearch,
-    PokemonInput
+    PokemonInput,
+    PokeboxList
   },
   props: {
     show: {
@@ -111,12 +112,20 @@ export default defineComponent({
       return this.pokemonFromPreExist === undefined
     }
   },
+  watch: {
+    pokemonFromPreExist() {
+      this.updateInitialSavedState()
+    }
+  },
   mounted() {
-    const initialSavedState = this.pokemonFromPreExist?.saved ?? false
-    this.savedState.serverState = initialSavedState
-    this.savedState.state = initialSavedState
+    this.updateInitialSavedState()
   },
   methods: {
+    updateInitialSavedState() {
+      const initialSavedState = this.pokemonFromPreExist?.saved ?? false
+      this.savedState.serverState = initialSavedState
+      this.savedState.state = initialSavedState
+    },
     handleAddClick() {
       this.closeSlotMenuDialog()
       this.openSubDialog('PokemonSearch', {})
@@ -126,6 +135,10 @@ export default defineComponent({
       this.openSubDialog('PokemonInput', {
         pokemonFromPreExist: this.pokemonFromPreExist
       })
+    },
+    handleSavedClick() {
+      this.closeSlotMenuDialog()
+      this.openSubDialog('PokeboxList', {})
     },
     openSubDialog(dialogComponent: string, props: object) {
       this.currentDialogComponent = dialogComponent
@@ -168,10 +181,6 @@ export default defineComponent({
         this.$emit('remove-pokemon', this.pokemonFromPreExist)
         this.closeSlotMenuDialog()
       }
-    },
-    openCollection() {
-      // TODO: call backend for all pokemon for this user that are saved
-      console.log('Not implemented..') // TODO:
     },
     updatePokemonInstance(pokemonInstance: PokemonInstanceExt) {
       this.$emit('update-pokemon', pokemonInstance)

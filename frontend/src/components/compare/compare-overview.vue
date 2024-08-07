@@ -5,7 +5,7 @@
       <v-card class="d-flex flex-column rounded-t-0">
         <v-data-table key="key" :items="members" :headers="headers" hide-default-footer>
           <template #item.member="{ item }">
-            <div style="padding-right: 12px">
+            <div>
               <div class="flex-center" style="max-height: 40px; overflow: hidden">
                 <v-img
                   :src="`/images/pokemon/${item.pokemonName.toLowerCase()}.png`"
@@ -20,14 +20,14 @@
           </template>
 
           <template #item.berries="{ item }">
-            <div class="flex-start">
+            <div class="flex-center" style="padding-right: 11px">
               <v-img
                 :src="`/images/berries/${item.berryName?.toLowerCase()}.png`"
                 height="24"
                 width="24"
               ></v-img>
             </div>
-            <div class="text-start">
+            <div class="text-center" style="padding-right: 11px">
               {{ item.berries }}
             </div>
           </template>
@@ -38,7 +38,7 @@
                 v-for="(ingredient, index) in item.ingredientList"
                 :key="index"
                 class="flex-start"
-                cols="3"
+                cols="4"
               >
                 <div class="flex-center flex-column">
                   <v-img :src="ingredientImage(ingredient.name)" height="24" width="24"></v-img>
@@ -51,7 +51,7 @@
           </template>
 
           <template #item.skillProcs="{ item }">
-            <div style="padding-right: 0; width: 24px">
+            <div class="flex-center flex-column">
               <div>
                 <v-img :src="`/images/misc/skillproc.png`" height="24" width="24"></v-img>
               </div>
@@ -59,6 +59,32 @@
                 {{ item.skillProcs }}
               </div>
             </div>
+            <div class="flex-center flex-column">
+              <div>
+                <v-img :src="`/images/mainskill/strength.png`" height="24" width="24"></v-img>
+              </div>
+              <div class="text-center">27638</div>
+            </div>
+            <!-- <v-row dense>
+              <v-col cols="6">
+                <div class="flex-center flex-column">
+                  <div>
+                    <v-img :src="`/images/misc/skillproc.png`" height="24" width="24"></v-img>
+                  </div>
+                  <div class="text-center">
+                    {{ item.skillProcs }}
+                  </div>
+                </div>
+              </v-col>
+              <v-col cols="6">
+                <div class="flex-center flex-column">
+                  <div>
+                    <v-img :src="`/images/mainskill/strength.png`" height="24" width="24"></v-img>
+                  </div>
+                  <div class="text-center">27638</div>
+                </div>
+              </v-col>
+            </v-row> -->
           </template>
         </v-data-table>
       </v-card>
@@ -79,6 +105,12 @@ type DataTableHeader = {
   sortable?: boolean
 }
 
+// TODO: tomorrow:
+// fix skill value under procs
+// fix so unsave from compare doesnt delete from db
+// test
+// go live
+
 export default defineComponent({
   name: 'TeamResults',
   props: {
@@ -90,9 +122,9 @@ export default defineComponent({
   data: () => ({
     headers: [
       { title: 'Name', key: 'member', sortable: true, align: 'center' },
-      { title: 'Berries', key: 'berries', sortable: true },
-      { title: 'Ingredients', key: 'ingredients', sortable: true },
-      { title: 'Skill procs', key: 'skillProcs', sortable: true }
+      { title: 'Berry', key: 'berries', sortable: true, align: 'center' },
+      { title: 'Ingredient', key: 'ingredients', sortable: true, align: 'center' },
+      { title: 'Skill', key: 'skillProcs', sortable: true, align: 'center' }
     ] as DataTableHeader[]
   }),
   computed: {
@@ -124,14 +156,15 @@ export default defineComponent({
         const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
 
         const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount, 1),
+          amount: MathUtils.round(amount - ingMagnetAmount, 1),
           name: ingredient.name.toLowerCase()
         }))
 
-        result.push({
-          amount: MathUtils.round(ingMagnetAmount, 2),
-          name: 'magnet'
-        })
+        // TODO: move these to skill value
+        // result.push({
+        //   amount: MathUtils.round(ingMagnetAmount, 2),
+        //   name: 'magnet'
+        // })
 
         return result
       } else {
@@ -155,8 +188,7 @@ export default defineComponent({
 .v-table > .v-table__wrapper > table > thead > tr > th,
 .v-table > .v-table__wrapper > table > tfoot > tr > td,
 .v-table > .v-table__wrapper > table > tfoot > tr > th {
-  padding: 0 4px !important;
-  padding-left: 8px !important;
-  border-right: 1px;
+  padding: 0 0px !important;
+  padding-left: 0px !important;
 }
 </style>

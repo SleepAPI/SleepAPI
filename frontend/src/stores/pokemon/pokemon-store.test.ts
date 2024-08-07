@@ -36,7 +36,7 @@ describe('Pokemon Store', () => {
 
   it('should upsert a pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     expect(pokemonStore.pokemon).toEqual({
       'external-id': mockPokemon
@@ -45,10 +45,10 @@ describe('Pokemon Store', () => {
 
   it('should update an existing pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     const updatedPokemon = { ...mockPokemon, name: 'Raichu' }
-    pokemonStore.upsertPokemon(updatedPokemon)
+    pokemonStore.upsertLocalPokemon(updatedPokemon)
 
     expect(pokemonStore.pokemon).toEqual({
       'external-id': updatedPokemon
@@ -57,7 +57,7 @@ describe('Pokemon Store', () => {
 
   it('should remove a pokemon correctly', () => {
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     expect(pokemonStore.pokemon).toEqual({
       'external-id': mockPokemon
@@ -69,7 +69,7 @@ describe('Pokemon Store', () => {
 
   it('should get a pokemon by externalId correctly', () => {
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     const retrievedPokemon = pokemonStore.getPokemon(externalId)
     expect(retrievedPokemon).toEqual(mockPokemon)

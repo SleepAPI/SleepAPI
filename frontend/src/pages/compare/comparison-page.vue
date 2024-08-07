@@ -14,6 +14,7 @@
           @edit-pokemon="editCompareMember"
           @duplicate-pokemon="duplicateCompareMember"
           @remove-pokemon="removeCompareMember"
+          @toggle-save-state="toggleSaveState"
         />
       </v-col>
 
@@ -46,7 +47,7 @@
     <v-row>
       <v-col cols="12">
         <v-card color="transparent" :loading="loading">
-          <v-tabs v-model="tab" fixed-tabs class="d-flex justify-space-around">
+          <v-tabs v-model="tab" class="d-flex justify-space-around">
             <v-tab
               v-for="tabItem in tabs"
               :key="tabItem.value"
@@ -84,6 +85,7 @@ import CompareSlot from '@/components/compare/compare-slot.vue'
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { ProductionService } from '@/services/production/production-service'
 import { randomName } from '@/services/utils/name-utils'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import {
   uuid,
@@ -96,6 +98,10 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ComparisonPage',
   components: { PokemonSlotMenu, CompareSlot, CompareOverview },
+  setup() {
+    const pokemonStore = usePokemonStore()
+    return { pokemonStore }
+  },
   data: () => ({
     pokemonToCompare: [] as MemberProductionExt[],
     showDialog: false,
@@ -129,6 +135,12 @@ export default defineComponent({
         berries: production.produce.berries
       }
       this.pokemonToCompare.push(memberProduction)
+
+      const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
+      if (pokemonInstance.saved && previouslyExisted === undefined) {
+        this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      }
+
       this.loading = false
     },
     async editCompareMember(pokemonInstance: PokemonInstanceExt) {
@@ -136,6 +148,19 @@ export default defineComponent({
       const simulationData: SingleProductionResponse =
         await ProductionService.calculateSingleProduction(pokemonInstance)
       const production: DetailedProduce = simulationData.production.detailedProduce
+
+      // if user chose to save mon in edit and it wasn't saved before, we upsert in server
+      // if user chose to unsave mon in edit and it was saved before, we delete in server
+      const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
+      if (pokemonInstance.saved && previouslyExisted === undefined) {
+        this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      } else if (
+        previouslyExisted !== undefined &&
+        previouslyExisted.saved !== pokemonInstance.saved
+      ) {
+        // TODO: this pokemon could still be used in some teams, in which case we might still want to upsert rather than delete
+        this.pokemonStore.deleteServerPokemon(pokemonInstance.externalId)
+      }
 
       const memberProduction: MemberProductionExt = {
         member: pokemonInstance,
@@ -176,6 +201,18 @@ export default defineComponent({
       this.pokemonToCompare = this.pokemonToCompare.filter(
         (pkmn) => pkmn.member.externalId !== pokemonInstance.externalId
       )
+    },
+    toggleSaveState(pokemonInstance: PokemonInstanceExt) {
+      this.pokemonToCompare = this.pokemonToCompare.map((pkmn) => ({
+        ...pkmn,
+        member: {
+          ...pkmn.member,
+          saved:
+            pkmn.member.externalId === pokemonInstance.externalId
+              ? pokemonInstance.saved
+              : pkmn.member.saved
+        }
+      }))
     }
   }
 })

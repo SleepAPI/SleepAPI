@@ -1,12 +1,9 @@
-import { DBPokemon, PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
 import { DBTeamWithoutVersion, TeamDAO } from '@src/database/dao/team/team-dao';
 import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
 import { DBUser } from '@src/database/dao/user/user-dao';
-import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
 import {
   GetTeamsResponse,
-  IngredientInstance,
-  SubskillInstance,
   UpsertTeamMemberRequest,
   UpsertTeamMemberResponse,
   UpsertTeamMetaResponse,
@@ -62,14 +59,14 @@ export async function upsertTeamMember(params: {
       carry_size: request.carrySize,
       skill_level: request.skillLevel,
       nature: request.nature,
-      subskill_10: subskillForLevel(10, request.subskills),
-      subskill_25: subskillForLevel(25, request.subskills),
-      subskill_50: subskillForLevel(50, request.subskills),
-      subskill_75: subskillForLevel(75, request.subskills),
-      subskill_100: subskillForLevel(100, request.subskills),
-      ingredient_0: ingredientForLevel(0, request.ingredients),
-      ingredient_30: ingredientForLevel(30, request.ingredients),
-      ingredient_60: ingredientForLevel(60, request.ingredients),
+      subskill_10: PokemonDAO.subskillForLevel(10, request.subskills),
+      subskill_25: PokemonDAO.subskillForLevel(25, request.subskills),
+      subskill_50: PokemonDAO.subskillForLevel(50, request.subskills),
+      subskill_75: PokemonDAO.subskillForLevel(75, request.subskills),
+      subskill_100: PokemonDAO.subskillForLevel(100, request.subskills),
+      ingredient_0: PokemonDAO.ingredientForLevel(0, request.ingredients),
+      ingredient_30: PokemonDAO.ingredientForLevel(30, request.ingredients),
+      ingredient_60: PokemonDAO.ingredientForLevel(60, request.ingredients),
     },
     filter: { external_id: request.externalId },
   });
@@ -92,7 +89,7 @@ export async function upsertTeamMember(params: {
     carrySize: upsertedMember.carry_size,
     skillLevel: upsertedMember.skill_level,
     nature: upsertedMember.nature,
-    subskills: filterFilledSubskills(upsertedMember),
+    subskills: PokemonDAO.filterFilledSubskills(upsertedMember),
     ingredients: [
       {
         level: 0,
@@ -132,38 +129,4 @@ export async function deleteMember(params: { teamIndex: number; memberIndex: num
   if (!pokemon.saved && nrOfTimesInTeams === 0) {
     await PokemonDAO.delete(pokemon);
   }
-}
-
-function subskillForLevel(level: number, subskills: SubskillInstance[]) {
-  return subskills.find((subskill) => subskill.level === level)?.subskill;
-}
-
-function filterFilledSubskills(subskills: DBPokemon): SubskillInstance[] {
-  const filledSubskills: SubskillInstance[] = [];
-
-  if (subskills.subskill_10) {
-    filledSubskills.push({ level: 10, subskill: subskills.subskill_10 });
-  }
-  if (subskills.subskill_25) {
-    filledSubskills.push({ level: 25, subskill: subskills.subskill_25 });
-  }
-  if (subskills.subskill_50) {
-    filledSubskills.push({ level: 50, subskill: subskills.subskill_50 });
-  }
-  if (subskills.subskill_75) {
-    filledSubskills.push({ level: 75, subskill: subskills.subskill_75 });
-  }
-  if (subskills.subskill_100) {
-    filledSubskills.push({ level: 100, subskill: subskills.subskill_100 });
-  }
-
-  return filledSubskills;
-}
-
-function ingredientForLevel(level: number, ingredients: IngredientInstance[]) {
-  const ingredient = ingredients.find((ingredient) => ingredient.level === level)?.ingredient;
-  if (!ingredient) {
-    throw new IngredientError('Missing required ingredient in upsert member request for level: ' + level);
-  }
-  return ingredient;
 }
