@@ -1,12 +1,21 @@
 <template>
   <v-dialog v-model="pokemonMenu" max-width="550px" class="flex-center">
     <template #activator="{ props }">
-      <v-btn icon size="150" color="#19122400" v-bind="props" elevation="0" @click="openMenu">
-        <v-badge icon="mdi-pencil" color="primary" offset-x="50" offset-y="30">
+      <v-btn
+        icon
+        size="120"
+        color="transparent"
+        v-bind="props"
+        elevation="0"
+        class="flex-center"
+        @click="openMenu"
+      >
+        <v-badge icon="mdi-pencil" color="primary" offset-x="30" offset-y="40">
           <v-img
             :src="`/images/pokemon/${pokemon.name.toLowerCase()}.png`"
-            max-height="150px"
-            width="180px"
+            height="150px"
+            width="150px"
+            cover
           />
         </v-badge>
       </v-btn>
@@ -67,3 +76,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.v-btn > * {
+  // Not sure why, but this makes the click area smaller
+  pointer-events: none;
+}
+</style>

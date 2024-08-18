@@ -67,7 +67,6 @@ export class TeamSimulator {
   }
 
   public simulate() {
-    // TODO: init starts day which collects inventory and banked procs, doing this at start of day means last night doesn't get counted
     this.init();
 
     while (this.daytime()) {
@@ -103,6 +102,7 @@ export class TeamSimulator {
   }
 
   public results(): CalculateTeamResponse {
+    this.collectInventory();
     // TODO: return more info, total team's ingredients, each member's stats etc
 
     return { members: this.memberStates.map((m) => m.averageResults(this.run)) };

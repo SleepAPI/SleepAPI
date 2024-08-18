@@ -1,10 +1,20 @@
 import { config } from '@src/config/config';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
 import { UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
-import { client, deleteUser, refresh, signup, verify } from '@src/services/api-service/login/login-service';
+import {
+  client,
+  deletePokemon,
+  deleteUser,
+  getSavedPokemon,
+  refresh,
+  signup,
+  upsertPokemon,
+  verify,
+} from '@src/services/api-service/login/login-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
-import { uuid } from 'sleepapi-common';
+import { PokemonInstanceWithMeta, uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
@@ -15,7 +25,7 @@ jest.mock('@src/utils/time-utils/time-utils', () => ({
 
 beforeEach(() => {
   uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
-  MockService.init({ UserDAO, client });
+  MockService.init({ UserDAO, PokemonDAO, client });
 });
 
 afterEach(() => {
@@ -241,3 +251,119 @@ describe('delete', () => {
     expect(await UserDAO.findMultiple()).toEqual([]);
   });
 });
+
+describe('getSavedPokemon', () => {
+  it("shall return a user's saved pokemon", async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+    const pkmnSaved = await PokemonDAO.insert({
+      ...basePokemon,
+      saved: true,
+      external_id: 'saved id',
+      fk_user_id: user.id,
+    });
+    await PokemonDAO.insert({ ...basePokemon, saved: false, external_id: 'not saved id', fk_user_id: user.id });
+
+    expect((await getSavedPokemon(user)).map((pkmn) => pkmn.externalId)).toEqual([pkmnSaved.external_id]);
+  });
+});
+
+describe('upsertPokemon', () => {
+  const pokemonInstance: PokemonInstanceWithMeta = {
+    carrySize: 0,
+    externalId: 'ext id',
+    ingredients: [
+      { level: 0, ingredient: 'ing0' },
+      { level: 30, ingredient: 'ing30' },
+      { level: 60, ingredient: 'ing60' },
+    ],
+    level: 0,
+    name: 'name',
+    nature: 'nature',
+    pokemon: 'pokemon',
+    ribbon: 0,
+    saved: false,
+    shiny: false,
+    skillLevel: 0,
+    subskills: [],
+    version: 0,
+  };
+  it('shall insert pokemon if not exists and saved is true', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+
+    await upsertPokemon({ user, pokemonInstance: { ...pokemonInstance, saved: true } });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(1);
+  });
+
+  it('shall update pokemon if pre-exists', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+
+    await upsertPokemon({ user, pokemonInstance: { ...pokemonInstance, saved: true } });
+    await upsertPokemon({ user, pokemonInstance: { ...pokemonInstance, saved: true } });
+
+    const pkmns = await PokemonDAO.findMultiple();
+    expect(pkmns).toHaveLength(1);
+    expect(pkmns[0].version).toBe(2); // it updated
+  });
+
+  it('shall delete pokemon if saved false and does not exist in any teams', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+
+    await upsertPokemon({ user, pokemonInstance: { ...pokemonInstance, saved: false } });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(0);
+  });
+});
+
+describe('deletePokemon', () => {
+  it('shall delete specific pokemon for user', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+    const pkmn = await PokemonDAO.insert({
+      ...basePokemon,
+      saved: true,
+      external_id: 'saved id',
+      fk_user_id: user.id,
+    });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(1);
+
+    await deletePokemon({ user, externalId: pkmn.external_id });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(0);
+  });
+
+  it('shall not delete if user id matches, but external id doesnt', async () => {
+    const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
+    await PokemonDAO.insert({
+      ...basePokemon,
+      saved: true,
+      external_id: 'saved id',
+      fk_user_id: user.id,
+    });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(1);
+
+    await deletePokemon({ user, externalId: 'incorrect' });
+
+    expect(await PokemonDAO.findMultiple()).toHaveLength(1);
+  });
+});
+
+const basePokemon = {
+  shiny: false,
+  pokemon: 'Pikachu',
+  name: 'Sparky',
+  skill_level: 5,
+  carry_size: 10,
+  level: 25,
+  ribbon: 0,
+  nature: 'Brave',
+  subskill_10: 'Thunderbolt',
+  subskill_25: 'Quick Attack',
+  subskill_50: 'Iron Tail',
+  subskill_75: 'Electro Ball',
+  subskill_100: 'Thunder',
+  ingredient_0: 'Berry',
+  ingredient_30: 'Potion',
+  ingredient_60: 'Elixir',
+};

@@ -164,7 +164,7 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
-      pokemonStore.upsertPokemon(updatedMember)
+      pokemonStore.upsertLocalPokemon(updatedMember)
 
       if (userStore.loggedIn) {
         try {

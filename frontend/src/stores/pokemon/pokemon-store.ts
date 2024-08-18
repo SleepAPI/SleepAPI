@@ -1,3 +1,5 @@
+import { UserService } from '@/services/user/user-service'
+import { useUserStore } from '@/stores/user-store'
 import { defineStore } from 'pinia'
 import { RP, type PokemonInstanceExt } from 'sleepapi-common'
 
@@ -10,7 +12,7 @@ export const usePokemonStore = defineStore('pokemon', {
     pokemon: {}
   }),
   actions: {
-    upsertPokemon(pokemon: PokemonInstanceExt) {
+    upsertLocalPokemon(pokemon: PokemonInstanceExt) {
       // TODO: instead of calcing we probably should store in db on save and load here
       const rpUtil = new RP(pokemon)
       pokemon.rp = rpUtil.calc()
@@ -18,6 +20,30 @@ export const usePokemonStore = defineStore('pokemon', {
     },
     removePokemon(externalId: string) {
       delete this.pokemon[externalId]
+    },
+    upsertServerPokemon(pokemon: PokemonInstanceExt) {
+      const userStore = useUserStore()
+
+      if (userStore.loggedIn) {
+        try {
+          UserService.upsertPokemon(pokemon)
+        } catch (error) {
+          console.error('Error upserting pokemon in server')
+        }
+      }
+
+      this.pokemon[pokemon.externalId] = pokemon
+    },
+    deleteServerPokemon(externalId: string) {
+      const userStore = useUserStore()
+
+      if (userStore.loggedIn) {
+        try {
+          UserService.deletePokemon(externalId)
+        } catch (error) {
+          console.error('Error upserting pokemon in server')
+        }
+      }
     }
   },
   getters: {

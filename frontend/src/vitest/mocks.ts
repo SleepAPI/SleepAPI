@@ -6,7 +6,11 @@ export function createMockPokemon(attrs?: Partial<PokemonInstanceExt>): PokemonI
     externalId: 'external-id',
     pokemon: pokemon.PIKACHU,
     carrySize: 10,
-    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
+    ingredients: [
+      { level: 0, ingredient: ingredient.FANCY_APPLE },
+      { level: 30, ingredient: ingredient.FANCY_APPLE },
+      { level: 60, ingredient: ingredient.FANCY_APPLE }
+    ],
     level: 10,
     ribbon: 0,
     nature: nature.BASHFUL,

@@ -17,10 +17,10 @@
       <div style="position: absolute; bottom: 0%; width: 100%">
         <v-card
           class="text-center responsive-text rounded-t-0"
-          color="subskillGold"
+          color="subskillWhite"
           location="bottom center"
         >
-          {{ subskillBadge }}
+          {{ rpBadge }}
         </v-card>
       </div>
     </v-card>
@@ -38,7 +38,7 @@
     <PokemonSlotMenu
       v-model:show="showDialog"
       :pokemon-from-pre-exist="pokemonInstance.member"
-      :full-team="fullTeam"
+      :full-team="comparisonStore.fullTeam"
       @update-pokemon="editCompareMember"
       @duplicate-pokemon="duplicateCompareMember"
       @toggle-saved-pokemon="toggleSavedState"
@@ -49,8 +49,10 @@
 
 <script lang="ts">
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
-import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
+import { RP, type PokemonInstanceExt } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -62,13 +64,15 @@ export default defineComponent({
     pokemonInstance: {
       type: Object as PropType<MemberProductionExt>,
       required: true
-    },
-    fullTeam: {
-      type: Boolean,
-      required: true
     }
   },
-  emits: ['edit-pokemon', 'duplicate-pokemon', 'remove-pokemon'],
+  emits: ['edit-pokemon', 'duplicate-pokemon', 'remove-pokemon', 'toggle-save-state'],
+  setup() {
+    const pokemonStore = usePokemonStore()
+    const comparisonStore = useComparisonStore()
+
+    return { pokemonStore, comparisonStore }
+  },
   data: () => ({
     showDialog: false
   }),
@@ -81,31 +85,10 @@ export default defineComponent({
     level() {
       return `Level ${this.pokemonInstance.member.level}`
     },
-    erb() {
-      return (
-        this.pokemonInstance.member.subskills &&
-        this.pokemonInstance.member.subskills.some(
-          (s) => s.subskill.name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase()
-        )
-      )
-    },
-    hb() {
-      return (
-        this.pokemonInstance.member.subskills &&
-        this.pokemonInstance.member.subskills.some(
-          (s) => s.subskill.name.toLowerCase() === subskill.HELPING_BONUS.name.toLowerCase()
-        )
-      )
-    },
-    subskillBadge() {
-      const subskills = []
-      if (this.hb) {
-        subskills.push('HB')
-      }
-      if (this.erb) {
-        subskills.push('ERB')
-      }
-      return subskills.join(' + ')
+    rpBadge() {
+      const rpUtil = new RP(this.pokemonInstance.member)
+      const rp = this.pokemonInstance.member.rp ?? rpUtil.calc()
+      return `RP ${rp}`
     }
   },
   methods: {
@@ -122,8 +105,10 @@ export default defineComponent({
       this.$emit('remove-pokemon', pokemonInstance)
     },
     async toggleSavedState(state: boolean) {
-      console.log('Save from comparison view not implemented')
-      // TODO: implement, look at how team slot implements this
+      const updatedMon = { ...this.pokemonInstance.member, saved: state }
+      this.pokemonStore.upsertServerPokemon(updatedMon)
+
+      this.$emit('toggle-save-state', updatedMon)
     }
   }
 })

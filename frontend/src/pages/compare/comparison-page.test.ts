@@ -4,6 +4,7 @@ import { mainskill, pokemon, type SingleProductionResponse } from 'sleepapi-comm
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ProductionService } from '@/services/production/production-service'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
@@ -70,7 +71,6 @@ describe('ComparisonPage', () => {
     ProductionService.calculateSingleProduction = vi.fn().mockResolvedValue(mockResponse)
     wrapper = mount(ComparisonPage)
     wrapper.setData({
-      pokemonToCompare: [mockMemberProduction],
       showDialog: false,
       tab: 'overview',
       tabs: [
@@ -83,7 +83,11 @@ describe('ComparisonPage', () => {
     await nextTick()
   })
 
-  it('renders correctly with initial data', () => {
+  it('renders correctly with initial data', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    await nextTick()
+
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.findAllComponents({ name: 'CompareSlot' })).toHaveLength(1)
   })
@@ -100,31 +104,41 @@ describe('ComparisonPage', () => {
   })
 
   it('adds a new pokemon to compare members', async () => {
+    const compStore = useComparisonStore()
+    compStore.addMember(mockMemberProduction)
+
     const newPokemon = createMockPokemon({ name: 'Misty' })
     await wrapper.vm.addToCompareMembers(newPokemon)
 
-    expect(wrapper.vm.pokemonToCompare).toHaveLength(2)
-    expect(wrapper.vm.pokemonToCompare[1].member.name).toBe('Misty')
+    expect(compStore.members).toHaveLength(2)
+    expect(compStore.members[1].member.name).toBe('Misty')
   })
 
   it('edits an existing pokemon in compare members', async () => {
+    const compStore = useComparisonStore()
+    compStore.addMember(mockMemberProduction)
+
     const editedPokemon = { ...mockMemberProduction.member, name: 'Brock' }
     await wrapper.vm.editCompareMember(editedPokemon)
 
-    expect(wrapper.vm.pokemonToCompare[0].member.name).toBe('Brock')
+    expect(compStore.members[0].member.name).toBe('Brock')
   })
 
   it('duplicates a pokemon in compare members', () => {
+    const compStore = useComparisonStore()
+    compStore.addMember(mockMemberProduction)
+
     wrapper.vm.duplicateCompareMember(mockMemberProduction.member)
 
-    expect(wrapper.vm.pokemonToCompare).toHaveLength(2)
-    expect(wrapper.vm.pokemonToCompare[1].member.name).not.toBe('Ash')
+    expect(compStore.members).toHaveLength(2)
+    expect(compStore.members[1].member.name).not.toBe('Ash')
   })
 
   it('removes a pokemon from compare members', () => {
+    const compStore = useComparisonStore()
     wrapper.vm.removeCompareMember(mockMemberProduction.member)
 
-    expect(wrapper.vm.pokemonToCompare).toHaveLength(0)
+    expect(compStore.members).toHaveLength(0)
   })
 
   it('renders the correct tab content when tabs are clicked', async () => {

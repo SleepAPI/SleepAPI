@@ -82,7 +82,7 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
 
@@ -99,7 +99,7 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
     teamStore.teams[0] = team
@@ -115,7 +115,7 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
     teamStore.teams[0] = team
@@ -136,7 +136,7 @@ describe('TeamResults', () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     teamStore.currentIndex = 0
     teamStore.teams[0] = team

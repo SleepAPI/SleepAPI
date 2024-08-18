@@ -84,7 +84,7 @@ describe('Team Store', () => {
     })
 
     const pokemonStore = usePokemonStore()
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     teamStore.teams = [
       {
         index: 0,
@@ -355,7 +355,7 @@ describe('Team Store', () => {
         production: undefined
       }
     ]
-    pokemonStore.upsertPokemon(mockPokemon)
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     TeamService.createOrUpdateMember = vi.fn().mockResolvedValue({ index: 0, name: 'Pikachu' })
 

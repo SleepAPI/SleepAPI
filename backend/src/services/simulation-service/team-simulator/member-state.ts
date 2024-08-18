@@ -303,9 +303,10 @@ export class MemberState {
   private attemptSkill(): SkillActivation | undefined {
     if (rollRandomChance(this.skillPercentage)) {
       this.skillProcs += 1;
+      let result: SkillActivation | undefined = undefined;
 
       if (this.member.pokemonSet.pokemon.skill === mainskill.METRONOME) {
-        const result: SkillActivation = { energyTeam: 0, helpsTeam: 0, other: 0 };
+        result = { energyTeam: 0, helpsTeam: 0, other: 0 };
         for (const skill of this.skillsWithoutMetronome) {
           const activationResult = this.activateSkill(skill);
           if (activationResult) {
@@ -313,10 +314,12 @@ export class MemberState {
             result.helpsTeam += activationResult.helpsTeam;
           }
         }
-        return result;
       } else {
-        return this.activateSkill(this.member.pokemonSet.pokemon.skill);
+        result = this.activateSkill(this.member.pokemonSet.pokemon.skill);
       }
+
+      // this.collectInventory(); // TODO: as soon as i add collect then inventory L becomes super good?
+      return result;
     }
   }
 
