@@ -80,7 +80,7 @@ describe('calculateTeam', () => {
     expect(result.members).toHaveLength(1);
     expect(result.members[0].berries).toMatchInlineSnapshot(`
       {
-        "amount": 40.51619348689946,
+        "amount": 40.51834916094541,
         "berry": {
           "name": "LUM",
           "type": "bug",
@@ -91,7 +91,7 @@ describe('calculateTeam', () => {
     expect(result.members[0].ingredients).toMatchInlineSnapshot(`
       [
         {
-          "amount": 90.91241709872433,
+          "amount": 90.91586142467838,
           "ingredient": {
             "longName": "Honey",
             "name": "Honey",

@@ -23,10 +23,8 @@ describe('RibbonButton', () => {
     await nextTick()
 
     expect(wrapper.exists()).toBe(true)
-    const badge = wrapper.find('.v-badge')
-    expect(badge.exists()).toBe(true)
-    expect(badge.text()).toBe('500')
     const avatarImg = wrapper.find('img')
+    expect(avatarImg.attributes('src')).toMatchInlineSnapshot(`"/images/misc/ribbon2.png"`)
     expect(avatarImg.classes()).not.toContain('greyScale')
   })
 
@@ -34,9 +32,8 @@ describe('RibbonButton', () => {
     await wrapper.setProps({ ribbon: 0 })
     await nextTick()
 
-    const badge = wrapper.find('.v-badge')
-    expect(badge.exists()).toBe(true)
-    expect(badge.text()).toBe('0')
+    const img = wrapper.find('img')
+    expect(img.attributes('src')).toMatchInlineSnapshot(`"/images/misc/ribbon1.png"`)
     const avatarImg = wrapper.find('.v-img')
     expect(avatarImg.classes()).toContain('greyScale')
   })

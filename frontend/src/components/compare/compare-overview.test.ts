@@ -1,10 +1,12 @@
 import CompareOverview from '@/components/compare/compare-overview.vue'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { MathUtils, berry, ingredient } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 describe('CompareOverview', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareOverview>>
@@ -30,11 +32,7 @@ describe('CompareOverview', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    wrapper = mount(CompareOverview, {
-      props: {
-        membersToCompare: [mockMemberProduction]
-      }
-    })
+    wrapper = mount(CompareOverview, {})
   })
 
   afterEach(() => {
@@ -48,6 +46,11 @@ describe('CompareOverview', () => {
   })
 
   it('renders member data correctly', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+
+    await nextTick()
+
     const rows = wrapper.findAll('tbody tr')
     expect(rows).toHaveLength(1)
 
@@ -68,13 +71,23 @@ describe('CompareOverview', () => {
     expect(firstRowCells[3].text()).toContain('5')
   })
 
-  it('correctly computes the rounded values', () => {
+  it('correctly computes the rounded values', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+
+    await nextTick()
+
     const members = wrapper.vm.members as any[]
     expect(members[0].berries).toBe(MathUtils.round(100, 1))
     expect(members[0].skillProcs).toBe(MathUtils.round(5, 1))
   })
 
   it('displays ingredient images correctly', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+
+    await nextTick()
+
     const ingredientImages = wrapper.findAll('tbody tr td:nth-child(3) .v-img img')
     expect(ingredientImages.length).toBe(2)
     expect(ingredientImages[0].attributes('src')).toBe('/images/ingredient/apple.png')
@@ -85,8 +98,8 @@ describe('CompareOverview', () => {
     const headers = wrapper.findAll('thead th')
     expect(headers.length).toBe(4)
     expect(headers[0].text()).toBe('Name')
-    expect(headers[1].text()).toBe('Berries')
-    expect(headers[2].text()).toBe('Ingredients')
-    expect(headers[3].text()).toBe('Skill procs')
+    expect(headers[1].text()).toBe('Berry')
+    expect(headers[2].text()).toBe('Ingredient')
+    expect(headers[3].text()).toBe('Skill')
   })
 })

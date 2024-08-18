@@ -3,17 +3,17 @@
     <v-row dense class="scroll-container" style="flex-wrap: nowrap">
       <!-- Filled compare slot -->
       <v-col
-        v-for="(mon, index) in pokemonToCompare"
+        v-for="(mon, index) in comparisonStore.members"
         :key="index"
         class="team-slot flex-grow-1"
-        style="position: relative; min-width: 20%; max-width: 20%"
+        style="position: relative; min-width: 18%; max-width: 18%"
       >
         <CompareSlot
           :pokemon-instance="mon"
-          :full-team="fullTeam"
           @edit-pokemon="editCompareMember"
           @duplicate-pokemon="duplicateCompareMember"
           @remove-pokemon="removeCompareMember"
+          @toggle-save-state="toggleSaveState"
         />
       </v-col>
 
@@ -21,7 +21,7 @@
       <v-col
         class="team-slot flex-grow-1"
         style="min-width: 20%; max-width: 20%"
-        :hidden="fullTeam"
+        :hidden="comparisonStore.fullTeam"
       >
         <div class="d-flex w-100 fill-height transparent">
           <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDialog">
@@ -46,7 +46,7 @@
     <v-row>
       <v-col cols="12">
         <v-card color="transparent" :loading="loading">
-          <v-tabs v-model="tab" fixed-tabs class="d-flex justify-space-around">
+          <v-tabs v-model="tab" class="d-flex justify-space-around">
             <v-tab
               v-for="tabItem in tabs"
               :key="tabItem.value"
@@ -59,17 +59,17 @@
 
           <v-tabs-window v-model="tab">
             <v-tabs-window-item value="overview">
-              <CompareOverview :members-to-compare="pokemonToCompare" />
+              <CompareOverview />
             </v-tabs-window-item>
 
             <v-tabs-window-item value="strength">
               <!-- TODO: replace -->
-              <CompareOverview :members-to-compare="pokemonToCompare" />
+              <CompareOverview />
             </v-tabs-window-item>
 
             <v-tabs-window-item value="misc">
               <!-- TODO: replace -->
-              <CompareOverview :members-to-compare="pokemonToCompare" />
+              <CompareOverview />
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>
@@ -84,6 +84,8 @@ import CompareSlot from '@/components/compare/compare-slot.vue'
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { ProductionService } from '@/services/production/production-service'
 import { randomName } from '@/services/utils/name-utils'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import {
   uuid,
@@ -96,8 +98,12 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'ComparisonPage',
   components: { PokemonSlotMenu, CompareSlot, CompareOverview },
+  setup() {
+    const pokemonStore = usePokemonStore()
+    const comparisonStore = useComparisonStore()
+    return { pokemonStore, comparisonStore }
+  },
   data: () => ({
-    pokemonToCompare: [] as MemberProductionExt[],
     showDialog: false,
     tab: null,
     tabs: [
@@ -107,11 +113,6 @@ export default defineComponent({
     ],
     loading: false
   }),
-  computed: {
-    fullTeam() {
-      return this.pokemonToCompare.length >= 10
-    }
-  },
   methods: {
     openDialog() {
       this.showDialog = true
@@ -128,7 +129,13 @@ export default defineComponent({
         skillProcs: production.averageTotalSkillProcs,
         berries: production.produce.berries
       }
-      this.pokemonToCompare.push(memberProduction)
+      this.comparisonStore.members.push(memberProduction)
+
+      const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
+      if (pokemonInstance.saved && previouslyExisted === undefined) {
+        this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      }
+
       this.loading = false
     },
     async editCompareMember(pokemonInstance: PokemonInstanceExt) {
@@ -137,6 +144,11 @@ export default defineComponent({
         await ProductionService.calculateSingleProduction(pokemonInstance)
       const production: DetailedProduce = simulationData.production.detailedProduce
 
+      const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
+      if (previouslyExisted?.saved || pokemonInstance.saved) {
+        this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      }
+
       const memberProduction: MemberProductionExt = {
         member: pokemonInstance,
         ingredients: production.produce.ingredients,
@@ -144,15 +156,15 @@ export default defineComponent({
         berries: production.produce.berries
       }
 
-      const indexToUpdate = this.pokemonToCompare.findIndex(
+      const indexToUpdate = this.comparisonStore.members.findIndex(
         (pkmn) => pkmn.member.externalId === pokemonInstance.externalId
       )
 
-      this.pokemonToCompare[indexToUpdate] = memberProduction
+      this.comparisonStore.members[indexToUpdate] = memberProduction
       this.loading = false
     },
     duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
-      const copiedProduction = this.pokemonToCompare.find(
+      const copiedProduction = this.comparisonStore.members.find(
         (pkmn) => pkmn.member.externalId === pokemonInstance.externalId
       )
       if (!copiedProduction) {
@@ -165,17 +177,25 @@ export default defineComponent({
           externalId: uuid.v4(),
           name: randomName(12)
         }
-
-        this.pokemonToCompare.push({
-          ...copiedProduction,
-          member: duplicatedMember
-        })
+        this.comparisonStore.addMember({ ...copiedProduction, member: duplicatedMember })
       }
     },
     removeCompareMember(pokemonInstance: PokemonInstanceExt) {
-      this.pokemonToCompare = this.pokemonToCompare.filter(
+      this.comparisonStore.members = this.comparisonStore.members.filter(
         (pkmn) => pkmn.member.externalId !== pokemonInstance.externalId
       )
+    },
+    toggleSaveState(pokemonInstance: PokemonInstanceExt) {
+      this.comparisonStore.members = this.comparisonStore.members.map((pkmn) => ({
+        ...pkmn,
+        member: {
+          ...pkmn.member,
+          saved:
+            pkmn.member.externalId === pokemonInstance.externalId
+              ? pokemonInstance.saved
+              : pkmn.member.saved
+        }
+      }))
     }
   }
 })

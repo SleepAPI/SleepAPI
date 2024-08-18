@@ -48,7 +48,7 @@ describe('CompareSlot', () => {
     expect(wrapper.find('.pokemon-image img').attributes('src')).toBe(
       `/images/pokemon/${mockMemberProduction.member.pokemon.name.toLowerCase()}.png`
     )
-    expect(wrapper.find('.responsive-text').text()).toBe('HB')
+    expect(wrapper.find('.responsive-text').text()).toBe('RP 674')
   })
 
   it('computed properties return correct values', () => {
@@ -56,9 +56,7 @@ describe('CompareSlot', () => {
       `/images/pokemon/${mockMemberProduction.member.pokemon.name.toLowerCase()}.png`
     )
     expect(wrapper.vm.level).toBe('Level 10')
-    expect(wrapper.vm.erb).toBe(false)
-    expect(wrapper.vm.hb).toBe(true)
-    expect(wrapper.vm.subskillBadge).toBe('HB')
+    expect(wrapper.vm.rpBadge).toBe('RP 674')
   })
 
   it('openDialog method sets showDialog to true', async () => {
