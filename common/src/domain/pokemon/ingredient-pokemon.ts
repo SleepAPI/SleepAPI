@@ -459,6 +459,38 @@ export const DRAGONITE: Pokemon = {
   carrySize: 20,
 };
 
+export const WOOPER: Pokemon = {
+  name: 'WOOPER',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 38, 20),
+  ingredientPercentage: 20.1,
+  skillPercentage: 3.8,
+  berry: ORAN,
+  carrySize: 10,
+  previousEvolutions: 0,
+  remainingEvolutions: 1,
+  ingredient0: { amount: 2, ingredient: TASTY_MUSHROOM },
+  ingredient30: [
+    { amount: 5, ingredient: TASTY_MUSHROOM },
+    { amount: 6, ingredient: SOFT_POTATO },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: TASTY_MUSHROOM },
+    { amount: 10, ingredient: SOFT_POTATO },
+    { amount: 12, ingredient: BEAN_SAUSAGE },
+  ],
+  skill: CHARGE_ENERGY_S,
+};
+
+export const QUAGSIRE: Pokemon = {
+  ...evolvesFrom(WOOPER),
+  name: 'QUAGSIRE',
+  frequency: toSeconds(0, 56, 40),
+  ingredientPercentage: 19,
+  skillPercentage: 3.2,
+  carrySize: 16,
+};
+
 export const DELIBIRD: Pokemon = {
   name: 'DELIBIRD',
   specialty: 'ingredient',
@@ -836,6 +868,7 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   PINSIR,
   DITTO,
   DRAGONITE,
+  QUAGSIRE,
   DELIBIRD,
   PUPITAR,
   TYRANITAR,
@@ -869,6 +902,7 @@ export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
   HAUNTER,
   DRATINI,
   DRAGONAIR,
+  WOOPER,
   LARVITAR,
   MIME_JR,
   CROAGUNK,
