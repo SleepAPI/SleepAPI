@@ -278,7 +278,7 @@ function skillChart(log) {
   const xAxisEnd = scatterData[scatterData.length - 1].x + X_RANGE_OFFSET;
 
   const Y_RANGE_OFFSET = 10;
-  const max = scatterData.sort((a, b) => b.y - a.y)[0].y + Y_RANGE_OFFSET;
+  const max = Math.max(...scatterData.map((point) => point.y)) + Y_RANGE_OFFSET;
 
   const ctx = document.getElementById('skillChart').getContext('2d');
   if (skillChartInstance) {
