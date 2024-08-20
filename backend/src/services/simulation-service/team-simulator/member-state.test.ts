@@ -188,6 +188,14 @@ describe('addHelps', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 0,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [],
+          "totalHelps": 0,
+        },
         "berries": {
           "amount": 0.8,
           "berry": {
@@ -220,6 +228,14 @@ describe('addHelps', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 0,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [],
+          "totalHelps": 0,
+        },
         "berries": {
           "amount": 0,
           "berry": {
@@ -288,6 +304,14 @@ describe('attemptDayHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 1,
+          "nightHelps": 0,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [],
+          "totalHelps": 1,
+        },
         "berries": {
           "amount": 0.8,
           "berry": {
@@ -326,6 +350,14 @@ describe('attemptDayHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 0,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [],
+          "totalHelps": 0,
+        },
         "berries": undefined,
         "externalId": undefined,
         "ingredients": [],
@@ -457,6 +489,14 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 0,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [],
+          "totalHelps": 0,
+        },
         "berries": undefined,
         "externalId": undefined,
         "ingredients": [],
@@ -472,6 +512,14 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 1,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 1,
+          "spilledIngredients": [],
+          "totalHelps": 1,
+        },
         "berries": {
           "amount": 0.8,
           "berry": {
@@ -505,6 +553,24 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 1,
+          "nightHelpsAfterSS": 1,
+          "nightHelpsBeforeSS": 0,
+          "spilledIngredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+          "totalHelps": 1,
+        },
         "berries": {
           "amount": 81,
           "berry": {
@@ -546,6 +612,14 @@ describe('attemptNightHelp', () => {
 
     expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
       {
+        "advanced": {
+          "dayHelps": 0,
+          "nightHelps": 1,
+          "nightHelpsAfterSS": 0,
+          "nightHelpsBeforeSS": 1,
+          "spilledIngredients": [],
+          "totalHelps": 1,
+        },
         "berries": {
           "amount": 0.8,
           "berry": {

@@ -22,10 +22,12 @@ import {
   subskill,
 } from 'sleepapi-common';
 
+// TODO: all skills need to return a SkillActivation so morning proc can early exit, but SkillActivation.produce and other are not actually used anywhere, that's what SkillValue class is for
 export interface SkillActivation {
   energyTeam: number;
   helpsTeam: number;
-  other: number; // TODO: fix strength, pot etc later, not functional now
+  produce?: Produce;
+  other?: number; // TODO: fix strength, pot etc later, not functional now
 }
 
 export class MemberState {
@@ -56,11 +58,10 @@ export class MemberState {
   private skillProcs = 0;
   private skillValue = new SkillValue();
   private morningProcs = 0;
-  private nrOfHelps = 0;
-  private dayHelps = 0;
+  private totalDayHelps = 0;
   private totalNightHelps = 0;
-  private helpsBeforeSS = 0;
-  private helpsAfterSS = 0;
+  private nightHelpsBeforeSS = 0;
+  private nightHelpsAfterSS = 0;
   private averageEnergy = 0;
   private totalRecovery = 0;
   private averageFrequency = 0;
@@ -160,7 +161,12 @@ export class MemberState {
   }
 
   public addHelps(helps: number) {
-    const addedProduce: Produce = {
+    const addedProduce: Produce = this.averageProduceForHelps(helps);
+    this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, addedProduce);
+  }
+
+  private averageProduceForHelps(helps: number): Produce {
+    return {
       berries: this.averageProduce.berries && {
         amount: this.averageProduce.berries.amount * helps,
         berry: this.averageProduce.berries.berry,
@@ -170,8 +176,6 @@ export class MemberState {
         ingredient,
       })),
     };
-
-    this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, addedProduce);
   }
 
   public recoverMeal() {
@@ -184,8 +188,7 @@ export class MemberState {
       const frequency = calculateFrequencyWithEnergy(this.frequency, this.currentEnergy);
 
       // update stats
-      this.helpsBeforeSS += 1;
-      this.dayHelps += 1;
+      this.totalDayHelps += 1;
       // this.frequencyChanges.push(frequency);
 
       this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, this.averageProduce);
@@ -216,7 +219,7 @@ export class MemberState {
         });
 
         this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, clampedProduce);
-        this.helpsBeforeSS += 1;
+        this.nightHelpsBeforeSS += 1;
 
         if (inventorySpace < this.averageProduceAmount) {
           const voidProduce = clampHelp({
@@ -232,7 +235,7 @@ export class MemberState {
       } else {
         // sneaky snack
 
-        this.helpsAfterSS += 1;
+        this.nightHelpsAfterSS += 1;
         this.spilledIngredients = InventoryUtils.addToInventory(this.spilledIngredients, {
           ingredients: this.averageProduce.ingredients,
         });
@@ -244,10 +247,6 @@ export class MemberState {
   }
 
   public collectInventory(): SkillActivation[] {
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentSneakySnack);
-    this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
-
     // roll skill proc on each stored help, stop after if we get a successful roll
     const bankedSkillProcs: SkillActivation[] = [];
     for (let i = 0; i < this.currentNightHelps; i++) {
@@ -260,6 +259,10 @@ export class MemberState {
         }
       }
     }
+
+    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
+    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentSneakySnack);
+    this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
 
     this.currentNightHelps = 0;
     this.currentNightSkillProcs = 0;
@@ -285,6 +288,14 @@ export class MemberState {
       })),
       skillProcs: this.skillProcs / iterations,
       externalId: this.member.externalId,
+      advanced: {
+        spilledIngredients: this.spilledIngredients.ingredients,
+        dayHelps: this.totalDayHelps / iterations,
+        nightHelps: this.totalNightHelps / iterations,
+        totalHelps: (this.totalDayHelps + this.totalNightHelps) / iterations,
+        nightHelpsAfterSS: this.nightHelpsAfterSS / iterations,
+        nightHelpsBeforeSS: this.nightHelpsBeforeSS / iterations,
+      },
     };
 
     return result;
@@ -306,7 +317,7 @@ export class MemberState {
       let result: SkillActivation | undefined = undefined;
 
       if (this.member.pokemonSet.pokemon.skill === mainskill.METRONOME) {
-        result = { energyTeam: 0, helpsTeam: 0, other: 0 };
+        result = { energyTeam: 0, helpsTeam: 0 };
         for (const skill of this.skillsWithoutMetronome) {
           const activationResult = this.activateSkill(skill);
           if (activationResult) {
@@ -318,7 +329,6 @@ export class MemberState {
         result = this.activateSkill(this.member.pokemonSet.pokemon.skill);
       }
 
-      // this.collectInventory(); // TODO: as soon as i add collect then inventory L becomes super good?
       return result;
     }
   }
@@ -346,7 +356,7 @@ export class MemberState {
       this.skillValue.addValue(clampedEnergyRecovered);
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
-      return { energyTeam: 0, helpsTeam: 0, other: 0 };
+      return { energyTeam: 0, helpsTeam: 0 };
     } else if (skill === mainskill.ENERGIZING_CHEER_S) {
       this.skillValue.addValue(this.skillAmount(skill));
       const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
@@ -354,7 +364,6 @@ export class MemberState {
       return {
         energyTeam: averageRecoveredEnergy,
         helpsTeam: 0,
-        other: 0,
       };
     } else {
       this.skillValue.addValue(this.skillAmount(skill));
@@ -362,13 +371,13 @@ export class MemberState {
       return {
         energyTeam: this.skillAmount(skill),
         helpsTeam: 0,
-        other: 0,
       };
     }
   }
 
   #activateHelpSkill(skill: mainskill.MainSkill): SkillActivation {
     if (skill === mainskill.HELPER_BOOST) {
+      // helper boost
       const unique = TeamSimulatorUtils.uniqueMembersWithBerry({
         berry: this.berry,
         members: this.team,
@@ -380,16 +389,17 @@ export class MemberState {
       return {
         energyTeam: 0,
         helpsTeam: helps,
-        other: 0,
+        produce: this.averageProduceForHelps(helps),
       };
     } else {
       // extra helpful
       this.skillValue.addValue(this.skillAmount(skill));
 
+      const helpsPerMember = this.skillAmount(skill) / this.teamSize;
       return {
         energyTeam: 0,
-        helpsTeam: this.skillAmount(skill) / this.teamSize,
-        other: 0,
+        helpsTeam: helpsPerMember,
+        produce: this.averageProduceForHelps(helpsPerMember),
       };
     }
   }
@@ -406,7 +416,7 @@ export class MemberState {
     return {
       energyTeam: 0,
       helpsTeam: 0,
-      other: 0, // TODO: fix
+      produce: magnetProduce,
     };
   }
 
@@ -415,7 +425,6 @@ export class MemberState {
     return {
       energyTeam: 0,
       helpsTeam: 0,
-      other: 0, // TODO: fix
     };
   }
 
