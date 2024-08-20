@@ -26,9 +26,9 @@
     </v-card>
 
     <v-card
-      class="text-center responsive-text"
+      class="text-center level-text"
       rounded="lg"
-      style="position: absolute; top: 0%; width: 80%"
+      style="position: absolute; top: 0%; width: 80%; font-size: 0.8rem"
       color="primary"
       location="top center"
     >
@@ -135,5 +135,15 @@ export default defineComponent({
   transform: rotate(180deg);
   white-space: nowrap;
   text-align: center;
+}
+
+.level-text {
+  font-size: 0.8rem !important;
+}
+
+@media (max-width: 365px) {
+  .level-text {
+    font-size: 0.7rem !important;
+  }
 }
 </style>

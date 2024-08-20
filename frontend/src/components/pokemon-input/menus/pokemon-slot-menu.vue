@@ -7,7 +7,12 @@
           <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
             >Add</v-list-item
           >
-          <v-list-item prepend-icon="mdi-import" @click="handleSavedClick">Pokebox</v-list-item>
+          <v-list-item
+            prepend-icon="mdi-import"
+            :disabled="!userStore.loggedIn"
+            @click="handleSavedClick"
+            >Pokebox</v-list-item
+          >
         </div>
         <div v-else id="filledMenu">
           <!-- Filled slot  -->
