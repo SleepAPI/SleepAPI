@@ -11,7 +11,7 @@
           <v-text-field
             v-model="teamStore.getCurrentTeam.name"
             :rules="[
-              (v) =>
+              (v: any) =>
                 (v || '').length <= maxTeamNameLength ||
                 `Description must be ${maxTeamNameLength} characters or less`
             ]"
