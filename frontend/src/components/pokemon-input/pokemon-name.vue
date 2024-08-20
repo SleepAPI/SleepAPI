@@ -11,7 +11,7 @@
         <v-textarea
           v-model="editedName"
           :rules="[
-            (v) =>
+            (v: any) =>
               (v || '').length <= maxNameLength ||
               `Description must be ${maxNameLength} characters or less`
           ]"

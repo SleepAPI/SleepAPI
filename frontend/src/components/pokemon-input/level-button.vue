@@ -12,7 +12,7 @@
         hide-details
         hide-spin-buttons
         type="number"
-        :rules="[(v) => (v <= 100 && v >= 1) || `Level must be 1-100`]"
+        :rules="[(v: any) => (v <= 100 && v >= 1) || `Level must be 1-100`]"
         @keydown.enter="menu = false"
       ></v-text-field>
     </template>
