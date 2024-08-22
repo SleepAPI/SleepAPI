@@ -29,6 +29,27 @@ class TeamRouterImpl {
       }
     });
 
+    BaseRouter.router.delete(
+      '/team/:index',
+      validateAuthHeader,
+      async (req: Request<{ index: string }, unknown, unknown, unknown>, res: Response) => {
+        try {
+          Logger.log('Entered /team/:index DEL');
+
+          const user = (req as AuthenticatedRequest).user;
+          if (!user) {
+            throw new Error('User not found');
+          }
+
+          const teams = await controller.deleteTeam(+req.params.index, user);
+          res.json(teams);
+        } catch (err) {
+          Logger.error(err as Error);
+          res.status(500).send('Something went wrong');
+        }
+      }
+    );
+
     BaseRouter.router.put(
       '/team/meta/:index',
       validateAuthHeader,

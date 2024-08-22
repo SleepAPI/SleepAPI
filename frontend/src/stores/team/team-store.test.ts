@@ -9,6 +9,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@/services/team/team-service', () => ({
   TeamService: {
     getTeams: vi.fn(),
+    deleteTeam: vi.fn(),
     createOrUpdateTeam: vi.fn(),
     createOrUpdateMember: vi.fn(),
     calculateProduction: vi.fn()
@@ -204,14 +205,14 @@ describe('Team Store', () => {
     expect(teamStore.$state.teams[0].name).toBe('Log in to save your teams')
   })
 
-  it('should reset the state correctly', () => {
+  it('should reset the state correctly', async () => {
     const teamStore = useTeamStore()
     teamStore.teams = [
       {
         index: 0,
         name: 'Team 1',
         camp: false,
-        bedtime: '21:30',
+        bedtime: '22:30',
         wakeup: '06:00',
         members: [],
         version: 1,
@@ -477,5 +478,79 @@ describe('Team Store', () => {
 
     const size = teamStore.getTeamSize
     expect(size).toBe(2)
+  })
+
+  it('deleteTeam shall reset current team', () => {
+    const teamStore = useTeamStore()
+
+    const team1 = {
+      index: 0,
+      name: 'Team 1',
+      camp: false,
+      bedtime: '21:10',
+      wakeup: '06:00',
+      members: [undefined, 'member1', undefined, 'member2', undefined],
+      version: 1,
+      production: undefined
+    }
+    const team2 = {
+      index: 0,
+      name: 'Team 2',
+      camp: false,
+      bedtime: '21:20',
+      wakeup: '06:00',
+      members: [undefined, 'member3', undefined, 'member4', undefined],
+      version: 1,
+      production: undefined
+    }
+    teamStore.teams = [team1, team2]
+    teamStore.currentIndex = 1
+
+    teamStore.deleteTeam()
+
+    expect(teamStore.teams[0]).toEqual(team1)
+    expect(teamStore.getCurrentTeam).toMatchInlineSnapshot(`
+      {
+        "bedtime": "21:30",
+        "camp": false,
+        "index": 1,
+        "members": [
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+        ],
+        "name": "Log in to save your teams",
+        "production": undefined,
+        "version": 0,
+        "wakeup": "06:00",
+      }
+    `)
+  })
+
+  it('deleteTeam shall call server to delete team if user logged in', () => {
+    const teamStore = useTeamStore()
+    const userStore = useUserStore()
+
+    userStore.setTokens({ accessToken: 'at', expiryDate: 0, refreshToken: 'rt' })
+
+    const team1 = {
+      index: 0,
+      name: 'Team 1',
+      camp: false,
+      bedtime: '21:10',
+      wakeup: '06:00',
+      members: [undefined, 'member1', undefined, 'member2', undefined],
+      version: 1,
+      production: undefined
+    }
+
+    teamStore.teams = [team1]
+    teamStore.currentIndex = 0
+
+    teamStore.deleteTeam()
+
+    expect(TeamService.deleteTeam).toHaveBeenCalled()
   })
 })

@@ -45,6 +45,7 @@ describe('getTeams', () => {
   beforeEach(async () => {
     setActivePinia(createPinia())
   })
+
   it('should call server to get teams', async () => {
     const mockTeamStore = useTeamStore()
     const res = await TeamService.getTeams()
@@ -316,5 +317,13 @@ describe('removeMember', () => {
     await TeamService.removeMember({ teamIndex: 1, memberIndex: 2 })
 
     expect(serverAxios.delete).toHaveBeenCalledWith('team/1/member/2')
+  })
+})
+
+describe('deleteTeam', () => {
+  it('shall call server to delete a team', async () => {
+    await TeamService.deleteTeam(2)
+
+    expect(serverAxios.delete).toHaveBeenCalledWith('team/2')
   })
 })

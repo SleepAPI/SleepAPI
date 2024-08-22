@@ -24,6 +24,20 @@ export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<Upsert
   };
 }
 
+export async function deleteTeam(index: number, user: DBUser) {
+  const team = await TeamDAO.get({ fk_user_id: user.id, team_index: index });
+  const teamMembers = await TeamMemberDAO.findMultiple({ fk_team_id: team.id });
+
+  for (const teamMember of teamMembers) {
+    const pkmn = await PokemonDAO.get({ id: teamMember.fk_pokemon_id });
+    if (!pkmn.saved) {
+      await PokemonDAO.delete(pkmn);
+    }
+  }
+
+  await TeamDAO.delete(team);
+}
+
 // TODO: would be better if this entire thing was in a transaction
 export async function upsertTeamMember(params: {
   teamIndex: number;

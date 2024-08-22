@@ -99,6 +99,10 @@ class TeamServiceImpl {
     return teams
   }
 
+  public async deleteTeam(index: number) {
+    return await serverAxios.delete(`team/${index}`)
+  }
+
   public async removeMember(params: { teamIndex: number; memberIndex: number }) {
     const { teamIndex, memberIndex } = params
     await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
