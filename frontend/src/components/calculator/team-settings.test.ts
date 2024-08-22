@@ -1,4 +1,5 @@
 import TeamSettings from '@/components/calculator/team-settings.vue'
+import { TeamService } from '@/services/team/team-service'
 import { useTeamStore } from '@/stores/team/team-store'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
@@ -145,5 +146,17 @@ describe('TeamSettings', () => {
     const allowedWakeupHours = wrapper.vm.allowedWakeupHours
     expect(allowedWakeupHours(7)).toBe(true)
     expect(allowedWakeupHours(22)).toBe(false)
+  })
+
+  it('clicking delete button should call server to delete team', async () => {
+    TeamService.deleteTeam = vi.fn().mockResolvedValue(undefined)
+    const teamStore = useTeamStore()
+    const deleteTeamSpy = vi.spyOn(teamStore, 'deleteTeam')
+
+    const deleteButton = wrapper.find('button[aria-label="delete team"]')
+    await deleteButton.trigger('click')
+
+    await nextTick()
+    expect(deleteTeamSpy).toHaveBeenCalled()
   })
 })

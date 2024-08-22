@@ -118,6 +118,7 @@ export const useTeamStore = defineStore('team', {
             }
 
             if (rerunCalculations) {
+              this.currentIndex = 0
               await this.calculateProduction(updatedTeam.index)
             } else {
               this.teams[updatedTeam.index].production = previousTeam.production
@@ -153,6 +154,32 @@ export const useTeamStore = defineStore('team', {
             bedtime: this.getCurrentTeam.bedtime,
             wakeup: this.getCurrentTeam.wakeup
           })
+        } catch {
+          console.error('Error updating teams')
+        }
+      }
+    },
+    async deleteTeam() {
+      const userStore = useUserStore()
+
+      const newName = userStore.loggedIn
+        ? `Helper team ${this.currentIndex + 1}`
+        : 'Log in to save your teams'
+
+      this.teams[this.currentIndex] = {
+        index: this.currentIndex,
+        camp: false,
+        name: newName,
+        bedtime: '21:30',
+        wakeup: '06:00',
+        version: 0,
+        members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+        production: undefined
+      }
+
+      if (userStore.loggedIn) {
+        try {
+          await TeamService.deleteTeam(this.currentIndex)
         } catch {
           console.error('Error updating teams')
         }

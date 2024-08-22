@@ -1,13 +1,32 @@
 <template>
   <v-row dense>
-    <v-col cols="8" class="d-flex align-center">
+    <v-col cols="6" class="d-flex align-center">
       Click a mon above to edit, save, duplicate or remove it.
+    </v-col>
+    <v-col cols="2" class="flex-center">
+      <v-btn
+        icon
+        color="transparent"
+        elevation="0"
+        :class="{ nudge: teamStore.getTeamSize === 0 }"
+        aria-label="delete team"
+        @click="deleteTeam"
+      >
+        <v-avatar size="48">
+          <v-icon
+            size="36"
+            :color="teamStore.getTeamSize === 0 ? 'secondary' : 'primary'"
+            alt="delete team icon"
+            >mdi-delete</v-icon
+          >
+        </v-avatar>
+      </v-btn>
     </v-col>
     <v-col cols="2" class="flex-center">
       <v-btn
         :disabled="isCampButtonDisabled"
         icon
-        color="rgba(255, 0, 0, 0)"
+        color="transparent"
         elevation="0"
         @click="toggleCamp"
       >
@@ -246,6 +265,9 @@ export default defineComponent({
     allowedWakeupHours(hour: number) {
       const wakeupHour = +this.bedtime.split(':')[0]
       return Math.abs(hour - wakeupHour) > 1
+    },
+    deleteTeam() {
+      this.teamStore.deleteTeam()
     }
   }
 })

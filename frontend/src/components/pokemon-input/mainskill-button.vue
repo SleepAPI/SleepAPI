@@ -1,5 +1,5 @@
 <template>
-  <v-menu v-model="menu" :close-on-content-click="false" offset-y>
+  <v-menu v-model="menu" :close-on-content-click="true" offset-y>
     <template #activator="{ props }">
       <v-card v-bind="props">
         <v-row no-gutters>
@@ -88,7 +88,7 @@ export default {
     pokemon: {
       handler(newPokemon: pokemon.Pokemon) {
         if (this.pokemonInstance.skillLevel > 0) {
-          this.mainskillLevel = this.pokemonInstance.skillLevel
+          this.mainskillLevel = Math.min(this.pokemonInstance.skillLevel, newPokemon.skill.maxLevel)
         } else {
           const nrOfEvolutions = newPokemon.previousEvolutions
           this.mainskillLevel = 1 + nrOfEvolutions
