@@ -1,8 +1,8 @@
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { SingleProductionExt } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
 
 export interface ComparisonState {
-  members: MemberProductionExt[]
+  members: SingleProductionExt[]
 }
 
 const MAX_COMPARISON_MEMBERS = 10
@@ -17,7 +17,7 @@ export const useComparisonStore = defineStore('comparison', {
     fullTeam: (state) => state.members.length >= MAX_COMPARISON_MEMBERS
   },
   actions: {
-    addMember(member: MemberProductionExt) {
+    addMember(member: SingleProductionExt) {
       this.members.push(member)
     }
   },

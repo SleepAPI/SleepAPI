@@ -153,6 +153,7 @@ export function setupAndRunProductionSimulation(params: {
     : generateSkillActivations({
         dayInfo: daySleepInfo,
         helpFrequency,
+        ingredientPercentage,
         skillPercentage,
         input,
         pokemonWithAverageProduce,
@@ -167,6 +168,8 @@ export function setupAndRunProductionSimulation(params: {
     dayInfo: daySleepInfo,
     input,
     helpFrequency,
+    ingredientPercentage,
+    skillPercentage,
     pokemonWithAverageProduce,
     inventoryLimit,
     sneakySnackBerries,
@@ -204,6 +207,7 @@ export function setupAndRunProductionSimulation(params: {
 export function generateSkillActivations(params: {
   dayInfo: SleepInfo;
   helpFrequency: number;
+  ingredientPercentage: number;
   skillPercentage: number;
   recoveryEvents: EnergyEvent[];
   mealTimes: Time[];
@@ -216,6 +220,7 @@ export function generateSkillActivations(params: {
   const {
     dayInfo,
     helpFrequency,
+    ingredientPercentage,
     skillPercentage,
     recoveryEvents,
     mealTimes,
@@ -255,6 +260,8 @@ export function generateSkillActivations(params: {
       dayInfo,
       input,
       helpFrequency,
+      ingredientPercentage,
+      skillPercentage,
       pokemonWithAverageProduce,
       inventoryLimit,
       sneakySnackBerries,

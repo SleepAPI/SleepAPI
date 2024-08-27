@@ -4,6 +4,10 @@ import { IngredientSet } from '../../domain/types/ingredient-set';
 import { Time } from '../../domain/types/time';
 
 export interface Summary {
+  ingredientPercentage: number;
+  skillPercentage: number;
+  carrySize: number;
+
   skill: MainSkill;
   skillProcs: number;
   skillEnergySelfValue: number;

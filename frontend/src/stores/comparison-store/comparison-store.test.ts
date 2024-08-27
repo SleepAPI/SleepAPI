@@ -1,5 +1,5 @@
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, ingredient } from 'sleepapi-common'
@@ -9,7 +9,7 @@ beforeEach(() => {
   setActivePinia(createPinia())
 })
 
-const mockMemberProduction: MemberProductionExt = {
+const mockMemberProduction: SingleProductionExt = {
   member: createMockPokemon({ name: 'Ash' }),
   ingredients: [
     {
@@ -25,7 +25,18 @@ const mockMemberProduction: MemberProductionExt = {
   berries: {
     amount: 100,
     berry: berry.BELUE
-  }
+  },
+  ingredientPercentage: 0.2,
+  skillPercentage: 0.02,
+  carrySize: 10,
+  averageEnergy: 10,
+  averageFrequency: 10,
+  dayHelps: 10,
+  nightHelps: 10,
+  nrOfHelps: 10,
+  sneakySnackHelps: 10,
+  spilledIngredients: [],
+  totalRecovery: 10
 }
 
 describe('getMemberProduction', () => {

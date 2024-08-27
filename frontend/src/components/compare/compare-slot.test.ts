@@ -48,7 +48,7 @@ describe('CompareSlot', () => {
     expect(wrapper.find('.pokemon-image img').attributes('src')).toBe(
       `/images/pokemon/${mockMemberProduction.member.pokemon.name.toLowerCase()}.png`
     )
-    expect(wrapper.find('.responsive-text').text()).toBe('RP 674')
+    expect(wrapper.find('.xsmall-responsive-text').text()).toBe('RP 674')
   })
 
   it('computed properties return correct values', () => {

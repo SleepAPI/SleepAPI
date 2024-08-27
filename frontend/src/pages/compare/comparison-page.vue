@@ -63,13 +63,11 @@
             </v-tabs-window-item>
 
             <v-tabs-window-item value="strength">
-              <!-- TODO: replace -->
-              <CompareOverview />
+              <CompareStrength />
             </v-tabs-window-item>
 
             <v-tabs-window-item value="misc">
-              <!-- TODO: replace -->
-              <CompareOverview />
+              <CompareMisc />
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>
@@ -79,14 +77,16 @@
 </template>
 
 <script lang="ts">
+import CompareMisc from '@/components/compare/compare-misc.vue'
 import CompareOverview from '@/components/compare/compare-overview.vue'
 import CompareSlot from '@/components/compare/compare-slot.vue'
+import CompareStrength from '@/components/compare/compare-strength.vue'
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { ProductionService } from '@/services/production/production-service'
 import { randomName } from '@/services/utils/name-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { SingleProductionExt } from '@/types/member/instanced'
 import {
   uuid,
   type DetailedProduce,
@@ -97,7 +97,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ComparisonPage',
-  components: { PokemonSlotMenu, CompareSlot, CompareOverview },
+  components: { PokemonSlotMenu, CompareSlot, CompareOverview, CompareStrength, CompareMisc },
   setup() {
     const pokemonStore = usePokemonStore()
     const comparisonStore = useComparisonStore()
@@ -119,16 +119,7 @@ export default defineComponent({
     },
     async addToCompareMembers(pokemonInstance: PokemonInstanceExt) {
       this.loading = true
-      const simulationData: SingleProductionResponse =
-        await ProductionService.calculateSingleProduction(pokemonInstance)
-      const production: DetailedProduce = simulationData.production.detailedProduce
-
-      const memberProduction: MemberProductionExt = {
-        member: pokemonInstance,
-        ingredients: production.produce.ingredients,
-        skillProcs: production.averageTotalSkillProcs,
-        berries: production.produce.berries
-      }
+      const memberProduction = await this.fetchSingleProductionResult(pokemonInstance)
       this.comparisonStore.members.push(memberProduction)
 
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
@@ -140,20 +131,11 @@ export default defineComponent({
     },
     async editCompareMember(pokemonInstance: PokemonInstanceExt) {
       this.loading = true
-      const simulationData: SingleProductionResponse =
-        await ProductionService.calculateSingleProduction(pokemonInstance)
-      const production: DetailedProduce = simulationData.production.detailedProduce
+      const memberProduction = await this.fetchSingleProductionResult(pokemonInstance)
 
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
       if (previouslyExisted?.saved || pokemonInstance.saved) {
         this.pokemonStore.upsertServerPokemon(pokemonInstance)
-      }
-
-      const memberProduction: MemberProductionExt = {
-        member: pokemonInstance,
-        ingredients: production.produce.ingredients,
-        skillProcs: production.averageTotalSkillProcs,
-        berries: production.produce.berries
       }
 
       const indexToUpdate = this.comparisonStore.members.findIndex(
@@ -162,6 +144,34 @@ export default defineComponent({
 
       this.comparisonStore.members[indexToUpdate] = memberProduction
       this.loading = false
+    },
+    async fetchSingleProductionResult(pokemonInstance: PokemonInstanceExt) {
+      const simulationData: SingleProductionResponse =
+        await ProductionService.calculateSingleProduction(pokemonInstance)
+      const production: DetailedProduce = simulationData.production.detailedProduce
+      const summary = simulationData.summary
+
+      const memberProduction: SingleProductionExt = {
+        member: pokemonInstance,
+        ingredientPercentage: summary.ingredientPercentage,
+        skillPercentage: summary.skillPercentage,
+        carrySize: summary.carrySize,
+        ingredients: production.produce.ingredients,
+        skillProcs: production.averageTotalSkillProcs,
+        berries: production.produce.berries,
+        spilledIngredients: production.spilledIngredients,
+        nrOfHelps: summary.nrOfHelps,
+        dayHelps: production.dayHelps,
+        nightHelps: production.nightHelps,
+        sneakySnackHelps: summary.helpsAfterSS,
+        sneakySnack: production.sneakySnack,
+        totalRecovery: summary.totalRecovery,
+        averageEnergy: summary.averageEnergy,
+        averageFrequency: summary.averageFrequency,
+        collectFrequency: summary.collectFrequency
+      }
+
+      return memberProduction
     },
     duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
       const copiedProduction = this.comparisonStore.members.find(
@@ -233,7 +243,7 @@ export default defineComponent({
 
 @media (min-width: 1000px) {
   .team-container {
-    max-width: 50dvw;
+    max-width: 60dvw;
   }
 }
 </style>

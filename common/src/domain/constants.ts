@@ -3,6 +3,11 @@ export const TASTY_CHANCE_S_CAP = 0.7;
 
 // recipe
 export const MAX_RECIPE_LEVEL = 60;
+// TODO: rework max recipe bonus to be per ingredient, slowpoke tail for example cant reach 48%
+export const MAX_RECIPE_BONUS = 48;
+
+// pokemon
+export const MAX_POKEMON_LEVEL = 60;
 
 // cooking
 export const MAX_POT_SIZE = 57;

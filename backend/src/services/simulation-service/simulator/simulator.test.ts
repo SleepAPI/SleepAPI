@@ -13,6 +13,8 @@ describe('simulator', () => {
     const { detailedProduce, log } = simulation({
       dayInfo: { period: MOCKED_MAIN_SLEEP, erb: 0, incense: false, nature: nature.QUIET },
       helpFrequency: 1000,
+      ingredientPercentage: 0.2,
+      skillPercentage: 0.02,
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       pokemonWithAverageProduce,
       inventoryLimit: maxCarrySize(pokemonWithAverageProduce.pokemon),

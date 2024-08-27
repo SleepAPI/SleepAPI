@@ -5,16 +5,20 @@
       <v-card class="d-flex flex-column rounded-t-0">
         <v-data-table key="key" :items="members" :headers="headers" hide-default-footer>
           <template #item.member="{ item }">
-            <div>
-              <div class="flex-center" style="max-height: 40px; overflow: hidden">
+            <div class="flex-center">
+              <div style="overflow: hidden; width: 60px; height: 60px">
+                <v-card
+                  width="60px"
+                  height="20px"
+                  elevation="0"
+                  style="transform: translateY(40px); white-space: nowrap"
+                  >{{ item.member }}</v-card
+                >
                 <v-img
+                  style="transform: translateY(-20px)"
                   :src="`/images/pokemon/${item.pokemonName.toLowerCase()}.png`"
-                  height="64"
                   cover
                 ></v-img>
-              </div>
-              <div class="text-center">
-                {{ item.member }}
               </div>
             </div>
           </template>
@@ -56,21 +60,6 @@
                 <v-img :src="`/images/misc/skillproc.png`" height="24" width="24"></v-img>
                 {{ item.skillProcs }}
               </div>
-              <div v-if="item.skillUnit !== 'metronome'" class="pl-2 pr-2">
-                <div class="flex-center">
-                  <v-img
-                    :src="`/images/mainskill/${item.skillUnit}.png`"
-                    height="24"
-                    width="24"
-                  ></v-img>
-                </div>
-                <div v-if="item.energyPerMember">
-                  <div>{{ item.energyPerMember }} x5</div>
-                </div>
-                <div v-else>
-                  {{ item.skillValue }}
-                </div>
-              </div>
             </div>
           </template>
         </v-data-table>
@@ -83,8 +72,7 @@
 import { defineComponent } from 'vue'
 
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
-import { MathUtils, ingredient, mainskill, type IngredientSet } from 'sleepapi-common'
+import { MathUtils, ingredient, type IngredientSet } from 'sleepapi-common'
 
 type DataTableHeader = {
   title: string
@@ -94,7 +82,7 @@ type DataTableHeader = {
 }
 
 export default defineComponent({
-  name: 'TeamResults',
+  name: 'CompareOverview',
   setup() {
     const comparisonStore = useComparisonStore()
     return {
@@ -123,9 +111,7 @@ export default defineComponent({
           ingredients: memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
           ingredientList: this.splitIngredientMagnetIngredients(memberProduction.ingredients),
           skillProcs: MathUtils.round(memberProduction.skillProcs, 1),
-          skillUnit: memberPokemon.skill.unit,
-          skillValue: this.skillValue(memberProduction),
-          energyPerMember: this.energyPerMember(memberProduction)
+          skillUnit: memberPokemon.skill.unit
         })
       }
 
@@ -133,23 +119,6 @@ export default defineComponent({
     }
   },
   methods: {
-    energyPerMember(memberProduction: MemberProductionExt) {
-      const skill = memberProduction.member.pokemon.skill
-      if (
-        skill.name === mainskill.ENERGY_FOR_EVERYONE.name ||
-        skill.name === mainskill.ENERGIZING_CHEER_S.name
-      ) {
-        return MathUtils.round(this.skillValue(memberProduction) / 5, 1)
-      }
-    },
-    skillValue(memberProduction: MemberProductionExt) {
-      // TODO: different rounding for different skills
-      const amount =
-        memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
-        (memberProduction.member.pokemon.skill.name === mainskill.ENERGY_FOR_EVERYONE.name ? 5 : 1)
-
-      return MathUtils.round(amount * memberProduction.skillProcs, 1)
-    },
     splitIngredientMagnetIngredients(ingredients: IngredientSet[]) {
       if (ingredients.length >= ingredient.INGREDIENTS.length) {
         const ingMagnetAmount = ingredients.reduce(

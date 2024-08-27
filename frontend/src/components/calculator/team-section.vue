@@ -148,7 +148,7 @@ export default defineComponent({
 
 @media (min-width: 1000px) {
   .team-container {
-    max-width: 50dvw;
+    max-width: 60dvw;
   }
 }
 </style>

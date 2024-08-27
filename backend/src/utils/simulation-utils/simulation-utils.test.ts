@@ -40,6 +40,9 @@ describe('finishSimulation', () => {
   it('shall push simulation end events', () => {
     const eventLog: ScheduledEvent[] = [];
     const summary: Summary = {
+      ingredientPercentage: 0.2,
+      carrySize: 23,
+      skillPercentage: 0.02,
       skill: mainskill.CHARGE_STRENGTH_S,
       skillProcs: 11,
       skillEnergySelfValue: 11,
