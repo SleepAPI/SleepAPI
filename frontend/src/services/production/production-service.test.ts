@@ -31,6 +31,9 @@ const mockResponse: SingleProductionResponse = {
     }
   },
   summary: {
+    ingredientPercentage: 0.2,
+    skillPercentage: 0.02,
+    carrySize: 10,
     averageEnergy: 10,
     averageFrequency: 10,
     helpsAfterSS: 10,

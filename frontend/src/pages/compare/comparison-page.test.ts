@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ProductionService } from '@/services/production/production-service'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
@@ -34,6 +34,9 @@ describe('ComparisonPage', () => {
       }
     },
     summary: {
+      ingredientPercentage: 0.2,
+      skillPercentage: 0.02,
+      carrySize: 10,
       averageEnergy: 10,
       averageFrequency: 10,
       helpsAfterSS: 10,
@@ -58,11 +61,22 @@ describe('ComparisonPage', () => {
     }
   }
 
-  const mockMemberProduction: MemberProductionExt = {
+  const mockMemberProduction: SingleProductionExt = {
     member: createMockPokemon({ name: 'Ash' }),
     ingredients: mockResponse.production.detailedProduce.produce.ingredients,
     berries: mockResponse.production.detailedProduce.produce.berries,
-    skillProcs: mockResponse.production.detailedProduce.averageTotalSkillProcs
+    skillProcs: mockResponse.production.detailedProduce.averageTotalSkillProcs,
+    ingredientPercentage: 0.2,
+    skillPercentage: 0.02,
+    carrySize: 10,
+    averageEnergy: 10,
+    averageFrequency: 10,
+    dayHelps: 10,
+    nightHelps: 10,
+    nrOfHelps: 10,
+    sneakySnackHelps: 10,
+    spilledIngredients: [],
+    totalRecovery: 10
   }
 
   beforeEach(async () => {

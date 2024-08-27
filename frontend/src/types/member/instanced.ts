@@ -1,19 +1,33 @@
-import type { BerrySet, IngredientSet, PokemonInstanceExt } from 'sleepapi-common'
+import type { BerrySet, IngredientSet, PokemonInstanceExt, Time } from 'sleepapi-common'
 
 export interface TeamCombinedProduction {
-  // TODO: expand
-  // TODO: probably like a skill proc array with procs and skill?
   berries: BerrySet[]
   ingredients: IngredientSet[]
 }
 
-// TODO: expand
 export interface MemberProductionExt {
   berries?: BerrySet
   ingredients: IngredientSet[]
   skillProcs: number
   member: PokemonInstanceExt
 }
+
+export interface SingleProductionExt extends MemberProductionExt {
+  ingredientPercentage: number
+  skillPercentage: number
+  carrySize: number
+  spilledIngredients: IngredientSet[]
+  sneakySnack?: BerrySet
+  nrOfHelps: number
+  dayHelps: number
+  nightHelps: number
+  sneakySnackHelps: number
+  totalRecovery: number
+  averageEnergy: number
+  averageFrequency: number
+  collectFrequency?: Time
+}
+
 export interface TeamProductionExt {
   team: TeamCombinedProduction
   members: MemberProductionExt[]

@@ -54,6 +54,8 @@ export function simulation(params: {
   dayInfo: SleepInfo;
   input: ProductionStats;
   helpFrequency: number;
+  ingredientPercentage: number;
+  skillPercentage: number;
   pokemonWithAverageProduce: PokemonProduce;
   inventoryLimit: number;
   sneakySnackBerries: BerrySet;
@@ -68,6 +70,8 @@ export function simulation(params: {
     dayInfo,
     input,
     helpFrequency,
+    ingredientPercentage,
+    skillPercentage,
     pokemonWithAverageProduce,
     inventoryLimit,
     sneakySnackBerries,
@@ -384,6 +388,9 @@ export function simulation(params: {
   totalProduce = InventoryUtils.addToInventory(totalProduce, skillProduceValue);
   totalProduce = InventoryUtils.addToInventory(totalProduce, totalSneakySnack);
   const summary: Summary = {
+    ingredientPercentage,
+    skillPercentage,
+    carrySize: inventoryLimit,
     skill: pokemon.skill,
     skillProcs,
     skillEnergySelfValue,

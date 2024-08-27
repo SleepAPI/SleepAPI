@@ -6,6 +6,9 @@ import { Summary, mainskill } from 'sleepapi-common';
 describe('SummaryEvent', () => {
   it('summary event shall format correctly', () => {
     const summary: Summary = {
+      ingredientPercentage: 0.2,
+      carrySize: 23,
+      skillPercentage: 0.02,
       skill: mainskill.CHARGE_STRENGTH_S,
       skillProcs: 11,
       skillEnergySelfValue: 11,
@@ -35,6 +38,9 @@ describe('SummaryEvent', () => {
       "-----
       [06:00:00][pokemon]
       Total produce: 2 GREPA + 1 Apple
+      Ingredient percentage: 20%
+      Skill percentage: 2%
+      Carry limit: 23
       Spilled produce: 1 Apple
       Charge Strength S activations: 11
       Energy self skill value: 11 energy

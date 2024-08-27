@@ -16,7 +16,7 @@
 
       <div style="position: absolute; bottom: 0%; width: 100%">
         <v-card
-          class="text-center responsive-text rounded-t-0"
+          class="text-center xsmall-responsive-text rounded-t-0"
           color="subskillWhite"
           location="bottom center"
         >
@@ -26,7 +26,7 @@
     </v-card>
 
     <v-card
-      class="text-center level-text"
+      class="text-center xsmall-responsive-text"
       rounded="lg"
       style="position: absolute; top: 0%; width: 80%; font-size: 0.8rem"
       color="primary"
@@ -137,12 +137,12 @@ export default defineComponent({
   text-align: center;
 }
 
-.level-text {
+.xsmall-responsive-text {
   font-size: 0.8rem !important;
 }
 
 @media (max-width: 365px) {
-  .level-text {
+  .xsmall-responsive-text {
     font-size: 0.7rem !important;
   }
 }

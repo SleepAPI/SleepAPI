@@ -21,6 +21,9 @@ export class SummaryEvent extends ScheduledEvent {
 
   format(): string {
     const {
+      ingredientPercentage,
+      skillPercentage,
+      carrySize,
       skill,
       skillProcs,
       skillEnergySelfValue,
@@ -68,6 +71,9 @@ export class SummaryEvent extends ScheduledEvent {
       `-----\n` +
       `[${TimeUtils.prettifyTime(this.time)}][${this.description}]\n` +
       `Total produce: ${prettifiedProduce}\n` +
+      `Ingredient percentage: ${MathUtils.round(ingredientPercentage * 100, 1)}%\n` +
+      `Skill percentage: ${MathUtils.round(skillPercentage * 100, 1)}%\n` +
+      `Carry limit: ${carrySize}\n` +
       `Spilled produce: ${spilledProduce}\n` +
       `${skill.name} activations: ${MathUtils.round(skillProcs, 2)}\n` +
       (skillEnergySelfValue > 0
