@@ -95,7 +95,7 @@
     </v-row>
 
     <v-row dense>
-      <v-col cols="6"> <CustomLabel> Ingredient Finding </CustomLabel> </v-col>
+      <v-col cols="6"> <CustomLabel> Ingredient Finder </CustomLabel> </v-col>
       <v-col cols="3" class="flex-center pr-1">
         <SubskillButton
           :subskill="availableSubskills.INGREDIENT_FINDER_S"
