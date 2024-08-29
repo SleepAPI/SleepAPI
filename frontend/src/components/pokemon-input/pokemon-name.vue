@@ -19,7 +19,7 @@
           clearable
           rows="2"
           no-resize
-          label="Team Name"
+          label="Pokemon Name"
           class="compact-control"
           @input="filterInput"
           @keydown.enter="saveEditDialog"
@@ -46,7 +46,6 @@
 
 <script lang="ts">
 import { randomName } from '@/services/utils/name-utils'
-import { useTeamStore } from '@/stores/team/team-store'
 
 export default {
   name: 'PokemonName',
@@ -57,10 +56,6 @@ export default {
     }
   },
   emits: ['update-name'],
-  setup() {
-    const teamStore = useTeamStore()
-    return { teamStore }
-  },
   data: () => ({
     isEditDialogOpen: false,
     maxNameLength: 12,
