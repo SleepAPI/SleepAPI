@@ -41,7 +41,7 @@
       />
     </v-row>
 
-    <!-- TODO: should add settings component here -->
+    <CompareSettings />
 
     <v-row>
       <v-col cols="12">
@@ -79,6 +79,7 @@
 <script lang="ts">
 import CompareMisc from '@/components/compare/compare-misc.vue'
 import CompareOverview from '@/components/compare/compare-overview.vue'
+import CompareSettings from '@/components/compare/compare-settings.vue'
 import CompareSlot from '@/components/compare/compare-slot.vue'
 import CompareStrength from '@/components/compare/compare-strength.vue'
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
@@ -97,7 +98,14 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ComparisonPage',
-  components: { PokemonSlotMenu, CompareSlot, CompareOverview, CompareStrength, CompareMisc },
+  components: {
+    PokemonSlotMenu,
+    CompareSlot,
+    CompareOverview,
+    CompareStrength,
+    CompareMisc,
+    CompareSettings
+  },
   setup() {
     const pokemonStore = usePokemonStore()
     const comparisonStore = useComparisonStore()
@@ -147,7 +155,7 @@ export default defineComponent({
     },
     async fetchSingleProductionResult(pokemonInstance: PokemonInstanceExt) {
       const simulationData: SingleProductionResponse =
-        await ProductionService.calculateSingleProduction(pokemonInstance)
+        await ProductionService.calculateCompareProduction(pokemonInstance)
       const production: DetailedProduce = simulationData.production.detailedProduce
       const summary = simulationData.summary
 

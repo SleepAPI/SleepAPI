@@ -1,5 +1,7 @@
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import axios from 'axios'
 import {
+  mainskill,
   maxCarrySize,
   type PokemonInstanceExt,
   type SingleProductionRequest,
@@ -8,22 +10,32 @@ import {
 
 class ProductionServiceImpl {
   // TODO: should probably take in optional analysis, if outside tool edits pokemon, but doesnt change the pokemon itself we can probably keep old optimal data and save some time
-  public async calculateSingleProduction(pokemonInstance: PokemonInstanceExt) {
-    // TODO: compare tool should have advanced settings to set these
+
+  public async calculateSingleProduction(pokemonName: string, request: SingleProductionRequest) {
+    const response = await axios.post<SingleProductionResponse>(
+      `/api/calculator/production/${pokemonName}`,
+      request
+    )
+
+    return response.data
+  }
+
+  public async calculateCompareProduction(pokemonInstance: PokemonInstanceExt) {
+    const comparisonStore = useComparisonStore()
     const defaultSettings = {
-      camp: false,
-      cheer: 0,
-      e4eLevel: 1,
-      e4eProcs: 0,
-      erb: 0,
-      extraHelpful: 0,
-      helperBoostLevel: 1,
-      helperBoostProcs: 0,
-      helperBoostUnique: 0,
-      helpingbonus: 0,
-      mainBedtime: '21:30',
-      mainWakeup: '06:00',
-      recoveryIncense: false
+      camp: comparisonStore.camp,
+      cheer: comparisonStore.cheer,
+      e4eLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
+      e4eProcs: comparisonStore.e4e,
+      erb: comparisonStore.erb,
+      extraHelpful: comparisonStore.extraHelpful,
+      helperBoostLevel: mainskill.HELPER_BOOST.maxLevel,
+      helperBoostProcs: comparisonStore.helperBoost,
+      helperBoostUnique: comparisonStore.helperBoostUnique,
+      helpingbonus: comparisonStore.helpingBonus,
+      mainBedtime: comparisonStore.bedtime,
+      mainWakeup: comparisonStore.wakeup,
+      recoveryIncense: comparisonStore.recoveryIncense
     }
 
     const nrOfEvolutions = (maxCarrySize(pokemonInstance.pokemon) - pokemonInstance.carrySize) / 5
@@ -41,12 +53,7 @@ class ProductionServiceImpl {
       nrOfEvolutions
     }
 
-    const response = await axios.post<SingleProductionResponse>(
-      `/api/calculator/production/${pokemonInstance.pokemon.name}`,
-      request
-    )
-
-    return response.data
+    return await this.calculateSingleProduction(pokemonInstance.pokemon.name, request)
   }
 }
 

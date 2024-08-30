@@ -219,6 +219,10 @@ export default defineComponent({
       }
     }
   },
+  mounted() {
+    ;(this.bedtime = this.teamStore.getCurrentTeam.bedtime),
+      (this.wakeup = this.teamStore.getCurrentTeam.wakeup)
+  },
   methods: {
     async toggleCamp() {
       if (!this.isCampButtonDisabled) {
