@@ -83,3 +83,30 @@ describe('addMember', () => {
     expect(comparisonStore.members).toHaveLength(1)
   })
 })
+
+describe('toggleCamp', () => {
+  it('shall toggle camp', () => {
+    const comparisonStore = useComparisonStore()
+    expect(comparisonStore.camp).toBe(false)
+    comparisonStore.toggleCamp()
+    expect(comparisonStore.camp).toBe(true)
+  })
+})
+describe('toggleRecoveryIncense', () => {
+  it('shall toggle recovery incense', () => {
+    const comparisonStore = useComparisonStore()
+    expect(comparisonStore.recoveryIncense).toBe(false)
+    comparisonStore.toggleRecoveryIncense()
+    expect(comparisonStore.recoveryIncense).toBe(true)
+  })
+})
+describe('updateSleep', () => {
+  it('shall update sleep', () => {
+    const comparisonStore = useComparisonStore()
+    expect(comparisonStore.wakeup).toEqual('06:00')
+    expect(comparisonStore.bedtime).toEqual('21:30')
+    comparisonStore.updateSleep({ wakeup: '07:00', bedtime: '22:00' })
+    expect(comparisonStore.wakeup).toEqual('07:00')
+    expect(comparisonStore.bedtime).toEqual('22:00')
+  })
+})

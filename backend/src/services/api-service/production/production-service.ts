@@ -107,7 +107,7 @@ export function calculatePokemonProduction(
     }).detailedProduce;
   }
 
-  // TODO: the filters, the log and the pokemonCombination can we removed with Sleep API 2
+  // TODO: the filters and the pokemonCombination can we removed with Sleep API 2
   return {
     filters: input,
     production: {

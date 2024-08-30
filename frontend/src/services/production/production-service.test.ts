@@ -1,8 +1,9 @@
 import { ProductionService } from '@/services/production/production-service'
 import { createMockPokemon } from '@/vitest'
 import axios from 'axios'
+import { createPinia, setActivePinia } from 'pinia'
 import { mainskill, maxCarrySize, pokemon, type SingleProductionResponse } from 'sleepapi-common'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('axios')
 
@@ -59,45 +60,50 @@ const mockResponse: SingleProductionResponse = {
 }
 
 describe('ProductionService', () => {
-  it('should calculate single production', async () => {
-    mockedAxios.post.mockResolvedValue({ data: mockResponse })
-
-    const result = await ProductionService.calculateSingleProduction(mockPokemonInstance)
-
-    expect(result).toEqual(mockResponse)
-    expect(mockedAxios.post).toHaveBeenCalledWith(
-      `/api/calculator/production/${mockPokemonInstance.pokemon.name}`,
-      {
-        camp: false,
-        cheer: 0,
-        e4eLevel: 1,
-        e4eProcs: 0,
-        erb: 0,
-        extraHelpful: 0,
-        helperBoostLevel: 1,
-        helperBoostProcs: 0,
-        helperBoostUnique: 0,
-        helpingbonus: 0,
-        mainBedtime: '21:30',
-        mainWakeup: '06:00',
-        recoveryIncense: false,
-        level: mockPokemonInstance.level,
-        skillLevel: mockPokemonInstance.skillLevel,
-        ribbon: mockPokemonInstance.ribbon,
-        nature: mockPokemonInstance.nature.name,
-        subskills: mockPokemonInstance.subskills,
-        ingredientSet: mockPokemonInstance.ingredients.map((ing) => ing.ingredient.name),
-        nrOfEvolutions:
-          (maxCarrySize(mockPokemonInstance.pokemon) - mockPokemonInstance.carrySize) / 5
-      }
-    )
+  beforeEach(() => {
+    setActivePinia(createPinia())
   })
+  describe('calculateCompareProduction', () => {
+    it('should calculate compare production', async () => {
+      mockedAxios.post.mockResolvedValue({ data: mockResponse })
 
-  it('should throw an error if the request fails', async () => {
-    mockedAxios.post.mockRejectedValue(new Error('Request failed'))
+      const result = await ProductionService.calculateCompareProduction(mockPokemonInstance)
 
-    await expect(ProductionService.calculateSingleProduction(mockPokemonInstance)).rejects.toThrow(
-      'Request failed'
-    )
+      expect(result).toEqual(mockResponse)
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/calculator/production/${mockPokemonInstance.pokemon.name}`,
+        {
+          camp: false,
+          cheer: 0,
+          e4eLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
+          e4eProcs: 0,
+          erb: 0,
+          extraHelpful: 0,
+          helperBoostLevel: mainskill.HELPER_BOOST.maxLevel,
+          helperBoostProcs: 0,
+          helperBoostUnique: 1,
+          helpingbonus: 0,
+          mainBedtime: '21:30',
+          mainWakeup: '06:00',
+          recoveryIncense: false,
+          level: mockPokemonInstance.level,
+          skillLevel: mockPokemonInstance.skillLevel,
+          ribbon: mockPokemonInstance.ribbon,
+          nature: mockPokemonInstance.nature.name,
+          subskills: mockPokemonInstance.subskills,
+          ingredientSet: mockPokemonInstance.ingredients.map((ing) => ing.ingredient.name),
+          nrOfEvolutions:
+            (maxCarrySize(mockPokemonInstance.pokemon) - mockPokemonInstance.carrySize) / 5
+        }
+      )
+    })
+
+    it('should throw an error if the request fails', async () => {
+      mockedAxios.post.mockRejectedValue(new Error('Request failed'))
+
+      await expect(
+        ProductionService.calculateCompareProduction(mockPokemonInstance)
+      ).rejects.toThrow('Request failed')
+    })
   })
 })

@@ -82,7 +82,7 @@ describe('ComparisonPage', () => {
   beforeEach(async () => {
     setActivePinia(createPinia())
 
-    ProductionService.calculateSingleProduction = vi.fn().mockResolvedValue(mockResponse)
+    ProductionService.calculateCompareProduction = vi.fn().mockResolvedValue(mockResponse)
     wrapper = mount(ComparisonPage)
     wrapper.setData({
       showDialog: false,
