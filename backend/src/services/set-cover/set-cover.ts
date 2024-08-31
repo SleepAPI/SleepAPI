@@ -353,25 +353,22 @@ export class SetCover {
   public calculateMinTeamSizeFor(
     recipe: IngredientSet[],
     startingPokemon: CustomPokemonCombinationWithProduce[],
-    maxTeamSize?: number,
     timeout?: number
   ) {
     this.#startTime = Date.now();
     this.#timeout = timeout ?? this.#timeout;
-
-    const spotsLeftInTeam = maxTeamSize ?? 5;
 
     const params: MemoizedParameters = {
       remainingIngredients: recipe.map((ing) => ({
         amount: ing.amount,
         ingredient: ing.ingredient.name,
       })),
-      spotsLeftInTeam: spotsLeftInTeam,
+      spotsLeftInTeam: 5,
     };
 
     const key = createMemoKey(params);
     const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
 
-    return solutions.at(0) ? solutions[0].length : spotsLeftInTeam + 1;
+    return solutions.at(0);
   }
 }

@@ -357,6 +357,12 @@
 					"skillValue": {
 						"type": "number",
 						"format": "double"
+					},
+					"team": {
+						"items": {
+							"$ref": "#/components/schemas/PokemonIngredientSet"
+						},
+						"type": "array"
 					}
 				},
 				"required": [

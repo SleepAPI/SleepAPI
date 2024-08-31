@@ -14,8 +14,8 @@ describe('setupAndRunProductionSimulation', () => {
     expect(skillActivations).toMatchInlineSnapshot(`
       [
         {
-          "adjustedAmount": 1783.3549168848635,
-          "fractionOfProc": 0.3922910067938547,
+          "adjustedAmount": 2535.705616670246,
+          "fractionOfProc": 0.5577883010713256,
           "nrOfHelpsToActivate": 0,
           "skill": {
             "RP": [
@@ -45,7 +45,7 @@ describe('setupAndRunProductionSimulation', () => {
         {
           "adjustedAmount": 4546,
           "fractionOfProc": 1,
-          "nrOfHelpsToActivate": 50,
+          "nrOfHelpsToActivate": 34,
           "skill": {
             "RP": [
               880,
@@ -72,8 +72,8 @@ describe('setupAndRunProductionSimulation', () => {
           },
         },
         {
-          "adjustedAmount": 363.68000000000035,
-          "fractionOfProc": 0.08000000000000007,
+          "adjustedAmount": 2567.6441547762433,
+          "fractionOfProc": 0.5648139363784082,
           "nrOfHelpsToActivate": 54,
           "skill": {
             "RP": [
@@ -113,7 +113,7 @@ describe('setupAndRunProductionSimulation', () => {
 
     expect(detailedProduce).toMatchInlineSnapshot(`
       {
-        "averageTotalSkillProcs": 1.4722910067938548,
+        "averageTotalSkillProcs": 2.1226022374497338,
         "dayHelps": 54,
         "nightHelps": 20,
         "nightHelpsBeforeSS": 20,
@@ -140,8 +140,8 @@ describe('setupAndRunProductionSimulation', () => {
         },
         "skillActivations": [
           {
-            "adjustedAmount": 1783.3549168848635,
-            "fractionOfProc": 0.3922910067938547,
+            "adjustedAmount": 2535.705616670246,
+            "fractionOfProc": 0.5577883010713256,
             "nrOfHelpsToActivate": 0,
             "skill": {
               "RP": [
@@ -171,7 +171,7 @@ describe('setupAndRunProductionSimulation', () => {
           {
             "adjustedAmount": 4546,
             "fractionOfProc": 1,
-            "nrOfHelpsToActivate": 50,
+            "nrOfHelpsToActivate": 34,
             "skill": {
               "RP": [
                 880,
@@ -198,8 +198,8 @@ describe('setupAndRunProductionSimulation', () => {
             },
           },
           {
-            "adjustedAmount": 363.68000000000035,
-            "fractionOfProc": 0.08000000000000007,
+            "adjustedAmount": 2567.6441547762433,
+            "fractionOfProc": 0.5648139363784082,
             "nrOfHelpsToActivate": 54,
             "skill": {
               "RP": [

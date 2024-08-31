@@ -1,7 +1,16 @@
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { PokemonIngredientSet, berry, ingredient, mainskill, nature, pokemon, subskill } from 'sleepapi-common';
+import {
+  PokemonIngredientSet,
+  berry,
+  calculatePityProcThreshold,
+  ingredient,
+  mainskill,
+  nature,
+  pokemon,
+  subskill,
+} from 'sleepapi-common';
 
 const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
@@ -167,5 +176,46 @@ describe('TeamSimulator', () => {
     expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`50`);
     expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`10`);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`42`);
+  });
+
+  it('shall give pity procs to certain fast pokemon', () => {
+    const settings: TeamSettings = {
+      bedtime: TimeUtils.parseTime('21:30'),
+      wakeup: TimeUtils.parseTime('06:00'),
+      camp: false,
+    };
+
+    const mockMember = {
+      ...mockPokemonSet,
+      pokemon: { ...mockPokemonSet.pokemon, frequency: 3000, skillPercentage: 0 },
+    };
+    const members: TeamMember[] = [
+      {
+        pokemonSet: mockMember,
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.BASHFUL,
+        skillLevel: 6,
+        subskills: [],
+      },
+    ];
+    const simulator = new TeamSimulator({ settings, members });
+
+    simulator.simulate();
+
+    const result = simulator.results();
+    expect(result.members).toHaveLength(1);
+    const member = result.members[0];
+
+    const helpsBeforeSS = member.advanced.dayHelps + member.advanced.nightHelpsBeforeSS;
+    const pityProcThreshold = calculatePityProcThreshold(mockMember.pokemon);
+    const expectedPityProcs = Math.floor(helpsBeforeSS / pityProcThreshold);
+
+    expect(helpsBeforeSS).toMatchInlineSnapshot(`50`);
+    expect(pityProcThreshold).toMatchInlineSnapshot(`48`);
+    expect(expectedPityProcs).toMatchInlineSnapshot(`1`);
+
+    expect(member.skillProcs).toMatchInlineSnapshot(`1`);
   });
 });

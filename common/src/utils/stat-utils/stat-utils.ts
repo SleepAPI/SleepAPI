@@ -23,9 +23,19 @@ export function extractIngredientSubskills(subskills: SubSkill[]) {
   return MathUtils.round(1 + ingM + ingS, 2);
 }
 
-export function calculateSkillPercentage(pokemon: Pokemon, subskills: SubSkill[], nature: Nature) {
+export function calculateSkillPercentage(basePercentage: number, subskills: SubSkill[], nature: Nature) {
   const triggerSubskills = extractTriggerSubskills(subskills);
-  return (pokemon.skillPercentage / 100) * triggerSubskills * nature.skill;
+  return (basePercentage / 100) * triggerSubskills * nature.skill;
+}
+
+export function calculateSkillPercentageWithPityProc(pokemon: Pokemon, subskills: SubSkill[], nature: Nature) {
+  const skillPercentWithoutPity = calculateSkillPercentage(pokemon.skillPercentage, subskills, nature);
+  const pityProcThreshold = calculatePityProcThreshold(pokemon);
+  return skillPercentWithoutPity / (1 - Math.pow(1 - skillPercentWithoutPity, pityProcThreshold + 1));
+}
+
+export function calculatePityProcThreshold(pokemon: Pokemon) {
+  return pokemon.specialty === 'skill' ? Math.floor(144000 / pokemon.frequency) : 78;
 }
 
 export function extractTriggerSubskills(subskills: SubSkill[]) {

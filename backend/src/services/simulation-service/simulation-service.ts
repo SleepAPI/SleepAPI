@@ -37,7 +37,7 @@ import {
   Time,
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
-  calculateSkillPercentage,
+  calculateSkillPercentageWithPityProc,
   combineSameIngredientsInDrop,
   mainskill,
   maxCarrySize,
@@ -101,7 +101,8 @@ export function setupAndRunProductionSimulation(params: {
     nature: maybeNature,
     subskills,
   });
-  const skillPercentage = calculateSkillPercentage(pokemonCombination.pokemon, subskills, maybeNature);
+
+  const skillPercentage = calculateSkillPercentageWithPityProc(pokemonCombination.pokemon, subskills, maybeNature);
 
   const daySleepInfo: SleepInfo = {
     period: { end: mainBedtime, start: mainWakeup },
