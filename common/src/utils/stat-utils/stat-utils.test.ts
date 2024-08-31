@@ -1,6 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { MILD, SASSY } from '../../domain/nature';
-import { DRAGONITE, GALLADE, MOCK_POKEMON, RAICHU } from '../../domain/pokemon';
+import { BRAVE, MILD, SASSY } from '../../domain/nature';
+import {
+  ABSOL,
+  CATERPIE,
+  CHARIZARD,
+  DEDENNE,
+  DRAGONITE,
+  FLAREON,
+  GALLADE,
+  GLACEON,
+  LEAFEON,
+  MAGNEZONE,
+  MOCK_POKEMON,
+  PIKACHU_CHRISTMAS,
+  RAICHU,
+  RAIKOU,
+  SYLVEON,
+  TOGEKISS,
+} from '../../domain/pokemon';
 import {
   BERRY_FINDING_S,
   INGREDIENT_FINDER_M,
@@ -11,7 +28,9 @@ import {
 import {
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
+  calculatePityProcThreshold,
   calculateSkillPercentage,
+  calculateSkillPercentageWithPityProc,
   extractIngredientSubskills,
   extractTriggerSubskills,
 } from '../../utils/stat-utils/stat-utils';
@@ -29,14 +48,48 @@ describe('calculateIngredientPercentage', () => {
 });
 
 describe('calculateSkillPercentage', () => {
-  it('shall calculate ingredient percentage', () => {
-    const result = calculateSkillPercentage(
-      { ...MOCK_POKEMON, skillPercentage: 2 },
-      [SKILL_TRIGGER_M, SKILL_TRIGGER_S],
-      SASSY,
-    );
+  it('shall calculate skill percentage', () => {
+    const result = calculateSkillPercentage(SYLVEON.skillPercentage, [SKILL_TRIGGER_M, SKILL_TRIGGER_S], SASSY);
 
-    expect(result).toBe(0.03696);
+    expect(result).toBe(0.07392);
+  });
+});
+
+describe('calculateSkillPercentageWithPityProc', () => {
+  it('shall calculate skill percentage with subskills and nature', () => {
+    const result = calculateSkillPercentageWithPityProc(SYLVEON, [SKILL_TRIGGER_M, SKILL_TRIGGER_S], SASSY);
+
+    expect(result).toBe(0.07493626822619681);
+  });
+
+  it('shall calculate Raikou', () => {
+    const result = calculateSkillPercentage(RAIKOU.skillPercentage, [], BRAVE);
+    expect(result).toMatchInlineSnapshot(`0.019`);
+    const result2 = calculateSkillPercentageWithPityProc(RAIKOU, [], BRAVE);
+    expect(result2).toMatchInlineSnapshot(`0.0258916072626962`);
+  });
+});
+
+describe('calculatePityProcThreshold', () => {
+  it('shall calculate correct threshold for skill Pokemon', () => {
+    expect(calculatePityProcThreshold(GALLADE)).toBe(60);
+    expect(calculatePityProcThreshold(SYLVEON)).toBe(55);
+    expect(calculatePityProcThreshold(DEDENNE)).toBe(57);
+    expect(calculatePityProcThreshold(PIKACHU_CHRISTMAS)).toBe(55);
+    expect(calculatePityProcThreshold(GLACEON)).toBe(45);
+    expect(calculatePityProcThreshold(LEAFEON)).toBe(48);
+    expect(calculatePityProcThreshold(TOGEKISS)).toBe(55);
+    expect(calculatePityProcThreshold(MAGNEZONE)).toBe(46);
+    expect(calculatePityProcThreshold(FLAREON)).toBe(53);
+    expect(calculatePityProcThreshold(RAIKOU)).toBe(68);
+  });
+
+  it('shall calculate correct threshold for berry and ingredient pokemon', () => {
+    expect(calculatePityProcThreshold(RAICHU)).toBe(78);
+    expect(calculatePityProcThreshold(CATERPIE)).toBe(78);
+    expect(calculatePityProcThreshold(CHARIZARD)).toBe(78);
+    expect(calculatePityProcThreshold(DRAGONITE)).toBe(78);
+    expect(calculatePityProcThreshold(ABSOL)).toBe(78);
   });
 });
 

@@ -93,7 +93,7 @@ export class RP {
   }
 
   get skillChance() {
-    return MathUtils.floor(calculateSkillPercentage(this.pokemon, this.subskills, this.nature), 4);
+    return MathUtils.floor(calculateSkillPercentage(this.pokemon.skillPercentage, this.subskills, this.nature), 4);
   }
 
   get ingredientFactor() {

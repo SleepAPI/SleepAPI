@@ -9,7 +9,7 @@ import {
 
 class TeamSimulatorUtilsImpl {
   public calculateSkillPercentage(member: TeamMember) {
-    return calculateSkillPercentage(member.pokemonSet.pokemon, member.subskills, member.nature);
+    return calculateSkillPercentage(member.pokemonSet.pokemon.skillPercentage, member.subskills, member.nature);
   }
 
   public calculateIngredientPercentage(member: TeamMember) {

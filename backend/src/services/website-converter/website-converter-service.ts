@@ -146,6 +146,16 @@ class WebsiteConverterServiceImpl {
                     `[${Math.round(meal.contributedPower)} ${MathUtils.round(meal.percentage, 1)}%] ${meal.meal.name
                       .toLowerCase()
                       .replace(/_/g, ' ')}`
+                  // \nExample solve: ${
+                  // meal.team
+                  //   ?.map(
+                  //     (member) =>
+                  //       `${capitalize(member.pokemon.name)}(${shortPrettifyIngredientDrop(
+                  //         member.ingredientList
+                  //       )})`
+                  //   )
+                  //   .join(', ') ?? 'no team'
+                  // }`
                 )
                 .join('\n')}`
           )

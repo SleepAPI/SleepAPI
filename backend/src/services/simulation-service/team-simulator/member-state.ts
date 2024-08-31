@@ -17,6 +17,7 @@ import {
   Produce,
   Time,
   TimePeriod,
+  calculatePityProcThreshold,
   ingredient,
   mainskill,
   subskill,
@@ -40,6 +41,8 @@ export class MemberState {
   // state
   private currentEnergy = 0;
   private nextHelp: Time;
+  private helpsSinceLastSkillProc = 0;
+  private currentNightHelps = 0;
   private dayPeriod: TimePeriod;
   private nightPeriod: TimePeriod;
 
@@ -51,8 +54,7 @@ export class MemberState {
   private sneakySnackProduce: Produce;
   private averageProduce: Produce;
   private averageProduceAmount: number;
-  private currentNightHelps = 0;
-  private currentNightSkillProcs = 0;
+  private pityProcThreshold;
 
   // summary
   private skillProcs = 0;
@@ -110,6 +112,8 @@ export class MemberState {
       settings,
       helpingBonus: nrOfHelpingBonus,
     });
+
+    this.pityProcThreshold = calculatePityProcThreshold(member.pokemonSet.pokemon);
 
     this.member = member;
     this.team = team;
@@ -189,6 +193,7 @@ export class MemberState {
 
       // update stats
       this.totalDayHelps += 1;
+      this.helpsSinceLastSkillProc += 1;
       // this.frequencyChanges.push(frequency);
 
       this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, this.averageProduce);
@@ -250,6 +255,7 @@ export class MemberState {
     // roll skill proc on each stored help, stop after if we get a successful roll
     const bankedSkillProcs: SkillActivation[] = [];
     for (let i = 0; i < this.currentNightHelps; i++) {
+      this.helpsSinceLastSkillProc += 1;
       const activatedSkill = this.attemptSkill();
       if (activatedSkill) {
         bankedSkillProcs.push(activatedSkill);
@@ -265,7 +271,6 @@ export class MemberState {
     this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
 
     this.currentNightHelps = 0;
-    this.currentNightSkillProcs = 0;
     this.currentInventory = InventoryUtils.getEmptyInventory();
     this.currentSneakySnack = InventoryUtils.getEmptyInventory();
     return bankedSkillProcs;
@@ -312,8 +317,9 @@ export class MemberState {
   }
 
   private attemptSkill(): SkillActivation | undefined {
-    if (rollRandomChance(this.skillPercentage)) {
+    if (this.helpsSinceLastSkillProc > this.pityProcThreshold || rollRandomChance(this.skillPercentage)) {
       this.skillProcs += 1;
+      this.helpsSinceLastSkillProc = 0;
       let result: SkillActivation | undefined = undefined;
 
       if (this.member.pokemonSet.pokemon.skill === mainskill.METRONOME) {

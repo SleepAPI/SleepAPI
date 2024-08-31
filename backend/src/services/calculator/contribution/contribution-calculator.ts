@@ -4,6 +4,7 @@ import {
   mainskill,
   MAX_RECIPE_LEVEL,
   pokemon,
+  PokemonIngredientSet,
   Recipe,
   recipeLevelBonus,
   RecipeType,
@@ -136,6 +137,7 @@ export function calculateMealContributionFor(params: {
   let totalSupportedFillerIngredients: IngredientSet[] = [];
   let totalSupportedUsedIngredients: IngredientSet[] = [];
   let teamSize = 0;
+  let team: PokemonIngredientSet[] | undefined = undefined;
 
   const supportSkills: mainskill.MainSkill[] = [
     mainskill.ENERGY_FOR_EVERYONE,
@@ -145,24 +147,32 @@ export function calculateMealContributionFor(params: {
     mainskill.HELPER_BOOST,
   ];
   if (shouldCalculateTeamSolutions && supportSkills.includes(currentPokemon.pokemonCombination.pokemon.skill)) {
-    const { supportedFillerIngredients, supportedUsedIngredients, teamSizeRequired } =
-      calculateTeamSizeAndSupportedIngredients({
-        recipe: meal,
-        currentPokemon,
-        currentPokemonDefault,
-        memoizedSetCover,
-        timeout,
-        defaultProduceMap,
-        preCalcedSupportMap,
-      });
+    const {
+      supportedFillerIngredients,
+      supportedUsedIngredients,
+      teamSizeRequired,
+      team: teamSolve,
+    } = calculateTeamSizeAndSupportedIngredients({
+      recipe: meal,
+      currentPokemon,
+      currentPokemonDefault,
+      memoizedSetCover,
+      timeout,
+      defaultProduceMap,
+      preCalcedSupportMap,
+    });
     totalSupportedFillerIngredients = supportedFillerIngredients;
     totalSupportedUsedIngredients = supportedUsedIngredients;
     teamSize = teamSizeRequired;
+    team = teamSolve?.team.map((member) => member.pokemonCombination);
   } else if (shouldCalculateTeamSolutions) {
     if (remainderOfRecipe.length > 0) {
-      teamSize = memoizedSetCover.calculateMinTeamSizeFor(meal.ingredients, [currentPokemon], undefined, 10000);
+      const solution = memoizedSetCover.calculateMinTeamSizeFor(meal.ingredients, [currentPokemon], 10000);
+      teamSize = solution?.length ?? 6;
+      team = solution?.map((member) => member.pokemonCombination);
     } else {
       teamSize = 1;
+      team = [currentPokemon.pokemonCombination];
     }
   } else {
     teamSize = 6;
@@ -171,6 +181,7 @@ export function calculateMealContributionFor(params: {
   return calculateContributionForMealWithPunishment({
     meal,
     teamSize,
+    team,
     percentage,
     producedIngredients: currentPokemonDefault.detailedProduce.produce.ingredients,
     fillerSupportIngredients: totalSupportedFillerIngredients,
@@ -241,6 +252,7 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
   }
 
   return {
+    team: bestSolution,
     teamSizeRequired: bestSolution?.team.length ?? 6,
     supportedUsedIngredients: supportedUsedIngredients.filter(({ amount }) => amount > 0),
     supportedFillerIngredients: supportedFillerIngredients.filter(({ amount }) => amount > 0),
@@ -256,6 +268,7 @@ export function calculateContributionForMealWithPunishment(params: {
   fillerSupportIngredients: IngredientSet[];
   critMultiplier: number;
   defaultCritMultiplier: number;
+  team?: PokemonIngredientSet[];
 }): Contribution {
   const {
     meal,
@@ -266,6 +279,7 @@ export function calculateContributionForMealWithPunishment(params: {
     fillerSupportIngredients,
     critMultiplier,
     defaultCritMultiplier,
+    team,
   } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
 
@@ -294,6 +308,7 @@ export function calculateContributionForMealWithPunishment(params: {
     percentage,
     contributedPower,
     skillValue: tastyChanceContribution + supportedContribution,
+    team,
   };
 }
 
