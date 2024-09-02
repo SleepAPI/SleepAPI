@@ -547,6 +547,29 @@ export const ENTEI: Pokemon = {
   skill: HELPER_BOOST,
 };
 
+export const SUICUNE: Pokemon = {
+  name: 'SUICUNE',
+  specialty: 'skill',
+  frequency: toSeconds(0, 45, 0),
+  ingredientPercentage: 27.7,
+  skillPercentage: 2.6,
+  berry: ORAN,
+  carrySize: 17,
+  previousEvolutions: 0,
+  remainingEvolutions: 0,
+  ingredient0: { amount: 1, ingredient: FANCY_APPLE },
+  ingredient30: [
+    { amount: 2, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: PURE_OIL },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 3, ingredient: PURE_OIL },
+    { amount: 2, ingredient: GREENGRASS_CORN },
+  ],
+  skill: HELPER_BOOST,
+};
+
 export const RALTS: Pokemon = {
   name: 'RALTS',
   specialty: 'skill',
@@ -797,6 +820,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   HERACROSS,
   RAIKOU,
   ENTEI,
+  SUICUNE,
   GARDEVOIR,
   SABLEYE,
   SWALOT,
