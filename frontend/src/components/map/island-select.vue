@@ -1,0 +1,159 @@
+<template>
+  <v-dialog v-model="menu" max-width="500px" class="flex-center">
+    <template #activator="{ props }">
+      <v-btn icon color="transparent" elevation="0" v-bind="props">
+        <v-avatar size="48">
+          <v-img src="/images/misc/map.png" alt="island icon" />
+        </v-avatar>
+      </v-btn>
+    </template>
+
+    <v-card title="Select island or berries">
+      <v-container>
+        <v-row class="flex-center">
+          <v-col class="flex-center">
+            <v-btn icon color="transparent" size="64" aria-label="cyan island" @click="selectCyan">
+              <v-avatar size="64">
+                <v-img src="/images/misc/cyan.png" alt="cyan icon" />
+              </v-avatar>
+            </v-btn>
+          </v-col>
+          <v-col class="flex-center">
+            <v-btn
+              icon
+              color="transparent"
+              size="64"
+              aria-label="taupe island"
+              @click="selectTaupe"
+            >
+              <v-avatar size="64">
+                <v-img src="/images/misc/taupe.png" alt="taupe icon" />
+              </v-avatar>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col class="flex-center">
+            <v-btn
+              icon
+              color="transparent"
+              size="64"
+              aria-label="snowdrop island"
+              @click="selectSnowdrop"
+            >
+              <v-avatar size="64">
+                <v-img src="/images/misc/snowdrop.png" alt="snowdrop icon" />
+              </v-avatar>
+            </v-btn>
+          </v-col>
+          <v-col class="flex-center">
+            <v-btn
+              icon
+              color="transparent"
+              size="64"
+              aria-label="lapis island"
+              @click="selectLapis"
+            >
+              <v-avatar size="64">
+                <v-img src="/images/misc/lapis.png" alt="lapis icon" />
+              </v-avatar>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="12">
+            <v-sheet color="secondary" rounded style="overflow-y: auto">
+              <v-chip-group v-model="favoredBerries" column multiple selected-class="bg-primary">
+                <v-chip
+                  v-for="berry in berries"
+                  :key="berry.name"
+                  :value="berry"
+                  class="ma-1"
+                  @click="toggleBerry(berry)"
+                >
+                  <v-avatar size="24">
+                    <v-img :src="`/images/berries/${berry.name.toLowerCase()}.png`" />
+                  </v-avatar>
+                </v-chip>
+              </v-chip-group>
+            </v-sheet>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="6" class="flex-left">
+            <v-btn color="surface" aria-label="clear button" @click="clear()">Clear</v-btn>
+          </v-col>
+          <v-col cols="6" class="flex-right">
+            <v-btn color="secondary" aria-label="close button" @click="menu = false">Close</v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script lang="ts">
+import { berry } from 'sleepapi-common'
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'IslandSelect',
+  props: {
+    previousBerries: {
+      type: Array<berry.Berry>,
+      default: []
+    }
+  },
+  emits: ['favored-berries'],
+  data: () => ({
+    menu: false,
+    favoredBerries: [] as berry.Berry[]
+  }),
+  computed: {
+    berries() {
+      return berry.BERRIES.sort((a, b) => a.name.localeCompare(b.name))
+    }
+  },
+  mounted() {
+    this.favoredBerries = this.previousBerries
+  },
+  methods: {
+    toggleBerry(berry: berry.Berry) {
+      const index = this.favoredBerries.findIndex((item) => item.name === berry.name)
+
+      if (index === -1) {
+        this.favoredBerries = this.favoredBerries.concat(berry)
+      } else {
+        this.favoredBerries = this.favoredBerries.filter((b) => b.name !== berry.name)
+      }
+      this.updateBerries()
+    },
+    clear() {
+      this.favoredBerries = []
+      this.updateBerries()
+    },
+    selectCyan() {
+      this.favoredBerries = berry.CYAN_BERRIES
+      this.updateBerries()
+    },
+    selectTaupe() {
+      this.favoredBerries = berry.TAUPE_BERRIES
+      this.updateBerries()
+    },
+    selectSnowdrop() {
+      this.favoredBerries = berry.SNOWDROP_BERRIES
+      this.updateBerries()
+    },
+    selectLapis() {
+      this.favoredBerries = berry.LAPIS_BERRIES
+      this.updateBerries()
+    },
+    updateBerries() {
+      this.$emit('favored-berries', this.favoredBerries)
+    }
+  }
+})
+</script>

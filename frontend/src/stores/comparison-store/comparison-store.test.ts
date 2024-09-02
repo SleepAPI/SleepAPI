@@ -4,6 +4,7 @@ import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, ingredient } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 beforeEach(() => {
   setActivePinia(createPinia())
@@ -108,5 +109,18 @@ describe('updateSleep', () => {
     comparisonStore.updateSleep({ wakeup: '07:00', bedtime: '22:00' })
     expect(comparisonStore.wakeup).toEqual('07:00')
     expect(comparisonStore.bedtime).toEqual('22:00')
+  })
+})
+
+describe('timeWindowDivider', () => {
+  it('shall handle 8h and 24h correctly', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.timeWindow = '24H'
+    await nextTick()
+    expect(comparisonStore.timewindowDivider).toEqual(1)
+
+    comparisonStore.timeWindow = '8H'
+    await nextTick()
+    expect(comparisonStore.timewindowDivider).toEqual(3)
   })
 })

@@ -91,7 +91,53 @@ describe('CompareStrength', () => {
     expect(firstRowCells[3].text()).toContain(skillValue)
 
     // Check total power
-    expect(firstRowCells[4].text()).toContain(berryPower + highestIngredientValue + skillValue)
+    const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
+    expect(firstRowCells[4].text()).toContain(totalPower)
+    expect(totalPower).toEqual(20739)
+  })
+
+  it('renders 8h time window correctly', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    comparisonStore.timeWindow = '8H'
+
+    await nextTick()
+
+    const rows = wrapper.findAll('tbody tr')
+    expect(rows).toHaveLength(1)
+
+    const firstRowCells = rows[0].findAll('td')
+    expect(firstRowCells.length).toBe(5)
+
+    expect(firstRowCells[0].text()).toContain('Ash')
+
+    // Check berry power
+    const berryPower = Math.floor(
+      (berryPowerForLevel(
+        mockMemberProduction.member.pokemon.berry,
+        mockMemberProduction.member.level
+      ) *
+        (mockMemberProduction.berries?.amount ?? 1)) /
+        3
+    )
+    expect(firstRowCells[1].text()).toContain(berryPower.toString())
+
+    // Check ingredient power range
+    const lowestIngredientValue = wrapper.vm.lowestIngredientPower(mockMemberProduction)
+    const highestIngredientValue = wrapper.vm.highestIngredientPower(mockMemberProduction)
+
+    const ingredientPower = firstRowCells[2].text()
+    expect(ingredientPower).toContain(lowestIngredientValue)
+    expect(ingredientPower).toContain(highestIngredientValue)
+
+    // Check skill value
+    const skillValue = wrapper.vm.skillValue(mockMemberProduction)
+    expect(firstRowCells[3].text()).toContain(skillValue)
+
+    // Check total power
+    const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
+    expect(firstRowCells[4].text()).toContain(totalPower)
+    expect(totalPower).toEqual(6912)
   })
 
   it('displays the correct number of headers', () => {

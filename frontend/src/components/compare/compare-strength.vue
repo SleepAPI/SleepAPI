@@ -78,7 +78,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import {
+  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+  useComparisonStore
+} from '@/stores/comparison-store/comparison-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import {
   MAX_RECIPE_BONUS,
@@ -132,7 +135,9 @@ export default defineComponent({
           pokemonName: memberPokemon.name,
           berries: berryPower,
           berryName: memberProduction.berries?.berry.name,
-          ingredients: memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+          ingredients:
+            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) /
+            this.comparisonStore.timewindowDivider,
           lowestIngredientPower: this.lowestIngredientPower(memberProduction),
           highestIngredientPower: ingredientPower,
           skillUnit: memberPokemon.skill.unit,
@@ -161,20 +166,29 @@ export default defineComponent({
         memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
         (memberProduction.member.pokemon.skill.name === mainskill.ENERGY_FOR_EVERYONE.name ? 5 : 1)
 
-      return MathUtils.round(amount * memberProduction.skillProcs, 1)
+      return MathUtils.round(
+        (amount * memberProduction.skillProcs) / this.comparisonStore.timewindowDivider,
+        1
+      )
     },
     berryPower(memberProduction: MemberProductionExt) {
+      const favoredBerryMultiplier = this.comparisonStore.favoredBerries.some(
+        (berry) => berry.name === memberProduction.member.pokemon.berry.name
+      )
+        ? 2
+        : 1
       return Math.floor(
-        (memberProduction.berries?.amount ?? 0) *
-          berryPowerForLevel(memberProduction.member.pokemon.berry, memberProduction.member.level)
+        ((memberProduction.berries?.amount ?? 0) / this.comparisonStore.timewindowDivider) *
+          berryPowerForLevel(memberProduction.member.pokemon.berry, memberProduction.member.level) *
+          favoredBerryMultiplier
       )
     },
     lowestIngredientPower(memberProduction: MemberProductionExt) {
       return Math.floor(
         memberProduction.ingredients.reduce(
-          (sum, cur) => sum + cur.amount * cur.ingredient.value,
+          (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
           0
-        )
+        ) / this.comparisonStore.timewindowDivider
       )
     },
     highestIngredientPower(memberProduction: MemberProductionExt) {
@@ -182,12 +196,13 @@ export default defineComponent({
       const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL]
 
       return Math.floor(
-        recipeBonus *
+        (recipeBonus *
           maxLevelRecipeMultiplier *
           memberProduction.ingredients.reduce(
-            (sum, cur) => sum + cur.amount * cur.ingredient.value,
+            (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
             0
-          )
+          )) /
+          this.comparisonStore.timewindowDivider
       )
     }
   }

@@ -106,11 +106,19 @@ export default defineComponent({
         production.push({
           member: memberProduction.member.name,
           pokemonName: memberPokemon.name,
-          berries: MathUtils.round(memberProduction.berries?.amount ?? 0, 1),
+          berries: MathUtils.round(
+            (memberProduction.berries?.amount ?? 0) / this.comparisonStore.timewindowDivider,
+            1
+          ),
           berryName: memberProduction.berries?.berry.name,
-          ingredients: memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+          ingredients:
+            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) /
+            this.comparisonStore.timewindowDivider,
           ingredientList: this.splitIngredientMagnetIngredients(memberProduction.ingredients),
-          skillProcs: MathUtils.round(memberProduction.skillProcs, 1),
+          skillProcs: MathUtils.round(
+            memberProduction.skillProcs / this.comparisonStore.timewindowDivider,
+            1
+          ),
           skillUnit: memberPokemon.skill.unit
         })
       }
@@ -128,15 +136,16 @@ export default defineComponent({
 
         const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
 
-        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount - ingMagnetAmount, 1),
+        return nonIngMagnetIngs.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(
+            (amount - ingMagnetAmount) / this.comparisonStore.timewindowDivider,
+            1
+          ),
           name: ingredient.name.toLowerCase()
         }))
-
-        return result
       } else {
         return ingredients.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount, 1),
+          amount: MathUtils.round(amount / this.comparisonStore.timewindowDivider, 1),
           name: ingredient.name.toLowerCase()
         }))
       }

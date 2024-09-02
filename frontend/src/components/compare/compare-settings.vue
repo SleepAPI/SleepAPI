@@ -157,9 +157,45 @@
             </v-col>
           </v-row>
 
-          <v-col cols="12" class="flex-right">
-            <v-btn color="secondary" @click="advancedMenu = false">Close</v-btn>
-          </v-col>
+          <v-row class="flex-center">
+            <v-col class="text-center responsive-text py-0"> Results timeframe </v-col>
+            <v-col class="text-center responsive-text py-0"> Map </v-col>
+          </v-row>
+
+          <v-row class="flex-center">
+            <v-col class="flex-center">
+              <v-btn-toggle
+                v-model="comparisonStore.timeWindow"
+                mandatory
+                color="primary"
+                rounded="xl"
+                base-color="secondary"
+              >
+                <v-btn value="8H">8H</v-btn>
+                <v-btn value="24H">24H</v-btn>
+              </v-btn-toggle>
+            </v-col>
+
+            <v-col class="flex-center">
+              <IslandSelect
+                id="island-select"
+                :previous-berries="comparisonStore.favoredBerries"
+                @favored-berries="updateFavoredBerries"
+              />
+            </v-col>
+          </v-row>
+
+          <v-row class="flex-center">
+            <v-col cols="10">
+              <v-divider />
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="12" class="flex-right">
+              <v-btn color="secondary" @click="advancedMenu = false">Close</v-btn>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card>
 
@@ -362,11 +398,16 @@
 </template>
 
 <script lang="ts">
+import IslandSelect from '@/components/map/island-select.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import type { berry } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CompareSettings',
+  components: {
+    IslandSelect
+  },
   setup() {
     const comparisonStore = useComparisonStore()
     return { comparisonStore }
@@ -380,6 +421,7 @@ export default defineComponent({
     subskillsMenu: false,
     helpMenu: false,
     energyMenu: false,
+    islandMenu: false,
     wakeup: '06:00',
     bedtime: '21:30',
     updatedWakeup: null,
@@ -453,6 +495,9 @@ export default defineComponent({
     openHelpMenu() {
       this.helpMenu = true
     },
+    openIslandMenu() {
+      this.islandMenu = true
+    },
     toggleWakeupMenu() {
       this.isWakeupOpen = !this.isWakeupOpen
       if (this.updatedWakeup) {
@@ -480,6 +525,9 @@ export default defineComponent({
     allowedWakeupHours(hour: number) {
       const wakeupHour = +this.bedtime.split(':')[0]
       return Math.abs(hour - wakeupHour) > 1
+    },
+    updateFavoredBerries(berries: berry.Berry[]) {
+      this.comparisonStore.favoredBerries = berries
     },
     deleteTeam() {
       this.comparisonStore.$reset()

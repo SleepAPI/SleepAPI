@@ -82,6 +82,33 @@ describe('CompareOverview', () => {
     expect(firstRowCells[3].text()).toContain('5')
   })
 
+  it('renders 8h time window correctly', async () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    comparisonStore.timeWindow = '8H'
+
+    await nextTick()
+
+    const rows = wrapper.findAll('tbody tr')
+    expect(rows).toHaveLength(1)
+
+    const firstRowCells = rows[0].findAll('td')
+    expect(firstRowCells.length).toBe(4)
+
+    // Check member name
+    expect(firstRowCells[0].text()).toContain('Ash')
+
+    // Check berries
+    expect(firstRowCells[1].text()).toContain('33.3')
+
+    // Check ingredients
+    expect(firstRowCells[2].text()).toContain('3.3')
+    expect(firstRowCells[2].text()).toContain('6.7')
+
+    // Check skill procs
+    expect(firstRowCells[3].text()).toContain('1.7')
+  })
+
   it('correctly computes the rounded values', async () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
