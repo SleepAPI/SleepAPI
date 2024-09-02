@@ -1,5 +1,6 @@
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
+import type { berry } from 'sleepapi-common'
 
 export interface ComparisonState {
   members: SingleProductionExt[]
@@ -14,9 +15,12 @@ export interface ComparisonState {
   helperBoost: number
   helperBoostUnique: number
   recoveryIncense: boolean
+  timeWindow: '8H' | '24H'
+  favoredBerries: berry.Berry[]
 }
 
 const MAX_COMPARISON_MEMBERS = 10
+export const AVERAGE_WEEKLY_CRIT_MULTIPLIER = 1.171428571
 
 export const useComparisonStore = defineStore('comparison', {
   state: (): ComparisonState => {
@@ -32,13 +36,16 @@ export const useComparisonStore = defineStore('comparison', {
       extraHelpful: 0,
       helperBoost: 0,
       helperBoostUnique: 1,
-      recoveryIncense: false
+      recoveryIncense: false,
+      timeWindow: '24H',
+      favoredBerries: []
     }
   },
   getters: {
     getMemberProduction: (state) => (externalId: string) =>
       state.members.find((member) => member.member.externalId === externalId),
-    fullTeam: (state) => state.members.length >= MAX_COMPARISON_MEMBERS
+    fullTeam: (state) => state.members.length >= MAX_COMPARISON_MEMBERS,
+    timewindowDivider: (state) => (state.timeWindow === '24H' ? 1 : 3)
   },
   actions: {
     addMember(member: SingleProductionExt) {

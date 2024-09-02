@@ -164,7 +164,11 @@ export default defineComponent({
         ingredientPercentage: summary.ingredientPercentage,
         skillPercentage: summary.skillPercentage,
         carrySize: summary.carrySize,
-        ingredients: production.produce.ingredients,
+        // classic API returns ingredients per meal-window, but berries / skill procs per day
+        ingredients: production.produce.ingredients.map(({ amount, ingredient }) => ({
+          amount: amount * 3,
+          ingredient
+        })),
         skillProcs: production.averageTotalSkillProcs,
         berries: production.produce.berries,
         spilledIngredients: production.spilledIngredients,

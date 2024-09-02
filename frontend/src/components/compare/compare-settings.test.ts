@@ -111,4 +111,43 @@ describe('CompareSettings', () => {
     button.click()
     expect(wrapper.vm.tooltipMenu).toBe(true)
   })
+
+  it('toggles timeWindow correctly', async () => {
+    const comparisonStore = useComparisonStore()
+
+    const openMenuButton = wrapper.find('button[aria-label="open advanced menu"]')
+    await openMenuButton.trigger('click')
+
+    const twentyFourHourBtn = document.querySelector('button[value="24H"]') as HTMLElement
+    const eightHourBtn = document.querySelector('button[value="8H"]') as HTMLElement
+
+    expect(twentyFourHourBtn).not.toBeNull()
+    expect(eightHourBtn).not.toBeNull()
+
+    expect(comparisonStore.timeWindow).toBe('24H')
+
+    eightHourBtn.click()
+    await nextTick()
+    expect(comparisonStore.timeWindow).toBe('8H')
+
+    twentyFourHourBtn.click()
+    await nextTick()
+    expect(comparisonStore.timeWindow).toBe('24H')
+  })
+
+  it('updates favored berries correctly', async () => {
+    const comparisonStore = useComparisonStore()
+
+    const openMenuButton = wrapper.find('button[aria-label="open advanced menu"]')
+    await openMenuButton.trigger('click')
+
+    await nextTick()
+
+    const berriesToAdd = [berry.BELUE, berry.LUM]
+
+    wrapper.vm.updateFavoredBerries(berriesToAdd)
+    await nextTick()
+
+    expect(comparisonStore.favoredBerries).toEqual(berriesToAdd)
+  })
 })

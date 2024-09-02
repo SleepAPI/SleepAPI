@@ -1,7 +1,13 @@
 <template>
   <v-row>
     <v-col cols="12" class="fill-height">
-      <v-card :loading="loading" max-width="600px" title="Pokebox">
+      <v-card
+        :loading="loading"
+        max-width="600px"
+        max-height="75dvh"
+        title="Pokebox"
+        style="overflow-y: auto"
+      >
         <v-divider />
 
         <v-list>

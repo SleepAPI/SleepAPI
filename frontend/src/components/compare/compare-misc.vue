@@ -72,7 +72,6 @@
 
           <template #item.collectFrequency="{ item }">
             <div v-if="item.collectFrequency">
-              <div>(hh:mm:ss)</div>
               <div>
                 {{ item.collectFrequency }}
               </div>
@@ -82,36 +81,29 @@
 
           <template #item.totalHelps="{ item }">
             <div>{{ item.totalHelps }}</div>
-            <div>helps</div>
           </template>
 
           <template #item.dayHelps="{ item }">
             <div>{{ item.dayHelps }}</div>
-            <div>helps</div>
           </template>
 
           <template #item.nightHelps="{ item }">
             <div>{{ item.nightHelps }}</div>
-            <div>helps</div>
           </template>
 
           <template #item.sneakySnackHelps="{ item }">
             <div>{{ item.sneakySnackHelps }}</div>
-            <div>helps</div>
           </template>
 
           <template #item.totalRecovery="{ item }">
             <div>{{ item.totalRecovery }}</div>
-            <div>energy</div>
           </template>
 
           <template #item.averageEnergy="{ item }">
             <div>{{ item.averageEnergy }}</div>
-            <div>energy</div>
           </template>
 
           <template #item.averageFrequency="{ item }">
-            <div>(hh:mm:ss)</div>
             <div>{{ item.averageFrequency }}</div>
           </template>
         </v-data-table>
@@ -155,10 +147,20 @@ export default defineComponent({
       { title: 'Carry limit', key: 'carryLimit', sortable: true, align: 'center' },
       { title: 'Spilled ingredients', key: 'spilledIngredients', sortable: true, align: 'center' },
       { title: 'Sneaky snack', key: 'sneakySnack', sortable: true, align: 'center' },
-      { title: 'Time to full carry', key: 'collectFrequency', sortable: true, align: 'center' },
-      { title: 'Average frequency', key: 'averageFrequency', sortable: true, align: 'center' },
+      {
+        title: 'Time to full carry\n(hh:mm:ss)',
+        key: 'collectFrequency',
+        sortable: true,
+        align: 'center'
+      },
+      {
+        title: 'Average frequency\n(hh:mm:ss)',
+        key: 'averageFrequency',
+        sortable: true,
+        align: 'center'
+      },
       { title: 'Average energy', key: 'averageEnergy', sortable: true, align: 'center' },
-      { title: 'Total recovery', key: 'totalRecovery', sortable: true, align: 'center' },
+      { title: 'Total recovered energy', key: 'totalRecovery', sortable: true, align: 'center' },
       { title: 'Total helps', key: 'totalHelps', sortable: true, align: 'center' },
       { title: 'Day helps', key: 'dayHelps', sortable: true, align: 'center' },
       { title: 'Night helps', key: 'nightHelps', sortable: true, align: 'center' },
@@ -193,7 +195,7 @@ export default defineComponent({
           dayHelps: memberProduction.dayHelps,
           nightHelps: memberProduction.nightHelps,
           sneakySnackHelps: memberProduction.sneakySnackHelps,
-          totalRecovery: memberProduction.totalRecovery,
+          totalRecovery: MathUtils.round(memberProduction.totalRecovery, 1),
           averageEnergy: MathUtils.round(memberProduction.averageEnergy, 1),
           averageFrequency: TimeUtils.formatTime(Math.floor(memberProduction.averageFrequency)),
           collectFrequency:
