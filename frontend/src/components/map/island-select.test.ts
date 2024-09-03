@@ -107,6 +107,22 @@ describe('IslandSelect', () => {
     expect(wrapper.vm.favoredBerries).toEqual([])
   })
 
+  it('selects all berries when the all button is clicked', async () => {
+    wrapper.vm.menu = true
+    wrapper.vm.favoredBerries = berry.CYAN_BERRIES
+    await wrapper.vm.$nextTick()
+
+    const allButton = document.querySelector(
+      'button[aria-label="select all button"]'
+    ) as HTMLElement
+    expect(allButton).not.toBeNull()
+
+    allButton.click()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.vm.favoredBerries).toEqual(berry.BERRIES)
+  })
+
   it('closes the dialog when the close button is clicked', async () => {
     wrapper.vm.menu = true
     await wrapper.vm.$nextTick()

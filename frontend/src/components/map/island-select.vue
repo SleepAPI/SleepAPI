@@ -83,10 +83,13 @@
         </v-row>
 
         <v-row>
-          <v-col cols="6" class="flex-left">
+          <v-col cols="4" class="flex-left">
             <v-btn color="surface" aria-label="clear button" @click="clear()">Clear</v-btn>
           </v-col>
-          <v-col cols="6" class="flex-right">
+          <v-col cols="4" class="flex-left">
+            <v-btn color="surface" aria-label="select all button" @click="selectAll()">All</v-btn>
+          </v-col>
+          <v-col cols="4" class="flex-right">
             <v-btn color="secondary" aria-label="close button" @click="menu = false">Close</v-btn>
           </v-col>
         </v-row>
@@ -133,6 +136,10 @@ export default defineComponent({
     },
     clear() {
       this.favoredBerries = []
+      this.updateBerries()
+    },
+    selectAll() {
+      this.favoredBerries = this.berries
       this.updateBerries()
     },
     selectCyan() {
