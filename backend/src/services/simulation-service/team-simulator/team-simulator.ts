@@ -15,6 +15,7 @@
  */
 
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
@@ -24,6 +25,7 @@ export class TeamSimulator {
   private run = 0;
 
   private memberStates: MemberState[] = [];
+  private cookingState;
 
   private currentTimeIndex = 0;
   private timeIntervals: Time[] = [];
@@ -35,6 +37,8 @@ export class TeamSimulator {
 
   constructor(params: { settings: TeamSettings; members: TeamMember[] }) {
     const { settings, members } = params;
+
+    this.cookingState = new CookingState(settings.camp);
 
     const dayPeriod = {
       start: settings.wakeup,
@@ -61,7 +65,7 @@ export class TeamSimulator {
     this.mealTimes = getDefaultMealTimes(dayPeriod);
 
     for (const member of members) {
-      const memberState = new MemberState({ member, team: members, settings });
+      const memberState = new MemberState({ member, team: members, settings, cookingState: this.cookingState });
       this.memberStates.push(memberState);
     }
   }
@@ -103,9 +107,10 @@ export class TeamSimulator {
 
   public results(): CalculateTeamResponse {
     this.collectInventory();
-    // TODO: return more info, total team's ingredients, each member's stats etc
 
-    return { members: this.memberStates.map((m) => m.averageResults(this.run)) };
+    const cookingResult = this.cookingState.results(this.run);
+
+    return { members: this.memberStates.map((m) => m.averageResults(this.run)), cooking: cookingResult };
   }
 
   private init() {
@@ -141,6 +146,8 @@ export class TeamSimulator {
         for (const member of this.memberStates) {
           member.recoverMeal();
         }
+        // mod 7 for if Sunday
+        this.cookingState.cook(this.run % 7 === 0);
         this.cookedMealsCounter++;
       } else break;
     }

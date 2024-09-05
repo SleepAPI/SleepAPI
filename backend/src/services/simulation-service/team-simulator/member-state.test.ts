@@ -1,5 +1,6 @@
 import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
@@ -44,8 +45,10 @@ const settings: TeamSettings = {
   camp: false,
 };
 
+const cookingState: CookingState = new CookingState(settings.camp);
+
 describe('MemberState init', () => {
-  const memberState = new MemberState({ member, settings, team: [member] });
+  const memberState = new MemberState({ member, settings, team: [member], cookingState });
 
   it('shall return expected skill level', () => {
     expect(memberState.skillLevel).toBe(6);
@@ -70,7 +73,7 @@ describe('MemberState init', () => {
 
 describe('startDay', () => {
   it('shall recover full sleep', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.startDay();
     expect(memberState.energy).toBe(100);
@@ -87,7 +90,7 @@ describe('startDay', () => {
       subskills: [],
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.startDay();
     expect(memberState.energy).toBe(88);
@@ -110,14 +113,14 @@ describe('startDay', () => {
       camp: false,
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.startDay();
     expect(Math.round(memberState.energy)).toBe(67);
   });
 
   it('shall recover max up to 100 if member has residual energy from day before', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(50);
     expect(memberState.energy).toBe(50);
@@ -136,7 +139,7 @@ describe('startDay', () => {
       subskills: [subskill.ENERGY_RECOVERY_BONUS],
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.startDay();
     expect(memberState.energy).toBe(100);
@@ -145,7 +148,7 @@ describe('startDay', () => {
 
 describe('recoverEnergy', () => {
   it('shall recover energy from e4e', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(18);
     expect(memberState.energy).toBe(18);
@@ -164,14 +167,14 @@ describe('recoverEnergy', () => {
       subskills: [],
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(50);
     expect(memberState.energy).toBe(44);
   });
 
   it('shall recover max 150 energy', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(200);
     expect(memberState.energy).toBe(150);
@@ -182,7 +185,7 @@ describe('recoverEnergy', () => {
 
 describe('addHelps', () => {
   it('shall add 1 average produce help', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.addHelps(1);
     memberState.collectInventory();
 
@@ -222,7 +225,7 @@ describe('addHelps', () => {
   });
 
   it('shall not add produce if adding 0 helps', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.addHelps(0);
     memberState.collectInventory();
 
@@ -264,14 +267,14 @@ describe('addHelps', () => {
 
 describe('recoverMeal', () => {
   it('shall recover energy from cooking', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverMeal();
     expect(memberState.energy).toBe(5);
   });
 
   it('shall recover no energy from cooking at 150 energy', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(150);
     expect(memberState.energy).toBe(150);
@@ -298,7 +301,7 @@ describe('attemptDayHelp', () => {
       subskills: [],
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptDayHelp(TimeUtils.parseTime('06:01'));
     memberState.collectInventory();
 
@@ -344,7 +347,7 @@ describe('attemptDayHelp', () => {
       camp: false,
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptDayHelp(TimeUtils.parseTime('05:59'));
     memberState.collectInventory();
 
@@ -373,7 +376,7 @@ describe('attemptDayHelp', () => {
       camp: false,
     };
 
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
 
@@ -426,7 +429,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall empty inventory if full', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     // fill inv
     memberState.addHelps(100);
 
@@ -453,7 +456,7 @@ describe('attemptDayHelp', () => {
       skillLevel: 6,
       subskills: [],
     };
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     // fill inv
     memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
 
@@ -473,7 +476,7 @@ describe('attemptDayHelp', () => {
       skillLevel: 6,
       subskills: [],
     };
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     // fill inv
     memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
 
@@ -483,7 +486,7 @@ describe('attemptDayHelp', () => {
 
 describe('attemptNightHelp', () => {
   it('shall not perform night help during the day', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptNightHelp(TimeUtils.parseTime('06:05'));
     memberState.collectInventory();
 
@@ -506,7 +509,7 @@ describe('attemptNightHelp', () => {
   });
 
   it('shall add 1 night help', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
 
@@ -546,7 +549,7 @@ describe('attemptNightHelp', () => {
   });
 
   it('shall add any excess helps to sneaky snacking, and shall not roll skill proc on those', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.addHelps(100);
     memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
@@ -606,7 +609,7 @@ describe('attemptNightHelp', () => {
       skillLevel: 6,
       subskills: [],
     };
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
 
@@ -648,7 +651,7 @@ describe('attemptNightHelp', () => {
 
 describe('degradeEnergy', () => {
   it('shall degrade energy by 1', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(100);
     memberState.degradeEnergy();
@@ -656,7 +659,7 @@ describe('degradeEnergy', () => {
   });
 
   it('shall degrade by less than 1 if less than 1 energy left total', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(0.1);
     memberState.degradeEnergy();
@@ -664,7 +667,7 @@ describe('degradeEnergy', () => {
   });
 
   it('shall not degrade if energy at 0', () => {
-    const memberState = new MemberState({ member, settings, team: [member] });
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
     memberState.degradeEnergy();
     expect(memberState.energy).toBe(0);

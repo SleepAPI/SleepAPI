@@ -40,13 +40,32 @@ describe('TeamResults', () => {
       ],
       team: {
         berries: [{ amount: 5, berry: berry.BELUE }],
-        ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }]
+        ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
+        cooking: {
+          curry: {
+            weeklyStrength: 0,
+            cookedRecipes: [],
+            sundayStrength: 0
+          },
+          salad: {
+            weeklyStrength: 0,
+            cookedRecipes: [],
+            sundayStrength: 0
+          },
+          dessert: {
+            weeklyStrength: 0,
+            cookedRecipes: [],
+            sundayStrength: 0
+          }
+        }
       }
     },
     index: 0,
     camp: false,
     bedtime: '21:30',
     wakeup: '06:00',
+    recipeType: 'curry',
+    favoredBerries: [],
     name: 'Team name',
     version: 0
   }

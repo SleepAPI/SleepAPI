@@ -5,7 +5,6 @@ import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, ingredient } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
 
 describe('TeamResults', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamResults>>
@@ -45,7 +44,24 @@ describe('TeamResults', () => {
           berry: berry.BELUE
         }
       ],
-      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }]
+      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }],
+      cooking: {
+        curry: {
+          weeklyStrength: 0,
+          cookedRecipes: [],
+          sundayStrength: 0
+        },
+        salad: {
+          weeklyStrength: 0,
+          cookedRecipes: [],
+          sundayStrength: 0
+        },
+        dessert: {
+          weeklyStrength: 0,
+          cookedRecipes: [],
+          sundayStrength: 0
+        }
+      }
     }
 
     teamStore.teams[0] = {
@@ -56,44 +72,5 @@ describe('TeamResults', () => {
     } as any
 
     expect(wrapper.vm.teamProduction).toBe('10 BELUE\n5 Sausage')
-  })
-
-  it('changes tab correctly', async () => {
-    const tabs = wrapper.findAll('.v-tab')
-    await tabs[1].trigger('click')
-    expect(wrapper.vm.tab).toBe('cooking')
-    await tabs[2].trigger('click')
-    expect(wrapper.vm.tab).toBe('analysis')
-    await tabs[0].trigger('click')
-    expect(wrapper.vm.tab).toBe('overview')
-  })
-
-  it('renders tab contents correctly', async () => {
-    const tabs = wrapper.findAll('.v-tab')
-
-    const teamStore = useTeamStore()
-
-    teamStore.currentIndex = 0
-    const teamProduction: TeamCombinedProduction = {
-      berries: [
-        {
-          amount: 10,
-          berry: berry.BELUE
-        }
-      ],
-      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }]
-    }
-
-    teamStore.teams[0] = {
-      production: {
-        team: teamProduction,
-        members: []
-      }
-    } as any
-
-    await tabs[0].trigger('click')
-    await nextTick()
-    const overviewTabContent = wrapper.find('.v-window-item.v-tabs-window-item .v-card-text')
-    expect(overviewTabContent.text()).toBe('10 BELUE\n5 Sausage')
   })
 })

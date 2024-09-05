@@ -1,8 +1,17 @@
-import type { BerrySet, IngredientSet, PokemonInstanceExt, Time } from 'sleepapi-common'
+import type {
+  BerrySet,
+  CookingResult,
+  IngredientSet,
+  PokemonInstanceExt,
+  RecipeType,
+  Time,
+  berry
+} from 'sleepapi-common'
 
 export interface TeamCombinedProduction {
   berries: BerrySet[]
   ingredients: IngredientSet[]
+  cooking: CookingResult
 }
 
 export interface MemberProductionExt {
@@ -38,6 +47,8 @@ export interface TeamInstance {
   camp: boolean
   bedtime: string
   wakeup: string
+  recipeType: RecipeType
+  favoredBerries: berry.Berry[]
   version: number
   members: (string | undefined)[]
   production?: TeamProductionExt

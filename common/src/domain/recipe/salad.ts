@@ -19,6 +19,12 @@ import {
 } from '../ingredient/ingredient';
 import { Recipe } from './recipe';
 
+export const MIXED_SALAD = createSalad({
+  name: 'MIXED_SALAD',
+  ingredients: [],
+  bonus: 0,
+});
+
 export const FANCY_APPLE_SALAD = createSalad({
   name: 'FANCY_APPLE_SALAD',
   ingredients: [{ amount: 8, ingredient: FANCY_APPLE }],

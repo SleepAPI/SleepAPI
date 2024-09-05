@@ -67,6 +67,8 @@ describe('getTeams', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
       })
@@ -117,6 +119,8 @@ describe('getTeams', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipeType: 'curry',
+      favoredBerries: [],
       version: 1,
       members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined]
     })
@@ -129,6 +133,8 @@ describe('getTeams', () => {
       name: `Team ${index + 1}`,
       camp: index % 2 === 0,
       version: 1,
+      recipeType: 'curry',
+      favoredBerries: [],
       members: Array.from({ length: MAX_TEAM_MEMBERS }, (__, memberIndex) => ({
         version: 1,
         memberIndex,
@@ -159,6 +165,8 @@ describe('getTeams', () => {
         name: `Team ${teamIndex + 1}`,
         camp: teamIndex % 2 === 0,
         version: 1,
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [
           '000000000000000000000000000000000000',
           '000000000000000000000000000000000000',
