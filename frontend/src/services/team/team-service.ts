@@ -61,6 +61,8 @@ class TeamServiceImpl {
           camp: false,
           bedtime: '21:30',
           wakeup: '06:00',
+          recipeType: 'curry',
+          favoredBerries: [],
           version: 0,
           members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
           production: undefined
@@ -82,12 +84,19 @@ class TeamServiceImpl {
           }
         }
 
+        // TODO: fix in db
+        const { favoredBerries, recipeType } = teamStore.teams[teamIndex] ?? {
+          favoredBerries: [],
+          recipeType: 'curry'
+        }
         const instancedTeam: TeamInstance = {
           index: existingTeam.index,
           name: existingTeam.name,
           camp: existingTeam.camp,
           bedtime: existingTeam.bedtime,
           wakeup: existingTeam.wakeup,
+          recipeType, // TODO: fix in db
+          favoredBerries, // TODO: fix in db
           version: existingTeam.version,
           members,
           production: undefined
@@ -149,7 +158,8 @@ class TeamServiceImpl {
     )
     const teamProduction: TeamCombinedProduction = {
       berries: teamBerries,
-      ingredients: teamIngredients
+      ingredients: teamIngredients,
+      cooking: response.data.cooking
     }
 
     const pokemonStore = usePokemonStore()

@@ -1,28 +1,24 @@
 <template>
   <v-row dense>
-    <v-col cols="6" class="d-flex align-center">
-      Click a mon above to edit, save, duplicate or remove it.
-    </v-col>
-    <v-col cols="2" class="flex-center">
+    <v-col cols="12/5" class="flex-center">
       <v-btn
         icon
         color="transparent"
         elevation="0"
-        :class="{ nudge: teamStore.getTeamSize === 0 }"
-        aria-label="delete team"
-        @click="deleteTeam"
+        aria-label="select recipe"
+        @click="openRecipeMenu"
       >
-        <v-avatar size="48">
-          <v-icon
-            size="36"
-            :color="teamStore.getTeamSize === 0 ? 'secondary' : 'primary'"
-            alt="delete team icon"
-            >mdi-delete</v-icon
-          >
-        </v-avatar>
+        <v-img height="48" width="48" :src="recipeTypeImage" alt="pot icon" class="recipe-color" />
       </v-btn>
     </v-col>
-    <v-col cols="2" class="flex-center">
+    <v-col cols="12/5" class="flex-center">
+      <IslandSelect
+        :previous-berries="teamStore.getCurrentTeam.favoredBerries"
+        @favored-berries="updateFavoredBerries"
+      />
+    </v-col>
+
+    <v-col cols="12/5" class="flex-center">
       <v-btn
         :disabled="isCampButtonDisabled"
         icon
@@ -35,7 +31,7 @@
         </v-avatar>
       </v-btn>
     </v-col>
-    <v-col cols="2" class="flex-center">
+    <v-col cols="12/5" class="flex-center">
       <v-btn
         icon
         color="white"
@@ -56,6 +52,86 @@
         </v-avatar>
       </v-btn>
     </v-col>
+    <v-col cols="12/5" class="flex-center">
+      <v-btn
+        icon
+        color="transparent"
+        elevation="0"
+        :class="{ nudge: teamStore.getTeamSize === 0 }"
+        aria-label="delete team"
+        @click="deleteTeam"
+      >
+        <v-avatar size="48">
+          <v-icon
+            size="36"
+            :color="teamStore.getTeamSize === 0 ? 'secondary' : 'primary'"
+            alt="delete team icon"
+            >mdi-delete</v-icon
+          >
+        </v-avatar>
+      </v-btn>
+    </v-col>
+
+    <v-dialog
+      v-model="recipeMenu"
+      max-width="400px"
+      aria-label="recipe menu"
+      close-on-content-click
+    >
+      <v-card title="Choose recipe week" subtitle="Curry, salad or dessert">
+        <template #append>
+          <v-img width="48" height="48" src="/images/misc/pot1.png"></v-img>
+        </template>
+        <v-card
+          class="flex-center"
+          color="curry"
+          height="72"
+          aria-label="curry button"
+          @click="teamStore.updateRecipeType('curry')"
+        >
+          <v-row class="flex-center">
+            <v-col cols="6" class="w-100 text-h5 text-center flex-center"> Curry </v-col>
+            <v-col cols="6" class="w-100 flex-center">
+              <v-img width="72" height="72" src="/images/recipe/mixedcurry.png"></v-img>
+            </v-col>
+          </v-row>
+        </v-card>
+
+        <v-card
+          class="flex-center"
+          color="salad"
+          height="72"
+          aria-label="salad button"
+          @click="teamStore.updateRecipeType('salad')"
+        >
+          <v-row class="flex-center">
+            <v-col cols="6" class="w-100 text-h5 text-center flex-center"> Salad </v-col>
+            <v-col cols="6" class="w-100 flex-center">
+              <v-img width="72" height="72" src="/images/recipe/mixedsalad.png"></v-img>
+            </v-col>
+          </v-row>
+        </v-card>
+
+        <v-card
+          class="flex-center"
+          color="dessert"
+          height="72"
+          aria-label="dessert button"
+          @click="teamStore.updateRecipeType('dessert')"
+        >
+          <v-row class="flex-center">
+            <v-col cols="6" class="w-100 text-h5 text-center flex-center"> Dessert </v-col>
+            <v-col cols="6" class="w-100 flex-center">
+              <v-img width="72" height="72" src="/images/recipe/mixedjuice.png"></v-img>
+            </v-col>
+          </v-row>
+        </v-card>
+
+        <v-card-actions class="pt-0">
+          <v-btn rounded="lg" @click="recipeMenu = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="isTimePickerOpen" max-width="400px" aria-label="time menu">
       <v-card title="Update sleep" :subtitle="calculateSleepDuration">
@@ -147,11 +223,14 @@
 </template>
 
 <script lang="ts">
+import IslandSelect from '@/components/map/island-select.vue'
 import { useTeamStore } from '@/stores/team/team-store'
+import type { berry } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSettings',
+  components: { IslandSelect },
   setup() {
     const teamStore = useTeamStore()
     return { teamStore }
@@ -159,6 +238,7 @@ export default defineComponent({
   data: () => ({
     isCampButtonDisabled: false,
     isSleepScoreButtonDisabled: false,
+    recipeMenu: false,
     isTimePickerOpen: false,
     isWakeupOpen: false,
     isBedtimeOpen: false,
@@ -210,6 +290,11 @@ export default defineComponent({
       const minutes = Math.floor((duration % 3600) / 60)
 
       return `${hours} hours and ${minutes} minutes`
+    },
+    recipeTypeImage() {
+      return this.teamStore.getCurrentTeam.recipeType === 'dessert'
+        ? '/images/recipe/mixedjuice.png'
+        : `/images/recipe/mixed${this.teamStore.getCurrentTeam.recipeType}.png`
     }
   },
   watch: {
@@ -232,6 +317,9 @@ export default defineComponent({
           this.isCampButtonDisabled = false
         }, 1000)
       }
+    },
+    openRecipeMenu() {
+      this.recipeMenu = true
     },
     openSleepMenu() {
       if (!this.isSleepScoreButtonDisabled) {
@@ -272,6 +360,9 @@ export default defineComponent({
     },
     deleteTeam() {
       this.teamStore.deleteTeam()
+    },
+    updateFavoredBerries(berries: berry.Berry[]) {
+      this.teamStore.getCurrentTeam.favoredBerries = berries
     }
   }
 })

@@ -123,7 +123,8 @@ export function calculatePokemonProduction(
   };
 }
 
-export function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }, iterations = 5000) {
+// 5110 days is 14 years or 730 weeks
+export function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }, iterations = 5110) {
   const { settings, members } = params;
   const teamSimulator = new TeamSimulator({ settings, members });
 

@@ -209,7 +209,6 @@ export default defineComponent({
   },
   methods: {
     ingredientImage(name: string) {
-      console.log(name)
       return name === 'magnet' ? '/images/misc/ingredients.png' : `/images/ingredient/${name}.png`
     }
   }

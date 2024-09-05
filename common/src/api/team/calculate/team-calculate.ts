@@ -1,4 +1,5 @@
 import { PokemonInstance } from '../../../api/pokemon/pokemon-instance';
+import { Recipe } from '../../../domain/recipe/recipe';
 import { BerrySet } from '../../../domain/types/berry-drop';
 import { IngredientSet } from '../../../domain/types/ingredient-set';
 
@@ -34,6 +35,19 @@ export interface MemberProduction {
   advanced: MemberProductionAdvanced;
 }
 
+export interface RecipeTypeResult {
+  weeklyStrength: number;
+  sundayStrength: number;
+  cookedRecipes: { recipe: Recipe; count: number; sunday: number }[];
+}
+
+export interface CookingResult {
+  curry: RecipeTypeResult;
+  salad: RecipeTypeResult;
+  dessert: RecipeTypeResult;
+}
+
 export interface CalculateTeamResponse {
   members: MemberProduction[];
+  cooking: CookingResult;
 }

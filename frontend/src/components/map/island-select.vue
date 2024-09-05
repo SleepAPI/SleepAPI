@@ -2,9 +2,7 @@
   <v-dialog v-model="menu" max-width="500px" class="flex-center">
     <template #activator="{ props }">
       <v-btn icon color="transparent" elevation="0" v-bind="props">
-        <v-avatar size="48">
-          <v-img src="/images/misc/map.png" alt="island icon" />
-        </v-avatar>
+        <v-img height="48" width="48" :src="menuButtonImage" alt="island icon" />
       </v-btn>
     </template>
 
@@ -86,7 +84,7 @@
           <v-col cols="4" class="flex-left">
             <v-btn color="surface" aria-label="clear button" @click="clear()">Clear</v-btn>
           </v-col>
-          <v-col cols="4" class="flex-left">
+          <v-col cols="4" class="flex-center">
             <v-btn color="surface" aria-label="select all button" @click="selectAll()">All</v-btn>
           </v-col>
           <v-col cols="4" class="flex-right">
@@ -118,6 +116,30 @@ export default defineComponent({
   computed: {
     berries() {
       return berry.BERRIES.sort((a, b) => a.name.localeCompare(b.name))
+    },
+    menuButtonImage() {
+      const berryNames = this.favoredBerries.map((b) => b.name)
+
+      const arraysEqual = (arr1: string[], arr2: string[]) => {
+        if (arr1.length !== arr2.length) return false
+        return arr1.every((value, index) => value === arr2[index])
+      }
+
+      const berryImageMap = {
+        '/images/misc/cyan.png': berry.CYAN_BERRIES,
+        '/images/misc/taupe.png': berry.TAUPE_BERRIES,
+        '/images/misc/snowdrop.png': berry.SNOWDROP_BERRIES,
+        '/images/misc/lapis.png': berry.LAPIS_BERRIES
+      }
+
+      for (const [imagePath, islandberries] of Object.entries(berryImageMap)) {
+        const berryArrayNames = islandberries.map((b) => b.name)
+        if (arraysEqual(berryNames, berryArrayNames)) {
+          return imagePath
+        }
+      }
+
+      return '/images/misc/greengrass.png'
     }
   },
   mounted() {

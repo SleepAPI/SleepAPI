@@ -2,7 +2,7 @@ import router from '@/router/router'
 import { GoogleService } from '@/services/login/google-service'
 import { clearCacheAndLogout } from '@/stores/store-service'
 import { defineStore } from 'pinia'
-import type { LoginResponse } from 'sleepapi-common'
+import { MAX_ISLAND_BONUS, type LoginResponse } from 'sleepapi-common'
 import { googleLogout } from 'vue3-google-login'
 
 export interface UserState {
@@ -27,7 +27,8 @@ export const useUserStore = defineStore('user', {
   },
   getters: {
     // loggedIn doesnt check if access token valid/expired, just that the user is logged in
-    loggedIn: (state) => state.tokens !== null
+    loggedIn: (state) => state.tokens !== null,
+    islandBonus: (state) => 1 + MAX_ISLAND_BONUS / 100 // TODO: user should probably hold island bonuses and recipe levels
   },
   actions: {
     setUserData(userData: { name: string; avatar?: string }) {

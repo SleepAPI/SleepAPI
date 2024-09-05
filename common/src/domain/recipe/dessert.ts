@@ -15,6 +15,12 @@ import {
 } from '../ingredient/ingredient';
 import { Recipe } from './recipe';
 
+export const MIXED_JUICE = createDessert({
+  name: 'MIXED_JUICE',
+  ingredients: [],
+  bonus: 0,
+});
+
 export const WARM_MOOMOO_MILK = createDessert({
   name: 'WARM_MOOMOO_MILK',
   ingredients: [{ amount: 7, ingredient: MOOMOO_MILK }],

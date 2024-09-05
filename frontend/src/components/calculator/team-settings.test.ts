@@ -3,6 +3,7 @@ import { TeamService } from '@/services/team/team-service'
 import { useTeamStore } from '@/stores/team/team-store'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
+import { berry } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -22,12 +23,6 @@ describe('TeamSettings', () => {
 
   it('renders correctly with initial data', () => {
     expect(wrapper.exists()).toBe(true)
-  })
-
-  it('displays the correct initial text content', () => {
-    const textContent = wrapper.find('.v-col')
-    expect(textContent.exists()).toBe(true)
-    expect(textContent.text()).toBe('Click a mon above to edit, save, duplicate or remove it.')
   })
 
   it('toggles camp button correctly', async () => {
@@ -158,5 +153,27 @@ describe('TeamSettings', () => {
 
     await nextTick()
     expect(deleteTeamSpy).toHaveBeenCalled()
+  })
+
+  it('opens the recipe menu correctly', async () => {
+    const teamStore = useTeamStore()
+    const button = wrapper.find('button[aria-label="select recipe"]')
+    await button.trigger('click')
+
+    expect(wrapper.vm.recipeMenu).toBe(true)
+
+    const menuContainer = document.querySelector('[aria-label="dessert button"]') as HTMLElement
+    expect(menuContainer).not.toBeNull()
+
+    menuContainer.click()
+    expect(teamStore.getCurrentTeam.recipeType).toEqual('dessert')
+  })
+
+  it('shall update favoredBerries on emit', async () => {
+    const teamStore = useTeamStore()
+    wrapper.vm.updateFavoredBerries(berry.CYAN_BERRIES)
+    await nextTick()
+
+    expect(teamStore.getCurrentTeam.favoredBerries).toEqual(berry.CYAN_BERRIES)
   })
 })

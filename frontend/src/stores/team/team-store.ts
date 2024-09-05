@@ -6,8 +6,10 @@ import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/i
 import { defineStore } from 'pinia'
 import {
   DOMAIN_VERSION,
+  berry,
   uuid,
   type PokemonInstanceExt,
+  type RecipeType,
   type TeamSettingsRequest
 } from 'sleepapi-common'
 
@@ -34,6 +36,8 @@ export const useTeamStore = defineStore('team', {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
         production: undefined
@@ -172,6 +176,8 @@ export const useTeamStore = defineStore('team', {
         name: newName,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
         production: undefined
@@ -297,6 +303,18 @@ export const useTeamStore = defineStore('team', {
 
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
+    },
+    // TODO: add test when db fixed
+    async updateRecipeType(recipeType: RecipeType) {
+      this.getCurrentTeam.recipeType = recipeType
+
+      // this.updateTeam() // TODO: add recipe to db first
+    },
+    // TODO: add test when db fixed
+    async updateFavoredBerries(berries: berry.Berry[]) {
+      this.getCurrentTeam.favoredBerries = berries
+
+      // this.updateTeam() // TODO: add recipe to db first
     },
     toggleMemberLoading(memberIndex: number) {
       this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]

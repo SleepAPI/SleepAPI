@@ -2,6 +2,7 @@ import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
+import type { TeamInstance } from '@/types/member/instanced'
 import { createPinia, setActivePinia } from 'pinia'
 import { ingredient, nature, pokemon, uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -57,6 +58,7 @@ describe('Team Store', () => {
           {
             "bedtime": "21:30",
             "camp": false,
+            "favoredBerries": [],
             "index": 0,
             "members": [
               undefined,
@@ -67,6 +69,7 @@ describe('Team Store', () => {
             ],
             "name": "Log in to save your teams",
             "production": undefined,
+            "recipeType": "curry",
             "version": 0,
             "wakeup": "06:00",
           },
@@ -93,6 +96,8 @@ describe('Team Store', () => {
         camp: true,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         version: 0,
         members: ['Old member 1', undefined, undefined, undefined, undefined],
         production: undefined
@@ -103,6 +108,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         version: 0,
         members: [undefined, undefined, undefined, undefined, undefined],
         production: undefined
@@ -216,6 +223,8 @@ describe('Team Store', () => {
         wakeup: '06:00',
         members: [],
         version: 1,
+        recipeType: 'curry',
+        favoredBerries: [],
         production: undefined
       },
       {
@@ -226,6 +235,8 @@ describe('Team Store', () => {
         wakeup: '06:00',
         members: [],
         version: 1,
+        recipeType: 'curry',
+        favoredBerries: [],
         production: undefined
       }
     ]
@@ -252,6 +263,7 @@ describe('Team Store', () => {
           {
             "bedtime": "21:30",
             "camp": false,
+            "favoredBerries": [],
             "index": 0,
             "members": [
               undefined,
@@ -262,6 +274,7 @@ describe('Team Store', () => {
             ],
             "name": "Log in to save your teams",
             "production": undefined,
+            "recipeType": "curry",
             "version": 0,
             "wakeup": "06:00",
           },
@@ -281,6 +294,8 @@ describe('Team Store', () => {
         wakeup: '06:00',
         members: [],
         version: 1,
+        recipeType: 'curry',
+        favoredBerries: [],
         production: undefined
       },
       {
@@ -291,6 +306,8 @@ describe('Team Store', () => {
         wakeup: '06:00',
         members: [],
         version: 1,
+        recipeType: 'curry',
+        favoredBerries: [],
         production: undefined
       }
     ]
@@ -311,6 +328,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [],
         version: 1,
         production: undefined
@@ -321,6 +340,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [],
         version: 1,
         production: undefined
@@ -351,6 +372,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [undefined, externalId, undefined, undefined, undefined],
         version: 1,
         production: undefined
@@ -380,6 +403,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [member, member, member, member, member],
         version: 1,
         production: undefined
@@ -403,6 +428,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [undefined, undefined, undefined, undefined, undefined],
         version: 1,
         production: undefined
@@ -436,6 +463,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [undefined, member2, undefined, member4, undefined],
         version: 1,
         production: undefined
@@ -470,6 +499,8 @@ describe('Team Store', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipeType: 'curry',
+        favoredBerries: [],
         members: [undefined, member, null as any, member, '' as any],
         version: 1,
         production: undefined
@@ -483,22 +514,26 @@ describe('Team Store', () => {
   it('deleteTeam shall reset current team', () => {
     const teamStore = useTeamStore()
 
-    const team1 = {
+    const team1: TeamInstance = {
       index: 0,
       name: 'Team 1',
       camp: false,
       bedtime: '21:10',
       wakeup: '06:00',
+      recipeType: 'curry',
+      favoredBerries: [],
       members: [undefined, 'member1', undefined, 'member2', undefined],
       version: 1,
       production: undefined
     }
-    const team2 = {
+    const team2: TeamInstance = {
       index: 0,
       name: 'Team 2',
       camp: false,
       bedtime: '21:20',
       wakeup: '06:00',
+      recipeType: 'curry',
+      favoredBerries: [],
       members: [undefined, 'member3', undefined, 'member4', undefined],
       version: 1,
       production: undefined
@@ -513,6 +548,7 @@ describe('Team Store', () => {
       {
         "bedtime": "21:30",
         "camp": false,
+        "favoredBerries": [],
         "index": 1,
         "members": [
           undefined,
@@ -523,6 +559,7 @@ describe('Team Store', () => {
         ],
         "name": "Log in to save your teams",
         "production": undefined,
+        "recipeType": "curry",
         "version": 0,
         "wakeup": "06:00",
       }
@@ -535,12 +572,14 @@ describe('Team Store', () => {
 
     userStore.setTokens({ accessToken: 'at', expiryDate: 0, refreshToken: 'rt' })
 
-    const team1 = {
+    const team1: TeamInstance = {
       index: 0,
       name: 'Team 1',
       camp: false,
       bedtime: '21:10',
       wakeup: '06:00',
+      recipeType: 'curry',
+      favoredBerries: [],
       members: [undefined, 'member1', undefined, 'member2', undefined],
       version: 1,
       production: undefined

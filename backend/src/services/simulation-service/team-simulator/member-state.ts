@@ -4,6 +4,7 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce, clampHelp } from '@src/services/calculator/production/produce-calculator';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { SkillValue } from '@src/services/simulation-service/team-simulator/skill-value';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
@@ -34,6 +35,7 @@ export interface SkillActivation {
 export class MemberState {
   private member: TeamMember;
   private team: TeamMember[];
+  private cookingState: CookingState;
 
   // quick lookups, static data
   private skillsWithoutMetronome = mainskill.MAINSKILLS.filter((ms) => ms !== mainskill.METRONOME);
@@ -73,8 +75,10 @@ export class MemberState {
   private collectFrequency: Time | undefined = undefined;
   // private frequencyChanges: number[] = [];
 
-  constructor(params: { member: TeamMember; team: TeamMember[]; settings: TeamSettings }) {
-    const { member, team, settings } = params;
+  constructor(params: { member: TeamMember; team: TeamMember[]; settings: TeamSettings; cookingState: CookingState }) {
+    const { member, team, settings, cookingState } = params;
+
+    this.cookingState = cookingState;
 
     const nrOfHelpingBonus = team.filter((member) => member.subskills.includes(subskill.HELPING_BONUS)).length;
 
@@ -167,6 +171,7 @@ export class MemberState {
   public addHelps(helps: number) {
     const addedProduce: Produce = this.averageProduceForHelps(helps);
     this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, addedProduce);
+    this.cookingState.addIngredients(addedProduce.ingredients);
   }
 
   private averageProduceForHelps(helps: number): Produce {
@@ -197,6 +202,7 @@ export class MemberState {
       // this.frequencyChanges.push(frequency);
 
       this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, this.averageProduce);
+      this.cookingState.addIngredients(this.averageProduce.ingredients);
       this.emptyIfFull();
 
       this.nextHelp = TimeUtils.addTime(this.nextHelp, TimeUtils.secondsToTime(frequency));
@@ -224,6 +230,7 @@ export class MemberState {
         });
 
         this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, clampedProduce);
+        this.cookingState.addIngredients(clampedProduce.ingredients);
         this.nightHelpsBeforeSS += 1;
 
         if (inventorySpace < this.averageProduceAmount) {
@@ -348,8 +355,8 @@ export class MemberState {
     helps: (skill) => this.#activateHelpSkill(skill),
     ingredients: () => this.#activateIngredientMagnet(),
     'dream shards': (skill) => this.#activateValueSkills(skill),
-    'pot size': (skill) => this.#activateValueSkills(skill),
-    chance: (skill) => this.#activateValueSkills(skill),
+    'pot size': () => this.#activateCookingPowerUp(),
+    chance: () => this.#activateTastyChance(),
     metronome: (skill) => this.#activateValueSkills(skill),
     strength: (skill) => this.#activateValueSkills(skill),
   };
@@ -395,7 +402,6 @@ export class MemberState {
       return {
         energyTeam: 0,
         helpsTeam: helps,
-        produce: this.averageProduceForHelps(helps),
       };
     } else {
       // extra helpful
@@ -405,7 +411,6 @@ export class MemberState {
       return {
         energyTeam: 0,
         helpsTeam: helpsPerMember,
-        produce: this.averageProduceForHelps(helpsPerMember),
       };
     }
   }
@@ -419,10 +424,31 @@ export class MemberState {
 
     this.skillValue.addProduce(magnetProduce);
     this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, magnetProduce);
+    this.cookingState.addIngredients(magnetProduce.ingredients);
     return {
       energyTeam: 0,
       helpsTeam: 0,
       produce: magnetProduce,
+    };
+  }
+
+  #activateTastyChance() {
+    const critAmount = this.skillAmount(mainskill.TASTY_CHANCE_S);
+    this.skillValue.addValue(critAmount);
+    this.cookingState.addCritBonus(critAmount / 100);
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
+  #activateCookingPowerUp() {
+    const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
+    this.skillValue.addValue(potAmount);
+    this.cookingState.addPotSize(potAmount);
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
     };
   }
 

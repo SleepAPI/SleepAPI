@@ -19,6 +19,12 @@ import {
 } from '../ingredient/ingredient';
 import { Recipe } from './recipe';
 
+export const MIXED_CURRY = createCurry({
+  name: 'MIXED_CURRY',
+  ingredients: [],
+  bonus: 0,
+});
+
 export const FANCY_APPLE_CURRY = createCurry({
   name: 'FANCY_APPLE_CURRY',
   ingredients: [{ amount: 7, ingredient: FANCY_APPLE }],

@@ -56,8 +56,8 @@
               <MemberResults />
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="todo">
-              <TeamResults />
+            <v-tabs-window-item value="cooking">
+              <CookingResults />
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>
@@ -69,6 +69,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import CookingResults from '@/components/calculator/results/cooking-results.vue'
 import MemberResults from '@/components/calculator/results/member-results.vue'
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
@@ -85,7 +86,8 @@ export default defineComponent({
     TeamName,
     TeamSettings,
     TeamResults,
-    MemberResults
+    MemberResults,
+    CookingResults
   },
   setup() {
     const userStore = useUserStore()
@@ -99,7 +101,7 @@ export default defineComponent({
     tabs: [
       { value: 'team', label: 'Team' },
       { value: 'members', label: 'Members' },
-      { value: 'todo', label: 'TODO' }
+      { value: 'cooking', label: 'Cooking' }
     ],
     currentMemberIndex: 0
   }),
