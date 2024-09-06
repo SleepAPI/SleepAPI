@@ -144,6 +144,7 @@ export class TeamSimulator {
         })
       ) {
         for (const member of this.memberStates) {
+          member.collectInventory();
           member.recoverMeal();
         }
         // mod 7 for if Sunday

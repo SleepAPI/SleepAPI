@@ -72,8 +72,6 @@ export class MemberState {
   private totalProduce = InventoryUtils.getEmptyInventory();
   private totalSneakySnack = InventoryUtils.getEmptyInventory();
   private spilledIngredients = InventoryUtils.getEmptyInventory();
-  private collectFrequency: Time | undefined = undefined;
-  // private frequencyChanges: number[] = [];
 
   constructor(params: { member: TeamMember; team: TeamMember[]; settings: TeamSettings; cookingState: CookingState }) {
     const { member, team, settings, cookingState } = params;
@@ -171,7 +169,6 @@ export class MemberState {
   public addHelps(helps: number) {
     const addedProduce: Produce = this.averageProduceForHelps(helps);
     this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, addedProduce);
-    this.cookingState.addIngredients(addedProduce.ingredients);
   }
 
   private averageProduceForHelps(helps: number): Produce {
@@ -202,7 +199,6 @@ export class MemberState {
       // this.frequencyChanges.push(frequency);
 
       this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, this.averageProduce);
-      this.cookingState.addIngredients(this.averageProduce.ingredients);
       this.emptyIfFull();
 
       this.nextHelp = TimeUtils.addTime(this.nextHelp, TimeUtils.secondsToTime(frequency));
@@ -230,7 +226,6 @@ export class MemberState {
         });
 
         this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, clampedProduce);
-        this.cookingState.addIngredients(clampedProduce.ingredients);
         this.nightHelpsBeforeSS += 1;
 
         if (inventorySpace < this.averageProduceAmount) {
@@ -273,6 +268,7 @@ export class MemberState {
       }
     }
 
+    this.cookingState.addIngredients(this.currentInventory.ingredients);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentSneakySnack);
     this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
@@ -315,9 +311,7 @@ export class MemberState {
 
   private emptyIfFull() {
     if (InventoryUtils.countInventory(this.currentInventory) + this.averageProduceAmount >= this.inventoryLimit) {
-      if (!this.collectFrequency) {
-        this.collectFrequency = TimeUtils.calculateDuration({ start: this.dayPeriod.start, end: this.nextHelp });
-      }
+      this.cookingState.addIngredients(this.currentInventory.ingredients);
       this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
       this.currentInventory = InventoryUtils.getEmptyInventory();
     }
@@ -424,7 +418,6 @@ export class MemberState {
 
     this.skillValue.addProduce(magnetProduce);
     this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, magnetProduce);
-    this.cookingState.addIngredients(magnetProduce.ingredients);
     return {
       energyTeam: 0,
       helpsTeam: 0,
