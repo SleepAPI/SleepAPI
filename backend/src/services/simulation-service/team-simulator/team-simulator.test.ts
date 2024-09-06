@@ -61,8 +61,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`34.4`);
-    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
+    expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`34.400000000000006`);
+    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`8.600000000000001`);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`35`);
   });
 
@@ -99,7 +99,7 @@ describe('TeamSimulator', () => {
 
     expect(result.members).toHaveLength(1);
     expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`41.562818229753496`);
-    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`92.89420577024653`);
+    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`92.89420577024651`);
   });
 
   it('shall calculate team with multiple members', () => {
@@ -129,8 +129,8 @@ describe('TeamSimulator', () => {
     expect(result.members).toHaveLength(5);
 
     for (const member of result.members) {
-      expect(member.berries?.amount).toEqual(34.4);
-      expect(member.ingredients[0].amount).toEqual(8.6);
+      expect(member.berries?.amount).toEqual(34.400000000000006);
+      expect(member.ingredients[0].amount).toEqual(8.600000000000001);
       expect(member.skillProcs).toEqual(35);
     }
   });

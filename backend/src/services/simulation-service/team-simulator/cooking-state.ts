@@ -7,6 +7,7 @@ interface CookedRecipe extends Recipe {
   nrOfFiller: number;
   strength: number;
 }
+// TODO: if we need more performance we can track current day in cookingState and only cook/add ings every %2 days or something
 
 // TODO: fillers, should increase weekly strength, but should also be passed alone to frontend so we can show filler value
 export class CookingState {
