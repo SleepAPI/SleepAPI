@@ -1,3 +1,4 @@
+import { BALANCED_GENDER } from 'src/domain';
 import { describe, expect, it } from 'vitest';
 import { BELUE } from '../../domain/berry';
 import { SLOWPOKE_TAIL } from '../../domain/ingredient';
@@ -12,6 +13,7 @@ const MOCK_POKEMON: Pokemon = {
   ingredientPercentage: 0,
   skillPercentage: 0,
   berry: BELUE,
+  genders: BALANCED_GENDER,
   carrySize: 0,
   previousEvolutions: 1,
   remainingEvolutions: 1,

@@ -3,6 +3,7 @@
  */
 
 import { BELUE, Berry } from '../berry/berry';
+import { BALANCED_GENDER, GenderRatio } from '../gender';
 import { SLOWPOKE_TAIL } from '../ingredient';
 import { HELPER_BOOST, MainSkill } from '../mainskill/mainskill';
 import { IngredientSet } from '../types';
@@ -22,6 +23,7 @@ export interface Pokemon {
   ingredientPercentage: number;
   skillPercentage: number;
   berry: Berry;
+  genders: GenderRatio;
   carrySize: number;
   previousEvolutions: number;
   remainingEvolutions: number;
@@ -38,6 +40,7 @@ export const MOCK_POKEMON: Pokemon = {
   ingredientPercentage: 0,
   skillPercentage: 0,
   berry: BELUE,
+  genders: BALANCED_GENDER,
   carrySize: 0,
   previousEvolutions: 0,
   remainingEvolutions: 0,

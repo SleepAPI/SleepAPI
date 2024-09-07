@@ -2,6 +2,7 @@ import { TeamMember, TeamSettings } from '@src/domain/combination/team';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
+  BALANCED_GENDER,
   PokemonIngredientSet,
   berry,
   calculatePityProcThreshold,
@@ -16,6 +17,7 @@ const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
     name: 'Mockemon',
     berry: berry.BELUE,
+    genders: BALANCED_GENDER,
     carrySize: 10,
     frequency: 3600,
     ingredient0: { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },

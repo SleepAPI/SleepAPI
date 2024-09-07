@@ -1,5 +1,6 @@
 export * as berry from './berry';
 export * from './constants';
+export * from './gender';
 export * as ingredient from './ingredient';
 export * as island from './island';
 export * as mainskill from './mainskill';

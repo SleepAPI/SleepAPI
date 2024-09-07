@@ -4,12 +4,13 @@ import { CookingState } from '@src/services/simulation-service/team-simulator/co
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { PokemonIngredientSet, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
+import { BALANCED_GENDER, PokemonIngredientSet, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
 
 const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
     name: 'Mockemon',
     berry: berry.BELUE,
+    genders: BALANCED_GENDER,
     carrySize: 10,
     frequency: 3600,
     ingredient0: { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
