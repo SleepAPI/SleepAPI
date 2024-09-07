@@ -207,6 +207,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GenderRatio": {
+				"properties": {
+					"male": {
+						"type": "number",
+						"format": "double"
+					},
+					"female": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"male",
+					"female"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Pokemon": {
 				"properties": {
 					"name": {
@@ -229,6 +247,9 @@
 					},
 					"berry": {
 						"$ref": "#/components/schemas/Berry"
+					},
+					"genders": {
+						"$ref": "#/components/schemas/GenderRatio"
 					},
 					"carrySize": {
 						"type": "number",
@@ -268,6 +289,7 @@
 					"ingredientPercentage",
 					"skillPercentage",
 					"berry",
+					"genders",
 					"carrySize",
 					"previousEvolutions",
 					"remainingEvolutions",

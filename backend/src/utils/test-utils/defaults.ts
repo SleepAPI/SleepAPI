@@ -2,6 +2,7 @@ import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/cus
 import { ProductionStats } from '@src/domain/computed/production';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import {
+  BALANCED_GENDER,
   Produce,
   TimePeriod,
   berry,
@@ -62,6 +63,7 @@ export const MOCKED_PRODUCE: Produce = {
 
 export const MOCKED_POKEMON: pokemon.Pokemon = {
   berry: berry.BELUE,
+  genders: BALANCED_GENDER,
   carrySize: 20,
   frequency: 2500,
   ingredient0: {
