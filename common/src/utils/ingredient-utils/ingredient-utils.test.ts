@@ -67,51 +67,19 @@ describe('getIngredientNames', () => {
 describe('combineSameIngredientsInDrop', () => {
   it('shall combine ingredients and leave unique ingredients as is', () => {
     const pinsir: IngredientSet[] = [
-      {
-        amount: 2,
-        ingredient: HONEY,
-      },
+      { amount: 2, ingredient: HONEY },
       { amount: 5, ingredient: FANCY_APPLE },
     ];
     const absol: IngredientSet[] = [
-      {
-        amount: 2,
-        ingredient: SOOTHING_CACAO,
-      },
+      { amount: 2, ingredient: SOOTHING_CACAO },
       { amount: 8, ingredient: FANCY_APPLE },
     ];
 
-    expect(combineSameIngredientsInDrop([...pinsir, ...absol])).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Honey",
-            "name": "Honey",
-            "taxedValue": 29.8,
-            "value": 101,
-          },
-        },
-        {
-          "amount": 13,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Soothing Cacao",
-            "name": "Cacao",
-            "taxedValue": 66.7,
-            "value": 151,
-          },
-        },
-      ]
-    `);
+    expect(combineSameIngredientsInDrop([...pinsir, ...absol])).toStrictEqual([
+      { amount: 2, ingredient: HONEY },
+      { amount: 13, ingredient: FANCY_APPLE },
+      { amount: 2, ingredient: SOOTHING_CACAO },
+    ]);
   });
 });
 
@@ -143,6 +111,9 @@ describe('prettifyIngredientDrop', () => {
       { amount: 7, ingredient: HONEY },
     ];
     INGREDIENTS.map((ingredient) => rawCombination.push({ amount: 0.83761, ingredient }));
+    // TODO: This output implies that there is not also 0.84 Honey and 0.84 Apples added.
+    // This should instead say 'and 0.84 of all 16 ingredients', or it should combine the
+    // Honey and Apple numbers and say '9.8 Honey, 5.8 Apple'.
     expect(prettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(
       `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 14 other ingredients"`,
     );
