@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { maxCarrySize, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { maxCarrySize, mocks, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -55,7 +55,7 @@ export default {
       handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
         // new mon is from search or new mon is actually new and not just mocked mon changing
         const loadFromExisting =
-          this.pokemonInstance.carrySize > 0 && oldPokemon.name === pokemon.MOCK_POKEMON.name
+          this.pokemonInstance.carrySize > 0 && oldPokemon.name === mocks.MOCK_POKEMON.name
 
         const newCarrySize = loadFromExisting
           ? this.pokemonInstance.carrySize
