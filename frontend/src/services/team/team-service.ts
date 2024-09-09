@@ -85,10 +85,8 @@ class TeamServiceImpl {
         }
 
         // TODO: fix in db
-        const { favoredBerries, recipeType } = teamStore.teams[teamIndex] ?? {
-          favoredBerries: [],
-          recipeType: 'curry'
-        }
+        const favoredBerries = teamStore.teams[teamIndex]?.favoredBerries ?? []
+        const recipeType = teamStore.teams[teamIndex]?.recipeType ?? 'curry'
         const instancedTeam: TeamInstance = {
           index: existingTeam.index,
           name: existingTeam.name,

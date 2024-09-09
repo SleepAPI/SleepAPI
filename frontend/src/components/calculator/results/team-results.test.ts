@@ -1,10 +1,11 @@
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { TeamCombinedProduction } from '@/types/member/instanced'
+import { createMockMemberProduction, createMockTeamProduction } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, ingredient } from 'sleepapi-common'
+import { berry } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 describe('TeamResults', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamResults>>
@@ -20,57 +21,81 @@ describe('TeamResults', () => {
     }
   })
 
-  it('renders correctly with initial data', () => {
-    expect(wrapper.exists()).toBe(true)
-  })
-
-  it('displays "No production" when there is no team production', () => {
+  it('renders correctly with initial data', async () => {
     const teamStore = useTeamStore()
-    teamStore.currentIndex = 0
-    teamStore.teams[0] = {
-      production: undefined
-    } as any
 
-    expect(wrapper.vm.teamProduction).toBe('No production')
-  })
-
-  it('displays team production when data is available', () => {
-    const teamStore = useTeamStore()
-    teamStore.currentIndex = 0
-    const teamProduction: TeamCombinedProduction = {
-      berries: [
-        {
-          amount: 10,
-          berry: berry.BELUE
-        }
-      ],
-      ingredients: [{ amount: 5, ingredient: ingredient.BEAN_SAUSAGE }],
-      cooking: {
-        curry: {
-          weeklyStrength: 0,
-          cookedRecipes: [],
-          sundayStrength: 0
+    teamStore.getCurrentTeam.production = {
+      team: {
+        cooking: {
+          curry: {
+            weeklyStrength: 1000,
+            sundayStrength: 100,
+            cookedRecipes: []
+          },
+          salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
         },
-        salad: {
-          weeklyStrength: 0,
-          cookedRecipes: [],
-          sundayStrength: 0
-        },
-        dessert: {
-          weeklyStrength: 0,
-          cookedRecipes: [],
-          sundayStrength: 0
-        }
-      }
+        berries: [],
+        ingredients: []
+      },
+      members: []
     }
+    await nextTick()
 
-    teamStore.teams[0] = {
-      production: {
-        team: teamProduction,
-        members: []
-      }
-    } as any
+    const strengthSpan = wrapper.find('#weeklyStrength')
+    expect(strengthSpan.text()).toBe('1,600')
+    const totalStrength = wrapper.vm.totalStrengthString
+    expect(totalStrength).toBe('1,600')
+  })
 
-    expect(wrapper.vm.teamProduction).toBe('10 BELUE\n5 Sausage')
+  it('renders the stacked bar with correct percentages', async () => {
+    const teamStore = useTeamStore()
+
+    teamStore.getCurrentTeam.production = {
+      team: {
+        cooking: {
+          curry: {
+            weeklyStrength: 10000,
+            sundayStrength: 0,
+            cookedRecipes: []
+          },
+          salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
+        },
+        berries: [],
+        ingredients: []
+      },
+      members: [
+        createMockMemberProduction({ berries: { amount: 10, berry: berry.BELUE }, skillProcs: 1 })
+      ]
+    }
+    await nextTick()
+
+    const stackedBar = wrapper.findComponent({ name: 'StackedBar' })
+    expect(stackedBar.exists()).toBe(true)
+
+    expect(stackedBar.props('sections')).toEqual([
+      { color: 'curry', percentage: 63.5 },
+      { color: 'berry', percentage: 18.6 },
+      { color: 'skill', percentage: 17.7 }
+    ])
+  })
+
+  it('renders member progress bars correctly', async () => {
+    const teamStore = useTeamStore()
+
+    teamStore.getCurrentTeam.production = createMockTeamProduction()
+    await nextTick()
+
+    const progressBars = wrapper.findAll('#memberBar')
+    expect(progressBars.length).toBe(1)
+
+    const memberProgress = progressBars.at(0)
+
+    const berryPercentage = memberProgress?.attributes('aria-valuenow')
+    expect(Number(berryPercentage)).toBeCloseTo(17.4)
+
+    const totalStrength = memberProgress?.find('.text-body-1').text()
+    expect(totalStrength).toBe('27,104')
   })
 })

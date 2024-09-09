@@ -61,6 +61,7 @@ export const useTeamStore = defineStore('team', {
     }
   },
   actions: {
+    // TODO: this also triggers recalc constantly even when no changes are made, idk why
     async populateTeams() {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()

@@ -47,7 +47,6 @@
             <v-col cols="12" class="flex-center">
               <v-img
                 :src="`/images/recipe/${recipe.name.replace(/[_]/g, '').toLowerCase()}.png`"
-                alt="Curry"
                 contain
                 width="36"
                 height="36"

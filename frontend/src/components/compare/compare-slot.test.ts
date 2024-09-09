@@ -1,35 +1,20 @@
 import CompareSlot from '@/components/compare/compare-slot.vue'
-import type { MemberProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
+import { createMockMemberProduction } from '@/vitest/mocks/calculator/member-production'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, ingredient, subskill, type PokemonInstanceExt } from 'sleepapi-common'
+import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('CompareSlot', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareSlot>>
 
-  const mockMemberProduction: MemberProductionExt = {
+  const mockMemberProduction = createMockMemberProduction({
     member: createMockPokemon({
       name: 'Ash',
       subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
-    }),
-    ingredients: [
-      {
-        amount: 10,
-        ingredient: ingredient.FANCY_APPLE
-      },
-      {
-        amount: 20,
-        ingredient: ingredient.HONEY
-      }
-    ],
-    skillProcs: 5,
-    berries: {
-      amount: 100,
-      berry: berry.BELUE
-    }
-  }
+    })
+  })
 
   beforeEach(() => {
     setActivePinia(createPinia())
