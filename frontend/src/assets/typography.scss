@@ -15,3 +15,11 @@ html {
     }
   }
 }
+
+.text-outline {
+  text-shadow:
+    -0.5px -0.5px 0 #000,
+    0.5px -0.5px 0 #000,
+    -0.5px 0.5px 0 #000,
+    0.5px 0.5px 0 #000;
+}

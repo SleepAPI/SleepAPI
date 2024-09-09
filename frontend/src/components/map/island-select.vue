@@ -142,8 +142,13 @@ export default defineComponent({
       return '/images/misc/greengrass.png'
     }
   },
-  mounted() {
-    this.favoredBerries = this.previousBerries
+  watch: {
+    previousBerries: {
+      handler(newBerries: berry.Berry[]) {
+        this.favoredBerries = newBerries
+      },
+      immediate: true
+    }
   },
   methods: {
     toggleBerry(berry: berry.Berry) {

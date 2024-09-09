@@ -33,7 +33,7 @@
 
     <TeamSettings class="pt-4" />
 
-    <v-row>
+    <v-row v-if="teamStore.getTeamSize > 0">
       <v-col cols="12">
         <v-card :loading="teamStore.loadingTeams" color="transparent">
           <v-tabs v-model="tab" class="d-flex justify-space-around">
