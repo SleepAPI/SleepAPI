@@ -59,7 +59,7 @@
         elevation="0"
         :class="{ nudge: teamStore.getTeamSize === 0 }"
         aria-label="delete team"
-        @click="deleteTeam"
+        @click="toggleDeleteMenu"
       >
         <v-avatar size="48">
           <v-icon
@@ -196,6 +196,7 @@
         </v-col>
       </v-row>
     </v-dialog>
+
     <v-dialog v-model="isWakeupOpen" aria-label="wakeup menu">
       <v-row class="flex-center">
         <v-col cols="auto">
@@ -214,6 +215,30 @@
             <v-card-actions>
               <v-spacer />
               <v-btn @click="toggleWakeupMenu">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-dialog>
+
+    <v-dialog v-model="isDeleteOpen" aria-label="delete team menu">
+      <v-row class="flex-center">
+        <v-col cols="auto">
+          <v-card max-width="400px">
+            <v-card-title>Confirm delete team</v-card-title>
+            <v-card-text>Do you really want to delete this team?</v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn @click="toggleDeleteMenu">Close</v-btn>
+              <v-row>
+                <v-btn color="surface" aria-label="close button" @click="toggleDeleteMenu"
+                  >Close</v-btn
+                >
+
+                <v-btn color="primary" aria-label="delete button" @click="deleteTeam"
+                  >Delete team</v-btn
+                >
+              </v-row>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -242,6 +267,7 @@ export default defineComponent({
     isTimePickerOpen: false,
     isWakeupOpen: false,
     isBedtimeOpen: false,
+    isDeleteOpen: false,
     wakeup: '06:00',
     bedtime: '21:30',
     updatedWakeup: null,
@@ -344,6 +370,12 @@ export default defineComponent({
         this.updatedBedtime = null
       }
     },
+    openDeleteMenu() {
+      this.isDeleteOpen = true
+    },
+    toggleDeleteMenu() {
+      this.isDeleteOpen = !this.isDeleteOpen
+    },
     async updateSleep() {
       await this.teamStore.updateSleep({ bedtime: this.bedtime, wakeup: this.wakeup })
     },
@@ -359,6 +391,7 @@ export default defineComponent({
       return Math.abs(hour - wakeupHour) > 1
     },
     deleteTeam() {
+      this.toggleDeleteMenu()
       this.teamStore.deleteTeam()
     },
     updateFavoredBerries(berries: berry.Berry[]) {

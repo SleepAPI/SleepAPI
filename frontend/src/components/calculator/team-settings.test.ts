@@ -148,8 +148,16 @@ describe('TeamSettings', () => {
     const teamStore = useTeamStore()
     const deleteTeamSpy = vi.spyOn(teamStore, 'deleteTeam')
 
-    const deleteButton = wrapper.find('button[aria-label="delete team"]')
-    await deleteButton.trigger('click')
+    const deleteMenuButton = wrapper.find('button[aria-label="delete team"]')
+    await deleteMenuButton.trigger('click')
+
+    await nextTick()
+    expect(wrapper.vm.isDeleteOpen).toBe(true)
+
+    const deleteModalButton = document.querySelector(
+      'button[aria-label="delete button"]'
+    ) as HTMLElement
+    deleteModalButton.click()
 
     await nextTick()
     expect(deleteTeamSpy).toHaveBeenCalled()
