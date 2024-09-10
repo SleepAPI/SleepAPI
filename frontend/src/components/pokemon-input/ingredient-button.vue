@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { pokemon, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
+import { mocks, pokemon, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -158,7 +158,7 @@ export default {
       const existingIngredients =
         this.pokemonInstance.ingredients.filter((ing) => ing.ingredient !== undefined).length === 3
 
-      return oldPokemon.name === pokemon.MOCK_POKEMON.name && existingIngredients
+      return oldPokemon.name === mocks.MOCK_POKEMON.name && existingIngredients
     }
   }
 }

@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import {
   ingredient,
   maxCarrySize,
+  mocks,
   nature,
   pokemon,
   subskill,
@@ -90,7 +91,7 @@ describe('PokemonInput', () => {
     })
     const updatedPokemonInstance = wrapper.vm.$data.pokemonInstance
     expect(updatedPokemonInstance).not.toEqual(preExistingMon)
-    expect(updatedPokemonInstance.pokemon).not.toEqual(pokemon.MOCK_POKEMON)
+    expect(updatedPokemonInstance.pokemon).not.toEqual(mocks.MOCK_POKEMON)
 
     expect(updatedPokemonInstance.pokemon).toEqual(pokemon.GALLADE)
     expect(updatedPokemonInstance.carrySize).toBe(maxCarrySize(pokemon.GALLADE))
