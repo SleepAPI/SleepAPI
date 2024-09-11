@@ -47,14 +47,14 @@ class TeamServiceImpl {
   public async getTeams(): Promise<TeamInstance[]> {
     const response = await serverAxios.get<GetTeamsResponse>('team')
 
-    const existingTeams = response.data.teams
+    const serverTeams = response.data.teams
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
     const teams: TeamInstance[] = []
     for (let teamIndex = 0; teamIndex < teamStore.maxAvailableTeams; teamIndex++) {
-      const existingTeam = existingTeams.find((team) => team.index === teamIndex)
-      if (!existingTeam) {
+      const serverTeam = serverTeams.find((team) => team.index === teamIndex)
+      if (!serverTeam) {
         const emptyTeam: TeamInstance = {
           index: teamIndex,
           name: `Helper team ${teamIndex + 1}`,
@@ -71,14 +71,14 @@ class TeamServiceImpl {
       } else {
         const members: (string | undefined)[] = []
         for (let memberIndex = 0; memberIndex < MAX_TEAM_MEMBERS; memberIndex++) {
-          const existingMember = existingTeam.members.find(
+          const serverMember = serverTeam.members.find(
             (member) => member.memberIndex === memberIndex
           )
 
-          if (!existingMember) {
+          if (!serverMember) {
             members.push(undefined)
           } else {
-            const cachedMember = PokemonInstanceUtils.toPokemonInstanceExt(existingMember)
+            const cachedMember = PokemonInstanceUtils.toPokemonInstanceExt(serverMember)
             pokemonStore.upsertLocalPokemon(cachedMember)
             members.push(cachedMember.externalId)
           }
@@ -88,14 +88,14 @@ class TeamServiceImpl {
         const favoredBerries = teamStore.teams[teamIndex]?.favoredBerries ?? []
         const recipeType = teamStore.teams[teamIndex]?.recipeType ?? 'curry'
         const instancedTeam: TeamInstance = {
-          index: existingTeam.index,
-          name: existingTeam.name,
-          camp: existingTeam.camp,
-          bedtime: existingTeam.bedtime,
-          wakeup: existingTeam.wakeup,
+          index: serverTeam.index,
+          name: serverTeam.name,
+          camp: serverTeam.camp,
+          bedtime: serverTeam.bedtime,
+          wakeup: serverTeam.wakeup,
           recipeType, // TODO: fix in db
           favoredBerries, // TODO: fix in db
-          version: existingTeam.version,
+          version: serverTeam.version,
           members,
           production: undefined
         }

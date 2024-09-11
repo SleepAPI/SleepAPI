@@ -3,6 +3,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import type { TeamInstance } from '@/types/member/instanced'
+import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
 import { ingredient, nature, pokemon, uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -52,7 +53,7 @@ describe('Team Store', () => {
           false,
           false,
         ],
-        "loadingTeams": true,
+        "loadingTeams": false,
         "maxAvailableTeams": 5,
         "teams": [
           {
@@ -89,32 +90,7 @@ describe('Team Store', () => {
 
     const pokemonStore = usePokemonStore()
     pokemonStore.upsertLocalPokemon(mockPokemon)
-    teamStore.teams = [
-      {
-        index: 0,
-        name: 'Team 1',
-        camp: true,
-        bedtime: '21:30',
-        wakeup: '06:00',
-        recipeType: 'curry',
-        favoredBerries: [],
-        version: 0,
-        members: ['Old member 1', undefined, undefined, undefined, undefined],
-        production: undefined
-      },
-      {
-        index: 1,
-        name: 'Team 2',
-        camp: false,
-        bedtime: '21:30',
-        wakeup: '06:00',
-        recipeType: 'curry',
-        favoredBerries: [],
-        version: 0,
-        members: [undefined, undefined, undefined, undefined, undefined],
-        production: undefined
-      }
-    ]
+    teamStore.teams = createMockTeams(2)
 
     TeamService.getTeams = vi.fn().mockResolvedValue([
       {
@@ -135,25 +111,10 @@ describe('Team Store', () => {
       }
     ])
 
-    TeamService.calculateProduction = vi.fn().mockResolvedValue({
-      team: {
-        berries: 'Some berries',
-        ingredients: 'Some ingredients'
-      },
-      members: [
-        {
-          berries: 'Member berry',
-          ingredients: 'Member ings',
-          skillProcs: 'Member procs',
-          externalId: 'Some id'
-        }
-      ]
-    })
-
-    await teamStore.populateTeams()
+    await teamStore.syncTeams()
 
     expect(TeamService.getTeams).toHaveBeenCalled()
-    expect(TeamService.calculateProduction).toHaveBeenCalled()
+    teamStore.teams.forEach((team) => expect(team.production).toBeUndefined())
     expect(teamStore.$state.teams).toMatchInlineSnapshot(`
       [
         {
@@ -167,20 +128,7 @@ describe('Team Store', () => {
             undefined,
           ],
           "name": "Team 1",
-          "production": {
-            "members": [
-              {
-                "berries": "Member berry",
-                "externalId": "Some id",
-                "ingredients": "Member ings",
-                "skillProcs": "Member procs",
-              },
-            ],
-            "team": {
-              "berries": "Some berries",
-              "ingredients": "Some ingredients",
-            },
-          },
+          "production": undefined,
           "version": 1,
         },
         {
@@ -201,45 +149,10 @@ describe('Team Store', () => {
     `)
   })
 
-  it('should set loadingTeams to false if user is not logged in', async () => {
-    const teamStore = useTeamStore()
-    const userStore = useUserStore()
-    userStore.tokens = null
-
-    await teamStore.populateTeams()
-
-    expect(teamStore.loadingTeams).toBeFalsy()
-    expect(teamStore.$state.teams[0].name).toBe('Log in to save your teams')
-  })
-
   it('should reset the state correctly', async () => {
     const teamStore = useTeamStore()
-    teamStore.teams = [
-      {
-        index: 0,
-        name: 'Team 1',
-        camp: false,
-        bedtime: '22:30',
-        wakeup: '06:00',
-        members: [],
-        version: 1,
-        recipeType: 'curry',
-        favoredBerries: [],
-        production: undefined
-      },
-      {
-        index: 1,
-        name: 'Team 2',
-        camp: false,
-        bedtime: '21:30',
-        wakeup: '06:00',
-        members: [],
-        version: 1,
-        recipeType: 'curry',
-        favoredBerries: [],
-        production: undefined
-      }
-    ]
+    teamStore.teams = createMockTeams(2)
+
     teamStore.currentIndex = 1
     teamStore.maxAvailableTeams = 4
     teamStore.loadingTeams = false
@@ -257,7 +170,7 @@ describe('Team Store', () => {
           false,
           false,
         ],
-        "loadingTeams": true,
+        "loadingTeams": false,
         "maxAvailableTeams": 5,
         "teams": [
           {
