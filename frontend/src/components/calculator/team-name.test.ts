@@ -28,16 +28,6 @@ describe('TeamSlotName', () => {
     expect(teamNameSpan).toBe('Log in to save your teams')
   })
 
-  it('displays skeleton loader while team is loading', async () => {
-    const teamStore = useTeamStore()
-    teamStore.loadingTeams = true
-
-    wrapper = mount(TeamName)
-
-    const skeletonLoader = wrapper.find('.v-skeleton-loader')
-    expect(skeletonLoader.exists()).toBe(true)
-  })
-
   it('updates team name correctly when input changes', async () => {
     const teamStore = useTeamStore()
     teamStore.loadingTeams = false

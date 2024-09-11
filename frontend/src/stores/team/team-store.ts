@@ -26,7 +26,7 @@ export const useTeamStore = defineStore('team', {
   state: (): TeamState => ({
     currentIndex: 0,
     maxAvailableTeams: MAX_TEAMS,
-    loadingTeams: true,
+    loadingTeams: false,
     loadingMembers: [false, false, false, false, false],
     domainVersion: 0,
     teams: [
@@ -61,87 +61,69 @@ export const useTeamStore = defineStore('team', {
     }
   },
   actions: {
-    // TODO: this also triggers recalc constantly even when no changes are made, idk why
-    async populateTeams() {
+    async syncTeams() {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
 
       if (userStore.loggedIn) {
-        // TODO: very very messy
-        try {
-          // TODO: we could change loadingTeams to a loading for each team. that way as soon as first team is finished loading we can remove loading bar, then when user swipes to team 2 if that hasnt finished loading yet then loading bar shows up again
-          this.loadingTeams = true
+        // grab previous teams so we may compare it to updated teams from server
+        const previousTeams = this.teams.map((team) => ({
+          ...team,
+          members: team.members.map((member) =>
+            member ? pokemonStore.getPokemon(member) : undefined
+          )
+        }))
 
-          // grab previous teams so we may compare it to updated teams from server
-          const previousTeams = this.teams.map((team) => ({
-            ...team,
-            members: team.members.map((member) =>
-              member ? pokemonStore.getPokemon(member) : undefined
-            )
-          }))
-          // get updated teams from server
-          // this also already updates the pokemon in pokemonStore
-          const updatedTeams = await TeamService.getTeams()
+        // get updated teams from server
+        // this also already updates the pokemon in pokemonStore
+        const serverTeams = await TeamService.getTeams()
 
-          // overwrite cached teams with data from server
-          this.teams = updatedTeams
+        // overwrite cached teams with data from server
+        this.teams = serverTeams
 
-          // loop through each team from server and compare it to previously cached teams
-          for (const updatedTeam of updatedTeams) {
-            const previousTeam = previousTeams.find((team) => team.index === updatedTeam.index)
-            if (!previousTeam) {
-              // first time user refreshes page since logging in
-              await this.calculateProduction(updatedTeam.index)
-              continue
-            }
-
-            let rerunCalculations = false
-            if (this.domainVersion < DOMAIN_VERSION) {
-              rerunCalculations = true
-              this.domainVersion = DOMAIN_VERSION
-            }
-
-            // if version of team mismatch, we re-sim
-            if (updatedTeam.version !== previousTeam.version) {
-              rerunCalculations = true
-            }
-
-            for (let i = 0; i < updatedTeam.members.length; i++) {
-              const updatedMember = updatedTeam.members[i]
+        for (const serverTeam of serverTeams) {
+          const previousTeam = previousTeams.find((team) => team.index === serverTeam.index)
+          if (!previousTeam || previousTeam.version !== serverTeam.version) {
+            // this team does not exist on this device previously or this team has been updated on other device
+            // keep team's production undefined
+            continue
+          } else {
+            // check if any individual members have been updated, if so set updated to true
+            let memberUpdated = false
+            for (let i = 0; i < serverTeam.members.length; i++) {
+              const updatedMember = serverTeam.members[i]
               const populatedUpdateMember = updatedMember
                 ? pokemonStore.getPokemon(updatedMember)
                 : undefined
-              // if the member of this member index is not the same pokemon, we re-sim
+
               const previousMember = previousTeam.members.find(
                 (member, previousIndex) =>
                   previousIndex === i && member?.externalId === populatedUpdateMember?.externalId
               )
-              // the member is the same, but version mismatches we also re-sim
-              if (populatedUpdateMember?.version !== previousMember?.version) {
-                rerunCalculations = true
+
+              // if the member is not the same uuid or the member is the same, but version mismatches we also re-sim
+              if (previousMember && populatedUpdateMember?.version !== previousMember.version) {
+                memberUpdated = true
+                break
               }
             }
 
-            if (rerunCalculations) {
-              this.currentIndex = 0
-              await this.calculateProduction(updatedTeam.index)
-            } else {
-              this.teams[updatedTeam.index].production = previousTeam.production
+            // if neither team nor members have been update we copy production from cache
+            if (!memberUpdated) {
+              this.teams[serverTeam.index].production = previousTeam.production
             }
           }
-
-          this.loadingTeams = false
-        } catch (error) {
-          console.error('Error fetching teams')
-          const userStore = useUserStore()
-          userStore.logout()
         }
-      } else if (this.domainVersion < DOMAIN_VERSION) {
-        await this.calculateProduction(this.currentIndex)
-        this.domainVersion = DOMAIN_VERSION
       }
 
-      this.loadingTeams = false
+      // we do this last since we want to fetch teams from server and update anyways first
+      // if domain version is bumped this indicates the base pokemon data has changed (buffs, new patch etc)
+      if (this.domainVersion < DOMAIN_VERSION) {
+        for (const team of this.teams) {
+          team.production = undefined
+        }
+        this.domainVersion = DOMAIN_VERSION
+      }
     },
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.teams.length
@@ -149,16 +131,18 @@ export const useTeamStore = defineStore('team', {
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.teams.length) % this.teams.length
     },
-    updateTeam() {
+    async updateTeam() {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          TeamService.createOrUpdateTeam(this.currentIndex, {
+          const { version } = await TeamService.createOrUpdateTeam(this.currentIndex, {
             name: this.getCurrentTeam.name,
             camp: this.getCurrentTeam.camp,
             bedtime: this.getCurrentTeam.bedtime,
             wakeup: this.getCurrentTeam.wakeup
           })
+
+          this.getCurrentTeam.version = version
         } catch {
           console.error('Error updating teams')
         }
@@ -218,6 +202,7 @@ export const useTeamStore = defineStore('team', {
     },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
+      // TODO: this doesn't show, because we hide the entire results box
       this.loadingTeams = true
 
       const members: PokemonInstanceExt[] = []

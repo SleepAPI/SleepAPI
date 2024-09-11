@@ -2,29 +2,22 @@
   <v-card id="teamNameCard" class="flex-grow-1 text-center" rounded="xl">
     <v-row>
       <v-col class="team-name">
-        <v-skeleton-loader
-          v-if="teamStore.loadingTeams"
-          type="card"
-          style="width: 100%"
-        ></v-skeleton-loader>
-        <template v-else>
-          <v-text-field
-            v-model="teamStore.getCurrentTeam.name"
-            :rules="[
-              (v: any) =>
-                (v || '').length <= maxTeamNameLength ||
-                `Description must be ${maxTeamNameLength} characters or less`
-            ]"
-            append-inner-icon="mdi-pencil"
-            label="Team name"
-            density="compact"
-            variant="solo"
-            hide-details
-            single-line
-            @input="filterInput"
-            @update:focused="updateTeamName"
-          ></v-text-field>
-        </template>
+        <v-text-field
+          v-model="teamStore.getCurrentTeam.name"
+          :rules="[
+            (v: any) =>
+              (v || '').length <= maxTeamNameLength ||
+              `Description must be ${maxTeamNameLength} characters or less`
+          ]"
+          append-inner-icon="mdi-pencil"
+          label="Team name"
+          density="compact"
+          variant="solo"
+          hide-details
+          single-line
+          @input="filterInput"
+          @update:focused="updateTeamName"
+        ></v-text-field>
       </v-col>
     </v-row>
   </v-card>

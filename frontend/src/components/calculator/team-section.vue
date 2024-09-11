@@ -4,6 +4,7 @@
       <v-btn
         icon="mdi-chevron-left"
         variant="plain"
+        aria-label="previous team"
         :disabled="!userStore.loggedIn"
         style="width: 36px; height: 36px"
         @click="teamStore.prev"
@@ -15,6 +16,7 @@
         class="team-label-margin"
         icon="mdi-chevron-right"
         variant="plain"
+        aria-label="next team"
         :disabled="!userStore.loggedIn"
         style="width: 36px; height: 36px"
         @click="teamStore.next"
@@ -33,7 +35,7 @@
 
     <TeamSettings class="pt-4" />
 
-    <v-row v-if="teamStore.getTeamSize > 0">
+    <v-row v-if="teamStore.getCurrentTeam.production">
       <v-col cols="12">
         <v-card :loading="teamStore.loadingTeams" color="transparent">
           <v-tabs v-model="tab" class="d-flex justify-space-around">
@@ -61,6 +63,27 @@
             </v-tabs-window-item>
           </v-tabs-window>
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else-if="teamStore.getTeamSize > 0" class="justify-space-around">
+      <v-col cols="12">
+        <v-skeleton-loader type="card">
+          <v-col v-for="(_, index) in tabs" :key="index" cols="4" class="flex-center">
+            <v-skeleton-loader type="button" width="100%" height="36px" class="flex-center" />
+          </v-col>
+
+          <v-col cols="12" class="">
+            <v-skeleton-loader type="heading"></v-skeleton-loader>
+          </v-col>
+
+          <v-col cols="12">
+            <v-skeleton-loader type="divider"></v-skeleton-loader>
+          </v-col>
+
+          <div v-for="i in Math.max(teamStore.getTeamSize, 1)" :key="i" class="w-100">
+            <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
+          </div>
+        </v-skeleton-loader>
       </v-col>
     </v-row>
   </v-container>
@@ -113,8 +136,18 @@ export default defineComponent({
       return berries && ingredients ? `${berries}\n${ingredients}` : 'No production'
     }
   },
+  watch: {
+    'teamStore.getCurrentTeam.production': {
+      immediate: true,
+      async handler(newProduction) {
+        if (!newProduction) {
+          await this.teamStore.calculateProduction(this.teamStore.currentIndex)
+        }
+      }
+    }
+  },
   async mounted() {
-    await this.teamStore.populateTeams()
+    await this.teamStore.syncTeams()
   }
 })
 </script>

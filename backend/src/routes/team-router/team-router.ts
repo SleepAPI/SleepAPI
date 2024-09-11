@@ -67,9 +67,8 @@ class TeamRouterImpl {
             throw new Error('User not found');
           }
 
-          await controller.upsertMeta(+index, req.body, user);
-
-          res.sendStatus(200);
+          const data = await controller.upsertMeta(+index, req.body, user);
+          res.json(data);
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
