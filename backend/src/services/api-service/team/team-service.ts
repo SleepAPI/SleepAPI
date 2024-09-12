@@ -20,6 +20,8 @@ export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<Upsert
     camp: upsertedTeam.camp,
     bedtime: upsertedTeam.bedtime,
     wakeup: upsertedTeam.wakeup,
+    recipeType: upsertedTeam.recipe_type,
+    favoredBerries: upsertedTeam.favored_berries?.split(','),
     version: upsertedTeam.version,
   };
 }
@@ -55,6 +57,8 @@ export async function upsertTeamMember(params: {
       camp: team?.camp ?? false,
       bedtime: team?.bedtime ?? '21:30',
       wakeup: team?.wakeup ?? '06:00',
+      recipe_type: team?.recipe_type ?? 'curry',
+      favored_berries: team?.favored_berries,
       name: team?.name ?? `Helper team ${teamIndex + 1}`,
     },
     filter: { fk_user_id: user.id, team_index: teamIndex },
@@ -66,6 +70,7 @@ export async function upsertTeamMember(params: {
       fk_user_id: user.id,
       saved: request.saved,
       shiny: request.shiny,
+      gender: request.gender,
       pokemon: request.pokemon,
       name: request.name,
       level: request.level,
@@ -96,6 +101,7 @@ export async function upsertTeamMember(params: {
     version: upsertedMember.version,
     saved: upsertedMember.saved,
     shiny: upsertedMember.shiny,
+    gender: upsertedMember.gender,
     pokemon: upsertedMember.pokemon,
     name: upsertedMember.name,
     level: upsertedMember.level,

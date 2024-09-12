@@ -10,7 +10,7 @@ import {
   uuid,
   type PokemonInstanceExt,
   type RecipeType,
-  type TeamSettingsRequest
+  type TeamSettings
 } from 'sleepapi-common'
 
 export interface TeamState {
@@ -135,11 +135,29 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
+          const {
+            favoredBerries: teamBerries,
+            name,
+            camp,
+            bedtime,
+            wakeup,
+            recipeType
+          } = this.getCurrentTeam
+
+          const anyFavoredBerries = teamBerries?.length > 0
+          const favoredBerries = anyFavoredBerries
+            ? teamBerries.length === berry.BERRIES.length
+              ? ['all']
+              : teamBerries.map((b) => b.name)
+            : undefined
+
           const { version } = await TeamService.createOrUpdateTeam(this.currentIndex, {
-            name: this.getCurrentTeam.name,
-            camp: this.getCurrentTeam.camp,
-            bedtime: this.getCurrentTeam.bedtime,
-            wakeup: this.getCurrentTeam.wakeup
+            name,
+            camp,
+            bedtime,
+            wakeup,
+            recipeType,
+            favoredBerries
           })
 
           this.getCurrentTeam.version = version
@@ -211,9 +229,8 @@ export const useTeamStore = defineStore('team', {
           members.push(pokemonStore.getPokemon(member))
         }
       }
-      const settings: TeamSettingsRequest = {
+      const settings: TeamSettings = {
         camp: this.teams[teamIndex].camp,
-        // TODO: hard-coded sleep times for now
         bedtime: this.teams[teamIndex].bedtime,
         wakeup: this.teams[teamIndex].wakeup
       }
@@ -241,7 +258,7 @@ export const useTeamStore = defineStore('team', {
         version: 0,
         saved: false,
         externalId: uuid.v4(),
-        name: randomName(12)
+        name: randomName(12, existingMember.gender)
       }
       await this.updateTeamMember(duplicatedMember, openSlotIndex)
       this.toggleMemberLoading(openSlotIndex)
@@ -290,17 +307,15 @@ export const useTeamStore = defineStore('team', {
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
     },
-    // TODO: add test when db fixed
     async updateRecipeType(recipeType: RecipeType) {
       this.getCurrentTeam.recipeType = recipeType
 
-      // this.updateTeam() // TODO: add recipe to db first
+      this.updateTeam()
     },
-    // TODO: add test when db fixed
     async updateFavoredBerries(berries: berry.Berry[]) {
       this.getCurrentTeam.favoredBerries = berries
 
-      // this.updateTeam() // TODO: add recipe to db first
+      this.updateTeam()
     },
     toggleMemberLoading(memberIndex: number) {
       this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]

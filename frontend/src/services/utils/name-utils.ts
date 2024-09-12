@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker/locale/en'
+import type { PokemonGender } from 'sleepapi-common'
 
-export function randomName(maxLength: number) {
-  let name = faker.person.firstName()
+export function randomName(maxLength: number, gender: PokemonGender) {
+  let name = faker.person.firstName(gender)
   while (name.length > maxLength) {
-    // TODO: we could save possible genders on each mon and pass, some mons can only be one gender, some have higher likelihood
-    name = faker.person.firstName()
+    name = faker.person.firstName(gender)
   }
   return name
 }

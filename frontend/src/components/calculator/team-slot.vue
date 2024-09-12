@@ -82,7 +82,7 @@ export default defineComponent({
     },
     imageUrl(): string | undefined {
       return this.pokemonInstance
-        ? `/images/pokemon/${this.pokemonInstance.pokemon.name.toLowerCase()}.png`
+        ? `/images/pokemon/${this.pokemonInstance.pokemon.name.toLowerCase()}${this.pokemonInstance.shiny ? '_shiny' : ''}.png`
         : ''
     },
     level() {

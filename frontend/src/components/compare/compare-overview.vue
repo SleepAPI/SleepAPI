@@ -16,7 +16,7 @@
                 >
                 <v-img
                   style="transform: translateY(-20px)"
-                  :src="`/images/pokemon/${item.pokemonName.toLowerCase()}.png`"
+                  :src="`/images/pokemon/${item.pokemonName.toLowerCase()}${item.shiny ? '_shiny' : ''}.png`"
                   cover
                 ></v-img>
               </div>
@@ -106,6 +106,7 @@ export default defineComponent({
         production.push({
           member: memberProduction.member.name,
           pokemonName: memberPokemon.name,
+          shiny: memberProduction.member.shiny,
           berries: MathUtils.round(
             (memberProduction.berries?.amount ?? 0) / this.comparisonStore.timewindowDivider,
             1

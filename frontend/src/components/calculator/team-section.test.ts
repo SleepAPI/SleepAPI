@@ -82,10 +82,13 @@ describe('TeamSettings.vue', () => {
 
   it('calculates production when missing', async () => {
     const teamStore = useTeamStore()
+    teamStore.syncTeams = vi.fn()
     teamStore.calculateProduction = vi.fn()
 
     wrapper = mount(TeamSection)
+    await nextTick()
 
+    expect(teamStore.syncTeams).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
 })

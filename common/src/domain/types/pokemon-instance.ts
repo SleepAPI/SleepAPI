@@ -1,3 +1,4 @@
+import { PokemonGender } from '../../domain/gender/gender';
 import { Ingredient } from '../../domain/ingredient';
 import { Nature } from '../../domain/nature';
 import { Pokemon } from '../../domain/pokemon';
@@ -17,6 +18,7 @@ export interface PokemonInstanceExt {
   version: number;
   saved: boolean;
   shiny: boolean;
+  gender: PokemonGender;
   externalId: string;
   pokemon: Pokemon;
   name: string;

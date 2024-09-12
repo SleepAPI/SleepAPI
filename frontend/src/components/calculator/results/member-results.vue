@@ -15,7 +15,7 @@
         <v-tabs v-model="tab" fixed-tabs stacked density="compact" class="custom-tab">
           <v-tab v-for="(member, index) in members" :key="index" :value="index">
             <img
-              :src="getMemberImage(member.member.pokemon.name)"
+              :src="getMemberImage(member.member.pokemon.name, member.member.shiny)"
               alt="Pokemon Tab Image"
               class="tab-image"
             />
@@ -48,8 +48,8 @@ export default defineComponent({
     }
   },
   methods: {
-    getMemberImage(name: string) {
-      return `/images/pokemon/${name.toLowerCase()}.png`
+    getMemberImage(name: string, shiny: boolean) {
+      return `/images/pokemon/${name.toLowerCase()}${shiny ? '_shiny' : ''}.png`
     },
     prettifiedMemberBerries(member: MemberProductionExt) {
       return `Berries: ${MathUtils.round(member.berries?.amount ?? 0, 1)} ${member.berries?.berry.name}`

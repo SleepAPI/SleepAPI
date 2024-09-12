@@ -1,3 +1,5 @@
+import { PokemonGender } from '../../domain/gender/gender';
+
 export interface SubskillInstance {
   level: number;
   subskill: string;
@@ -24,5 +26,6 @@ export interface PokemonInstanceWithMeta extends PokemonInstance {
   externalId: string;
   saved: boolean;
   shiny: boolean;
+  gender: PokemonGender;
   name: string;
 }

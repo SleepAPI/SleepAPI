@@ -18,6 +18,8 @@ export default class TeamController {
       camp: request.camp,
       bedtime: request.bedtime,
       wakeup: request.wakeup,
+      recipe_type: request.recipeType,
+      favored_berries: request.favoredBerries?.join(','),
     };
     return upsertTeamMeta(team);
   }

@@ -1,5 +1,6 @@
 import PokemonInput from '@/components/pokemon-input/pokemon-input.vue'
 import { useUserStore } from '@/stores/user-store'
+import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import {
@@ -8,7 +9,6 @@ import {
   nature,
   pokemon,
   subskill,
-  uuid,
   type PokemonInstanceExt
 } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -17,34 +17,7 @@ describe('PokemonInput', () => {
   let wrapper: VueWrapper<InstanceType<typeof PokemonInput>>
   console.error = vi.fn()
 
-  const preExistingMon: PokemonInstanceExt = {
-    version: 1,
-    externalId: uuid.v4(),
-    saved: false,
-    shiny: false,
-    pokemon: pokemon.PIKACHU,
-    name: 'Spike',
-    level: 60,
-    ribbon: 0,
-    carrySize: pokemon.PIKACHU.carrySize,
-    skillLevel: 2,
-    nature: nature.LONELY,
-    subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }],
-    ingredients: [
-      {
-        level: 0,
-        ingredient: pokemon.PIKACHU.ingredient0.ingredient
-      },
-      {
-        level: 30,
-        ingredient: pokemon.PIKACHU.ingredient30[0].ingredient
-      },
-      {
-        level: 60,
-        ingredient: pokemon.PIKACHU.ingredient60[0].ingredient
-      }
-    ]
-  }
+  const preExistingMon: PokemonInstanceExt = createMockPokemon()
 
   beforeEach(() => {
     setActivePinia(createPinia())

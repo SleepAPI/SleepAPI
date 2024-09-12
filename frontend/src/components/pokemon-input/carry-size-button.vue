@@ -1,7 +1,7 @@
 <template>
   <v-menu v-model="menu" :close-on-content-click="false" offset-y>
     <template #activator="{ props }">
-      <v-btn class="w-100" v-bind="props" :disabled="singleStageMon" append-icon="mdi-menu-down">
+      <v-btn class="w-100" v-bind="props" :disabled="singleStageMon">
         <span class="text-body-1"> Carry size {{ pokemonInstance.carrySize }} </span>
       </v-btn>
     </template>

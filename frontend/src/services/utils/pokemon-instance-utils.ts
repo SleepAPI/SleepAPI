@@ -8,7 +8,7 @@ import {
 } from 'sleepapi-common'
 
 class PokemonInstanceUtilsImpl {
-  public toPokemonInstanceExt(pokemonInstance: PokemonInstanceWithMeta) {
+  public toPokemonInstanceExt(pokemonInstance: PokemonInstanceWithMeta): PokemonInstanceExt {
     if (pokemonInstance.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (pokemonInstance.subskills.length > 5) {
@@ -19,6 +19,7 @@ class PokemonInstanceUtilsImpl {
       version: pokemonInstance.version,
       saved: pokemonInstance.saved,
       shiny: pokemonInstance.shiny,
+      gender: pokemonInstance.gender,
       externalId: pokemonInstance.externalId,
       pokemon: getPokemon(pokemonInstance.pokemon),
       name: pokemonInstance.name,
@@ -49,6 +50,7 @@ class PokemonInstanceUtilsImpl {
       version: instancedPokemon.version,
       saved: instancedPokemon.saved,
       shiny: instancedPokemon.shiny,
+      gender: instancedPokemon.gender,
       externalId: instancedPokemon.externalId,
       pokemon: instancedPokemon.pokemon.name,
       name: instancedPokemon.name,

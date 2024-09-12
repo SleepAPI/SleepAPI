@@ -20,7 +20,6 @@ import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event'
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { MathUtils, Produce, Time, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
@@ -94,13 +93,13 @@ export function randomizedSimulation(params: {
 
   // check skill procs at night
   for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
-    const skillActivated = rollRandomChance(skillPercentage);
+    const skillActivated = MathUtils.rollRandomChance(skillPercentage);
     if (skillActivated) {
       if (pokemon.skill.unit === 'energy') {
         let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
         if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
           // 20% chance it affects this Pokémon
-          if (!rollRandomChance(0.2)) {
+          if (!MathUtils.rollRandomChance(0.2)) {
             energyAmount = 0;
           }
         }
@@ -141,13 +140,13 @@ export function randomizedSimulation(params: {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
       const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
 
-      if (rollRandomChance(skillPercentage)) {
+      if (MathUtils.rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
         if (pokemon.skill.unit === 'energy') {
           let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
           if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
             // 20% chance it affects this Pokémon
-            if (!rollRandomChance(0.2)) {
+            if (!MathUtils.rollRandomChance(0.2)) {
               energyAmount = 0;
             }
           }

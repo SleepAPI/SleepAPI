@@ -12,7 +12,7 @@
       >
         <v-badge icon="mdi-pencil" color="primary" offset-x="30" offset-y="40">
           <v-img
-            :src="`/images/pokemon/${pokemon.name.toLowerCase()}.png`"
+            :src="`/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}${pokemonInstance.shiny ? '_shiny' : ''}.png`"
             height="150px"
             width="150px"
             cover
@@ -24,7 +24,7 @@
     <v-card>
       <GroupList
         :data="pokedexStore.groupedPokedex"
-        :selected-options="[pokemon.name]"
+        :selected-options="[pokemonInstance.name]"
         @select-option="selectPokemon"
         @cancel="closeMenu"
       />
@@ -35,7 +35,7 @@
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
 import { usePokedexStore } from '@/stores/pokedex-store/pokedex-store'
-import { pokemon } from 'sleepapi-common'
+import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -44,8 +44,8 @@ export default {
     GroupList
   },
   props: {
-    pokemon: {
-      type: Object as PropType<pokemon.Pokemon>,
+    pokemonInstance: {
+      type: Object as PropType<PokemonInstanceExt>,
       required: true
     }
   },

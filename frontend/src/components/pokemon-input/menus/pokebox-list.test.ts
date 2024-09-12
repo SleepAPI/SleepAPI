@@ -1,7 +1,8 @@
 import PokeboxList from '@/components/pokemon-input/menus/pokebox-list.vue'
 import { UserService } from '@/services/user/user-service'
+import { createMockPokemon } from '@/vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
-import { nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/user/user-service', () => ({
@@ -13,21 +14,7 @@ vi.mock('@/services/user/user-service', () => ({
 describe('PokeboxList', () => {
   let wrapper: VueWrapper<InstanceType<typeof PokeboxList>>
 
-  const mockPokemon: PokemonInstanceExt = {
-    name: 'Pikachu',
-    level: 10,
-    pokemon: pokemon.PIKACHU,
-    externalId: 'some-id',
-    carrySize: 1,
-    ingredients: [],
-    shiny: false,
-    ribbon: 0,
-    subskills: [],
-    saved: true,
-    version: 1,
-    skillLevel: 1,
-    nature: nature.BASHFUL
-  }
+  const mockPokemon: PokemonInstanceExt = createMockPokemon()
 
   beforeEach(async () => {
     UserService.getUserPokemon = vi.fn().mockResolvedValue([mockPokemon])
@@ -45,7 +32,7 @@ describe('PokeboxList', () => {
   it('displays saved Pokémon correctly', async () => {
     const listItems = wrapper.findAll('.v-list-item')
     expect(listItems.length).toBe(1)
-    expect(listItems[0].text()).toContain('Pikachu')
+    expect(listItems[0].text()).toContain(mockPokemon.name)
     expect(listItems[0].text()).toContain('Level 10')
   })
 

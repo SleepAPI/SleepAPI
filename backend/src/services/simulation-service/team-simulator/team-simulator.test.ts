@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
@@ -39,7 +39,7 @@ const mockPokemonSet: PokemonIngredientSet = {
 
 describe('TeamSimulator', () => {
   it('shall return expected production from mocked pokemon', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -69,7 +69,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall calculate production with uneven sleep times', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:01'),
       camp: false,
@@ -105,7 +105,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall calculate team with multiple members', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -138,7 +138,7 @@ describe('TeamSimulator', () => {
   });
 
   it('team members shall affect each other', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -181,7 +181,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall give pity procs to certain fast pokemon', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,

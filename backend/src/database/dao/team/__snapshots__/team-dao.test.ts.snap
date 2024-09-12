@@ -5,11 +5,13 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
   {
     "bedtime": "21:30",
     "camp": false,
+    "favoredBerries": undefined,
     "index": 0,
     "members": [
       {
         "carrySize": 10,
         "externalId": "111111111111111111111111111111111111",
+        "gender": undefined,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -60,6 +62,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       {
         "carrySize": 10,
         "externalId": "111111111111111111111111111111111111",
+        "gender": undefined,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -110,6 +113,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       {
         "carrySize": 10,
         "externalId": "222222222222222222222222222222222222",
+        "gender": undefined,
         "ingredients": [
           {
             "ingredient": "Berry",
@@ -159,6 +163,7 @@ exports[`findTeamsWithMembers shall get team with members 1`] = `
       },
     ],
     "name": "Team A",
+    "recipeType": "curry",
     "version": 1,
     "wakeup": "06:00",
   },

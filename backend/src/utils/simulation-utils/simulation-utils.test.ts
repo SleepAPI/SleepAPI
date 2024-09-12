@@ -4,7 +4,7 @@ import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event'
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { SkillActivation, Summary, mainskill, maxCarrySize, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_PRODUCE } from '../test-utils/defaults';
-import { finishSimulation, rollRandomChance, startDayAndEnergy, startNight } from './simulation-utils';
+import { finishSimulation, startDayAndEnergy, startNight } from './simulation-utils';
 
 describe('startDayAndEnergy', () => {
   it('shall calculate starting energy and log starting events', () => {
@@ -73,15 +73,5 @@ describe('finishSimulation', () => {
       eventLog,
     });
     expect(eventLog).toHaveLength(6);
-  });
-});
-
-describe('rollRandomChance', () => {
-  it('shall return false for 0% chance', () => {
-    expect(rollRandomChance(0)).toBeFalsy();
-  });
-
-  it('shall return true for 100% chance', () => {
-    expect(rollRandomChance(1)).toBeTruthy();
   });
 });

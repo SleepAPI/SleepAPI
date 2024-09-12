@@ -137,17 +137,20 @@ export default defineComponent({
     }
   },
   watch: {
-    'teamStore.getCurrentTeam.production': {
-      immediate: true,
-      async handler(newProduction) {
-        if (!newProduction) {
-          await this.teamStore.calculateProduction(this.teamStore.currentIndex)
+    'teamStore.currentIndex': {
+      async handler(newIndex) {
+        if (!this.teamStore.teams[newIndex].production) {
+          await this.teamStore.calculateProduction(newIndex)
         }
       }
     }
   },
   async mounted() {
     await this.teamStore.syncTeams()
+
+    if (!this.teamStore.getCurrentTeam.production) {
+      await this.teamStore.calculateProduction(this.teamStore.currentIndex)
+    }
   }
 })
 </script>

@@ -88,7 +88,7 @@
             <v-btn color="surface" aria-label="select all button" @click="selectAll()">All</v-btn>
           </v-col>
           <v-col cols="4" class="flex-right">
-            <v-btn color="secondary" aria-label="close button" @click="menu = false">Close</v-btn>
+            <v-btn color="secondary" aria-label="save button" @click="saveBerries()">Save</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -151,6 +151,10 @@ export default defineComponent({
     }
   },
   methods: {
+    saveBerries() {
+      this.menu = false
+      this.updateBerries()
+    },
     toggleBerry(berry: berry.Berry) {
       const index = this.favoredBerries.findIndex((item) => item.name === berry.name)
 
@@ -159,31 +163,24 @@ export default defineComponent({
       } else {
         this.favoredBerries = this.favoredBerries.filter((b) => b.name !== berry.name)
       }
-      this.updateBerries()
     },
     clear() {
       this.favoredBerries = []
-      this.updateBerries()
     },
     selectAll() {
       this.favoredBerries = this.berries
-      this.updateBerries()
     },
     selectCyan() {
       this.favoredBerries = berry.CYAN_BERRIES
-      this.updateBerries()
     },
     selectTaupe() {
       this.favoredBerries = berry.TAUPE_BERRIES
-      this.updateBerries()
     },
     selectSnowdrop() {
       this.favoredBerries = berry.SNOWDROP_BERRIES
-      this.updateBerries()
     },
     selectLapis() {
       this.favoredBerries = berry.LAPIS_BERRIES
-      this.updateBerries()
     },
     updateBerries() {
       this.$emit('favored-berries', this.favoredBerries)

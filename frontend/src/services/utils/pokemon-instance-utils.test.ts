@@ -1,58 +1,40 @@
 import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
+import { createMockPokemon } from '@/vitest'
 import {
   ingredient,
-  nature,
-  pokemon,
   subskill,
   type PokemonInstanceExt,
   type PokemonInstanceWithMeta
 } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
-// Mock data for testing
+const mockPokemonInstanceExt: PokemonInstanceExt = createMockPokemon({
+  subskills: [
+    { level: 10, subskill: subskill.HELPING_BONUS },
+    { level: 25, subskill: subskill.BERRY_FINDING_S }
+  ]
+})
 const mockPokemonInstanceWithMeta: PokemonInstanceWithMeta = {
-  version: 1,
-  saved: true,
-  shiny: false,
-  externalId: 'external-id',
-  pokemon: pokemon.PIKACHU.name,
-  name: pokemon.PIKACHU.name,
-  level: 10,
-  ribbon: 0,
-  carrySize: 1,
-  skillLevel: 1,
-  nature: 'Bashful',
+  version: mockPokemonInstanceExt.version,
+  saved: mockPokemonInstanceExt.saved,
+  shiny: mockPokemonInstanceExt.shiny,
+  gender: mockPokemonInstanceExt.gender,
+  externalId: mockPokemonInstanceExt.externalId,
+  pokemon: mockPokemonInstanceExt.pokemon.name,
+  name: mockPokemonInstanceExt.name,
+  level: mockPokemonInstanceExt.level,
+  ribbon: mockPokemonInstanceExt.ribbon,
+  carrySize: mockPokemonInstanceExt.carrySize,
+  skillLevel: mockPokemonInstanceExt.skillLevel,
+  nature: mockPokemonInstanceExt.nature.name,
   subskills: [
     { level: 10, subskill: 'Helping Bonus' },
     { level: 25, subskill: 'Berry Finding S' }
   ],
   ingredients: [
-    { level: 0, ingredient: 'Sausage' },
-    { level: 30, ingredient: 'Sausage' },
-    { level: 60, ingredient: 'Sausage' }
-  ]
-}
-
-const mockPokemonInstanceExt: PokemonInstanceExt = {
-  version: 1,
-  saved: true,
-  shiny: false,
-  externalId: 'external-id',
-  pokemon: pokemon.PIKACHU,
-  name: pokemon.PIKACHU.name,
-  level: 10,
-  ribbon: 0,
-  carrySize: 1,
-  skillLevel: 1,
-  nature: nature.BASHFUL,
-  subskills: [
-    { level: 10, subskill: subskill.HELPING_BONUS },
-    { level: 25, subskill: subskill.BERRY_FINDING_S }
-  ],
-  ingredients: [
-    { level: 0, ingredient: ingredient.BEAN_SAUSAGE },
-    { level: 30, ingredient: ingredient.BEAN_SAUSAGE },
-    { level: 60, ingredient: ingredient.BEAN_SAUSAGE }
+    { level: 0, ingredient: 'Apple' },
+    { level: 30, ingredient: 'Apple' },
+    { level: 60, ingredient: 'Apple' }
   ]
 }
 

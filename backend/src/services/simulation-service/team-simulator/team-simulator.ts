@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
@@ -35,7 +35,7 @@ export class TeamSimulator {
   private cookedMealsCounter = 0;
   private chunksOf5Minutes = 0;
 
-  constructor(params: { settings: TeamSettings; members: TeamMember[] }) {
+  constructor(params: { settings: TeamSettingsExt; members: TeamMember[] }) {
     const { settings, members } = params;
 
     this.cookingState = new CookingState(settings.camp);

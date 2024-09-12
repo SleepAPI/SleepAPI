@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator';
 import {
   berry,
@@ -24,7 +24,11 @@ class TeamSimulatorUtilsImpl {
     return calculateNrOfBerriesPerDrop(member.pokemonSet.pokemon, member.subskills);
   }
 
-  public calculateHelpSpeedBeforeEnergy(params: { member: TeamMember; settings: TeamSettings; helpingBonus: number }) {
+  public calculateHelpSpeedBeforeEnergy(params: {
+    member: TeamMember;
+    settings: TeamSettingsExt;
+    helpingBonus: number;
+  }) {
     const { member, settings, helpingBonus } = params;
 
     return calculateHelpSpeedBeforeEnergy({
