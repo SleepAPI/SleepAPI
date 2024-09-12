@@ -10,13 +10,14 @@ import {
 } from '@/types/member/instanced'
 import axios from 'axios'
 import {
+  berry,
   type BerrySet,
   type CalculateTeamResponse,
   type GetTeamsResponse,
   type IngredientSet,
   type PokemonInstanceExt,
   type PokemonInstanceIdentity,
-  type TeamSettingsRequest,
+  type TeamSettings,
   type UpsertTeamMemberResponse,
   type UpsertTeamMetaRequest,
   type UpsertTeamMetaResponse
@@ -84,17 +85,29 @@ class TeamServiceImpl {
           }
         }
 
-        // TODO: fix in db
-        const favoredBerries = teamStore.teams[teamIndex]?.favoredBerries ?? []
-        const recipeType = teamStore.teams[teamIndex]?.recipeType ?? 'curry'
+        const favoredBerries: berry.Berry[] = []
+        if (serverTeam.favoredBerries?.length === 1 && serverTeam.favoredBerries[0] === 'all') {
+          favoredBerries.push(...berry.BERRIES)
+        } else {
+          for (const berryName of serverTeam.favoredBerries ?? []) {
+            const favoredBerry = berry.BERRIES.find((berry) => berry.name === berryName)
+            if (!favoredBerry) {
+              console.error(
+                `Couldn't find favored berry with name: ${berryName}, contact developer`
+              )
+              continue
+            }
+            favoredBerries.push(favoredBerry)
+          }
+        }
         const instancedTeam: TeamInstance = {
           index: serverTeam.index,
           name: serverTeam.name,
           camp: serverTeam.camp,
           bedtime: serverTeam.bedtime,
           wakeup: serverTeam.wakeup,
-          recipeType, // TODO: fix in db
-          favoredBerries, // TODO: fix in db
+          recipeType: serverTeam.recipeType,
+          favoredBerries,
           version: serverTeam.version,
           members,
           production: undefined
@@ -118,7 +131,7 @@ class TeamServiceImpl {
   // TODO: not tested?
   public async calculateProduction(params: {
     members: PokemonInstanceExt[]
-    settings: TeamSettingsRequest
+    settings: TeamSettings
   }) {
     const { members, settings } = params
     if (members.length === 0) {

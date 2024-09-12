@@ -24,8 +24,8 @@ describe('randomName', () => {
       .mockReturnValueOnce('Alexander')
       .mockReturnValueOnce('Jane')
 
-    const alex = randomName(maxLength)
-    const jane = randomName(maxLength)
+    const alex = randomName(maxLength, undefined)
+    const jane = randomName(maxLength, undefined)
     expect(alex).toBe('Alex')
     expect(jane).toBe('Jane')
   })
@@ -35,7 +35,14 @@ describe('randomName', () => {
 
     faker.person.firstName = vi.fn().mockReturnValue('Alexander')
 
-    const name = randomName(maxLength)
+    const name = randomName(maxLength, undefined)
     expect(name).toBe('Alexander')
+  })
+
+  it('shall call faker with gender', () => {
+    faker.person.firstName = vi.fn().mockReturnValue('Louis')
+
+    randomName(12, 'female')
+    expect(faker.person.firstName).toHaveBeenLastCalledWith('female')
   })
 })

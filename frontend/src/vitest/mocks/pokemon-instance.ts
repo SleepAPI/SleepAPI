@@ -16,6 +16,7 @@ export function createMockPokemon(attrs?: Partial<PokemonInstanceExt>): PokemonI
     nature: nature.BASHFUL,
     saved: false,
     shiny: false,
+    gender: undefined,
     skillLevel: 1,
     subskills: [],
     version: 1,

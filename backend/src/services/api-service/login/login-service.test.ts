@@ -283,6 +283,7 @@ describe('upsertPokemon', () => {
     ribbon: 0,
     saved: false,
     shiny: false,
+    gender: 'female',
     skillLevel: 0,
     subskills: [],
     version: 0,

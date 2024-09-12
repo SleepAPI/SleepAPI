@@ -1,6 +1,6 @@
 import { PokemonIngredientSet, Time, nature, subskill } from 'sleepapi-common';
 
-export interface TeamSettings {
+export interface TeamSettingsExt {
   camp: boolean;
   bedtime: Time;
   wakeup: Time;

@@ -32,3 +32,13 @@ describe('round', () => {
     expect(MathUtils.round(-0.26, 1)).toBe(-0.3);
   });
 });
+
+describe('rollRandomChance', () => {
+  it('shall return false for 0% chance', () => {
+    expect(MathUtils.rollRandomChance(0)).toBeFalsy();
+  });
+
+  it('shall return true for 100% chance', () => {
+    expect(MathUtils.rollRandomChance(1)).toBeTruthy();
+  });
+});

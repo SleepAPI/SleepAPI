@@ -1,5 +1,4 @@
-import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
-import { CookingResult, IngredientSet, MAX_POT_SIZE, Recipe, curry, dessert, salad } from 'sleepapi-common';
+import { CookingResult, IngredientSet, MAX_POT_SIZE, MathUtils, Recipe, curry, dessert, salad } from 'sleepapi-common';
 
 interface CookedRecipe extends Recipe {
   extraTasty: boolean;
@@ -64,7 +63,7 @@ export class CookingState {
         currentIngredients: this.currentDessertInventory,
       }) ?? dessert.MIXED_JUICE;
 
-    const extraTasty = rollRandomChance(this.currentCritChance(sunday));
+    const extraTasty = MathUtils.rollRandomChance(this.currentCritChance(sunday));
     if (extraTasty) {
       this.bonusCritChance = 0;
     }

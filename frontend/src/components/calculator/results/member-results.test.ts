@@ -2,30 +2,17 @@ import TeamResults from '@/components/calculator/results/member-results.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { TeamInstance } from '@/types/member/instanced'
+import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { berry, ingredient, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
 describe('TeamResults', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamResults>>
   const externalId = 'external-id'
-  const mockPokemon: PokemonInstanceExt = {
-    name: 'Bubbles',
-    externalId,
-    pokemon: pokemon.PIKACHU,
-    carrySize: 10,
-    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
-    level: 10,
-    ribbon: 0,
-    nature: nature.BASHFUL,
-    saved: false,
-    shiny: false,
-    skillLevel: 1,
-    subskills: [],
-    version: 1
-  }
+  const mockPokemon: PokemonInstanceExt = createMockPokemon()
 
   const team: TeamInstance = {
     members: [externalId],

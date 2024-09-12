@@ -254,7 +254,7 @@ export default defineComponent({
             (skillStrength / (this.berryStrength + this.skillStrength)) * 100,
             1
           ),
-          image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}.png`
+          image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
         })
       }
       return result

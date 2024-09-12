@@ -13,7 +13,7 @@ import {
 } from '@src/services/api-service/team/team-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
-import { uuid } from 'sleepapi-common';
+import { UpsertTeamMemberRequest, uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true, enforceForeignKeyConstraints: true });
 
@@ -43,6 +43,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -55,6 +56,8 @@ describe('upsertTeam', () => {
         name: 'some name',
         team_index: 0,
         version: 1,
+        recipe_type: 'curry',
+        favored_berries: undefined,
       },
     ]);
   });
@@ -73,6 +76,7 @@ describe('upsertTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     await upsertTeamMeta({
       fk_user_id: user.id,
@@ -81,6 +85,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -93,6 +98,8 @@ describe('upsertTeam', () => {
         name: 'new name',
         team_index: 0,
         version: 2,
+        recipe_type: 'curry',
+        favored_berries: undefined,
       },
     ]);
   });
@@ -111,6 +118,7 @@ describe('upsertTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     await upsertTeamMeta({
       fk_user_id: user.id,
@@ -119,6 +127,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -131,6 +140,8 @@ describe('upsertTeam', () => {
         name: 'name',
         team_index: 0,
         version: 1,
+        recipe_type: 'curry',
+        favored_berries: undefined,
       },
       {
         camp: false,
@@ -141,6 +152,8 @@ describe('upsertTeam', () => {
         name: 'name',
         team_index: 1,
         version: 1,
+        recipe_type: 'curry',
+        favored_berries: undefined,
       },
     ]);
   });
@@ -167,6 +180,7 @@ describe('getTeams', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     await TeamDAO.insert({
       fk_user_id: user.id,
@@ -175,14 +189,35 @@ describe('getTeams', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const response = await getTeams(user);
 
     expect(response).toEqual({
       teams: [
-        { index: 0, name: 'Team A', camp: false, members: [], bedtime: '21:30', wakeup: '06:00', version: 1 },
-        { index: 1, name: 'Team B', camp: true, bedtime: '21:30', wakeup: '06:00', members: [], version: 1 },
+        {
+          index: 0,
+          name: 'Team A',
+          camp: false,
+          members: [],
+          bedtime: '21:30',
+          wakeup: '06:00',
+          version: 1,
+          recipeType: 'curry',
+          favoredBerries: undefined,
+        },
+        {
+          index: 1,
+          name: 'Team B',
+          camp: true,
+          bedtime: '21:30',
+          wakeup: '06:00',
+          members: [],
+          version: 1,
+          recipeType: 'curry',
+          favoredBerries: undefined,
+        },
       ],
     });
   });
@@ -206,6 +241,7 @@ describe('getTeams', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     await TeamDAO.insert({
       fk_user_id: user2.id,
@@ -214,12 +250,25 @@ describe('getTeams', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const response = await getTeams(user1);
 
     expect(response).toEqual({
-      teams: [{ index: 0, name: 'Team A', camp: false, members: [], bedtime: '21:30', wakeup: '06:00', version: 1 }],
+      teams: [
+        {
+          index: 0,
+          name: 'Team A',
+          camp: false,
+          members: [],
+          bedtime: '21:30',
+          wakeup: '06:00',
+          version: 1,
+          recipeType: 'curry',
+          favoredBerries: undefined,
+        },
+      ],
     });
   });
 });
@@ -232,10 +281,11 @@ describe('upsertTeamMember', () => {
       sub: 'sub',
     });
 
-    const request = {
+    const request: UpsertTeamMemberRequest = {
       version: 1,
       saved: true,
       shiny: false,
+      gender: 'female',
       externalId: uuid.v4(),
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
@@ -263,6 +313,7 @@ describe('upsertTeamMember', () => {
       name: 'Bulbasaur',
       level: 5,
       shiny: false,
+      gender: 'female',
       ribbon: 0,
       carrySize: 3,
       skillLevel: 2,
@@ -284,6 +335,7 @@ describe('upsertTeamMember', () => {
       name: 'Bulbasaur',
       level: 5,
       shiny: false,
+      gender: 'female',
       ribbon: 0,
       carry_size: 3,
       skill_level: 2,
@@ -319,6 +371,8 @@ describe('upsertTeamMember', () => {
         name: 'Helper team 1',
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
+        favoredBerries: undefined,
       },
     ]);
   });
@@ -330,11 +384,11 @@ describe('upsertTeamMember', () => {
       sub: 'sub',
     });
 
-    const request = {
-      index: 0,
+    const request: UpsertTeamMemberRequest = {
       version: 1,
       saved: true,
       shiny: false,
+      gender: 'female',
       externalId: uuid.v4(),
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
@@ -362,6 +416,7 @@ describe('upsertTeamMember', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     await PokemonDAO.insert({
@@ -394,6 +449,7 @@ describe('upsertTeamMember', () => {
       version: 2,
       saved: true,
       shiny: false,
+      gender: 'female',
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
       level: 10,
@@ -418,6 +474,7 @@ describe('upsertTeamMember', () => {
       fk_user_id: user.id,
       saved: true,
       shiny: false,
+      gender: 'female',
       ribbon: 0,
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
@@ -454,6 +511,8 @@ describe('upsertTeamMember', () => {
         name: 'test team',
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
+        favoredBerries: undefined,
       },
     ]);
   });
@@ -465,10 +524,11 @@ describe('upsertTeamMember', () => {
       sub: 'sub',
     });
 
-    const request = {
+    const request: UpsertTeamMemberRequest = {
       version: 1,
       saved: true,
       shiny: false,
+      gender: 'female',
       externalId: uuid.v4(),
       pokemon: 'bulbasaur',
       name: 'Bulbasaur',
@@ -507,6 +567,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -553,6 +614,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -599,6 +661,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     const team2 = await TeamDAO.insert({
       fk_user_id: user.id,
@@ -607,6 +670,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -658,6 +722,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const pkmn = await PokemonDAO.insert({
@@ -710,6 +775,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     await deleteTeam(team.team_index, user);
@@ -732,6 +798,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     const pkmn = await PokemonDAO.insert({

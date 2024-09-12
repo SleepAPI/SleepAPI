@@ -3,7 +3,7 @@ import { Recipe } from '../../../domain/recipe/recipe';
 import { BerrySet } from '../../../domain/types/berry-drop';
 import { IngredientSet } from '../../../domain/types/ingredient-set';
 
-export interface TeamSettingsRequest {
+export interface TeamSettings {
   camp: boolean;
   bedtime: string;
   wakeup: string;
@@ -14,7 +14,7 @@ export interface PokemonInstanceIdentity extends PokemonInstance {
 }
 
 export interface CalculateTeamRequest {
-  settings: TeamSettingsRequest;
+  settings: TeamSettings;
   members: PokemonInstanceIdentity[];
 }
 

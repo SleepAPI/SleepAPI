@@ -22,7 +22,7 @@
         <v-btn
           :color="rarityColor(subskillLevel)"
           class="w-100"
-          rounded="lg"
+          rounded="xs"
           height="36px"
           style="font-size: xx-small"
           @click="toggleSubskillMenu"

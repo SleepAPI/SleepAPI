@@ -90,7 +90,6 @@ describe('IslandSelect', () => {
     berryChip.click()
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.favoredBerries.map((s) => s.name)).not.toContain(testBerry.name)
-    expect(wrapper.emitted('favored-berries')).toBeTruthy()
   })
 
   it('clears all selected berries when the clear button is clicked', async () => {
@@ -123,16 +122,17 @@ describe('IslandSelect', () => {
     expect(wrapper.vm.favoredBerries).toEqual(berry.BERRIES)
   })
 
-  it('closes the dialog when the close button is clicked', async () => {
+  it('saves the dialog when the save button is clicked', async () => {
     wrapper.vm.menu = true
     await wrapper.vm.$nextTick()
 
-    const closeButton = document.querySelector('button[aria-label="close button"]')
+    const closeButton = document.querySelector('button[aria-label="save button"]')
     expect(closeButton).not.toBeNull()
 
     closeButton?.dispatchEvent(new Event('click'))
     await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.menu).toBe(false)
+    expect(wrapper.emitted('favored-berries')).toBeTruthy()
   })
 })

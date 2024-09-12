@@ -55,6 +55,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.helpFactor).toBe(8.299999999999999);
@@ -88,6 +89,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(5463);
@@ -115,6 +117,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(1350);
@@ -143,6 +146,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(4699);
@@ -173,6 +177,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(4295);
@@ -203,6 +208,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3726);
@@ -233,6 +239,7 @@ describe('RP', () => {
       version: 0,
       saved: true,
       shiny: false,
+      gender: 'female',
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3555);

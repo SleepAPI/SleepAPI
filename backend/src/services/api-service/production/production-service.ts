@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
@@ -124,7 +124,7 @@ export function calculatePokemonProduction(
 }
 
 // 5110 days is 14 years or 730 weeks
-export function calculateTeam(params: { settings: TeamSettings; members: TeamMember[] }, iterations = 5110) {
+export function calculateTeam(params: { settings: TeamSettingsExt; members: TeamMember[] }, iterations = 5110) {
   const { settings, members } = params;
   const teamSimulator = new TeamSimulator({ settings, members });
 

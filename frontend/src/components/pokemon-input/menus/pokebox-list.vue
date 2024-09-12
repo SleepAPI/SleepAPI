@@ -15,7 +15,7 @@
             <v-list-item
               v-for="(userPokemon, i) in savedPokemon"
               :key="i"
-              :prepend-avatar="`/images/pokemon/${userPokemon.pokemon.name.toLowerCase()}.png`"
+              :prepend-avatar="`/images/pokemon/${userPokemon.pokemon.name.toLowerCase()}${userPokemon.shiny ? '_shiny' : ''}.png`"
               :title="userPokemon.name"
               :subtitle="`Level ${userPokemon.level}`"
               :value="userPokemon"

@@ -15,7 +15,6 @@ import {
   mainskill,
 } from 'sleepapi-common';
 import { MealError } from '../../domain/error/meal/meal-error';
-import { rollRandomChance } from '../simulation-utils/simulation-utils';
 
 export function getMeal(name: string) {
   const meal: Recipe | undefined = RECIPES.find((meal) => meal.name === name.toUpperCase());
@@ -207,7 +206,7 @@ export function monteCarloCrits(bonusChance: number) {
 
   const WEEKDAY_MEALS = 18;
   for (let i = 0; i < WEEKDAY_MEALS; i++) {
-    const critRoll = rollRandomChance(WEEKDAY_CRIT_CHANCE + currentBonus);
+    const critRoll = MathUtils.rollRandomChance(WEEKDAY_CRIT_CHANCE + currentBonus);
     if (critRoll) {
       weekdayMultipliers.push(WEEKDAY_CRIT_MULTIPLIER);
       currentBonus = bonusChance;
@@ -220,7 +219,7 @@ export function monteCarloCrits(bonusChance: number) {
 
   const SUNDAY_MEALS = 3;
   for (let i = 0; i < SUNDAY_MEALS; i++) {
-    const critRoll = rollRandomChance(SUNDAY_CRIT_CHANCE + currentBonus);
+    const critRoll = MathUtils.rollRandomChance(SUNDAY_CRIT_CHANCE + currentBonus);
     if (critRoll) {
       sundayMultipliers.push(SUNDAY_CRIT_MULTIPLIER);
       currentBonus = bonusChance;

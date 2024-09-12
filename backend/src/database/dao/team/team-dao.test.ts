@@ -21,6 +21,7 @@ describe('TeamDAO insert', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     expect(team).toBeDefined();
 
@@ -30,9 +31,11 @@ describe('TeamDAO insert', () => {
         {
           "bedtime": "21:30",
           "camp": false,
+          "favored_berries": undefined,
           "fk_user_id": 1,
           "id": 1,
           "name": "Team A",
+          "recipe_type": "curry",
           "team_index": 0,
           "version": 1,
           "wakeup": "06:00",
@@ -50,6 +53,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.fk_user_id/);
   });
@@ -63,6 +67,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.team_index/);
   });
@@ -76,6 +81,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.name/);
   });
@@ -88,6 +94,7 @@ describe('TeamDAO insert', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     await expect(
       TeamDAO.insert({
@@ -97,6 +104,7 @@ describe('TeamDAO insert', () => {
         camp: true,
         bedtime: '21:30',
         wakeup: '06:00',
+        recipe_type: 'curry',
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: UNIQUE constraint failed: team.fk_user_id, team.team_index/);
   });
@@ -111,6 +119,7 @@ describe('TeamDAO update', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     expect(team.name).toEqual('Team A');
 
@@ -122,9 +131,11 @@ describe('TeamDAO update', () => {
         {
           "bedtime": "21:30",
           "camp": false,
+          "favored_berries": undefined,
           "fk_user_id": 1,
           "id": 1,
           "name": "Updated Team A",
+          "recipe_type": "curry",
           "team_index": 0,
           "version": 2,
           "wakeup": "06:00",
@@ -141,6 +152,7 @@ describe('TeamDAO update', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     const teamB = await TeamDAO.insert({
       fk_user_id: 1,
@@ -149,6 +161,7 @@ describe('TeamDAO update', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     await expect(TeamDAO.update({ ...teamB, team_index: 0 })).rejects.toThrow(
@@ -166,6 +179,7 @@ describe('TeamDAO delete', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     await TeamDAO.delete({ id: team.id });
@@ -184,6 +198,7 @@ describe('findTeamsWithMembers', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
     // should not be found
     await TeamDAO.insert({
@@ -193,6 +208,7 @@ describe('findTeamsWithMembers', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
+      recipe_type: 'curry',
     });
 
     await PokemonDAO.insert({

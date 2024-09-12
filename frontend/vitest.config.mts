@@ -12,7 +12,7 @@ export default mergeConfig(
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
         include: ['**/src/**'],
-        exclude: ['**/node_modules/**', '**/test/**', '**/main.ts']
+        exclude: ['**/node_modules/**', '**/test/**', '**/main.ts', '**/index.ts']
       },
       setupFiles: ['./src/vitest']
     }

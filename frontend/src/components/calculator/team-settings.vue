@@ -395,7 +395,7 @@ export default defineComponent({
       this.teamStore.deleteTeam()
     },
     updateFavoredBerries(berries: berry.Berry[]) {
-      this.teamStore.getCurrentTeam.favoredBerries = berries
+      this.teamStore.updateFavoredBerries(berries)
     }
   }
 })

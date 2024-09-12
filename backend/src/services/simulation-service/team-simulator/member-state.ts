@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
@@ -9,7 +9,6 @@ import { SkillValue } from '@src/services/simulation-service/team-simulator/skil
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
-import { rollRandomChance } from '@src/utils/simulation-utils/simulation-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
   IngredientSet,
@@ -73,7 +72,12 @@ export class MemberState {
   private totalSneakySnack = InventoryUtils.getEmptyInventory();
   private spilledIngredients = InventoryUtils.getEmptyInventory();
 
-  constructor(params: { member: TeamMember; team: TeamMember[]; settings: TeamSettings; cookingState: CookingState }) {
+  constructor(params: {
+    member: TeamMember;
+    team: TeamMember[];
+    settings: TeamSettingsExt;
+    cookingState: CookingState;
+  }) {
     const { member, team, settings, cookingState } = params;
 
     this.cookingState = cookingState;
@@ -318,7 +322,7 @@ export class MemberState {
   }
 
   private attemptSkill(): SkillActivation | undefined {
-    if (this.helpsSinceLastSkillProc > this.pityProcThreshold || rollRandomChance(this.skillPercentage)) {
+    if (this.helpsSinceLastSkillProc > this.pityProcThreshold || MathUtils.rollRandomChance(this.skillPercentage)) {
       this.skillProcs += 1;
       this.helpsSinceLastSkillProc = 0;
       let result: SkillActivation | undefined = undefined;

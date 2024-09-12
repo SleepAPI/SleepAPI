@@ -197,7 +197,7 @@ export default defineComponent({
           version: 0,
           saved: false,
           externalId: uuid.v4(),
-          name: randomName(12)
+          name: randomName(12, pokemonInstance.gender)
         }
         this.comparisonStore.addMember({ ...copiedProduction, member: duplicatedMember })
       }

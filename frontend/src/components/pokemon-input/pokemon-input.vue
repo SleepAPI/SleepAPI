@@ -7,17 +7,16 @@
           <h2>{{ pokemonInstance.rp }}</h2>
         </v-col>
         <v-col class="flex-right pr-0">
-          <RibbonButton :ribbon="pokemonInstance.ribbon" @update-ribbon="updateRibbon" />
-
           <v-btn
             id="saveIcon"
             icon
+            elevation="0"
             color="background"
             :class="{ nudge: !userStore.loggedIn }"
             @click="toggleSave"
           >
-            <v-icon v-if="pokemonInstance.saved" color="accent" size="32">mdi-star</v-icon>
-            <v-icon v-else size="32">mdi-star-outline</v-icon>
+            <v-icon v-if="pokemonInstance.saved" color="accent" size="32">mdi-bookmark</v-icon>
+            <v-icon v-else size="32">mdi-bookmark-outline</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -31,17 +30,29 @@
       position="absolute"
       style="margin-top: 60px"
     >
+      <v-btn
+        icon
+        color="surface"
+        elevation="0"
+        style="right: 4px; position: absolute"
+        size="40"
+        @click="toggleShiny"
+      >
+        <v-icon v-if="pokemonInstance.shiny" color="accent" size="24">mdi-creation</v-icon>
+        <v-icon v-else size="24">mdi-creation-outline</v-icon>
+      </v-btn>
+      <GenderButton :pokemon-instance="pokemonInstance" @update-gender="updateGender" />
     </v-sheet>
 
     <v-row no-gutters class="pt-2 pb-2">
       <v-col class="flex-center">
-        <PokemonButton :pokemon="pokemonInstance.pokemon" @update-pokemon="updatePokemon" />
+        <PokemonButton :pokemon-instance="pokemonInstance" @update-pokemon="updatePokemon" />
       </v-col>
     </v-row>
 
     <v-row no-gutters>
       <v-col class="flex-center">
-        <PokemonName :name="pokemonInstance.name" @update-name="updateName" />
+        <PokemonName :pokemon-instance="pokemonInstance" @update-name="updateName" />
       </v-col>
     </v-row>
 
@@ -52,11 +63,14 @@
     </v-row>
 
     <v-row dense class="mt-3">
-      <v-col cols="6" class="flex-center">
+      <v-col cols="4" class="flex-center">
         <LevelButton :level="pokemonInstance.level" @update-level="updateLevel" />
       </v-col>
       <v-col cols="6" class="flex-center">
         <CarrySizeButton :pokemon-instance="pokemonInstance" @update-carry="updateCarry" />
+      </v-col>
+      <v-col cols="2" class="flex-center">
+        <RibbonButton :ribbon="pokemonInstance.ribbon" @update-ribbon="updateRibbon" />
       </v-col>
     </v-row>
 
@@ -141,6 +155,7 @@
 
 <script lang="ts">
 import CarrySizeButton from '@/components/pokemon-input/carry-size-button.vue'
+import GenderButton from '@/components/pokemon-input/gender-button.vue'
 import IngredientButton from '@/components/pokemon-input/ingredient-button.vue'
 import LevelButton from '@/components/pokemon-input/level-button.vue'
 import MainskillButton from '@/components/pokemon-input/mainskill-button.vue'
@@ -158,6 +173,7 @@ import {
   nature,
   pokemon,
   uuid,
+  type PokemonGender,
   type PokemonInstanceExt,
   type SubskillInstanceExt
 } from 'sleepapi-common'
@@ -174,7 +190,8 @@ export default defineComponent({
     IngredientButton,
     MainskillButton,
     NatureButton,
-    RibbonButton
+    RibbonButton,
+    GenderButton
   },
   props: {
     pokemonFromPreExist: {
@@ -200,6 +217,7 @@ export default defineComponent({
       externalId: '',
       saved: false,
       shiny: false,
+      gender: undefined,
       pokemon: pokemon.MOCK_POKEMON,
       name: '',
       level: 60,
@@ -235,6 +253,12 @@ export default defineComponent({
       if (this.userStore.loggedIn) {
         this.pokemonInstance.saved = !this.pokemonInstance.saved
       }
+    },
+    toggleShiny() {
+      this.pokemonInstance.shiny = !this.pokemonInstance.shiny
+    },
+    updateGender(gender: PokemonGender) {
+      this.pokemonInstance.gender = gender
     },
     updateSubskills(updatedSubskills: SubskillInstanceExt[]) {
       this.pokemonInstance.subskills = updatedSubskills

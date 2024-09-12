@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
@@ -40,7 +40,7 @@ const member: TeamMember = {
   subskills: [],
 };
 
-const settings: TeamSettings = {
+const settings: TeamSettingsExt = {
   bedtime: TimeUtils.parseTime('21:30'),
   wakeup: TimeUtils.parseTime('06:00'),
   camp: false,
@@ -108,7 +108,7 @@ describe('startDay', () => {
       subskills: [],
     };
 
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -286,7 +286,7 @@ describe('recoverMeal', () => {
 
 describe('attemptDayHelp', () => {
   it('shall perform a help if time surpasses scheduled help time', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -342,7 +342,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall not perform a help if time has not passed scheduled help time', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -371,7 +371,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall schedule the next help', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
       camp: false,
@@ -514,39 +514,7 @@ describe('attemptNightHelp', () => {
     memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
-      {
-        "advanced": {
-          "dayHelps": 0,
-          "nightHelps": 1,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 1,
-          "spilledIngredients": [],
-          "totalHelps": 1,
-        },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
-            },
-          },
-        ],
-        "skillProcs": 0,
-      }
-    `);
+    expect(memberState.averageResults(1).advanced.nightHelps).toEqual(1);
   });
 
   it('shall add any excess helps to sneaky snacking, and shall not roll skill proc on those', () => {

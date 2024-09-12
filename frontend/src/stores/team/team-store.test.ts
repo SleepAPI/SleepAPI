@@ -3,10 +3,12 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import type { TeamInstance } from '@/types/member/instanced'
+import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
-import { ingredient, nature, pokemon, uuid, type PokemonInstanceExt } from 'sleepapi-common'
+import { berry, uuid, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 
 vi.mock('@/services/team/team-service', () => ({
   TeamService: {
@@ -20,21 +22,7 @@ vi.mock('@/services/team/team-service', () => ({
 
 describe('Team Store', () => {
   const externalId = 'external-id'
-  const mockPokemon: PokemonInstanceExt = {
-    name: 'Bubbles',
-    externalId,
-    pokemon: pokemon.PIKACHU,
-    carrySize: 10,
-    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
-    level: 10,
-    ribbon: 0,
-    nature: nature.BASHFUL,
-    saved: false,
-    shiny: false,
-    skillLevel: 1,
-    subskills: [],
-    version: 1
-  }
+  const mockPokemon = createMockPokemon()
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -504,5 +492,33 @@ describe('Team Store', () => {
     teamStore.deleteTeam()
 
     expect(TeamService.deleteTeam).toHaveBeenCalled()
+  })
+
+  it('updateFavoredBerries shall update berries and call server', async () => {
+    const teamStore = useTeamStore()
+    const userStore = useUserStore()
+
+    userStore.setTokens({ accessToken: 'at', expiryDate: 0, refreshToken: 'rt' })
+    await nextTick()
+
+    teamStore.updateTeam = vi.fn()
+
+    await teamStore.updateFavoredBerries([berry.BELUE])
+    expect(teamStore.getCurrentTeam.favoredBerries).toEqual([berry.BELUE])
+    expect(teamStore.updateTeam).toHaveBeenCalled()
+  })
+
+  it('updateRecipeType shall update the recipe type and call server', async () => {
+    const teamStore = useTeamStore()
+    const userStore = useUserStore()
+
+    userStore.setTokens({ accessToken: 'at', expiryDate: 0, refreshToken: 'rt' })
+    await nextTick()
+
+    teamStore.updateTeam = vi.fn()
+
+    await teamStore.updateRecipeType('dessert')
+    expect(teamStore.getCurrentTeam.recipeType).toEqual('dessert')
+    expect(teamStore.updateTeam).toHaveBeenCalled()
   })
 })

@@ -9,6 +9,7 @@ const DBPokemonSchema = Type.Composite([
     fk_user_id: Type.Number(),
     saved: Type.Boolean(),
     shiny: Type.Boolean(),
+    gender: Type.Optional(Type.Union([Type.Literal('male'), Type.Literal('female')])),
     external_id: Type.String({ minLength: 36, maxLength: 36 }),
     pokemon: Type.String(),
     name: Type.String(),

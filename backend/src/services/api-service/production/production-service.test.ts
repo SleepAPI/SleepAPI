@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettings } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
@@ -50,7 +50,7 @@ describe('calculatePokemonProduction', () => {
 
 describe('calculateTeam', () => {
   it('shall calculate production with uneven sleep times', () => {
-    const settings: TeamSettings = {
+    const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:01'),
       camp: false,

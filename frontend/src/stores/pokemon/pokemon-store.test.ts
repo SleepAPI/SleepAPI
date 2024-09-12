@@ -1,8 +1,8 @@
 import { UserService } from '@/services/user/user-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
+import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/user/user-service', () => ({
@@ -15,21 +15,7 @@ vi.mock('@/services/user/user-service', () => ({
 
 describe('Pokemon Store', () => {
   const externalId = 'external-id'
-  const mockPokemon: PokemonInstanceExt = {
-    name: 'Bubbles',
-    externalId,
-    pokemon: pokemon.PIKACHU,
-    carrySize: 10,
-    ingredients: [{ level: 1, ingredient: ingredient.FANCY_APPLE }],
-    level: 10,
-    ribbon: 0,
-    nature: nature.BASHFUL,
-    saved: false,
-    shiny: false,
-    skillLevel: 1,
-    subskills: [],
-    version: 1
-  }
+  const mockPokemon = createMockPokemon({ externalId })
 
   beforeEach(() => {
     setActivePinia(createPinia())

@@ -79,7 +79,7 @@ export default defineComponent({
   computed: {
     imageUrl(): string | undefined {
       return this.pokemonInstance
-        ? `/images/pokemon/${this.pokemonInstance.member.pokemon.name.toLowerCase()}.png`
+        ? `/images/pokemon/${this.pokemonInstance.member.pokemon.name.toLowerCase()}${this.pokemonInstance.member.shiny ? '_shiny' : ''}.png`
         : ''
     },
     level() {

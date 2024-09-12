@@ -1,5 +1,5 @@
 <template>
-  <v-btn variant="text" class="text-h6" :text="name" @click="openEditDialog">
+  <v-btn variant="text" class="text-h6" :text="pokemonInstance.name" @click="openEditDialog">
     <template #append>
       <v-icon size="24">mdi-pencil</v-icon>
     </template>
@@ -46,12 +46,14 @@
 
 <script lang="ts">
 import { randomName } from '@/services/utils/name-utils'
+import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PropType } from 'vue'
 
 export default {
   name: 'PokemonName',
   props: {
-    name: {
-      type: String,
+    pokemonInstance: {
+      type: Object as PropType<PokemonInstanceExt>,
       required: true
     }
   },
@@ -67,13 +69,15 @@ export default {
     }
   },
   mounted() {
-    if (this.name === '') {
-      this.$emit('update-name', this.randomizeName())
-    }
+    this.$nextTick(() => {
+      if (this.pokemonInstance.name === '') {
+        this.$emit('update-name', this.randomizeName())
+      }
+    })
   },
   methods: {
     openEditDialog() {
-      this.editedName = this.name
+      this.editedName = this.pokemonInstance.name
       this.isEditDialogOpen = true
     },
     closeEditDialog() {
@@ -82,7 +86,7 @@ export default {
     async saveEditDialog() {
       if (this.remainingChars >= 0) {
         if (this.remainingChars === this.maxNameLength) {
-          this.editedName = this.name
+          this.editedName = this.pokemonInstance.name
         }
         this.$emit('update-name', this.editedName)
         this.isEditDialogOpen = false
@@ -96,7 +100,7 @@ export default {
       }
     },
     randomizeName() {
-      return randomName(12)
+      return randomName(12, this.pokemonInstance.gender)
     }
   }
 }
