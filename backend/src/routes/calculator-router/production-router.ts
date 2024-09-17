@@ -4,7 +4,13 @@ import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
 import path from 'path';
 import { CalculateTeamRequest, CalculateTeamResponse, SingleProductionRequest } from 'sleepapi-common';
+import workerpool from 'workerpool';
 import { BaseRouter } from '../base-router';
+
+const pool = workerpool.pool(path.resolve(__dirname, './team-worker.js'), {
+  minWorkers: 4,
+  maxWorkers: 4,
+});
 
 class ProductionRouterImpl {
   public async register() {
@@ -36,9 +42,7 @@ class ProductionRouterImpl {
         try {
           Logger.log('Entered /calculator/team');
 
-          const data = await runWorkerFile(path.resolve(__dirname, './team-worker.js'), {
-            body: req.body,
-          });
+          const data = await pool.exec('calculateTeam', [req.body]);
           res.json(data);
         } catch (err) {
           Logger.error((err as Error).stack);

@@ -1,21 +1,18 @@
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
-import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
-import { calculateAverageProduce, clampHelp } from '@src/services/calculator/production/produce-calculator';
+import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { SkillValue } from '@src/services/simulation-service/team-simulator/skill-value';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
   IngredientSet,
   MathUtils,
   MemberProduction,
   Produce,
-  Time,
   TimePeriod,
   calculatePityProcThreshold,
   ingredient,
@@ -23,7 +20,6 @@ import {
   subskill,
 } from 'sleepapi-common';
 
-// TODO: all skills need to return a SkillActivation so morning proc can early exit, but SkillActivation.produce and other are not actually used anywhere, that's what SkillValue class is for
 export interface SkillActivation {
   energyTeam: number;
   helpsTeam: number;
@@ -41,17 +37,24 @@ export class MemberState {
 
   // state
   private currentEnergy = 0;
-  private nextHelp: Time;
+  private nextHelp: number;
   private helpsSinceLastSkillProc = 0;
   private currentNightHelps = 0;
-  private dayPeriod: TimePeriod;
   private nightPeriod: TimePeriod;
+  private fullDayDuration = 1440;
+  private carriedAmount = 0;
+  private helpsSinceLastCook = 0;
+  private totalAverageHelps = 0;
+  private totalSneakySnackHelps = 0;
+  private voidHelps = 0;
 
   // stats
-  private frequency: number;
+  private frequency0;
+  private frequency1;
+  private frequency40;
+  private frequency60;
+  private frequency80;
   private skillPercentage: number;
-  private currentInventory = InventoryUtils.getEmptyInventory();
-  private currentSneakySnack = InventoryUtils.getEmptyInventory();
   private sneakySnackProduce: Produce;
   private averageProduce: Produce;
   private averageProduceAmount: number;
@@ -65,12 +68,8 @@ export class MemberState {
   private totalNightHelps = 0;
   private nightHelpsBeforeSS = 0;
   private nightHelpsAfterSS = 0;
-  private averageEnergy = 0;
   private totalRecovery = 0;
-  private averageFrequency = 0;
   private totalProduce = InventoryUtils.getEmptyInventory();
-  private totalSneakySnack = InventoryUtils.getEmptyInventory();
-  private spilledIngredients = InventoryUtils.getEmptyInventory();
 
   constructor(params: {
     member: TeamMember;
@@ -84,18 +83,13 @@ export class MemberState {
 
     const nrOfHelpingBonus = team.filter((member) => member.subskills.includes(subskill.HELPING_BONUS)).length;
 
-    const dayPeriod = {
-      start: settings.wakeup,
-      end: settings.bedtime,
-    };
-    this.dayPeriod = dayPeriod;
     const nightPeriod = {
       start: settings.bedtime,
       end: settings.wakeup,
     };
     this.nightPeriod = nightPeriod;
 
-    this.nextHelp = dayPeriod.start;
+    this.nextHelp = this.fullDayDuration; // set to 1440, first start of day subtracts 1440
 
     this.skillPercentage = TeamSimulatorUtils.calculateSkillPercentage(member);
     const ingredientPercentage = TeamSimulatorUtils.calculateIngredientPercentage(member);
@@ -113,11 +107,17 @@ export class MemberState {
       },
     };
 
-    this.frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
+    const frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member,
       settings,
       helpingBonus: nrOfHelpingBonus,
     });
+    // TODO: not nice to duplicate this between here and energy utils in case brackets change
+    this.frequency0 = frequency * 1; // 0 energy
+    this.frequency1 = frequency * 0.66; // 1-39 energy
+    this.frequency40 = frequency * 0.58; // 40-59 energy
+    this.frequency60 = frequency * 0.52; // 60-79 energy
+    this.frequency80 = frequency * 0.45; // 80+ energy
 
     this.pityProcThreshold = calculatePityProcThreshold(member.pokemonSet.pokemon);
 
@@ -158,6 +158,8 @@ export class MemberState {
     const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo));
     this.currentEnergy += recoveredEnergy;
 
+    this.nextHelp -= this.fullDayDuration;
+
     return this.collectInventory();
   }
 
@@ -171,21 +173,17 @@ export class MemberState {
   }
 
   public addHelps(helps: number) {
-    const addedProduce: Produce = this.averageProduceForHelps(helps);
-    this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, addedProduce);
+    this.helpsSinceLastCook += helps;
+    this.totalAverageHelps += helps;
   }
 
-  private averageProduceForHelps(helps: number): Produce {
-    return {
-      berries: this.averageProduce.berries && {
-        amount: this.averageProduce.berries.amount * helps,
-        berry: this.averageProduce.berries.berry,
-      },
-      ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
-        amount: helps * amount,
-        ingredient,
-      })),
-    };
+  public updateIngredientBag() {
+    const ingsSinceLastCook = this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+      amount: this.helpsSinceLastCook * amount,
+      ingredient,
+    }));
+    this.cookingState.addIngredients(ingsSinceLastCook);
+    this.helpsSinceLastCook = 0;
   }
 
   public recoverMeal() {
@@ -193,67 +191,52 @@ export class MemberState {
     this.currentEnergy += getMealRecoveryAmount(this.currentEnergy);
   }
 
-  public attemptDayHelp(currentTime: Time): SkillActivation | undefined {
-    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: this.nextHelp, period: this.dayPeriod })) {
-      const frequency = calculateFrequencyWithEnergy(this.frequency, this.currentEnergy);
+  public attemptDayHelp(currentMinutesSincePeriodStart: number): SkillActivation | undefined {
+    if (currentMinutesSincePeriodStart >= this.nextHelp) {
+      const frequency = this.calculateFrequencyWithEnergy();
 
       // update stats
       this.totalDayHelps += 1;
       this.helpsSinceLastSkillProc += 1;
-      // this.frequencyChanges.push(frequency);
 
-      this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, this.averageProduce);
-      this.emptyIfFull();
+      this.totalAverageHelps += 1;
+      this.helpsSinceLastCook += 1;
 
-      this.nextHelp = TimeUtils.addTime(this.nextHelp, TimeUtils.secondsToTime(frequency));
+      this.nextHelp += frequency / 60;
 
       return this.attemptSkill();
     }
   }
 
-  public attemptNightHelp(currentTime: Time) {
-    if (TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime: this.nextHelp, period: this.nightPeriod })) {
-      const frequency = calculateFrequencyWithEnergy(this.frequency, this.currentEnergy);
+  public attemptNightHelp(currentMinutesSincePeriodStart: number) {
+    if (currentMinutesSincePeriodStart >= this.nextHelp) {
+      const frequency = this.calculateFrequencyWithEnergy();
 
       // update stats
       this.totalNightHelps += 1;
-      // this.frequencyChanges.push(frequency);
 
-      const inventorySpace = this.inventoryLimit - InventoryUtils.countInventory(this.currentInventory);
+      const inventorySpace = this.inventoryLimit - this.carriedAmount;
       if (inventorySpace > 0) {
         this.currentNightHelps += 1; // these run skill procs at wakeup
-
-        const clampedProduce = clampHelp({
-          inventorySpace,
-          averageProduce: this.averageProduce,
-          amount: this.averageProduceAmount,
-        });
-
-        this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, clampedProduce);
         this.nightHelpsBeforeSS += 1;
 
-        if (inventorySpace < this.averageProduceAmount) {
-          const voidProduce = clampHelp({
-            inventorySpace: this.averageProduceAmount - inventorySpace,
-            averageProduce: this.averageProduce,
-            amount: this.averageProduceAmount,
-          });
+        this.carriedAmount += this.averageProduceAmount;
 
-          this.spilledIngredients = InventoryUtils.addToInventory(this.spilledIngredients, {
-            ingredients: voidProduce.ingredients,
-          });
+        // if this help hits the inventory limit we split into what fits in bag and what gets spilled
+        if (inventorySpace < this.averageProduceAmount) {
+          this.totalAverageHelps += inventorySpace / this.averageProduceAmount;
+          this.helpsSinceLastCook += inventorySpace / this.averageProduceAmount;
+          this.voidHelps += 1 - inventorySpace / this.averageProduceAmount;
+        } else {
+          this.helpsSinceLastCook += 1;
+          this.totalAverageHelps += 1;
         }
       } else {
-        // sneaky snack
-
         this.nightHelpsAfterSS += 1;
-        this.spilledIngredients = InventoryUtils.addToInventory(this.spilledIngredients, {
-          ingredients: this.averageProduce.ingredients,
-        });
-        this.currentSneakySnack = InventoryUtils.addToInventory(this.currentSneakySnack, this.sneakySnackProduce);
+        this.totalSneakySnackHelps += 1;
       }
 
-      this.nextHelp = TimeUtils.addTime(this.nextHelp, TimeUtils.secondsToTime(frequency));
+      this.nextHelp += frequency / 60;
     }
   }
 
@@ -272,14 +255,9 @@ export class MemberState {
       }
     }
 
-    this.cookingState.addIngredients(this.currentInventory.ingredients);
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentSneakySnack);
-    this.totalSneakySnack = InventoryUtils.addToInventory(this.totalSneakySnack, this.currentSneakySnack);
-
     this.currentNightHelps = 0;
-    this.currentInventory = InventoryUtils.getEmptyInventory();
-    this.currentSneakySnack = InventoryUtils.getEmptyInventory();
+    this.carriedAmount = 0;
+
     return bankedSkillProcs;
   }
 
@@ -288,7 +266,31 @@ export class MemberState {
     this.currentEnergy = Math.max(0, MathUtils.round(this.currentEnergy - energyToDegrade, 2));
   }
 
-  public averageResults(iterations: number): MemberProduction {
+  public results(iterations: number): MemberProduction {
+    this.collectInventory();
+
+    const totalProduce: Produce = {
+      berries: {
+        amount:
+          this.averageProduce.berries!.amount * this.totalAverageHelps +
+          this.sneakySnackProduce.berries!.amount * this.totalSneakySnackHelps,
+        berry: this.averageProduce.berries!.berry,
+      },
+      ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+        amount: this.totalAverageHelps * amount,
+        ingredient,
+      })),
+    };
+    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalProduce);
+    const spilledHelps = this.voidHelps + this.totalSneakySnackHelps;
+    const spilledIngredients =
+      spilledHelps < 0
+        ? this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+            amount: spilledHelps * amount,
+            ingredient,
+          }))
+        : [];
+
     const result: MemberProduction = {
       berries: this.totalProduce.berries && {
         amount: this.totalProduce.berries.amount / iterations,
@@ -301,7 +303,7 @@ export class MemberState {
       skillProcs: this.skillProcs / iterations,
       externalId: this.member.externalId,
       advanced: {
-        spilledIngredients: this.spilledIngredients.ingredients,
+        spilledIngredients: spilledIngredients,
         dayHelps: this.totalDayHelps / iterations,
         nightHelps: this.totalNightHelps / iterations,
         totalHelps: (this.totalDayHelps + this.totalNightHelps) / iterations,
@@ -313,11 +315,17 @@ export class MemberState {
     return result;
   }
 
-  private emptyIfFull() {
-    if (InventoryUtils.countInventory(this.currentInventory) + this.averageProduceAmount >= this.inventoryLimit) {
-      this.cookingState.addIngredients(this.currentInventory.ingredients);
-      this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, this.currentInventory);
-      this.currentInventory = InventoryUtils.getEmptyInventory();
+  private calculateFrequencyWithEnergy() {
+    if (this.currentEnergy >= 80) {
+      return this.frequency80;
+    } else if (this.currentEnergy >= 60) {
+      return this.frequency60;
+    } else if (this.currentEnergy >= 40) {
+      return this.frequency40;
+    } else if (this.currentEnergy >= 1) {
+      return this.frequency1;
+    } else {
+      return this.frequency0;
     }
   }
 
@@ -344,6 +352,8 @@ export class MemberState {
     }
   }
 
+  // TODO: most skills have static result, probably only self charge may diff if energy needs to cap at 150?
+  // TODO: could cache most of these
   private activateSkill(skill: mainskill.MainSkill): SkillActivation {
     return this.skillActivators[skill.unit](skill);
   }
@@ -414,14 +424,16 @@ export class MemberState {
   }
 
   #activateIngredientMagnet(): SkillActivation {
+    const ingMagnetAmount = this.skillAmount(mainskill.INGREDIENT_MAGNET_S);
     const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
-      amount: this.skillAmount(mainskill.INGREDIENT_MAGNET_S) / ingredient.INGREDIENTS.length,
+      amount: ingMagnetAmount / ingredient.INGREDIENTS.length,
     }));
     const magnetProduce = { ingredients: magnetIngredients };
 
     this.skillValue.addProduce(magnetProduce);
-    this.currentInventory = InventoryUtils.addToInventory(this.currentInventory, magnetProduce);
+    this.cookingState.addIngredients(magnetProduce.ingredients);
+    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, magnetProduce);
     return {
       energyTeam: 0,
       helpsTeam: 0,

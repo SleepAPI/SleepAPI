@@ -27,13 +27,14 @@ export class TeamSimulator {
   private memberStates: MemberState[] = [];
   private cookingState;
 
-  private currentTimeIndex = 0;
   private timeIntervals: Time[] = [];
   private dayPeriod: TimePeriod;
   private nightPeriod: TimePeriod;
-  private mealTimes: Time[];
+  private nightStartMinutes: number;
+  private mealTimes: number[];
   private cookedMealsCounter = 0;
-  private chunksOf5Minutes = 0;
+  private fullDayDuration = 1440;
+  private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
   constructor(params: { settings: TeamSettingsExt; members: TeamMember[] }) {
     const { settings, members } = params;
@@ -62,7 +63,10 @@ export class TeamSimulator {
       next5Minutes = TimeUtils.addTime(next5Minutes, { hour: 0, minute: 5, second: 0 });
     }
 
-    this.mealTimes = getDefaultMealTimes(dayPeriod);
+    this.nightStartMinutes = TimeUtils.timeToMinutesSinceStart(this.nightPeriod.start, this.dayPeriod.start);
+
+    const mealTimes = getDefaultMealTimes(dayPeriod);
+    this.mealTimes = mealTimes.map((time) => TimeUtils.timeToMinutesSinceStart(time, this.dayPeriod.start));
 
     for (const member of members) {
       const memberState = new MemberState({ member, team: members, settings, cookingState: this.cookingState });
@@ -73,44 +77,40 @@ export class TeamSimulator {
   public simulate() {
     this.init();
 
-    while (this.daytime()) {
-      this.attemptCooking();
+    let minutesSinceWakeup = 0;
+    // Day loop
+    while (minutesSinceWakeup <= this.nightStartMinutes) {
+      this.attemptCooking(minutesSinceWakeup);
 
       for (const member of this.memberStates) {
-        const teamSkillActivated = member.attemptDayHelp(this.#currentTime);
+        const teamSkillActivated = member.attemptDayHelp(minutesSinceWakeup);
         if (teamSkillActivated) {
           this.activateTeamSkill(teamSkillActivated);
         }
       }
 
       this.maybeDegradeEnergy();
-
-      this.currentTimeIndex += 1;
+      minutesSinceWakeup += 5;
     }
 
     this.collectInventory();
 
-    while (this.nightTime()) {
+    // Night loop
+    while (minutesSinceWakeup <= this.fullDayDuration) {
       for (const member of this.memberStates) {
-        member.attemptNightHelp(this.#currentTime);
+        member.attemptNightHelp(minutesSinceWakeup);
       }
 
-      if (this.chunksOf5Minutes++ % 2 === 0 && this.chunksOf5Minutes >= 2) {
-        for (const member of this.memberStates) {
-          member.degradeEnergy();
-        }
-      }
-
-      this.currentTimeIndex += 1;
+      this.maybeDegradeEnergy();
+      minutesSinceWakeup += 5;
     }
   }
 
   public results(): CalculateTeamResponse {
-    this.collectInventory();
+    const members = this.memberStates.map((m) => m.results(this.run));
+    const cooking = this.cookingState.results(this.run);
 
-    const cookingResult = this.cookingState.results(this.run);
-
-    return { members: this.memberStates.map((m) => m.averageResults(this.run)), cooking: cookingResult };
+    return { members, cooking };
   }
 
   private init() {
@@ -121,42 +121,27 @@ export class TeamSimulator {
       }
     }
 
-    this.currentTimeIndex = 0;
+    this.energyDegradeCounter = -1;
     this.cookedMealsCounter = 0;
-    this.chunksOf5Minutes = 0;
     this.run++;
   }
 
-  get #currentTime() {
-    return this.timeIntervals[this.currentTimeIndex];
-  }
-
-  private attemptCooking() {
-    let mealIndex = this.cookedMealsCounter;
-
-    for (; mealIndex < this.mealTimes.length; mealIndex++) {
-      const mealTime = this.mealTimes[mealIndex];
-      if (
-        TimeUtils.isAfterOrEqualWithinPeriod({
-          currentTime: this.#currentTime,
-          eventTime: mealTime,
-          period: this.dayPeriod,
-        })
-      ) {
-        for (const member of this.memberStates) {
-          member.collectInventory();
-          member.recoverMeal();
-        }
-        // mod 7 for if Sunday
-        this.cookingState.cook(this.run % 7 === 0);
-        this.cookedMealsCounter++;
-      } else break;
+  private attemptCooking(currentMinutesSincePeriodStart: number) {
+    if (currentMinutesSincePeriodStart >= this.mealTimes[this.cookedMealsCounter]) {
+      for (const member of this.memberStates) {
+        member.updateIngredientBag();
+        member.recoverMeal();
+      }
+      // mod 7 for if Sunday
+      this.cookingState.cook(this.run % 7 === 0);
+      this.cookedMealsCounter++;
     }
   }
 
   private maybeDegradeEnergy() {
     // degrade energy every 10 minutes, so every 2nd chunk of 5 minutes
-    if (this.chunksOf5Minutes++ % 2 === 0 && this.chunksOf5Minutes >= 2) {
+    if (++this.energyDegradeCounter >= 2) {
+      this.energyDegradeCounter = 0;
       for (const member of this.memberStates) {
         member.degradeEnergy();
       }
@@ -164,9 +149,14 @@ export class TeamSimulator {
   }
 
   private activateTeamSkill(result: SkillActivation) {
-    for (const mem of this.memberStates) {
-      mem.addHelps(result.helpsTeam);
-      mem.recoverEnergy(result.energyTeam);
+    if (result.helpsTeam > 0) {
+      for (const mem of this.memberStates) {
+        mem.addHelps(result.helpsTeam);
+      }
+    } else if (result.energyTeam > 0) {
+      for (const mem of this.memberStates) {
+        mem.recoverEnergy(result.energyTeam);
+      }
     }
   }
 
@@ -174,13 +164,5 @@ export class TeamSimulator {
     for (const member of this.memberStates) {
       member.collectInventory();
     }
-  }
-
-  private daytime() {
-    return TimeUtils.timeWithinPeriod(this.#currentTime, this.dayPeriod);
-  }
-
-  private nightTime() {
-    return this.#currentTime && TimeUtils.timeWithinPeriod(this.#currentTime, this.nightPeriod);
   }
 }

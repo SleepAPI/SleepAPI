@@ -6,7 +6,7 @@
           <v-row class="flex-center">
             <v-col cols="auto" class="flex-center">
               <span class="text-h5">Weekly </span>
-              <span id="weeklyStrength" class="text-h4 ml-2 text-accent">
+              <span id="weeklyStrength" class="text-h4 ml-2 text-accent font-weight-medium">
                 {{ totalStrengthString }}</span
               >
               <v-img src="/images/misc/strength.png" class="ml-2" width="30" height="30" contain />
@@ -21,7 +21,8 @@
                   'text-body-1',
                   `text-${teamStore.getCurrentTeam.recipeType}`,
                   'w-100',
-                  'text-center'
+                  'text-center',
+                  'font-weight-medium'
                 ]"
               >
                 {{ cookingStrengthString }}</span
@@ -29,13 +30,13 @@
             </v-col>
             <v-col cols="auto" class="flex-center">
               <v-img src="/images/misc/berries.png" contain width="24" height="24" />
-              <span class="text-body-1 text-berry w-100 text-center ml-2">
+              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
                 {{ berryStrengthString }}</span
               >
             </v-col>
             <v-col cols="auto" class="flex-center">
               <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
-              <span class="text-body-1 text-skill w-100 text-center">
+              <span class="text-body-1 text-skill w-100 text-center font-weight-medium">
                 {{ skillStrengthString }}</span
               >
             </v-col>
@@ -78,7 +79,9 @@
                 class="flex-grow-1"
               >
                 <v-col cols="auto" class="flex-center">
-                  <span class="text-body-1 ml-2 text-accent"> {{ member.total }}</span>
+                  <span class="text-body-1 ml-2 font-weight-regular text-black">
+                    {{ member.total }}</span
+                  >
                   <v-img
                     src="/images/misc/strength.png"
                     class="ml-2"

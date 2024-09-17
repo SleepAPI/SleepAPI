@@ -1,17 +1,11 @@
 import ProductionController from '@src/controllers/calculator/production.controller';
-import { parentPort, workerData } from 'worker_threads';
+import workerpool from 'workerpool';
 
-const { body } = workerData.params;
-
-async function calculateTeam() {
+async function calculateTeam(body: any) {
   const controller = new ProductionController();
   return await controller.calculateTeam(body);
 }
 
-calculateTeam()
-  .then((result) => {
-    parentPort?.postMessage(result);
-  })
-  .catch((err) => {
-    parentPort?.postMessage({ error: err.message });
-  });
+workerpool.worker({
+  calculateTeam,
+});

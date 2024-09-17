@@ -518,3 +518,13 @@ describe('getMySQLNow', () => {
     expect(actualResult).toMatch(regex);
   });
 });
+
+describe('timeToMinutesSinceStart', () => {
+  it('shall calculate correct minutes for default day', () => {
+    expect(TimeUtils.timeToMinutesSinceStart(TimeUtils.parseTime('21:30'), TimeUtils.parseTime('06:00'))).toBe(930);
+  });
+
+  it('shall calculate correct minutes for default day', () => {
+    expect(TimeUtils.timeToMinutesSinceStart(TimeUtils.parseTime('00:30'), TimeUtils.parseTime('06:00'))).toBe(1110);
+  });
+});

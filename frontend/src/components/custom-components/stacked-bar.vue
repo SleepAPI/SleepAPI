@@ -7,7 +7,9 @@
       :class="`bg-${section.color}`"
       :style="{ width: section.percentage + '%' }"
     >
-      {{ section.percentage }}%
+      <span :style="{ zIndex: sections.length - index }" class="font-weight-regular text-black">
+        {{ section.percentage > 0 ? `${section.percentage}%` : '' }}
+      </span>
     </div>
   </v-row>
 </template>
@@ -30,16 +32,7 @@ export default defineComponent({
 @import '@/assets/main.scss';
 
 .stacked-bar {
-  width: 100%;
   height: 40px;
-  display: flex;
-  overflow: hidden;
-  border-radius: 4px;
   background-color: $secondary;
-}
-
-.stacked-bar-section {
-  height: 100%;
-  text-align: center;
 }
 </style>
