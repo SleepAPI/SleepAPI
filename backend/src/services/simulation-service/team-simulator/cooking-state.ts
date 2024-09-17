@@ -129,13 +129,12 @@ export class CookingState {
     potSize: number,
     skippedRecipesGrouped: Map<string, SkippedRecipe>
   ): Recipe[] {
-    const potLimitedRecipes: Recipe[] = [];
+    const allowedRecipes: Recipe[] = [];
 
     for (const recipe of recipes) {
       const missingPotSize = recipe.nrOfIngredients - potSize;
-
-      if (missingPotSize < 0) {
-        potLimitedRecipes.push(recipe);
+      if (missingPotSize <= 0) {
+        allowedRecipes.push(recipe);
       } else {
         let existingSkippedRecipe = skippedRecipesGrouped.get(recipe.name);
 
@@ -158,7 +157,7 @@ export class CookingState {
       }
     }
 
-    return potLimitedRecipes;
+    return allowedRecipes;
   }
 
   private currentCritChance(sunday: boolean) {

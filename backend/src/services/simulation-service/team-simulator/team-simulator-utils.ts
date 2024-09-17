@@ -5,6 +5,7 @@ import {
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentage,
+  subskill,
 } from 'sleepapi-common';
 
 class TeamSimulatorUtilsImpl {
@@ -31,11 +32,14 @@ class TeamSimulatorUtilsImpl {
   }) {
     const { member, settings, helpingBonus } = params;
 
+    // all hb are already counted for team
+    const subskillsWithoutHB = member.subskills.filter((s) => s.name !== subskill.HELPING_BONUS.name);
+
     return calculateHelpSpeedBeforeEnergy({
       pokemon: member.pokemonSet.pokemon,
       level: member.level,
       nature: member.nature,
-      subskills: member.subskills,
+      subskills: subskillsWithoutHB,
       camp: settings.camp,
       ribbonLevel: member.ribbon,
       helpingBonus,
