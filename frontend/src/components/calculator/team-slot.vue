@@ -91,18 +91,24 @@ export default defineComponent({
       } else return ''
     },
     erb() {
+      const pokemonInstance = this.pokemonInstance
       return (
-        this.pokemonInstance?.subskills &&
-        this.pokemonInstance.subskills.some(
-          (s) => s.subskill.name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase()
+        pokemonInstance &&
+        pokemonInstance.subskills.some(
+          (s) =>
+            s.subskill.name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase() &&
+            s.level <= pokemonInstance.level
         )
       )
     },
     hb() {
+      const pokemonInstance = this.pokemonInstance
       return (
-        this.pokemonInstance?.subskills &&
-        this.pokemonInstance.subskills.some(
-          (s) => s.subskill.name.toLowerCase() === subskill.HELPING_BONUS.name.toLowerCase()
+        pokemonInstance &&
+        pokemonInstance.subskills.some(
+          (s) =>
+            s.subskill.name.toLowerCase() === subskill.HELPING_BONUS.name.toLowerCase() &&
+            s.level <= pokemonInstance.level
         )
       )
     },

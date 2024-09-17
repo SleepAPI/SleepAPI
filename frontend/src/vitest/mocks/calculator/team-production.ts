@@ -9,17 +9,44 @@ export function createMockTeamProduction(attrs?: Partial<TeamProductionExt>): Te
         curry: {
           weeklyStrength: 1000,
           sundayStrength: 100,
-          cookedRecipes: [{ recipe: curry.INFERNO_CORN_KEEMA_CURRY, count: 1, sunday: 0 }]
+          cookedRecipes: [
+            {
+              recipe: curry.INFERNO_CORN_KEEMA_CURRY,
+              count: 1,
+              sunday: 0,
+              totalSkipped: 0,
+              potLimited: { averageMissing: 0, count: 0 },
+              ingredientLimited: []
+            }
+          ]
         },
         salad: {
           weeklyStrength: 1000,
           sundayStrength: 100,
-          cookedRecipes: [{ recipe: salad.GREENGRASS_SALAD, count: 1, sunday: 0 }]
+          cookedRecipes: [
+            {
+              recipe: salad.GREENGRASS_SALAD,
+              count: 1,
+              sunday: 0,
+              totalSkipped: 0,
+              potLimited: { averageMissing: 0, count: 0 },
+              ingredientLimited: []
+            }
+          ]
         },
         dessert: {
           weeklyStrength: 1000,
           sundayStrength: 100,
-          cookedRecipes: [{ recipe: dessert.FLOWER_GIFT_MACARONS, count: 1, sunday: 0 }]
+          cookedRecipes: [
+            {
+              recipe: dessert.FLOWER_GIFT_MACARONS,
+              count: 1,
+              sunday: 0,
+              totalSkipped: 0,
+              potLimited: { averageMissing: 0, count: 0 },
+              ingredientLimited: []
+            }
+          ]
         }
       },
       berries: [{ amount: 10, berry: berry.BELUE }],

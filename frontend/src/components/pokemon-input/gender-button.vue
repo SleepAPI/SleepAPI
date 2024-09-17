@@ -58,7 +58,6 @@ export default {
   methods: {
     toggleGender() {
       const newGender = this.pokemonInstance.gender === 'male' ? 'female' : 'male'
-      console.log(`${this.pokemonInstance.gender} -> ${newGender}`)
       this.$emit('update-gender', newGender)
     }
   }

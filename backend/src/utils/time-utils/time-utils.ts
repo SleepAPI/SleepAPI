@@ -19,8 +19,7 @@ class TimeUtilsImpl {
     return currentMinutes >= eventMinutes && currentMinutes <= periodDuration;
   }
 
-  // used by isAfterOrEqualWithinPeriod
-  private timeToMinutesSinceStart(time: Time, startTime: Time): number {
+  public timeToMinutesSinceStart(time: Time, startTime: Time): number {
     let minutesSinceStart = time.hour * 60 + time.minute - (startTime.hour * 60 + startTime.minute);
     if (minutesSinceStart < 0) {
       // Adjusts for crossing midnight
@@ -30,7 +29,6 @@ class TimeUtilsImpl {
   }
 
   // used by isAfterOrEqualWithinPeriod
-  // TODO: this is super static and only needs to be calculated one time instead of millions
   private calculatePeriodDuration(period: TimePeriod): number {
     const startMinutes = period.start.hour * 60 + period.start.minute;
     const endMinutes = period.end.hour * 60 + period.end.minute;

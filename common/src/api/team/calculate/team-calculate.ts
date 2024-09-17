@@ -35,10 +35,19 @@ export interface MemberProduction {
   advanced: MemberProductionAdvanced;
 }
 
+export interface CookedRecipeResult {
+  recipe: Recipe;
+  count: number;
+  sunday: number;
+  totalSkipped: number;
+  potLimited: { count: number; averageMissing: number };
+  ingredientLimited: { ingredientName: string; count: number; averageMissing: number }[];
+}
+
 export interface RecipeTypeResult {
   weeklyStrength: number;
   sundayStrength: number;
-  cookedRecipes: { recipe: Recipe; count: number; sunday: number }[];
+  cookedRecipes: CookedRecipeResult[];
 }
 
 export interface CookingResult {

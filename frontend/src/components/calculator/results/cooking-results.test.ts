@@ -1,5 +1,6 @@
 import CookingResults from '@/components/calculator/results/cooking-results.vue'
 import { useTeamStore } from '@/stores/team/team-store'
+import { createMockTeamProduction } from '@/vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { curry } from 'sleepapi-common'
@@ -22,30 +23,7 @@ describe('CookingResults', () => {
 
   it('renders correctly with initial data', async () => {
     const teamStore = useTeamStore()
-    teamStore.getCurrentTeam.production = {
-      team: {
-        berries: [],
-        ingredients: [],
-        cooking: {
-          curry: {
-            cookedRecipes: [{ recipe: curry.INFERNO_CORN_KEEMA_CURRY, count: 1, sunday: 1 }],
-            sundayStrength: 100,
-            weeklyStrength: 1000
-          },
-          salad: {
-            cookedRecipes: [],
-            sundayStrength: 0,
-            weeklyStrength: 0
-          },
-          dessert: {
-            cookedRecipes: [],
-            sundayStrength: 0,
-            weeklyStrength: 0
-          }
-        }
-      },
-      members: []
-    }
+    teamStore.getCurrentTeam.production = createMockTeamProduction()
     await nextTick()
 
     // Check for cooking strength
@@ -63,15 +41,30 @@ describe('CookingResults', () => {
 
   it('renders progress bars for each recipe correctly', async () => {
     const teamStore = useTeamStore()
-    teamStore.getCurrentTeam.production = {
+
+    teamStore.getCurrentTeam.production = createMockTeamProduction({
       team: {
         berries: [],
         ingredients: [],
         cooking: {
           curry: {
             cookedRecipes: [
-              { recipe: curry.INFERNO_CORN_KEEMA_CURRY, count: 2, sunday: 1 },
-              { recipe: curry.MILD_HONEY_CURRY, count: 1, sunday: 1 }
+              {
+                recipe: curry.INFERNO_CORN_KEEMA_CURRY,
+                count: 2,
+                sunday: 1,
+                ingredientLimited: [],
+                potLimited: { averageMissing: 0, count: 0 },
+                totalSkipped: 0
+              },
+              {
+                recipe: curry.MILD_HONEY_CURRY,
+                count: 1,
+                sunday: 1,
+                ingredientLimited: [],
+                potLimited: { averageMissing: 0, count: 0 },
+                totalSkipped: 0
+              }
             ],
             sundayStrength: 100,
             weeklyStrength: 1000
@@ -87,16 +80,15 @@ describe('CookingResults', () => {
             weeklyStrength: 0
           }
         }
-      },
-      members: []
-    }
+      }
+    })
     await nextTick()
 
     const progressBars = wrapper.findAllComponents({ name: 'VProgressLinear' })
-    expect(progressBars.length).toBe(4)
+    expect(progressBars.length).toBe(3)
 
-    const firstProgress = progressBars.at(2)
-    const secondProgress = progressBars.at(3)
+    const firstProgress = progressBars.at(1)
+    const secondProgress = progressBars.at(2)
 
     expect(firstProgress?.text()).toContain('66.67%')
     expect(secondProgress?.text()).toContain('33.33%')

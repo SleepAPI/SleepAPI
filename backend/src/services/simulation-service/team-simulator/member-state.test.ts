@@ -190,7 +190,7 @@ describe('addHelps', () => {
     memberState.addHelps(1);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
+    expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
@@ -230,7 +230,7 @@ describe('addHelps', () => {
     memberState.addHelps(0);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
+    expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
@@ -303,10 +303,11 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptDayHelp(TimeUtils.parseTime('06:01'));
+    memberState.startDay();
+    memberState.attemptDayHelp(0);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
+    expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 1,
@@ -349,10 +350,11 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptDayHelp(TimeUtils.parseTime('05:59'));
+    memberState.startDay();
+    memberState.attemptDayHelp(-1);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
+    expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
@@ -362,9 +364,26 @@ describe('attemptDayHelp', () => {
           "spilledIngredients": [],
           "totalHelps": 0,
         },
-        "berries": undefined,
+        "berries": {
+          "amount": 0,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+        },
         "externalId": undefined,
-        "ingredients": [],
+        "ingredients": [
+          {
+            "amount": 0,
+            "ingredient": {
+              "longName": "Slowpoke Tail",
+              "name": "Tail",
+              "taxedValue": 342,
+              "value": 342,
+            },
+          },
+        ],
         "skillProcs": 0,
       }
     `);
@@ -378,19 +397,10 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
-    memberState.collectInventory();
+    memberState.startDay();
+    memberState.attemptDayHelp(0);
 
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
-      {
-        "amount": 0.8,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
-        },
-      }
-    `);
+    expect(memberState.results(1).advanced.totalHelps).toEqual(1);
 
     const frequencyBeforeEnergy = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member,
@@ -398,53 +408,15 @@ describe('attemptDayHelp', () => {
       helpingBonus: 0,
     });
     const frequency = calculateFrequencyWithEnergy(frequencyBeforeEnergy, memberState.energy);
-    const nextHelp = TimeUtils.addTime(TimeUtils.parseTime('06:00'), TimeUtils.secondsToTime(frequency));
+    const nextHelp = frequency / 60;
 
-    const justBeforeNextHelp = TimeUtils.addTime(nextHelp, { hour: 0, minute: -1, second: 0 });
+    const justBeforeNextHelp = nextHelp - 1;
 
     memberState.attemptDayHelp(justBeforeNextHelp);
-    memberState.collectInventory();
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
-      {
-        "amount": 0.8,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
-        },
-      }
-    `);
+    expect(memberState.results(1).advanced.totalHelps).toEqual(1);
 
     memberState.attemptDayHelp(nextHelp);
-    memberState.collectInventory();
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
-      {
-        "amount": 1.6,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
-        },
-      }
-    `);
-  });
-
-  it('shall empty inventory if full', () => {
-    const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    // fill inv
-    memberState.addHelps(100);
-
-    memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
-    expect(memberState.averageResults(1).berries).toMatchInlineSnapshot(`
-      {
-        "amount": 80.8,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
-        },
-      }
-    `);
+    expect(memberState.results(1).advanced.totalHelps).toEqual(2);
   });
 
   it('shall attempt and proc skill', () => {
@@ -458,10 +430,10 @@ describe('attemptDayHelp', () => {
       subskills: [],
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    // fill inv
-    memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
+    memberState.startDay();
+    memberState.attemptDayHelp(0);
 
-    expect(memberState.averageResults(1).skillProcs).toBe(1);
+    expect(memberState.results(1).skillProcs).toBe(1);
   });
 
   it('shall still count metronome proc as 1 proc', () => {
@@ -478,94 +450,43 @@ describe('attemptDayHelp', () => {
       subskills: [],
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.startDay();
     // fill inv
-    memberState.attemptDayHelp(TimeUtils.parseTime('06:00'));
+    memberState.attemptDayHelp(0);
 
-    expect(memberState.averageResults(1).skillProcs).toBe(1);
+    expect(memberState.results(1).skillProcs).toBe(1);
   });
 });
 
 describe('attemptNightHelp', () => {
-  it('shall not perform night help during the day', () => {
+  it('shall not perform night help if the time has not passed scheduled time', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptNightHelp(TimeUtils.parseTime('06:05'));
-    memberState.collectInventory();
+    memberState.startDay();
+    memberState.attemptNightHelp(-1);
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
-      {
-        "advanced": {
-          "dayHelps": 0,
-          "nightHelps": 0,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 0,
-          "spilledIngredients": [],
-          "totalHelps": 0,
-        },
-        "berries": undefined,
-        "externalId": undefined,
-        "ingredients": [],
-        "skillProcs": 0,
-      }
-    `);
+    expect(memberState.results(1).advanced.totalHelps).toEqual(0);
+    expect(memberState.results(1).advanced.nightHelps).toEqual(0);
   });
 
   it('shall add 1 night help', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
-    memberState.collectInventory();
+    memberState.startDay();
+    memberState.attemptNightHelp(0);
 
-    expect(memberState.averageResults(1).advanced.nightHelps).toEqual(1);
+    expect(memberState.results(1).advanced.nightHelps).toEqual(1);
   });
 
   it('shall add any excess helps to sneaky snacking, and shall not roll skill proc on those', () => {
-    const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelps(100);
-    memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
+    const noCarryMember: TeamMember = { ...member, carrySize: 0 };
+    const memberState = new MemberState({ member: noCarryMember, settings, team: [noCarryMember], cookingState });
+    memberState.startDay();
+    memberState.attemptNightHelp(0);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
-      {
-        "advanced": {
-          "dayHelps": 0,
-          "nightHelps": 1,
-          "nightHelpsAfterSS": 1,
-          "nightHelpsBeforeSS": 0,
-          "spilledIngredients": [
-            {
-              "amount": 0.2,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
-          "totalHelps": 1,
-        },
-        "berries": {
-          "amount": 81,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 20,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
-            },
-          },
-        ],
-        "skillProcs": 0,
-      }
-    `);
+    expect(memberState.results(1).skillProcs).toEqual(0);
+    expect(memberState.results(1).ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toEqual(0);
+    expect(memberState.results(1).advanced.nightHelps).toEqual(1);
+    expect(memberState.results(1).advanced.totalHelps).toEqual(1);
   });
 
   it('shall roll skill proc on helps before inventory full at night, upon collecting in the morning', () => {
@@ -579,10 +500,11 @@ describe('attemptNightHelp', () => {
       subskills: [],
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.attemptNightHelp(TimeUtils.parseTime('06:00'));
+    memberState.startDay();
+    memberState.attemptNightHelp(0);
     memberState.collectInventory();
 
-    expect(memberState.averageResults(1)).toMatchInlineSnapshot(`
+    expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
