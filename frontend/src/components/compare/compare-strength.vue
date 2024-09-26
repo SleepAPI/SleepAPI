@@ -2,8 +2,8 @@
 <template>
   <v-card class="flex-center flex-column frosted-glass rounded-t-0 w-100">
     <v-container>
-      <v-row class="flex-left">
-        <v-col cols="12">
+      <v-row class="d-flex align-center justify-space-between">
+        <v-col class="d-flex align-center flex-wrap">
           <v-chip-group v-model="chips" column multiple>
             <v-chip text="Berry strength" color="berry" variant="outlined" filter></v-chip>
             <v-chip text="Skill strength" color="skill" variant="outlined" filter></v-chip>
@@ -39,38 +39,25 @@
             </v-card>
           </v-menu>
         </v-col>
+
+        <v-col cols="auto" class="flex-right">
+          <v-btn-toggle
+            v-model="tab"
+            mandatory
+            rounded="pill"
+            variant="outlined"
+            style="height: 32px"
+          >
+            <v-btn value="visual" class="w-50" :prepend-icon="tab === 'visual' ? 'mdi-check' : ''">
+              Visual
+            </v-btn>
+            <v-btn value="data" class="w-50" :prepend-icon="tab === 'data' ? 'mdi-check' : ''">
+              Data
+            </v-btn>
+          </v-btn-toggle>
+        </v-col>
       </v-row>
     </v-container>
-
-    <v-row class="w-100 py-2">
-      <v-container class="w-100 flex-center" style="max-width: 400px">
-        <v-btn-toggle
-          v-model="tab"
-          mandatory
-          rounded="pill"
-          variant="outlined"
-          class="w-75"
-          style="height: 40px"
-        >
-          <v-btn
-            value="visual"
-            class="w-50"
-            :prepend-icon="tab === 'visual' ? 'mdi-check' : ''"
-            style="min-height: 36px; font-size: 14px; padding: 8px 16px"
-          >
-            Visual
-          </v-btn>
-          <v-btn
-            value="data"
-            class="w-50"
-            :prepend-icon="tab === 'data' ? 'mdi-check' : ''"
-            style="min-height: 36px; font-size: 14px; padding: 8px 16px"
-          >
-            Data
-          </v-btn>
-        </v-btn-toggle>
-      </v-container>
-    </v-row>
 
     <v-tabs-window v-model="tab" class="w-100">
       <v-tabs-window-item value="visual">
