@@ -48,12 +48,23 @@
                 id="memberBar"
                 style="height: 30px"
                 :sections="[
-                  { color: 'berry', percentage: berryPercentage, text: `${berryPercentage}%` },
-                  { color: 'skill', percentage: skillPercentage, text: `${skillPercentage}%` },
+                  {
+                    color: 'berry',
+                    percentage: berryPercentage,
+                    sectionText: `${berryPercentage}%`,
+                    tooltipText: `${compactNumber(berryStrength)} (${berryPercentage}%)`
+                  },
+                  {
+                    color: 'skill',
+                    percentage: skillPercentage,
+                    sectionText: `${skillPercentage}%`,
+                    tooltipText: `${compactNumber(skillStrength)} (${skillPercentage}%)`
+                  },
                   {
                     color: teamStore.getCurrentTeam.recipeType,
                     percentage: cookingPercentage,
-                    text: `${cookingPercentage}%`
+                    sectionText: `${cookingPercentage}%`,
+                    tooltipText: `${compactNumber(cookingStrength)} (${cookingPercentage}%)`
                   }
                 ]"
               />
@@ -77,12 +88,14 @@
                   {
                     color: 'berry',
                     percentage: member.berryPercentage,
-                    text: member.berryValue
+                    sectionText: member.berryValue,
+                    tooltipText: `${member.berryValue} (${member.berryPercentage}%)`
                   },
                   {
                     color: 'skill',
                     percentage: member.skillPercentage,
-                    text: member.skillValue
+                    sectionText: member.skillValue,
+                    tooltipText: `${member.skillValue} (${member.skillPercentage}%)`
                   }
                 ]"
               />
@@ -267,6 +280,11 @@ export default defineComponent({
       return result.sort(
         (a, b) => b.skillPercentage + b.berryPercentage - (a.berryPercentage + a.skillPercentage)
       )
+    }
+  },
+  methods: {
+    compactNumber(num: number) {
+      return compactNumber(num)
     }
   }
 })

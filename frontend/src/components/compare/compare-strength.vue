@@ -89,17 +89,20 @@
                 {
                   color: 'berry',
                   percentage: member.berryPercentage,
-                  text: member.berryCompact
+                  sectionText: member.berryCompact,
+                  tooltipText: `${member.berryCompact} (${round(member.berryPercentage)}%)`
                 },
                 {
                   color: 'skill',
                   percentage: member.skillPercentage,
-                  text: member.skillCompact
+                  sectionText: member.skillCompact,
+                  tooltipText: `${member.skillCompact} (${round(member.skillPercentage)}%)`
                 },
                 {
                   color: 'ingredient',
                   percentage: member.ingredientPercentage,
-                  text: member.ingredientCompact
+                  sectionText: member.ingredientCompact,
+                  tooltipText: `${member.ingredientCompact} (${round(member.ingredientPercentage)}%)`
                 }
               ]"
             />
@@ -385,6 +388,9 @@ export default defineComponent({
         default:
           return 'Ingredient strength'
       }
+    },
+    round(num: number) {
+      return MathUtils.round(num, 1)
     }
   }
 })
