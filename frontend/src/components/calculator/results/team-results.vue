@@ -15,6 +15,18 @@
 
           <v-row dense class="flex-center">
             <v-col cols="auto" class="flex-center">
+              <v-img src="/images/misc/berries.png" contain width="24" height="24" />
+              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
+                {{ berryStrengthString }}</span
+              >
+            </v-col>
+            <v-col cols="auto" class="flex-center">
+              <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
+              <span class="text-body-1 text-skill w-100 text-center font-weight-medium">
+                {{ skillStrengthString }}</span
+              >
+            </v-col>
+            <v-col cols="auto" class="flex-center">
               <v-img :src="recipeTypeImage" contain width="30" height="30" />
               <span
                 :class="[
@@ -28,27 +40,20 @@
                 {{ cookingStrengthString }}</span
               >
             </v-col>
-            <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/berries.png" contain width="24" height="24" />
-              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
-                {{ berryStrengthString }}</span
-              >
-            </v-col>
-            <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
-              <span class="text-body-1 text-skill w-100 text-center font-weight-medium">
-                {{ skillStrengthString }}</span
-              >
-            </v-col>
           </v-row>
 
           <v-row class="flex-center">
             <v-col cols="12" class="flex-center">
               <StackedBar
+                style="height: 30px"
                 :sections="[
-                  { color: teamStore.getCurrentTeam.recipeType, percentage: cookingPercentage },
-                  { color: 'berry', percentage: berryPercentage },
-                  { color: 'skill', percentage: skillPercentage }
+                  { color: 'berry', percentage: berryPercentage, text: `${berryPercentage}%` },
+                  { color: 'skill', percentage: skillPercentage, text: `${skillPercentage}%` },
+                  {
+                    color: teamStore.getCurrentTeam.recipeType,
+                    percentage: cookingPercentage,
+                    text: `${cookingPercentage}%`
+                  }
                 ]"
               />
             </v-col>
@@ -71,6 +76,7 @@
               <v-progress-linear
                 id="memberBar"
                 v-model="member.berryPercentage"
+                rounded="xl"
                 :buffer-value="member.berryPercentage + member.skillPercentage"
                 buffer-color="skill"
                 buffer-opacity="1"
@@ -260,7 +266,9 @@ export default defineComponent({
           image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
         })
       }
-      return result
+      return result.sort(
+        (a, b) => b.skillPercentage + b.berryPercentage - (a.berryPercentage + a.skillPercentage)
+      )
     }
   }
 })

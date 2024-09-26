@@ -75,9 +75,9 @@ describe('TeamResults', () => {
     expect(stackedBar.exists()).toBe(true)
 
     expect(stackedBar.props('sections')).toEqual([
-      { color: 'curry', percentage: 63.5 },
-      { color: 'berry', percentage: 18.6 },
-      { color: 'skill', percentage: 17.7 }
+      { color: 'berry', percentage: 18.6, text: '18.6%' },
+      { color: 'skill', percentage: 17.7, text: '17.7%' },
+      { color: 'curry', percentage: 63.5, text: '63.5%' }
     ])
   })
 

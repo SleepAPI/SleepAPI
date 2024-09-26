@@ -33,10 +33,18 @@
               <span class="text-body-1 flex-right">Sun </span>
               <span
                 id="sundayStrength"
-                class="text-body-1 ml-2 text-blue flex-right font-weight-medium"
+                :class="[
+                  'text-body-1',
+                  'ml-2',
+                  'flex-right',
+                  `text-${teamStore.getCurrentTeam.recipeType}`,
+                  'font-weight-medium'
+                ]"
+                style="opacity: 50%"
               >
-                {{ sundayStrength }}</span
-              >
+                {{ sundayStrength }}
+              </span>
+
               <v-img src="/images/misc/strength.png" class="ml-2" width="20" height="20" contain />
             </v-col>
           </v-row>
@@ -104,13 +112,19 @@
               <v-progress-linear
                 v-model="cookedRecipe.weekdayPercentage"
                 :buffer-value="cookedRecipe.fullWeekPercentage"
-                buffer-color="blue"
-                buffer-opacity="1"
+                :buffer-color="teamStore.getCurrentTeam.recipeType"
+                buffer-opacity="0.5"
                 :color="teamStore.getCurrentTeam.recipeType"
                 height="25"
                 class="flex-grow-1"
               >
-                {{ cookedRecipe.fullWeekPercentage }}%
+                <span
+                  :style="{
+                    color: cookedRecipe.weekdayPercentage > 50 ? 'black' : 'white'
+                  }"
+                >
+                  {{ cookedRecipe.fullWeekPercentage }}%
+                </span>
               </v-progress-linear>
             </v-col>
             <v-row v-if="cookedRecipe.showDetails" class="flex-center w-100 py-4">

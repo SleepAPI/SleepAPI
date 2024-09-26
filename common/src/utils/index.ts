@@ -3,6 +3,7 @@ export * from './berry-utils';
 export * from './ingredient-utils';
 export * from './math-utils';
 export * from './nature-utils';
+export * from './number-utils';
 export * from './pokemon-utils';
 export * from './recipe-utils';
 export * from './rp-utils';
