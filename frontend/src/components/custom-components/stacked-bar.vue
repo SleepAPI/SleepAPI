@@ -31,11 +31,11 @@
               :style="{ zIndex: sections.length - index }"
               class="font-weight-regular text-black responsive-text"
             >
-              {{ section.text }}
+              {{ section.sectionText }}
             </span>
           </div>
         </template>
-        <span>{{ round(section.percentage) }}%</span>
+        <span>{{ section.tooltipText }}</span>
       </v-tooltip>
     </div>
   </v-row>
@@ -46,7 +46,8 @@ import { defineComponent } from 'vue'
 
 export interface Section {
   percentage: number
-  text: string
+  sectionText: string
+  tooltipText: string
   color: string
 }
 
