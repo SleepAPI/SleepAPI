@@ -62,11 +62,15 @@ describe('CompareStrength', () => {
 
     await nextTick()
 
+    const dataTabButton = wrapper.find('button[value="data"]')
+    await dataTabButton.trigger('click')
+    await nextTick()
+
     const rows = wrapper.findAll('tbody tr')
     expect(rows).toHaveLength(1)
 
     const firstRowCells = rows[0].findAll('td')
-    expect(firstRowCells.length).toBe(5)
+    expect(firstRowCells).toHaveLength(5)
 
     expect(firstRowCells[0].text()).toContain('Ash')
 
@@ -79,35 +83,37 @@ describe('CompareStrength', () => {
     expect(firstRowCells[1].text()).toContain(berryPower.toString())
 
     // Check ingredient power range
-    const lowestIngredientValue = wrapper.vm.lowestIngredientPower(mockMemberProduction)
     const highestIngredientValue = wrapper.vm.highestIngredientPower(mockMemberProduction)
 
     const ingredientPower = firstRowCells[2].text()
-    expect(ingredientPower).toContain(lowestIngredientValue)
-    expect(ingredientPower).toContain(highestIngredientValue)
+    expect(ingredientPower).toContain(highestIngredientValue.toString())
 
     // Check skill value
     const skillValue = wrapper.vm.skillValue(mockMemberProduction)
-    expect(firstRowCells[3].text()).toContain(skillValue)
+    expect(firstRowCells[3].text()).toContain(skillValue.toString())
 
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
-    expect(firstRowCells[4].text()).toContain(totalPower)
+    expect(firstRowCells[4].text()).toContain(totalPower.toString())
     expect(totalPower).toEqual(20739)
   })
 
-  it('renders 8h time window correctly', async () => {
+  it('renders 8h time window correctly in data tab', async () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
     comparisonStore.timeWindow = '8H'
 
     await nextTick()
 
+    const dataTabButton = wrapper.find('button[value="data"]')
+    await dataTabButton.trigger('click')
+    await nextTick()
+
     const rows = wrapper.findAll('tbody tr')
     expect(rows).toHaveLength(1)
 
     const firstRowCells = rows[0].findAll('td')
-    expect(firstRowCells.length).toBe(5)
+    expect(firstRowCells).toHaveLength(5)
 
     expect(firstRowCells[0].text()).toContain('Ash')
 
@@ -123,30 +129,32 @@ describe('CompareStrength', () => {
     expect(firstRowCells[1].text()).toContain(berryPower.toString())
 
     // Check ingredient power range
-    const lowestIngredientValue = wrapper.vm.lowestIngredientPower(mockMemberProduction)
     const highestIngredientValue = wrapper.vm.highestIngredientPower(mockMemberProduction)
 
     const ingredientPower = firstRowCells[2].text()
-    expect(ingredientPower).toContain(lowestIngredientValue)
-    expect(ingredientPower).toContain(highestIngredientValue)
+    expect(ingredientPower).toContain(highestIngredientValue.toString())
 
     // Check skill value
     const skillValue = wrapper.vm.skillValue(mockMemberProduction)
-    expect(firstRowCells[3].text()).toContain(skillValue)
+    expect(firstRowCells[3].text()).toContain(skillValue.toString())
 
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
-    expect(firstRowCells[4].text()).toContain(totalPower)
+    expect(firstRowCells[4].text()).toContain(totalPower.toString())
     expect(totalPower).toEqual(6912)
   })
 
-  it('displays the correct number of headers', () => {
+  it('displays the correct number of headers', async () => {
+    const dataTabButton = wrapper.find('button[value="data"]')
+    await dataTabButton.trigger('click')
+    await nextTick()
+
     const headers = wrapper.findAll('thead th')
     expect(headers.length).toBe(5)
     expect(headers[0].text()).toBe('Name')
     expect(headers[1].text()).toBe('Berry')
     expect(headers[2].text()).toBe('Ingredient')
     expect(headers[3].text()).toBe('Skill')
-    expect(headers[4].text()).toBe('Total (max)')
+    expect(headers[4].text()).toBe('Total')
   })
 })

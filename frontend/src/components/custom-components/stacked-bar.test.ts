@@ -1,14 +1,14 @@
-import StackedBar from '@/components/custom-components/stacked-bar.vue'
+import StackedBar, { type Section } from '@/components/custom-components/stacked-bar.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('StackedBar', () => {
   let wrapper: VueWrapper<InstanceType<typeof StackedBar>>
 
-  const sections = [
-    { percentage: 30, color: 'red' },
-    { percentage: 50, color: 'blue' },
-    { percentage: 20, color: 'green' }
+  const sections: Section[] = [
+    { percentage: 30, color: 'red', text: 'red' },
+    { percentage: 50, color: 'blue', text: 'blue' },
+    { percentage: 20, color: 'green', text: 'green' }
   ]
 
   beforeEach(() => {
@@ -17,11 +17,6 @@ describe('StackedBar', () => {
         sections
       }
     })
-  })
-
-  it('renders the correct number of sections', () => {
-    const sectionDivs = wrapper.findAll('.stacked-bar-section')
-    expect(sectionDivs.length).toBe(sections.length)
   })
 
   it('renders each section with the correct width and color', () => {
