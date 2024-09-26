@@ -1,9 +1,13 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="d-flex flex-column">
+      <v-card class="frosted-glass rounded-t-0">
         <v-tabs-window v-model="tab" class="flex-grow-1">
           <v-tabs-window-item v-for="(member, index) in members" :key="index" :value="index">
+            <!-- <v-row>
+              <v-col cols="6"> some chart </v-col>
+              <v-col cols="6"> some chart </v-col>
+            </v-row> -->
             <v-card-text style="white-space: pre-wrap" class="text-center">
               <div>{{ prettifiedMemberBerries(member) }}</div>
               <div>{{ prettifiedMemberIngredients(member) }}</div>

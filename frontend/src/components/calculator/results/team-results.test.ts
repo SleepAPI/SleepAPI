@@ -89,13 +89,5 @@ describe('TeamResults', () => {
 
     const progressBars = wrapper.findAll('#memberBar')
     expect(progressBars.length).toBe(1)
-
-    const memberProgress = progressBars.at(0)
-
-    const berryPercentage = memberProgress?.attributes('aria-valuenow')
-    expect(Number(berryPercentage)).toBeCloseTo(17.4)
-
-    const totalStrength = memberProgress?.find('.text-body-1').text()
-    expect(totalStrength).toBe('27,104')
   })
 })

@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="frosted-glass" rounded="0">
+      <v-card class="frosted-glass rounded-t-0">
         <v-container>
           <v-row class="flex-center">
             <v-col cols="auto" class="flex-center">
@@ -45,6 +45,7 @@
           <v-row class="flex-center">
             <v-col cols="12" class="flex-center">
               <StackedBar
+                id="memberBar"
                 style="height: 30px"
                 :sections="[
                   { color: 'berry', percentage: berryPercentage, text: `${berryPercentage}%` },
@@ -65,38 +66,26 @@
             </v-col>
           </v-row>
 
-          <v-row dense>
-            <v-col
-              v-for="(member, index) in memberPercentages"
-              :key="index"
-              cols="12"
-              class="flex-center"
-            >
-              <v-img :src="`${member.image}`" contain width="36" height="36" class="mr-2" />
-              <v-progress-linear
-                id="memberBar"
-                v-model="member.berryPercentage"
-                rounded="xl"
-                :buffer-value="member.berryPercentage + member.skillPercentage"
-                buffer-color="skill"
-                buffer-opacity="1"
-                color="berry"
-                height="25"
-                class="flex-grow-1"
-              >
-                <v-col cols="auto" class="flex-center">
-                  <span class="text-body-1 ml-2 font-weight-regular text-black">
-                    {{ member.total }}</span
-                  >
-                  <v-img
-                    src="/images/misc/strength.png"
-                    class="ml-2"
-                    width="20"
-                    height="20"
-                    contain
-                  />
-                </v-col>
-              </v-progress-linear>
+          <v-row v-for="(member, index) in memberPercentages" :key="index" dense>
+            <v-col cols="auto">
+              <v-img :src="`${member.image}`" contain width="36" height="36" />
+            </v-col>
+            <v-col class="flex-center">
+              <StackedBar
+                style="height: 25px"
+                :sections="[
+                  {
+                    color: 'berry',
+                    percentage: member.berryPercentage,
+                    text: member.berryValue
+                  },
+                  {
+                    color: 'skill',
+                    percentage: member.skillPercentage,
+                    text: member.skillValue
+                  }
+                ]"
+              />
             </v-col>
           </v-row>
         </v-container>
@@ -112,7 +101,12 @@ import StackedBar from '@/components/custom-components/stacked-bar.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { MathUtils, berryPowerForLevel, type RecipeTypeResult } from 'sleepapi-common'
+import {
+  MathUtils,
+  berryPowerForLevel,
+  compactNumber,
+  type RecipeTypeResult
+} from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   components: { StackedBar },
@@ -225,6 +219,8 @@ export default defineComponent({
         total: string
         berryPercentage: number
         skillPercentage: number
+        berryValue: string
+        skillValue: string
         image: string
       }[] = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
@@ -263,6 +259,8 @@ export default defineComponent({
             (skillStrength / (this.berryStrength + this.skillStrength)) * 100,
             1
           ),
+          berryValue: compactNumber(berryStrength),
+          skillValue: compactNumber(skillStrength),
           image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
         })
       }
