@@ -220,14 +220,14 @@ describe('createPokemonByIngredientReverseIndex', () => {
     const reverseIndex = createPokemonByIngredientReverseIndex(pokemons);
     expect(reverseIndex.get(ingredient.FANCY_APPLE.name)).toHaveLength(1);
     expect(reverseIndex.get(ingredient.BEAN_SAUSAGE.name)).toHaveLength(1);
-    expect(reverseIndex.size).toBe(16);
+    expect(reverseIndex.size).toBe(ingredient.INGREDIENTS.length);
     expect(reverseIndex.get(ingredient.FANCY_APPLE.name)).toContainEqual(pokemons[0]);
   });
 
   it('shall add non-special pokemon once per ingredient', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raichu, raikou];
     const reverseIndex = createPokemonByIngredientReverseIndex(produce);
-    expect(reverseIndex.size).toBe(16);
+    expect(reverseIndex.size).toBe(ingredient.INGREDIENTS.length);
     expect(
       reverseIndex
         .get(ingredient.FANCY_APPLE.name)

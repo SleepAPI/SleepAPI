@@ -314,6 +314,9 @@
 					},
 					"lapis": {
 						"type": "boolean"
+					},
+					"powerplant": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -793,6 +796,14 @@
 					{
 						"in": "query",
 						"name": "lapis",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "powerplant",
 						"required": false,
 						"schema": {
 							"type": "boolean"

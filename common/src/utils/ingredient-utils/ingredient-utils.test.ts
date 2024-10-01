@@ -56,6 +56,7 @@ describe('getIngredientNames', () => {
         "Herb",
         "Corn",
         "Cacao",
+        "Coffee",
         "Mushroom",
         "Leek",
         "Tail",
@@ -144,13 +145,13 @@ describe('prettifyIngredientDrop', () => {
     ];
     INGREDIENTS.map((ingredient) => rawCombination.push({ amount: 0.83761, ingredient }));
     expect(prettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(
-      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 14 other ingredients"`,
+      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 15 other ingredients"`,
     );
   });
 
   it('shall prettify an isolated ingredient magnet proc', () => {
     const ings = INGREDIENTS.map((ingredient) => ({ amount: 0.83761, ingredient }));
-    expect(prettifyIngredientDrop(ings)).toMatchInlineSnapshot(`"0.84 of all 16 ingredients"`);
+    expect(prettifyIngredientDrop(ings)).toMatchInlineSnapshot(`"0.84 of all 17 ingredients"`);
   });
 
   it('shall support custom separator', () => {

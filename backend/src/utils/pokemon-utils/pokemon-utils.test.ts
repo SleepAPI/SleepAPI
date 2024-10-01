@@ -7,6 +7,7 @@ describe('getPokemonNames', () => {
       taupe: false,
       snowdrop: false,
       lapis: false,
+      powerplant: false,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -17,6 +18,7 @@ describe('getPokemonNames', () => {
       taupe: false,
       snowdrop: false,
       lapis: false,
+      powerplant: false,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -27,6 +29,7 @@ describe('getPokemonNames', () => {
       taupe: true,
       snowdrop: false,
       lapis: false,
+      powerplant: false,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -37,6 +40,7 @@ describe('getPokemonNames', () => {
       taupe: false,
       snowdrop: true,
       lapis: false,
+      powerplant: false,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -47,6 +51,18 @@ describe('getPokemonNames', () => {
       taupe: false,
       snowdrop: false,
       lapis: true,
+      powerplant: false,
+    };
+    expect(getPokemonNames(params)).toMatchSnapshot();
+  });
+
+  it('shall return all power plant pokemon', () => {
+    const params = {
+      cyan: false,
+      taupe: false,
+      snowdrop: false,
+      lapis: false,
+      powerplant: true,
     };
     expect(getPokemonNames(params)).toMatchSnapshot();
   });
@@ -57,6 +73,7 @@ describe('getPokemonNames', () => {
       taupe: true,
       snowdrop: true,
       lapis: true,
+      powerplant: true,
     };
 
     expect(getPokemonNames(allIslands)).toMatchSnapshot();

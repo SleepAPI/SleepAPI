@@ -58,6 +58,19 @@
               </v-avatar>
             </v-btn>
           </v-col>
+          <v-col class="flex-center">
+            <v-btn
+              icon
+              color="transparent"
+              size="64"
+              aria-label="power plant island"
+              @click="selectPowerPlant"
+            >
+              <v-avatar size="64">
+                <v-img src="/images/misc/powerplant.png" alt="power plant icon" />
+              </v-avatar>
+            </v-btn>
+          </v-col>
         </v-row>
 
         <v-row>
@@ -97,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import { berry } from 'sleepapi-common'
+import { berry, island } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -126,10 +139,11 @@ export default defineComponent({
       }
 
       const berryImageMap = {
-        '/images/misc/cyan.png': berry.CYAN_BERRIES,
-        '/images/misc/taupe.png': berry.TAUPE_BERRIES,
-        '/images/misc/snowdrop.png': berry.SNOWDROP_BERRIES,
-        '/images/misc/lapis.png': berry.LAPIS_BERRIES
+        '/images/misc/cyan.png': island.CYAN.berries,
+        '/images/misc/taupe.png': island.TAUPE.berries,
+        '/images/misc/snowdrop.png': island.SNOWDROP.berries,
+        '/images/misc/lapis.png': island.LAPIS.berries,
+        '/images/misc/powerplant.png': island.POWER_PLANT.berries
       }
 
       for (const [imagePath, islandberries] of Object.entries(berryImageMap)) {
@@ -171,16 +185,19 @@ export default defineComponent({
       this.favoredBerries = this.berries
     },
     selectCyan() {
-      this.favoredBerries = berry.CYAN_BERRIES
+      this.favoredBerries = island.CYAN.berries
     },
     selectTaupe() {
-      this.favoredBerries = berry.TAUPE_BERRIES
+      this.favoredBerries = island.TAUPE.berries
     },
     selectSnowdrop() {
-      this.favoredBerries = berry.SNOWDROP_BERRIES
+      this.favoredBerries = island.SNOWDROP.berries
     },
     selectLapis() {
-      this.favoredBerries = berry.LAPIS_BERRIES
+      this.favoredBerries = island.LAPIS.berries
+    },
+    selectPowerPlant() {
+      this.favoredBerries = island.POWER_PLANT.berries
     },
     updateBerries() {
       this.$emit('favored-berries', this.favoredBerries)

@@ -72,17 +72,23 @@ describe('getMealsForFilter', () => {
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
+        "DIZZY_PUNCH_SPICY_CURRY",
         "NINJA_CURRY",
         "DREAM_EATER_BUTTER_CURRY",
         "INFERNO_CORN_KEEMA_CURRY",
+        "HIDDEN_POWER_PERK_UP_STEW",
         "CALM_MIND_FRUIT_SALAD",
-        "NINJA_SALAD",
+        "CROSS_CHOP_SALAD",
         "GREENGRASS_SALAD",
+        "NINJA_SALAD",
+        "DEFIANT_COFFEE_DRESSED_SALAD",
         "HUGE_POWER_SOY_DONUTS",
         "EXPLOSION_POPCORN",
+        "EARLY_BIRD_COFFEE_JELLY",
         "JIGGLYPUFFS_FRUITY_FLAN",
         "TEATIME_CORN_SCONES",
         "FLOWER_GIFT_MACARONS",
+        "ZING_ZAP_SPICED_COLA",
       ]
     `);
   });
@@ -110,6 +116,7 @@ describe('getMealsForFilter', () => {
         "SPORE_MUSHROOM_CURRY",
         "EGG_BOMB_CURRY",
         "LIMBER_CORN_STEW",
+        "DIZZY_PUNCH_SPICY_CURRY",
         "SPICY_LEEK_CURRY",
         "NINJA_CURRY",
         "GRILLED_TAIL_CURRY",
@@ -131,6 +138,7 @@ describe('getMealsForFilter', () => {
         "SPORE_MUSHROOM_SALAD",
         "CALM_MIND_FRUIT_SALAD",
         "SLOWPOKE_TAIL_PEPPER_SALAD",
+        "CROSS_CHOP_SALAD",
         "NINJA_SALAD",
         "WARM_MOOMOO_MILK",
         "FANCY_APPLE_JUICE",
@@ -149,6 +157,7 @@ describe('getMealsForFilter', () => {
         "STEADFAST_GINGER_COOKIES",
         "NEROLIS_RESTORATIVE_TEA",
         "EXPLOSION_POPCORN",
+        "EARLY_BIRD_COFFEE_JELLY",
         "JIGGLYPUFFS_FRUITY_FLAN",
       ]
     `);

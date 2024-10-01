@@ -1,7 +1,7 @@
 import IslandSelect from '@/components/map/island-select.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry } from 'sleepapi-common'
+import { berry, island } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('IslandSelect', () => {
@@ -38,7 +38,7 @@ describe('IslandSelect', () => {
     expect(cyanButton).not.toBeNull()
     cyanButton.click()
 
-    expect(wrapper.vm.favoredBerries).toEqual(berry.CYAN_BERRIES)
+    expect(wrapper.vm.favoredBerries).toEqual(island.CYAN.berries)
   })
 
   it('selects taupe berries when Taupe button is clicked', async () => {
@@ -49,7 +49,7 @@ describe('IslandSelect', () => {
     expect(button).not.toBeNull()
     button.click()
 
-    expect(wrapper.vm.favoredBerries).toEqual(berry.TAUPE_BERRIES)
+    expect(wrapper.vm.favoredBerries).toEqual(island.TAUPE.berries)
   })
 
   it('selects snowdrop berries when Snowdrop button is clicked', async () => {
@@ -60,7 +60,7 @@ describe('IslandSelect', () => {
     expect(button).not.toBeNull()
     button.click()
 
-    expect(wrapper.vm.favoredBerries).toEqual(berry.SNOWDROP_BERRIES)
+    expect(wrapper.vm.favoredBerries).toEqual(island.SNOWDROP.berries)
   })
 
   it('selects lapis berries when Lapis button is clicked', async () => {
@@ -71,7 +71,18 @@ describe('IslandSelect', () => {
     expect(button).not.toBeNull()
     button.click()
 
-    expect(wrapper.vm.favoredBerries).toEqual(berry.LAPIS_BERRIES)
+    expect(wrapper.vm.favoredBerries).toEqual(island.LAPIS.berries)
+  })
+
+  it('selects power plant berries when Power plant button is clicked', async () => {
+    wrapper.vm.menu = true // Open the dialog
+    await wrapper.vm.$nextTick()
+
+    const button = document.querySelector('[aria-label="power plant island"]') as HTMLElement
+    expect(button).not.toBeNull()
+    button.click()
+
+    expect(wrapper.vm.favoredBerries).toEqual(island.POWER_PLANT.berries)
   })
 
   it('toggles a berry correctly', async () => {
@@ -94,7 +105,7 @@ describe('IslandSelect', () => {
 
   it('clears all selected berries when the clear button is clicked', async () => {
     wrapper.vm.menu = true
-    wrapper.vm.favoredBerries = berry.CYAN_BERRIES
+    wrapper.vm.favoredBerries = island.CYAN.berries
     await wrapper.vm.$nextTick()
 
     const clearButton = document.querySelector('button[aria-label="clear button"]') as HTMLElement
@@ -108,7 +119,7 @@ describe('IslandSelect', () => {
 
   it('selects all berries when the all button is clicked', async () => {
     wrapper.vm.menu = true
-    wrapper.vm.favoredBerries = berry.CYAN_BERRIES
+    wrapper.vm.favoredBerries = island.CYAN.berries
     await wrapper.vm.$nextTick()
 
     const allButton = document.querySelector(

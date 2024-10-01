@@ -10,6 +10,7 @@ import {
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SLOWPOKE_TAIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -136,6 +137,16 @@ export const LIMBER_CORN_STEW = createCurry({
   bonus: 25,
 });
 
+export const DIZZY_PUNCH_SPICY_CURRY = createCurry({
+  name: 'DIZZY_PUNCH_SPICY_CURRY',
+  ingredients: [
+    { amount: 11, ingredient: ROUSING_COFFEE },
+    { amount: 11, ingredient: FIERY_HERB },
+    { amount: 11, ingredient: HONEY },
+  ],
+  bonus: 35,
+});
+
 export const SPICY_LEEK_CURRY = createCurry({
   name: 'SPICY_LEEK_CURRY',
   ingredients: [
@@ -188,6 +199,17 @@ export const INFERNO_CORN_KEEMA_CURRY = createCurry({
   bonus: 48,
 });
 
+export const HIDDEN_POWER_PERK_UP_STEW = createCurry({
+  name: 'HIDDEN_POWER_PERK_UP_STEW',
+  ingredients: [
+    { amount: 28, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 25, ingredient: SNOOZY_TOMATO },
+    { amount: 23, ingredient: TASTY_MUSHROOM },
+    { amount: 16, ingredient: ROUSING_COFFEE },
+  ],
+  bonus: 61,
+});
+
 export const CURRIES: Recipe[] = [
   FANCY_APPLE_CURRY,
   SIMPLE_CHOWDER,
@@ -202,9 +224,11 @@ export const CURRIES: Recipe[] = [
   SPORE_MUSHROOM_CURRY,
   EGG_BOMB_CURRY,
   LIMBER_CORN_STEW,
+  DIZZY_PUNCH_SPICY_CURRY,
   SPICY_LEEK_CURRY,
   NINJA_CURRY,
   GRILLED_TAIL_CURRY,
   DREAM_EATER_BUTTER_CURRY,
   INFERNO_CORN_KEEMA_CURRY,
+  HIDDEN_POWER_PERK_UP_STEW,
 ];
