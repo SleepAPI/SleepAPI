@@ -1,8 +1,11 @@
 import {
+  BELUE,
+  BLUK,
   Berry,
   CHERI,
   DURIN,
   FIGY,
+  GREPA,
   LEPPA,
   MAGO,
   ORAN,
@@ -35,5 +38,9 @@ export const LAPIS: Island = {
   name: 'Lapis lakeside',
   berries: [CHERI, DURIN, MAGO],
 };
+export const POWER_PLANT: Island = {
+  name: 'Old gold power plant',
+  berries: [BELUE, BLUK, GREPA],
+};
 
-export const ISLANDS = [CYAN, TAUPE, SNOWDROP, LAPIS];
+export const ISLANDS = [CYAN, TAUPE, SNOWDROP, LAPIS, POWER_PLANT];

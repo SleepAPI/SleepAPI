@@ -9,17 +9,11 @@ import { InputProductionStatsRequest } from '../../routes/optimal-router/optimal
 import {
   findOptimalMonsForIngredient,
   findOptimalSetsForMeal,
-  getOptimalFlexiblePokemon,
 } from '../../services/api-service/optimal/optimal-service';
 
 @Route('api/optimal')
 @Tags('optimal')
 export default class OptimalController extends Controller {
-  @Post('meal/flexible')
-  public getFlexiblePokemon(@Body() input: InputProductionStatsRequest) {
-    return getOptimalFlexiblePokemon(this.#parseInputProductionStatsRequest(input), 500);
-  }
-
   @Post('meal/{name}')
   public getOptimalPokemonForMealRaw(@Path() name: string, @Body() input: InputProductionStatsRequest) {
     return findOptimalSetsForMeal(name, this.#parseInputProductionStatsRequest(input), 500);

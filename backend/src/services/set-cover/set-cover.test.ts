@@ -111,7 +111,7 @@ describe('findOptimalCombinationFor', () => {
   it('shall not add special pokemon twice', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raikou];
     const reverseIndex = createPokemonByIngredientReverseIndex(produce);
-    expect(reverseIndex.size).toBe(16);
+    expect(reverseIndex.size).toBe(ingredient.INGREDIENTS.length);
 
     const setCover = new SetCover(reverseIndex, new Map());
     // set recipe to 2x raikou's produced ingredients, meaning raikou will need help to make this recipe, or be included twice (not allowed)
@@ -162,7 +162,7 @@ describe('findOptimalCombinationFor', () => {
   it('for team [RAICHU, RAIKOU] shall add 6 helps to both when RAIKOU gets added', () => {
     const produce: CustomPokemonCombinationWithProduce[] = [raichu, raikou];
     const reverseIndex = createPokemonByIngredientReverseIndex(produce);
-    expect(reverseIndex.size).toBe(16);
+    expect(reverseIndex.size).toBe(ingredient.INGREDIENTS.length);
     expect(
       reverseIndex
         .get(ingredient.FANCY_APPLE.name)
@@ -274,7 +274,7 @@ describe('findOptimalCombinationFor', () => {
     const vaporeonProduce = team[0]!.detailedProduce.produce.ingredients;
 
     expect(prettifyIngredientDrop(vaporeonProduce)).toMatchInlineSnapshot(
-      `"9 Milk and 1.37 of all 15 other ingredients"`
+      `"9 Milk and 1.37 of all 16 other ingredients"`
     );
   });
 });
@@ -501,6 +501,10 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
         {
           amount: 1.3653423571121408,
           ingredient: ingredient.SOOTHING_CACAO,
+        },
+        {
+          amount: 1.3653423571121408,
+          ingredient: ingredient.ROUSING_COFFEE,
         },
         {
           amount: 1.3653423571121408,

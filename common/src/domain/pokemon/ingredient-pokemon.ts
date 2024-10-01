@@ -1,11 +1,13 @@
 import { evolvesFrom, evolvesInto } from '../../utils/pokemon-utils/evolution-utils';
 import { toSeconds } from '../../utils/time-utils/frequency-utils';
 import {
+  BELUE,
   BLUK,
   CHERI,
   CHESTO,
   DURIN,
   FIGY,
+  GREPA,
   LEPPA,
   LUM,
   MAGO,
@@ -30,6 +32,7 @@ import {
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SLOWPOKE_TAIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -572,6 +575,48 @@ export const TYRANITAR: Pokemon = {
   carrySize: 19,
 };
 
+export const ARON: Pokemon = {
+  name: 'ARON',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 35, 0),
+  ingredientPercentage: 27.3,
+  skillPercentage: 4.6,
+  berry: BELUE,
+  genders: BALANCED_GENDER,
+  carrySize: 10,
+  previousEvolutions: 0,
+  remainingEvolutions: 2,
+  ingredient0: { amount: 2, ingredient: BEAN_SAUSAGE },
+  ingredient30: [
+    { amount: 5, ingredient: BEAN_SAUSAGE },
+    { amount: 3, ingredient: ROUSING_COFFEE },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: BEAN_SAUSAGE },
+    { amount: 5, ingredient: ROUSING_COFFEE },
+    { amount: 7, ingredient: GREENGRASS_SOYBEANS },
+  ],
+  skill: CHARGE_ENERGY_S,
+};
+
+export const LAIRON: Pokemon = {
+  ...evolvesFrom(ARON),
+  name: 'LAIRON',
+  frequency: toSeconds(1, 10, 0),
+  ingredientPercentage: 27.7, // TODO:
+  skillPercentage: 4.8, // TODO:
+  carrySize: 13,
+};
+
+export const AGGRON: Pokemon = {
+  ...evolvesFrom(LAIRON),
+  name: 'AGGRON',
+  frequency: toSeconds(0, 50, 0),
+  ingredientPercentage: 28.5, // TODO:
+  skillPercentage: 4.8, // TODO:
+  carrySize: 18,
+};
+
 export const ABSOL: Pokemon = {
   name: 'ABSOL',
   specialty: 'ingredient',
@@ -594,6 +639,48 @@ export const ABSOL: Pokemon = {
     { amount: 7, ingredient: TASTY_MUSHROOM },
   ],
   skill: CHARGE_STRENGTH_S,
+};
+
+export const SHINX: Pokemon = {
+  name: 'SHINX',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 13, 20),
+  ingredientPercentage: 18.1,
+  skillPercentage: 1.8,
+  berry: GREPA,
+  genders: BALANCED_GENDER,
+  carrySize: 11,
+  previousEvolutions: 0,
+  remainingEvolutions: 2,
+  ingredient0: { amount: 2, ingredient: SNOOZY_TOMATO },
+  ingredient30: [
+    { amount: 5, ingredient: SNOOZY_TOMATO },
+    { amount: 4, ingredient: PURE_OIL },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: SNOOZY_TOMATO },
+    { amount: 7, ingredient: PURE_OIL },
+    { amount: 5, ingredient: ROUSING_COFFEE },
+  ],
+  skill: COOKING_POWER_UP_S,
+};
+
+export const LUXIO: Pokemon = {
+  ...evolvesFrom(SHINX),
+  name: 'LUXIO',
+  frequency: toSeconds(0, 53, 20),
+  ingredientPercentage: 20, // TODO:
+  skillPercentage: 2, // TODO:
+  carrySize: 16,
+};
+
+export const LUXRAY: Pokemon = {
+  ...evolvesFrom(LUXIO),
+  name: 'LUXRAY',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 20, // TODO:
+  skillPercentage: 2, // TODO:
+  carrySize: 21,
 };
 
 export const MIME_JR: Pokemon = {
@@ -668,6 +755,48 @@ export const ABOMASNOW: Pokemon = {
   ingredientPercentage: 25.0,
   skillPercentage: 4.4,
   carrySize: 21,
+};
+
+export const GRUBBIN: Pokemon = {
+  name: 'GRUBBIN',
+  specialty: 'ingredient',
+  frequency: toSeconds(1, 16, 40),
+  ingredientPercentage: 15.5,
+  skillPercentage: 2.9,
+  berry: LUM,
+  genders: BALANCED_GENDER,
+  carrySize: 11,
+  previousEvolutions: 0,
+  remainingEvolutions: 2,
+  ingredient0: { amount: 2, ingredient: ROUSING_COFFEE },
+  ingredient30: [
+    { amount: 5, ingredient: ROUSING_COFFEE },
+    { amount: 4, ingredient: TASTY_MUSHROOM },
+  ],
+  ingredient60: [
+    { amount: 7, ingredient: ROUSING_COFFEE },
+    { amount: 7, ingredient: TASTY_MUSHROOM },
+    { amount: 11, ingredient: HONEY },
+  ],
+  skill: CHARGE_STRENGTH_S,
+};
+
+export const CHARJABUG: Pokemon = {
+  ...evolvesFrom(GRUBBIN),
+  name: 'CHARJABUG',
+  frequency: toSeconds(0, 55, 0),
+  ingredientPercentage: 20, // TODO:
+  skillPercentage: 2, // TODO:
+  carrySize: 15,
+};
+
+export const VIKAVOLT: Pokemon = {
+  ...evolvesFrom(CHARJABUG),
+  name: 'VIKAVOLT',
+  frequency: toSeconds(0, 46, 40),
+  ingredientPercentage: 19.4,
+  skillPercentage: 5.1,
+  carrySize: 19,
 };
 
 export const STUFFUL: Pokemon = {
@@ -897,9 +1026,12 @@ export const OPTIMAL_INGREDIENT_SPECIALISTS: Pokemon[] = [
   DELIBIRD,
   PUPITAR,
   TYRANITAR,
+  AGGRON,
   ABSOL,
+  LUXRAY,
   TOXICROAK,
   ABOMASNOW,
+  VIKAVOLT,
   BEWEAR,
   COMFEY,
   CRAMORANT,
@@ -929,9 +1061,15 @@ export const INFERIOR_INGREDIENT_SPECIALISTS: Pokemon[] = [
   DRAGONAIR,
   WOOPER,
   LARVITAR,
+  ARON,
+  LAIRON,
+  SHINX,
+  LUXIO,
   MIME_JR,
   CROAGUNK,
   SNOVER,
+  GRUBBIN,
+  CHARJABUG,
   STUFFUL,
   SPRIGATITO,
   FUECOCO,

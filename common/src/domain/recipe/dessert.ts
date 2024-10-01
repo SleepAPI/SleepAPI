@@ -5,8 +5,10 @@ import {
   GREENGRASS_CORN,
   GREENGRASS_SOYBEANS,
   HONEY,
+  LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SNOOZY_TOMATO,
   SOFT_POTATO,
   SOOTHING_CACAO,
@@ -174,6 +176,16 @@ export const EXPLOSION_POPCORN = createDessert({
   bonus: 35,
 });
 
+export const EARLY_BIRD_COFFEE_JELLY = createDessert({
+  name: 'EARLY_BIRD_COFFEE_JELLY',
+  ingredients: [
+    { amount: 16, ingredient: ROUSING_COFFEE },
+    { amount: 14, ingredient: MOOMOO_MILK },
+    { amount: 12, ingredient: HONEY },
+  ],
+  bonus: 35,
+});
+
 export const JIGGLYPUFFS_FRUITY_FLAN = createDessert({
   name: 'JIGGLYPUFFS_FRUITY_FLAN',
   ingredients: [
@@ -207,6 +219,17 @@ export const FLOWER_GIFT_MACARONS = createDessert({
   bonus: 48,
 });
 
+export const ZING_ZAP_SPICED_COLA = createDessert({
+  name: 'ZING_ZAP_SPICED_COLA',
+  ingredients: [
+    { amount: 35, ingredient: FANCY_APPLE },
+    { amount: 20, ingredient: WARMING_GINGER },
+    { amount: 20, ingredient: LARGE_LEEK },
+    { amount: 12, ingredient: ROUSING_COFFEE },
+  ],
+  bonus: 61,
+});
+
 export const DESSERTS: Recipe[] = [
   WARM_MOOMOO_MILK,
   FANCY_APPLE_JUICE,
@@ -225,7 +248,9 @@ export const DESSERTS: Recipe[] = [
   STEADFAST_GINGER_COOKIES,
   NEROLIS_RESTORATIVE_TEA,
   EXPLOSION_POPCORN,
+  EARLY_BIRD_COFFEE_JELLY,
   JIGGLYPUFFS_FRUITY_FLAN,
   TEATIME_CORN_SCONES,
   FLOWER_GIFT_MACARONS,
+  ZING_ZAP_SPICED_COLA,
 ];

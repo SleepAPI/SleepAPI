@@ -1,6 +1,6 @@
 import { SetCoverProductionStats } from '@src/domain/computed/production';
 import { berry, dessert, ingredient, mainskill, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
-import { findOptimalMonsForIngredient, findOptimalSetsForMeal, getOptimalFlexiblePokemon } from './optimal-service';
+import { findOptimalMonsForIngredient, findOptimalSetsForMeal } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {
   it('shall find all optimal solutions for a recipe', () => {
@@ -87,71 +87,5 @@ describe('findOptimalMonsForIngredient', () => {
     expect(pokemonNames).toHaveLength(2);
     expect(pokemonNames).toContainEqual('SLOWBRO');
     expect(pokemonNames).toContainEqual('SLOWKING');
-  });
-});
-
-describe('getOptimalFlexiblePokemon', () => {
-  it('shall rank optimal flexible pokemon', () => {
-    const input: SetCoverProductionStats = {
-      level: 30,
-      ribbon: 0,
-      berries: berry.LAPIS_BERRIES,
-      subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
-      e4eProcs: 5,
-      e4eLevel: 6,
-      cheer: 0,
-      extraHelpful: 0,
-      helperBoostProcs: 0,
-      helperBoostUnique: 1,
-      helperBoostLevel: 6,
-      camp: true,
-      helpingBonus: 5,
-      nature: nature.RASH,
-      erb: 0,
-      incense: false,
-      skillLevel: 6,
-      mainBedtime: { hour: 21, minute: 30, second: 0 },
-      mainWakeup: { hour: 6, minute: 0, second: 0 },
-    };
-
-    const data = getOptimalFlexiblePokemon(input, 50);
-
-    expect(
-      data.map(
-        (entry) =>
-          `${entry.pokemonCombination.pokemon.name}(${prettifyIngredientDrop(entry.pokemonCombination.ingredientList)})`
-      )
-    ).toMatchInlineSnapshot(`
-      [
-        "BEWEAR(2 Corn, 5 Corn)",
-        "FLORAGATO(2 Potato, 6 Milk)",
-        "VENUSAUR(2 Honey, 4 Tomato)",
-        "VENUSAUR(2 Honey, 5 Honey)",
-        "VICTREEBEL(2 Tomato, 4 Potato)",
-        "MEGANIUM(1 Cacao, 2 Cacao)",
-        "MR_MIME(2 Tomato, 4 Potato)",
-        "QUAQUAVAL(2 Soybean, 5 Soybean)",
-        "VICTREEBEL(2 Tomato, 5 Tomato)",
-        "MR_MIME(2 Tomato, 5 Tomato)",
-        "BEWEAR(2 Corn, 6 Sausage)",
-        "GALLADE(1 Apple, 2 Apple)",
-        "LUCARIO(1 Oil, 2 Oil)",
-        "GARDEVOIR(1 Apple, 2 Apple)",
-        "WOBBUFFET(1 Apple, 2 Apple)",
-        "LEAFEON(1 Milk, 2 Milk)",
-        "ESPEON(1 Milk, 2 Milk)",
-        "MEGANIUM(1 Cacao, 3 Honey)",
-        "PRIMEAPE(1 Sausage, 2 Sausage)",
-        "FLORAGATO(2 Potato, 5 Potato)",
-        "LEAFEON(1 Milk, 1 Cacao)",
-        "ESPEON(1 Milk, 1 Cacao)",
-        "LUCARIO(1 Oil, 2 Potato)",
-        "QUAQUAVAL(2 Soybean, 2 Leek)",
-        "WOBBUFFET(1 Apple, 1 Mushroom)",
-        "PRIMEAPE(1 Sausage, 1 Mushroom)",
-        "GALLADE(1 Apple, 1 Corn)",
-        "GARDEVOIR(1 Apple, 1 Corn)",
-      ]
-    `);
   });
 });

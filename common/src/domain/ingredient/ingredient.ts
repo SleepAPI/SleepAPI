@@ -96,6 +96,13 @@ export const SOOTHING_CACAO: Ingredient = {
   longName: 'Soothing Cacao',
 };
 
+export const ROUSING_COFFEE: Ingredient = {
+  name: 'Coffee',
+  value: 153,
+  taxedValue: 68.4,
+  longName: 'Soothing Cacao',
+};
+
 export const TASTY_MUSHROOM: Ingredient = {
   name: 'Mushroom',
   value: 167,
@@ -131,6 +138,7 @@ export const INGREDIENTS: Ingredient[] = [
   FIERY_HERB,
   GREENGRASS_CORN,
   SOOTHING_CACAO,
+  ROUSING_COFFEE,
   TASTY_MUSHROOM,
   LARGE_LEEK,
   SLOWPOKE_TAIL,

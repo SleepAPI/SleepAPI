@@ -10,6 +10,7 @@ import {
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SLOWPOKE_TAIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -190,6 +191,17 @@ export const NINJA_SALAD = createSalad({
   bonus: 48,
 });
 
+export const CROSS_CHOP_SALAD = createSalad({
+  name: 'CROSS_CHOP_SALAD',
+  ingredients: [
+    { amount: 20, ingredient: FANCY_EGG },
+    { amount: 15, ingredient: BEAN_SAUSAGE },
+    { amount: 11, ingredient: GREENGRASS_CORN },
+    { amount: 10, ingredient: SNOOZY_TOMATO },
+  ],
+  bonus: 35,
+});
+
 export const GREENGRASS_SALAD = createSalad({
   name: 'GREENGRASS_SALAD',
   ingredients: [
@@ -199,6 +211,17 @@ export const GREENGRASS_SALAD = createSalad({
     { amount: 9, ingredient: SOFT_POTATO },
   ],
   bonus: 48,
+});
+
+export const DEFIANT_COFFEE_DRESSED_SALAD = createSalad({
+  name: 'DEFIANT_COFFEE_DRESSED_SALAD',
+  ingredients: [
+    { amount: 28, ingredient: ROUSING_COFFEE },
+    { amount: 28, ingredient: BEAN_SAUSAGE },
+    { amount: 22, ingredient: PURE_OIL },
+    { amount: 22, ingredient: SOFT_POTATO },
+  ],
+  bonus: 61,
 });
 
 export const SALADS: Recipe[] = [
@@ -219,6 +242,8 @@ export const SALADS: Recipe[] = [
   SPORE_MUSHROOM_SALAD,
   CALM_MIND_FRUIT_SALAD,
   SLOWPOKE_TAIL_PEPPER_SALAD,
-  NINJA_SALAD,
+  CROSS_CHOP_SALAD,
   GREENGRASS_SALAD,
+  NINJA_SALAD,
+  DEFIANT_COFFEE_DRESSED_SALAD,
 ];

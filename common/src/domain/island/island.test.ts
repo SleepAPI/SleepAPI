@@ -1,6 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { CHERI, DURIN, FIGY, LEPPA, MAGO, ORAN, PAMTRE, PECHA, PERSIM, RAWST, SITRUS, WIKI } from '../berry/berry';
-import { CYAN, ISLANDS, LAPIS, SNOWDROP, TAUPE } from './island';
+import {
+  BELUE,
+  BLUK,
+  CHERI,
+  DURIN,
+  FIGY,
+  GREPA,
+  LEPPA,
+  MAGO,
+  ORAN,
+  PAMTRE,
+  PECHA,
+  PERSIM,
+  RAWST,
+  SITRUS,
+  WIKI,
+} from '../berry/berry';
+import { CYAN, ISLANDS, LAPIS, POWER_PLANT, SNOWDROP, TAUPE } from './island';
 
 describe('island', () => {
   it('CYAN island shall have the correct properties', () => {
@@ -23,11 +39,17 @@ describe('island', () => {
     expect(LAPIS.berries).toEqual([CHERI, DURIN, MAGO]);
   });
 
+  it('POWER_PLANT island shall have the correct properties', () => {
+    expect(POWER_PLANT.name).toBe('Old gold power plant');
+    expect(POWER_PLANT.berries).toEqual([BELUE, BLUK, GREPA]);
+  });
+
   it('ISLANDS array shall contain all islands', () => {
-    expect(ISLANDS).toHaveLength(4);
+    expect(ISLANDS).toHaveLength(5);
     expect(ISLANDS).toContain(CYAN);
     expect(ISLANDS).toContain(TAUPE);
     expect(ISLANDS).toContain(SNOWDROP);
     expect(ISLANDS).toContain(LAPIS);
+    expect(ISLANDS).toContain(POWER_PLANT);
   });
 });

@@ -132,8 +132,3 @@ export const BERRIES: Berry[] = [
   BELUE,
   YACHE,
 ];
-
-export const CYAN_BERRIES: Berry[] = [ORAN, PAMTRE, PECHA];
-export const TAUPE_BERRIES: Berry[] = [FIGY, LEPPA, SITRUS];
-export const SNOWDROP_BERRIES: Berry[] = [PERSIM, RAWST, WIKI];
-export const LAPIS_BERRIES: Berry[] = [CHERI, DURIN, MAGO];
