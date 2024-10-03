@@ -603,8 +603,8 @@ export const LAIRON: Pokemon = {
   ...evolvesFrom(ARON),
   name: 'LAIRON',
   frequency: toSeconds(1, 10, 0),
-  ingredientPercentage: 27.7, // TODO:
-  skillPercentage: 4.8, // TODO:
+  ingredientPercentage: 27.7,
+  skillPercentage: 4.8,
   carrySize: 13,
 };
 
@@ -612,8 +612,8 @@ export const AGGRON: Pokemon = {
   ...evolvesFrom(LAIRON),
   name: 'AGGRON',
   frequency: toSeconds(0, 50, 0),
-  ingredientPercentage: 28.5, // TODO:
-  skillPercentage: 4.8, // TODO:
+  ingredientPercentage: 28.5,
+  skillPercentage: 5.2,
   carrySize: 18,
 };
 
@@ -669,8 +669,8 @@ export const LUXIO: Pokemon = {
   ...evolvesFrom(SHINX),
   name: 'LUXIO',
   frequency: toSeconds(0, 53, 20),
-  ingredientPercentage: 20, // TODO:
-  skillPercentage: 2, // TODO:
+  ingredientPercentage: 18.2,
+  skillPercentage: 1.8,
   carrySize: 16,
 };
 
@@ -678,8 +678,8 @@ export const LUXRAY: Pokemon = {
   ...evolvesFrom(LUXIO),
   name: 'LUXRAY',
   frequency: toSeconds(0, 40, 0),
-  ingredientPercentage: 20, // TODO:
-  skillPercentage: 2, // TODO:
+  ingredientPercentage: 20,
+  skillPercentage: 2.3,
   carrySize: 21,
 };
 
@@ -785,8 +785,8 @@ export const CHARJABUG: Pokemon = {
   ...evolvesFrom(GRUBBIN),
   name: 'CHARJABUG',
   frequency: toSeconds(0, 55, 0),
-  ingredientPercentage: 20, // TODO:
-  skillPercentage: 2, // TODO:
+  ingredientPercentage: 15.4,
+  skillPercentage: 2.8,
   carrySize: 15,
 };
 

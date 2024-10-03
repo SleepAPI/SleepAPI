@@ -18,4 +18,4 @@ export const SUNDAY_CRIT_CHANCE = 0.3;
 export const SUNDAY_CRIT_MULTIPLIER = 3;
 
 // island
-export const MAX_ISLAND_BONUS = 60;
+export const MAX_ISLAND_BONUS = 75;
