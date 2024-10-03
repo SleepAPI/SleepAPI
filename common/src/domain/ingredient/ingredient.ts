@@ -100,7 +100,7 @@ export const ROUSING_COFFEE: Ingredient = {
   name: 'Coffee',
   value: 153,
   taxedValue: 68.4,
-  longName: 'Soothing Cacao',
+  longName: 'Rousing Coffee',
 };
 
 export const TASTY_MUSHROOM: Ingredient = {
