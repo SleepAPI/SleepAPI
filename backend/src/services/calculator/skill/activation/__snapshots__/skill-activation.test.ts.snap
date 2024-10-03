@@ -514,7 +514,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
         {
           "amount": 0.07601809954751132,
           "ingredient": {
-            "longName": "Soothing Cacao",
+            "longName": "Rousing Coffee",
             "name": "Coffee",
             "taxedValue": 68.4,
             "value": 153,
