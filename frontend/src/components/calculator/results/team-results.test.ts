@@ -43,9 +43,9 @@ describe('TeamResults', () => {
     await nextTick()
 
     const strengthSpan = wrapper.find('#weeklyStrength')
-    expect(strengthSpan.text()).toBe('1,600')
+    expect(strengthSpan.text()).toBe('1,750')
     const totalStrength = wrapper.vm.totalStrengthString
-    expect(totalStrength).toBe('1,600')
+    expect(totalStrength).toBe('1,750')
   })
 
   it('renders the stacked bar with correct percentages', async () => {
@@ -75,9 +75,9 @@ describe('TeamResults', () => {
     expect(stackedBar.exists()).toBe(true)
 
     expect(stackedBar.props('sections')).toEqual([
-      { color: 'berry', percentage: 18.6, sectionText: '18.6%', tooltipText: '4.7K (18.6%)' },
-      { color: 'skill', percentage: 17.7, sectionText: '17.7%', tooltipText: '4.5K (17.7%)' },
-      { color: 'curry', percentage: 63.5, sectionText: '63.5%', tooltipText: '16K (63.5%)' }
+      { color: 'berry', percentage: 18.6, sectionText: '18.6%', tooltipText: '5.1K (18.6%)' },
+      { color: 'skill', percentage: 17.7, sectionText: '17.7%', tooltipText: '4.9K (17.7%)' },
+      { color: 'curry', percentage: 63.5, sectionText: '63.5%', tooltipText: '17.5K (63.5%)' }
     ])
   })
 

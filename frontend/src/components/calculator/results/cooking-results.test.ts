@@ -28,15 +28,15 @@ describe('CookingResults', () => {
 
     // Check for cooking strength
     const strengthSpan = wrapper.find('#weeklyStrength')
-    expect(strengthSpan.text()).toBe('1,600') // 1000 * 1.6
+    expect(strengthSpan.text()).toBe('1,750') // 1000 * 1.75
 
     // Check for Sunday strength
     const sundaySpan = wrapper.find('#sundayStrength')
-    expect(sundaySpan.text()).toBe('160') // 100 * 1.6
+    expect(sundaySpan.text()).toBe('175') // 100 * 1.75
 
     // Check for Weekday strength
     const weekdaySpan = wrapper.find('#weekdayStrength')
-    expect(weekdaySpan.text()).toBe('1,440') // 1600 - 160
+    expect(weekdaySpan.text()).toBe('1,575')
   })
 
   it('renders progress bars for each recipe correctly', async () => {
