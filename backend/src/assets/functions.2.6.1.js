@@ -207,7 +207,7 @@ function goToProductionCalculator() {
   };
 
   var pokemon = document.getElementById('pokemon').value;
-  var url = `calculator/production/${pokemon}?pretty=true`;
+  var url = `calculator/production/${pokemon}?pretty=true&includeAnalysis=true`;
 
   makeRequest(
     url,

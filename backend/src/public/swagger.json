@@ -327,6 +327,9 @@
 					"name": {
 						"type": "string"
 					},
+					"shortName": {
+						"type": "string"
+					},
 					"amount": {
 						"type": "number",
 						"format": "double"
@@ -342,6 +345,7 @@
 				},
 				"required": [
 					"name",
+					"shortName",
 					"amount",
 					"rarity"
 				],
@@ -505,7 +509,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "2.6.0",
+		"version": "2.6.1",
 		"contact": {}
 	},
 	"paths": {
