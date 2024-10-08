@@ -27,11 +27,11 @@ export default class ProductionController extends Controller {
   public async calculatePokemonProduction(
     @Path() name: string,
     @Body() body: SingleProductionRequest,
-    @Query() pretty?: boolean
+    @Query() includeAnalysis?: boolean
   ) {
     const pokemon = getPokemon(name);
     const parsedInput = this.#parseSingleProductionInput(pokemon, body);
-    return calculatePokemonProduction(pokemon, parsedInput, body.ingredientSet, queryAsBoolean(pretty), 5000);
+    return calculatePokemonProduction(pokemon, parsedInput, body.ingredientSet, queryAsBoolean(includeAnalysis), 5000);
   }
 
   public async calculateTeam(body: CalculateTeamRequest) {
