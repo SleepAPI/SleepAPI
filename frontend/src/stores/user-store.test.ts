@@ -19,6 +19,8 @@ describe('User Store', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": null,
       }
@@ -31,11 +33,15 @@ describe('User Store', () => {
     const userStore = useUserStore()
     userStore.setUserData({
       name: 'some name',
-      avatar: 'some avatar'
+      avatar: 'some avatar',
+      email: 'some email',
+      externalId: 'some id'
     })
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": "some avatar",
+        "email": "some email",
+        "externalId": "some id",
         "name": "some name",
         "tokens": null,
       }
@@ -54,6 +60,8 @@ describe('User Store', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": {
           "accessToken": "some access token",
@@ -68,7 +76,9 @@ describe('User Store', () => {
     const userStore = useUserStore()
     userStore.setUserData({
       name: 'some name',
-      avatar: 'some avatar'
+      avatar: 'some avatar',
+      email: 'some email',
+      externalId: 'some id'
     })
     userStore.setTokens({
       accessToken: 'some access token',
@@ -79,6 +89,8 @@ describe('User Store', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": null,
       }
@@ -103,6 +115,8 @@ describe('User Store', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": "some avatar",
+        "email": undefined,
+        "externalId": undefined,
         "name": "some name",
         "tokens": {
           "accessToken": "some access token",
@@ -186,7 +200,9 @@ describe('User Store', () => {
     const userStore = useUserStore()
     userStore.setUserData({
       name: 'some name',
-      avatar: 'some avatar'
+      avatar: 'some avatar',
+      email: 'some email',
+      externalId: 'some id'
     })
     userStore.setTokens({
       accessToken: 'some access token',
@@ -199,6 +215,8 @@ describe('User Store', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": null,
       }

@@ -86,7 +86,9 @@ describe('AccountMenu', () => {
     const userStore = useUserStore()
 
     userStore.setUserData({
-      name: 'some name'
+      name: 'some name',
+      email: 'some email',
+      externalId: 'some id'
     })
     userStore.setTokens({
       accessToken: 'access token',
@@ -98,6 +100,8 @@ describe('AccountMenu', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": "default",
+        "email": "some email",
+        "externalId": "some id",
         "name": "some name",
         "tokens": {
           "accessToken": "access token",
@@ -118,6 +122,8 @@ describe('AccountMenu', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": null,
       }

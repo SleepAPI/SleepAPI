@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="max-width: 600px">
     <v-row>
       <v-col cols="12">
         <v-card class="pb-4">
@@ -44,14 +44,23 @@
             </v-col>
           </v-row>
 
-          <v-row>
+          <v-row dense>
+            <v-col cols="12" class="flex-center flex-column">
+              <span class="text-center"
+                >E-mail: {{ userStore.email ?? 'missing, log out and back in' }}</span
+              >
+              <span class="text-center font-weight-thin font-italic text-body-2 text-grey"
+                >This is only stored on your device, we do not store personal information</span
+              >
+            </v-col>
+          </v-row>
+
+          <v-row dense>
             <v-spacer />
 
             <v-col cols="5" class="flex-center">
               <v-btn color="secondary" class="w-100" @click="logout">Logout</v-btn>
             </v-col>
-
-            <v-spacer />
 
             <v-col cols="5" class="flex-center" stacked>
               <v-btn color="warning" class="w-100" @click="showDeleteConfirmationDialog"

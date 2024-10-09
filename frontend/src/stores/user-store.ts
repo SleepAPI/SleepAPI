@@ -8,7 +8,9 @@ import { googleLogout } from 'vue3-google-login'
 export interface UserState {
   name: string
   avatar: string | null
+  email: string | null
   tokens: TokenInfo | null
+  externalId: string | null
 }
 
 export interface TokenInfo {
@@ -22,7 +24,9 @@ export const useUserStore = defineStore('user', {
     return {
       name: 'Guest',
       avatar: null,
-      tokens: null
+      email: null,
+      tokens: null,
+      externalId: null
     }
   },
   getters: {
@@ -31,9 +35,11 @@ export const useUserStore = defineStore('user', {
     islandBonus: (state) => 1 + MAX_ISLAND_BONUS / 100 // TODO: user should probably hold island bonuses and recipe levels
   },
   actions: {
-    setUserData(userData: { name: string; avatar?: string }) {
+    setUserData(userData: { name: string; avatar?: string; email: string; externalId: string }) {
       this.name = userData.name
       this.avatar = userData.avatar ?? 'default'
+      this.email = userData.email
+      this.externalId = userData.externalId
     },
     setTokens(tokens: TokenInfo) {
       this.tokens = tokens
@@ -47,7 +53,9 @@ export const useUserStore = defineStore('user', {
       })
       this.setUserData({
         name: loginResponse.name,
-        avatar: loginResponse.avatar
+        avatar: loginResponse.avatar,
+        email: loginResponse.email,
+        externalId: loginResponse.externalId
       })
 
       // Refresh the current page

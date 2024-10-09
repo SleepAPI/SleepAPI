@@ -84,4 +84,12 @@ describe('SettingsPage', () => {
     expect(userStore.logout).toHaveBeenCalled()
     expect(wrapper.vm.deleteDialog).toBe(false)
   })
+
+  it('displays email information disclaimer', () => {
+    const disclaimerElement = wrapper.find('.font-italic')
+    expect(disclaimerElement.exists()).toBe(true)
+    expect(disclaimerElement.text()).toBe(
+      'This is only stored on your device, we do not store personal information'
+    )
+  })
 })
