@@ -1,9 +1,11 @@
 import type {
   BerrySet,
   CookingResult,
+  DetailedProduce,
   IngredientSet,
   PokemonInstanceExt,
   RecipeType,
+  Summary,
   Time,
   berry
 } from 'sleepapi-common'
@@ -14,11 +16,29 @@ export interface TeamCombinedProduction {
   cooking: CookingResult
 }
 
+export interface PerformanceDetails {
+  berry: number
+  skill: number
+  ingredient: number
+  ingredientsOfTotal: number[]
+}
+export interface PerformanceAnalysis {
+  neutral: PerformanceDetails
+  user: PerformanceDetails
+  optimal: PerformanceDetails
+}
+export interface SingleMemberProduction {
+  summary: Summary
+  detailedProduce: DetailedProduce
+  performanceAnalysis: PerformanceAnalysis
+}
+
 export interface MemberProductionExt {
   berries?: BerrySet
   ingredients: IngredientSet[]
   skillProcs: number
   member: PokemonInstanceExt
+  singleProduction?: SingleMemberProduction
 }
 
 export interface SingleProductionExt extends MemberProductionExt {
@@ -43,6 +63,7 @@ export interface TeamProductionExt {
 }
 export interface TeamInstance {
   index: number
+  memberIndex: number
   name: string
   camp: boolean
   bedtime: string
@@ -55,7 +76,7 @@ export interface TeamInstance {
 }
 
 export const MAX_TEAM_MEMBERS = 5
-export const MAX_TEAMS = 5
+export const MAX_TEAMS = 10
 export const DEFAULT_SLEEP = {
   bedtime: '21:30',
   wakeup: '06:00'

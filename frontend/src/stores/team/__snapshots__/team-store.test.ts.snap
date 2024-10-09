@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`migrate > shall migrate old teams to new state 1`] = `
+[
+  {
+    "bedtime": "21:10",
+    "camp": false,
+    "favoredBerries": [],
+    "index": 0,
+    "memberIndex": 0,
+    "members": [
+      undefined,
+      "member1",
+      undefined,
+      "member2",
+      undefined,
+    ],
+    "name": "Team 1",
+    "production": undefined,
+    "recipeType": "curry",
+    "version": 1,
+    "wakeup": "06:00",
+  },
+  {
+    "bedtime": "21:20",
+    "camp": false,
+    "favoredBerries": [],
+    "index": 0,
+    "memberIndex": 0,
+    "members": [
+      undefined,
+      "member3",
+      undefined,
+      "member4",
+      undefined,
+    ],
+    "name": "Team 2",
+    "production": undefined,
+    "recipeType": "curry",
+    "version": 1,
+    "wakeup": "06:00",
+  },
+]
+`;

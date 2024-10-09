@@ -1,8 +1,10 @@
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberProductionExt, SingleMemberProduction } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
 import { berry, ingredient } from 'sleepapi-common'
 
-export function createMockMemberProduction(attrs?: Partial<MemberProductionExt>) {
+export function createMockMemberProduction(
+  attrs?: Partial<MemberProductionExt>
+): MemberProductionExt {
   return {
     member: createMockPokemon(),
     ingredients: [
@@ -20,6 +22,18 @@ export function createMockMemberProduction(attrs?: Partial<MemberProductionExt>)
       amount: 10,
       berry: berry.BELUE
     },
+    singleProduction: createMockMemberSingleProduction(),
+    ...attrs
+  }
+}
+
+export function createMockMemberSingleProduction(
+  attrs?: Partial<SingleMemberProduction>
+): SingleMemberProduction {
+  return {
+    summary: {} as any,
+    detailedProduce: {} as any,
+    performanceAnalysis: {} as any,
     ...attrs
   }
 }
