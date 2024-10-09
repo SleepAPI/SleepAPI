@@ -577,7 +577,7 @@ describe('updateTeamMember', () => {
     `)
   })
 
-  it('shall reset the single production', () => {
+  it('shall reset the single production', async () => {
     const teamStore = useTeamStore()
 
     teamStore.teams = createMockTeams()
@@ -586,29 +586,30 @@ describe('updateTeamMember', () => {
     expect(teamStore.teams[0].production?.members).toHaveLength(1)
     expect(teamStore.teams[0].production?.members[0].singleProduction).toBeDefined()
 
-    teamStore.updateTeamMember(createMockPokemon(), 0)
+    await teamStore.updateTeamMember(createMockPokemon(), 0)
 
     expect(teamStore.teams).toHaveLength(1)
     expect(teamStore.teams[0].production?.members).toHaveLength(1)
     expect(teamStore.teams[0].production?.members[0].singleProduction).toBeUndefined()
   })
 
-  it("shall reset every member's single production for support mons", () => {
+  it("shall reset every member's single production for support mons", async () => {
     const teamStore = useTeamStore()
 
     teamStore.resetCurrentTeamSingleProduction = vi.fn()
     teamStore.calculateProduction = vi.fn()
-    teamStore.updateTeamMember(createMockPokemon({ pokemon: pokemon.WIGGLYTUFF }), 2)
+    await teamStore.updateTeamMember(createMockPokemon({ pokemon: pokemon.WIGGLYTUFF }), 2)
 
     expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
-  it("shall reset every member's single production if mon has support subskill", () => {
+
+  it("shall reset every member's single production if mon has support subskill", async () => {
     const teamStore = useTeamStore()
 
     teamStore.resetCurrentTeamSingleProduction = vi.fn()
     teamStore.calculateProduction = vi.fn()
-    teamStore.updateTeamMember(
+    await teamStore.updateTeamMember(
       createMockPokemon({ subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }] }),
       2
     )

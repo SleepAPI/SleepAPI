@@ -81,6 +81,9 @@ export const useTeamStore = defineStore('team', {
           team.memberIndex = 0
         }
       }
+      if (this.maxAvailableTeams < MAX_TEAMS) {
+        this.maxAvailableTeams = MAX_TEAMS
+      }
     },
     async syncTeams() {
       const userStore = useUserStore()
@@ -238,6 +241,8 @@ export const useTeamStore = defineStore('team', {
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
 
+      await this.calculateProduction(this.currentIndex)
+      // reset single production to trigger radar chart recalc
       if (this.isSupportMember(updatedMember)) {
         this.resetCurrentTeamSingleProduction()
       } else if (
@@ -247,7 +252,6 @@ export const useTeamStore = defineStore('team', {
         this.teams[this.currentIndex].production!.members[memberIndex].singleProduction = undefined
       }
 
-      await this.calculateProduction(this.currentIndex)
       this.toggleMemberLoading(memberIndex)
     },
     async calculateProduction(teamIndex: number) {

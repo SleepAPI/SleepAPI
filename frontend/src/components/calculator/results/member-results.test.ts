@@ -2,7 +2,12 @@ import TeamResults from '@/components/calculator/results/member-results.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { TeamInstance } from '@/types/member/instanced'
-import { createMockMemberProduction, createMockPokemon, createMockTeamProduction } from '@/vitest'
+import {
+  createMockMemberProduction,
+  createMockMemberSingleProduction,
+  createMockPokemon,
+  createMockTeamProduction
+} from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
@@ -104,6 +109,9 @@ describe('TeamResults', () => {
     const radarChartCanvas = wrapper.find('canvas')
     expect(radarChartCanvas.exists()).toBe(true)
 
+    const radarChartData = wrapper.vm.radarData.datasets[0].data
+    expect(radarChartData).toEqual([50, 50, 50])
+
     const pokemonImage = wrapper.find('.v-window-item img')
     expect(pokemonImage.exists()).toBe(true)
     expect(pokemonImage.attributes('src')).toBe('/images/avatar/happy/pikachu_happy.png')
@@ -114,6 +122,39 @@ describe('TeamResults', () => {
     expect(ingredientCard.exists()).toBe(true)
     const skillCard = wrapper.find('.text-skill')
     expect(skillCard.exists()).toBe(true)
+  })
+
+  it('should update chart on new single production', async () => {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+
+    teamStore.currentIndex = 0
+    teamStore.teams[0] = team
+
+    await nextTick()
+
+    const radarChartCanvas = wrapper.find('canvas')
+    expect(radarChartCanvas.exists()).toBe(true)
+
+    let radarChartData = wrapper.vm.radarData.datasets[0].data
+    expect(radarChartData).toEqual([50, 50, 50])
+
+    const defaultPerformance = { berry: 0, ingredient: 0, ingredientsOfTotal: [0], skill: 0 }
+    teamStore.teams[0]!.production!.members[0]!.singleProduction = createMockMemberSingleProduction(
+      {
+        performanceAnalysis: {
+          neutral: defaultPerformance,
+          optimal: defaultPerformance,
+          user: { berry: 60, ingredient: 60, ingredientsOfTotal: [60], skill: 60 }
+        }
+      }
+    )
+    await nextTick()
+
+    radarChartData = wrapper.vm.radarData.datasets[0].data
+    expect(radarChartData).toEqual([60, 60, 60])
   })
 
   it('renders window item images correctly', async () => {
