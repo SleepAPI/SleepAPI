@@ -9,6 +9,7 @@
     <v-app-bar-title>{{ $route.name }}</v-app-bar-title>
 
     <template #append>
+      <DonateMenu />
       <AccountMenu />
     </template>
   </v-app-bar>
@@ -28,12 +29,14 @@
 
 <script lang="ts">
 import AccountMenu from '@/components/account/account-menu.vue'
+import DonateMenu from '@/components/donate/donate-menu.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TheNavBar',
   components: {
-    AccountMenu
+    AccountMenu,
+    DonateMenu
   },
   data: () => ({
     drawer: false

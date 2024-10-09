@@ -14,7 +14,7 @@
       </v-btn>
     </template>
 
-    <v-card>
+    <v-card id="accountMenu">
       <v-col cols="auto" class="text-center">
         <v-avatar size="72" color="background" class="mb-2">
           <img

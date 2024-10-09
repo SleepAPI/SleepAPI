@@ -29,7 +29,7 @@ describe('AccountMenu', () => {
   })
 
   it('clicking activator should open menu', async () => {
-    expect(document.querySelector('.account-menu-container')).toBeNull()
+    expect(document.querySelector('#accountMenu')).toBeNull()
 
     const button = wrapper.find('#navBarIcon')
     await button.trigger('click')
@@ -37,7 +37,7 @@ describe('AccountMenu', () => {
     await nextTick()
     await flushPromises()
 
-    const menuContainer = document.querySelector('.account-menu-container')
+    const menuContainer = document.querySelector('#accountMenu')
     expect(menuContainer).not.toBeNull()
 
     if (menuContainer) {
@@ -69,7 +69,7 @@ describe('AccountMenu', () => {
     const openMenuButton = wrapper.find('#navBarIcon')
     await openMenuButton.trigger('click')
 
-    const menuContainer = document.querySelector('.account-menu-container')
+    const menuContainer = document.querySelector('#accountMenu')
     expect(menuContainer).not.toBeNull()
 
     if (menuContainer) {

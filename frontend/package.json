@@ -29,9 +29,11 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.6.8",
     "axios-mock-adapter": "^1.22.0",
+    "chart.js": "^4.4.4",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "vue": "^3.4.21",
+    "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.0",
     "vue3-google-login": "^2.0.26"
   },
