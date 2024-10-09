@@ -1,4 +1,8 @@
-import type { MemberProductionExt, SingleMemberProduction } from '@/types/member/instanced'
+import type {
+  MemberProductionExt,
+  PerformanceDetails,
+  SingleMemberProduction
+} from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
 import { berry, ingredient } from 'sleepapi-common'
 
@@ -30,10 +34,20 @@ export function createMockMemberProduction(
 export function createMockMemberSingleProduction(
   attrs?: Partial<SingleMemberProduction>
 ): SingleMemberProduction {
+  const performanceDetails: PerformanceDetails = {
+    berry: 50,
+    ingredient: 50,
+    ingredientsOfTotal: [50],
+    skill: 50
+  }
   return {
     summary: {} as any,
     detailedProduce: {} as any,
-    performanceAnalysis: {} as any,
+    performanceAnalysis: {
+      neutral: performanceDetails,
+      optimal: performanceDetails,
+      user: performanceDetails
+    },
     ...attrs
   }
 }

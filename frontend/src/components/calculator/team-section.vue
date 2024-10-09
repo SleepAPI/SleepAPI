@@ -33,24 +33,24 @@
       </v-window-item>
     </v-window>
 
-    <TeamSettings class="pt-4" />
+    <TeamSettings class="pt-2" />
 
-    <v-row v-if="teamStore.getCurrentTeam.production">
+    <v-row v-if="teamStore.getCurrentTeam.production" dense>
       <v-col cols="12">
         <v-card :loading="teamStore.loadingTeams" color="transparent">
-          <v-tabs v-model="tab" class="d-flex justify-space-around">
+          <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
             <v-tab
               v-for="tabItem in tabs"
               :key="tabItem.value"
               :value="tabItem.value"
-              :class="[tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
+              :class="[teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
             >
               {{ tabItem.label }}
             </v-tab>
           </v-tabs>
 
-          <v-tabs-window v-model="tab">
-            <v-tabs-window-item value="team">
+          <v-tabs-window v-model="teamStore.tab">
+            <v-tabs-window-item value="overview">
               <TeamResults />
             </v-tabs-window-item>
 
@@ -120,9 +120,8 @@ export default defineComponent({
     return { userStore, teamStore, pokemonStore, notificationStore }
   },
   data: () => ({
-    tab: null,
     tabs: [
-      { value: 'team', label: 'Team' },
+      { value: 'overview', label: 'Overview' },
       { value: 'members', label: 'Members' },
       { value: 'cooking', label: 'Cooking' }
     ],
@@ -172,8 +171,8 @@ export default defineComponent({
 }
 
 .team-slot {
-  aspect-ratio: 6 / 10;
-  max-height: 25dvh;
+  aspect-ratio: 6 / 8;
+  max-height: 20dvh;
 }
 
 .team-label-margin {

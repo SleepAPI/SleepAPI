@@ -15,26 +15,54 @@
 
           <v-row dense class="flex-center">
             <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/berries.png" contain width="24" height="24" />
-              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
-                {{ berryStrengthString }}</span
-              >
+              <v-img
+                color="berry"
+                src="/images/misc/berries.png"
+                contain
+                width="24"
+                height="24"
+                style="border-radius: 45px"
+              />
+              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-1">
+                {{ berryStrengthString }}
+              </span>
             </v-col>
+
             <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
-              <span class="text-body-1 text-skill w-100 text-center font-weight-medium">
-                {{ skillStrengthString }}</span
-              >
+              <v-img
+                src="/images/misc/skillproc.png"
+                style="border-radius: 45px"
+                color="skill"
+                contain
+                width="24"
+                height="24"
+              />
+              <span class="text-body-1 text-skill w-100 text-center font-weight-medium ml-1">
+                {{ skillStrengthString }}
+              </span>
             </v-col>
+
             <v-col cols="auto" class="flex-center">
-              <v-img :src="recipeTypeImage" contain width="30" height="30" />
+              <v-img
+                :color="teamStore.getCurrentTeam.recipeType"
+                style="border-radius: 45px"
+                width="24"
+                height="24"
+              >
+                <img
+                  :src="recipeTypeImage"
+                  style="width: 100%; height: 100%; transform: scale(1.2)"
+                />
+              </v-img>
+
               <span
                 :class="[
                   'text-body-1',
                   `text-${teamStore.getCurrentTeam.recipeType}`,
                   'w-100',
                   'text-center',
-                  'font-weight-medium'
+                  'font-weight-medium',
+                  'ml-1'
                 ]"
               >
                 {{ cookingStrengthString }}</span
