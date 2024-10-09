@@ -122,11 +122,11 @@
         <v-row dense class="mb-4">
           <v-col cols="6">
             <v-card color="surface">
-              <v-row dense class="flex-wrap flex-top align-center pb-4">
+              <v-row dense class="flex-wrap flex-top py-2">
                 <!-- Berries -->
-                <v-col cols="12" md="4" class="flex-center flex-column">
+                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
                   <v-row dense class="flex-center">
-                    <v-col cols="12" class="flex-center text-h5 text-berry font-weight-medium pb-0">
+                    <v-col cols="12" class="flex-center text-h6 text-berry font-weight-medium py-0">
                       Berry
                     </v-col>
                   </v-row>
@@ -135,28 +135,26 @@
                     <v-col cols="6" class="flex-center flex-column pt-0">
                       <v-img
                         :src="`/images/berries/${member.member.pokemon.berry.name.toLowerCase()}.png`"
-                        height="32"
-                        width="32"
+                        height="24"
+                        width="24"
                       ></v-img>
-                      <span class="text-h6 font-weight-medium text-center">{{
+                      <span class="font-weight-medium text-center">{{
                         round((member.berries?.amount ?? 0) / teamStore.timewindowDivider)
                       }}</span>
                     </v-col>
                     <v-col cols="6" class="flex-center flex-column pt-0">
-                      <v-img src="/images/misc/strength.png" height="20px" width="20px"></v-img>
-                      <span class="text-h6 font-weight-medium text-center">{{
-                        currentBerryStrength
-                      }}</span>
+                      <v-img src="/images/misc/strength.png" height="16px" width="16px"></v-img>
+                      <span class="font-weight-medium text-center">{{ currentBerryStrength }}</span>
                     </v-col>
                   </v-row>
                 </v-col>
 
                 <!-- Ingredients -->
-                <v-col cols="12" md="4" class="flex-center flex-column">
+                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
                   <v-row dense class="flex-center">
                     <v-col
                       cols="12"
-                      class="flex-center text-h5 text-ingredient font-weight-medium pb-0"
+                      class="flex-center text-h6 text-ingredient font-weight-medium py-0"
                     >
                       Ingredient
                     </v-col>
@@ -164,18 +162,14 @@
 
                   <v-row dense justify="center">
                     <v-col
-                      v-for="(ingredientSet, i) in member.ingredients"
+                      v-for="({ amount, name }, i) in member.ingredients"
                       :key="i"
                       class="flex-center pt-0"
                     >
                       <div class="flex-center flex-column">
-                        <v-img
-                          :src="`/images/ingredient/${ingredientSet.ingredient.name.toLowerCase()}.png`"
-                          height="32"
-                          width="32"
-                        ></v-img>
-                        <span class="text-h6 text-center font-weight-medium">{{
-                          round(ingredientSet.amount / teamStore.timewindowDivider)
+                        <v-img :src="name" height="24" width="24"></v-img>
+                        <span class="text-center font-weight-medium">{{
+                          round(amount / teamStore.timewindowDivider)
                         }}</span>
                       </div>
                     </v-col>
@@ -183,21 +177,24 @@
                 </v-col>
 
                 <!-- Skills -->
-                <v-col cols="12" md="4" class="flex-center flex-column">
+                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
                   <v-row dense class="flex-center">
-                    <v-col cols="12" class="flex-center text-h5 text-skill font-weight-medium pb-0">
+                    <v-col cols="12" class="flex-center text-h6 text-skill font-weight-medium py-0">
                       Skill
                     </v-col>
                   </v-row>
 
                   <v-row dense justify="center">
-                    <v-col cols="6" class="flex-center flex-column pt-0">
-                      <v-img src="/images/misc/skillproc.png" height="32" width="32"></v-img>
-                      <span class="text-h6 font-weight-medium text-center">{{
+                    <v-col class="flex-center flex-column pt-0">
+                      <v-img src="/images/misc/skillproc.png" height="24" width="24"></v-img>
+                      <span class="font-weight-medium text-center">{{
                         round(member.skillProcs / teamStore.timewindowDivider)
                       }}</span>
                     </v-col>
-                    <v-col cols="6" class="flex-center flex-column pt-0">
+                    <v-col
+                      v-if="member.member.pokemon.skill.unit !== 'metronome'"
+                      class="flex-center flex-column pt-0"
+                    >
                       <v-badge
                         :content="`Lv.${member.member.skillLevel}`"
                         location="top right"
@@ -208,13 +205,11 @@
                       >
                         <v-img
                           :src="`/images/mainskill/${member.member.pokemon.skill.unit.toLowerCase()}.png`"
-                          height="30px"
-                          width="30px"
+                          height="24px"
+                          width="24px"
                         ></v-img>
                       </v-badge>
-                      <span class="text-h6 font-weight-medium text-center">{{
-                        currentSkillValue
-                      }}</span>
+                      <span class="font-weight-medium text-center">{{ currentSkillValue }}</span>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -243,10 +238,12 @@ import {
   MathUtils,
   berryPowerForLevel,
   capitalize,
+  ingredient,
   island,
   mainskill,
   nature,
   type DetailedProduce,
+  type IngredientSet,
   type SingleProductionResponse,
   type subskill
 } from 'sleepapi-common'
@@ -415,7 +412,11 @@ export default defineComponent({
   },
   computed: {
     members() {
-      return this.teamStore.getCurrentTeam.production?.members ?? []
+      const result = []
+      for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
+        result.push({ ...member, ingredients: this.prepareMemberIngredients(member.ingredients) })
+      }
+      return result
     },
     currentMemberSingleProduction() {
       const currentMember = this.members[this.teamStore.getCurrentTeam.memberIndex]
@@ -513,6 +514,29 @@ export default defineComponent({
   methods: {
     getMemberImage(name: string, shiny: boolean) {
       return `/images/avatar/happy/${name.toLowerCase()}_happy${shiny ? '_shiny' : ''}.png`
+    },
+    prepareMemberIngredients(ingredients: IngredientSet[]) {
+      if (ingredients.length >= ingredient.INGREDIENTS.length) {
+        const ingMagnetAmount = ingredients.reduce(
+          (min, cur) => (cur.amount < min ? cur.amount : min),
+          ingredients[0].amount
+        )
+
+        const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
+
+        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount - ingMagnetAmount, 1),
+          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+
+        result.push({ amount: ingMagnetAmount, name: '/images/misc/ingredients.png' })
+        return result
+      } else {
+        return ingredients.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount, 1),
+          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+      }
     },
     rarityColor(subskill: subskill.SubSkill) {
       return `subskill${capitalize(subskill.rarity)}`
