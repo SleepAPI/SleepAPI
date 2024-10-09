@@ -66,18 +66,18 @@ describe('TeamSettings.vue', () => {
 
     const tabs = wrapper.findAllComponents({ name: 'VTab' })
     expect(tabs).toHaveLength(3)
-    const teamTab = tabs.at(0)
+    const overviewTab = tabs.at(0)
     const membersTab = tabs.at(1)
     const cookingTab = tabs.at(2)
 
-    await teamTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('team')
+    await overviewTab?.trigger('click')
+    expect(teamStore.tab).toBe('overview')
 
     await membersTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('members')
+    expect(teamStore.tab).toBe('members')
 
     await cookingTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('cooking')
+    expect(teamStore.tab).toBe('cooking')
   })
 
   it('calculates production when missing', async () => {

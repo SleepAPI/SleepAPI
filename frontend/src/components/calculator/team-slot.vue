@@ -1,8 +1,14 @@
 <template>
-  <div v-if="pokemonInstance" class="w-100 fill-height transparent">
+  <div v-if="pokemonInstance" class="fill-height">
     <v-card
       :loading="teamStore.getMemberLoading(memberIndex)"
-      class="w-100 fill-height frosted-glass rounded-b-0"
+      :class="[
+        'fill-height',
+        'rounded-b-0',
+        teamStore.getCurrentTeam.memberIndex === memberIndex && teamStore.tab === 'members'
+          ? 'bg-surface'
+          : 'frosted-glass'
+      ]"
       @click="openDetailsDialog"
     >
       <div
@@ -154,10 +160,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '@/assets/main';
 
-.transparent {
-  background: rgba($surface, 0) !important;
-}
-
 .pokemon-image {
   width: 100%;
   height: 100%;
@@ -166,7 +168,7 @@ export default defineComponent({
 }
 
 .vertical-text {
-  color: rgba(white, 0.6) !important;
+  color: rgba(white, 0.8) !important;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);

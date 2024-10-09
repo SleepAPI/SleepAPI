@@ -8,7 +8,9 @@ describe('RibbonButton', () => {
 
   beforeEach(() => {
     wrapper = mount(RibbonButton, {
-      ribbon: 0
+      props: {
+        ribbon: 0
+      }
     })
   })
 
@@ -46,7 +48,7 @@ describe('RibbonButton', () => {
     await button.trigger('click')
 
     expect(wrapper.vm.menu).toBe(true)
-    const menuContainer = document.querySelectorAll('#ribbonMenu')
+    const menuContainer = document.querySelectorAll('#ribbon-menu')
     expect(menuContainer[0]).not.toBeNull()
   })
 
