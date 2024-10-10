@@ -439,7 +439,6 @@ export default defineComponent({
             berries.berry,
             this.members[this.teamStore.getCurrentTeam.memberIndex].member.level
           ) *
-          favoredBerryMultiplier *
           favoredBerryMultiplier
       )
     },

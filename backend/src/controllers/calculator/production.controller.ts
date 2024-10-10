@@ -41,6 +41,7 @@ export default class ProductionController extends Controller {
 
   #parseTeamInput(body: CalculateTeamRequest) {
     const { settings, members } = body;
+    const camp = queryAsBoolean(settings.camp);
     const bedtime = TimeUtils.parseTime(settings.bedtime);
     const wakeup = TimeUtils.parseTime(settings.wakeup);
     const sleepDuration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
@@ -63,7 +64,10 @@ export default class ProductionController extends Controller {
         },
         level: member.level,
         ribbon: member.ribbon,
-        carrySize: member.carrySize + calculateSubskillCarrySize(subskills) + calculateRibbonCarrySize(member.ribbon),
+        carrySize: Math.ceil(
+          (member.carrySize + calculateSubskillCarrySize(subskills) + calculateRibbonCarrySize(member.ribbon)) *
+            (camp ? 1.2 : 1)
+        ),
         nature: getNature(member.nature),
         skillLevel: member.skillLevel,
         subskills,
@@ -73,7 +77,7 @@ export default class ProductionController extends Controller {
 
     return {
       settings: {
-        camp: queryAsBoolean(settings.camp),
+        camp,
         bedtime,
         wakeup,
       },

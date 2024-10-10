@@ -119,10 +119,13 @@ export function setupAndRunProductionSimulation(params: {
     berry: averagedPokemonCombination.pokemon.berry,
   };
 
-  const inventoryLimit =
-    (input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon)) +
-    calculateSubskillCarrySize(limitSubSkillsToLevel(input.subskills ?? [], input.level)) +
-    calculateRibbonCarrySize(input.ribbon);
+  const inventoryLimit = Math.ceil(
+    ((input.inventoryLimit ??
+      maxCarrySize(averagedPokemonCombination.pokemon) +
+        calculateSubskillCarrySize(limitSubSkillsToLevel(input.subskills ?? [], input.level))) +
+      calculateRibbonCarrySize(input.ribbon)) *
+      (camp ? 1.2 : 1)
+  );
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
