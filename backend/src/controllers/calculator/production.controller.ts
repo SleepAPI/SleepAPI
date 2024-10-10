@@ -3,7 +3,7 @@ import { ProductionStats } from '@src/domain/computed/production';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
-import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
@@ -64,10 +64,13 @@ export default class ProductionController extends Controller {
         },
         level: member.level,
         ribbon: member.ribbon,
-        carrySize: Math.ceil(
-          (member.carrySize + calculateSubskillCarrySize(subskills) + calculateRibbonCarrySize(member.ribbon)) *
-            (camp ? 1.2 : 1)
-        ),
+        carrySize: InventoryUtils.calculateCarrySize({
+          baseWithEvolutions: member.carrySize,
+          subskills,
+          ribbon: member.ribbon,
+          level: member.level,
+          camp,
+        }),
         nature: getNature(member.nature),
         skillLevel: member.skillLevel,
         subskills,

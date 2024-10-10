@@ -1,4 +1,6 @@
-import { Produce as Inventory } from 'sleepapi-common';
+import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
+import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
+import { Produce as Inventory, subskill } from 'sleepapi-common';
 
 class InventoryUtilsImpl {
   public addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {
@@ -38,6 +40,22 @@ class InventoryUtilsImpl {
     return {
       ingredients: [],
     };
+  }
+
+  public calculateCarrySize(params: {
+    baseWithEvolutions: number;
+    subskills: subskill.SubSkill[];
+    level: number;
+    ribbon: number;
+    camp: boolean;
+  }) {
+    const { baseWithEvolutions, subskills, level, ribbon, camp } = params;
+    return Math.ceil(
+      (baseWithEvolutions +
+        calculateSubskillCarrySize(limitSubSkillsToLevel(subskills, level)) +
+        calculateRibbonCarrySize(ribbon)) *
+        (camp ? 1.2 : 1)
+    );
   }
 }
 
