@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pokemonInstance" class="fill-height">
+  <div v-if="pokemonInstance" ref="teamSlotRef" class="fill-height">
     <v-card
       :loading="teamStore.getMemberLoading(memberIndex)"
       :class="[
@@ -30,15 +30,16 @@
       </div>
     </v-card>
 
-    <v-card
-      class="text-center responsive-text"
-      rounded="lg"
-      style="position: absolute; top: 0%; width: 80%"
-      color="primary"
-      location="top center"
-    >
-      {{ level }}
-    </v-card>
+    <teleport to="body">
+      <v-card
+        class="text-center responsive-text"
+        rounded="lg"
+        :style="teleportCardStyle"
+        color="primary"
+      >
+        {{ level }}
+      </v-card>
+    </teleport>
   </div>
   <div v-else class="d-flex w-100 fill-height transparent">
     <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDetailsDialog">
@@ -62,7 +63,7 @@ import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.
 import { useTeamStore } from '@/stores/team/team-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlot',
@@ -77,7 +78,38 @@ export default defineComponent({
   },
   setup() {
     const teamStore = useTeamStore()
-    return { teamStore }
+    const teamSlotRef = ref<HTMLElement | null>(null)
+    const teleportCardStyle = ref<Record<string, string>>({
+      top: '0%',
+      width: '80%',
+      position: 'absolute',
+      left: '0%',
+      whiteSpace: 'nowrap'
+    })
+
+    const updateTeleportCardStyle = () => {
+      if (teamSlotRef.value) {
+        const { top, left, width } = teamSlotRef.value.getBoundingClientRect()
+        teleportCardStyle.value = {
+          position: 'absolute',
+          top: `${top - 5 + window.scrollY}px`,
+          left: `${left + width / 20 + window.scrollX}px`,
+          width: `${width * 0.9}px`,
+          whiteSpace: 'nowrap'
+        }
+      }
+    }
+
+    onMounted(() => {
+      updateTeleportCardStyle()
+      window.addEventListener('resize', updateTeleportCardStyle)
+    })
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('resize', updateTeleportCardStyle)
+    })
+
+    return { teamStore, teamSlotRef, teleportCardStyle }
   },
   data: () => ({
     showTeamSlotDialog: false

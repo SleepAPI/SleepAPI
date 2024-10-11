@@ -85,13 +85,16 @@ describe('TeamResults', () => {
     await nextTick()
     expect(teamStore.getCurrentTeam.memberIndex).toBe(0)
 
-    const nextButton = wrapper.find('.v-window__right')
-    await nextButton.trigger('click')
+    const nextButton = document.querySelector('#nextMember') as HTMLElement
+    nextButton.click()
+    await nextTick()
 
     expect(teamStore.getCurrentTeam.memberIndex).toBe(1)
 
-    const previousButton = wrapper.find('.v-window__left')
-    await previousButton.trigger('click')
+    const previousButton = document.querySelector('#prevMember') as HTMLElement
+    previousButton.click()
+    await nextTick()
+
     expect(teamStore.getCurrentTeam.memberIndex).toBe(0)
   })
 
