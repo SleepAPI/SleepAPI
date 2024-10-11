@@ -66,6 +66,10 @@ export const useTeamStore = defineStore('team', {
         return state.loadingMembers[memberIndex]
       }
     },
+    getCurrentMember: (state) => {
+      const currentTeam = state.teams[state.currentIndex]
+      return currentTeam.production?.members.at(currentTeam.memberIndex)?.member.externalId
+    },
     timewindowDivider: (state) => (state.timeWindow === '24H' ? 1 : 3)
   },
   actions: {
@@ -327,6 +331,9 @@ export const useTeamStore = defineStore('team', {
 
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
+
+      // members array will be reduced by one
+      this.getCurrentTeam.memberIndex = Math.max(this.getCurrentTeam.memberIndex - 1, 0)
 
       if (userStore.loggedIn) {
         try {

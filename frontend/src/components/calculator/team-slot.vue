@@ -5,7 +5,7 @@
       :class="[
         'fill-height',
         'rounded-b-0',
-        teamStore.getCurrentTeam.memberIndex === memberIndex && teamStore.tab === 'members'
+        teamStore.getCurrentMember === pokemonInstance.externalId && teamStore.tab === 'members'
           ? 'bg-surface'
           : 'frosted-glass'
       ]"

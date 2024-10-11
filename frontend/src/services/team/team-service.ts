@@ -185,6 +185,7 @@ class TeamServiceImpl {
         return {
           berries: member.berries,
           ingredients: member.ingredients,
+          skillAmount: member.skillAmount,
           skillProcs: member.skillProcs,
           member: pokemonStore.getPokemon(member.externalId)
         }

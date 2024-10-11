@@ -17,7 +17,8 @@
 					"strength",
 					"pot size",
 					"chance",
-					"metronome"
+					"metronome",
+					"stockpile"
 				]
 			},
 			"MainSkill": {

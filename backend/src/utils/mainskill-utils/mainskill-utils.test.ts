@@ -19,6 +19,7 @@ describe('getMainskillNames', () => {
         "Tasty Chance S",
         "Ingredient Magnet S",
         "Metronome",
+        "Stockpile (Charge Strength S",
       ]
     `);
   });

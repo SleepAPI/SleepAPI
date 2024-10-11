@@ -31,6 +31,7 @@ export interface MemberProduction {
   berries?: BerrySet;
   ingredients: IngredientSet[];
   skillProcs: number;
+  skillAmount: number;
   externalId?: string;
   advanced: MemberProductionAdvanced;
 }
