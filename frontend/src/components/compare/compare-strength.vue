@@ -202,7 +202,7 @@ import {
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
   useComparisonStore
 } from '@/stores/comparison-store/comparison-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { SingleProductionExt } from '@/types/member/instanced'
 import {
   MAX_RECIPE_BONUS,
   MAX_RECIPE_LEVEL,
@@ -324,7 +324,7 @@ export default defineComponent({
     }
   },
   methods: {
-    energyPerMember(memberProduction: MemberProductionExt) {
+    energyPerMember(memberProduction: SingleProductionExt) {
       const skill = memberProduction.member.pokemon.skill
       if (
         skill.name === mainskill.ENERGY_FOR_EVERYONE.name ||
@@ -333,7 +333,7 @@ export default defineComponent({
         return MathUtils.round(this.skillValue(memberProduction) / 5, 1)
       }
     },
-    skillValue(memberProduction: MemberProductionExt) {
+    skillValue(memberProduction: SingleProductionExt) {
       // TODO: different rounding for different skills
       const amount =
         memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
@@ -343,7 +343,7 @@ export default defineComponent({
         1
       )
     },
-    berryPower(memberProduction: MemberProductionExt) {
+    berryPower(memberProduction: SingleProductionExt) {
       const favoredBerryMultiplier = this.comparisonStore.favoredBerries.some(
         (berry) => berry.name === memberProduction.member.pokemon.berry.name
       )
@@ -355,7 +355,7 @@ export default defineComponent({
           favoredBerryMultiplier
       )
     },
-    lowestIngredientPower(memberProduction: MemberProductionExt) {
+    lowestIngredientPower(memberProduction: SingleProductionExt) {
       return Math.floor(
         memberProduction.ingredients.reduce(
           (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
@@ -363,7 +363,7 @@ export default defineComponent({
         ) / this.comparisonStore.timewindowDivider
       )
     },
-    highestIngredientPower(memberProduction: MemberProductionExt) {
+    highestIngredientPower(memberProduction: SingleProductionExt) {
       const recipeBonus = 1 + MAX_RECIPE_BONUS / 100
       const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL]
       return Math.floor(

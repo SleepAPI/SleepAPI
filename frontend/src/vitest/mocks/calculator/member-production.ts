@@ -21,6 +21,7 @@ export function createMockMemberProduction(
         ingredient: ingredient.HONEY
       }
     ],
+    skillAmount: 100,
     skillProcs: 5,
     berries: {
       amount: 10,

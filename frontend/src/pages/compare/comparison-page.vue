@@ -9,7 +9,7 @@
         style="position: relative; min-width: 18%; max-width: 18%"
       >
         <CompareSlot
-          :pokemon-instance="mon"
+          :pokemon-instance="mon.member"
           @edit-pokemon="editCompareMember"
           @duplicate-pokemon="duplicateCompareMember"
           @remove-pokemon="removeCompareMember"

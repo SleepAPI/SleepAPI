@@ -177,7 +177,7 @@ import {
   type PokemonInstanceExt,
   type SubskillInstanceExt
 } from 'sleepapi-common'
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, nextTick, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'PokemonInput',
@@ -234,8 +234,10 @@ export default defineComponent({
     pokemonInstance: {
       deep: true,
       handler(newPokemon: PokemonInstanceExt) {
-        const rp = new RP(newPokemon)
-        this.pokemonInstance.rp = rp.calc()
+        nextTick(() => {
+          const rp = new RP(newPokemon)
+          this.pokemonInstance.rp = rp.calc()
+        })
       }
     }
   },

@@ -201,6 +201,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "GARDEVOIR",
   "SABLEYE",
   "SWALOT",
+  "DRIFBLIM",
   "LUCARIO",
   "MAGNEZONE",
   "TOGEKISS",
@@ -227,6 +228,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
   "GULPIN",
   "WYNAUT",
   "BONSLY",
+  "DRIFLOON",
   "RIOLU",
 ]
 `;
@@ -344,6 +346,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
   "SUICUNE",
   "GARDEVOIR",
   "SABLEYE",
+  "DRIFBLIM",
   "LUCARIO",
   "MAGNEZONE",
   "TOGEKISS",
@@ -369,6 +372,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
   "KIRLIA",
   "WYNAUT",
   "BONSLY",
+  "DRIFLOON",
   "RIOLU",
 ]
 `;
@@ -396,12 +400,14 @@ exports[`getPokemonNames shall return all power plant pokemon 1`] = `
   "JOLTEON",
   "AMPHAROS",
   "RAIKOU",
+  "DRIFBLIM",
   "MAGNEZONE",
   "DEDENNE",
   "MAGNEMITE",
   "MAGNETON",
   "MAREEP",
   "FLAAFFY",
+  "DRIFLOON",
 ]
 `;
 

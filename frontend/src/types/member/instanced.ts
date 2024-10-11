@@ -37,11 +37,16 @@ export interface MemberProductionExt {
   berries?: BerrySet
   ingredients: IngredientSet[]
   skillProcs: number
+  skillAmount: number
   member: PokemonInstanceExt
   singleProduction?: SingleMemberProduction
 }
 
-export interface SingleProductionExt extends MemberProductionExt {
+export interface SingleProductionExt {
+  member: PokemonInstanceExt
+  berries?: BerrySet
+  ingredients: IngredientSet[]
+  skillProcs: number
   ingredientPercentage: number
   skillPercentage: number
   carrySize: number

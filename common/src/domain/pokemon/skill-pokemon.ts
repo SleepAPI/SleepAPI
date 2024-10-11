@@ -2,6 +2,7 @@ import { evolvesFrom, evolvesInto } from '../../utils/pokemon-utils/evolution-ut
 import { toSeconds } from '../../utils/time-utils/frequency-utils';
 import {
   BELUE,
+  BLUK,
   CHERI,
   CHESTO,
   DURIN,
@@ -55,6 +56,7 @@ import {
   HELPER_BOOST,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  STOCKPILE_CHARGE_STRENGTH_S,
   TASTY_CHANCE_S,
 } from '../mainskill/mainskill';
 import { Pokemon } from './pokemon';
@@ -711,6 +713,38 @@ export const BONSLY: Pokemon = {
   carrySize: 8,
 };
 
+export const DRIFLOON: Pokemon = {
+  name: 'DRIFLOON',
+  specialty: 'skill',
+  frequency: toSeconds(1, 20, 0),
+  ingredientPercentage: 13.7,
+  skillPercentage: 6.9,
+  berry: BLUK,
+  genders: BALANCED_GENDER,
+  carrySize: 9,
+  previousEvolutions: 0,
+  remainingEvolutions: 1,
+  ingredient0: { amount: 1, ingredient: GREENGRASS_CORN },
+  ingredient30: [
+    { amount: 2, ingredient: GREENGRASS_CORN },
+    { amount: 3, ingredient: PURE_OIL },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: GREENGRASS_CORN },
+    { amount: 4, ingredient: PURE_OIL },
+    { amount: 4, ingredient: SOFT_POTATO },
+  ],
+  skill: STOCKPILE_CHARGE_STRENGTH_S,
+};
+export const DRIFBLIM: Pokemon = {
+  ...evolvesFrom(DRIFLOON),
+  name: 'DRIFBLIM',
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 12.8,
+  skillPercentage: 6.1,
+  carrySize: 17,
+};
+
 export const RIOLU: Pokemon = {
   name: 'RIOLU',
   specialty: 'skill',
@@ -854,6 +888,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   GARDEVOIR,
   SABLEYE,
   SWALOT,
+  DRIFBLIM,
   LUCARIO,
   MAGNEZONE,
   TOGEKISS,
@@ -883,6 +918,7 @@ export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [
   GULPIN,
   WYNAUT,
   BONSLY,
+  DRIFLOON,
   RIOLU,
 ];
 

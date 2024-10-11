@@ -204,7 +204,7 @@
                         rounded="pill"
                       >
                         <v-img
-                          :src="`/images/mainskill/${member.member.pokemon.skill.unit.toLowerCase()}.png`"
+                          :src="mainskillImage(member.member.pokemon)"
                           height="24px"
                           width="24px"
                         ></v-img>
@@ -226,6 +226,7 @@
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
 import { ProductionService } from '@/services/production/production-service'
 import { hexToRgba } from '@/services/utils/color-utils'
+import { mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type {
@@ -240,7 +241,6 @@ import {
   capitalize,
   ingredient,
   island,
-  mainskill,
   nature,
   type DetailedProduce,
   type IngredientSet,
@@ -335,7 +335,7 @@ export default defineComponent({
       window.removeEventListener('resize', updateClipPath)
     })
 
-    return { teamStore, pokemonStore, chartClipPath }
+    return { teamStore, pokemonStore, chartClipPath, mainskillImage }
   },
   data() {
     return {
@@ -447,12 +447,11 @@ export default defineComponent({
       if (!memberProduction) {
         return 0
       }
-      // TODO: different rounding for different skills
-      const amount =
-        memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
-        (memberProduction.member.pokemon.skill.name === mainskill.ENERGY_FOR_EVERYONE.name ? 5 : 1)
+      const result = memberProduction.skillAmount / this.teamStore.timewindowDivider
 
-      return Math.floor(amount * (memberProduction.skillProcs / this.teamStore.timewindowDivider))
+      return ['dream shards', 'strength'].includes(memberProduction.member.pokemon.skill.unit)
+        ? Math.floor(result)
+        : MathUtils.round(result, 1)
     },
     viewportWidth() {
       return window.innerWidth

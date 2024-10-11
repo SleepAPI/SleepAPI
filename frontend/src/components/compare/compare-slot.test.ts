@@ -1,6 +1,5 @@
 import CompareSlot from '@/components/compare/compare-slot.vue'
 import { createMockPokemon } from '@/vitest'
-import { createMockMemberProduction } from '@/vitest/mocks/calculator/member-production'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
@@ -9,11 +8,9 @@ import { beforeEach, describe, expect, it } from 'vitest'
 describe('CompareSlot', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareSlot>>
 
-  const mockMemberProduction = createMockMemberProduction({
-    member: createMockPokemon({
-      name: 'Ash',
-      subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
-    })
+  const pokemonInstance = createMockPokemon({
+    name: 'Ash',
+    subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
   })
 
   beforeEach(() => {
@@ -21,7 +18,7 @@ describe('CompareSlot', () => {
 
     wrapper = mount(CompareSlot, {
       props: {
-        pokemonInstance: mockMemberProduction,
+        pokemonInstance,
         fullTeam: true
       }
     })
@@ -31,14 +28,14 @@ describe('CompareSlot', () => {
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.find('.vertical-text').text()).toBe('Ash')
     expect(wrapper.find('.pokemon-image img').attributes('src')).toBe(
-      `/images/pokemon/${mockMemberProduction.member.pokemon.name.toLowerCase()}.png`
+      `/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`
     )
     expect(wrapper.find('.xsmall-responsive-text').text()).toBe('RP 674')
   })
 
   it('computed properties return correct values', () => {
     expect(wrapper.vm.imageUrl).toBe(
-      `/images/pokemon/${mockMemberProduction.member.pokemon.name.toLowerCase()}.png`
+      `/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`
     )
     expect(wrapper.vm.level).toBe('Level 10')
     expect(wrapper.vm.rpBadge).toBe('RP 674')
@@ -52,7 +49,7 @@ describe('CompareSlot', () => {
 
   it('emits edit-pokemon event correctly', async () => {
     const mockPokemonInstanceExt: PokemonInstanceExt = {
-      ...mockMemberProduction.member,
+      ...pokemonInstance,
       name: 'New Name'
     }
     wrapper.vm.editCompareMember(mockPokemonInstanceExt)
@@ -62,7 +59,7 @@ describe('CompareSlot', () => {
 
   it('emits duplicate-pokemon event correctly', async () => {
     const mockPokemonInstanceExt: PokemonInstanceExt = {
-      ...mockMemberProduction.member,
+      ...pokemonInstance,
       name: 'New Name'
     }
     wrapper.vm.duplicateCompareMember(mockPokemonInstanceExt)
@@ -72,7 +69,7 @@ describe('CompareSlot', () => {
 
   it('emits remove-pokemon event correctly', async () => {
     const mockPokemonInstanceExt: PokemonInstanceExt = {
-      ...mockMemberProduction.member,
+      ...pokemonInstance,
       name: 'New Name'
     }
     wrapper.vm.removeCompareMember(mockPokemonInstanceExt)

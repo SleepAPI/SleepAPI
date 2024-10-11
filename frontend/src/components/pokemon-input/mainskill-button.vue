@@ -5,7 +5,11 @@
         <v-row no-gutters>
           <v-col cols="3">
             <v-card class="flex-center rounded-te-0 rounded-be-0 fill-height" color="secondary">
-              <v-img class="ma-2" :src="mainskillImage" max-height="50px"></v-img>
+              <v-img
+                class="ma-2"
+                :src="mainskillImage(pokemonInstance.pokemon)"
+                max-height="50px"
+              ></v-img>
             </v-card>
           </v-col>
           <v-col cols="9">
@@ -46,7 +50,8 @@
 </template>
 
 <script lang="ts">
-import { mainskill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { mainskillImage } from '@/services/utils/image-utils'
+import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -58,6 +63,9 @@ export default {
     }
   },
   emits: ['update-skill-level'],
+  setup() {
+    return { mainskillImage }
+  },
   data: () => ({
     mainskillLevel: 1,
     menu: false,
@@ -72,13 +80,6 @@ export default {
         '?',
         this.pokemonInstance.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
       )
-    },
-    mainskillImage() {
-      if (this.pokemonInstance.pokemon.skill.name === mainskill.HELPER_BOOST.name) {
-        return `/images/type/${this.pokemonInstance.pokemon.berry.type}.png`
-      }
-
-      return `/images/mainskill/${this.pokemonInstance.pokemon.skill.unit}.png`
     },
     pokemon() {
       return this.pokemonInstance.pokemon

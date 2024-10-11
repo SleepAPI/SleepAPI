@@ -4,7 +4,6 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { SkillValue } from '@src/services/simulation-service/team-simulator/skill-value';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
@@ -47,6 +46,7 @@ export class MemberState {
   private totalAverageHelps = 0;
   private totalSneakySnackHelps = 0;
   private voidHelps = 0;
+  private currentStockpile = 0;
 
   // stats
   private frequency0;
@@ -62,7 +62,7 @@ export class MemberState {
 
   // summary
   private skillProcs = 0;
-  private skillValue = new SkillValue();
+  private skillValue = 0;
   private morningProcs = 0;
   private totalDayHelps = 0;
   private totalNightHelps = 0;
@@ -300,6 +300,7 @@ export class MemberState {
         amount: amount / iterations,
         ingredient,
       })),
+      skillAmount: this.skillValue / iterations,
       skillProcs: this.skillProcs / iterations,
       externalId: this.member.externalId,
       advanced: {
@@ -366,6 +367,7 @@ export class MemberState {
     'pot size': () => this.#activateCookingPowerUp(),
     chance: () => this.#activateTastyChance(),
     metronome: (skill) => this.#activateValueSkills(skill),
+    stockpile: (skill) => this.#activateStockpile(skill),
     strength: (skill) => this.#activateValueSkills(skill),
   };
 
@@ -374,12 +376,12 @@ export class MemberState {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
-      this.skillValue.addValue(clampedEnergyRecovered);
+      this.skillValue += clampedEnergyRecovered;
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
       return { energyTeam: 0, helpsTeam: 0 };
     } else if (skill === mainskill.ENERGIZING_CHEER_S) {
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
       const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
 
       return {
@@ -387,7 +389,7 @@ export class MemberState {
         helpsTeam: 0,
       };
     } else {
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
 
       return {
         energyTeam: this.skillAmount(skill),
@@ -406,6 +408,7 @@ export class MemberState {
 
       const helps =
         this.skillAmount(skill) + mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
+      this.skillValue += helps;
 
       return {
         energyTeam: 0,
@@ -413,7 +416,7 @@ export class MemberState {
       };
     } else {
       // extra helpful
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
 
       const helpsPerMember = this.skillAmount(skill) / this.teamSize;
       return {
@@ -431,7 +434,7 @@ export class MemberState {
     }));
     const magnetProduce = { ingredients: magnetIngredients };
 
-    this.skillValue.addProduce(magnetProduce);
+    this.skillValue += ingMagnetAmount;
     this.cookingState.addIngredients(magnetProduce.ingredients);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, magnetProduce);
     return {
@@ -443,7 +446,7 @@ export class MemberState {
 
   #activateTastyChance() {
     const critAmount = this.skillAmount(mainskill.TASTY_CHANCE_S);
-    this.skillValue.addValue(critAmount);
+    this.skillValue += critAmount;
     this.cookingState.addCritBonus(critAmount / 100);
     return {
       energyTeam: 0,
@@ -453,7 +456,7 @@ export class MemberState {
 
   #activateCookingPowerUp() {
     const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
-    this.skillValue.addValue(potAmount);
+    this.skillValue += potAmount;
     this.cookingState.addPotSize(potAmount);
     return {
       energyTeam: 0,
@@ -461,8 +464,30 @@ export class MemberState {
     };
   }
 
+  // currently only implement strength S stockpile, needs branching if more stockpile skills come out
+  #activateStockpile(skill: mainskill.MainSkill): SkillActivation {
+    // TODO: does stockpile count reset on new week?
+    const triggerSpitUp = MathUtils.rollRandomChance(0.2); // TODO: implement once we know ratio, 50% is mock number
+    if (triggerSpitUp || this.currentStockpile === 10) {
+      // TODO: maybe use max stockpile count, in case future gets bumped to 11 max
+      // TODO: proc spit up always if 10 stacks stored?
+      const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
+      this.skillValue += stockpiledValue;
+      // console.log(`[${this.skillLevel - 1}][${this.currentStockpile}] = ${stockpiledValue}`);
+      this.currentStockpile = 0;
+    } else {
+      // TODO: what happens if we reach 10? auto proc? 100% proc next activation? nothing?
+      // TODO: might not need the math min here if we auto proc at 10 in first if check
+      this.currentStockpile = Math.min(this.currentStockpile + 1, 10);
+    }
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
   #activateValueSkills(skill: mainskill.MainSkill): SkillActivation {
-    this.skillValue.addValue(this.skillAmount(skill));
+    this.skillValue += this.skillAmount(skill);
     return {
       energyTeam: 0,
       helpsTeam: 0,
