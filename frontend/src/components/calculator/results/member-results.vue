@@ -1,6 +1,30 @@
 <template>
-  <v-card class="frosted-glass rounded-t-0">
+  <v-card ref="memberHeaderRef" class="frosted-glass rounded-t-0">
     <v-window v-model="teamStore.getCurrentTeam.memberIndex" continuous show-arrows>
+      <template #prev="{ props }">
+        <teleport to="body">
+          <v-btn
+            id="prevMember"
+            size="48"
+            icon="mdi-chevron-left"
+            color="secondary"
+            :style="teleportPrevStyle"
+            @click="props.onClick"
+          ></v-btn>
+        </teleport>
+      </template>
+      <template #next="{ props }">
+        <teleport to="body">
+          <v-btn
+            id="nextMember"
+            size="48"
+            icon="mdi-chevron-right"
+            color="secondary"
+            :style="teleportNextStyle"
+            @click="props.onClick"
+          ></v-btn>
+        </teleport>
+      </template>
       <v-window-item v-for="(member, index) in members" :key="index" :value="index">
         <v-row no-gutters class="flex-nowrap bg-surface" style="position: relative">
           <div
@@ -196,6 +220,7 @@
                       class="flex-center flex-column pt-0"
                     >
                       <v-badge
+                        id="skillLevelBadge"
                         :content="`Lv.${member.member.skillLevel}`"
                         location="top right"
                         offset-x="10"
@@ -247,7 +272,7 @@ import {
   type SingleProductionResponse,
   type subskill
 } from 'sleepapi-common'
-import { defineComponent, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { defineComponent, onBeforeUnmount, onMounted, ref, type ComponentPublicInstance } from 'vue'
 
 const customPlugin = {
   id: 'customPlugin',
@@ -306,36 +331,90 @@ export default defineComponent({
   setup() {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
+    const memberHeaderRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
     const chartClipPath = ref('polygon(0% 0%, 50% 0%, 150% 100%, 0% 100%)')
 
-    const updateClipPath = () => {
-      nextTick(() => {
-        const chartContainer = document.getElementById('chartContainer') as HTMLElement
-        if (chartContainer) {
-          const height = chartContainer.offsetHeight
-          const width = chartContainer.offsetWidth
+    const teleportPrevStyle = ref<Record<string, string>>({
+      top: '0%',
+      position: 'absolute',
+      left: '0%'
+    })
+    const teleportNextStyle = ref<Record<string, string>>({
+      top: '0%',
+      position: 'absolute',
+      left: '0%'
+    })
 
-          // on thin mobile the cut can overlap with chart numbers
-          const factor = width < 400 ? 0.6 : 0.5
-
-          const startingWidth = width * factor - height / Math.sqrt(3)
-          const startingWidthPercentage = (startingWidth / width) * 100
-
-          chartClipPath.value = `polygon(0% 0%, ${startingWidthPercentage}% 0%, ${factor * 100}% 100%, 0% 100%)`
+    const updatePrevPosition = () => {
+      if (memberHeaderRef.value) {
+        const element =
+          memberHeaderRef.value instanceof HTMLElement
+            ? memberHeaderRef.value
+            : memberHeaderRef.value.$el
+        const { top, left } = element.getBoundingClientRect()
+        teleportPrevStyle.value = {
+          position: 'absolute',
+          top: `${top + (140 / 3 - 24) + window.scrollY}px`,
+          left: `${left - 15 + window.scrollX}px`
         }
-      })
+      }
+    }
+
+    const updateNextPosition = () => {
+      if (memberHeaderRef.value) {
+        const element =
+          memberHeaderRef.value instanceof HTMLElement
+            ? memberHeaderRef.value
+            : memberHeaderRef.value.$el
+        const { top, right } = element.getBoundingClientRect()
+        teleportNextStyle.value = {
+          position: 'absolute',
+          top: `${top + (140 / 3 - 24) + window.scrollY}px`,
+          left: `${right - (48 - 15) + window.scrollX}px`
+        }
+      }
+    }
+
+    const updateClipPath = () => {
+      const chartContainer = document.getElementById('chartContainer') as HTMLElement
+      if (chartContainer) {
+        const height = chartContainer.offsetHeight
+        const width = chartContainer.offsetWidth
+
+        // on thin mobile the cut can overlap with chart numbers
+        const factor = width < 400 ? 0.6 : 0.5
+
+        const startingWidth = width * factor - height / Math.sqrt(3)
+        const startingWidthPercentage = (startingWidth / width) * 100
+
+        chartClipPath.value = `polygon(0% 0%, ${startingWidthPercentage}% 0%, ${factor * 100}% 100%, 0% 100%)`
+      }
     }
 
     onMounted(() => {
       updateClipPath()
+      updatePrevPosition()
+      updateNextPosition()
       window.addEventListener('resize', updateClipPath)
+      window.addEventListener('resize', updatePrevPosition)
+      window.addEventListener('resize', updateNextPosition)
     })
 
     onBeforeUnmount(() => {
       window.removeEventListener('resize', updateClipPath)
+      window.removeEventListener('resize', updatePrevPosition)
+      window.removeEventListener('resize', updateNextPosition)
     })
 
-    return { teamStore, pokemonStore, chartClipPath, mainskillImage }
+    return {
+      teamStore,
+      pokemonStore,
+      chartClipPath,
+      teleportPrevStyle,
+      teleportNextStyle,
+      memberHeaderRef,
+      mainskillImage
+    }
   },
   data() {
     return {
@@ -344,12 +423,18 @@ export default defineComponent({
         datasets: [
           {
             data: [0, 0, 0],
-            borderColor: '#888',
-            backgroundColor: hexToRgba(
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-secondary`),
-              0.5
-            ),
+            borderColor: '#e7b3c7',
+            backgroundColor: '#e7b3c788',
+            // borderColor: '#667085',
+            // backgroundColor: '#66708588',
+            // borderColor: '#7a76a8',
+            // backgroundColor: '#7a76a888',
             pointBorderColor: [
+              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-skill`),
+              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-ingredient`),
+              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-berry`)
+            ],
+            pointBackgroundColor: [
               getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-skill`),
               getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-ingredient`),
               getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-berry`)
@@ -681,7 +766,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/assets/main.scss';
 .chart-container-triangle {
   transition: clip-path 0.3s ease;
 }
@@ -690,20 +774,7 @@ export default defineComponent({
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
-.v-badge__badge {
+#skillLevelBadge .v-badge__badge {
   max-height: 13px;
-}
-
-.v-window__left {
-  position: absolute;
-  left: 0px;
-  top: 51px; // 75px - 24px which is half the header down and then half the button height up
-  overflow: visible;
-}
-
-.v-window__right {
-  position: absolute;
-  right: 0px;
-  top: 51px;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <v-menu id="ribbon-menu" v-model="menu" :close-on-content-click="true" offset-y>
     <template #activator="{ props }">
-      <v-btn v-bind="props" icon style="overflow: visible" elevation="0" color="transparent">
-        <v-avatar style="overflow: visible" size="32">
+      <v-btn v-bind="props" icon elevation="0" color="transparent">
+        <v-avatar size="32">
           <v-img :src="ribbonImage" :class="ribbon === 0 ? 'greyScale' : ''"></v-img>
         </v-avatar>
       </v-btn>
