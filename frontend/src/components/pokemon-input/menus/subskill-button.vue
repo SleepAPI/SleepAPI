@@ -2,8 +2,8 @@
   <v-badge
     class="w-100"
     location="top right"
-    :offset-y="-5"
-    :offset-x="5"
+    :offset-y="2"
+    :offset-x="8"
     color="primary"
     rounded="lg"
     :content="level"

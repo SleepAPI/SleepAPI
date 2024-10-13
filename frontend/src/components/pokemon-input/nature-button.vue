@@ -4,6 +4,7 @@
       <v-dialog id="natureDialog" v-model="natureMenu" max-width="550px">
         <template #activator="{ props }">
           <v-badge
+            id="natureBadge"
             color="primary"
             content="Nature"
             location="top left"
@@ -145,5 +146,9 @@ export default {
   .responsive-icon {
     font-size: 0.7rem !important;
   }
+}
+
+#natureBadge .v-badge__badge {
+  max-height: 13px;
 }
 </style>

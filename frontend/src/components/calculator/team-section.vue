@@ -1,24 +1,25 @@
 <template>
-  <v-container class="team-container">
+  <v-container class="team-container pt-2">
     <v-card-actions class="px-0 pt-0" :disabled="!userStore.loggedIn">
       <v-btn
         icon="mdi-chevron-left"
+        size="36"
+        class="px-0 mx-auto"
         variant="plain"
         aria-label="previous team"
         :disabled="!userStore.loggedIn"
-        style="width: 36px; height: 36px"
         @click="teamStore.prev"
       ></v-btn>
 
       <TeamName />
 
       <v-btn
-        class="team-label-margin"
         icon="mdi-chevron-right"
+        size="36"
+        class="px-0 mx-auto"
         variant="plain"
         aria-label="next team"
         :disabled="!userStore.loggedIn"
-        style="width: 36px; height: 36px"
         @click="teamStore.next"
       ></v-btn>
     </v-card-actions>
@@ -33,7 +34,7 @@
       </v-window-item>
     </v-window>
 
-    <TeamSettings class="pt-2" />
+    <TeamSettings class="pt-3 pb-2" />
 
     <v-row v-if="teamStore.getCurrentTeam.production" dense>
       <v-col cols="12">
@@ -171,7 +172,7 @@ export default defineComponent({
 }
 
 .team-slot {
-  aspect-ratio: 6 / 8;
+  aspect-ratio: 6 / 9;
   max-height: 20dvh;
 }
 
