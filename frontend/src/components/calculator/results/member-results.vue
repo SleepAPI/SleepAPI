@@ -423,12 +423,8 @@ export default defineComponent({
         datasets: [
           {
             data: [0, 0, 0],
-            borderColor: '#e7b3c7',
-            backgroundColor: '#e7b3c788',
-            // borderColor: '#667085',
-            // backgroundColor: '#66708588',
-            // borderColor: '#7a76a8',
-            // backgroundColor: '#7a76a888',
+            borderColor: '#767d98',
+            backgroundColor: '#5f6782AA',
             pointBorderColor: [
               getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-skill`),
               getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-ingredient`),

@@ -467,13 +467,12 @@ export class MemberState {
   // currently only implement strength S stockpile, needs branching if more stockpile skills come out
   #activateStockpile(skill: mainskill.MainSkill): SkillActivation {
     // TODO: does stockpile count reset on new week?
-    const triggerSpitUp = MathUtils.rollRandomChance(0.2); // TODO: implement once we know ratio, 50% is mock number
+    const triggerSpitUp = MathUtils.rollRandomChance(0.3); // TODO: implement once we know ratio, 50% is mock number
     if (triggerSpitUp || this.currentStockpile === 10) {
       // TODO: maybe use max stockpile count, in case future gets bumped to 11 max
       // TODO: proc spit up always if 10 stacks stored?
       const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
       this.skillValue += stockpiledValue;
-      // console.log(`[${this.skillLevel - 1}][${this.currentStockpile}] = ${stockpiledValue}`);
       this.currentStockpile = 0;
     } else {
       // TODO: what happens if we reach 10? auto proc? 100% proc next activation? nothing?

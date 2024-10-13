@@ -1,5 +1,5 @@
 <template>
-  <v-row id="subskills" dense class="mt-3">
+  <v-row id="subskills" dense>
     <v-col
       v-for="subskillLevel in subskillLevels"
       :key="subskillLevel"
@@ -7,11 +7,12 @@
       class="flex-center"
     >
       <v-badge
+        id="subskillBadge"
         color="secondary"
         class="w-100"
         location="top left"
         offset-x="auto"
-        :offset-y="-5"
+        :offset-y="-2"
         :model-value="locked(subskillLevel)"
       >
         <template #badge>
@@ -108,3 +109,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+#subskillBadge .v-badge__badge {
+  max-height: 13px;
+}
+</style>
