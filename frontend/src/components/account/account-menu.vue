@@ -2,15 +2,14 @@
   <v-menu v-model="menu" :close-on-content-click="false" location="bottom" width="250px">
     <template #activator="{ props }">
       <v-btn v-bind="props" id="navBarIcon" icon>
-        <v-avatar size="36" color="background">
-          <img
-            v-if="userStore.loggedIn"
-            :src="`/images/avatar/${userStore.avatar}.png`"
-            alt="User Profile Picture"
-            style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.4)"
-          />
-          <v-icon v-else size="36">mdi-account-circle</v-icon>
-        </v-avatar>
+        <img
+          v-if="userStore.loggedIn"
+          :src="`/images/avatar/${userStore.avatar}.png`"
+          alt="User Profile Picture"
+          height="24px"
+          style="transform: scale(1.4)"
+        />
+        <v-icon v-else size="24">mdi-account-circle</v-icon>
       </v-btn>
     </template>
 

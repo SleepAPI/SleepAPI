@@ -2,7 +2,7 @@
   <v-app-bar color="background">
     <template #prepend>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-        <v-icon size="36">mdi-menu</v-icon>
+        <v-icon size="24">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
     </template>
 
