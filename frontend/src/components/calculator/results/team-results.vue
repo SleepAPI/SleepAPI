@@ -157,7 +157,7 @@ export default defineComponent({
     const userStore = useUserStore()
     return { teamStore, pokemonStore, userStore }
   },
-  data: () => ({ DAYS_IN_WEEK: 7 }), // TODO: currently lists everything in week result, needs to support toggle
+  data: () => ({ DAYS_IN_WEEK: 7 }),
   computed: {
     currentRecipeTypeResult(): RecipeTypeResult | undefined {
       if (this.teamStore.getCurrentTeam.recipeType === 'curry') {
@@ -256,14 +256,7 @@ export default defineComponent({
         : `/images/recipe/mixed${this.teamStore.getCurrentTeam.recipeType}.png`
     },
     memberPercentages() {
-      const result: {
-        total: string
-        berryPercentage: number
-        skillPercentage: number
-        berryValue: string
-        skillValue: string
-        image: string
-      }[] = []
+      const memberStrengths = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
         const { berries, skillProcs } = member
         const { pokemon, skillLevel } = member.member
@@ -286,28 +279,28 @@ export default defineComponent({
           ? skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
           : 0
 
-        const userLocale = navigator.language || 'en-US'
-        const total = new Intl.NumberFormat(userLocale, {
-          maximumFractionDigits: 0
-        }).format(Math.floor(berryStrength + skillStrength))
-        result.push({
-          total,
-          berryPercentage: MathUtils.round(
-            (berryStrength / (this.berryStrength + this.skillStrength)) * 100,
-            1
-          ),
-          skillPercentage: MathUtils.round(
-            (skillStrength / (this.berryStrength + this.skillStrength)) * 100,
-            1
-          ),
+        memberStrengths.push({
+          berryStrength,
+          skillStrength,
           berryValue: compactNumber(berryStrength),
           skillValue: compactNumber(skillStrength),
           image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
         })
       }
-      return result.sort(
-        (a, b) => b.skillPercentage + b.berryPercentage - (a.berryPercentage + a.skillPercentage)
+
+      const result = memberStrengths.sort(
+        (a, b) => b.skillStrength + b.berryStrength - (a.skillStrength + a.berryStrength)
       )
+      const highestTotal = memberStrengths.at(0)
+        ? memberStrengths[0].berryStrength + memberStrengths[0].skillStrength
+        : 0
+      return result.map((member) => ({
+        berryPercentage: MathUtils.round((member.berryStrength / highestTotal) * 100, 1),
+        skillPercentage: MathUtils.round((member.skillStrength / highestTotal) * 100, 1),
+        berryValue: member.berryValue,
+        skillValue: member.skillValue,
+        image: member.image
+      }))
     }
   },
   methods: {
