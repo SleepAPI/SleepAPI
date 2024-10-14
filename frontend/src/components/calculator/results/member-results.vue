@@ -1,29 +1,25 @@
 <template>
-  <v-card ref="memberHeaderRef" class="frosted-glass rounded-t-0">
+  <v-card class="frosted-glass rounded-t-0">
     <v-window v-model="teamStore.getCurrentTeam.memberIndex" continuous show-arrows>
       <template #prev="{ props }">
-        <teleport to="body">
-          <v-btn
-            id="prevMember"
-            size="48"
-            icon="mdi-chevron-left"
-            color="secondary"
-            :style="teleportPrevStyle"
-            @click="props.onClick"
-          ></v-btn>
-        </teleport>
+        <v-btn
+          id="prevMember"
+          size="48"
+          icon="mdi-chevron-left"
+          color="secondary"
+          style="position: absolute; top: 10px; left: 10px"
+          @click="props.onClick"
+        ></v-btn>
       </template>
       <template #next="{ props }">
-        <teleport to="body">
-          <v-btn
-            id="nextMember"
-            size="48"
-            icon="mdi-chevron-right"
-            color="secondary"
-            :style="teleportNextStyle"
-            @click="props.onClick"
-          ></v-btn>
-        </teleport>
+        <v-btn
+          id="nextMember"
+          size="48"
+          icon="mdi-chevron-right"
+          color="secondary"
+          style="position: absolute; top: 10px; right: 10px"
+          @click="props.onClick"
+        ></v-btn>
       </template>
       <v-window-item v-for="(member, index) in members" :key="index" :value="index">
         <v-row no-gutters class="flex-nowrap bg-surface" style="position: relative">
@@ -272,7 +268,7 @@ import {
   type SingleProductionResponse,
   type subskill
 } from 'sleepapi-common'
-import { defineComponent, onBeforeUnmount, onMounted, ref, type ComponentPublicInstance } from 'vue'
+import { defineComponent, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const customPlugin = {
   id: 'customPlugin',
@@ -331,88 +327,39 @@ export default defineComponent({
   setup() {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
-    const memberHeaderRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
     const chartClipPath = ref('polygon(0% 0%, 50% 0%, 150% 100%, 0% 100%)')
 
-    const teleportPrevStyle = ref<Record<string, string>>({
-      top: '0%',
-      position: 'absolute',
-      left: '0%'
-    })
-    const teleportNextStyle = ref<Record<string, string>>({
-      top: '0%',
-      position: 'absolute',
-      left: '0%'
-    })
-
-    const updatePrevPosition = () => {
-      if (memberHeaderRef.value) {
-        const element =
-          memberHeaderRef.value instanceof HTMLElement
-            ? memberHeaderRef.value
-            : memberHeaderRef.value.$el
-        const { top, left } = element.getBoundingClientRect()
-        teleportPrevStyle.value = {
-          position: 'absolute',
-          top: `${top + (140 / 3 - 24) + window.scrollY}px`,
-          left: `${left - 15 + window.scrollX}px`
-        }
-      }
-    }
-
-    const updateNextPosition = () => {
-      if (memberHeaderRef.value) {
-        const element =
-          memberHeaderRef.value instanceof HTMLElement
-            ? memberHeaderRef.value
-            : memberHeaderRef.value.$el
-        const { top, right } = element.getBoundingClientRect()
-        teleportNextStyle.value = {
-          position: 'absolute',
-          top: `${top + (140 / 3 - 24) + window.scrollY}px`,
-          left: `${right - (48 - 15) + window.scrollX}px`
-        }
-      }
-    }
-
     const updateClipPath = () => {
-      const chartContainer = document.getElementById('chartContainer') as HTMLElement
-      if (chartContainer) {
-        const height = chartContainer.offsetHeight
-        const width = chartContainer.offsetWidth
+      nextTick(() => {
+        const chartContainer = document.getElementById('chartContainer') as HTMLElement
+        if (chartContainer) {
+          const height = chartContainer.offsetHeight
+          const width = chartContainer.offsetWidth
 
-        // on thin mobile the cut can overlap with chart numbers
-        const factor = width < 400 ? 0.6 : 0.5
+          // on thin mobile the cut can overlap with chart numbers
+          const factor = width < 400 ? 0.6 : 0.5
 
-        const startingWidth = width * factor - height / Math.sqrt(3)
-        const startingWidthPercentage = (startingWidth / width) * 100
+          const startingWidth = width * factor - height / Math.sqrt(3)
+          const startingWidthPercentage = (startingWidth / width) * 100
 
-        chartClipPath.value = `polygon(0% 0%, ${startingWidthPercentage}% 0%, ${factor * 100}% 100%, 0% 100%)`
-      }
+          chartClipPath.value = `polygon(0% 0%, ${startingWidthPercentage}% 0%, ${factor * 100}% 100%, 0% 100%)`
+        }
+      })
     }
 
     onMounted(() => {
       updateClipPath()
-      updatePrevPosition()
-      updateNextPosition()
       window.addEventListener('resize', updateClipPath)
-      window.addEventListener('resize', updatePrevPosition)
-      window.addEventListener('resize', updateNextPosition)
     })
 
     onBeforeUnmount(() => {
       window.removeEventListener('resize', updateClipPath)
-      window.removeEventListener('resize', updatePrevPosition)
-      window.removeEventListener('resize', updateNextPosition)
     })
 
     return {
       teamStore,
       pokemonStore,
       chartClipPath,
-      teleportPrevStyle,
-      teleportNextStyle,
-      memberHeaderRef,
       mainskillImage
     }
   },

@@ -1,45 +1,40 @@
 <template>
-  <div v-if="pokemonInstance" ref="teamSlotRef" class="fill-height">
-    <v-card
-      :loading="teamStore.getMemberLoading(memberIndex)"
-      :class="[
-        'fill-height',
-        'rounded-b-0',
-        teamStore.getCurrentMember === pokemonInstance.externalId && teamStore.tab === 'members'
-          ? 'bg-surface'
-          : 'frosted-glass'
-      ]"
-      @click="openDetailsDialog"
-    >
-      <div
-        class="text-center vertical-text"
-        style="position: absolute; top: 0%; width: 100%; height: 100%"
-      >
-        {{ pokemonInstance.name }}
-      </div>
-      <v-img :src="imageUrl" class="pokemon-image" />
-
-      <div style="position: absolute; bottom: 0%; width: 100%">
-        <v-card
-          class="text-center responsive-text rounded-t-0"
-          color="subskillGold"
-          location="bottom center"
-        >
-          {{ subskillBadge }}
-        </v-card>
-      </div>
-    </v-card>
-
-    <teleport to="body">
+  <div v-if="pokemonInstance" class="team-slot-container fill-height" style="position: relative">
+    <div class="card-wrapper fill-height">
       <v-card
-        class="text-center responsive-text"
-        rounded="lg"
-        :style="teleportCardStyle"
-        color="primary"
+        :loading="teamStore.getMemberLoading(memberIndex)"
+        :class="[
+          'fill-height',
+          'rounded-b-0',
+          teamStore.getCurrentMember === pokemonInstance.externalId && teamStore.tab === 'members'
+            ? 'bg-surface'
+            : 'frosted-glass'
+        ]"
+        @click="openDetailsDialog"
       >
+        <div
+          class="text-center vertical-text"
+          style="position: absolute; top: 0%; width: 100%; height: 100%"
+        >
+          {{ pokemonInstance.name }}
+        </div>
+        <v-img :src="imageUrl" class="pokemon-image" />
+
+        <div style="position: absolute; bottom: 0%; width: 100%">
+          <v-card
+            class="text-center responsive-text rounded-t-0"
+            color="subskillGold"
+            location="bottom center"
+          >
+            {{ subskillBadge }}
+          </v-card>
+        </div>
+      </v-card>
+
+      <v-card class="text-center responsive-text level-card" rounded="lg" color="primary">
         {{ level }}
       </v-card>
-    </teleport>
+    </div>
   </div>
   <div v-else class="d-flex w-100 fill-height transparent">
     <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDetailsDialog">
@@ -63,7 +58,7 @@ import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.
 import { useTeamStore } from '@/stores/team/team-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
-import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TeamSlot',
@@ -78,38 +73,8 @@ export default defineComponent({
   },
   setup() {
     const teamStore = useTeamStore()
-    const teamSlotRef = ref<HTMLElement | null>(null)
-    const teleportCardStyle = ref<Record<string, string>>({
-      top: '0%',
-      width: '80%',
-      position: 'absolute',
-      left: '0%',
-      whiteSpace: 'nowrap'
-    })
 
-    const updateTeleportCardStyle = () => {
-      if (teamSlotRef.value) {
-        const { top, left, width } = teamSlotRef.value.getBoundingClientRect()
-        teleportCardStyle.value = {
-          position: 'absolute',
-          top: `${top - 5 + window.scrollY}px`,
-          left: `${left + width / 20 + window.scrollX}px`,
-          width: `${width * 0.9}px`,
-          whiteSpace: 'nowrap'
-        }
-      }
-    }
-
-    onMounted(() => {
-      updateTeleportCardStyle()
-      window.addEventListener('resize', updateTeleportCardStyle)
-    })
-
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', updateTeleportCardStyle)
-    })
-
-    return { teamStore, teamSlotRef, teleportCardStyle }
+    return { teamStore }
   },
   data: () => ({
     showTeamSlotDialog: false
@@ -192,6 +157,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '@/assets/main';
 
+.card-wrapper {
+  position: relative;
+  padding-top: 5px;
+}
+
 .pokemon-image {
   width: 100%;
   height: 100%;
@@ -206,5 +176,13 @@ export default defineComponent({
   transform: rotate(180deg);
   white-space: nowrap;
   text-align: center;
+}
+
+.level-card {
+  position: absolute;
+  top: 0px;
+  left: 5%;
+  width: 90%;
+  white-space: nowrap;
 }
 </style>
