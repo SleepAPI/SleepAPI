@@ -60,8 +60,8 @@
     </v-container>
 
     <v-tabs-window v-model="tab" class="w-100">
-      <v-tabs-window-item value="visual">
-        <v-row v-for="(member, index) in members" :key="index" dense class="w-100">
+      <v-tabs-window-item value="visual" class="pb-4">
+        <v-row v-for="(member, index) in members" :key="index" no-gutters class="w-100">
           <v-col cols="auto" class="flex-center">
             <div class="flex-center">
               <div class="text-center" style="overflow: hidden; width: 60px; height: 60px">
@@ -107,7 +107,7 @@
               ]"
             />
           </v-col>
-          <v-col cols="auto" class="flex-center">
+          <v-col cols="auto" class="flex-center" style="min-width: 55px">
             {{ member.totalCompact }}
           </v-col>
         </v-row>

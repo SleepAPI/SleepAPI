@@ -253,7 +253,7 @@ export default defineComponent({
   overflow-x: auto;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: $desktop) {
   .team-container {
     max-width: 60dvw;
   }
