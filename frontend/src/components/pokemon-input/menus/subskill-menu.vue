@@ -232,7 +232,7 @@
 <script lang="ts">
 import CustomLabel from '@/components/custom-components/custom-label.vue'
 import SubskillButton from '@/components/pokemon-input/menus/subskill-button.vue'
-import { capitalize, subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
 
 export default {
   name: 'SubskillMenu',
@@ -254,11 +254,6 @@ export default {
     availableLevels: [10, 25, 50, 75, 100]
   }),
   computed: {
-    rarityColor() {
-      return (ss: subskill.SubSkill) => {
-        return `subskill${capitalize(ss.rarity)}`
-      }
-    },
     subskillName() {
       return (subskillLevel: number) => {
         return this.subskillForLevel(subskillLevel)?.name ?? '???'

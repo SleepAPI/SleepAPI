@@ -1,4 +1,4 @@
-import { mainskill, type pokemon } from 'sleepapi-common'
+import { mainskill, pokemon } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: pokemon.Pokemon) {
   if (pokemon.skill.name === mainskill.HELPER_BOOST.name) {
@@ -8,4 +8,14 @@ export function mainskillImage(pokemon: pokemon.Pokemon) {
     const image = stockpileVersion ? 'stockpile_strength' : pokemon.skill.unit.toLowerCase()
     return `/images/mainskill/${image}.png`
   }
+}
+
+export function pokemonImage(params: { pokemonName: string; shiny: boolean }) {
+  const { pokemonName, shiny } = params
+  return `/images/pokemon/${pokemonName.toLowerCase()}${shiny ? '_shiny' : ''}.png`
+}
+
+export function avatarImage(params: { pokemonName: string; shiny: boolean; happy: boolean }) {
+  const { pokemonName, shiny, happy } = params
+  return `/images/avatar/${happy ? 'happy' : 'portrait'}/${pokemonName.toLowerCase()}${happy ? '_happy' : ''}${shiny ? '_shiny' : ''}.png`
 }

@@ -1,44 +1,46 @@
 <template>
   <v-container class="team-container pt-2">
-    <v-card-actions class="px-0 pt-0" :disabled="!userStore.loggedIn">
-      <v-btn
-        icon="mdi-chevron-left"
-        size="36"
-        class="px-0 mx-auto"
-        variant="plain"
-        aria-label="previous team"
-        :disabled="!userStore.loggedIn"
-        @click="teamStore.prev"
-      ></v-btn>
+    <v-row v-if="!isMobile" id="desktop-layout">
+      <v-col cols="auto">
+        <v-card-actions class="px-0" :disabled="!userStore.loggedIn">
+          <v-btn
+            icon="mdi-chevron-left"
+            size="36"
+            class="px-0 mx-auto"
+            variant="plain"
+            aria-label="previous team"
+            :disabled="!userStore.loggedIn"
+            @click="teamStore.prev"
+          ></v-btn>
 
-      <TeamName />
+          <TeamName />
 
-      <v-btn
-        icon="mdi-chevron-right"
-        size="36"
-        class="px-0 mx-auto"
-        variant="plain"
-        aria-label="next team"
-        :disabled="!userStore.loggedIn"
-        @click="teamStore.next"
-      ></v-btn>
-    </v-card-actions>
+          <v-btn
+            icon="mdi-chevron-right"
+            size="36"
+            class="px-0 mx-auto"
+            variant="plain"
+            aria-label="next team"
+            :disabled="!userStore.loggedIn"
+            @click="teamStore.next"
+          ></v-btn>
+        </v-card-actions>
 
-    <v-window v-model="teamStore.currentIndex" continuous style="margin-top: -5px">
-      <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
-        <v-row class="flex-nowrap" dense>
-          <v-col v-for="member in 5" :key="member" class="team-slot" style="position: relative">
-            <TeamSlot :member-index="member - 1" />
-          </v-col>
-        </v-row>
-      </v-window-item>
-    </v-window>
+        <TeamSettings />
 
-    <TeamSettings class="pt-3 pb-2" />
+        <v-window v-model="teamStore.currentIndex" continuous class="mt-2">
+          <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
+            <v-row class="flex-column" dense>
+              <v-col v-for="member in 5" :key="member" class="team-slot">
+                <TeamSlot :member-index="member - 1" />
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
+      </v-col>
 
-    <v-row v-if="teamStore.getCurrentTeam.production" dense>
-      <v-col cols="12">
-        <v-card :loading="teamStore.loadingTeams" color="transparent">
+      <v-col v-if="teamStore.getCurrentTeam.production" class="mt-3">
+        <v-card :loading="teamStore.loadingTeams" class="fill-height frosted-glass">
           <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
             <v-tab
               v-for="tabItem in tabs"
@@ -65,15 +67,13 @@
           </v-tabs-window>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row v-else-if="teamStore.getTeamSize > 0" class="justify-space-around">
-      <v-col cols="12">
+      <v-col v-else-if="teamStore.getTeamSize > 0" class="mt-3">
         <v-skeleton-loader type="card">
           <v-col v-for="(_, index) in tabs" :key="index" cols="4" class="flex-center">
             <v-skeleton-loader type="button" width="100%" height="36px" class="flex-center" />
           </v-col>
 
-          <v-col cols="12" class="">
+          <v-col cols="12">
             <v-skeleton-loader type="heading"></v-skeleton-loader>
           </v-col>
 
@@ -87,6 +87,80 @@
         </v-skeleton-loader>
       </v-col>
     </v-row>
+
+    <!-- Mobile Layout -->
+    <div v-else id="mobile-layout">
+      <v-card-actions class="px-0 pt-0" :disabled="!userStore.loggedIn">
+        <v-btn
+          icon="mdi-chevron-left"
+          size="36"
+          class="px-0 mx-auto"
+          variant="plain"
+          aria-label="previous team"
+          :disabled="!userStore.loggedIn"
+          @click="teamStore.prev"
+        ></v-btn>
+
+        <TeamName />
+
+        <v-btn
+          icon="mdi-chevron-right"
+          size="36"
+          class="px-0 mx-auto"
+          variant="plain"
+          aria-label="next team"
+          :disabled="!userStore.loggedIn"
+          @click="teamStore.next"
+        ></v-btn>
+      </v-card-actions>
+
+      <v-window v-model="teamStore.currentIndex" continuous style="margin-top: -5px">
+        <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
+          <v-row class="flex-nowrap" dense>
+            <v-col v-for="member in 5" :key="member" class="team-slot" style="position: relative">
+              <TeamSlot :member-index="member - 1" />
+            </v-col>
+          </v-row>
+        </v-window-item>
+      </v-window>
+
+      <TeamSettings class="pt-3 pb-2" />
+
+      <!-- Production Tabs and Results -->
+      <v-row v-if="teamStore.getCurrentTeam.production" dense>
+        <v-col cols="12">
+          <v-card :loading="teamStore.loadingTeams" class="fill-height frosted-glass">
+            <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
+              <v-tab
+                v-for="tabItem in tabs"
+                :key="tabItem.value"
+                :value="tabItem.value"
+                :class="[
+                  teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
+                  'tab-item'
+                ]"
+              >
+                {{ tabItem.label }}
+              </v-tab>
+            </v-tabs>
+
+            <v-tabs-window v-model="teamStore.tab">
+              <v-tabs-window-item value="overview">
+                <TeamResults />
+              </v-tabs-window-item>
+
+              <v-tabs-window-item value="members">
+                <MemberResults />
+              </v-tabs-window-item>
+
+              <v-tabs-window-item value="cooking">
+                <CookingResults />
+              </v-tabs-window-item>
+            </v-tabs-window>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
   </v-container>
 </template>
 
@@ -99,6 +173,7 @@ import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
 import TeamSettings from '@/components/calculator/team-settings.vue'
 import TeamSlot from '@/components/calculator/team-slot.vue'
+import { useViewport } from '@/composables/viewport-composable'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
@@ -118,7 +193,10 @@ export default defineComponent({
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
     const notificationStore = useNotificationStore()
-    return { userStore, teamStore, pokemonStore, notificationStore }
+
+    const { isMobile } = useViewport()
+
+    return { userStore, teamStore, pokemonStore, notificationStore, isMobile }
   },
   data: () => ({
     tabs: [
@@ -142,7 +220,8 @@ export default defineComponent({
         if (!this.teamStore.teams[newIndex].production) {
           await this.teamStore.calculateProduction(newIndex)
         }
-      }
+      },
+      immediate: true
     }
   },
   async mounted() {
@@ -159,11 +238,7 @@ export default defineComponent({
 @import '@/assets/main';
 
 .frosted-tab {
-  background: rgba($surface, 0.8) !important;
-  backdrop-filter: blur(10px);
-}
-.frosted-glass {
-  background: rgba($surface, 0.4) !important;
+  background: rgba($surface, 0.2) !important;
   backdrop-filter: blur(10px);
 }
 
@@ -176,17 +251,18 @@ export default defineComponent({
   max-height: 20dvh;
 }
 
-.team-label-margin {
-  margin-inline-start: 0 !important;
-}
-
 .team-container {
   max-width: 100%;
 }
 
-@media (min-width: 1000px) {
+@media (min-width: $desktop) {
   .team-container {
-    max-width: 60dvw;
+    max-width: 90dvw;
+  }
+
+  .team-slot {
+    aspect-ratio: 6 / 9;
+    max-height: 15dvh;
   }
 }
 </style>

@@ -91,4 +91,38 @@ describe('TeamSettings.vue', () => {
     expect(teamStore.syncTeams).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
+
+  it('renders desktop-specific layout when not on mobile', async () => {
+    wrapper = mount(TeamSection, {
+      global: {
+        mocks: {
+          isMobile: false
+        }
+      }
+    })
+
+    const desktopLayout = wrapper.find('#desktop-layout')
+    const mobileLayout = wrapper.find('#mobile-layout')
+    expect(desktopLayout.exists()).toBe(true)
+    expect(mobileLayout.exists()).toBe(false)
+  })
+
+  it('shows team settings and navigation on desktop', async () => {
+    wrapper = mount(TeamSection, {
+      global: {
+        mocks: {
+          isMobile: false
+        }
+      }
+    })
+
+    const teamSettings = wrapper.findComponent({ name: 'TeamSettings' })
+    expect(teamSettings.exists()).toBe(true)
+
+    const leftButton = wrapper.find('button[aria-label="previous team"]')
+    const rightButton = wrapper.find('button[aria-label="next team"]')
+
+    expect(leftButton.exists()).toBe(true)
+    expect(rightButton.exists()).toBe(true)
+  })
 })

@@ -1,3 +1,5 @@
+import { capitalize, subskill } from 'sleepapi-common'
+
 export function hexToRgba(hex: string, opacity: number) {
   hex = hex.replace('#', '')
 
@@ -13,4 +15,8 @@ export function hexToRgba(hex: string, opacity: number) {
   const b = parseInt(hex.substring(4, 6), 16)
 
   return `rgba(${r}, ${g}, ${b}, ${opacity})`
+}
+
+export function rarityColor(subskill: subskill.SubSkill) {
+  return `subskill${capitalize(subskill.rarity)}`
 }

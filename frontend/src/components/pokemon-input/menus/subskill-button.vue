@@ -10,7 +10,7 @@
     :model-value="level !== undefined"
   >
     <v-btn
-      :color="rarityColor"
+      :color="rarityColor(subskill)"
       class="w-100 button-height"
       rounded="lg"
       size="xx-small"
@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-import { capitalize, subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { rarityColor } from '@/services/utils/color-utils'
+import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -44,10 +45,10 @@ export default {
       default: () => []
     }
   },
+  setup() {
+    return { rarityColor }
+  },
   computed: {
-    rarityColor() {
-      return `subskill${capitalize(this.subskill.rarity)}`
-    },
     subskillLabel() {
       return this.label ?? this.subskill.name
     },

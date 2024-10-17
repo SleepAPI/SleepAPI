@@ -45,17 +45,6 @@ describe('SubskillButton', () => {
     expect(button.text()).toBe('Custom Label')
   })
 
-  it('computes rarityColor correctly', () => {
-    const wrapper = mount(SubskillButton, {
-      props: {
-        subskill: mockSubskill,
-        selectedSubskills
-      }
-    })
-
-    expect(wrapper.vm.rarityColor).toBe('subskillGold')
-  })
-
   it('computes level correctly when subskill is selected', () => {
     const wrapper = mount(SubskillButton, {
       props: {

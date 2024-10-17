@@ -2,7 +2,8 @@ $background: #191224;
 $surface: #403d58;
 $primary: #e63946;
 $secondary: #5e5a7f;
-$accent: #ffb81f;
+$accent: #8a76c4;
+$strength: #ffb81f;
 $nature-up: #ff683a;
 $nature-down: #2ba0ed;
 $subskill-white: #fafafa;
@@ -25,6 +26,7 @@ $on-secondary: #ffffff;
   --v-theme-primary: #{$primary};
   --v-theme-secondary: #{$secondary};
   --v-theme-accent: #{$accent};
+  --v-theme-strength: #{$strength};
   --v-theme-nature-up: #{$nature-up};
   --v-theme-nature-down: #{$nature-down};
   --v-theme-subskill-white: #{$subskill-white};
@@ -44,5 +46,10 @@ $on-secondary: #ffffff;
 
 .frosted-glass {
   background: rgba($surface, 0.4) !important;
+  backdrop-filter: blur(10px);
+}
+
+.frosted-glass-dark {
+  background: rgba($surface, 0.9) !important;
   backdrop-filter: blur(10px);
 }

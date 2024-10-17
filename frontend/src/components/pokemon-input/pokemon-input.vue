@@ -15,7 +15,7 @@
             :class="{ nudge: !userStore.loggedIn }"
             @click="toggleSave"
           >
-            <v-icon v-if="pokemonInstance.saved" color="accent" size="32">mdi-bookmark</v-icon>
+            <v-icon v-if="pokemonInstance.saved" color="strength" size="32">mdi-bookmark</v-icon>
             <v-icon v-else size="32">mdi-bookmark-outline</v-icon>
           </v-btn>
         </v-col>
@@ -38,7 +38,7 @@
         size="40"
         @click="toggleShiny"
       >
-        <v-icon v-if="pokemonInstance.shiny" color="accent" size="24">mdi-creation</v-icon>
+        <v-icon v-if="pokemonInstance.shiny" color="strength" size="24">mdi-creation</v-icon>
         <v-icon v-else size="24">mdi-creation-outline</v-icon>
       </v-btn>
       <GenderButton :pokemon-instance="pokemonInstance" @update-gender="updateGender" />
