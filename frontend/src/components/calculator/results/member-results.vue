@@ -53,7 +53,7 @@
             :style="{
               maxWidth: '50%',
               height: '140px',
-              left: isMobile ? '20px' : 0,
+              left: '20px',
               position: 'relative'
             }"
           >
@@ -71,7 +71,7 @@
             </v-col>
           </v-col>
 
-          <v-col v-if="!isMobile" cols="auto" class="flex-right" style="max-height: 140px">
+          <v-col v-if="!isMobile" cols="auto" class="flex-right mr-3" style="max-height: 140px">
             <SpeechBubble :pokemon-instance="member.member">
               <template #header-text>
                 <v-row no-gutters class="flex-start flex-nowrap">
@@ -515,9 +515,14 @@ export default defineComponent({
       }
       return result
     },
+    currentMember() {
+      return this.members[this.teamStore.getCurrentTeam.memberIndex]
+    },
+    currentMemberExternalId() {
+      return this.currentMember?.member.externalId
+    },
     currentMemberSingleProduction() {
-      const currentMember = this.members[this.teamStore.getCurrentTeam.memberIndex]
-      return currentMember?.singleProduction
+      return this.currentMember?.singleProduction
     },
     currentBerryStrength() {
       const berries = this.members[this.teamStore.getCurrentTeam.memberIndex].berries
@@ -581,18 +586,28 @@ export default defineComponent({
       immediate: true,
       async handler(newProduction?: SingleMemberProduction) {
         if (!newProduction) {
-          const result = await this.populateSingleProduction()
-          this.radarData.datasets[0].data = [
-            result?.performanceAnalysis.user.skill ?? 0,
-            result?.performanceAnalysis.user.ingredient ?? 0,
-            result?.performanceAnalysis.user.berry ?? 0
-          ]
+          await this.populateSingleProduction()
         } else {
-          this.radarData.datasets[0].data = [
-            newProduction.performanceAnalysis.user.skill ?? 0,
-            newProduction.performanceAnalysis.user.ingredient ?? 0,
-            newProduction.performanceAnalysis.user.berry ?? 0
-          ]
+          this.radarData = {
+            ...this.radarData,
+            datasets: [
+              {
+                ...this.radarData.datasets[0],
+                data: [
+                  newProduction.performanceAnalysis.user.skill ?? 0,
+                  newProduction.performanceAnalysis.user.ingredient ?? 0,
+                  newProduction.performanceAnalysis.user.berry ?? 0
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    currentMemberExternalId: {
+      async handler() {
+        if (!this.currentMember?.singleProduction) {
+          await this.populateSingleProduction()
         }
       }
     }
@@ -625,6 +640,14 @@ export default defineComponent({
       }
     },
     async populateSingleProduction() {
+      const calculatedExternalId = this.teamStore.getCurrentMember
+      if (!calculatedExternalId) {
+        console.error(
+          "Can't calculate single production for non-existing member, contact developer"
+        )
+        return
+      }
+
       const response = await ProductionService.calculateTeamMemberProduction({
         teamIndex: this.teamStore.currentIndex,
         memberIndex: this.teamStore.getCurrentTeam.memberIndex
@@ -638,9 +661,12 @@ export default defineComponent({
             detailedProduce: response.production.detailedProduce,
             performanceAnalysis
           }
-          this.teamStore.getCurrentTeam.production.members[
-            this.teamStore.getCurrentTeam.memberIndex
-          ].singleProduction = result
+
+          for (const member of this.teamStore.getCurrentTeam.production.members) {
+            if (member.member.externalId === calculatedExternalId) {
+              member.singleProduction = result
+            }
+          }
           return result
         }
       }
@@ -710,7 +736,7 @@ export default defineComponent({
           optimalIng: optimalIng.produce.ingredients[0].amount,
           optimalSkill: optimalSkill.produce.ingredients[0].amount
         }),
-        ingredientsOfTotal: current.produce.ingredients.map(({ amount }, i) =>
+        ingredientsOfTotal: current.produce.ingredients.map(({ amount }) =>
           this.calculatePercentageOfOptimal({
             current: amount,
             optimalBerry: optimalBerry.produce.ingredients.reduce(
