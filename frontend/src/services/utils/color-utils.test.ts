@@ -1,4 +1,5 @@
-import { hexToRgba } from '@/services/utils/color-utils'
+import { hexToRgba, rarityColor } from '@/services/utils/color-utils'
+import { subskill } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
 describe('hexToRgba', () => {
@@ -20,5 +21,17 @@ describe('hexToRgba', () => {
 
   it('handles full opacity correctly', () => {
     expect(hexToRgba('#ffffff', 1)).toBe('rgba(255, 255, 255, 1)')
+  })
+})
+
+describe('rarityColor', () => {
+  it('should return white subskill', () => {
+    expect(rarityColor(subskill.INVENTORY_S)).toEqual('subskillWhite')
+  })
+  it('should return silver subskill', () => {
+    expect(rarityColor(subskill.INVENTORY_M)).toEqual('subskillSilver')
+  })
+  it('should return gold subskill', () => {
+    expect(rarityColor(subskill.BERRY_FINDING_S)).toEqual('subskillGold')
   })
 })

@@ -1,12 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="frosted-glass rounded-t-0">
+      <v-card class="bg-transparent rounded-t-0">
         <v-container>
           <v-row class="flex-center">
             <v-col cols="auto" class="flex-center">
               <span class="text-h5">Weekly </span>
-              <span id="weeklyStrength" class="text-h4 ml-2 text-accent font-weight-medium">
+              <span id="weeklyStrength" class="text-h4 ml-2 text-strength font-weight-medium">
                 {{ totalStrengthString }}</span
               >
               <v-img src="/images/misc/strength.png" class="ml-2" width="30" height="30" contain />
@@ -74,7 +74,7 @@
             <v-col cols="12" class="flex-center">
               <StackedBar
                 id="memberBar"
-                style="height: 30px"
+                :style="[`height: ${isMobile ? '30' : '50'}px`]"
                 :sections="[
                   {
                     color: 'berry',
@@ -105,13 +105,13 @@
             </v-col>
           </v-row>
 
-          <v-row v-for="(member, index) in memberPercentages" :key="index" dense>
+          <v-row v-for="(member, index) in memberPercentages" :key="index" no-gutters>
             <v-col cols="auto">
-              <v-img :src="`${member.image}`" contain width="36" height="36" />
+              <v-img :src="`${member.image}`" contain :width="isMobile ? '40' : '72'" />
             </v-col>
             <v-col class="flex-center">
               <StackedBar
-                style="height: 25px"
+                :style="[`height: ${isMobile ? '25' : '36'}px`]"
                 :sections="[
                   {
                     color: 'berry',
@@ -139,6 +139,7 @@
 import { defineComponent } from 'vue'
 
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
+import { useViewport } from '@/composables/viewport-composable'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
@@ -155,7 +156,9 @@ export default defineComponent({
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
     const userStore = useUserStore()
-    return { teamStore, pokemonStore, userStore }
+    const { isMobile } = useViewport()
+
+    return { teamStore, pokemonStore, userStore, isMobile }
   },
   data: () => ({ DAYS_IN_WEEK: 7 }),
   computed: {

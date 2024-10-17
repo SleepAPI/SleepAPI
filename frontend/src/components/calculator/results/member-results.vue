@@ -1,32 +1,44 @@
 <template>
-  <v-card class="frosted-glass rounded-t-0">
+  <v-card class="bg-transparent rounded-t-0">
     <v-window v-model="teamStore.getCurrentTeam.memberIndex" continuous show-arrows>
       <template #prev="{ props }">
         <v-btn
           id="prevMember"
-          size="48"
-          icon="mdi-chevron-left"
           color="secondary"
-          style="position: absolute; top: 10px; left: 10px"
+          height="140"
+          :width="isMobile ? 24 : 48"
+          rounded="0"
+          icon="mdi-chevron-left"
+          style="position: absolute; top: 0px; left: 00px"
           @click="props.onClick"
         ></v-btn>
       </template>
       <template #next="{ props }">
         <v-btn
           id="nextMember"
-          size="48"
-          icon="mdi-chevron-right"
           color="secondary"
-          style="position: absolute; top: 10px; right: 10px"
+          height="140"
+          :width="isMobile ? 24 : 48"
+          rounded="0"
+          icon="mdi-chevron-right"
+          style="position: absolute; top: 0px; right: 0px"
           @click="props.onClick"
         ></v-btn>
       </template>
       <v-window-item v-for="(member, index) in members" :key="index" :value="index">
-        <v-row no-gutters class="flex-nowrap bg-surface" style="position: relative">
+        <v-row
+          no-gutters
+          class="flex-nowrap bg-surface"
+          :style="{
+            backgroundImage: `url(${memberBackground})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'bottom'
+          }"
+        >
           <div
             id="chartContainer"
+            class="frosted-glass-dark"
             :style="{
-              backgroundColor: `${chartBackground}`,
               clipPath: chartClipPath,
               position: 'absolute',
               top: 0,
@@ -39,9 +51,9 @@
           <v-col
             class="flex-left chart-container-triangle"
             :style="{
-              width: '50%',
               maxWidth: '50%',
               height: '140px',
+              left: isMobile ? '20px' : 0,
               position: 'relative'
             }"
           >
@@ -59,12 +71,31 @@
             </v-col>
           </v-col>
 
-          <v-col
-            class="flex-right"
-            style="overflow: hidden; position: relative; width: 50%; max-width: 50%"
-          >
-            <!-- TODO: bring div back if we need to right align pokemon img -->
-            <!-- <div style="display: inline-block"> -->
+          <v-col v-if="!isMobile" cols="auto" class="flex-right" style="max-height: 140px">
+            <SpeechBubble :pokemon-instance="member.member">
+              <template #header-text>
+                <v-row no-gutters class="flex-start flex-nowrap">
+                  <v-col cols="auto" class="mx-1">
+                    <span class="text-surface text-left">Lv.{{ member.member.level }}</span>
+                  </v-col>
+                  <v-col>
+                    <span class="text-primary text-left font-weight-medium">{{
+                      member.member.name
+                    }}</span>
+                  </v-col>
+                </v-row>
+              </template>
+              <template #body-text>
+                <div style="width: 200px; height: 75px">
+                  <span class="text-black text-left font-weight-light text-break">
+                    {{ randomPhrase }}
+                  </span>
+                </div>
+              </template>
+            </SpeechBubble>
+          </v-col>
+
+          <v-col class="flex-left" style="max-height: 140px; display: inline-block">
             <v-img
               :src="getMemberImage(member.member.pokemon.name, member.member.shiny)"
               height="140"
@@ -74,7 +105,6 @@
                   drop-shadow(0.5px -0.5px 0 black) drop-shadow(-0.5px -0.5px 0 black);
               "
             ></v-img>
-            <!-- </div> -->
           </v-col>
         </v-row>
 
@@ -86,7 +116,7 @@
               :style="subskill.level > member.member.level ? 'opacity: 40%' : ''"
               class="text-body-2 text-center"
             >
-              {{ viewportWidth < 1200 ? subskill.subskill.shortName : subskill.subskill.name }}
+              {{ isMobile ? subskill.subskill.shortName : subskill.subskill.name }}
             </v-card>
           </v-col>
         </v-row>
@@ -120,22 +150,7 @@
             >
           </v-col>
           <v-col v-if="!member.member.nature.prettyName.includes('neutral')" class="flex-left">
-            <div>
-              <div class="nowrap responsive-text">
-                <span class="nowrap mr-1">{{
-                  getModifiedStat(member.member.nature, 'positive')
-                }}</span>
-                <v-icon color="primary" class="responsive-icon">mdi-triangle</v-icon>
-                <v-icon color="primary" class="responsive-icon">mdi-triangle</v-icon>
-              </div>
-              <div class="nowrap responsive-text">
-                <span class="nowrap mr-1">{{
-                  getModifiedStat(member.member.nature, 'negative')
-                }}</span>
-                <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
-                <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
-              </div>
-            </div>
+            <NatureModifiers :nature="member.member.nature" :short="true" />
           </v-col>
         </v-row>
 
@@ -245,11 +260,16 @@
 
 <script lang="ts">
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
+import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
+import SpeechBubble from '@/components/speech-bubble/speech-bubble.vue'
+import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phrase'
+import { useViewport } from '@/composables/viewport-composable'
 import { ProductionService } from '@/services/production/production-service'
-import { hexToRgba } from '@/services/utils/color-utils'
+import { rarityColor } from '@/services/utils/color-utils'
 import { mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { useUserStore } from '@/stores/user-store'
 import type {
   PerformanceAnalysis,
   PerformanceDetails,
@@ -259,16 +279,21 @@ import { Chart, RadialLinearScale } from 'chart.js'
 import {
   MathUtils,
   berryPowerForLevel,
-  capitalize,
   ingredient,
   island,
-  nature,
   type DetailedProduce,
   type IngredientSet,
-  type SingleProductionResponse,
-  type subskill
+  type SingleProductionResponse
 } from 'sleepapi-common'
-import { defineComponent, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watchEffect
+} from 'vue'
 
 const customPlugin = {
   id: 'customPlugin',
@@ -322,12 +347,52 @@ Chart.register(customPlugin)
 export default defineComponent({
   name: 'MemberResults',
   components: {
-    RadarChart
+    RadarChart,
+    NatureModifiers,
+    SpeechBubble
   },
   setup() {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
-    const chartClipPath = ref('polygon(0% 0%, 50% 0%, 150% 100%, 0% 100%)')
+    const userStore = useUserStore()
+    const chartClipPath = ref('polygon(0% -10%, 50% -10%, 150% 100%, 0% 100%)')
+    const { isMobile } = useViewport()
+    const currentMember = computed(() => {
+      return (
+        teamStore.getCurrentTeam.production?.members[teamStore.getCurrentTeam.memberIndex] ?? null
+      )
+    })
+
+    const { randomPhrase, getRandomPhrase } = useRandomPhrase()
+
+    watchEffect(() => {
+      if (currentMember.value && currentMember.value.member && currentMember.value.member.nature) {
+        getRandomPhrase(currentMember.value.member.nature)
+      }
+    })
+
+    let refreshInterval: number | null = null
+    onMounted(() => {
+      refreshInterval = window.setInterval(() => {
+        if (
+          currentMember.value &&
+          currentMember.value.member &&
+          currentMember.value.member.nature
+        ) {
+          getRandomPhrase(currentMember.value.member.nature)
+        }
+      }, 60000)
+
+      updateClipPath()
+      window.addEventListener('resize', updateClipPath)
+    })
+
+    onBeforeUnmount(() => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval)
+      }
+      window.removeEventListener('resize', updateClipPath)
+    })
 
     const updateClipPath = () => {
       nextTick(() => {
@@ -342,7 +407,7 @@ export default defineComponent({
           const startingWidth = width * factor - height / Math.sqrt(3)
           const startingWidthPercentage = (startingWidth / width) * 100
 
-          chartClipPath.value = `polygon(0% 0%, ${startingWidthPercentage}% 0%, ${factor * 100}% 100%, 0% 100%)`
+          chartClipPath.value = `polygon(0% -1%, ${startingWidthPercentage}% -1%, ${factor * 100}% 101%, 0% 101%)`
         }
       })
     }
@@ -359,8 +424,12 @@ export default defineComponent({
     return {
       teamStore,
       pokemonStore,
+      userStore,
       chartClipPath,
-      mainskillImage
+      isMobile,
+      randomPhrase,
+      mainskillImage,
+      rarityColor
     }
   },
   data() {
@@ -481,15 +550,6 @@ export default defineComponent({
         ? Math.floor(result)
         : MathUtils.round(result, 1)
     },
-    viewportWidth() {
-      return window.innerWidth
-    },
-    chartBackground() {
-      return hexToRgba(
-        getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-secondary`),
-        0.8
-      )
-    },
     memberBackground() {
       const berryNames = this.teamStore.getCurrentTeam.favoredBerries.map((b) => b.name)
 
@@ -499,11 +559,11 @@ export default defineComponent({
       }
 
       const berryImageMap = {
-        '/images/site/background-cyan.png': island.CYAN.berries,
-        '/images/site/background-taupe.png': island.TAUPE.berries,
-        '/images/site/background-snowdrop.png': island.SNOWDROP.berries,
-        '/images/site/background-lapis.png': island.LAPIS.berries,
-        '/images/site/background-powerplant.png': island.POWER_PLANT.berries
+        '/images/island/background-cyan.png': island.CYAN.berries,
+        '/images/island/background-taupe.png': island.TAUPE.berries,
+        '/images/island/background-snowdrop.png': island.SNOWDROP.berries,
+        '/images/island/background-lapis.png': island.LAPIS.berries,
+        '/images/island/background-powerplant.png': island.POWER_PLANT.berries
       }
 
       for (const [imagePath, islandberries] of Object.entries(berryImageMap)) {
@@ -513,7 +573,7 @@ export default defineComponent({
         }
       }
 
-      return '/images/site/background-greengrass.png'
+      return '/images/island/background-greengrass.png'
     }
   },
   watch: {
@@ -563,28 +623,6 @@ export default defineComponent({
           name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
         }))
       }
-    },
-    rarityColor(subskill: subskill.SubSkill) {
-      return `subskill${capitalize(subskill.rarity)}`
-    },
-    getModifiedStat(nature: nature.Nature, modifier: 'positive' | 'negative') {
-      const modifiers: { [key: string]: { value: number; message: string } } = {
-        frequency: { value: nature.frequency, message: 'Speed' },
-        ingredient: { value: nature.ingredient, message: 'Ing' },
-        skill: { value: nature.skill, message: 'Skill' },
-        energy: { value: nature.energy, message: 'Energy' },
-        exp: { value: nature.exp, message: 'EXP' }
-      }
-
-      for (const key in modifiers) {
-        if (modifiers[key].value > 1 && modifier === 'positive') {
-          return modifiers[key].message
-        } else if (modifiers[key].value < 1 && modifier === 'negative') {
-          return modifiers[key].message
-        }
-      }
-
-      return ''
     },
     async populateSingleProduction() {
       const response = await ProductionService.calculateTeamMemberProduction({
