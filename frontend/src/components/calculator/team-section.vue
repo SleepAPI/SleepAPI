@@ -168,7 +168,7 @@
 import { defineComponent } from 'vue'
 
 import CookingResults from '@/components/calculator/results/cooking-results.vue'
-import MemberResults from '@/components/calculator/results/member-results.vue'
+import MemberResults from '@/components/calculator/results/member-results/member-results.vue'
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
 import TeamSettings from '@/components/calculator/team-settings.vue'

@@ -26,7 +26,7 @@ const darkTheme: ThemeDefinition = {
     surface: '#403D58',
     primary: '#E63946',
     secondary: '#5E5A7F',
-    accent: '#8a76c4',
+    accent: '#9A95C3',
     strength: '#FFB81F',
     natureUp: 'FF683A',
     natureDown: '2BA0ED',

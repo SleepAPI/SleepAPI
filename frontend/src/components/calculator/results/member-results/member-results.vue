@@ -25,12 +25,13 @@
           @click="props.onClick"
         ></v-btn>
       </template>
+
       <v-window-item v-for="(member, index) in members" :key="index" :value="index">
         <v-row
           no-gutters
           class="flex-nowrap bg-surface"
           :style="{
-            backgroundImage: `url(${memberBackground})`,
+            backgroundImage: `url(${islandImage({ favoredBerries: teamStore.getCurrentTeam.favoredBerries, background: true })})`,
             backgroundSize: 'cover',
             backgroundPosition: 'bottom'
           }"
@@ -59,8 +60,8 @@
           >
             <RadarChart
               v-if="member.singleProduction"
-              :chart-data="radarData"
-              :chart-options="radarOptions"
+              :chart-data="ivData"
+              :chart-options="ivOptions"
             />
             <v-col v-else class="flex-center pa-0">
               <v-skeleton-loader
@@ -108,7 +109,7 @@
           </v-col>
         </v-row>
 
-        <v-row dense class="flex-nowrap flex-center">
+        <v-row dense class="flex-nowrap flex-center mt-0">
           <v-col v-for="(subskill, i) in member.member.subskills" :key="i">
             <v-card
               :color="rarityColor(subskill.subskill)"
@@ -122,10 +123,10 @@
         </v-row>
 
         <v-row dense>
-          <v-col cols="6" class="flex-center w-100">
+          <v-col cols="6" class="flex-center w-100 px-2">
             <v-btn-toggle
               v-model="teamStore.timeWindow"
-              style="height: 32px; width: 80%"
+              style="height: 32px; width: 100%; max-width: 300px"
               mandatory
               color="primary"
               rounded="xl"
@@ -154,12 +155,12 @@
           </v-col>
         </v-row>
 
-        <v-row dense class="mb-4">
-          <v-col cols="6">
-            <v-card color="surface">
-              <v-row dense class="flex-wrap flex-top py-2">
+        <v-row dense>
+          <v-col class="px-4">
+            <v-card color="surface" rounded="xl">
+              <v-row class="flex-center flex-nowrap mx-2 my-1">
                 <!-- Berries -->
-                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
+                <v-col cols="4" class="flex-center flex-column">
                   <v-row dense class="flex-center">
                     <v-col cols="12" class="flex-center text-h6 text-berry font-weight-medium py-0">
                       Berry
@@ -185,7 +186,7 @@
                 </v-col>
 
                 <!-- Ingredients -->
-                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
+                <v-col cols="4" class="flex-center flex-column">
                   <v-row dense class="flex-center">
                     <v-col
                       cols="12"
@@ -212,7 +213,7 @@
                 </v-col>
 
                 <!-- Skills -->
-                <v-col cols="12" md="4" class="flex-center flex-column pt-0">
+                <v-col cols="4" class="flex-center flex-column">
                   <v-row dense class="flex-center">
                     <v-col cols="12" class="flex-center text-h6 text-skill font-weight-medium py-0">
                       Skill
@@ -252,6 +253,30 @@
               </v-row>
             </v-card>
           </v-col>
+          <v-col class="pr-6" style="min-width: 200px">
+            <v-row dense class="flex-center flex-nowrap">
+              <v-col cols="6" class="flex-center flex-column">
+                <span class="text-h6 text-accent">Stats</span>
+                <v-col cols="12" class="flex-left pt-0">
+                  <v-divider />
+                </v-col>
+                <span>Some stat</span>
+                <span>Other stat</span>
+                <span>Other stat</span>
+                <span>Other stat</span>
+              </v-col>
+              <v-col cols="6" class="flex-center flex-column">
+                <span class="text-h6 text-accent text-no-wrap">Team impact</span>
+                <v-col cols="12" class="flex-left pt-0">
+                  <v-divider />
+                </v-col>
+                <span>Some stat</span>
+                <span>Other stat</span>
+                <span>Other stat</span>
+                <span>Other stat</span>
+              </v-col>
+            </v-row>
+          </v-col>
         </v-row>
       </v-window-item>
     </v-window>
@@ -259,6 +284,11 @@
 </template>
 
 <script lang="ts">
+import {
+  ivData,
+  ivOptions,
+  ivTextPlugin
+} from '@/components/calculator/results/chart-data/iv-chart'
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
 import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
 import SpeechBubble from '@/components/speech-bubble/speech-bubble.vue'
@@ -266,7 +296,7 @@ import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phra
 import { useViewport } from '@/composables/viewport-composable'
 import { ProductionService } from '@/services/production/production-service'
 import { rarityColor } from '@/services/utils/color-utils'
-import { mainskillImage } from '@/services/utils/image-utils'
+import { islandImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
@@ -275,12 +305,11 @@ import type {
   PerformanceDetails,
   SingleMemberProduction
 } from '@/types/member/instanced'
-import { Chart, RadialLinearScale } from 'chart.js'
+import { Chart } from 'chart.js'
 import {
   MathUtils,
   berryPowerForLevel,
   ingredient,
-  island,
   type DetailedProduce,
   type IngredientSet,
   type SingleProductionResponse
@@ -295,54 +324,7 @@ import {
   watchEffect
 } from 'vue'
 
-const customPlugin = {
-  id: 'customPlugin',
-  afterDraw(chart: Chart) {
-    const ctx = chart.ctx
-    const scale = chart.scales.r as RadialLinearScale
-    const data = chart.config.data.datasets[0].data as number[]
-    const labels = chart.config.data.labels as string[]
-
-    if (!chart) return
-
-    ctx.save()
-    ctx.textAlign = 'center'
-
-    // Iterate over each label and data value to draw the percentage and label
-    labels.forEach((label, index) => {
-      const position = scale.getPointPosition(index, scale.max)
-      const value = `${data[index]}%`
-
-      ctx.font = 'bold 18px Chakra Petch'
-      if (index === 0) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-skill'
-        )
-        ctx.fillText(value, position.x, position.y + 33)
-        ctx.font = '10px Chakra Petch'
-        ctx.fillText(label.toLowerCase(), position.x, position.y + 40)
-      } else if (index === 1) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-ingredient'
-        )
-        ctx.fillText(value, position.x - 35, position.y - 7)
-        ctx.font = '10px Chakra Petch'
-        ctx.fillText(label.toLowerCase(), position.x - 35, position.y)
-      } else if (index === 2) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-berry'
-        )
-        ctx.fillText(value, position.x + 30, position.y - 7)
-        ctx.font = '10px Chakra Petch'
-        ctx.fillText(label.toLowerCase(), position.x + 30, position.y)
-      }
-    })
-
-    ctx.restore()
-  }
-}
-
-Chart.register(customPlugin)
+Chart.register(ivTextPlugin)
 
 export default defineComponent({
   name: 'MemberResults',
@@ -429,82 +411,10 @@ export default defineComponent({
       isMobile,
       randomPhrase,
       mainskillImage,
-      rarityColor
-    }
-  },
-  data() {
-    return {
-      radarData: {
-        labels: ['Skill', 'Ingredient', 'Berry'],
-        datasets: [
-          {
-            data: [0, 0, 0],
-            borderColor: '#767d98',
-            backgroundColor: '#5f6782AA',
-            pointBorderColor: [
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-skill`),
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-ingredient`),
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-berry`)
-            ],
-            pointBackgroundColor: [
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-skill`),
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-ingredient`),
-              getComputedStyle(document.documentElement).getPropertyValue(`--v-theme-berry`)
-            ]
-          }
-        ]
-      },
-      radarOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 10
-          }
-        },
-        scales: {
-          r: {
-            min: 0,
-            max: 100,
-
-            ticks: {
-              stepSize: 100,
-              backdropColor: 'rgba(0, 0, 0, 0)',
-              callback(value: number) {
-                if (value === 100) {
-                  return ''
-                }
-                return value
-              }
-            },
-            pointLabels: {
-              display: false
-            },
-            grid: {
-              color: '#fff',
-              lineWidth: 1
-            },
-            angleLines: {
-              color: '#fff',
-              lineWidth: 1
-            },
-            afterFit(scale: any) {
-              scale.yCenter += 10
-            }
-          }
-        },
-        elements: {
-          line: {
-            borderWidth: 2
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          },
-          customPlugin
-        }
-      }
+      islandImage,
+      rarityColor,
+      ivData,
+      ivOptions
     }
   },
   computed: {
@@ -554,31 +464,6 @@ export default defineComponent({
       return ['dream shards', 'strength'].includes(memberProduction.member.pokemon.skill.unit)
         ? Math.floor(result)
         : MathUtils.round(result, 1)
-    },
-    memberBackground() {
-      const berryNames = this.teamStore.getCurrentTeam.favoredBerries.map((b) => b.name)
-
-      const arraysEqual = (arr1: string[], arr2: string[]) => {
-        if (arr1.length !== arr2.length) return false
-        return arr1.every((value, index) => value === arr2[index])
-      }
-
-      const berryImageMap = {
-        '/images/island/background-cyan.png': island.CYAN.berries,
-        '/images/island/background-taupe.png': island.TAUPE.berries,
-        '/images/island/background-snowdrop.png': island.SNOWDROP.berries,
-        '/images/island/background-lapis.png': island.LAPIS.berries,
-        '/images/island/background-powerplant.png': island.POWER_PLANT.berries
-      }
-
-      for (const [imagePath, islandberries] of Object.entries(berryImageMap)) {
-        const berryArrayNames = islandberries.map((b) => b.name)
-        if (arraysEqual(berryNames, berryArrayNames)) {
-          return imagePath
-        }
-      }
-
-      return '/images/island/background-greengrass.png'
     }
   },
   watch: {
@@ -588,11 +473,11 @@ export default defineComponent({
         if (!newProduction) {
           await this.populateSingleProduction()
         } else {
-          this.radarData = {
-            ...this.radarData,
+          this.ivData = {
+            ...this.ivData,
             datasets: [
               {
-                ...this.radarData.datasets[0],
+                ...this.ivData.datasets[0],
                 data: [
                   newProduction.performanceAnalysis.user.skill ?? 0,
                   newProduction.performanceAnalysis.user.ingredient ?? 0,

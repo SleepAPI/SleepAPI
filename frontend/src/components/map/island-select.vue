@@ -2,7 +2,12 @@
   <v-dialog v-model="menu" max-width="500px" class="flex-center">
     <template #activator="{ props }">
       <v-btn icon color="transparent" elevation="0" v-bind="props">
-        <v-img height="48" width="48" :src="menuButtonImage" alt="island icon" />
+        <v-img
+          height="48"
+          width="48"
+          :src="islandImage({ favoredBerries, background: false })"
+          alt="island icon"
+        />
       </v-btn>
     </template>
 
@@ -12,7 +17,7 @@
           <v-col class="flex-center">
             <v-btn icon color="transparent" size="64" aria-label="cyan island" @click="selectCyan">
               <v-avatar size="64">
-                <v-img src="/images/misc/cyan.png" alt="cyan icon" />
+                <v-img src="/images/island/cyan.png" alt="cyan icon" />
               </v-avatar>
             </v-btn>
           </v-col>
@@ -25,7 +30,7 @@
               @click="selectTaupe"
             >
               <v-avatar size="64">
-                <v-img src="/images/misc/taupe.png" alt="taupe icon" />
+                <v-img src="/images/island/taupe.png" alt="taupe icon" />
               </v-avatar>
             </v-btn>
           </v-col>
@@ -41,7 +46,7 @@
               @click="selectSnowdrop"
             >
               <v-avatar size="64">
-                <v-img src="/images/misc/snowdrop.png" alt="snowdrop icon" />
+                <v-img src="/images/island/snowdrop.png" alt="snowdrop icon" />
               </v-avatar>
             </v-btn>
           </v-col>
@@ -54,7 +59,7 @@
               @click="selectLapis"
             >
               <v-avatar size="64">
-                <v-img src="/images/misc/lapis.png" alt="lapis icon" />
+                <v-img src="/images/island/lapis.png" alt="lapis icon" />
               </v-avatar>
             </v-btn>
           </v-col>
@@ -67,7 +72,7 @@
               @click="selectPowerPlant"
             >
               <v-avatar size="64">
-                <v-img src="/images/misc/powerplant.png" alt="power plant icon" />
+                <v-img src="/images/island/powerplant.png" alt="power plant icon" />
               </v-avatar>
             </v-btn>
           </v-col>
@@ -110,6 +115,7 @@
 </template>
 
 <script lang="ts">
+import { islandImage } from '@/services/utils/image-utils'
 import { berry, island } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
@@ -122,6 +128,9 @@ export default defineComponent({
     }
   },
   emits: ['favored-berries'],
+  setup() {
+    return { islandImage }
+  },
   data: () => ({
     menu: false,
     favoredBerries: [] as berry.Berry[]
@@ -129,31 +138,6 @@ export default defineComponent({
   computed: {
     berries() {
       return berry.BERRIES.sort((a, b) => a.name.localeCompare(b.name))
-    },
-    menuButtonImage() {
-      const berryNames = this.favoredBerries.map((b) => b.name)
-
-      const arraysEqual = (arr1: string[], arr2: string[]) => {
-        if (arr1.length !== arr2.length) return false
-        return arr1.every((value, index) => value === arr2[index])
-      }
-
-      const berryImageMap = {
-        '/images/misc/cyan.png': island.CYAN.berries,
-        '/images/misc/taupe.png': island.TAUPE.berries,
-        '/images/misc/snowdrop.png': island.SNOWDROP.berries,
-        '/images/misc/lapis.png': island.LAPIS.berries,
-        '/images/misc/powerplant.png': island.POWER_PLANT.berries
-      }
-
-      for (const [imagePath, islandberries] of Object.entries(berryImageMap)) {
-        const berryArrayNames = islandberries.map((b) => b.name)
-        if (arraysEqual(berryNames, berryArrayNames)) {
-          return imagePath
-        }
-      }
-
-      return '/images/misc/greengrass.png'
     }
   },
   watch: {

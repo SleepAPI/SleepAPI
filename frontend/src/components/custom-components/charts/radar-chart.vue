@@ -26,8 +26,6 @@ ChartJS.register(
   Legend
 )
 
-type RadarChartData = ChartData<'radar', (number | null)[], string>
-
 export default {
   name: 'RadarChart',
   components: {
@@ -35,7 +33,7 @@ export default {
   },
   props: {
     chartData: {
-      type: Object as () => RadarChartData,
+      type: Object as () => ChartData<'radar'>,
       required: true
     },
     chartOptions: {
