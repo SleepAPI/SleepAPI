@@ -172,13 +172,14 @@ export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
 
 export const STOCKPILE_CHARGE_STRENGTH_S: MainSkill = {
   name: 'Stockpile (Charge Strength S',
-  amount: [1, 1, 1, 1, 1, 1, 1],
+  amount: [600, 853, 1177, 1625, 2243, 3099, 4497],
   unit: 'stockpile',
   maxLevel: MAX_SKILL_LEVEL,
   description:
     "Stockpile or Spit Up is selected. When Spit Up triggers, Snorlax gains Strength from Stockpile's number.",
   RP: [600, 853, 1177, 1625, 2243, 3099, 3984],
 };
+export const STOCKPILE_SPIT_CHANCE = 0.3;
 export const STOCKPILE_STOCKS: Record<number, number[]> = {
   1: [600, 1020, 1500, 2040, 2640, 3300, 4020, 4920, 6180, 7980, 10980],
   2: [853, 1450, 2132, 2900, 3753, 4691, 5715, 6995, 8786, 11345, 15610],
