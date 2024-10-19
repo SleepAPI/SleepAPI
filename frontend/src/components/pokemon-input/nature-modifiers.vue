@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="nature.positiveModifier !== 'neutral'">
     <div class="nowrap responsive-text">
       <span class="nowrap mr-1">{{ getModifiedStat('positive') }}</span>
       <v-icon color="primary" class="responsive-icon">mdi-triangle</v-icon>
@@ -9,6 +9,11 @@
       <span class="nowrap mr-1">{{ getModifiedStat('negative') }}</span>
       <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
       <v-icon color="surface" class="responsive-icon">mdi-triangle-down</v-icon>
+    </div>
+  </div>
+  <div v-else>
+    <div class="nowrap responsive-text">
+      <span class="nowrap mr-1">This nature has no effect</span>
     </div>
   </div>
 </template>
