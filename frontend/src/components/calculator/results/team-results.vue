@@ -145,8 +145,10 @@ import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
   MathUtils,
+  Strength,
   berryPowerForLevel,
   compactNumber,
+  isSkillOrStockpileOf,
   type RecipeTypeResult
 } from 'sleepapi-common'
 export default defineComponent({
@@ -202,12 +204,12 @@ export default defineComponent({
       const members = this.teamStore.getCurrentTeam.production?.members || []
 
       return members.reduce((sum, member) => {
-        const { pokemon, skillLevel } = member.member
-        const isStrengthUnit = pokemon.skill.unit === 'strength'
-        const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
+        const { pokemon } = member.member
+        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
+        const skillAmount = isStrengthUnit ? member.skillAmount : 0
 
         const memberSkillStrength = isStrengthUnit
-          ? member.skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
+          ? skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
           : 0
 
         return sum + memberSkillStrength
@@ -276,7 +278,7 @@ export default defineComponent({
             this.DAYS_IN_WEEK
           : 0
 
-        const isStrengthUnit = pokemon.skill.unit === 'strength'
+        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
         const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
         const skillStrength = isStrengthUnit
           ? skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK

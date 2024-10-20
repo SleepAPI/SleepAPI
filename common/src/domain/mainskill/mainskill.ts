@@ -1,13 +1,5 @@
-export type MainSkillType =
-  | 'energy'
-  | 'ingredients'
-  | 'helps'
-  | 'dream shards'
-  | 'strength'
-  | 'pot size'
-  | 'chance'
-  | 'metronome'
-  | 'stockpile';
+import { MainSkillType, StockpileStrength } from './mainskill-type';
+
 export interface MainSkill {
   name: string;
   amount: number[];
@@ -173,7 +165,7 @@ export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
 export const STOCKPILE_CHARGE_STRENGTH_S: MainSkill = {
   name: 'Stockpile (Charge Strength S',
   amount: [600, 853, 1177, 1625, 2243, 3099, 4497],
-  unit: 'stockpile',
+  unit: StockpileStrength,
   maxLevel: MAX_SKILL_LEVEL,
   description:
     "Stockpile or Spit Up is selected. When Spit Up triggers, Snorlax gains Strength from Stockpile's number.",

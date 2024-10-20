@@ -1,5 +1,6 @@
 import CompareStrength from '@/components/compare/compare-strength.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { useUserStore } from '@/stores/user-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
@@ -57,6 +58,7 @@ describe('CompareStrength', () => {
   })
 
   it('renders member data correctly', async () => {
+    const userStore = useUserStore()
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
 
@@ -79,7 +81,9 @@ describe('CompareStrength', () => {
       berryPowerForLevel(
         mockMemberProduction.member.pokemon.berry,
         mockMemberProduction.member.level
-      ) * (mockMemberProduction.berries?.amount ?? 1)
+      ) *
+      (mockMemberProduction.berries?.amount ?? 1) *
+      userStore.islandBonus
     expect(firstRowCells[1].text()).toContain(berryPower.toString())
 
     // Check ingredient power range
@@ -95,10 +99,11 @@ describe('CompareStrength', () => {
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
     expect(firstRowCells[4].text()).toContain(totalPower.toString())
-    expect(totalPower).toEqual(22086)
+    expect(totalPower).toEqual(38651)
   })
 
   it('renders 8h time window correctly in data tab', async () => {
+    const userStore = useUserStore()
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
     comparisonStore.timeWindow = '8H'
@@ -123,7 +128,8 @@ describe('CompareStrength', () => {
         mockMemberProduction.member.pokemon.berry,
         mockMemberProduction.member.level
       ) *
-        (mockMemberProduction.berries?.amount ?? 1)) /
+        (mockMemberProduction.berries?.amount ?? 1) *
+        userStore.islandBonus) /
         3
     )
     expect(firstRowCells[1].text()).toContain(berryPower.toString())
@@ -141,7 +147,7 @@ describe('CompareStrength', () => {
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
     expect(firstRowCells[4].text()).toContain(totalPower.toString())
-    expect(totalPower).toEqual(7361)
+    expect(totalPower).toEqual(12882)
   })
 
   it('displays the correct number of headers', async () => {

@@ -8,13 +8,16 @@ import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simula
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
 import {
+  BasicSkillType,
   IngredientSet,
   MathUtils,
   MemberProduction,
   Produce,
+  StockpileStrength,
   TimePeriod,
   calculatePityProcThreshold,
   ingredient,
+  isStockpile,
   mainskill,
   subskill,
 } from 'sleepapi-common';
@@ -356,10 +359,14 @@ export class MemberState {
   // TODO: most skills have static result, probably only self charge may diff if energy needs to cap at 150?
   // TODO: could cache most of these
   private activateSkill(skill: mainskill.MainSkill): SkillActivation {
-    return this.skillActivators[skill.unit](skill);
+    if (isStockpile(skill.unit)) {
+      return this.#activateStockpile(skill);
+    } else {
+      return this.skillActivators[skill.unit as BasicSkillType](skill);
+    }
   }
 
-  private skillActivators: Record<mainskill.MainSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
+  private skillActivators: Record<BasicSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
     energy: (skill) => this.#activateEnergySkill(skill),
     helps: (skill) => this.#activateHelpSkill(skill),
     ingredients: () => this.#activateIngredientMagnet(),
@@ -367,7 +374,6 @@ export class MemberState {
     'pot size': () => this.#activateCookingPowerUp(),
     chance: () => this.#activateTastyChance(),
     metronome: (skill) => this.#activateValueSkills(skill),
-    stockpile: (skill) => this.#activateStockpile(skill),
     strength: (skill) => this.#activateValueSkills(skill),
   };
 
@@ -464,16 +470,23 @@ export class MemberState {
     };
   }
 
-  // currently only implement strength S stockpile, needs branching if more stockpile skills come out
   #activateStockpile(skill: mainskill.MainSkill): SkillActivation {
-    const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_SPIT_CHANCE);
-    if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STOCKS[this.skillLevel].length - 1) {
-      const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
-      this.skillValue += stockpiledValue;
-      this.currentStockpile = 0;
-    } else {
-      this.currentStockpile = this.currentStockpile + 1;
+    if (skill.unit === StockpileStrength) {
+      const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_SPIT_CHANCE);
+      if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STOCKS[this.skillLevel].length - 1) {
+        const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
+        this.skillValue += stockpiledValue;
+        this.currentStockpile = 0;
+      } else {
+        this.currentStockpile = this.currentStockpile + 1;
+      }
+      return {
+        energyTeam: 0,
+        helpsTeam: 0,
+      };
     }
+
+    // default
     return {
       energyTeam: 0,
       helpsTeam: 0,

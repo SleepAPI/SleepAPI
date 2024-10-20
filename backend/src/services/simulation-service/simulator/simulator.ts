@@ -38,6 +38,8 @@ import {
   MathUtils,
   Produce,
   SkillActivation,
+  StockpileStrength,
+  Strength,
   Summary,
   Time,
   combineSameIngredientsInDrop,
@@ -263,8 +265,7 @@ export function simulation(params: {
             skillHelpsValue += skillActivation.adjustedAmount;
           }
           skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
-          // TODO: only stockpile for now since we only have strength stockpile
-        } else if (skillActivation.skill.unit === 'strength' || skillActivation.skill.unit === 'stockpile') {
+        } else if (skillActivation.skill.unit === Strength || skillActivation.skill.unit === StockpileStrength) {
           skillStrengthValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.unit === 'dream shards') {
           skillDreamShardValue += skillActivation.adjustedAmount;

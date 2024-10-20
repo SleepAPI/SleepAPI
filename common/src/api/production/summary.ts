@@ -1,5 +1,5 @@
 import { Produce } from '../../api/production/produce';
-import { MainSkill } from '../../domain/mainskill';
+import { MainSkill } from '../../domain/mainskill/mainskill';
 import { IngredientSet } from '../../domain/types/ingredient-set';
 import { Time } from '../../domain/types/time';
 

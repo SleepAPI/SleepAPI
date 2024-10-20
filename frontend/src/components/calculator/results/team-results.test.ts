@@ -66,7 +66,10 @@ describe('TeamResults', () => {
         ingredients: []
       },
       members: [
-        createMockMemberProduction({ berries: { amount: 10, berry: berry.BELUE }, skillProcs: 1 })
+        createMockMemberProduction({
+          berries: { amount: 10, berry: berry.BELUE },
+          skillAmount: 400
+        })
       ]
     }
     await nextTick()
