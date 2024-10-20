@@ -1,5 +1,5 @@
 <template>
-  <v-card class="bg-transparent rounded-t-0">
+  <v-card class="bg-transparent rounded-t-0" style="min-height: 485px">
     <v-window v-model="teamStore.getCurrentTeam.memberIndex" continuous show-arrows>
       <template #prev="{ props }">
         <v-btn
@@ -25,7 +25,7 @@
           @click="props.onClick"
         ></v-btn>
       </template>
-      <v-window-item v-for="(member, index) in members" :key="index" :value="index">
+      <v-window-item v-for="(member, index) in members" :key="index">
         <v-row
           no-gutters
           class="flex-nowrap bg-surface"
@@ -277,9 +277,12 @@ import type {
 } from '@/types/member/instanced'
 import { Chart, RadialLinearScale } from 'chart.js'
 import {
+  DreamShards,
   MathUtils,
+  Strength,
   berryPowerForLevel,
   ingredient,
+  isSkillOrStockpileOf,
   island,
   type DetailedProduce,
   type IngredientSet,
@@ -541,6 +544,7 @@ export default defineComponent({
             berries.berry,
             this.members[this.teamStore.getCurrentTeam.memberIndex].member.level
           ) *
+          this.userStore.islandBonus *
           favoredBerryMultiplier
       )
     },
@@ -549,9 +553,11 @@ export default defineComponent({
       if (!memberProduction) {
         return 0
       }
-      const result = memberProduction.skillAmount / this.teamStore.timewindowDivider
-
-      return ['dream shards', 'strength'].includes(memberProduction.member.pokemon.skill.unit)
+      const result =
+        (memberProduction.skillAmount / this.teamStore.timewindowDivider) *
+        this.userStore.islandBonus
+      const skill = memberProduction.member.pokemon.skill
+      return isSkillOrStockpileOf(skill, Strength) || isSkillOrStockpileOf(skill, DreamShards)
         ? Math.floor(result)
         : MathUtils.round(result, 1)
     },

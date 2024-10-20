@@ -1,11 +1,11 @@
-import { mainskill, pokemon } from 'sleepapi-common'
+import { StockpileStrength, mainskill, pokemon, unitString } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: pokemon.Pokemon) {
   if (pokemon.skill.name === mainskill.HELPER_BOOST.name) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
-    const stockpileVersion = pokemon.skill.unit === 'stockpile'
-    const image = stockpileVersion ? 'stockpile_strength' : pokemon.skill.unit.toLowerCase()
+    const stockpileVersion = pokemon.skill.unit === StockpileStrength
+    const image = stockpileVersion ? 'stockpile_strength' : unitString(pokemon.skill)
     return `/images/mainskill/${image}.png`
   }
 }

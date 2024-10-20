@@ -2,7 +2,7 @@ import { BALANCED_GENDER } from 'src/domain';
 import { describe, expect, it } from 'vitest';
 import { BELUE } from '../../domain/berry';
 import { SLOWPOKE_TAIL } from '../../domain/ingredient';
-import { HELPER_BOOST } from '../../domain/mainskill';
+import { HELPER_BOOST } from '../../domain/mainskill/mainskill';
 import { Pokemon } from '../../domain/pokemon';
 import { evolvesFrom, evolvesInto } from './evolution-utils';
 

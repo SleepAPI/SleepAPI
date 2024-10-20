@@ -3,7 +3,7 @@ export * from './constants';
 export * from './gender';
 export * as ingredient from './ingredient';
 export * as island from './island';
-export * as mainskill from './mainskill';
+export * from './mainskill';
 export * as nature from './nature';
 export * as pokemon from './pokemon';
 export * from './recipe';

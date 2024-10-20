@@ -602,7 +602,9 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
       "description": "Stockpile or Spit Up is selected. When Spit Up triggers, Snorlax gains Strength from Stockpile's number.",
       "maxLevel": 7,
       "name": "Stockpile (Charge Strength S",
-      "unit": "stockpile",
+      "unit": {
+        "stockpile": "strength",
+      },
     },
   },
 ]
