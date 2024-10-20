@@ -224,7 +224,7 @@ export const useTeamStore = defineStore('team', {
       }
     },
     async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = true
 
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
@@ -256,7 +256,7 @@ export const useTeamStore = defineStore('team', {
         this.teams[this.currentIndex].production!.members[memberIndex].singleProduction = undefined
       }
 
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = false
     },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
@@ -314,7 +314,7 @@ export const useTeamStore = defineStore('team', {
         console.error("No open slot or member can't be found")
         return
       }
-      this.toggleMemberLoading(openSlotIndex)
+      this.loadingMembers[openSlotIndex] = true
 
       const duplicatedMember: PokemonInstanceExt = {
         ...existingMember,
@@ -324,10 +324,10 @@ export const useTeamStore = defineStore('team', {
         name: randomName(12, existingMember.gender)
       }
       await this.updateTeamMember(duplicatedMember, openSlotIndex)
-      this.toggleMemberLoading(openSlotIndex)
+      this.loadingMembers[openSlotIndex] = false
     },
     async removeMember(memberIndex: number) {
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = true
 
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
@@ -361,7 +361,7 @@ export const useTeamStore = defineStore('team', {
       }
       this.teams[this.currentIndex].members[memberIndex] = undefined
 
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = false
       await this.calculateProduction(this.currentIndex)
     },
     async toggleCamp() {
@@ -389,9 +389,6 @@ export const useTeamStore = defineStore('team', {
       this.getCurrentTeam.favoredBerries = berries
 
       this.updateTeam()
-    },
-    toggleMemberLoading(memberIndex: number) {
-      this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]
     },
     resetCurrentTeamSingleProduction() {
       if (this.getCurrentTeam.production) {
