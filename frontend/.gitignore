@@ -33,5 +33,7 @@ test-results/
 
 *.mjs
 *.d.*
+# exception for global envs
+!vite-env.d.ts
 
 /dev-dist

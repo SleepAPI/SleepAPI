@@ -23,6 +23,7 @@
         title="Compare"
         to="/compare"
       ></v-list-item>
+      <v-list-item prepend-icon="mdi-cog" title="Settings" to="/settings"></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
