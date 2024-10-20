@@ -39,11 +39,11 @@
           >Profile</v-list-item
         >
         <v-list-item
-          :to="'/settings'"
+          :to="'/user-settings'"
           :disabled="!userStore.loggedIn"
           prepend-icon="mdi-cog"
           @click="toggleMenu"
-          >Settings</v-list-item
+          >User Settings</v-list-item
         >
       </v-list>
 

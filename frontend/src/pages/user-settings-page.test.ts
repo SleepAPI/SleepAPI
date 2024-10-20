@@ -1,11 +1,10 @@
-import SettingsPage from '@/pages/settings-page.vue'
 import { GoogleService } from '@/services/login/google-service'
-import { clearCacheKeepLogin } from '@/stores/store-service'
 import { useUserStore } from '@/stores/user-store'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
+import SettingsPage from './user-settings-page.vue'
 
 vi.mock('@/stores/store-service', () => ({
   clearCacheKeepLogin: vi.fn()
@@ -27,13 +26,7 @@ describe('SettingsPage', () => {
 
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true)
-    expect(wrapper.find('.text-h4').text()).toBe('Settings')
-  })
-
-  it('handles clear cache button click', async () => {
-    const clearButton = wrapper.findAll('button').find((button) => button.text() === 'Clear cache')
-    await clearButton?.trigger('click')
-    expect(clearCacheKeepLogin).toHaveBeenCalled()
+    expect(wrapper.find('.text-h4').text()).toBe('User Settings')
   })
 
   it('handles logout button click', async () => {

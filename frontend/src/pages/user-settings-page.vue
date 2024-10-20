@@ -4,7 +4,7 @@
       <v-col cols="12">
         <v-card class="pb-4">
           <v-row class="pt-4">
-            <v-col cols="12" class="flex-center text-h4"> Settings </v-col>
+            <v-col cols="12" class="flex-center text-h4"> User Settings </v-col>
           </v-row>
           <v-row>
             <v-divider />
@@ -15,22 +15,6 @@
                 >Sleep API does not store personal information. We only store an identifier
                 connected to your Google account so we may recognize you between sessions.</span
               >
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col class="flex-center">
-              <v-divider />
-            </v-col>
-            <v-col class="flex-center text-h6" style="text-wrap: nowrap"> Cache settings </v-col>
-            <v-col class="flex-center">
-              <v-divider />
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="12" class="flex-center">
-              <v-btn color="secondary" @click="clear">Clear cache</v-btn>
             </v-col>
           </v-row>
 
@@ -93,12 +77,11 @@
 
 <script lang="ts">
 import { GoogleService } from '@/services/login/google-service'
-import { clearCacheKeepLogin } from '@/stores/store-service'
 import { useUserStore } from '@/stores/user-store'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'SettingsPage',
+  name: 'UserSettingsPage',
   setup() {
     const userStore = useUserStore()
     return { userStore }
@@ -109,9 +92,6 @@ export default defineComponent({
     }
   },
   methods: {
-    clear() {
-      clearCacheKeepLogin()
-    },
     logout() {
       this.userStore.logout()
     },

@@ -14,11 +14,13 @@
 </template>
 
 <script lang="ts">
+import { useVersionStore } from '@/stores/version-store/version-store'
 import { onMounted, ref } from 'vue'
 
 export default {
   setup() {
     const showBanner = ref(false)
+    const versionStore = useVersionStore()
 
     onMounted(() => {
       if ('serviceWorker' in navigator) {
@@ -28,8 +30,19 @@ export default {
           .then((reg) => {
             // TODO: here we probably could clean up cached stuff before checking update
 
+            // TODO: test this: if updateFound that means we already have new version
+            if (versionStore.updateFound) {
+              versionStore.updateVersion()
+            } else {
+              console.log("Client thinks we're on latest")
+            }
+
             reg.onupdatefound = () => {
-              showBanner.value = true
+              // TODO: test this: if service worker found update and client is still on old code
+              if (!versionStore.updateFound) {
+                console.log('SW found update, client not on latest')
+                showBanner.value = true
+              }
             }
           })
           .catch(() => {

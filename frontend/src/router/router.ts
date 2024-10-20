@@ -6,15 +6,17 @@ export enum RouteName {
   Home = 'Home',
   Calculator = 'Calculator',
   Compare = 'Compare',
-  Profile = 'Profile',
   Settings = 'Settings',
+  Profile = 'Profile',
+  UserSettings = 'UserSettings',
   NotFound = 'NotFound'
 }
 
 const CalculatorPage = () => import('@/pages/calculator-page.vue')
 const ComparisonPage = () => import('@/pages/compare/comparison-page.vue')
+const SettingsPage = () => import('@/pages/settings/settings-page.vue')
 const ProfilePage = () => import('@/pages/profile-page.vue')
-const SettingsPage = () => import('@/pages/settings-page.vue')
+const UserSettingsPage = () => import('@/pages/user-settings-page.vue')
 const NotFoundPage = () => import('@/pages/not-found/not-found-page.vue')
 
 const router = createRouter({
@@ -36,14 +38,19 @@ const router = createRouter({
       component: ComparisonPage
     },
     {
+      path: '/settings',
+      name: RouteName.Settings,
+      component: SettingsPage
+    },
+    {
       path: '/profile',
       name: RouteName.Profile,
       component: ProfilePage
     },
     {
-      path: '/settings',
-      name: RouteName.Settings,
-      component: SettingsPage
+      path: '/user-settings',
+      name: RouteName.UserSettings,
+      component: UserSettingsPage
     },
     {
       path: '/:pathMatch(.*)*',
