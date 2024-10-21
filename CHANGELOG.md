@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/SleepAPI/SleepAPI/compare/v1.0.0...v1.0.1) (2024-10-21)
+
+
+### Bug Fixes
+
+* calculator and compare tools keep correct size ([dfc421e](https://github.com/SleepAPI/SleepAPI/commit/dfc421e8ee53dc5eb08a90e3b65e050892d57638))
+
 # 1.0.0 (2024-10-20)
 
 
