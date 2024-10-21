@@ -15,7 +15,7 @@ export const useVersionStore = defineStore('version', {
   },
   actions: {
     updateVersion() {
-      console.log(`Client updating version: ${this.version} -> ${APP_VERSION}`)
+      console.debug(`Client updating version: ${this.version} -> ${APP_VERSION}`)
       this.version = APP_VERSION
     }
   },

@@ -7,6 +7,7 @@ export function useRandomPhrase() {
   const fullPhrase = ref<string>('')
   let typingInterval: number | null = null
   let previousPhrase = ''
+  let typingIndex = 0
 
   const getRandomPhrase = (nature: nature.Nature) => {
     const naturePhrases = phrases[nature.name]
@@ -21,28 +22,29 @@ export function useRandomPhrase() {
       fullPhrase.value = newPhrase
     }
     randomPhrase.value = ''
+    typingIndex = 0
     startTypingAnimation()
   }
 
   const startTypingAnimation = () => {
-    let index = 0
-
     if (typingInterval) {
       clearInterval(typingInterval)
+      typingInterval = null
     }
 
     typingInterval = window.setInterval(() => {
-      if (index < fullPhrase.value.length) {
-        randomPhrase.value += fullPhrase.value[index]
-        index++
+      if (typingIndex < fullPhrase.value.length) {
+        randomPhrase.value += fullPhrase.value[typingIndex]
+        typingIndex++
       } else {
         clearInterval(typingInterval!)
+        typingInterval = null
       }
     }, 15)
   }
 
   const handleVisibilityChange = () => {
-    if (!document.hidden && fullPhrase.value) {
+    if (!document.hidden && typingIndex < fullPhrase.value.length) {
       startTypingAnimation()
     }
   }

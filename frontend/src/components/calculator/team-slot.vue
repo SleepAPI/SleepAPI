@@ -104,7 +104,7 @@
           </v-row>
         </v-row>
         <v-col cols="6">
-          <v-img :src="imageUrl" />
+          <v-img :src="imageUrl" style="aspect-ratio: 1 / 1" />
           <v-card
             v-if="isLeader && teamStore.tab !== 'members'"
             class="text-center leader-card"

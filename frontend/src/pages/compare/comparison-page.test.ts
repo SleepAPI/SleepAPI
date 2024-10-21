@@ -110,7 +110,7 @@ describe('ComparisonPage', () => {
     wrapper.setData({ pokemonToCompare: [] }) // ensures first card is empty
     await nextTick()
 
-    const addCard = wrapper.find('.team-slot .v-card')
+    const addCard = wrapper.find('.compare-slot .v-card')
     expect(addCard.exists()).toBe(true)
 
     await addCard.trigger('click')
