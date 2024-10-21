@@ -1,11 +1,11 @@
 <template>
-  <v-container class="team-container">
+  <v-container class="comparison-container">
     <v-row dense class="scroll-container" style="flex-wrap: nowrap">
       <!-- Filled compare slot -->
       <v-col
         v-for="(mon, index) in comparisonStore.members"
         :key="index"
-        class="team-slot flex-grow-1"
+        class="compare-slot flex-grow-1"
         style="position: relative; min-width: 18%; max-width: 18%"
       >
         <CompareSlot
@@ -19,7 +19,7 @@
 
       <!-- Click to add new pokemon -->
       <v-col
-        class="team-slot flex-grow-1"
+        class="compare-slot flex-grow-1"
         style="min-width: 20%; max-width: 20%"
         :hidden="comparisonStore.fullTeam"
       >
@@ -239,12 +239,12 @@ export default defineComponent({
   flex: 1;
 }
 
-.team-slot {
+.compare-slot {
   max-height: 25dvh;
   aspect-ratio: 6 / 10;
 }
 
-.team-container {
+.comparison-container {
   max-width: 100%;
 }
 
@@ -254,7 +254,7 @@ export default defineComponent({
 }
 
 @media (min-width: $desktop) {
-  .team-container {
+  .comparison-container {
     max-width: 60dvw;
   }
 }

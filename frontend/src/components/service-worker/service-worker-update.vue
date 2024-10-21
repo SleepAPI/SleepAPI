@@ -28,19 +28,17 @@ export default {
         navigator.serviceWorker
           .register(swUrl)
           .then((reg) => {
-            // TODO: here we probably could clean up cached stuff before checking update
-
-            // TODO: test this: if updateFound that means we already have new version
             if (versionStore.updateFound) {
               versionStore.updateVersion()
             } else {
-              console.log("Client thinks we're on latest")
+              console.debug(`Client cache up to date with version ${versionStore.version}`)
             }
 
             reg.onupdatefound = () => {
-              // TODO: test this: if service worker found update and client is still on old code
               if (!versionStore.updateFound) {
-                console.log('SW found update, client not on latest')
+                console.debug(
+                  `Service worker found update, client was on ${versionStore.version}, prompting client to refresh`
+                )
                 showBanner.value = true
               }
             }
