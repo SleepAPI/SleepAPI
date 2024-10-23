@@ -38,7 +38,6 @@
       "frontend": true,
       "bot": true,
       ".vscode": true,
-      "dist": true,
       "dev-dist": true,
       "node_modules": true,
       "package-lock.json": true,
