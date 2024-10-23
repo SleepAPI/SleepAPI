@@ -1,4 +1,4 @@
-import TeamResults from '@/components/calculator/results/member-results.vue'
+import TeamResults from '@/components/calculator/results/member-results/member-results.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { TeamInstance } from '@/types/member/instanced'
@@ -74,6 +74,7 @@ describe('TeamResults', () => {
     teamStore.currentIndex = 0
     teamStore.teams[0] = {
       ...team,
+      members: ['member1', 'member2'],
       production: createMockTeamProduction({
         members: [
           createMockMemberProduction({ member: mockPokemon }),
@@ -110,7 +111,7 @@ describe('TeamResults', () => {
     const radarChartCanvas = wrapper.find('canvas')
     expect(radarChartCanvas.exists()).toBe(true)
 
-    const radarChartData = wrapper.vm.radarData.datasets[0].data
+    const radarChartData = wrapper.vm.ivData.datasets[0].data
     expect(radarChartData).toEqual([50, 50, 50])
 
     const pokemonImage = wrapper.find('.v-window-item img')
@@ -139,7 +140,7 @@ describe('TeamResults', () => {
     const radarChartCanvas = wrapper.find('canvas')
     expect(radarChartCanvas.exists()).toBe(true)
 
-    let radarChartData = wrapper.vm.radarData.datasets[0].data
+    let radarChartData = wrapper.vm.ivData.datasets[0].data
     expect(radarChartData).toEqual([50, 50, 50])
 
     const defaultPerformance = { berry: 0, ingredient: 0, ingredientsOfTotal: [0], skill: 0 }
@@ -154,7 +155,7 @@ describe('TeamResults', () => {
     )
     await nextTick()
 
-    radarChartData = wrapper.vm.radarData.datasets[0].data
+    radarChartData = wrapper.vm.ivData.datasets[0].data
     expect(radarChartData).toEqual([60, 60, 60])
   })
 

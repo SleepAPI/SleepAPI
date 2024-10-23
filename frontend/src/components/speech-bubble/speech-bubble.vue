@@ -1,7 +1,7 @@
 <template>
   <div class="speech-bubble pb-2">
     <slot name="header-text">
-      <v-row no-gutters class="flex-start flex-nowrap">
+      <v-row no-gutters class="flex-start flex-nowrap text-no-wrap">
         <v-col cols="auto" class="mx-1">
           <span class="text-black text-left">Lv.{{ pokemonInstance.level }}</span>
         </v-col>

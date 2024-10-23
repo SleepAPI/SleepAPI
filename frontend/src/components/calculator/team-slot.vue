@@ -1,11 +1,6 @@
 <template>
   <template v-if="isMobile">
-    <div
-      v-if="pokemonInstance"
-      id="mobile-layout"
-      class="team-slot-container fill-height"
-      style="position: relative"
-    >
+    <div v-if="pokemonInstance" id="mobile-layout" class="fill-height" style="position: relative">
       <div class="card-wrapper fill-height">
         <v-card
           :loading="teamStore.getMemberLoading(memberIndex)"
@@ -42,21 +37,22 @@
         </v-card>
       </div>
     </div>
-    <div v-else class="d-flex w-100 fill-height transparent">
-      <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDetailsDialog">
-        <v-icon size="48" color="secondary" class="fill-height w-100 frosted-text">mdi-plus</v-icon>
+    <template v-else>
+      <v-card class="fill-height frosted-glass" @click="openDetailsDialog">
+        <v-icon size="48" color="secondary" class="fill-height w-100">mdi-plus</v-icon>
       </v-card>
-    </div>
+    </template>
   </template>
 
   <!-- desktop layout -->
   <template v-else>
+    <!-- only seem to be able to solve the same height for pokemon slot and empty is with max 14dvh here and 75 dvh in team-section -->
     <v-card
       v-if="pokemonInstance"
       id="desktop-layout"
       :loading="teamStore.getMemberLoading(memberIndex)"
       :class="['fill-height', currentMemberSelected ? 'bg-surface' : 'frosted-glass']"
-      :style="[`minHeight: '14dvh'`]"
+      style="max-height: 14dvh"
       @click="openDetailsDialog"
     >
       <v-row
@@ -116,13 +112,8 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-card
-      v-else
-      class="d-flex w-100 fill-height frosted-glass"
-      style="min-height: 14dvh"
-      @click="openDetailsDialog"
-    >
-      <v-icon size="48" color="secondary" class="fill-height w-100 frosted-text">mdi-plus</v-icon>
+    <v-card v-else class="fill-height frosted-glass" @click="openDetailsDialog">
+      <v-icon size="48" color="secondary" class="fill-height w-100">mdi-plus</v-icon>
     </v-card>
   </template>
 
@@ -181,7 +172,10 @@ export default defineComponent({
       )
     },
     isLeader() {
-      return this.teamStore.getCurrentTeam.members.at(0) === this.pokemonInstance?.externalId
+      return (
+        this.memberIndex === 0 &&
+        this.teamStore.getCurrentTeam.members.at(0) === this.pokemonInstance?.externalId
+      )
     },
     speechBubbleText() {
       return 'You can find our production in the members tab'

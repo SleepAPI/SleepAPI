@@ -1,6 +1,6 @@
 <template>
   <v-container class="team-container pt-2">
-    <v-row v-if="!isMobile" id="desktop-layout">
+    <v-row v-if="!isMobile" id="desktop-layout" class="d-flex justify-left flex-nowrap">
       <v-col cols="auto">
         <v-card-actions class="px-0" :disabled="!userStore.loggedIn">
           <v-btn
@@ -30,8 +30,12 @@
 
         <v-window v-model="teamStore.currentIndex" continuous class="mt-2">
           <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
-            <v-row class="flex-column" dense>
-              <v-col v-for="member in 5" :key="member" class="team-slot">
+            <v-row class="flex-column" dense style="height: 75dvh">
+              <v-col
+                v-for="member in teamSlots"
+                :key="member"
+                :class="[teamSlots > 1 ? 'team-slot' : '']"
+              >
                 <TeamSlot :member-index="member - 1" />
               </v-col>
             </v-row>
@@ -41,50 +45,58 @@
 
       <v-col v-if="teamStore.getCurrentTeam.production" class="mt-3">
         <v-card :loading="teamStore.loadingTeams" class="fill-height frosted-glass">
-          <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
-            <v-tab
-              v-for="tabItem in tabs"
-              :key="tabItem.value"
-              :value="tabItem.value"
-              :class="[teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
-            >
-              {{ tabItem.label }}
-            </v-tab>
-          </v-tabs>
+          <template v-if="teamStore.getTeamSize > 1">
+            <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
+              <v-tab
+                v-for="(tabItem, index) in tabs"
+                :key="tabItem.value"
+                :value="tabItem.value"
+                :data-index="index"
+                :class="[
+                  teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
+                  'tab-item'
+                ]"
+              >
+                {{ tabItem.label }}
+              </v-tab>
+            </v-tabs>
 
-          <v-tabs-window v-model="teamStore.tab">
-            <v-tabs-window-item value="overview">
-              <TeamResults />
-            </v-tabs-window-item>
+            <v-tabs-window v-model="teamStore.tab">
+              <v-tabs-window-item value="overview">
+                <TeamResults />
+              </v-tabs-window-item>
 
-            <v-tabs-window-item value="members">
-              <MemberResults />
-            </v-tabs-window-item>
+              <v-tabs-window-item value="members">
+                <MemberResults />
+              </v-tabs-window-item>
 
-            <v-tabs-window-item value="cooking">
-              <CookingResults />
-            </v-tabs-window-item>
-          </v-tabs-window>
+              <v-tabs-window-item value="cooking">
+                <CookingResults />
+              </v-tabs-window-item>
+            </v-tabs-window>
+          </template>
+          <template v-else>
+            <MemberResults />
+          </template>
         </v-card>
       </v-col>
       <v-col v-else-if="teamStore.getTeamSize > 0" class="mt-3">
-        <v-skeleton-loader type="card">
-          <v-col v-for="(_, index) in tabs" :key="index" cols="4" class="flex-center">
-            <v-skeleton-loader type="button" width="100%" height="36px" class="flex-center" />
-          </v-col>
-
+        <v-card class="fill-height">
           <v-col cols="12">
-            <v-skeleton-loader type="heading"></v-skeleton-loader>
+            <v-skeleton-loader type="card"></v-skeleton-loader>
+            <v-skeleton-loader type="subtitle"></v-skeleton-loader>
           </v-col>
 
-          <v-col cols="12">
-            <v-skeleton-loader type="divider"></v-skeleton-loader>
-          </v-col>
-
-          <div v-for="i in Math.max(teamStore.getTeamSize, 1)" :key="i" class="w-100">
-            <v-skeleton-loader type="list-item-avatar"></v-skeleton-loader>
-          </div>
-        </v-skeleton-loader>
+          <v-row>
+            <v-col cols="6">
+              <v-skeleton-loader type="image"></v-skeleton-loader>
+            </v-col>
+            <v-col cols="6">
+              <v-skeleton-loader type="paragraph"></v-skeleton-loader>
+              <v-skeleton-loader type="paragraph"></v-skeleton-loader>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -117,7 +129,12 @@
       <v-window v-model="teamStore.currentIndex" continuous style="margin-top: -5px">
         <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
           <v-row class="flex-nowrap" dense>
-            <v-col v-for="member in 5" :key="member" class="team-slot" style="position: relative">
+            <v-col
+              v-for="member in teamSlots"
+              :key="member"
+              class="team-slot"
+              style="position: relative"
+            >
               <TeamSlot :member-index="member - 1" />
             </v-col>
           </v-row>
@@ -126,40 +143,64 @@
 
       <TeamSettings class="pt-3 pb-2" />
 
-      <!-- Production Tabs and Results -->
       <v-row v-if="teamStore.getCurrentTeam.production" dense>
         <v-col cols="12">
           <v-card :loading="teamStore.loadingTeams" class="fill-height frosted-glass">
-            <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
-              <v-tab
-                v-for="tabItem in tabs"
-                :key="tabItem.value"
-                :value="tabItem.value"
-                :class="[
-                  teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
-                  'tab-item'
-                ]"
-              >
-                {{ tabItem.label }}
-              </v-tab>
-            </v-tabs>
+            <template v-if="teamStore.getTeamSize > 1">
+              <v-tabs v-model="teamStore.tab" class="d-flex justify-space-around">
+                <v-tab
+                  v-for="(tabItem, index) in tabs"
+                  :key="tabItem.value"
+                  :value="tabItem.value"
+                  :data-index="index"
+                  :class="[
+                    teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
+                    'tab-item'
+                  ]"
+                >
+                  {{ tabItem.label }}
+                </v-tab>
+              </v-tabs>
 
-            <v-tabs-window v-model="teamStore.tab">
-              <v-tabs-window-item value="overview">
-                <TeamResults />
-              </v-tabs-window-item>
+              <v-tabs-window v-model="teamStore.tab">
+                <v-tabs-window-item value="overview">
+                  <TeamResults />
+                </v-tabs-window-item>
 
-              <v-tabs-window-item value="members">
-                <MemberResults />
-              </v-tabs-window-item>
+                <v-tabs-window-item value="members">
+                  <MemberResults />
+                </v-tabs-window-item>
 
-              <v-tabs-window-item value="cooking">
-                <CookingResults />
-              </v-tabs-window-item>
-            </v-tabs-window>
+                <v-tabs-window-item value="cooking">
+                  <CookingResults />
+                </v-tabs-window-item>
+              </v-tabs-window>
+            </template>
+            <template v-else>
+              <MemberResults />
+            </template>
           </v-card>
         </v-col>
       </v-row>
+      <v-col v-else-if="teamStore.getTeamSize > 0" class="mt-3">
+        <v-card class="fill-height">
+          <v-col cols="12">
+            <v-skeleton-loader type="card"></v-skeleton-loader>
+          </v-col>
+
+          <v-col cols="12">
+            <v-skeleton-loader max-height="50" type="image"></v-skeleton-loader>
+          </v-col>
+          <v-row>
+            <v-col cols="6">
+              <v-skeleton-loader type="paragraph"></v-skeleton-loader>
+            </v-col>
+            <v-col cols="6">
+              <v-skeleton-loader type="paragraph"></v-skeleton-loader>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
     </div>
   </v-container>
 </template>
@@ -168,7 +209,7 @@
 import { defineComponent } from 'vue'
 
 import CookingResults from '@/components/calculator/results/cooking-results.vue'
-import MemberResults from '@/components/calculator/results/member-results.vue'
+import MemberResults from '@/components/calculator/results/member-results/member-results.vue'
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import TeamName from '@/components/calculator/team-name.vue'
 import TeamSettings from '@/components/calculator/team-settings.vue'
@@ -178,6 +219,7 @@ import { useNotificationStore } from '@/stores/notification-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
+import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 
 export default defineComponent({
   components: {
@@ -212,6 +254,9 @@ export default defineComponent({
       const berries = production?.team.berries
       const ingredients = production?.team.ingredients
       return berries && ingredients ? `${berries}\n${ingredients}` : 'No production'
+    },
+    teamSlots() {
+      return this.teamStore.getTeamSize === 0 ? 1 : MAX_TEAM_MEMBERS
     }
   },
   watch: {

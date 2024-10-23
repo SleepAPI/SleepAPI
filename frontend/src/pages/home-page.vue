@@ -106,14 +106,14 @@ export default defineComponent({
     features: [
       {
         description:
-          "Calculate your team's or pokemon's production with realistic our Sleep API-powered simulations.",
+          "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations.",
         title: 'Calculator',
         src: '/images/misc/doctor4.png',
         icon: 'mdi-square-root',
         to: '/calculator'
       },
       {
-        description: 'Compare your Pokémon to each other before deciding your investments.',
+        description: 'Compare your Pokémon to each other before deciding on your investments.',
         title: 'Compare',
         src: '/images/misc/doctor2.png',
         icon: 'mdi-compare-horizontal',
@@ -165,6 +165,7 @@ export default defineComponent({
   transform: rotate(35deg);
   z-index: 1;
   animation: lightSweep 7s cubic-bezier(0.175, 0.52, 0.165, 1) infinite;
+  animation-delay: 7s;
 }
 
 @keyframes lightSweep {
