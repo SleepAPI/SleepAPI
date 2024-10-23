@@ -28,11 +28,11 @@ describe('HomePage.vue', () => {
       {
         title: 'Calculator',
         description:
-          "Calculate your team's or pokemon's production with realistic our Sleep API-powered simulations."
+          "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations."
       },
       {
         title: 'Compare',
-        description: 'Compare your Pokémon to each other before deciding your investments.'
+        description: 'Compare your Pokémon to each other before deciding on your investments.'
       },
       {
         title: 'Tier lists',

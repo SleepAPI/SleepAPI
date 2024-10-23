@@ -18,7 +18,7 @@ export default defineComponent({
     const spinCoin = (speed = 1, isUserInitiated = false) => {
       if (coin.value) {
         if (isUserInitiated) {
-          const randomFullRotations = Math.floor(Math.random() * 10)
+          const randomFullRotations = Math.floor(Math.random() * 4)
           currentRotation += randomFullRotations * 360 + 180
         } else {
           currentRotation += 540
@@ -33,14 +33,34 @@ export default defineComponent({
       spinCoin(0.5)
     }
 
-    onMounted(() => {
+    const startAutoSpin = () => {
+      stopAutoSpin()
       intervalId = window.setInterval(autoSpin, 10000)
+    }
+
+    const stopAutoSpin = () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+        intervalId = null
+      }
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopAutoSpin() // Stop the interval when the tab is inactive
+      } else {
+        startAutoSpin() // Restart the interval when the tab is active
+      }
+    }
+
+    onMounted(() => {
+      startAutoSpin()
+      document.addEventListener('visibilitychange', handleVisibilityChange)
     })
 
     onUnmounted(() => {
-      if (intervalId) {
-        clearInterval(intervalId)
-      }
+      stopAutoSpin()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     })
 
     return {
@@ -55,6 +75,7 @@ export default defineComponent({
 .coin {
   height: 300px;
   width: 300px;
+  max-height: 40vh;
   text-align: center;
   transform-style: preserve-3d;
   outline: none;

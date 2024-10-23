@@ -3,7 +3,7 @@ import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { createMockTeamProduction } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
-import { mount, VueWrapper } from '@vue/test-utils'
+import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
@@ -61,7 +61,10 @@ describe('TeamSettings.vue', () => {
 
   it('switches between tabs correctly', async () => {
     const teamStore = useTeamStore()
-    teamStore.teams = createMockTeams(2, { production: createMockTeamProduction() })
+    teamStore.teams = createMockTeams(1, {
+      members: ['member1', 'member2'],
+      production: createMockTeamProduction()
+    })
     await nextTick()
 
     const tabs = wrapper.findAllComponents({ name: 'VTab' })
