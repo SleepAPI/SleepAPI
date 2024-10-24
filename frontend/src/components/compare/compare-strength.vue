@@ -209,7 +209,7 @@ import {
   berryPowerForLevel,
   compactNumber,
   defaultZero,
-  isSkillOrStockpileOf,
+  isSkillOrModifierOf,
   mainskill,
   recipeLevelBonus
 } from 'sleepapi-common'
@@ -283,7 +283,7 @@ export default defineComponent({
         const total = Math.floor(
           berryPower +
             ingredientPower +
-            (isSkillOrStockpileOf(memberPokemon.skill, Strength) ? skillValue : 0)
+            (isSkillOrModifierOf(memberPokemon.skill, Strength) ? skillValue : 0)
         )
         production.push({
           member: memberProduction.member.name,
@@ -299,7 +299,7 @@ export default defineComponent({
           ingredientCompact: compactNumber(ingredientPower),
           skill: memberPokemon.skill,
           skillValue,
-          skillCompact: isSkillOrStockpileOf(memberPokemon.skill, Strength)
+          skillCompact: isSkillOrModifierOf(memberPokemon.skill, Strength)
             ? compactNumber(skillValue)
             : '',
           energyPerMember: this.energyPerMember(memberProduction),
@@ -315,7 +315,7 @@ export default defineComponent({
       for (const member of sortedProduction) {
         const berryPercentage = defaultZero((member.berries / highestTotal) * 100)
         const skillPercentage = defaultZero(
-          ((isSkillOrStockpileOf(member.skill, Strength) ? member.skillValue : 0) / highestTotal) *
+          ((isSkillOrModifierOf(member.skill, Strength) ? member.skillValue : 0) / highestTotal) *
             100
         )
         const ingredientPercentage = defaultZero((member.ingredientPower / highestTotal) * 100)
@@ -347,7 +347,7 @@ export default defineComponent({
       const amount =
         memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
         (memberProduction.member.pokemon.skill.name === mainskill.ENERGY_FOR_EVERYONE.name ? 5 : 1)
-      const amountWithMaybeIslandBonus = isSkillOrStockpileOf(
+      const amountWithMaybeIslandBonus = isSkillOrModifierOf(
         memberProduction.member.pokemon.skill,
         Strength
       )

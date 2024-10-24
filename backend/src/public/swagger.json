@@ -21,6 +21,13 @@
 				],
 				"nullable": false
 			},
+			"Berries": {
+				"type": "string",
+				"enum": [
+					"berries"
+				],
+				"nullable": false
+			},
 			"Helps": {
 				"type": "string",
 				"enum": [
@@ -72,6 +79,9 @@
 						"$ref": "#/components/schemas/Ingredients"
 					},
 					{
+						"$ref": "#/components/schemas/Berries"
+					},
+					{
 						"$ref": "#/components/schemas/Helps"
 					},
 					{
@@ -91,14 +101,18 @@
 					}
 				]
 			},
-			"Stockpile_BasicSkillType_": {
+			"Modifier_BasicSkillType_": {
 				"properties": {
-					"stockpile": {
+					"type": {
+						"type": "string"
+					},
+					"value": {
 						"$ref": "#/components/schemas/BasicSkillType"
 					}
 				},
 				"required": [
-					"stockpile"
+					"type",
+					"value"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -109,7 +123,7 @@
 						"$ref": "#/components/schemas/BasicSkillType"
 					},
 					{
-						"$ref": "#/components/schemas/Stockpile_BasicSkillType_"
+						"$ref": "#/components/schemas/Modifier_BasicSkillType_"
 					}
 				]
 			},

@@ -43,6 +43,7 @@ import {
   Summary,
   Time,
   combineSameIngredientsInDrop,
+  isSkillOrModifierOf,
   mainskill,
 } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
@@ -241,24 +242,25 @@ export function simulation(params: {
           })
         );
 
-        if (skillActivation.skill.unit === 'energy') {
+        if (isSkillOrModifierOf(skillActivation.skill, 'energy')) {
+          const energyAmountWithNature = skillActivation.adjustedAmount * dayInfo.nature.energy;
           const clampedDelta =
-            currentEnergy + skillActivation.adjustedAmount > 150 ? 150 - currentEnergy : skillActivation.adjustedAmount;
+            currentEnergy + energyAmountWithNature > 150 ? 150 - currentEnergy : energyAmountWithNature;
 
           eventLog.push(
             new EnergyEvent({
               time: currentTime,
-              delta: clampedDelta * dayInfo.nature.energy,
+              delta: clampedDelta,
               description,
               before: currentEnergy,
             })
           );
-          currentEnergy += clampedDelta * dayInfo.nature.energy;
-          totalRecovery += clampedDelta * dayInfo.nature.energy;
+          currentEnergy += clampedDelta;
+          totalRecovery += clampedDelta;
           if (skillActivation.skill === mainskill.CHARGE_ENERGY_S) {
-            skillEnergySelfValue += clampedDelta * dayInfo.nature.energy;
+            skillEnergySelfValue += clampedDelta;
           } else {
-            skillEnergyOthersValue += clampedDelta;
+            skillEnergyOthersValue += energyAmountWithNature;
           }
         } else if (skillActivation.adjustedProduce) {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {

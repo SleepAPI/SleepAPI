@@ -17,7 +17,8 @@ import {
   TimePeriod,
   calculatePityProcThreshold,
   ingredient,
-  isStockpile,
+  isModifier,
+  isSkillOrModifierOf,
   mainskill,
   subskill,
 } from 'sleepapi-common';
@@ -359,23 +360,44 @@ export class MemberState {
   // TODO: most skills have static result, probably only self charge may diff if energy needs to cap at 150?
   // TODO: could cache most of these
   private activateSkill(skill: mainskill.MainSkill): SkillActivation {
-    if (isStockpile(skill.unit)) {
-      return this.#activateStockpile(skill);
+    if (isModifier(skill.unit)) {
+      return this.activateModifier(skill);
     } else {
-      return this.skillActivators[skill.unit as BasicSkillType](skill);
+      return this.activateBasicSkill(skill);
     }
   }
 
-  private skillActivators: Record<BasicSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
-    energy: (skill) => this.#activateEnergySkill(skill),
-    helps: (skill) => this.#activateHelpSkill(skill),
-    ingredients: () => this.#activateIngredientMagnet(),
-    'dream shards': (skill) => this.#activateValueSkills(skill),
-    'pot size': () => this.#activateCookingPowerUp(),
-    chance: () => this.#activateTastyChance(),
-    metronome: (skill) => this.#activateValueSkills(skill),
-    strength: (skill) => this.#activateValueSkills(skill),
-  };
+  private activateBasicSkill(skill: mainskill.MainSkill): SkillActivation {
+    const skillActivators: Record<BasicSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
+      energy: (skill) => this.#activateEnergySkill(skill),
+      helps: (skill) => this.#activateHelpSkill(skill),
+      ingredients: () => this.#activateIngredientMagnet(),
+      berries: () => this.#activateBerryBurst(),
+      'dream shards': (skill) => this.#activateValueSkills(skill),
+      'pot size': () => this.#activateCookingPowerUp(),
+      chance: () => this.#activateTastyChance(),
+      metronome: (skill) => this.#activateValueSkills(skill),
+      strength: (skill) => this.#activateValueSkills(skill),
+    };
+
+    return skillActivators[skill.unit as BasicSkillType](skill);
+  }
+  private activateModifier(skill: mainskill.MainSkill): SkillActivation {
+    const modifierActivators: Record<string, (skill: mainskill.MainSkill) => SkillActivation> = {
+      stockpile: (skill) => this.#activateStockpile(skill),
+      moonlight: (skill) => this.#activateMoonlight(skill),
+      disguise: (skill) => this.#activateDisguise(skill),
+    };
+
+    if (isModifier(skill.unit) && modifierActivators[skill.unit.type]) {
+      return modifierActivators[skill.unit.type](skill);
+    }
+
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
 
   #activateEnergySkill(skill: mainskill.MainSkill): SkillActivation {
     if (skill === mainskill.CHARGE_ENERGY_S) {
@@ -388,6 +410,8 @@ export class MemberState {
       return { energyTeam: 0, helpsTeam: 0 };
     } else if (skill === mainskill.ENERGIZING_CHEER_S) {
       this.skillValue += this.skillAmount(skill);
+      // TODO: not a fair implementation, it has high chance of hitting lowest pokemon
+
       const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
 
       return {
@@ -460,6 +484,14 @@ export class MemberState {
     };
   }
 
+  #activateBerryBurst() {
+    // doesn't exist yet
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
   #activateCookingPowerUp() {
     const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
     this.skillValue += potAmount;
@@ -487,6 +519,35 @@ export class MemberState {
     }
 
     // default
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
+  #activateMoonlight(skill: mainskill.MainSkill) {
+    if (isSkillOrModifierOf(skill, 'energy')) {
+      // TODO: I want to do isMoonlightOf(mainskill.CHARGE_ENERGY_S)
+      // TODO: currently doesnt support other energy skills for moonlight
+      const clampedEnergyRecovered =
+        this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
+
+      this.skillValue += clampedEnergyRecovered;
+      this.currentEnergy += clampedEnergyRecovered;
+      this.totalRecovery += clampedEnergyRecovered;
+
+      // TODO: missing moonlight crit, should give to team
+      return { energyTeam: 0, helpsTeam: 0 };
+    }
+
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
+  #activateDisguise(skill: mainskill.MainSkill) {
+    // TODO:
     return {
       energyTeam: 0,
       helpsTeam: 0,

@@ -148,7 +148,7 @@ import {
   Strength,
   berryPowerForLevel,
   compactNumber,
-  isSkillOrStockpileOf,
+  isSkillOrModifierOf,
   type RecipeTypeResult
 } from 'sleepapi-common'
 export default defineComponent({
@@ -205,7 +205,7 @@ export default defineComponent({
 
       return members.reduce((sum, member) => {
         const { pokemon } = member.member
-        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
+        const isStrengthUnit = isSkillOrModifierOf(pokemon.skill, Strength)
         const skillAmount = isStrengthUnit ? member.skillAmount : 0
 
         const memberSkillStrength = isStrengthUnit
@@ -278,7 +278,7 @@ export default defineComponent({
             this.DAYS_IN_WEEK
           : 0
 
-        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
+        const isStrengthUnit = isSkillOrModifierOf(pokemon.skill, Strength)
         const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
         const skillStrength = isStrengthUnit
           ? skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
