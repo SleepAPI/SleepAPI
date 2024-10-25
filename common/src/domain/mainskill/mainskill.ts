@@ -1,4 +1,6 @@
-import { MainSkillType, StockpileStrength } from './mainskill-type';
+import { DisguiseBerries, MoonlightEnergy, isModifier } from 'src/domain/mainskill/modifiers';
+import { MainSkillType } from './mainskill-type';
+import { StockpileStrength } from './modifiers/stockpile';
 
 export interface MainSkill {
   name: string;
@@ -163,7 +165,7 @@ export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
 ];
 
 export const STOCKPILE_CHARGE_STRENGTH_S: MainSkill = {
-  name: 'Stockpile (Charge Strength S',
+  name: 'Stockpile (Charge Strength S)',
   amount: [600, 853, 1177, 1625, 2243, 3099, 4497],
   unit: StockpileStrength,
   maxLevel: MAX_SKILL_LEVEL,
@@ -171,6 +173,7 @@ export const STOCKPILE_CHARGE_STRENGTH_S: MainSkill = {
     "Stockpile or Spit Up is selected. When Spit Up triggers, Snorlax gains Strength from Stockpile's number.",
   RP: [600, 853, 1177, 1625, 2243, 3099, 3984],
 };
+// TODO: rename to strength specific
 export const STOCKPILE_SPIT_CHANCE = 0.3;
 export const STOCKPILE_STOCKS: Record<number, number[]> = {
   1: [600, 1020, 1500, 2040, 2640, 3300, 4020, 4920, 6180, 7980, 10980],
@@ -181,6 +184,26 @@ export const STOCKPILE_STOCKS: Record<number, number[]> = {
   6: [3099, 5268, 7747, 10536, 13635, 17044, 20763, 25412, 31920, 41217, 56712],
   7: [4502, 7653, 11255, 15307, 19809, 24761, 30163, 36916, 46370, 59876, 82386],
 };
+
+export const MOONLIGHT_CHARGE_ENERGY_S: MainSkill = {
+  name: 'Moonlight (Charge Energy S)',
+  amount: [12, 16, 21, 26, 33, 43],
+  unit: MoonlightEnergy,
+  maxLevel: MAX_SKILL_LEVEL - 1,
+  description: 'Restores ? Energy to the user. Has a chance of restoring ? energy to another Pokémon.',
+  RP: [560, 797, 1099, 1516, 2094, 2892],
+};
+
+export const DISGUISE_BERRY_BURST: MainSkill = {
+  name: 'Disguise (Berry Burst)',
+  amount: [8, 10, 15, 17, 19, 21],
+  unit: DisguiseBerries,
+  maxLevel: MAX_SKILL_LEVEL - 1,
+  description:
+    'Gets ? Berries plus ? of each of the Berries other Pokémon on your team collect. May activate Greater Success once a day.',
+  RP: [1400, 1991, 2747, 3791, 5234, 7232],
+};
+export const DISGUISE_BERRY_BURST_TEAM_AMOUNT = [1, 2, 2, 3, 4, 5];
 
 export const MAINSKILLS: MainSkill[] = [
   CHARGE_ENERGY_S,
@@ -199,4 +222,5 @@ export const MAINSKILLS: MainSkill[] = [
   METRONOME,
   STOCKPILE_CHARGE_STRENGTH_S,
 ];
-export const METRONOME_FACTOR = MAINSKILLS.filter((s) => s !== METRONOME).length;
+export const METRONOME_SKILLS = MAINSKILLS.filter((s) => s !== METRONOME && !isModifier(s.unit));
+export const METRONOME_FACTOR = METRONOME_SKILLS.length;

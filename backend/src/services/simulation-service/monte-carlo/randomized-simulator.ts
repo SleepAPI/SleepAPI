@@ -21,7 +21,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Produce, Time, mainskill } from 'sleepapi-common';
+import { MathUtils, Produce, Time, isSkillOrModifierOf, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -95,7 +95,7 @@ export function randomizedSimulation(params: {
   for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
     const skillActivated = MathUtils.rollRandomChance(skillPercentage);
     if (skillActivated) {
-      if (pokemon.skill.unit === 'energy') {
+      if (isSkillOrModifierOf(pokemon.skill, 'energy')) {
         let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
         if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
           // 20% chance it affects this Pokémon
@@ -103,6 +103,7 @@ export function randomizedSimulation(params: {
             energyAmount = 0;
           }
         }
+        // TODO: implement moonlight crit if it can hit Umbreon itself
         currentEnergy = Math.min(currentEnergy + energyAmount, 150);
       }
       skillProcsNight += 1;
@@ -142,7 +143,7 @@ export function randomizedSimulation(params: {
 
       if (MathUtils.rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
-        if (pokemon.skill.unit === 'energy') {
+        if (isSkillOrModifierOf(pokemon.skill, 'energy')) {
           let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
           if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
             // 20% chance it affects this Pokémon
@@ -150,6 +151,7 @@ export function randomizedSimulation(params: {
               energyAmount = 0;
             }
           }
+          // TODO: implement moonlight crit if it can hit umbreon itself
           currentEnergy = Math.min(currentEnergy + energyAmount, 150);
         }
       }

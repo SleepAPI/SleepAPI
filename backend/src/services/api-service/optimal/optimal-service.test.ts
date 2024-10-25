@@ -42,7 +42,7 @@ describe('findOptimalSetsForMeal', () => {
           ],
         },
         {
-          "surplus": "3.7 Cacao, 2.7 Apple, 4.1 Mushroom, 2.7 Ginger",
+          "surplus": "3.7 Cacao, 2.8 Apple, 4.1 Mushroom, 3.1 Ginger",
           "team": [
             "ABSOL",
             "PIKACHU_HALLOWEEN",
