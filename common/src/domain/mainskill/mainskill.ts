@@ -1,15 +1,8 @@
-export type MainSkillType =
-  | 'energy'
-  | 'ingredients'
-  | 'helps'
-  | 'dream shards'
-  | 'strength'
-  | 'pot size'
-  | 'chance'
-  | 'metronome';
+import { MainSkillType, StockpileStrength } from './mainskill-type';
+
 export interface MainSkill {
   name: string;
-  amount: number[]; // level 6: amount of ings, amount of energy, amount of strength
+  amount: number[];
   unit: MainSkillType;
   maxLevel: number;
   description: string;
@@ -160,7 +153,6 @@ export const HELPER_BOOST: MainSkill = {
     'Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.',
   RP: [2800, 3902, 5273, 6975, 9317, 12438],
 };
-
 export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
   // Skill level 1 to 6
   [0, 0, 0, 0, 0, 0], // unique: 1
@@ -169,6 +161,26 @@ export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
   [2, 2, 3, 3, 4, 4], // unique: 4
   [4, 4, 5, 5, 6, 6], // unique: 5
 ];
+
+export const STOCKPILE_CHARGE_STRENGTH_S: MainSkill = {
+  name: 'Stockpile (Charge Strength S',
+  amount: [600, 853, 1177, 1625, 2243, 3099, 4497],
+  unit: StockpileStrength,
+  maxLevel: MAX_SKILL_LEVEL,
+  description:
+    "Stockpile or Spit Up is selected. When Spit Up triggers, Snorlax gains Strength from Stockpile's number.",
+  RP: [600, 853, 1177, 1625, 2243, 3099, 3984],
+};
+export const STOCKPILE_SPIT_CHANCE = 0.3;
+export const STOCKPILE_STOCKS: Record<number, number[]> = {
+  1: [600, 1020, 1500, 2040, 2640, 3300, 4020, 4920, 6180, 7980, 10980],
+  2: [853, 1450, 2132, 2900, 3753, 4691, 5715, 6995, 8786, 11345, 15610],
+  3: [1177, 2001, 2943, 4002, 5179, 6474, 7886, 9652, 12124, 15655, 21540],
+  4: [1625, 2763, 4063, 5526, 7151, 8939, 10889, 13327, 16740, 21615, 29740],
+  5: [2243, 3813, 5607, 7626, 9869, 12336, 15028, 18393, 23103, 29832, 41047],
+  6: [3099, 5268, 7747, 10536, 13635, 17044, 20763, 25412, 31920, 41217, 56712],
+  7: [4502, 7653, 11255, 15307, 19809, 24761, 30163, 36916, 46370, 59876, 82386],
+};
 
 export const MAINSKILLS: MainSkill[] = [
   CHARGE_ENERGY_S,
@@ -185,5 +197,6 @@ export const MAINSKILLS: MainSkill[] = [
   TASTY_CHANCE_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  STOCKPILE_CHARGE_STRENGTH_S,
 ];
 export const METRONOME_FACTOR = MAINSKILLS.filter((s) => s !== METRONOME).length;

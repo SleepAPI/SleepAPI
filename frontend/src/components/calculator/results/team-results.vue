@@ -1,12 +1,12 @@
 <template>
   <v-row>
     <v-col cols="12">
-      <v-card class="frosted-glass rounded-t-0">
+      <v-card class="bg-transparent rounded-t-0">
         <v-container>
           <v-row class="flex-center">
             <v-col cols="auto" class="flex-center">
               <span class="text-h5">Weekly </span>
-              <span id="weeklyStrength" class="text-h4 ml-2 text-accent font-weight-medium">
+              <span id="weeklyStrength" class="text-h4 ml-2 text-strength font-weight-medium">
                 {{ totalStrengthString }}</span
               >
               <v-img src="/images/misc/strength.png" class="ml-2" width="30" height="30" contain />
@@ -22,6 +22,7 @@
                 {{ berryStrengthString }}</span
               >
             </v-col>
+
             <v-col cols="auto" class="flex-center">
               <div class="legend bg-skill">
                 <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
@@ -30,6 +31,7 @@
                 {{ skillStrengthString }}</span
               >
             </v-col>
+
             <v-col cols="auto" class="flex-center">
               <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}`">
                 <v-img :src="recipeTypeImage" contain width="30" height="30" />
@@ -52,7 +54,7 @@
             <v-col cols="12" class="flex-center">
               <StackedBar
                 id="memberBar"
-                style="height: 30px"
+                :style="[`height: ${isMobile ? '30' : '50'}px`]"
                 :sections="[
                   {
                     color: 'berry',
@@ -83,13 +85,13 @@
             </v-col>
           </v-row>
 
-          <v-row v-for="(member, index) in memberPercentages" :key="index" dense>
+          <v-row v-for="(member, index) in memberPercentages" :key="index" no-gutters>
             <v-col cols="auto">
-              <v-img :src="`${member.image}`" contain width="36" height="36" />
+              <v-img :src="`${member.image}`" contain :width="isMobile ? '40' : '72'" />
             </v-col>
             <v-col class="flex-center">
               <StackedBar
-                style="height: 25px"
+                :style="[`height: ${isMobile ? '25' : '36'}px`]"
                 :sections="[
                   {
                     color: 'berry',
@@ -117,13 +119,16 @@
 import { defineComponent } from 'vue'
 
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
+import { useViewport } from '@/composables/viewport-composable'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
   MathUtils,
+  Strength,
   berryPowerForLevel,
   compactNumber,
+  isSkillOrStockpileOf,
   type RecipeTypeResult
 } from 'sleepapi-common'
 export default defineComponent({
@@ -133,9 +138,11 @@ export default defineComponent({
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
     const userStore = useUserStore()
-    return { teamStore, pokemonStore, userStore }
+    const { isMobile } = useViewport()
+
+    return { teamStore, pokemonStore, userStore, isMobile }
   },
-  data: () => ({ DAYS_IN_WEEK: 7 }), // TODO: currently lists everything in week result, needs to support toggle
+  data: () => ({ DAYS_IN_WEEK: 7 }),
   computed: {
     currentRecipeTypeResult(): RecipeTypeResult | undefined {
       if (this.teamStore.getCurrentTeam.recipeType === 'curry') {
@@ -177,12 +184,12 @@ export default defineComponent({
       const members = this.teamStore.getCurrentTeam.production?.members || []
 
       return members.reduce((sum, member) => {
-        const { pokemon, skillLevel } = member.member
-        const isStrengthUnit = pokemon.skill.unit === 'strength'
-        const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
+        const { pokemon } = member.member
+        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
+        const skillAmount = isStrengthUnit ? member.skillAmount : 0
 
         const memberSkillStrength = isStrengthUnit
-          ? member.skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
+          ? skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
           : 0
 
         return sum + memberSkillStrength
@@ -234,14 +241,7 @@ export default defineComponent({
         : `/images/recipe/mixed${this.teamStore.getCurrentTeam.recipeType}.png`
     },
     memberPercentages() {
-      const result: {
-        total: string
-        berryPercentage: number
-        skillPercentage: number
-        berryValue: string
-        skillValue: string
-        image: string
-      }[] = []
+      const memberStrengths = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
         const { berries, skillProcs } = member
         const { pokemon, skillLevel } = member.member
@@ -258,34 +258,34 @@ export default defineComponent({
             this.DAYS_IN_WEEK
           : 0
 
-        const isStrengthUnit = pokemon.skill.unit === 'strength'
+        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
         const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
         const skillStrength = isStrengthUnit
           ? skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
           : 0
 
-        const userLocale = navigator.language || 'en-US'
-        const total = new Intl.NumberFormat(userLocale, {
-          maximumFractionDigits: 0
-        }).format(Math.floor(berryStrength + skillStrength))
-        result.push({
-          total,
-          berryPercentage: MathUtils.round(
-            (berryStrength / (this.berryStrength + this.skillStrength)) * 100,
-            1
-          ),
-          skillPercentage: MathUtils.round(
-            (skillStrength / (this.berryStrength + this.skillStrength)) * 100,
-            1
-          ),
+        memberStrengths.push({
+          berryStrength,
+          skillStrength,
           berryValue: compactNumber(berryStrength),
           skillValue: compactNumber(skillStrength),
           image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
         })
       }
-      return result.sort(
-        (a, b) => b.skillPercentage + b.berryPercentage - (a.berryPercentage + a.skillPercentage)
+
+      const result = memberStrengths.sort(
+        (a, b) => b.skillStrength + b.berryStrength - (a.skillStrength + a.berryStrength)
       )
+      const highestTotal = memberStrengths.at(0)
+        ? memberStrengths[0].berryStrength + memberStrengths[0].skillStrength
+        : 0
+      return result.map((member) => ({
+        berryPercentage: MathUtils.round((member.berryStrength / highestTotal) * 100, 1),
+        skillPercentage: MathUtils.round((member.skillStrength / highestTotal) * 100, 1),
+        berryValue: member.berryValue,
+        skillValue: member.skillValue,
+        image: member.image
+      }))
     }
   },
   methods: {

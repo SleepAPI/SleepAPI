@@ -1,3 +1,4 @@
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePokedexStore } from '@/stores/pokedex-store/pokedex-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -12,12 +13,14 @@ export function clearCacheAndLogout() {
   const pokemonStore = usePokemonStore()
   const pokedexStore = usePokedexStore()
   const notificationStore = useNotificationStore()
+  const comparisonStore = useComparisonStore()
 
   userStore.$reset()
   teamStore.$reset()
   pokemonStore.$reset()
   pokedexStore.$reset()
   notificationStore.$reset()
+  comparisonStore.$reset()
 }
 
 export function clearCacheKeepLogin() {
@@ -25,9 +28,16 @@ export function clearCacheKeepLogin() {
   const pokemonStore = usePokemonStore()
   const pokedexStore = usePokedexStore()
   const notificationStore = useNotificationStore()
+  const comparisonStore = useComparisonStore()
 
   teamStore.$reset()
   pokemonStore.$reset()
   pokedexStore.$reset()
   notificationStore.$reset()
+  comparisonStore.$reset()
+}
+
+export function migrateStores() {
+  const teamStore = useTeamStore()
+  teamStore.migrate()
 }

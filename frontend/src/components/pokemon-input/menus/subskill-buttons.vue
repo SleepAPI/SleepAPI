@@ -1,5 +1,5 @@
 <template>
-  <v-row id="subskills" dense class="mt-3">
+  <v-row id="subskills" dense>
     <v-col
       v-for="subskillLevel in subskillLevels"
       :key="subskillLevel"
@@ -7,11 +7,12 @@
       class="flex-center"
     >
       <v-badge
+        id="subskillBadge"
         color="secondary"
         class="w-100"
         location="top left"
         offset-x="auto"
-        :offset-y="-5"
+        :offset-y="-2"
         :model-value="locked(subskillLevel)"
       >
         <template #badge>
@@ -20,7 +21,7 @@
         </template>
 
         <v-btn
-          :color="rarityColor(subskillLevel)"
+          :color="maybeRarityColor(subskillLevel)"
           class="w-100"
           rounded="xs"
           height="36px"
@@ -45,7 +46,8 @@
 
 <script lang="ts">
 import SubskillMenu from '@/components/pokemon-input/menus/subskill-menu.vue'
-import { capitalize, subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { rarityColor } from '@/services/utils/color-utils'
+import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
 
 export default {
   name: 'SubskillButtons',
@@ -70,13 +72,13 @@ export default {
     subskillLevels: [10, 25, 50, 75, 100]
   }),
   computed: {
-    rarityColor() {
+    maybeRarityColor() {
       return (subskillLevel: number) => {
         const maybeSubskill = this.subskillForLevel(subskillLevel)
         if (!maybeSubskill) {
           return undefined
         } else {
-          return `subskill${capitalize(maybeSubskill.rarity)}`
+          return rarityColor(maybeSubskill)
         }
       }
     },
@@ -108,3 +110,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+#subskillBadge .v-badge__badge {
+  max-height: 13px;
+}
+</style>

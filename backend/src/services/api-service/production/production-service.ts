@@ -99,7 +99,7 @@ export function calculatePokemonProduction(
           ],
           input.level
         ),
-        nature: nature.SASSY,
+        nature: nature.CAREFUL,
         skillLevel: pokemon.skill.maxLevel,
         inventoryLimit: maxCarrySize(pokemon),
       },

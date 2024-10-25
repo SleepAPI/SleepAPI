@@ -220,6 +220,7 @@ describe('addHelps', () => {
             },
           },
         ],
+        "skillAmount": 0,
         "skillProcs": 0,
       }
     `);
@@ -260,6 +261,7 @@ describe('addHelps', () => {
             },
           },
         ],
+        "skillAmount": 0,
         "skillProcs": 0,
       }
     `);
@@ -337,6 +339,7 @@ describe('attemptDayHelp', () => {
             },
           },
         ],
+        "skillAmount": 0,
         "skillProcs": 0,
       }
     `);
@@ -384,6 +387,7 @@ describe('attemptDayHelp', () => {
             },
           },
         ],
+        "skillAmount": 0,
         "skillProcs": 0,
       }
     `);
@@ -534,6 +538,7 @@ describe('attemptNightHelp', () => {
             },
           },
         ],
+        "skillAmount": 2066,
         "skillProcs": 1,
       }
     `);

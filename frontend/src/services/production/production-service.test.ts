@@ -1,5 +1,7 @@
 import { ProductionService } from '@/services/production/production-service'
+import { useTeamStore } from '@/stores/team/team-store'
 import { createMockPokemon } from '@/vitest'
+import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import { mainskill, maxCarrySize, pokemon, type SingleProductionResponse } from 'sleepapi-common'
@@ -10,6 +12,8 @@ vi.mock('axios')
 const mockedAxios = axios as unknown as {
   post: ReturnType<typeof vi.fn>
 }
+
+vi.mock('@/router/server-axios', () => ({}))
 
 const mockPokemonInstance = createMockPokemon({ pokemon: pokemon.ABOMASNOW })
 
@@ -63,6 +67,7 @@ describe('ProductionService', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
+
   describe('calculateCompareProduction', () => {
     it('should calculate compare production', async () => {
       mockedAxios.post.mockResolvedValue({ data: mockResponse })
@@ -71,7 +76,7 @@ describe('ProductionService', () => {
 
       expect(result).toEqual(mockResponse)
       expect(mockedAxios.post).toHaveBeenCalledWith(
-        `/api/calculator/production/${mockPokemonInstance.pokemon.name}`,
+        `/api/calculator/production/${mockPokemonInstance.pokemon.name}?includeAnalysis=true`,
         {
           camp: false,
           cheer: 0,
@@ -104,6 +109,47 @@ describe('ProductionService', () => {
       await expect(
         ProductionService.calculateCompareProduction(mockPokemonInstance)
       ).rejects.toThrow('Request failed')
+    })
+  })
+
+  describe('calculateTeamMemberProduction', () => {
+    it('should calculate team member production', async () => {
+      mockedAxios.post.mockResolvedValue({ data: mockResponse })
+
+      const teamStore = useTeamStore()
+      const mockTeam = createMockTeams()[0]
+      teamStore.teams = [mockTeam]
+
+      const params = { teamIndex: 0, memberIndex: 0 }
+      const result = await ProductionService.calculateTeamMemberProduction(params)
+
+      expect(result).toEqual(mockResponse)
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/calculator/production/${mockTeam.production?.members[0].member.pokemon.name}?includeAnalysis=true`,
+        expect.objectContaining({
+          camp: mockTeam.camp,
+          level: mockTeam.production?.members[0].member.level,
+          mainBedtime: mockTeam.bedtime,
+          mainWakeup: mockTeam.wakeup
+        })
+      )
+    })
+
+    it('should log error if team or member is not found', async () => {
+      const teamStore = useTeamStore()
+      const mockTeam = createMockTeams()[0]
+      teamStore.teams = [mockTeam]
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const params = { teamIndex: 999, memberIndex: 999 }
+      const result = await ProductionService.calculateTeamMemberProduction(params)
+
+      expect(result).toBeUndefined()
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Contact developer, can't find team or member for team single production"
+      )
+
+      consoleErrorSpy.mockRestore()
     })
   })
 })

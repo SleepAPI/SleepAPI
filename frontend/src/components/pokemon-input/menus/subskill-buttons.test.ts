@@ -50,22 +50,6 @@ describe('SubskillButtons', () => {
     expect(lastButton.text()).toBe('???')
   })
 
-  it('computes rarityColor correctly', () => {
-    const wrapper = mount(SubskillButtons, {
-      props: {
-        pokemonLevel: 50,
-        selectedSubskills: mockSubskills
-      }
-    })
-
-    const firstButton = wrapper.findAll('.v-btn')[0]
-
-    expect(firstButton.classes()).toContain('bg-subskillGold')
-
-    const secondButton = wrapper.findAll('.v-btn')[1]
-    expect(secondButton.classes()).toContain('bg-subskillSilver')
-  })
-
   it('locks subskills correctly based on pokemon level', () => {
     const wrapper = mount(SubskillButtons, {
       props: {

@@ -8,16 +8,14 @@ describe('HomePage.vue', () => {
     const wrapper = mount(HomePage)
 
     const title = wrapper.find('h1.title')
-    expect(title.text()).toBe('Pokémon Sleep Simulations')
+    expect(title.text()).toBe("Neroli's Lab")
   })
 
   it('should contain the correct description text', () => {
     const wrapper = mount(HomePage)
 
     const description = wrapper.find('p')
-    expect(description.text()).toBe(
-      "Run your own simulation-based calculations with Sleep API's built-in data analysis."
-    )
+    expect(description.text()).toBe('Helping you overthink sleep tracking.')
   })
 
   it('should contain the correct feature titles and descriptions', () => {
@@ -29,19 +27,16 @@ describe('HomePage.vue', () => {
     const expectedFeatures = [
       {
         title: 'Calculator',
-        description: "Simulate your Pokémon's production with in-depth data analysis."
+        description:
+          "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations."
       },
       {
         title: 'Compare',
-        description: 'Compare your Pokémon to each other before deciding your investments.'
+        description: 'Compare your Pokémon to each other before deciding on your investments.'
       },
       {
         title: 'Tier lists',
         description: 'Cooking tier lists based on millions of simulated recipe solutions.'
-      },
-      {
-        title: 'Team finder',
-        description: 'Find the most optimal teams for any given recipe.'
       }
     ]
 

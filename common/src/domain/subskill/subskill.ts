@@ -1,107 +1,125 @@
 export interface SubSkill {
   name: string;
+  shortName: string;
   amount: number;
   rarity: 'gold' | 'silver' | 'white';
 }
 
 export const BERRY_FINDING_S: SubSkill = {
   name: 'Berry Finding S',
+  shortName: 'BFS',
   amount: 1,
   rarity: 'gold',
 };
 
 export const ENERGY_RECOVERY_BONUS: SubSkill = {
   name: 'Energy Recovery Bonus',
+  shortName: 'ERB',
   amount: 0.14,
   rarity: 'gold',
 };
 
 export const HELPING_BONUS: SubSkill = {
   name: 'Helping Bonus',
+  shortName: 'HB',
   amount: 0.05,
   rarity: 'gold',
 };
 
 export const HELPING_SPEED_S: SubSkill = {
   name: 'Helping Speed S',
+  shortName: 'Help S',
   amount: 0.07,
   rarity: 'white',
 };
 
 export const HELPING_SPEED_M: SubSkill = {
   name: 'Helping Speed M',
+  shortName: 'Help M',
   amount: 0.14,
   rarity: 'silver',
 };
 
 export const INGREDIENT_FINDER_S: SubSkill = {
   name: 'Ingredient Finder S',
+  shortName: 'Ing S',
   amount: 0.18,
   rarity: 'white',
 };
 
 export const INGREDIENT_FINDER_M: SubSkill = {
   name: 'Ingredient Finder M',
+  shortName: 'Ing M',
   amount: 0.36,
   rarity: 'silver',
 };
 
 export const INVENTORY_S: SubSkill = {
   name: 'Inventory Up S',
+  shortName: 'Inv S',
   amount: 6,
   rarity: 'white',
 };
 
 export const INVENTORY_M: SubSkill = {
   name: 'Inventory Up M',
+  shortName: 'Inv M',
   amount: 12,
   rarity: 'silver',
 };
 
 export const INVENTORY_L: SubSkill = {
   name: 'Inventory Up L',
+  shortName: 'Inv L',
   amount: 18,
   rarity: 'silver',
 };
 
 export const SKILL_LEVEL_UP_S: SubSkill = {
   name: 'Skill Level Up S',
+  shortName: 'Skill Lv S',
   amount: 1,
   rarity: 'silver',
 };
 
 export const SKILL_LEVEL_UP_M: SubSkill = {
   name: 'Skill Level Up M',
+  shortName: 'Skill Lv M',
   amount: 2,
   rarity: 'gold',
 };
 
 export const SKILL_TRIGGER_S: SubSkill = {
   name: 'Skill Trigger S',
+  shortName: 'Trigger S',
   amount: 0.18,
   rarity: 'white',
 };
 
 export const SKILL_TRIGGER_M: SubSkill = {
   name: 'Skill Trigger M',
+  shortName: 'Trigger M',
   amount: 0.36,
   rarity: 'silver',
 };
 
 export const SLEEP_EXP_BONUS: SubSkill = {
   name: 'Sleep EXP Bonus',
+  shortName: 'SEB',
   amount: 0.14,
   rarity: 'gold',
 };
 
 export const DREAM_SHARD_BONUS: SubSkill = {
   name: 'Dream Shard Bonus',
+  shortName: 'DSB',
   amount: 0.06,
   rarity: 'gold',
 };
 
 export const RESEARCH_EXP_BONUS: SubSkill = {
   name: 'Research EXP Bonus',
+  shortName: 'REB',
   amount: 0.06,
   rarity: 'gold',
 };

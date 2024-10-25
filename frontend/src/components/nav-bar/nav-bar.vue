@@ -2,13 +2,14 @@
   <v-app-bar color="background">
     <template #prepend>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-        <v-icon size="36">mdi-menu</v-icon>
+        <v-icon size="24">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
     </template>
 
     <v-app-bar-title>{{ $route.name }}</v-app-bar-title>
 
     <template #append>
+      <DonateMenu />
       <AccountMenu />
     </template>
   </v-app-bar>
@@ -22,18 +23,21 @@
         title="Compare"
         to="/compare"
       ></v-list-item>
+      <v-list-item prepend-icon="mdi-cog" title="Settings" to="/settings"></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import AccountMenu from '@/components/account/account-menu.vue'
+import DonateMenu from '@/components/donate/donate-menu.vue'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'TheNavBar',
   components: {
-    AccountMenu
+    AccountMenu,
+    DonateMenu
   },
   data: () => ({
     drawer: false

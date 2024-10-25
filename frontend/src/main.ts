@@ -15,8 +15,10 @@ import '@/assets/main.scss'
 import App from '@/app.vue'
 import router from '@/router/router'
 
+import { migrateStores } from '@/stores/store-service'
 import { type ThemeDefinition } from 'vuetify'
 
+// colors duplicated in colors.scss
 const darkTheme: ThemeDefinition = {
   dark: true,
   colors: {
@@ -24,7 +26,8 @@ const darkTheme: ThemeDefinition = {
     surface: '#403D58',
     primary: '#E63946',
     secondary: '#5E5A7F',
-    accent: '#FFB81F',
+    accent: '#9A95C3',
+    strength: '#FFB81F',
     natureUp: 'FF683A',
     natureDown: '2BA0ED',
     subskillWhite: '#FAFAFA',
@@ -33,8 +36,7 @@ const darkTheme: ThemeDefinition = {
     curry: '#ff9f4b',
     salad: '#a8cf5c',
     dessert: '#f2df61',
-    ingredient: '#fc9c36', // same as curry?
-    // ingredient: '#fec34f', // default ingredient specialty orange
+    ingredient: '#fc9c36',
     berry: '#b99feb',
     skill: '#ff616e',
     'on-background': '#ffffff',
@@ -60,6 +62,7 @@ const vuetify = createVuetify({
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
+migrateStores()
 
 app.use(vuetify)
 app.use(router)

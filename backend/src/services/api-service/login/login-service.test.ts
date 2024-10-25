@@ -46,6 +46,7 @@ describe('signup', () => {
     client.request = jest.fn().mockResolvedValue({
       data: {
         sub: 'some-sub',
+        email: 'some-email',
       },
     });
 
@@ -68,7 +69,9 @@ describe('signup', () => {
       {
         "access_token": "some-access-token",
         "avatar": undefined,
+        "email": "some-email",
         "expiry_date": 10,
+        "externalId": "000000000000000000000000000000000000",
         "name": "New user",
         "refresh_token": "some-refresh-token",
       }
@@ -98,6 +101,7 @@ describe('signup', () => {
     client.request = jest.fn().mockResolvedValue({
       data: {
         sub: 'some-sub',
+        email: 'some-email',
       },
     });
 
@@ -122,7 +126,9 @@ describe('signup', () => {
       {
         "access_token": "some-access-token",
         "avatar": undefined,
+        "email": "some-email",
         "expiry_date": 10,
+        "externalId": "000000000000000000000000000000000000",
         "name": "Existing user",
         "refresh_token": "some-refresh-token",
       }

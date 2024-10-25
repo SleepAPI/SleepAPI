@@ -6,7 +6,7 @@
           <v-row class="flex-center py-2">
             <v-col cols="auto" class="flex-center">
               <span class="text-h5">Weekly </span>
-              <span id="weeklyStrength" class="text-h4 ml-2 text-accent font-weight-medium">
+              <span id="weeklyStrength" class="text-h4 ml-2 text-strength font-weight-medium">
                 {{ cookingStrength }}</span
               >
               <v-img src="/images/misc/strength.png" class="ml-2" width="30" height="30" contain />
@@ -50,18 +50,15 @@
           </v-row>
 
           <v-row class="flex-center pt-4" dense>
-            <v-col cols="12" class="w-100 py-4">
+            <v-col cols="12" class="w-100">
               <v-divider />
             </v-col>
-            <v-col cols="12" class="flex-center flex-column">
+            <v-col cols="12" class="flex-center">
               <span class="text-h6"> Daily team ingredients </span>
-            </v-col>
-            <v-col cols="12" class="w-100 py-4">
-              <v-divider />
             </v-col>
           </v-row>
 
-          <v-row class="flex-center pb-3" dense>
+          <v-row class="flex-center" dense>
             <v-col
               v-for="(ingredient, i) in teamIngredients"
               :key="i"
@@ -74,14 +71,11 @@
           </v-row>
 
           <v-row class="flex-center" dense>
-            <v-col cols="12" class="w-100 py-4">
+            <v-col cols="12" class="w-100">
               <v-divider />
             </v-col>
-            <v-col cols="12" class="flex-center">
+            <v-col cols="12" class="flex-center py-3">
               <span class="text-h6"> Split of recipes cooked </span>
-            </v-col>
-            <v-col cols="12" class="w-100 py-4">
-              <v-divider />
             </v-col>
           </v-row>
 

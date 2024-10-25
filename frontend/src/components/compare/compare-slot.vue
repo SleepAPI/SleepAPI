@@ -10,7 +10,7 @@
         class="text-center vertical-text"
         style="position: absolute; top: 0%; width: 100%; height: 100%"
       >
-        {{ pokemonInstance.member.name }}
+        {{ pokemonInstance.name }}
       </div>
       <v-img :src="imageUrl" class="pokemon-image" />
 
@@ -37,7 +37,7 @@
 
     <PokemonSlotMenu
       v-model:show="showDialog"
-      :pokemon-from-pre-exist="pokemonInstance.member"
+      :pokemon-from-pre-exist="pokemonInstance"
       :full-team="comparisonStore.fullTeam"
       @update-pokemon="editCompareMember"
       @duplicate-pokemon="duplicateCompareMember"
@@ -51,7 +51,6 @@
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
 import { RP, type PokemonInstanceExt } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
@@ -62,7 +61,7 @@ export default defineComponent({
   },
   props: {
     pokemonInstance: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<PokemonInstanceExt>,
       required: true
     }
   },
@@ -79,15 +78,15 @@ export default defineComponent({
   computed: {
     imageUrl(): string | undefined {
       return this.pokemonInstance
-        ? `/images/pokemon/${this.pokemonInstance.member.pokemon.name.toLowerCase()}${this.pokemonInstance.member.shiny ? '_shiny' : ''}.png`
+        ? `/images/pokemon/${this.pokemonInstance.pokemon.name.toLowerCase()}${this.pokemonInstance.shiny ? '_shiny' : ''}.png`
         : ''
     },
     level() {
-      return `Level ${this.pokemonInstance.member.level}`
+      return `Level ${this.pokemonInstance.level}`
     },
     rpBadge() {
-      const rpUtil = new RP(this.pokemonInstance.member)
-      const rp = this.pokemonInstance.member.rp ?? rpUtil.calc()
+      const rpUtil = new RP(this.pokemonInstance)
+      const rp = this.pokemonInstance.rp ?? rpUtil.calc()
       return `RP ${rp}`
     }
   },
@@ -105,7 +104,7 @@ export default defineComponent({
       this.$emit('remove-pokemon', pokemonInstance)
     },
     async toggleSavedState(state: boolean) {
-      const updatedMon = { ...this.pokemonInstance.member, saved: state }
+      const updatedMon = { ...this.pokemonInstance, saved: state }
       this.pokemonStore.upsertServerPokemon(updatedMon)
 
       this.$emit('toggle-save-state', updatedMon)

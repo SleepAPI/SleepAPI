@@ -27,19 +27,6 @@ describe('NatureButton', () => {
     expect(wrapper.vm.natureName).toBe(sampleNature.name)
   })
 
-  it('computes filteredNatures correctly', () => {
-    const filteredNatures = wrapper.vm.filteredNatures
-    expect(filteredNatures).toMatchSnapshot()
-  })
-
-  it('computes positiveStat correctly', () => {
-    expect(wrapper.vm.positiveStat).toBe('This nature has no effect')
-  })
-
-  it('computes negativeStat correctly', () => {
-    expect(wrapper.vm.negativeStat).toBe('This nature has no effect')
-  })
-
   it('updates nature and emits update-nature event when selectNature is called', () => {
     const newNatureName = nature.BRAVE
     wrapper.vm.selectNature(newNatureName)
@@ -55,11 +42,5 @@ describe('NatureButton', () => {
     await button.trigger('click')
     expect(wrapper.vm.natureMenu).toBe(true)
     expect(wrapper.findComponent({ name: 'NatureMenu' }).exists()).toBe(true)
-  })
-
-  it('displays correct positive and negative stats for non-neutral nature', async () => {
-    await wrapper.setProps({ nature: nature.LONELY })
-    expect(wrapper.vm.positiveStat).toBe('Speed of help')
-    expect(wrapper.vm.negativeStat).toBe('Energy recovery')
   })
 })

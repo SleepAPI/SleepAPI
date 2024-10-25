@@ -1,10 +1,48 @@
-// Sleep API colors
-$primary: #e63946;
-$secondary: #403d58;
 $background: #191224;
 $surface: #403d58;
+$primary: #e63946;
+$secondary: #5e5a7f;
+$accent: #9a95c3;
+$strength: #ffb81f;
+$nature-up: #ff683a;
+$nature-down: #2ba0ed;
+$subskill-white: #fafafa;
+$subskill-silver: #dcf2ff;
+$subskill-gold: #ffe570;
+$curry: #fc9c36;
+$salad: #8fc549;
+$dessert: #fbe346;
+$ingredient: #fbe346; // same as dessert, could also use'#fec34f'
+$berry: #b297e7;
+$skill: #ff616e;
+$on-background: #ffffff;
 $on-surface: #ffffff;
-$on-primary: #000000;
+$on-primary: #ffffff;
+$on-secondary: #ffffff;
+
+:root {
+  --v-theme-background: #{$background};
+  --v-theme-surface: #{$surface};
+  --v-theme-primary: #{$primary};
+  --v-theme-secondary: #{$secondary};
+  --v-theme-accent: #{$accent};
+  --v-theme-strength: #{$strength};
+  --v-theme-nature-up: #{$nature-up};
+  --v-theme-nature-down: #{$nature-down};
+  --v-theme-subskill-white: #{$subskill-white};
+  --v-theme-subskill-silver: #{$subskill-silver};
+  --v-theme-subskill-gold: #{$subskill-gold};
+  --v-theme-curry: #{$curry};
+  --v-theme-salad: #{$salad};
+  --v-theme-dessert: #{$dessert};
+  --v-theme-ingredient: #{$ingredient};
+  --v-theme-berry: #{$berry};
+  --v-theme-skill: #{$skill};
+  --v-theme-on-background: #{$on-background};
+  --v-theme-on-surface: #{$on-surface};
+  --v-theme-on-primary: #{$on-primary};
+  --v-theme-on-secondary: #{$on-secondary};
+}
 
 $curry: #ff9f4b;
 $salad: #a8cf5c;
@@ -16,5 +54,10 @@ $skill: #fc4f5d;
 
 .frosted-glass {
   background: rgba($surface, 0.4) !important;
+  backdrop-filter: blur(10px);
+}
+
+.frosted-glass-dark {
+  background: rgba($surface, 0.85) !important;
   backdrop-filter: blur(10px);
 }

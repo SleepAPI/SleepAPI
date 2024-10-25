@@ -67,6 +67,7 @@ describe('getTeams', () => {
     res.forEach((team, index) => {
       expect(team).toEqual({
         index,
+        memberIndex: 0,
         name: `Helper team ${index + 1}`,
         camp: false,
         bedtime: '21:30',
@@ -121,6 +122,7 @@ describe('getTeams', () => {
 
     expect(res[0]).toEqual({
       index: 0,
+      memberIndex: 0,
       name: 'Team 1',
       camp: true,
       bedtime: '21:30',
@@ -168,6 +170,7 @@ describe('getTeams', () => {
     res.forEach((team, teamIndex) => {
       expect(team).toEqual({
         index: teamIndex,
+        memberIndex: 0,
         name: `Team ${teamIndex + 1}`,
         camp: teamIndex % 2 === 0,
         version: 1,

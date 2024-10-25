@@ -29,7 +29,7 @@ describe('AccountMenu', () => {
   })
 
   it('clicking activator should open menu', async () => {
-    expect(document.querySelector('.account-menu-container')).toBeNull()
+    expect(document.querySelector('#accountMenu')).toBeNull()
 
     const button = wrapper.find('#navBarIcon')
     await button.trigger('click')
@@ -37,7 +37,7 @@ describe('AccountMenu', () => {
     await nextTick()
     await flushPromises()
 
-    const menuContainer = document.querySelector('.account-menu-container')
+    const menuContainer = document.querySelector('#accountMenu')
     expect(menuContainer).not.toBeNull()
 
     if (menuContainer) {
@@ -69,7 +69,7 @@ describe('AccountMenu', () => {
     const openMenuButton = wrapper.find('#navBarIcon')
     await openMenuButton.trigger('click')
 
-    const menuContainer = document.querySelector('.account-menu-container')
+    const menuContainer = document.querySelector('#accountMenu')
     expect(menuContainer).not.toBeNull()
 
     if (menuContainer) {
@@ -86,7 +86,9 @@ describe('AccountMenu', () => {
     const userStore = useUserStore()
 
     userStore.setUserData({
-      name: 'some name'
+      name: 'some name',
+      email: 'some email',
+      externalId: 'some id'
     })
     userStore.setTokens({
       accessToken: 'access token',
@@ -98,6 +100,8 @@ describe('AccountMenu', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": "default",
+        "email": "some email",
+        "externalId": "some id",
         "name": "some name",
         "tokens": {
           "accessToken": "access token",
@@ -118,6 +122,8 @@ describe('AccountMenu', () => {
     expect(userStore.$state).toMatchInlineSnapshot(`
       {
         "avatar": null,
+        "email": null,
+        "externalId": null,
         "name": "Guest",
         "tokens": null,
       }

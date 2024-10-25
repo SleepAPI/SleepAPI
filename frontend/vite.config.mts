@@ -4,35 +4,24 @@ import { defineConfig } from 'vite'
 import { ManifestOptions, VitePWA } from 'vite-plugin-pwa'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import vuetify from 'vite-plugin-vuetify'
-import { name, version } from './package.json'
+import { name, version } from '../package.json'
 
 const manifest: Partial<ManifestOptions> = {
-  name: 'Sleep API',
-  short_name: 'Sleep API',
+  name: "Neroli's Lab",
+  short_name: "Neroli's Lab",
   display: 'fullscreen',
-  description:
-    "Run your own simulation-based calculations with Sleep API's built-in data analysis.",
+  description: 'Run your own calculations with our Sleep API-powered simulations.',
   theme_color: '#191224',
   background_color: '#191224',
   icons: [
     {
-      src: 'pwa-64x64.png',
-      sizes: '64x64',
-      type: 'image/png'
-    },
-    {
       src: `pwa-192x192.png`,
       sizes: '192x192',
-      type: 'image/png'
+      type: 'image/png',
+      purpose: 'maskable'
     },
     {
       src: `pwa-512x512.png`,
-      sizes: '512x512',
-      type: 'image/png',
-      purpose: 'any'
-    },
-    {
-      src: 'maskable-icon-512x512.png',
       sizes: '512x512',
       type: 'image/png',
       purpose: 'maskable'

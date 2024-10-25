@@ -1,5 +1,6 @@
 import router from '@/router/router'
 import { config } from '@vue/test-utils'
+import 'vitest-canvas-mock'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'

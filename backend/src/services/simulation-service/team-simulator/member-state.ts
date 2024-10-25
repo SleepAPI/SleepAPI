@@ -4,18 +4,20 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { SkillValue } from '@src/services/simulation-service/team-simulator/skill-value';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
 import {
+  BasicSkillType,
   IngredientSet,
   MathUtils,
   MemberProduction,
   Produce,
+  StockpileStrength,
   TimePeriod,
   calculatePityProcThreshold,
   ingredient,
+  isStockpile,
   mainskill,
   subskill,
 } from 'sleepapi-common';
@@ -47,6 +49,7 @@ export class MemberState {
   private totalAverageHelps = 0;
   private totalSneakySnackHelps = 0;
   private voidHelps = 0;
+  private currentStockpile = 0;
 
   // stats
   private frequency0;
@@ -62,7 +65,7 @@ export class MemberState {
 
   // summary
   private skillProcs = 0;
-  private skillValue = new SkillValue();
+  private skillValue = 0;
   private morningProcs = 0;
   private totalDayHelps = 0;
   private totalNightHelps = 0;
@@ -300,6 +303,7 @@ export class MemberState {
         amount: amount / iterations,
         ingredient,
       })),
+      skillAmount: this.skillValue / iterations,
       skillProcs: this.skillProcs / iterations,
       externalId: this.member.externalId,
       advanced: {
@@ -355,10 +359,14 @@ export class MemberState {
   // TODO: most skills have static result, probably only self charge may diff if energy needs to cap at 150?
   // TODO: could cache most of these
   private activateSkill(skill: mainskill.MainSkill): SkillActivation {
-    return this.skillActivators[skill.unit](skill);
+    if (isStockpile(skill.unit)) {
+      return this.#activateStockpile(skill);
+    } else {
+      return this.skillActivators[skill.unit as BasicSkillType](skill);
+    }
   }
 
-  private skillActivators: Record<mainskill.MainSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
+  private skillActivators: Record<BasicSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
     energy: (skill) => this.#activateEnergySkill(skill),
     helps: (skill) => this.#activateHelpSkill(skill),
     ingredients: () => this.#activateIngredientMagnet(),
@@ -374,12 +382,12 @@ export class MemberState {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
-      this.skillValue.addValue(clampedEnergyRecovered);
+      this.skillValue += clampedEnergyRecovered;
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
       return { energyTeam: 0, helpsTeam: 0 };
     } else if (skill === mainskill.ENERGIZING_CHEER_S) {
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
       const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
 
       return {
@@ -387,7 +395,7 @@ export class MemberState {
         helpsTeam: 0,
       };
     } else {
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
 
       return {
         energyTeam: this.skillAmount(skill),
@@ -406,6 +414,7 @@ export class MemberState {
 
       const helps =
         this.skillAmount(skill) + mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
+      this.skillValue += helps;
 
       return {
         energyTeam: 0,
@@ -413,7 +422,7 @@ export class MemberState {
       };
     } else {
       // extra helpful
-      this.skillValue.addValue(this.skillAmount(skill));
+      this.skillValue += this.skillAmount(skill);
 
       const helpsPerMember = this.skillAmount(skill) / this.teamSize;
       return {
@@ -431,7 +440,7 @@ export class MemberState {
     }));
     const magnetProduce = { ingredients: magnetIngredients };
 
-    this.skillValue.addProduce(magnetProduce);
+    this.skillValue += ingMagnetAmount;
     this.cookingState.addIngredients(magnetProduce.ingredients);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, magnetProduce);
     return {
@@ -443,7 +452,7 @@ export class MemberState {
 
   #activateTastyChance() {
     const critAmount = this.skillAmount(mainskill.TASTY_CHANCE_S);
-    this.skillValue.addValue(critAmount);
+    this.skillValue += critAmount;
     this.cookingState.addCritBonus(critAmount / 100);
     return {
       energyTeam: 0,
@@ -453,7 +462,7 @@ export class MemberState {
 
   #activateCookingPowerUp() {
     const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
-    this.skillValue.addValue(potAmount);
+    this.skillValue += potAmount;
     this.cookingState.addPotSize(potAmount);
     return {
       energyTeam: 0,
@@ -461,8 +470,31 @@ export class MemberState {
     };
   }
 
+  #activateStockpile(skill: mainskill.MainSkill): SkillActivation {
+    if (skill.unit === StockpileStrength) {
+      const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_SPIT_CHANCE);
+      if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STOCKS[this.skillLevel].length - 1) {
+        const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
+        this.skillValue += stockpiledValue;
+        this.currentStockpile = 0;
+      } else {
+        this.currentStockpile = this.currentStockpile + 1;
+      }
+      return {
+        energyTeam: 0,
+        helpsTeam: 0,
+      };
+    }
+
+    // default
+    return {
+      energyTeam: 0,
+      helpsTeam: 0,
+    };
+  }
+
   #activateValueSkills(skill: mainskill.MainSkill): SkillActivation {
-    this.skillValue.addValue(this.skillAmount(skill));
+    this.skillValue += this.skillAmount(skill);
     return {
       energyTeam: 0,
       helpsTeam: 0,

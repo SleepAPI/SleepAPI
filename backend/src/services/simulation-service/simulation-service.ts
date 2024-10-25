@@ -24,8 +24,8 @@ import {
   getExtraHelpfulEvents,
   getHelperBoostEvents,
 } from '@src/utils/event-utils/event-utils';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
 import {
   BerrySet,
   DetailedProduce,
@@ -51,11 +51,7 @@ import {
   calculateSkillProcs,
   scheduleSkillEvents,
 } from '../calculator/skill/skill-calculator';
-import {
-  calculateRibbonCarrySize,
-  calculateSubskillCarrySize,
-  countErbUsers,
-} from '../calculator/stats/stats-calculator';
+import { countErbUsers } from '../calculator/stats/stats-calculator';
 import { monteCarlo } from './monte-carlo/monte-carlo';
 import { simulation } from './simulator/simulator';
 
@@ -92,6 +88,7 @@ export function setupAndRunProductionSimulation(params: {
     incense,
     mainBedtime,
     mainWakeup,
+    ribbon,
   } = input;
 
   const averagedPokemonCombination = calculateAveragePokemonIngredientSet(pokemonCombination);
@@ -119,10 +116,13 @@ export function setupAndRunProductionSimulation(params: {
     berry: averagedPokemonCombination.pokemon.berry,
   };
 
-  const inventoryLimit =
-    (input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon)) +
-    calculateSubskillCarrySize(limitSubSkillsToLevel(input.subskills ?? [], input.level)) +
-    calculateRibbonCarrySize(input.ribbon);
+  const inventoryLimit = InventoryUtils.calculateCarrySize({
+    baseWithEvolutions: input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon),
+    subskills,
+    level,
+    ribbon,
+    camp,
+  });
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,

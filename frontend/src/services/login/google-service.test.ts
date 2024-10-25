@@ -22,7 +22,9 @@ describe('login', () => {
       avatar: 'some-avatar',
       access_token: 'some-access-token',
       refresh_token: 'some-refresh-id',
-      expiry_date: 1
+      expiry_date: 1,
+      email: 'some email',
+      externalId: 'some id'
     }
 
     mockedAxios.post.mockResolvedValue({ data: mockResponse })

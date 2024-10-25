@@ -58,6 +58,7 @@ class TeamServiceImpl {
       if (!serverTeam) {
         const emptyTeam: TeamInstance = {
           index: teamIndex,
+          memberIndex: 0,
           name: `Helper team ${teamIndex + 1}`,
           camp: false,
           bedtime: '21:30',
@@ -102,6 +103,7 @@ class TeamServiceImpl {
         }
         const instancedTeam: TeamInstance = {
           index: serverTeam.index,
+          memberIndex: teamStore.teams[serverTeam.index]?.memberIndex ?? 0,
           name: serverTeam.name,
           camp: serverTeam.camp,
           bedtime: serverTeam.bedtime,
@@ -183,6 +185,7 @@ class TeamServiceImpl {
         return {
           berries: member.berries,
           ingredients: member.ingredients,
+          skillAmount: member.skillAmount,
           skillProcs: member.skillProcs,
           member: pokemonStore.getPokemon(member.externalId)
         }

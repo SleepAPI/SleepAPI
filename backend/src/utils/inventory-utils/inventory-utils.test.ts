@@ -1,5 +1,5 @@
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { Produce, berry, ingredient, prettifyIngredientDrop } from 'sleepapi-common';
+import { Produce, berry, ingredient, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 
 describe('emptyInventory', () => {
   it('shall empty inventory', () => {
@@ -150,5 +150,25 @@ describe('addToInventory', () => {
     inventory = InventoryUtils.addToInventory(inventory, added);
     expect(inventory.berries).toBeUndefined();
     expect(prettifyIngredientDrop(inventory.ingredients)).toMatchInlineSnapshot(`"2 Tomato, 2 Mushroom"`);
+  });
+});
+
+describe('calculateCarrySize', () => {
+  it('shall give same for default', () => {
+    const baseWithEvolutions = 10;
+    const subskills: subskill.SubSkill[] = [];
+    const level = 10;
+    const ribbon = 0;
+    const camp = false;
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(10);
+  });
+
+  it('shall give correct for subskills, ribbon and camp', () => {
+    const baseWithEvolutions = 31;
+    const subskills: subskill.SubSkill[] = [subskill.INVENTORY_S];
+    const level = 54;
+    const ribbon = 2;
+    const camp = true;
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(48);
   });
 });

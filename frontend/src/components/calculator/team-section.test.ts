@@ -3,7 +3,7 @@ import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { createMockTeamProduction } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
-import { mount, VueWrapper } from '@vue/test-utils'
+import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
@@ -61,23 +61,26 @@ describe('TeamSettings.vue', () => {
 
   it('switches between tabs correctly', async () => {
     const teamStore = useTeamStore()
-    teamStore.teams = createMockTeams(2, { production: createMockTeamProduction() })
+    teamStore.teams = createMockTeams(1, {
+      members: ['member1', 'member2'],
+      production: createMockTeamProduction()
+    })
     await nextTick()
 
     const tabs = wrapper.findAllComponents({ name: 'VTab' })
     expect(tabs).toHaveLength(3)
-    const teamTab = tabs.at(0)
+    const overviewTab = tabs.at(0)
     const membersTab = tabs.at(1)
     const cookingTab = tabs.at(2)
 
-    await teamTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('team')
+    await overviewTab?.trigger('click')
+    expect(teamStore.tab).toBe('overview')
 
     await membersTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('members')
+    expect(teamStore.tab).toBe('members')
 
     await cookingTab?.trigger('click')
-    expect(wrapper.vm.tab).toBe('cooking')
+    expect(teamStore.tab).toBe('cooking')
   })
 
   it('calculates production when missing', async () => {
@@ -90,5 +93,39 @@ describe('TeamSettings.vue', () => {
 
     expect(teamStore.syncTeams).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
+  })
+
+  it('renders desktop-specific layout when not on mobile', async () => {
+    wrapper = mount(TeamSection, {
+      global: {
+        mocks: {
+          isMobile: false
+        }
+      }
+    })
+
+    const desktopLayout = wrapper.find('#desktop-layout')
+    const mobileLayout = wrapper.find('#mobile-layout')
+    expect(desktopLayout.exists()).toBe(true)
+    expect(mobileLayout.exists()).toBe(false)
+  })
+
+  it('shows team settings and navigation on desktop', async () => {
+    wrapper = mount(TeamSection, {
+      global: {
+        mocks: {
+          isMobile: false
+        }
+      }
+    })
+
+    const teamSettings = wrapper.findComponent({ name: 'TeamSettings' })
+    expect(teamSettings.exists()).toBe(true)
+
+    const leftButton = wrapper.find('button[aria-label="previous team"]')
+    const rightButton = wrapper.find('button[aria-label="next team"]')
+
+    expect(leftButton.exists()).toBe(true)
+    expect(rightButton.exists()).toBe(true)
   })
 })

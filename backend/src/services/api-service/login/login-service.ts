@@ -45,6 +45,8 @@ export async function signup(authorization_code: string): Promise<LoginResponse>
     access_token: tokens.access_token,
     refresh_token: tokens.refresh_token,
     expiry_date: tokens.expiry_date,
+    email: userinfo.data.email,
+    externalId: existingUser.external_id,
   };
 }
 

@@ -14,11 +14,13 @@
 </template>
 
 <script lang="ts">
+import { useVersionStore } from '@/stores/version-store/version-store'
 import { onMounted, ref } from 'vue'
 
 export default {
   setup() {
     const showBanner = ref(false)
+    const versionStore = useVersionStore()
 
     onMounted(() => {
       if ('serviceWorker' in navigator) {
@@ -26,10 +28,19 @@ export default {
         navigator.serviceWorker
           .register(swUrl)
           .then((reg) => {
-            // TODO: here we probably could clean up cached stuff before checking update
+            if (versionStore.updateFound) {
+              versionStore.updateVersion()
+            } else {
+              console.debug(`Client cache up to date with version ${versionStore.version}`)
+            }
 
             reg.onupdatefound = () => {
-              showBanner.value = true
+              if (!versionStore.updateFound) {
+                console.debug(
+                  `Service worker found update, client was on ${versionStore.version}, prompting client to refresh`
+                )
+                showBanner.value = true
+              }
             }
           })
           .catch(() => {

@@ -7,17 +7,110 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"MainSkillType": {
+			"Energy": {
 				"type": "string",
 				"enum": [
-					"energy",
-					"ingredients",
-					"helps",
-					"dream shards",
-					"strength",
-					"pot size",
-					"chance",
+					"energy"
+				],
+				"nullable": false
+			},
+			"Ingredients": {
+				"type": "string",
+				"enum": [
+					"ingredients"
+				],
+				"nullable": false
+			},
+			"Helps": {
+				"type": "string",
+				"enum": [
+					"helps"
+				],
+				"nullable": false
+			},
+			"DreamShards": {
+				"type": "string",
+				"enum": [
+					"dream shards"
+				],
+				"nullable": false
+			},
+			"Strength": {
+				"type": "string",
+				"enum": [
+					"strength"
+				],
+				"nullable": false
+			},
+			"PotSize": {
+				"type": "string",
+				"enum": [
+					"pot size"
+				],
+				"nullable": false
+			},
+			"TastyChance": {
+				"type": "string",
+				"enum": [
+					"chance"
+				],
+				"nullable": false
+			},
+			"Metronome": {
+				"type": "string",
+				"enum": [
 					"metronome"
+				],
+				"nullable": false
+			},
+			"BasicSkillType": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/Energy"
+					},
+					{
+						"$ref": "#/components/schemas/Ingredients"
+					},
+					{
+						"$ref": "#/components/schemas/Helps"
+					},
+					{
+						"$ref": "#/components/schemas/DreamShards"
+					},
+					{
+						"$ref": "#/components/schemas/Strength"
+					},
+					{
+						"$ref": "#/components/schemas/PotSize"
+					},
+					{
+						"$ref": "#/components/schemas/TastyChance"
+					},
+					{
+						"$ref": "#/components/schemas/Metronome"
+					}
+				]
+			},
+			"Stockpile_BasicSkillType_": {
+				"properties": {
+					"stockpile": {
+						"$ref": "#/components/schemas/BasicSkillType"
+					}
+				},
+				"required": [
+					"stockpile"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MainSkillType": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/BasicSkillType"
+					},
+					{
+						"$ref": "#/components/schemas/Stockpile_BasicSkillType_"
+					}
 				]
 			},
 			"MainSkill": {
@@ -327,6 +420,9 @@
 					"name": {
 						"type": "string"
 					},
+					"shortName": {
+						"type": "string"
+					},
 					"amount": {
 						"type": "number",
 						"format": "double"
@@ -342,6 +438,7 @@
 				},
 				"required": [
 					"name",
+					"shortName",
 					"amount",
 					"rarity"
 				],
@@ -505,7 +602,7 @@
 	},
 	"info": {
 		"title": "sleep-api",
-		"version": "2.6.0",
+		"version": "2.6.1",
 		"contact": {}
 	},
 	"paths": {

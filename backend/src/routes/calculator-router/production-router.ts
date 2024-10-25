@@ -16,17 +16,27 @@ class ProductionRouterImpl {
   public async register() {
     BaseRouter.router.post(
       '/calculator/production/:name',
-      async (req: Request<{ name: string }, unknown, SingleProductionRequest, { pretty?: boolean }>, res: Response) => {
+      async (
+        req: Request<
+          { name: string },
+          unknown,
+          SingleProductionRequest,
+          { pretty?: boolean; includeAnalysis?: boolean }
+        >,
+        res: Response
+      ) => {
         try {
           Logger.log('Entered /calculator/production/:name');
           const { name } = req.params;
 
           const pretty = queryAsBoolean(req.query.pretty);
+          const includeAnalysis = queryAsBoolean(req.query.includeAnalysis);
 
           const result = await runWorkerFile(path.resolve(__dirname, './production-worker.js'), {
             name,
             body: req.body,
             pretty,
+            includeAnalysis,
           });
           res.header('Content-Type', 'application/json').send(JSON.stringify(result, null, 4));
         } catch (err) {

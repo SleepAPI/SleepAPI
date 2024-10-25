@@ -7,6 +7,8 @@ import { defineStore } from 'pinia'
 import {
   DOMAIN_VERSION,
   berry,
+  mainskill,
+  subskill,
   uuid,
   type PokemonInstanceExt,
   type RecipeType,
@@ -19,6 +21,8 @@ export interface TeamState {
   loadingTeams: boolean
   loadingMembers: boolean[]
   domainVersion: number
+  timeWindow: '8H' | '24H'
+  tab: 'overview' | 'members' | 'cooking'
   teams: TeamInstance[]
 }
 
@@ -29,9 +33,12 @@ export const useTeamStore = defineStore('team', {
     loadingTeams: false,
     loadingMembers: [false, false, false, false, false],
     domainVersion: 0,
+    timeWindow: '24H',
+    tab: 'overview',
     teams: [
       {
         index: 0,
+        memberIndex: 0,
         name: 'Log in to save your teams',
         camp: false,
         bedtime: '21:30',
@@ -58,9 +65,30 @@ export const useTeamStore = defineStore('team', {
       return (memberIndex: number) => {
         return state.loadingMembers[memberIndex]
       }
-    }
+    },
+    getCurrentMember: (state) => {
+      const currentTeam = state.teams[state.currentIndex]
+      return currentTeam.production?.members.at(currentTeam.memberIndex)?.member.externalId
+    },
+    timewindowDivider: (state) => (state.timeWindow === '24H' ? 1 : 3)
   },
   actions: {
+    migrate() {
+      if (!this.timeWindow) {
+        this.timeWindow = '24H'
+      }
+      if (!this.tab) {
+        this.tab = 'overview'
+      }
+      for (const team of this.teams) {
+        if (!team.memberIndex) {
+          team.memberIndex = 0
+        }
+      }
+      if (this.maxAvailableTeams < MAX_TEAMS) {
+        this.maxAvailableTeams = MAX_TEAMS
+      }
+    },
     async syncTeams() {
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
@@ -175,6 +203,7 @@ export const useTeamStore = defineStore('team', {
 
       this.teams[this.currentIndex] = {
         index: this.currentIndex,
+        memberIndex: 0,
         camp: false,
         name: newName,
         bedtime: '21:30',
@@ -195,7 +224,7 @@ export const useTeamStore = defineStore('team', {
       }
     },
     async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number) {
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = true
 
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
@@ -215,12 +244,22 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.teams[this.currentIndex].members[memberIndex] = updatedMember.externalId
-      this.toggleMemberLoading(memberIndex)
+
       await this.calculateProduction(this.currentIndex)
+      // reset single production to trigger radar chart recalc
+      if (this.isSupportMember(updatedMember)) {
+        this.resetCurrentTeamSingleProduction()
+      } else if (
+        this.teams[this.currentIndex]?.production &&
+        this.teams[this.currentIndex].production?.members[memberIndex]
+      ) {
+        this.teams[this.currentIndex].production!.members[memberIndex].singleProduction = undefined
+      }
+
+      this.loadingMembers[memberIndex] = false
     },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
-      // TODO: this doesn't show, because we hide the entire results box
       this.loadingTeams = true
 
       const members: PokemonInstanceExt[] = []
@@ -235,8 +274,32 @@ export const useTeamStore = defineStore('team', {
         wakeup: this.teams[teamIndex].wakeup
       }
       try {
-        const production = await TeamService.calculateProduction({ members, settings })
-        this.teams[teamIndex].production = production
+        const newProduction = await TeamService.calculateProduction({ members, settings })
+
+        const existingProduction = this.teams[teamIndex].production
+
+        if (!existingProduction || !newProduction) {
+          this.teams[teamIndex].production = newProduction
+        } else {
+          // preserve the cached single production results
+          const mergedMembers = newProduction.members.map((newMemberProduction, index) => {
+            const existingMemberProduction = existingProduction.members[index]
+
+            if (existingMemberProduction && existingMemberProduction.singleProduction) {
+              return {
+                ...newMemberProduction,
+                singleProduction: existingMemberProduction.singleProduction
+              }
+            }
+
+            return newMemberProduction
+          })
+
+          this.teams[teamIndex].production = {
+            ...newProduction,
+            members: mergedMembers
+          }
+        }
       } catch {
         console.error('Could not calculate production, contact developer')
       }
@@ -251,7 +314,7 @@ export const useTeamStore = defineStore('team', {
         console.error("No open slot or member can't be found")
         return
       }
-      this.toggleMemberLoading(openSlotIndex)
+      this.loadingMembers[openSlotIndex] = true
 
       const duplicatedMember: PokemonInstanceExt = {
         ...existingMember,
@@ -261,13 +324,16 @@ export const useTeamStore = defineStore('team', {
         name: randomName(12, existingMember.gender)
       }
       await this.updateTeamMember(duplicatedMember, openSlotIndex)
-      this.toggleMemberLoading(openSlotIndex)
+      this.loadingMembers[openSlotIndex] = false
     },
     async removeMember(memberIndex: number) {
-      this.toggleMemberLoading(memberIndex)
+      this.loadingMembers[memberIndex] = true
 
       const userStore = useUserStore()
       const pokemonStore = usePokemonStore()
+
+      // members array will be reduced by one
+      this.getCurrentTeam.memberIndex = Math.max(this.getCurrentTeam.memberIndex - 1, 0)
 
       if (userStore.loggedIn) {
         try {
@@ -290,12 +356,18 @@ export const useTeamStore = defineStore('team', {
         pokemonStore.removePokemon(member.externalId)
       }
 
+      if (member && this.isSupportMember(member)) {
+        this.resetCurrentTeamSingleProduction()
+      }
       this.teams[this.currentIndex].members[memberIndex] = undefined
-      this.toggleMemberLoading(memberIndex)
+
+      this.loadingMembers[memberIndex] = false
       await this.calculateProduction(this.currentIndex)
     },
     async toggleCamp() {
       this.getCurrentTeam.camp = !this.getCurrentTeam.camp
+
+      this.resetCurrentTeamSingleProduction()
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
     },
@@ -304,6 +376,7 @@ export const useTeamStore = defineStore('team', {
       this.getCurrentTeam.bedtime = bedtime
       this.getCurrentTeam.wakeup = wakeup
 
+      this.resetCurrentTeamSingleProduction()
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
     },
@@ -317,8 +390,31 @@ export const useTeamStore = defineStore('team', {
 
       this.updateTeam()
     },
-    toggleMemberLoading(memberIndex: number) {
-      this.loadingMembers[memberIndex] = !this.loadingMembers[memberIndex]
+    resetCurrentTeamSingleProduction() {
+      if (this.getCurrentTeam.production) {
+        this.getCurrentTeam.production.members.forEach((member) => {
+          if (member.singleProduction) {
+            member.singleProduction = undefined
+          }
+        })
+      }
+    },
+    isSupportMember(member: PokemonInstanceExt) {
+      const hbOrErb = member.subskills.some(
+        (s) =>
+          (s.subskill.name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase() ||
+            s.subskill.name.toLowerCase() === subskill.HELPING_BONUS.name.toLowerCase()) &&
+          s.level <= member.level
+      )
+      const supportSkill = [
+        mainskill.ENERGIZING_CHEER_S,
+        mainskill.ENERGY_FOR_EVERYONE,
+        mainskill.HELPER_BOOST,
+        mainskill.EXTRA_HELPFUL_S,
+        mainskill.METRONOME
+      ].some((s) => s.name.toLowerCase() === member.pokemon.skill.name.toLowerCase())
+
+      return hbOrErb || supportSkill
     }
   },
   persist: true

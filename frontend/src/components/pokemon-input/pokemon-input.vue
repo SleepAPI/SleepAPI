@@ -15,7 +15,7 @@
             :class="{ nudge: !userStore.loggedIn }"
             @click="toggleSave"
           >
-            <v-icon v-if="pokemonInstance.saved" color="accent" size="32">mdi-bookmark</v-icon>
+            <v-icon v-if="pokemonInstance.saved" color="strength" size="32">mdi-bookmark</v-icon>
             <v-icon v-else size="32">mdi-bookmark-outline</v-icon>
           </v-btn>
         </v-col>
@@ -28,7 +28,7 @@
       :height="85"
       location="top left"
       position="absolute"
-      style="margin-top: 60px"
+      style="margin-top: 50px"
     >
       <v-btn
         icon
@@ -38,19 +38,19 @@
         size="40"
         @click="toggleShiny"
       >
-        <v-icon v-if="pokemonInstance.shiny" color="accent" size="24">mdi-creation</v-icon>
+        <v-icon v-if="pokemonInstance.shiny" color="strength" size="24">mdi-creation</v-icon>
         <v-icon v-else size="24">mdi-creation-outline</v-icon>
       </v-btn>
       <GenderButton :pokemon-instance="pokemonInstance" @update-gender="updateGender" />
     </v-sheet>
 
-    <v-row no-gutters class="pt-2 pb-2">
+    <v-row no-gutters class="py-0">
       <v-col class="flex-center">
         <PokemonButton :pokemon-instance="pokemonInstance" @update-pokemon="updatePokemon" />
       </v-col>
     </v-row>
 
-    <v-row no-gutters>
+    <v-row dense>
       <v-col class="flex-center">
         <PokemonName :pokemon-instance="pokemonInstance" @update-name="updateName" />
       </v-col>
@@ -62,7 +62,7 @@
       </v-col>
     </v-row>
 
-    <v-row dense class="mt-3">
+    <v-row dense class="mt-2">
       <v-col cols="4" class="flex-center">
         <LevelButton :level="pokemonInstance.level" @update-level="updateLevel" />
       </v-col>
@@ -75,7 +75,7 @@
     </v-row>
 
     <!-- Ingredients -->
-    <v-row no-gutters class="mt-5">
+    <v-row no-gutters class="mt-2">
       <v-col cols="4" class="mr-2 flex-center">
         <v-card rounded="pill" class="w-100 h-50 text-center responsive-text flex-center"
           >Ingredients</v-card
@@ -105,7 +105,7 @@
     </v-row>
 
     <!-- Mainskill -->
-    <v-row no-gutters class="mt-3">
+    <v-row no-gutters class="mt-2">
       <v-col cols="12">
         <MainskillButton
           :pokemon-instance="pokemonInstance"
@@ -114,19 +114,23 @@
       </v-col>
     </v-row>
 
-    <SubskillButtons
-      :pokemon-level="pokemonInstance.level"
-      :selected-subskills="pokemonInstance.subskills"
-      @update-subskills="updateSubskills"
-    />
+    <v-row dense class="mt-2">
+      <v-col cols="12">
+        <SubskillButtons
+          :pokemon-level="pokemonInstance.level"
+          :selected-subskills="pokemonInstance.subskills"
+          @update-subskills="updateSubskills"
+        />
+      </v-col>
+    </v-row>
 
-    <v-row id="nature">
+    <v-row id="nature" class="mt-2" dense>
       <v-col cols="12">
         <NatureButton :nature="pokemonInstance.nature" @update-nature="updateNature" />
       </v-col>
     </v-row>
 
-    <v-row dense class="mt-3">
+    <v-row dense class="mt-2">
       <v-col cols="6">
         <v-btn
           id="cancelButton"
@@ -177,7 +181,7 @@ import {
   type PokemonInstanceExt,
   type SubskillInstanceExt
 } from 'sleepapi-common'
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, nextTick, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'PokemonInput',
@@ -234,8 +238,10 @@ export default defineComponent({
     pokemonInstance: {
       deep: true,
       handler(newPokemon: PokemonInstanceExt) {
-        const rp = new RP(newPokemon)
-        this.pokemonInstance.rp = rp.calc()
+        nextTick(() => {
+          const rp = new RP(newPokemon)
+          this.pokemonInstance.rp = rp.calc()
+        })
       }
     }
   },
