@@ -3,6 +3,8 @@ import { BerrySet, IngredientSet, Produce, SkillActivation, ingredient, mainskil
 import { emptyBerrySet } from '../../berry/berry-calculator';
 import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 
+// TODO: need to support moonlight crit,it's like energizing cheer and can hit umbreon
+// TODO: if it just has flat crit chance on every skill proc then we can probably just calc average energy per member from crit
 export function createSkillEvent(
   params: {
     skill: mainskill.MainSkill;
@@ -183,7 +185,7 @@ export function activateMetronome(params: {
   skillActivations: SkillActivation[];
   uniqueHelperBoost: number;
 }) {
-  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
+  const skillsToActivate = mainskill.METRONOME_SKILLS;
 
   for (const skillToActivate of skillsToActivate) {
     createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);

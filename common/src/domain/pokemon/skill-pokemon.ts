@@ -44,7 +44,6 @@ import {
   WARMING_GINGER,
 } from '../ingredient/ingredient';
 import {
-  CHARGE_ENERGY_S,
   CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S_RANGE,
   COOKING_POWER_UP_S,
@@ -56,6 +55,7 @@ import {
   HELPER_BOOST,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  MOONLIGHT_CHARGE_ENERGY_S,
   STOCKPILE_CHARGE_STRENGTH_S,
   TASTY_CHANCE_S,
 } from '../mainskill/mainskill';
@@ -461,10 +461,10 @@ export const UMBREON: Pokemon = {
   name: 'UMBREON',
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 21.9,
-  skillPercentage: 14.1,
+  skillPercentage: 10.1,
   berry: WIKI,
   carrySize: 14,
-  skill: CHARGE_ENERGY_S,
+  skill: MOONLIGHT_CHARGE_ENERGY_S,
 };
 
 export const SLOWKING: Pokemon = {

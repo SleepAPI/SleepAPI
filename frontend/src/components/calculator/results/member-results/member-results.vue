@@ -312,7 +312,7 @@ import {
   berryPowerForLevel,
   compactNumber,
   ingredient,
-  isSkillOrStockpileOf,
+  isSkillOrModifierOf,
   type DetailedProduce,
   type IngredientSet,
   type SingleProductionResponse
@@ -470,7 +470,7 @@ export default defineComponent({
         this.userStore.islandBonus
       const skill = memberProduction.member.pokemon.skill
       const roundedResult =
-        isSkillOrStockpileOf(skill, Strength) || isSkillOrStockpileOf(skill, DreamShards)
+        isSkillOrModifierOf(skill, Strength) || isSkillOrModifierOf(skill, DreamShards)
           ? Math.floor(result)
           : MathUtils.round(result, 1)
 

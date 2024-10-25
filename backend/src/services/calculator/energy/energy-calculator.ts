@@ -18,7 +18,7 @@ import { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { SkillActivation, Time, TimePeriod, subskill } from 'sleepapi-common';
+import { SkillActivation, Time, TimePeriod, isSkillOrModifierOf, subskill } from 'sleepapi-common';
 
 /**
  * Calculates a delta left at the end of the day and how that translates into tomorrow's starting energy
@@ -57,7 +57,7 @@ export function calculateEnergyLeftInMorning(
 ): number {
   const energyFromRecoveryEvents = recoveryEvents.reduce((sum, proc) => sum + proc.delta, 0);
   const energyFromSkillProcs = skillActivations.reduce(
-    (sum, cur) => sum + (cur.skill.unit === 'energy' ? cur.adjustedAmount : 0),
+    (sum, cur) => sum + (isSkillOrModifierOf(cur.skill, 'energy') ? cur.adjustedAmount : 0),
     0
   );
 

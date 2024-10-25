@@ -532,9 +532,8 @@ describe('activateMetronome', () => {
       uniqueHelperBoost: 1,
     };
     activateMetronome(params);
-    const metronomeValidSkills = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
-    expect(skillActivations.length).toBe(metronomeValidSkills.length);
-    metronomeValidSkills.forEach((skill) => {
+    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR);
+    mainskill.METRONOME_SKILLS.forEach((skill) => {
       expect(skillActivations.some((sa) => sa.skill === skill)).toBe(true);
     });
   });
@@ -572,7 +571,7 @@ describe('activateMetronome', () => {
     };
     activateMetronome(params);
     expect(skillActivations[0]).toEqual(existingSkillActivation);
-    expect(skillActivations.length).toBe(1 + mainskill.MAINSKILLS.length - 1);
+    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR + 1);
   });
 });
 
