@@ -30,12 +30,12 @@ const darkTheme: ThemeDefinition = {
     subskillWhite: '#FAFAFA',
     subskillSilver: '#DCF2FF',
     subskillGold: '#FFE570',
-    curry: '#fc9c36',
-    salad: '#8fc549',
-    dessert: '#fbe346',
+    curry: '#ff9f4b',
+    salad: '#a8cf5c',
+    dessert: '#f2df61',
     ingredient: '#fc9c36', // same as curry?
     // ingredient: '#fec34f', // default ingredient specialty orange
-    berry: '#b297e7',
+    berry: '#b99feb',
     skill: '#ff616e',
     'on-background': '#ffffff',
     'on-surface': '#ffffff',

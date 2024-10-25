@@ -13,28 +13,34 @@
             </v-col>
           </v-row>
 
-          <v-row dense class="flex-center">
+          <v-row dense class="flex-center totals-row">
             <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/berries.png" contain width="24" height="24" />
-              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
+              <div class="legend bg-berry">
+                <v-img src="/images/misc/berries-icon-alt.png" contain width="30" height="30" />
+              </div>
+              <span class="text-body-1 text-berry text-center font-weight-medium ml-2">
                 {{ berryStrengthString }}</span
               >
             </v-col>
             <v-col cols="auto" class="flex-center">
-              <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
-              <span class="text-body-1 text-skill w-100 text-center font-weight-medium">
+              <div class="legend bg-skill">
+                <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
+              </div>
+              <span class="text-body-1 text-skill text-center font-weight-medium ml-2">
                 {{ skillStrengthString }}</span
               >
             </v-col>
             <v-col cols="auto" class="flex-center">
-              <v-img :src="recipeTypeImage" contain width="30" height="30" />
+              <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}`">
+                <v-img :src="recipeTypeImage" contain width="30" height="30" />
+              </div>
               <span
                 :class="[
                   'text-body-1',
                   `text-${teamStore.getCurrentTeam.recipeType}`,
-                  'w-100',
                   'text-center',
-                  'font-weight-medium'
+                  'font-weight-medium',
+                  'ml-2'
                 ]"
               >
                 {{ cookingStrengthString }}</span
@@ -292,4 +298,13 @@ export default defineComponent({
 
 <style lang="scss">
 @import '@/assets/main.scss';
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+}
 </style>

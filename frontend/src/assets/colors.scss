@@ -6,6 +6,14 @@ $surface: #403d58;
 $on-surface: #ffffff;
 $on-primary: #000000;
 
+$curry: #ff9f4b;
+$salad: #a8cf5c;
+$dessert: #f2df61;
+$ingredient: #fc9c36; // same as curry?
+// ingredient: #fec34f; // default ingredient specialty orange
+$berry: #b99feb;
+$skill: #fc4f5d;
+
 .frosted-glass {
   background: rgba($surface, 0.4) !important;
   backdrop-filter: blur(10px);
