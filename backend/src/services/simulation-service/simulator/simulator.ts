@@ -257,7 +257,10 @@ export function simulation(params: {
           );
           currentEnergy += clampedDelta;
           totalRecovery += clampedDelta;
-          if (skillActivation.skill === mainskill.CHARGE_ENERGY_S) {
+          if (
+            skillActivation.skill === mainskill.CHARGE_ENERGY_S ||
+            skillActivation.skill === mainskill.MOONLIGHT_CHARGE_ENERGY_S
+          ) {
             skillEnergySelfValue += clampedDelta;
           } else {
             skillEnergyOthersValue += energyAmountWithNature;
