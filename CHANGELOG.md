@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/SleepAPI/SleepAPI/compare/v1.0.1...v1.1.0) (2024-10-29)
+
+
+### Features
+
+* added Mimikyu and cache busting ([31bf1ab](https://github.com/SleepAPI/SleepAPI/commit/31bf1abf2271697fb1e24b7c24a69d24b2612344))
+
 ## [1.0.1](https://github.com/SleepAPI/SleepAPI/compare/v1.0.0...v1.0.1) (2024-10-21)
 
 
