@@ -4,7 +4,14 @@ import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
-import { mainskill, maxCarrySize, pokemon, type SingleProductionResponse } from 'sleepapi-common'
+import {
+  emptyBerryInventory,
+  emptyProduce,
+  mainskill,
+  maxCarrySize,
+  pokemon,
+  type SingleProductionResponse
+} from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('axios')
@@ -24,9 +31,8 @@ const mockResponse: SingleProductionResponse = {
       dayHelps: 10,
       nightHelps: 10,
       nightHelpsBeforeSS: 10,
-      produce: {
-        ingredients: []
-      },
+      produce: emptyProduce(),
+      sneakySnack: emptyBerryInventory(),
       skillActivations: [],
       spilledIngredients: []
     },
@@ -48,16 +54,15 @@ const mockResponse: SingleProductionResponse = {
     skillDreamShardValue: 10,
     skillEnergyOthersValue: 10,
     skillEnergySelfValue: 10,
+    skillBerriesOtherValue: 10,
     skillHelpsValue: 10,
     skillPotSizeValue: 10,
     skillProcs: 10,
-    skillProduceValue: { ingredients: [] },
+    skillProduceValue: emptyProduce(),
     skillStrengthValue: 10,
     skillTastyChanceValue: 10,
     spilledIngredients: [],
-    totalProduce: {
-      ingredients: []
-    },
+    totalProduce: emptyProduce(),
     totalRecovery: 10,
     collectFrequency: { hour: 1, minute: 0, second: 0 }
   }

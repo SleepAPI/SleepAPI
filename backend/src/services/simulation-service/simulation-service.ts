@@ -112,10 +112,13 @@ export function setupAndRunProductionSimulation(params: {
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
   const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, subskills);
-  const sneakySnackBerries: BerrySet = {
-    amount: berriesPerDrop,
-    berry: averagedPokemonCombination.pokemon.berry,
-  };
+  const sneakySnackBerries: BerrySet[] = [
+    {
+      amount: berriesPerDrop,
+      berry: averagedPokemonCombination.pokemon.berry,
+      level,
+    },
+  ];
 
   const inventoryLimit = InventoryUtils.calculateCarrySize({
     baseWithEvolutions: input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon),
@@ -127,7 +130,7 @@ export function setupAndRunProductionSimulation(params: {
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
-    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop),
+    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop, level),
   };
 
   const helpFrequency = calculateHelpSpeedBeforeEnergy({
@@ -186,10 +189,7 @@ export function setupAndRunProductionSimulation(params: {
     detailedProduce: {
       ...detailedProduce,
       produce: {
-        berries: detailedProduce.produce.berries && {
-          amount: detailedProduce.produce.berries.amount,
-          berry: detailedProduce.produce.berries.berry,
-        },
+        berries: detailedProduce.produce.berries,
         ingredients: detailedProduce.produce.ingredients.map(({ amount, ingredient }) => ({
           amount: amount / MEALS_IN_DAY,
           ingredient: ingredient,
@@ -216,7 +216,7 @@ export function generateSkillActivations(params: {
   input: ProductionStats;
   pokemonWithAverageProduce: PokemonProduce;
   inventoryLimit: number;
-  sneakySnackBerries: BerrySet;
+  sneakySnackBerries: BerrySet[];
   monteCarloIterations: number;
 }) {
   const {

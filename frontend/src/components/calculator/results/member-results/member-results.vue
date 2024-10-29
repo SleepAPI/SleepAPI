@@ -158,7 +158,7 @@
       <v-row dense>
         <v-col class="px-4">
           <v-card color="surface" rounded="xl">
-            <v-row class="flex-center flex-nowrap mx-2 my-1">
+            <v-row class="flex-center flex-nowrap mx-auto my-1">
               <!-- Berries -->
               <v-col cols="4" class="flex-center flex-column">
                 <v-row dense class="flex-center">
@@ -167,18 +167,20 @@
                   </v-col>
                 </v-row>
 
-                <v-row dense justify="center">
+                <v-row dense justify="center" class="flex-nowrap">
                   <v-col cols="6" class="flex-center flex-column pt-0">
                     <v-img
-                      :src="`/images/berries/${member.member.pokemon.berry.name.toLowerCase()}.png`"
+                      :src="berryImage(member.member.pokemon.berry)"
                       height="24"
                       width="24"
                     ></v-img>
                     <span class="font-weight-medium text-center">{{
-                      round((member.berries?.amount ?? 0) / teamStore.timewindowDivider)
+                      round(
+                        (member.produceWithoutSkill.berries.at(0)?.amount ?? 0) * timeWindowFactor
+                      )
                     }}</span>
                   </v-col>
-                  <v-col cols="6" class="flex-center flex-column pt-0">
+                  <v-col cols="auto" class="flex-center flex-column pt-0">
                     <v-img src="/images/misc/strength.png" height="16px" width="16px"></v-img>
                     <span class="font-weight-medium text-center">{{ currentBerryStrength }}</span>
                   </v-col>
@@ -196,7 +198,7 @@
                   </v-col>
                 </v-row>
 
-                <v-row dense justify="center">
+                <v-row dense justify="center" class="flex-nowrap">
                   <v-col
                     v-for="({ amount, name }, i) in member.ingredients"
                     :key="i"
@@ -205,7 +207,7 @@
                     <div class="flex-center flex-column">
                       <v-img :src="name" height="24" width="24"></v-img>
                       <span class="text-center font-weight-medium">{{
-                        round(amount / teamStore.timewindowDivider)
+                        round(amount * timeWindowFactor)
                       }}</span>
                     </div>
                   </v-col>
@@ -224,7 +226,7 @@
                   <v-col class="flex-center flex-column pt-0">
                     <v-img src="/images/misc/skillproc.png" height="24" width="24"></v-img>
                     <span class="font-weight-medium text-center">{{
-                      round(member.skillProcs / teamStore.timewindowDivider)
+                      round(member.skillProcs * timeWindowFactor)
                     }}</span>
                   </v-col>
                   <v-col
@@ -294,8 +296,9 @@ import SpeechBubble from '@/components/speech-bubble/speech-bubble.vue'
 import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phrase'
 import { useViewport } from '@/composables/viewport-composable'
 import { ProductionService } from '@/services/production/production-service'
+import { StrengthService } from '@/services/strength/strength-service'
 import { rarityColor } from '@/services/utils/color-utils'
-import { islandImage, mainskillImage } from '@/services/utils/image-utils'
+import { berryImage, islandImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
@@ -306,13 +309,9 @@ import type {
 } from '@/types/member/instanced'
 import { Chart } from 'chart.js'
 import {
-  DreamShards,
   MathUtils,
-  Strength,
-  berryPowerForLevel,
   compactNumber,
   ingredient,
-  isSkillOrModifierOf,
   type DetailedProduce,
   type IngredientSet,
   type SingleProductionResponse
@@ -415,6 +414,7 @@ export default defineComponent({
       randomPhrase,
       mainskillImage,
       islandImage,
+      berryImage,
       rarityColor,
       ivData,
       ivOptions
@@ -424,7 +424,10 @@ export default defineComponent({
     members() {
       const result = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
-        result.push({ ...member, ingredients: this.prepareMemberIngredients(member.ingredients) })
+        result.push({
+          ...member,
+          ingredients: this.prepareMemberIngredients(member.produceTotal.ingredients)
+        })
       }
       return result
     },
@@ -438,43 +441,31 @@ export default defineComponent({
       return this.currentMember?.singleProduction
     },
     currentBerryStrength() {
-      const berries = this.members[this.teamStore.getCurrentTeam.memberIndex].berries
-      if (!berries) {
-        return 0
-      }
-      const favoredBerryMultiplier = this.teamStore.getCurrentTeam.favoredBerries.some(
-        (berry) => berry.name === berries.berry.name
+      return compactNumber(
+        StrengthService.berryStrength({
+          favored: this.teamStore.getCurrentTeam.favoredBerries,
+          berries:
+            this.members[this.teamStore.getCurrentTeam.memberIndex].produceWithoutSkill.berries,
+          timeWindow: this.teamStore.timeWindow
+        })
       )
-        ? 2
-        : 1
-
-      const result = Math.floor(
-        (berries.amount / this.teamStore.timewindowDivider) *
-          berryPowerForLevel(
-            berries.berry,
-            this.members[this.teamStore.getCurrentTeam.memberIndex].member.level
-          ) *
-          this.userStore.islandBonus *
-          favoredBerryMultiplier
-      )
-
-      return compactNumber(result)
     },
     currentSkillValue() {
       const memberProduction = this.members[this.teamStore.getCurrentTeam.memberIndex]
       if (!memberProduction) {
         return 0
       }
-      const result =
-        (memberProduction.skillAmount / this.teamStore.timewindowDivider) *
-        this.userStore.islandBonus
-      const skill = memberProduction.member.pokemon.skill
-      const roundedResult =
-        isSkillOrModifierOf(skill, Strength) || isSkillOrModifierOf(skill, DreamShards)
-          ? Math.floor(result)
-          : MathUtils.round(result, 1)
 
-      return compactNumber(roundedResult)
+      return compactNumber(
+        StrengthService.skillValue({
+          skill: memberProduction.member.pokemon.skill,
+          amount: memberProduction.skillAmount,
+          timeWindow: this.teamStore.timeWindow
+        })
+      )
+    },
+    timeWindowFactor() {
+      return StrengthService.timeWindowFactor(this.teamStore.timeWindow)
     }
   },
   watch: {
@@ -621,10 +612,10 @@ export default defineComponent({
       const { current, optimalBerry, optimalIng, optimalSkill } = params
       return {
         berry: this.calculatePercentageOfOptimal({
-          current: current.produce.berries?.amount ?? 0,
-          optimalBerry: optimalBerry.produce.berries?.amount ?? 0,
-          optimalIng: optimalIng.produce.berries?.amount ?? 0,
-          optimalSkill: optimalSkill.produce.berries?.amount ?? 0
+          current: current.produce.berries.at(0)?.amount ?? 0,
+          optimalBerry: optimalBerry.produce.berries.at(0)?.amount ?? 0,
+          optimalIng: optimalIng.produce.berries.at(0)?.amount ?? 0,
+          optimalSkill: optimalSkill.produce.berries.at(0)?.amount ?? 0
         }),
         ingredient: this.calculatePercentageOfOptimal({
           current: current.produce.ingredients[0].amount,

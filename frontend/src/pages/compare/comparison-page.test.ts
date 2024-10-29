@@ -1,6 +1,12 @@
 import ComparisonPage from '@/pages/compare/comparison-page.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
-import { mainskill, pokemon, type SingleProductionResponse } from 'sleepapi-common'
+import {
+  emptyBerryInventory,
+  emptyProduce,
+  mainskill,
+  pokemon,
+  type SingleProductionResponse
+} from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ProductionService } from '@/services/production/production-service'
@@ -22,9 +28,8 @@ describe('ComparisonPage', () => {
         dayHelps: 10,
         nightHelps: 10,
         nightHelpsBeforeSS: 10,
-        produce: {
-          ingredients: []
-        },
+        produce: emptyProduce(),
+        sneakySnack: emptyBerryInventory(),
         skillActivations: [],
         spilledIngredients: []
       },
@@ -44,18 +49,17 @@ describe('ComparisonPage', () => {
       nrOfHelps: 10,
       skill: mainskill.CHARGE_ENERGY_S,
       skillDreamShardValue: 10,
+      skillBerriesOtherValue: 10,
       skillEnergyOthersValue: 10,
       skillEnergySelfValue: 10,
       skillHelpsValue: 10,
       skillPotSizeValue: 10,
       skillProcs: 10,
-      skillProduceValue: { ingredients: [] },
+      skillProduceValue: emptyProduce(),
       skillStrengthValue: 10,
       skillTastyChanceValue: 10,
       spilledIngredients: [],
-      totalProduce: {
-        ingredients: []
-      },
+      totalProduce: emptyProduce(),
       totalRecovery: 10,
       collectFrequency: { hour: 1, minute: 0, second: 0 }
     }
@@ -76,7 +80,8 @@ describe('ComparisonPage', () => {
     nrOfHelps: 10,
     sneakySnackHelps: 10,
     spilledIngredients: [],
-    totalRecovery: 10
+    totalRecovery: 10,
+    sneakySnack: []
   }
 
   beforeEach(async () => {

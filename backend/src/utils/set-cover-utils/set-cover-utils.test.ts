@@ -1,9 +1,9 @@
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import {
   berry,
+  emptyBerryInventory,
   ingredient,
   mainskill,
   maxCarrySize,
@@ -38,20 +38,14 @@ describe('createPokemonByIngredientReverseIndex', () => {
         },
         detailedProduce: {
           produce: {
-            berries: {
-              amount: 0,
-              berry: berry.YACHE,
-            },
+            berries: [],
             ingredients: [
               { amount: 2, ingredient: ingredient.FIERY_HERB },
               { amount: 4, ingredient: ingredient.GREENGRASS_CORN },
             ],
           },
           spilledIngredients: [],
-          sneakySnack: {
-            amount: 0,
-            berry: berry.YACHE,
-          },
+          sneakySnack: emptyBerryInventory(),
           dayHelps: 0,
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
@@ -86,11 +80,11 @@ describe('createPokemonByIngredientReverseIndex', () => {
         },
         detailedProduce: {
           produce: {
-            berries: { amount: 1, berry: berry.LUM },
+            berries: [{ amount: 1, berry: berry.LUM, level: 60 }],
             ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
           },
           spilledIngredients: [],
-          sneakySnack: { amount: 1, berry: berry.LUM },
+          sneakySnack: [{ amount: 1, berry: berry.LUM, level: 60 }],
           dayHelps: 0,
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
@@ -114,11 +108,11 @@ describe('createPokemonByIngredientReverseIndex', () => {
         },
         detailedProduce: {
           produce: {
-            berries: { amount: 2, berry: berry.PAMTRE },
+            berries: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
             ingredients: [{ amount: 4, ingredient: ingredient.FANCY_APPLE }],
           },
           spilledIngredients: [],
-          sneakySnack: { amount: 2, berry: berry.PAMTRE },
+          sneakySnack: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
           dayHelps: 0,
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
@@ -158,11 +152,11 @@ describe('createPokemonByIngredientReverseIndex', () => {
         },
         detailedProduce: {
           produce: {
-            berries: { amount: 2, berry: berry.PAMTRE },
+            berries: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
             ingredients: [],
           },
           spilledIngredients: [],
-          sneakySnack: { amount: 2, berry: berry.PAMTRE },
+          sneakySnack: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
           dayHelps: 0,
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
@@ -194,11 +188,11 @@ describe('createPokemonByIngredientReverseIndex', () => {
         },
         detailedProduce: {
           produce: {
-            berries: { amount: 1, berry: berry.LUM },
+            berries: [{ amount: 1, berry: berry.LUM, level: 60 }],
             ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
           },
           spilledIngredients: [],
-          sneakySnack: { amount: 1, berry: berry.LUM },
+          sneakySnack: [{ amount: 1, berry: berry.LUM, level: 60 }],
           dayHelps: 0,
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
@@ -541,10 +535,13 @@ describe('calculateHelperBoostIngredientsIncrease', () => {
     const member1: CustomPokemonCombinationWithProduce = {
       ...raichu,
       averageProduce: {
-        berries: {
-          berry: berry.GREPA,
-          amount: 1,
-        },
+        berries: [
+          {
+            berry: berry.GREPA,
+            amount: 1,
+            level: 60,
+          },
+        ],
         ingredients: [
           {
             amount: 1,
@@ -556,10 +553,13 @@ describe('calculateHelperBoostIngredientsIncrease', () => {
     const member2: CustomPokemonCombinationWithProduce = {
       ...raichu,
       averageProduce: {
-        berries: {
-          berry: berry.GREPA,
-          amount: 1,
-        },
+        berries: [
+          {
+            berry: berry.GREPA,
+            amount: 1,
+            level: 60,
+          },
+        ],
         ingredients: [
           {
             amount: 1,
@@ -595,10 +595,13 @@ const raichu: CustomPokemonCombinationWithProduce = {
     ],
   },
   averageProduce: {
-    berries: {
-      berry: berry.GREPA,
-      amount: 0.6,
-    },
+    berries: [
+      {
+        berry: berry.GREPA,
+        amount: 0.6,
+        level: 60,
+      },
+    ],
     ingredients: [
       {
         amount: 0.2,
@@ -620,7 +623,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
   },
   detailedProduce: {
     produce: {
-      berries: emptyBerrySet(pokemon.RAICHU.berry),
+      berries: emptyBerryInventory(),
       ingredients: [
         {
           amount: 3,
@@ -637,7 +640,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     skillActivations: [],
-    sneakySnack: emptyBerrySet(pokemon.RAICHU.berry),
+    sneakySnack: emptyBerryInventory(),
     spilledIngredients: [],
   },
 };
@@ -661,10 +664,13 @@ const raikou: CustomPokemonCombinationWithProduce = {
     ],
   },
   averageProduce: {
-    berries: {
-      berry: berry.GREPA,
-      amount: 0.6,
-    },
+    berries: [
+      {
+        berry: berry.GREPA,
+        amount: 0.6,
+        level: 60,
+      },
+    ],
     ingredients: [
       {
         amount: 0.2,
@@ -690,7 +696,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
   },
   detailedProduce: {
     produce: {
-      berries: emptyBerrySet(pokemon.RAIKOU.berry),
+      berries: emptyBerryInventory(),
       ingredients: [
         {
           amount: 3,
@@ -711,7 +717,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     skillActivations: [],
-    sneakySnack: emptyBerrySet(pokemon.RAICHU.berry),
+    sneakySnack: emptyBerryInventory(),
     spilledIngredients: [],
   },
 };

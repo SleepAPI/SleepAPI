@@ -43,6 +43,8 @@ import {
   Summary,
   Time,
   combineSameIngredientsInDrop,
+  emptyBerryInventory,
+  emptyProduce,
   isSkillOrModifierOf,
   mainskill,
 } from 'sleepapi-common';
@@ -61,7 +63,7 @@ export function simulation(params: {
   skillPercentage: number;
   pokemonWithAverageProduce: PokemonProduce;
   inventoryLimit: number;
-  sneakySnackBerries: BerrySet;
+  sneakySnackBerries: BerrySet[];
   recoveryEvents: EnergyEvent[];
   extraHelpfulEvents: SkillEvent[];
   helperBoostEvents: SkillEvent[];
@@ -93,6 +95,7 @@ export function simulation(params: {
   let skillEnergySelfValue = 0;
   let skillEnergyOthersValue = 0;
   let skillProduceValue: Produce = InventoryUtils.getEmptyInventory();
+  let skillBerriesOtherValue = 0;
   let skillStrengthValue = 0;
   let skillDreamShardValue = 0;
   let skillPotSizeValue = 0;
@@ -128,10 +131,7 @@ export function simulation(params: {
 
   let totalProduce: Produce = InventoryUtils.getEmptyInventory();
   let spilledIngredients: Produce = InventoryUtils.getEmptyInventory();
-  let totalSneakySnack: Produce = {
-    ingredients: [],
-    berries: { amount: 0, berry: pokemonWithAverageProduce.pokemon.berry },
-  };
+  let totalSneakySnack: Produce = emptyProduce();
 
   let currentEnergy = startingEnergy;
   let currentInventory: Produce = InventoryUtils.getEmptyInventory();
@@ -268,6 +268,11 @@ export function simulation(params: {
         } else if (skillActivation.adjustedProduce) {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
             skillHelpsValue += skillActivation.adjustedAmount;
+          } else if (skillActivation.skill === mainskill.DISGUISE_BERRY_BURST) {
+            skillBerriesOtherValue +=
+              mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[
+                (input.skillLevel ?? mainskill.DISGUISE_BERRY_BURST.maxLevel) - 1
+              ] * skillActivation.fractionOfProc;
           }
           skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
         } else if (skillActivation.skill.unit === Strength || skillActivation.skill.unit === StockpileStrength) {
@@ -313,6 +318,7 @@ export function simulation(params: {
       if (InventoryUtils.countInventory(currentInventory) >= inventoryLimit) {
         // sneaky snacking
         const spilledProduce: Produce = {
+          berries: emptyBerryInventory(),
           ingredients: averageProduce.ingredients,
         };
 
@@ -392,6 +398,7 @@ export function simulation(params: {
   }
 
   totalProduce = InventoryUtils.addToInventory(totalProduce, currentInventory);
+  // for skill berries we set level 0, so skill berries will always add a new index
   totalProduce = InventoryUtils.addToInventory(totalProduce, skillProduceValue);
   totalProduce = InventoryUtils.addToInventory(totalProduce, totalSneakySnack);
   const summary: Summary = {
@@ -403,6 +410,7 @@ export function simulation(params: {
     skillEnergySelfValue,
     skillEnergyOthersValue,
     skillProduceValue,
+    skillBerriesOtherValue,
     skillStrengthValue,
     skillDreamShardValue,
     skillPotSizeValue,

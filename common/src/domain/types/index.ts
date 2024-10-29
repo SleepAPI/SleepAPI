@@ -1,4 +1,4 @@
-export * from './berry-drop';
+export * from './berry-set';
 export * from './ingredient-set';
 export * from './pokemon-ingredient-set';
 export * from './pokemon-instance';

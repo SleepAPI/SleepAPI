@@ -20,15 +20,15 @@ function comparisonChart(
     ...formatData(
       {
         berries: {
-          amount: neutralSetup.berries.amount,
+          amount: neutralSetup.berries[0].amount,
           percentage: calculatePercentageOfOptimal(
-            neutralSetup.berries.amount,
-            optimalIngredientSetup.berries.amount,
-            optimalBerrySetup.berries.amount,
-            optimalSkillSetup.berries.amount
+            neutralSetup.berries[0].amount,
+            optimalIngredientSetup.berries[0].amount,
+            optimalBerrySetup.berries[0].amount,
+            optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: neutralSetup.berries.berry.name,
+            name: neutralSetup.berries[0].berry.name,
           },
         },
         skills: {
@@ -65,15 +65,15 @@ function comparisonChart(
     ...formatData(
       {
         berries: {
-          amount: userSetup.berries.amount,
+          amount: userSetup.berries[0].amount,
           percentage: calculatePercentageOfOptimal(
-            userSetup.berries.amount,
-            optimalBerrySetup.berries.amount,
-            optimalIngredientSetup.berries.amount,
-            optimalSkillSetup.berries.amount
+            userSetup.berries[0].amount,
+            optimalBerrySetup.berries[0].amount,
+            optimalIngredientSetup.berries[0].amount,
+            optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: userSetup.berries.berry.name,
+            name: userSetup.berries[0].berry.name,
           },
         },
         skills: {
@@ -117,15 +117,15 @@ function comparisonChart(
     ...formatData(
       {
         berries: {
-          amount: optimalForSpecialty.berries.amount,
+          amount: optimalForSpecialty.berries[0].amount,
           percentage: calculatePercentageOfOptimal(
-            optimalForSpecialty.berries.amount,
-            optimalBerrySetup.berries.amount,
-            optimalIngredientSetup.berries.amount,
-            optimalSkillSetup.berries.amount
+            optimalForSpecialty.berries[0].amount,
+            optimalBerrySetup.berries[0].amount,
+            optimalIngredientSetup.berries[0].amount,
+            optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: optimalForSpecialty.berries.berry.name,
+            name: optimalForSpecialty.berries[0].berry.name,
           },
         },
         skills: {

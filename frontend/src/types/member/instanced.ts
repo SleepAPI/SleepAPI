@@ -4,6 +4,7 @@ import type {
   DetailedProduce,
   IngredientSet,
   PokemonInstanceExt,
+  Produce,
   RecipeType,
   Summary,
   Time,
@@ -34,8 +35,9 @@ export interface SingleMemberProduction {
 }
 
 export interface MemberProductionExt {
-  berries?: BerrySet
-  ingredients: IngredientSet[]
+  produceTotal: Produce
+  produceFromSkill: Produce
+  produceWithoutSkill: Produce
   skillProcs: number
   skillAmount: number
   member: PokemonInstanceExt
@@ -44,14 +46,14 @@ export interface MemberProductionExt {
 
 export interface SingleProductionExt {
   member: PokemonInstanceExt
-  berries?: BerrySet
+  berries: BerrySet[]
   ingredients: IngredientSet[]
   skillProcs: number
   ingredientPercentage: number
   skillPercentage: number
   carrySize: number
   spilledIngredients: IngredientSet[]
-  sneakySnack?: BerrySet
+  sneakySnack: BerrySet[]
   nrOfHelps: number
   dayHelps: number
   nightHelps: number

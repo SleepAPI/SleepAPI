@@ -163,12 +163,13 @@ class TeamServiceImpl {
       settings
     })
 
-    const teamBerries: BerrySet[] = response.data.members.flatMap((member) =>
-      member.berries ? member.berries : []
+    const teamBerries: BerrySet[] = response.data.members.flatMap(
+      (member) => member.produceTotal.berries
     )
     const teamIngredients: IngredientSet[] = response.data.members.flatMap(
-      (member) => member.ingredients
+      (member) => member.produceTotal.ingredients
     )
+    // TODO: is team production used?
     const teamProduction: TeamCombinedProduction = {
       berries: teamBerries,
       ingredients: teamIngredients,
@@ -183,8 +184,9 @@ class TeamServiceImpl {
           throw new Error('Unidentified member in team calculation')
         }
         return {
-          berries: member.berries,
-          ingredients: member.ingredients,
+          produceTotal: member.produceTotal,
+          produceFromSkill: member.produceFromSkill,
+          produceWithoutSkill: member.produceWithoutSkill,
           skillAmount: member.skillAmount,
           skillProcs: member.skillProcs,
           member: pokemonStore.getPokemon(member.externalId)

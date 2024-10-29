@@ -1,7 +1,15 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
-import { SkillActivation, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
-import { emptyBerrySet } from '../../berry/berry-calculator';
 import {
+  SkillActivation,
+  berry,
+  emptyBerryInventory,
+  emptyIngredientInventory,
+  ingredient,
+  mainskill,
+  pokemon,
+} from 'sleepapi-common';
+import {
+  activateDisguiseBerryBurst,
   activateEnergizingCheer,
   activateExtraHelpful,
   activateHelperBoost,
@@ -19,7 +27,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 3,
       adjustedAmount: 0.7,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 0,
     };
@@ -36,7 +44,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 2,
       adjustedAmount: 0.5,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 0,
     };
@@ -53,7 +61,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 4,
       adjustedAmount: 0.8,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 0,
     };
@@ -69,7 +77,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 0.5,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 1,
     };
@@ -85,13 +93,13 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 0.5,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 0,
     };
     createSkillEvent(params);
     expect(skillActivations.length).toBe(1);
-    expect(skillActivations[0].adjustedProduce!.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toBe(0);
+    expect(skillActivations[0].adjustedProduce?.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toBe(0);
   });
 
   it('shall handle Metronome skill activation differently', () => {
@@ -101,7 +109,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 5,
       adjustedAmount: 1,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 1,
     };
@@ -116,7 +124,7 @@ describe('createSkillEvent', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 0.9,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations,
       uniqueHelperBoost: 0,
     };
@@ -218,7 +226,7 @@ describe('activateNonProduceSkills', () => {
 describe('activateExtraHelpful', () => {
   it('shall correctly calculate extra helpful produce for a given pokemon', () => {
     const params = {
-      pokemonWithAverageProduce: pokemonWithAverageProduce,
+      pokemonSet,
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 1,
@@ -236,7 +244,7 @@ describe('activateExtraHelpful', () => {
       adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount[5] / 5,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
+        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1,
@@ -245,7 +253,7 @@ describe('activateExtraHelpful', () => {
 
   it('shall handle zero adjusted amount', () => {
     const params = {
-      pokemonWithAverageProduce: pokemonWithAverageProduce,
+      pokemonSet: pokemonSet,
       skillLevel: 6,
       nrOfHelpsToActivate: 2,
       adjustedAmount: 0,
@@ -259,7 +267,7 @@ describe('activateExtraHelpful', () => {
       adjustedAmount: expectedAdjustedAmount,
       nrOfHelpsToActivate: 2,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: 0 },
+        berries: [{ berry: berry.BELUE, amount: 0, level: 60 }],
         ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 0 }],
       },
       fractionOfProc: 0,
@@ -268,7 +276,7 @@ describe('activateExtraHelpful', () => {
 
   it('shall process with high metronome factor', () => {
     const params = {
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillLevel: 6,
       nrOfHelpsToActivate: 4,
       adjustedAmount: 1,
@@ -289,7 +297,7 @@ describe('activateExtraHelpful', () => {
       adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount[5] / metronomeAndRandomFactor,
       nrOfHelpsToActivate: 4,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
+        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1 / (metronomeAndRandomFactor / 5),
@@ -300,7 +308,7 @@ describe('activateExtraHelpful', () => {
 describe('activateHelperBoost', () => {
   it('shall correctly calculate helper boost produce for a given pokemon', () => {
     const params = {
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillLevel: 6,
       uniqueHelperBoost: 5,
       nrOfHelpsToActivate: 1,
@@ -309,12 +317,11 @@ describe('activateHelperBoost', () => {
     };
     const result = activateHelperBoost(params);
 
-    const expectedBerriesAmount =
-      pokemonWithAverageProduce.produce.berries!.amount * (mainskill.HELPER_BOOST.amount[5] + 6);
+    const expectedBerriesAmount = pokemonSet.produce.berries[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6);
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6),
+        amount: pokemonSet.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6),
       },
     ];
 
@@ -323,7 +330,7 @@ describe('activateHelperBoost', () => {
       adjustedAmount: mainskill.HELPER_BOOST.amount[5] + 6,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
+        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1,
@@ -332,7 +339,7 @@ describe('activateHelperBoost', () => {
 
   it('shall handle zero adjusted amount', () => {
     const params = {
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillLevel: 6,
       uniqueHelperBoost: 5,
       nrOfHelpsToActivate: 1,
@@ -346,7 +353,7 @@ describe('activateHelperBoost', () => {
       adjustedAmount: 0,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: 0 },
+        berries: [{ berry: berry.BELUE, amount: 0, level: 60 }],
         ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 0 }],
       },
       fractionOfProc: 0,
@@ -355,7 +362,7 @@ describe('activateHelperBoost', () => {
 
   it('shall process with high metronome factor', () => {
     const params = {
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillLevel: 6,
       uniqueHelperBoost: 5,
       nrOfHelpsToActivate: 1,
@@ -366,13 +373,11 @@ describe('activateHelperBoost', () => {
     const metronomeFactor = 15;
 
     const expectedBerriesAmount =
-      (pokemonWithAverageProduce.produce.berries!.amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor;
+      (pokemonSet.produce.berries[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount:
-          (pokemonWithAverageProduce.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6)) /
-          metronomeFactor,
+        amount: (pokemonSet.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount[5] + 6)) / metronomeFactor,
       },
     ];
 
@@ -381,7 +386,7 @@ describe('activateHelperBoost', () => {
       adjustedAmount: (mainskill.HELPER_BOOST.amount[5] + 6) / metronomeFactor,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: { berry: berry.BELUE, amount: expectedBerriesAmount },
+        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1 / metronomeFactor,
@@ -391,7 +396,7 @@ describe('activateHelperBoost', () => {
 
 describe('activateIngredientMagnet', () => {
   it('shall correctly calculate ingredient amounts for a given berry set', () => {
-    const berries = emptyBerrySet(berry.BELUE);
+    const berries = emptyBerryInventory();
     const params = {
       berries: berries,
       skillLevel: 6,
@@ -421,7 +426,7 @@ describe('activateIngredientMagnet', () => {
   });
 
   it('shall handle zero adjusted amount', () => {
-    const berries = emptyBerrySet(berry.BELUE);
+    const berries = emptyBerryInventory();
     const params = {
       berries: berries,
       skillLevel: 6,
@@ -448,7 +453,7 @@ describe('activateIngredientMagnet', () => {
   });
 
   it('shall apply adjustment with high metronome factor', () => {
-    const berries = emptyBerrySet(berry.BELUE);
+    const berries = emptyBerryInventory();
     const params = {
       berries: berries,
       skillLevel: 6,
@@ -527,8 +532,8 @@ describe('activateMetronome', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 3,
       adjustedAmount: 0.6,
-      pokemonWithAverageProduce,
-      skillActivations: skillActivations,
+      pokemonSet,
+      skillActivations,
       uniqueHelperBoost: 1,
     };
     activateMetronome(params);
@@ -544,7 +549,7 @@ describe('activateMetronome', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 2,
       adjustedAmount: 0.8,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations: skillActivations,
       uniqueHelperBoost: 1,
     };
@@ -565,7 +570,7 @@ describe('activateMetronome', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 4,
       adjustedAmount: 1,
-      pokemonWithAverageProduce,
+      pokemonSet,
       skillActivations: skillActivations,
       uniqueHelperBoost: 1,
     };
@@ -575,10 +580,97 @@ describe('activateMetronome', () => {
   });
 });
 
-const pokemonWithAverageProduce: PokemonProduce = {
+const pokemonSet: PokemonProduce = {
   pokemon: pokemon.PINSIR,
   produce: {
-    berries: { berry: berry.BELUE, amount: 10 },
+    berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
   },
 };
+
+describe('activateDisguiseBerryBurst', () => {
+  it('shall correctly calculate berry burst for given pokemon', () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 3,
+      adjustedAmount: 0.7,
+      pokemonSet: pokemonSet,
+      metronomeFactor: 1,
+    };
+    const result = activateDisguiseBerryBurst(params);
+
+    expect(result).toEqual<SkillActivation>({
+      skill: mainskill.DISGUISE_BERRY_BURST,
+      adjustedAmount: (mainskill.DISGUISE_BERRY_BURST.amount[5] * 0.7) / 1,
+      nrOfHelpsToActivate: 3,
+      adjustedProduce: {
+        berries: [
+          {
+            berry: pokemonSet.pokemon.berry,
+            amount: mainskill.DISGUISE_BERRY_BURST.amount[5] * 0.7,
+            level: 0,
+          },
+        ],
+        ingredients: emptyIngredientInventory(),
+      },
+      fractionOfProc: 0.7,
+    });
+  });
+
+  it('shall handle zero adjusted amount', () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 2,
+      adjustedAmount: 0,
+      pokemonSet: pokemonSet,
+      metronomeFactor: 1,
+    };
+    const result = activateDisguiseBerryBurst(params);
+
+    expect(result).toEqual<SkillActivation>({
+      skill: mainskill.DISGUISE_BERRY_BURST,
+      adjustedAmount: 0,
+      nrOfHelpsToActivate: 2,
+      adjustedProduce: {
+        berries: [
+          {
+            berry: pokemonSet.pokemon.berry,
+            amount: 0,
+            level: 0,
+          },
+        ],
+        ingredients: emptyIngredientInventory(),
+      },
+      fractionOfProc: 0,
+    });
+  });
+
+  it('shall calculate adjusted amount with high metronome factor', () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 4,
+      adjustedAmount: 1,
+      pokemonSet,
+      metronomeFactor: 5,
+    };
+    const result = activateDisguiseBerryBurst(params);
+    const expectedAdjustedAmount = (mainskill.DISGUISE_BERRY_BURST.amount[5] * 1) / 5;
+
+    expect(result).toEqual<SkillActivation>({
+      skill: mainskill.DISGUISE_BERRY_BURST,
+      adjustedAmount: expectedAdjustedAmount,
+      nrOfHelpsToActivate: 4,
+      adjustedProduce: {
+        berries: [
+          {
+            berry: pokemonSet.pokemon.berry,
+            amount: mainskill.DISGUISE_BERRY_BURST.amount[5] * 1,
+            level: 0,
+          },
+        ],
+        ingredients: emptyIngredientInventory(),
+      },
+      fractionOfProc: 1 / 5,
+    });
+  });
+});

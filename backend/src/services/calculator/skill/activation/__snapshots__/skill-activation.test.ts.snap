@@ -231,14 +231,17 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   {
     "adjustedAmount": 0.12307692307692308,
     "adjustedProduce": {
-      "berries": {
-        "amount": 1.2307692307692308,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
+      "berries": [
+        {
+          "amount": 1.2307692307692308,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+          "level": 60,
         },
-      },
+      ],
       "ingredients": [
         {
           "amount": 2.4615384615384617,
@@ -281,14 +284,17 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   {
     "adjustedAmount": 0.3076923076923077,
     "adjustedProduce": {
-      "berries": {
-        "amount": 3.076923076923077,
-        "berry": {
-          "name": "BELUE",
-          "type": "steel",
-          "value": 33,
+      "berries": [
+        {
+          "amount": 3.076923076923077,
+          "berry": {
+            "name": "BELUE",
+            "type": "steel",
+            "value": 33,
+          },
+          "level": 60,
         },
-      },
+      ],
       "ingredients": [
         {
           "amount": 6.153846153846154,
@@ -385,14 +391,7 @@ exports[`activateMetronome shall use the correct metronomeFactor for each skill 
   {
     "adjustedAmount": 1.2923076923076924,
     "adjustedProduce": {
-      "berries": {
-        "amount": 0,
-        "berry": {
-          "name": "LUM",
-          "type": "bug",
-          "value": 24,
-        },
-      },
+      "berries": [],
       "ingredients": [
         {
           "amount": 0.07601809954751132,

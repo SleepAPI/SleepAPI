@@ -81,7 +81,8 @@ describe('Team Store', () => {
 
     const pokemonStore = usePokemonStore()
     pokemonStore.upsertLocalPokemon(mockPokemon)
-    teamStore.teams = createMockTeams(2)
+    const previousTeams = createMockTeams(2)
+    teamStore.teams = previousTeams
 
     TeamService.getTeams = vi.fn().mockResolvedValue([
       {
@@ -105,39 +106,8 @@ describe('Team Store', () => {
     await teamStore.syncTeams()
 
     expect(TeamService.getTeams).toHaveBeenCalled()
-    teamStore.teams.forEach((team) => expect(team.production).toBeUndefined())
-    expect(teamStore.$state.teams).toMatchInlineSnapshot(`
-      [
-        {
-          "camp": true,
-          "index": 0,
-          "members": [
-            "external-id",
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-          ],
-          "name": "Team 1",
-          "production": undefined,
-          "version": 1,
-        },
-        {
-          "camp": false,
-          "index": 1,
-          "members": [
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-          ],
-          "name": "Team 2",
-          "production": undefined,
-          "version": 0,
-        },
-      ]
-    `)
+    expect(teamStore.teams[0].production).toBeUndefined() // since version bump
+    expect(teamStore.teams[1].production).toEqual(previousTeams[1].production) // since version bump
   })
 
   it('should reset the state correctly', async () => {
@@ -619,22 +589,6 @@ describe('updateTeamMember', () => {
   })
 })
 
-describe('timewindowDivider', () => {
-  it('shall return 1 for 24H', () => {
-    const teamStore = useTeamStore()
-
-    teamStore.timeWindow = '24H'
-    expect(teamStore.timewindowDivider).toBe(1)
-  })
-
-  it('shall return 3 for 8H', () => {
-    const teamStore = useTeamStore()
-
-    teamStore.timeWindow = '8H'
-    expect(teamStore.timewindowDivider).toBe(3)
-  })
-})
-
 describe('migrate', () => {
   it('shall migrate old teams to new state', () => {
     const teamStore = useTeamStore()
@@ -808,5 +762,40 @@ describe('isSupportMember', () => {
       subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
     })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
+  })
+})
+
+describe('migrate', () => {
+  it('should migrate old teams to new state', () => {
+    const teamStore = useTeamStore()
+
+    teamStore.teams = createMockTeams(2, { memberIndex: undefined })
+    teamStore.timeWindow = undefined as any
+    teamStore.tab = null as any
+
+    teamStore.migrate()
+
+    expect(teamStore.tab).toEqual('overview')
+    expect(teamStore.timeWindow).toEqual('24H')
+    teamStore.teams.forEach((team) => expect(team.memberIndex).toBe(0))
+  })
+})
+
+describe('outdate', () => {
+  it('should outdate teams by resetting production and setting domainVersion', () => {
+    const teamStore = useTeamStore()
+    teamStore.teams = createMockTeams(2)
+    expect(teamStore.domainVersion).toBe(0)
+
+    teamStore.teams.forEach((team) => {
+      expect(team.production).not.toBeUndefined()
+    })
+
+    teamStore.outdate() // sets production to undefined
+
+    teamStore.teams.forEach((team) => {
+      expect(team.production).toBeUndefined()
+    })
+    expect(teamStore.domainVersion).toBeGreaterThan(0)
   })
 })

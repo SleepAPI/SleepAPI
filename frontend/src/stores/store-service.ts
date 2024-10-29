@@ -39,5 +39,7 @@ export function clearCacheKeepLogin() {
 
 export function migrateStores() {
   const teamStore = useTeamStore()
+  const comparisonStore = useComparisonStore()
   teamStore.migrate()
+  comparisonStore.migrate()
 }

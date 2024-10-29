@@ -60,7 +60,7 @@ export function scheduleSkillEvents(params: {
       skillLevel,
       nrOfHelpsToActivate,
       adjustedAmount,
-      pokemonWithAverageProduce,
+      pokemonSet: pokemonWithAverageProduce,
       skillActivations,
       uniqueHelperBoost,
     })

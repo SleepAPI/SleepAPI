@@ -200,26 +200,59 @@ describe('addHelps', () => {
           "spilledIngredients": [],
           "totalHelps": 0,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
         "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
+        },
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -241,26 +274,59 @@ describe('addHelps', () => {
           "spilledIngredients": [],
           "totalHelps": 0,
         },
-        "berries": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
         "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
+        },
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -319,26 +385,59 @@ describe('attemptDayHelp', () => {
           "spilledIngredients": [],
           "totalHelps": 1,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
         "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
+        },
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -367,26 +466,59 @@ describe('attemptDayHelp', () => {
           "spilledIngredients": [],
           "totalHelps": 0,
         },
-        "berries": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
         "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
+        },
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -488,7 +620,7 @@ describe('attemptNightHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1).skillProcs).toEqual(0);
-    expect(memberState.results(1).ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toEqual(0);
+    expect(memberState.results(1).produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toEqual(0);
     expect(memberState.results(1).advanced.nightHelps).toEqual(1);
     expect(memberState.results(1).advanced.totalHelps).toEqual(1);
   });
@@ -518,26 +650,59 @@ describe('attemptNightHelp', () => {
           "spilledIngredients": [],
           "totalHelps": 1,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
         "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
+        },
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 2066,
         "skillProcs": 1,
       }

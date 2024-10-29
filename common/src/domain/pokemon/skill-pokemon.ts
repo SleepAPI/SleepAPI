@@ -36,6 +36,7 @@ import {
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SLOWPOKE_TAIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -47,6 +48,7 @@ import {
   CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S_RANGE,
   COOKING_POWER_UP_S,
+  DISGUISE_BERRY_BURST,
   DREAM_SHARD_MAGNET_S,
   DREAM_SHARD_MAGNET_S_RANGE,
   ENERGIZING_CHEER_S,
@@ -865,6 +867,30 @@ export const DEDENNE: Pokemon = {
   skill: TASTY_CHANCE_S,
 };
 
+export const MIMIKYU: Pokemon = {
+  name: 'MIMIKYU',
+  specialty: 'skill',
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 15.3,
+  skillPercentage: 3.3,
+  berry: BLUK,
+  genders: BALANCED_GENDER,
+  carrySize: 19,
+  previousEvolutions: 0,
+  remainingEvolutions: 0,
+  ingredient0: { amount: 1, ingredient: FANCY_APPLE },
+  ingredient30: [
+    { amount: 2, ingredient: FANCY_APPLE },
+    { amount: 1, ingredient: ROUSING_COFFEE },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: ROUSING_COFFEE },
+    { amount: 2, ingredient: TASTY_MUSHROOM },
+  ],
+  skill: DISGUISE_BERRY_BURST,
+};
+
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   PIKACHU_CHRISTMAS,
   WIGGLYTUFF,
@@ -897,6 +923,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   GALLADE,
   SYLVEON,
   DEDENNE,
+  MIMIKYU,
 ];
 
 export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [

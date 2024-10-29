@@ -67,7 +67,9 @@
           <template #item.sneakySnack="{ item }">
             <div class="flex-center" style="padding-right: 11px">
               <v-img
-                :src="`/images/berries/${item.sneakySnackProduce?.berry.name?.toLowerCase()}.png`"
+                v-for="berrySet in item.sneakySnackProduce"
+                :key="berrySet.berry.name"
+                :src="`/images/berries/${berrySet.berry.name?.toLowerCase()}.png`"
                 height="24"
                 width="24"
               ></v-img>
@@ -197,7 +199,7 @@ export default defineComponent({
               amount: MathUtils.round(amount, 1)
             })
           ),
-          sneakySnack: memberProduction.sneakySnack?.amount ?? 0,
+          sneakySnack: memberProduction.sneakySnack.reduce((sum, cur) => sum + cur.amount, 0),
           sneakySnackProduce: memberProduction.sneakySnack,
           totalHelps: memberProduction.nrOfHelps,
           dayHelps: memberProduction.dayHelps,

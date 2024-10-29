@@ -75,6 +75,7 @@ export default defineComponent({
   },
   methods: {
     clear() {
+      // TODO: this should show a popup that it has been cleared, currently it looks like nothing is done
       clearCacheKeepLogin()
     }
   }

@@ -222,5 +222,6 @@ export const MAINSKILLS: MainSkill[] = [
   METRONOME,
   STOCKPILE_CHARGE_STRENGTH_S,
 ];
+// TODO: looks like metronome can trigger moonlight
 export const METRONOME_SKILLS = MAINSKILLS.filter((s) => s !== METRONOME && !isModifier(s.unit));
 export const METRONOME_FACTOR = METRONOME_SKILLS.length;

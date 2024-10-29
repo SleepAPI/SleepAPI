@@ -1,6 +1,6 @@
-import { MathUtils } from 'src/utils/math-utils';
 import { INGREDIENTS, Ingredient } from '../../domain/ingredient';
 import { IngredientSet } from '../../domain/types/ingredient-set';
+import { MathUtils } from '../math-utils/math-utils';
 
 export function getIngredient(name: string): Ingredient {
   const ing = INGREDIENTS.find((ing) => ing.name.toLowerCase() === name.toLowerCase());
@@ -12,6 +12,14 @@ export function getIngredient(name: string): Ingredient {
 
 export function getIngredientNames(): string[] {
   return INGREDIENTS.map((ing) => ing.name);
+}
+
+export function emptyIngredientInventory(): IngredientSet[] {
+  return [];
+}
+
+export function multiplyIngredients(ingredients: IngredientSet[], multiplyAmount: number) {
+  return ingredients.map(({ amount, ingredient }) => ({ amount: amount * multiplyAmount, ingredient }));
 }
 
 /**
@@ -38,8 +46,7 @@ export function shortPrettifyIngredientDrop(ingredientDrop: IngredientSet[]) {
   return ingredientDrop.map(({ ingredient }) => `${ingredient.name}`).join('/');
 }
 
-export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], providedSeparator?: string) {
-  const separator = providedSeparator ?? ', ';
+export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], separator = ', ') {
   if (ingredientDrop.length >= INGREDIENTS.length) {
     const ingMagnetAmount = ingredientDrop.reduce(
       (min, cur) => (cur.amount < min ? cur.amount : min),
