@@ -17,8 +17,16 @@
 import { OptimalTeamSolution } from '@src/domain/combination/combination';
 import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
-import { IngredientSet, MEALS_IN_DAY, combineSameIngredientsInDrop, mainskill } from 'sleepapi-common';
+import {
+  IngredientSet,
+  MEALS_IN_DAY,
+  combineSameIngredientsInDrop,
+  mainskill,
+  multiplyBerries,
+  multiplyIngredients,
+} from 'sleepapi-common';
 import {
   calculateHelperBoostIngredientsIncrease,
   calculateRemainingSimplifiedIngredients,
@@ -29,7 +37,6 @@ import {
   sumOfSimplifiedIngredients,
 } from '../../utils/set-cover-utils/set-cover-utils';
 import {
-  addIngredientSet,
   calculateRemainingIngredients,
   extractRelevantSurplus,
   sortByMinimumFiller,
@@ -268,21 +275,10 @@ export class SetCover {
         ...member,
         detailedProduce: {
           ...member.detailedProduce,
-          produce: {
-            ingredients: addIngredientSet(
-              member.detailedProduce.produce.ingredients,
-              member.averageProduce.ingredients.map(({ amount, ingredient }) => ({
-                ingredient,
-                amount: amount * addedHelps,
-              }))
-            ),
-            berries: member.detailedProduce.produce.berries && {
-              amount:
-                member.detailedProduce.produce.berries.amount +
-                addedHelps * (member.averageProduce.berries?.amount ?? 0),
-              berry: member.detailedProduce.produce.berries.berry,
-            },
-          },
+          produce: InventoryUtils.addToInventory(member.detailedProduce.produce, {
+            berries: multiplyBerries(member.averageProduce.berries, addedHelps),
+            ingredients: multiplyIngredients(member.averageProduce.ingredients, addedHelps),
+          }),
         },
       }));
 

@@ -18,7 +18,7 @@ function prettifyIngredientDrop(ingredientDrop) {
 }
 
 function prettifyProduce(produce) {
-  const berries = produce.berries;
+  const berries = produce.berries[0];
   const ings = produce.ingredients;
   return `${roundDown(berries.amount, 2)} ${berries.berry.name} ${
     ings.length > 0 ? `+ ${prettifyIngredientDrop(ings)}` : ''

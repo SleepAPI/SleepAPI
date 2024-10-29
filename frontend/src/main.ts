@@ -15,6 +15,7 @@ import '@/assets/main.scss'
 import App from '@/app.vue'
 import router from '@/router/router'
 
+import domainVersionPlugin from '@/stores/domain-version-plugin'
 import { migrateStores } from '@/stores/store-service'
 import { type ThemeDefinition } from 'vuetify'
 
@@ -61,6 +62,8 @@ const vuetify = createVuetify({
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
+pinia.use(domainVersionPlugin)
+
 app.use(pinia)
 migrateStores()
 

@@ -9,7 +9,7 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { Produce, Time, TimePeriod, mainskill, nature } from 'sleepapi-common';
+import { Produce, Time, TimePeriod, mainskill, multiplyBerries, nature } from 'sleepapi-common';
 import { splitNumber } from '../calculator-utils/calculator-utils';
 import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
 
@@ -37,10 +37,7 @@ export function getExtraHelpfulEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: averageBerries && {
-            berry: averageBerries.berry,
-            amount: averageBerries.amount * adjustedAmount,
-          },
+          berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
             amount: amount * adjustedAmount,
@@ -86,10 +83,7 @@ export function getHelperBoostEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: averageBerries && {
-            berry: averageBerries.berry,
-            amount: averageBerries.amount * adjustedAmount,
-          },
+          berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
             amount: amount * adjustedAmount,

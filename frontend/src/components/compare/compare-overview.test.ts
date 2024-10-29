@@ -11,8 +11,9 @@ import { nextTick } from 'vue'
 describe('CompareOverview', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareOverview>>
 
+  const mockPokemon = createMockPokemon({ name: 'Ash' })
   const mockMemberProduction: SingleProductionExt = {
-    member: createMockPokemon({ name: 'Ash' }),
+    member: mockPokemon,
     ingredients: [
       {
         amount: 10,
@@ -24,10 +25,13 @@ describe('CompareOverview', () => {
       }
     ],
     skillProcs: 5,
-    berries: {
-      amount: 100,
-      berry: berry.BELUE
-    },
+    berries: [
+      {
+        amount: 100,
+        berry: berry.BELUE,
+        level: mockPokemon.level
+      }
+    ],
     ingredientPercentage: 0.2,
     skillPercentage: 0.02,
     carrySize: 10,
@@ -38,7 +42,8 @@ describe('CompareOverview', () => {
     nrOfHelps: 10,
     sneakySnackHelps: 10,
     spilledIngredients: [],
-    totalRecovery: 10
+    totalRecovery: 10,
+    sneakySnack: []
   }
 
   beforeEach(() => {

@@ -11,22 +11,51 @@ export function createMockMemberProduction(
 ): MemberProductionExt {
   return {
     member: createMockPokemon(),
-    ingredients: [
-      {
-        amount: 10,
-        ingredient: ingredient.FANCY_APPLE
-      },
-      {
-        amount: 20,
-        ingredient: ingredient.HONEY
-      }
-    ],
+
+    produceTotal: {
+      berries: [
+        {
+          amount: 10,
+          berry: berry.BELUE,
+          level: 60
+        }
+      ],
+      ingredients: [
+        {
+          amount: 10,
+          ingredient: ingredient.FANCY_APPLE
+        },
+        {
+          amount: 20,
+          ingredient: ingredient.HONEY
+        }
+      ]
+    },
+    produceFromSkill: {
+      berries: [],
+      ingredients: []
+    },
+    produceWithoutSkill: {
+      berries: [
+        {
+          amount: 10,
+          berry: berry.BELUE,
+          level: 60
+        }
+      ],
+      ingredients: [
+        {
+          amount: 10,
+          ingredient: ingredient.FANCY_APPLE
+        },
+        {
+          amount: 20,
+          ingredient: ingredient.HONEY
+        }
+      ]
+    },
     skillAmount: 100,
     skillProcs: 5,
-    berries: {
-      amount: 10,
-      berry: berry.BELUE
-    },
     singleProduction: createMockMemberSingleProduction(),
     ...attrs
   }

@@ -61,7 +61,7 @@ describe('TeamResults', () => {
     expect(members).toBeDefined()
     expect(members!.length).toBe(1)
     expect(members![0].member).toEqual({ ...mockPokemon, rp: undefined })
-    expect(members![0].berries?.amount).toBe(10)
+    expect(members![0].produceTotal.berries[0].amount).toBe(10)
   })
 
   it('changes window item correctly', async () => {

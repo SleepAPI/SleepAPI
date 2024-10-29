@@ -3,8 +3,10 @@ import { FANCY_APPLE, HONEY, INGREDIENTS, SOOTHING_CACAO } from '../../domain/in
 import { IngredientSet } from '../../domain/types/ingredient-set';
 import {
   combineSameIngredientsInDrop,
+  emptyIngredientInventory,
   getIngredient,
   getIngredientNames,
+  multiplyIngredients,
   prettifyIngredientDrop,
   shortPrettifyIngredientDrop,
 } from './ingredient-utils';
@@ -62,6 +64,26 @@ describe('getIngredientNames', () => {
         "Tail",
       ]
     `);
+  });
+});
+
+describe('emptyIngredientInventory', () => {
+  it('shall return an empty ingredient inventory', () => {
+    expect(emptyIngredientInventory()).toEqual([]);
+  });
+});
+
+describe('multiplyIngredients', () => {
+  it('shall multiply the amount of each ingredient by the given factor', () => {
+    const ingredients: IngredientSet[] = [
+      { ingredient: HONEY, amount: 2 },
+      { ingredient: FANCY_APPLE, amount: 3 },
+    ];
+    const result = multiplyIngredients(ingredients, 2);
+    expect(result).toEqual([
+      { ingredient: HONEY, amount: 4 },
+      { ingredient: FANCY_APPLE, amount: 6 },
+    ]);
   });
 });
 

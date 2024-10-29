@@ -49,7 +49,7 @@ export function createMockTeamProduction(attrs?: Partial<TeamProductionExt>): Te
           ]
         }
       },
-      berries: [{ amount: 10, berry: berry.BELUE }],
+      berries: [{ amount: 10, berry: berry.BELUE, level: 60 }],
       ingredients: [{ amount: 10, ingredient: ingredient.FANCY_APPLE }]
     },
     members: [createMockMemberProduction()],

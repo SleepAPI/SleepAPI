@@ -6,6 +6,7 @@ import {
   Produce,
   TimePeriod,
   berry,
+  emptyBerryInventory,
   ingredient,
   mainskill,
   maxCarrySize,
@@ -49,10 +50,13 @@ export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
 };
 
 export const MOCKED_PRODUCE: Produce = {
-  berries: {
-    amount: 2,
-    berry: berry.GREPA,
-  },
+  berries: [
+    {
+      amount: 2,
+      berry: berry.GREPA,
+      level: 60,
+    },
+  ],
   ingredients: [
     {
       amount: 1,
@@ -101,20 +105,14 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
   },
   detailedProduce: {
     produce: {
-      berries: {
-        amount: 0,
-        berry: berry.LUM,
-      },
+      berries: emptyBerryInventory(),
       ingredients: [
         { amount: 2, ingredient: ingredient.HONEY },
         { amount: 5, ingredient: ingredient.FANCY_APPLE },
       ],
     },
     spilledIngredients: [],
-    sneakySnack: {
-      amount: 0,
-      berry: berry.LUM,
-    },
+    sneakySnack: emptyBerryInventory(),
     dayHelps: 0,
     nightHelps: 0,
     nightHelpsBeforeSS: 0,

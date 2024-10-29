@@ -170,7 +170,7 @@
                   <div>{{ item.energyPerMember }} x5</div>
                 </div>
                 <div v-else>
-                  {{ item.skillValue }}
+                  {{ item.skillStrength }}
                 </div>
               </div>
             </div>
@@ -194,6 +194,7 @@
 import { defineComponent } from 'vue'
 
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
+import { StrengthService } from '@/services/strength/strength-service'
 import { mainskillImage, pokemonImage } from '@/services/utils/image-utils'
 import {
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
@@ -205,11 +206,8 @@ import {
   MAX_RECIPE_BONUS,
   MAX_RECIPE_LEVEL,
   MathUtils,
-  Strength,
-  berryPowerForLevel,
   compactNumber,
   defaultZero,
-  isSkillOrModifierOf,
   mainskill,
   recipeLevelBonus
 } from 'sleepapi-common'
@@ -273,35 +271,53 @@ export default defineComponent({
       const production = []
       for (const memberProduction of this.comparisonStore.members) {
         const memberPokemon = memberProduction.member.pokemon
-        const berryPower = this.showBerries ? this.berryPower(memberProduction) : 0
+        const member = memberProduction.member
+
+        const berryPower = this.showBerries
+          ? StrengthService.berryStrength({
+              favored: this.comparisonStore.favoredBerries,
+              berries: memberProduction.berries.filter((b) => b.level === member.level),
+              timeWindow: this.comparisonStore.timeWindow
+            })
+          : 0
+
         const ingredientPower = this.showIngredientMax
           ? this.highestIngredientPower(memberProduction)
           : this.showIngredientMin
             ? this.lowestIngredientPower(memberProduction)
             : 0
-        const skillValue = this.showSkills ? this.skillValue(memberProduction) : 0
-        const total = Math.floor(
-          berryPower +
-            ingredientPower +
-            (isSkillOrModifierOf(memberPokemon.skill, Strength) ? skillValue : 0)
-        )
+
+        const skillStrength = this.showSkills
+          ? StrengthService.skillStrength({
+              skill: memberPokemon.skill,
+              amount:
+                memberPokemon.skill.amount[member.skillLevel - 1] * memberProduction.skillProcs,
+              // classic calc returns berry array with 2 elements, first is own berries, second is berries from skill
+              // berries from skill can be identified with level === 0, but we need to update this to real level so
+              // that the berries can scale. the classic calc is messy
+              berries: memberProduction.berries
+                .filter((b) => b.level !== member.level)
+                .map((b) => ({ amount: b.amount, berry: b.berry, level: member.level })),
+              favored: this.comparisonStore.favoredBerries,
+              timeWindow: this.comparisonStore.timeWindow
+            })
+          : 0
+        const total = Math.floor(berryPower + ingredientPower + skillStrength)
+
         production.push({
           member: memberProduction.member.name,
           pokemon: memberPokemon,
           shiny: memberProduction.member.shiny,
           berries: berryPower,
           berryCompact: compactNumber(berryPower),
-          berryName: memberProduction.berries?.berry.name,
           ingredients:
-            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) /
-            this.comparisonStore.timewindowDivider,
+            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
+            StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
           ingredientPower,
           ingredientCompact: compactNumber(ingredientPower),
           skill: memberPokemon.skill,
-          skillValue,
-          skillCompact: isSkillOrModifierOf(memberPokemon.skill, Strength)
-            ? compactNumber(skillValue)
-            : '',
+          skillStrength,
+          skillCompact: skillStrength > 0 ? compactNumber(skillStrength) : '',
           energyPerMember: this.energyPerMember(memberProduction),
           total,
           totalCompact: compactNumber(total)
@@ -314,10 +330,7 @@ export default defineComponent({
       const result = []
       for (const member of sortedProduction) {
         const berryPercentage = defaultZero((member.berries / highestTotal) * 100)
-        const skillPercentage = defaultZero(
-          ((isSkillOrModifierOf(member.skill, Strength) ? member.skillValue : 0) / highestTotal) *
-            100
-        )
+        const skillPercentage = defaultZero((member.skillStrength / highestTotal) * 100)
         const ingredientPercentage = defaultZero((member.ingredientPower / highestTotal) * 100)
         const comparedToBest = defaultZero((1 - member.total / highestTotal) * 100)
 
@@ -333,45 +346,23 @@ export default defineComponent({
     }
   },
   methods: {
-    energyPerMember(memberProduction: SingleProductionExt) {
+    energyPerMember(memberProduction: SingleProductionExt): number | undefined {
       const skill = memberProduction.member.pokemon.skill
+
       if (
-        skill.name === mainskill.ENERGY_FOR_EVERYONE.name ||
-        skill.name === mainskill.ENERGIZING_CHEER_S.name
+        skill.name === mainskill.ENERGIZING_CHEER_S.name ||
+        skill.name === mainskill.ENERGY_FOR_EVERYONE.name
       ) {
-        return MathUtils.round(this.skillValue(memberProduction) / 5, 1)
+        const amount =
+          memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1]
+        const energy = StrengthService.skillValue({
+          skill,
+          amount,
+          timeWindow: this.comparisonStore.timeWindow
+        })
+        const factor = skill.name === mainskill.ENERGIZING_CHEER_S.name ? 5 : 1
+        return MathUtils.round(energy / factor, 1)
       }
-    },
-    skillValue(memberProduction: SingleProductionExt) {
-      // TODO: just doing amount[level-1] doesnt work for skills like helper boost, classic calc should return skillAmount
-      const amount =
-        memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1] *
-        (memberProduction.member.pokemon.skill.name === mainskill.ENERGY_FOR_EVERYONE.name ? 5 : 1)
-      const amountWithMaybeIslandBonus = isSkillOrModifierOf(
-        memberProduction.member.pokemon.skill,
-        Strength
-      )
-        ? amount * this.userStore.islandBonus
-        : amount
-      // TODO: different rounding for different skills
-      return MathUtils.round(
-        (amountWithMaybeIslandBonus * memberProduction.skillProcs) /
-          this.comparisonStore.timewindowDivider,
-        1
-      )
-    },
-    berryPower(memberProduction: SingleProductionExt) {
-      const favoredBerryMultiplier = this.comparisonStore.favoredBerries.some(
-        (berry) => berry.name === memberProduction.member.pokemon.berry.name
-      )
-        ? 2
-        : 1
-      return Math.floor(
-        ((memberProduction.berries?.amount ?? 0) / this.comparisonStore.timewindowDivider) *
-          berryPowerForLevel(memberProduction.member.pokemon.berry, memberProduction.member.level) *
-          this.userStore.islandBonus *
-          favoredBerryMultiplier
-      )
     },
     lowestIngredientPower(memberProduction: SingleProductionExt) {
       const amount = memberProduction.ingredients.reduce(
@@ -383,7 +374,7 @@ export default defineComponent({
             this.userStore.islandBonus,
         0
       )
-      return Math.floor(amount / this.comparisonStore.timewindowDivider)
+      return Math.floor(amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow))
     },
     highestIngredientPower(memberProduction: SingleProductionExt) {
       const recipeBonus = 1 + MAX_RECIPE_BONUS / 100
@@ -396,7 +387,7 @@ export default defineComponent({
           (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
           0
         )
-      return Math.floor(amount / this.comparisonStore.timewindowDivider)
+      return Math.floor(amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow))
     },
     setIngredientOptions(option: string) {
       this.selectedIngredientOption = option

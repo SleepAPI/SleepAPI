@@ -78,28 +78,31 @@ describe('calculateTeam', () => {
     const result = calculateTeam({ members, settings }, 5000);
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries).toMatchInlineSnapshot(`
+    expect(result.members[0].produceTotal).toMatchInlineSnapshot(`
       {
-        "amount": 39.98336504575599,
-        "berry": {
-          "name": "LUM",
-          "type": "bug",
-          "value": 24,
-        },
-      }
-    `);
-    expect(result.members[0].ingredients).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 90.93165396225287,
-          "ingredient": {
-            "longName": "Honey",
-            "name": "Honey",
-            "taxedValue": 29.8,
-            "value": 101,
+        "berries": [
+          {
+            "amount": 39.98336504575599,
+            "berry": {
+              "name": "LUM",
+              "type": "bug",
+              "value": 24,
+            },
+            "level": 60,
           },
-        },
-      ]
+        ],
+        "ingredients": [
+          {
+            "amount": 90.93165396225288,
+            "ingredient": {
+              "longName": "Honey",
+              "name": "Honey",
+              "taxedValue": 29.8,
+              "value": 101,
+            },
+          },
+        ],
+      }
     `);
   });
 });

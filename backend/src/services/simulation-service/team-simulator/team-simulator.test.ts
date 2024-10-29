@@ -63,8 +63,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`35.4`);
-    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
+    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.4`);
+    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`35`);
   });
 
@@ -100,8 +100,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`40.56281822975349`);
-    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`92.89420577024654`);
+    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`40.56281822975349`);
+    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`92.89420577024654`);
   });
 
   it('shall calculate team with multiple members', () => {
@@ -131,8 +131,8 @@ describe('TeamSimulator', () => {
     expect(result.members).toHaveLength(5);
 
     for (const member of result.members) {
-      expect(member.berries?.amount).toEqual(35.4);
-      expect(member.ingredients[0].amount).toEqual(8.6);
+      expect(member.produceTotal.berries[0].amount).toEqual(35.4);
+      expect(member.produceTotal.ingredients[0].amount).toEqual(8.6);
       expect(member.skillProcs).toEqual(35);
     }
   });
@@ -175,8 +175,8 @@ describe('TeamSimulator', () => {
 
     expect(result.members).toHaveLength(2);
 
-    expect(result.members[0].berries?.amount).toMatchInlineSnapshot(`51`);
-    expect(result.members[0].ingredients[0].amount).toMatchInlineSnapshot(`10`);
+    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`51`);
+    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`10`);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`42`);
   });
 

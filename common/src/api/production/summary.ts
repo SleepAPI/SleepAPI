@@ -13,6 +13,7 @@ export interface Summary {
   skillEnergySelfValue: number;
   skillEnergyOthersValue: number;
   skillProduceValue: Produce;
+  skillBerriesOtherValue: number;
   skillStrengthValue: number;
   skillDreamShardValue: number;
   skillPotSizeValue: number;

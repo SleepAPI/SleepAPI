@@ -1,7 +1,7 @@
-import { PokemonInstance } from '../../../api/pokemon/pokemon-instance';
 import { Recipe } from '../../../domain/recipe/recipe';
-import { BerrySet } from '../../../domain/types/berry-drop';
 import { IngredientSet } from '../../../domain/types/ingredient-set';
+import { PokemonInstance } from '../../pokemon/pokemon-instance';
+import { Produce } from '../../production';
 
 export interface TeamSettings {
   camp: boolean;
@@ -28,8 +28,9 @@ export interface MemberProductionAdvanced {
 }
 
 export interface MemberProduction {
-  berries?: BerrySet;
-  ingredients: IngredientSet[];
+  produceTotal: Produce;
+  produceFromSkill: Produce;
+  produceWithoutSkill: Produce;
   skillProcs: number;
   skillAmount: number;
   externalId?: string;

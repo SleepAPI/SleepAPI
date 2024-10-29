@@ -288,7 +288,7 @@ describe('scheduleSkillEvents', () => {
 const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: pokemon.PINSIR,
   produce: {
-    berries: { berry: berry.BELUE, amount: 10 },
+    berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
   },
 };

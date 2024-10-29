@@ -3,6 +3,7 @@ import { randomName } from '@/services/utils/name-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
+import type { TimeWindowDay } from '@/types/time/time-window'
 import { defineStore } from 'pinia'
 import {
   DOMAIN_VERSION,
@@ -21,7 +22,7 @@ export interface TeamState {
   loadingTeams: boolean
   loadingMembers: boolean[]
   domainVersion: number
-  timeWindow: '8H' | '24H'
+  timeWindow: TimeWindowDay
   tab: 'overview' | 'members' | 'cooking'
   teams: TeamInstance[]
 }
@@ -69,8 +70,7 @@ export const useTeamStore = defineStore('team', {
     getCurrentMember: (state) => {
       const currentTeam = state.teams[state.currentIndex]
       return currentTeam.production?.members.at(currentTeam.memberIndex)?.member.externalId
-    },
-    timewindowDivider: (state) => (state.timeWindow === '24H' ? 1 : 3)
+    }
   },
   actions: {
     migrate() {
@@ -80,14 +80,21 @@ export const useTeamStore = defineStore('team', {
       if (!this.tab) {
         this.tab = 'overview'
       }
+      if (this.maxAvailableTeams < MAX_TEAMS) {
+        this.maxAvailableTeams = MAX_TEAMS
+      }
+
       for (const team of this.teams) {
         if (!team.memberIndex) {
           team.memberIndex = 0
         }
       }
-      if (this.maxAvailableTeams < MAX_TEAMS) {
-        this.maxAvailableTeams = MAX_TEAMS
+    },
+    outdate() {
+      for (const team of this.teams) {
+        team.production = undefined
       }
+      this.domainVersion = DOMAIN_VERSION
     },
     async syncTeams() {
       const userStore = useUserStore()
@@ -142,15 +149,6 @@ export const useTeamStore = defineStore('team', {
             }
           }
         }
-      }
-
-      // we do this last since we want to fetch teams from server and update anyways first
-      // if domain version is bumped this indicates the base pokemon data has changed (buffs, new patch etc)
-      if (this.domainVersion < DOMAIN_VERSION) {
-        for (const team of this.teams) {
-          team.production = undefined
-        }
-        this.domainVersion = DOMAIN_VERSION
       }
     },
     next() {

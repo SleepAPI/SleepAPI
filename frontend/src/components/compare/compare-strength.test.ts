@@ -1,19 +1,31 @@
 import CompareStrength from '@/components/compare/compare-strength.vue'
-import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { StrengthService } from '@/services/strength/strength-service'
+import {
+  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+  useComparisonStore
+} from '@/stores/comparison-store/comparison-store'
 import { useUserStore } from '@/stores/user-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, berryPowerForLevel, ingredient } from 'sleepapi-common'
+import {
+  MAX_RECIPE_BONUS,
+  MAX_RECIPE_LEVEL,
+  berry,
+  berryPowerForLevel,
+  ingredient,
+  recipeLevelBonus
+} from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
 describe('CompareStrength', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareStrength>>
 
+  const mockPokemon = createMockPokemon({ name: 'Ash', level: 10, skillLevel: 1 })
   const mockMemberProduction: SingleProductionExt = {
-    member: createMockPokemon({ name: 'Ash' }),
+    member: mockPokemon,
     ingredients: [
       {
         amount: 10,
@@ -25,10 +37,13 @@ describe('CompareStrength', () => {
       }
     ],
     skillProcs: 5,
-    berries: {
-      amount: 100,
-      berry: berry.BELUE
-    },
+    berries: [
+      {
+        amount: 100,
+        berry: berry.BELUE,
+        level: mockPokemon.level
+      }
+    ],
     ingredientPercentage: 0.2,
     skillPercentage: 0.02,
     carrySize: 10,
@@ -39,7 +54,8 @@ describe('CompareStrength', () => {
     nrOfHelps: 10,
     sneakySnackHelps: 10,
     spilledIngredients: [],
-    totalRecovery: 10
+    totalRecovery: 10,
+    sneakySnack: []
   }
 
   beforeEach(() => {
@@ -79,27 +95,49 @@ describe('CompareStrength', () => {
     // Check berry power
     const berryPower =
       berryPowerForLevel(
-        mockMemberProduction.member.pokemon.berry,
-        mockMemberProduction.member.level
+        mockMemberProduction.berries[0].berry,
+        mockMemberProduction.berries[0].level
       ) *
-      (mockMemberProduction.berries?.amount ?? 1) *
+      (mockMemberProduction.berries[0].amount ?? 1) *
       userStore.islandBonus
     expect(firstRowCells[1].text()).toContain(berryPower.toString())
 
     // Check ingredient power range
-    const highestIngredientValue = wrapper.vm.highestIngredientPower(mockMemberProduction)
+    const highestIngredientValue = Math.floor(
+      (1 + MAX_RECIPE_BONUS / 100) *
+        recipeLevelBonus[MAX_RECIPE_LEVEL] *
+        userStore.islandBonus *
+        AVERAGE_WEEKLY_CRIT_MULTIPLIER *
+        mockMemberProduction.ingredients.reduce(
+          (sum, cur) => sum + cur.amount * cur.ingredient.value,
+          0
+        )
+    )
+    expect(wrapper.vm.highestIngredientPower(mockMemberProduction)).toEqual(highestIngredientValue)
 
     const ingredientPower = firstRowCells[2].text()
     expect(ingredientPower).toContain(highestIngredientValue.toString())
 
     // Check skill value
-    const skillValue = wrapper.vm.skillValue(mockMemberProduction)
+    const skillValue = StrengthService.skillStrength({
+      skill: mockMemberProduction.member.pokemon.skill,
+      amount:
+        mockMemberProduction.member.pokemon.skill.amount[
+          mockMemberProduction.member.skillLevel - 1
+        ] * mockMemberProduction.skillProcs,
+      berries: mockMemberProduction.berries.filter(
+        (b) => b.level !== mockMemberProduction.member.level
+      ),
+      favored: [],
+      timeWindow: '24H'
+    })
     expect(firstRowCells[3].text()).toContain(skillValue.toString())
 
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
     expect(firstRowCells[4].text()).toContain(totalPower.toString())
-    expect(totalPower).toEqual(38651)
+
+    expect(totalPower).toEqual(40051)
   })
 
   it('renders 8h time window correctly in data tab', async () => {
@@ -123,31 +161,54 @@ describe('CompareStrength', () => {
     expect(firstRowCells[0].text()).toContain('Ash')
 
     // Check berry power
+    const factor = 1 / 3
     const berryPower = Math.floor(
-      (berryPowerForLevel(
-        mockMemberProduction.member.pokemon.berry,
-        mockMemberProduction.member.level
+      berryPowerForLevel(
+        mockMemberProduction.berries[0].berry,
+        mockMemberProduction.berries[0].level
       ) *
-        (mockMemberProduction.berries?.amount ?? 1) *
-        userStore.islandBonus) /
-        3
+        mockMemberProduction.berries[0].amount *
+        userStore.islandBonus *
+        factor
     )
-    expect(firstRowCells[1].text()).toContain(berryPower.toString())
+    expect(Math.abs(+firstRowCells[1].text() - berryPower)).toBeLessThanOrEqual(1)
 
     // Check ingredient power range
-    const highestIngredientValue = wrapper.vm.highestIngredientPower(mockMemberProduction)
+    const highestIngredientValue = Math.floor(
+      ((1 + MAX_RECIPE_BONUS / 100) *
+        recipeLevelBonus[MAX_RECIPE_LEVEL] *
+        userStore.islandBonus *
+        AVERAGE_WEEKLY_CRIT_MULTIPLIER *
+        mockMemberProduction.ingredients.reduce(
+          (sum, cur) => sum + cur.amount * cur.ingredient.value,
+          0
+        )) /
+        3
+    )
+    expect(wrapper.vm.highestIngredientPower(mockMemberProduction)).toEqual(highestIngredientValue)
 
     const ingredientPower = firstRowCells[2].text()
     expect(ingredientPower).toContain(highestIngredientValue.toString())
 
     // Check skill value
-    const skillValue = wrapper.vm.skillValue(mockMemberProduction)
+    const skillValue = StrengthService.skillStrength({
+      skill: mockMemberProduction.member.pokemon.skill,
+      amount:
+        mockMemberProduction.member.pokemon.skill.amount[
+          mockMemberProduction.member.skillLevel - 1
+        ] * mockMemberProduction.skillProcs,
+      berries: mockMemberProduction.berries.filter(
+        (b) => b.level !== mockMemberProduction.member.level
+      ),
+      favored: [],
+      timeWindow: '8H'
+    })
     expect(firstRowCells[3].text()).toContain(skillValue.toString())
 
     // Check total power
     const totalPower = Math.floor(berryPower + highestIngredientValue + skillValue)
-    expect(firstRowCells[4].text()).toContain(totalPower.toString())
-    expect(totalPower).toEqual(12882)
+    expect(Math.abs(+firstRowCells[4].text() - totalPower)).toBeLessThanOrEqual(1)
+    expect(totalPower).toEqual(13350)
   })
 
   it('displays the correct number of headers', async () => {

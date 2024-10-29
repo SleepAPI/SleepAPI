@@ -118,14 +118,17 @@ describe('setupAndRunProductionSimulation', () => {
         "nightHelps": 20,
         "nightHelpsBeforeSS": 20,
         "produce": {
-          "berries": {
-            "amount": 46.64959999999999,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
+          "berries": [
+            {
+              "amount": 46.64959999999999,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
+          ],
           "ingredients": [
             {
               "amount": 9.116800000000003,
@@ -227,14 +230,7 @@ describe('setupAndRunProductionSimulation', () => {
             },
           },
         ],
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
+        "sneakySnack": [],
         "spilledIngredients": [
           {
             "amount": 0,

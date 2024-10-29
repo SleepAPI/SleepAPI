@@ -21,7 +21,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Produce, Time, isSkillOrModifierOf, mainskill } from 'sleepapi-common';
+import { MathUtils, Produce, Time, emptyProduce, isSkillOrModifierOf, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -59,13 +59,7 @@ export function randomizedSimulation(params: {
 
   // TODO: only needed before refactor
   const eventLog: ScheduledEvent[] = [];
-  let currentInventory: Produce = {
-    ingredients: [],
-    berries: {
-      amount: 0,
-      berry: pokemonWithAverageProduce.pokemon.berry,
-    },
-  };
+  let currentInventory: Produce = emptyProduce();
 
   // summary values
   let skillProcsDay = 0;

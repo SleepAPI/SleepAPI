@@ -62,6 +62,7 @@ describe('finishSimulation', () => {
       totalProduce: MOCKED_PRODUCE,
       totalRecovery: 0,
       collectFrequency: MOCKED_MAIN_SLEEP.end,
+      skillBerriesOtherValue: 0,
     };
 
     finishSimulation({

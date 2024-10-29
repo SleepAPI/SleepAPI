@@ -2,10 +2,9 @@ import { PokemonProduce } from '@src/domain/combination/produce';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
-import { emptyBerrySet } from '@src/services/calculator/berry/berry-calculator';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { berry, ingredient, mainskill, maxCarrySize, nature } from 'sleepapi-common';
+import { berry, emptyBerryInventory, ingredient, mainskill, maxCarrySize, nature } from 'sleepapi-common';
 import { simulation } from './simulator';
 
 describe('simulator', () => {
@@ -48,7 +47,7 @@ describe('simulator', () => {
       skillActivations: [
         { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 },
       ],
-      sneakySnackBerries: emptyBerrySet(berry.BELUE),
+      sneakySnackBerries: emptyBerryInventory(),
       mealTimes: [],
     });
     expect(log.length).toBeGreaterThan(0);
@@ -63,14 +62,17 @@ describe('simulator', () => {
         "nightHelps": 37,
         "nightHelpsBeforeSS": 7,
         "produce": {
-          "berries": {
-            "amount": 229.33333333333334,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
+          "berries": [
+            {
+              "amount": 229.33333333333334,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
+          ],
           "ingredients": [
             {
               "amount": 114.66666666666667,
@@ -112,14 +114,7 @@ describe('simulator', () => {
             },
           },
         ],
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
+        "sneakySnack": [],
         "spilledIngredients": [
           {
             "amount": 30.333333333333332,
@@ -139,7 +134,7 @@ describe('simulator', () => {
 const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: MOCKED_POKEMON,
   produce: {
-    berries: { berry: berry.BELUE, amount: 2 },
+    berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
   },
 };

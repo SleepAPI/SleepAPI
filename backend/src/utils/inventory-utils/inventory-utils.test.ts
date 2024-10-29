@@ -1,18 +1,21 @@
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { Produce, berry, ingredient, prettifyIngredientDrop, subskill } from 'sleepapi-common';
+import { Produce, berry, emptyBerryInventory, ingredient, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 
 describe('emptyInventory', () => {
   it('shall empty inventory', () => {
     let inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
     inventory = InventoryUtils.getEmptyInventory();
-    expect(inventory.berries).toBeUndefined();
+    expect(inventory.berries).toEqual([]);
     expect(inventory.ingredients).toEqual([]);
   });
 });
@@ -20,10 +23,13 @@ describe('emptyInventory', () => {
 describe('countInventory', () => {
   it('shall count inventory size correctly', () => {
     const inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
@@ -32,6 +38,7 @@ describe('countInventory', () => {
 
   it('shall count inventory size and ignore berries if no berries', () => {
     const inventory: Produce = {
+      berries: emptyBerryInventory(),
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
@@ -40,10 +47,13 @@ describe('countInventory', () => {
 
   it('shall count inventory size and ignore ingredients if no ingredients', () => {
     const inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [],
     };
 
@@ -58,10 +68,13 @@ describe('countInventory', () => {
 describe('addToInventory', () => {
   it('shall add produce to inventory', () => {
     let inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
@@ -72,11 +85,14 @@ describe('addToInventory', () => {
   it('shall add produce to empty inventory', () => {
     let inventory = InventoryUtils.getEmptyInventory();
 
-    const addedProduce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+    const addedProduce: Produce = {
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
@@ -84,14 +100,17 @@ describe('addToInventory', () => {
     expect(InventoryUtils.countInventory(inventory)).toBe(4);
     expect(inventory).toMatchInlineSnapshot(`
       {
-        "berries": {
-          "amount": 2,
-          "berry": {
-            "name": "LEPPA",
-            "type": "fire",
-            "value": 27,
+        "berries": [
+          {
+            "amount": 2,
+            "berry": {
+              "name": "LEPPA",
+              "type": "fire",
+              "value": 27,
+            },
+            "level": 60,
           },
-        },
+        ],
         "ingredients": [
           {
             "amount": 2,
@@ -109,10 +128,13 @@ describe('addToInventory', () => {
 
   it('shall add empty produce to inventory', () => {
     let inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
@@ -122,33 +144,39 @@ describe('addToInventory', () => {
 
   it('shall add produce without berries to inventory', () => {
     let inventory: Produce = {
-      berries: {
-        amount: 2,
-        berry: berry.LEPPA,
-      },
+      berries: [
+        {
+          amount: 2,
+          berry: berry.LEPPA,
+          level: 60,
+        },
+      ],
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
     const added: Produce = {
+      berries: emptyBerryInventory(),
       ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
-    expect(inventory.berries?.amount).toBe(2);
+    expect(inventory.berries.reduce((sum, cur) => sum + cur.amount, 0)).toBe(2);
     expect(prettifyIngredientDrop(inventory.ingredients)).toMatchInlineSnapshot(`"2 Tomato, 2 Mushroom"`);
   });
 
   it('shall add produce without berries to inventory without berries', () => {
     let inventory: Produce = {
+      berries: emptyBerryInventory(),
       ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
     };
 
     const added: Produce = {
+      berries: emptyBerryInventory(),
       ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
-    expect(inventory.berries).toBeUndefined();
+    expect(inventory.berries).toEqual([]);
     expect(prettifyIngredientDrop(inventory.ingredients)).toMatchInlineSnapshot(`"2 Tomato, 2 Mushroom"`);
   });
 });

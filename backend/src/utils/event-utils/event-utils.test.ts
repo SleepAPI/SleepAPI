@@ -39,14 +39,17 @@ describe('getExtraHelpfulEvents', () => {
           "skillActivation": {
             "adjustedAmount": 2.2,
             "adjustedProduce": {
-              "berries": {
-                "amount": 4.4,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 4.4,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 2.2,
@@ -98,14 +101,17 @@ describe('getExtraHelpfulEvents', () => {
           "skillActivation": {
             "adjustedAmount": 1.1,
             "adjustedProduce": {
-              "berries": {
-                "amount": 2.2,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 2.2,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 1.1,
@@ -175,14 +181,17 @@ describe('getHelperBoostEvents', () => {
           "skillActivation": {
             "adjustedAmount": 6,
             "adjustedProduce": {
-              "berries": {
-                "amount": 12,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 12,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 6,
@@ -232,14 +241,17 @@ describe('getHelperBoostEvents', () => {
           "skillActivation": {
             "adjustedAmount": 3,
             "adjustedProduce": {
-              "berries": {
-                "amount": 6,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 6,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 3,
@@ -707,10 +719,13 @@ describe('triggerTeamHelpsEvent', () => {
           fractionOfProc: 2,
           nrOfHelpsToActivate: 2,
           adjustedProduce: {
-            berries: {
-              amount: 2,
-              berry: berry.BLUK,
-            },
+            berries: [
+              {
+                amount: 2,
+                berry: berry.BLUK,
+                level: 60,
+              },
+            ],
             ingredients: [
               {
                 amount: 2,
@@ -734,14 +749,17 @@ describe('triggerTeamHelpsEvent', () => {
     expect(result.helpEventsProcessed).toMatchInlineSnapshot(`2`);
     expect(result.helpsProduce).toMatchInlineSnapshot(`
       {
-        "berries": {
-          "amount": 2,
-          "berry": {
-            "name": "BLUK",
-            "type": "ghost",
-            "value": 26,
+        "berries": [
+          {
+            "amount": 2,
+            "berry": {
+              "name": "BLUK",
+              "type": "ghost",
+              "value": 26,
+            },
+            "level": 60,
           },
-        },
+        ],
         "ingredients": [
           {
             "amount": 2,

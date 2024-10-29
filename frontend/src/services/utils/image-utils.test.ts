@@ -1,5 +1,6 @@
 import {
   avatarImage,
+  berryImage,
   islandImage,
   mainskillImage,
   pokemonImage
@@ -88,5 +89,11 @@ describe('islandImage', () => {
   it('returns greengrass image path if no match is found', () => {
     const imagePath = islandImage({ favoredBerries: [], background: false })
     expect(imagePath).toBe('/images/island/greengrass.png')
+  })
+})
+
+describe('berryImage', () => {
+  it('return the correct image path', () => {
+    expect(berryImage(berry.BELUE)).toEqual('/images/berries/belue.png')
   })
 })

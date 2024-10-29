@@ -1,5 +1,5 @@
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Summary, Time, prettifyIngredientDrop } from 'sleepapi-common';
+import { MathUtils, Summary, Time, prettifyBerries, prettifyIngredientDrop } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class SummaryEvent extends ScheduledEvent {
@@ -29,6 +29,7 @@ export class SummaryEvent extends ScheduledEvent {
       skillEnergySelfValue,
       skillEnergyOthersValue,
       skillProduceValue,
+      skillBerriesOtherValue,
       skillStrengthValue,
       skillDreamShardValue,
       skillPotSizeValue,
@@ -44,15 +45,13 @@ export class SummaryEvent extends ScheduledEvent {
       collectFrequency,
       totalRecovery,
     } = this.summary;
-    const prettifiedProduce = `${
-      totalProduce.berries && MathUtils.round(totalProduce.berries.amount, 2) + ' ' + totalProduce.berries.berry.name
-    } ${totalProduce.ingredients.length > 0 ? `+ ${prettifyIngredientDrop(totalProduce.ingredients)}` : ''}`;
+    const prettifiedProduce = `${prettifyBerries(totalProduce.berries)} ${
+      totalProduce.ingredients.length > 0 ? `+ ${prettifyIngredientDrop(totalProduce.ingredients)}` : ''
+    }`;
 
     const prettifiedSkillProduce: string[] = [];
     if (skillProduceValue.berries) {
-      prettifiedSkillProduce.push(
-        `${MathUtils.round(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
-      );
+      prettifiedSkillProduce.push(prettifyBerries(skillProduceValue.berries));
     }
     if (skillProduceValue.ingredients.length > 0) {
       prettifiedSkillProduce.push(
@@ -83,6 +82,7 @@ export class SummaryEvent extends ScheduledEvent {
         ? `Energy team skill value: ${MathUtils.round(skillEnergyOthersValue, 1)} energy\n`
         : '') +
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '') +
+      (skillBerriesOtherValue > 0 ? `Berries team skill value: ${MathUtils.round(skillBerriesOtherValue, 1)}\n` : '') +
       (skillStrengthValue > 0 ? `Strength skill value: ${MathUtils.round(skillStrengthValue, 1)} strength\n` : '') +
       (skillDreamShardValue > 0
         ? `Dream shards skill value: ${MathUtils.round(skillDreamShardValue, 1)} shards\n`

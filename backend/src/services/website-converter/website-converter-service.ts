@@ -16,6 +16,7 @@ import {
   Summary,
   mainskill,
   nature,
+  prettifyBerries,
   prettifyIngredientDrop,
   shortPrettifyIngredientDrop,
   subskill,
@@ -395,6 +396,7 @@ class WebsiteConverterServiceImpl {
       skillEnergySelfValue,
       skillEnergyOthersValue,
       skillProduceValue,
+      skillBerriesOtherValue,
       skillStrengthValue,
       skillDreamShardValue,
       skillPotSizeValue,
@@ -402,10 +404,8 @@ class WebsiteConverterServiceImpl {
       skillTastyChanceValue,
     } = summary;
     const prettifiedSkillProduce: string[] = [];
-    if (skillProduceValue.berries) {
-      prettifiedSkillProduce.push(
-        `${MathUtils.round(skillProduceValue.berries.amount, 2)} ${skillProduceValue.berries.berry.name}`
-      );
+    if (skillProduceValue.berries.length > 0) {
+      prettifiedSkillProduce.push(prettifyBerries(skillProduceValue.berries));
     }
     if (skillProduceValue.ingredients.length > 0) {
       prettifiedSkillProduce.push(
@@ -424,6 +424,9 @@ class WebsiteConverterServiceImpl {
       (skillEnergyOthersValue > 0
         ? `Energy team skill value: ${MathUtils.round(skillEnergyOthersValue, 2)} energy / member\n`
         : '') +
+      (skillBerriesOtherValue > 0
+        ? `Berries team skill value: ${MathUtils.round(skillBerriesOtherValue, 1)} berries / member\n`
+        : '') +
       (skillHelpsValue > 0 ? `Helps team skill value: ${MathUtils.round(skillHelpsValue, 2)} helps / member\n` : '') +
       (skillStrengthValue > 0 ? `Strength skill value: ${Math.floor(skillStrengthValue)} strength\n` : '') +
       (skillDreamShardValue > 0 ? `Dream shards skill value: ${Math.floor(skillDreamShardValue)} shards\n` : '') +
@@ -434,9 +437,9 @@ class WebsiteConverterServiceImpl {
       (prettifiedSkillProduce.length > 0 ? `Produce skill value: ${prettifiedSkillProduce.join(' + ')}\n` : '');
 
     prettyString += `Total berry output per day: ${MathUtils.round(
-      pokemonCombination.detailedProduce.produce.berries?.amount ?? 0,
+      pokemonCombination.detailedProduce.produce.berries[0]?.amount ?? 0,
       1
-    )} ${pokemonCombination.pokemonCombination.pokemon.berry.name}\n`;
+    )} ${pokemonCombination.detailedProduce.produce.berries[0]?.berry.name}\n`;
 
     const maybeSpilledIngredients =
       pokemonCombination.detailedProduce.spilledIngredients.length > 0

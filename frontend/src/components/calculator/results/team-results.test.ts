@@ -67,7 +67,16 @@ describe('TeamResults', () => {
       },
       members: [
         createMockMemberProduction({
-          berries: { amount: 10, berry: berry.BELUE },
+          produceTotal: {
+            ingredients: [],
+
+            berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
+          },
+          produceWithoutSkill: {
+            ingredients: [],
+
+            berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
+          },
           skillAmount: 400
         })
       ]

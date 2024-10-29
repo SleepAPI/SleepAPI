@@ -9,6 +9,7 @@ import {
   Recipe,
   curry,
   dessert,
+  emptyBerryInventory,
   ingredient,
   maxCarrySize,
   nature,
@@ -21,7 +22,6 @@ import {
 import { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
 import { SetCover } from '../../set-cover/set-cover';
-import { emptyBerrySet } from '../berry/berry-calculator';
 import {
   boostFirstMealWithFactor,
   calculateContributionForMealWithPunishment,
@@ -826,7 +826,7 @@ function generateProducingPokemon(params: {
       ingredientList: [], // not used
     },
     averageProduce: {
-      berries: emptyBerrySet(pokemon.berry),
+      berries: emptyBerryInventory(),
       ingredients: average,
     },
     // not used
@@ -840,7 +840,7 @@ function generateProducingPokemon(params: {
     },
     detailedProduce: {
       produce: {
-        berries: emptyBerrySet(pokemon.berry),
+        berries: emptyBerryInventory(),
         ingredients: produced,
       },
       averageTotalSkillProcs: skillProcs,
@@ -848,7 +848,7 @@ function generateProducingPokemon(params: {
       nightHelps: 0,
       nightHelpsBeforeSS: 0,
       skillActivations: [],
-      sneakySnack: emptyBerrySet(pokemon.berry),
+      sneakySnack: emptyBerryInventory(),
       spilledIngredients: [],
     },
   };
