@@ -3,13 +3,13 @@
     <v-row dense class="scroll-container" style="flex-wrap: nowrap">
       <!-- Filled compare slot -->
       <v-col
-        v-for="(mon, index) in comparisonStore.members"
+        v-for="(mon, index) in members"
         :key="index"
         class="compare-slot flex-grow-1"
         style="position: relative; min-width: 18%; max-width: 18%"
       >
         <CompareSlot
-          :pokemon-instance="mon.member"
+          :pokemon-instance="mon"
           @edit-pokemon="editCompareMember"
           @duplicate-pokemon="duplicateCompareMember"
           @remove-pokemon="removeCompareMember"
@@ -121,6 +121,16 @@ export default defineComponent({
     ],
     loading: false
   }),
+  computed: {
+    members() {
+      const members: PokemonInstanceExt[] = []
+      for (const member of this.comparisonStore.members) {
+        const pokemon = this.pokemonStore.getPokemon(member.memberExternalId)
+        pokemon && members.push(pokemon)
+      }
+      return members
+    }
+  },
   methods: {
     openDialog() {
       this.showDialog = true
@@ -133,9 +143,14 @@ export default defineComponent({
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
       if (pokemonInstance.saved && previouslyExisted === undefined) {
         this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      } else {
+        this.pokemonStore.upsertLocalPokemon(pokemonInstance)
       }
 
       this.loading = false
+    },
+    async removeCompareMember(pokemonInstance: PokemonInstanceExt) {
+      this.comparisonStore.removeMember(pokemonInstance.externalId)
     },
     async editCompareMember(pokemonInstance: PokemonInstanceExt) {
       this.loading = true
@@ -144,10 +159,12 @@ export default defineComponent({
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
       if (previouslyExisted?.saved || pokemonInstance.saved) {
         this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      } else {
+        this.pokemonStore.upsertLocalPokemon(pokemonInstance)
       }
 
       const indexToUpdate = this.comparisonStore.members.findIndex(
-        (pkmn) => pkmn.member.externalId === pokemonInstance.externalId
+        (pkmn) => pkmn.memberExternalId === pokemonInstance.externalId
       )
 
       this.comparisonStore.members[indexToUpdate] = memberProduction
@@ -160,7 +177,7 @@ export default defineComponent({
       const summary = simulationData.summary
 
       const memberProduction: SingleProductionExt = {
-        member: pokemonInstance,
+        memberExternalId: pokemonInstance.externalId,
         ingredientPercentage: summary.ingredientPercentage,
         skillPercentage: summary.skillPercentage,
         carrySize: summary.carrySize,
@@ -187,7 +204,7 @@ export default defineComponent({
     },
     duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
       const copiedProduction = this.comparisonStore.members.find(
-        (pkmn) => pkmn.member.externalId === pokemonInstance.externalId
+        (pkmn) => pkmn.memberExternalId === pokemonInstance.externalId
       )
       if (!copiedProduction) {
         console.error("Can't find pokemon to duplicate in the list, contact developer")
@@ -199,25 +216,20 @@ export default defineComponent({
           externalId: uuid.v4(),
           name: randomName(12, pokemonInstance.gender)
         }
-        this.comparisonStore.addMember({ ...copiedProduction, member: duplicatedMember })
+        this.comparisonStore.addMember({
+          ...copiedProduction,
+          memberExternalId: duplicatedMember.externalId
+        })
+        this.pokemonStore.upsertLocalPokemon(duplicatedMember)
       }
     },
-    removeCompareMember(pokemonInstance: PokemonInstanceExt) {
-      this.comparisonStore.members = this.comparisonStore.members.filter(
-        (pkmn) => pkmn.member.externalId !== pokemonInstance.externalId
-      )
-    },
     toggleSaveState(pokemonInstance: PokemonInstanceExt) {
-      this.comparisonStore.members = this.comparisonStore.members.map((pkmn) => ({
-        ...pkmn,
-        member: {
-          ...pkmn.member,
-          saved:
-            pkmn.member.externalId === pokemonInstance.externalId
-              ? pokemonInstance.saved
-              : pkmn.member.saved
-        }
-      }))
+      const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
+      if (previouslyExisted?.saved || pokemonInstance.saved) {
+        this.pokemonStore.upsertServerPokemon(pokemonInstance)
+      } else {
+        this.pokemonStore.upsertLocalPokemon(pokemonInstance)
+      }
     }
   }
 })

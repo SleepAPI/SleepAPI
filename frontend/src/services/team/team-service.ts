@@ -176,7 +176,6 @@ class TeamServiceImpl {
       cooking: response.data.cooking
     }
 
-    const pokemonStore = usePokemonStore()
     const result: TeamProductionExt = {
       members: response.data.members.map((member) => {
         if (!member.externalId) {
@@ -189,7 +188,7 @@ class TeamServiceImpl {
           produceWithoutSkill: member.produceWithoutSkill,
           skillAmount: member.skillAmount,
           skillProcs: member.skillProcs,
-          member: pokemonStore.getPokemon(member.externalId)
+          memberExternalId: member.externalId
         }
       }),
       team: teamProduction

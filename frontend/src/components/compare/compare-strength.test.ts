@@ -4,9 +4,11 @@ import {
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
   useComparisonStore
 } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
+import { createMockSingleProduction } from '@/vitest/mocks/compare/single-production'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import {
@@ -14,7 +16,6 @@ import {
   MAX_RECIPE_LEVEL,
   berry,
   berryPowerForLevel,
-  ingredient,
   recipeLevelBonus
 } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -22,44 +23,17 @@ import { nextTick } from 'vue'
 
 describe('CompareStrength', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareStrength>>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
   const mockPokemon = createMockPokemon({ name: 'Ash', level: 10, skillLevel: 1 })
-  const mockMemberProduction: SingleProductionExt = {
-    member: mockPokemon,
-    ingredients: [
-      {
-        amount: 10,
-        ingredient: ingredient.FANCY_APPLE
-      },
-      {
-        amount: 20,
-        ingredient: ingredient.HONEY
-      }
-    ],
-    skillProcs: 5,
-    berries: [
-      {
-        amount: 100,
-        berry: berry.BELUE,
-        level: mockPokemon.level
-      }
-    ],
-    ingredientPercentage: 0.2,
-    skillPercentage: 0.02,
-    carrySize: 10,
-    averageEnergy: 10,
-    averageFrequency: 10,
-    dayHelps: 10,
-    nightHelps: 10,
-    nrOfHelps: 10,
-    sneakySnackHelps: 10,
-    spilledIngredients: [],
-    totalRecovery: 10,
-    sneakySnack: []
-  }
+  const mockMemberProduction: SingleProductionExt = createMockSingleProduction({
+    berries: [{ amount: 100, berry: berry.BELUE, level: mockPokemon.level }]
+  })
 
   beforeEach(() => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     wrapper = mount(CompareStrength, {})
   })
 
@@ -77,6 +51,7 @@ describe('CompareStrength', () => {
     const userStore = useUserStore()
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
+    const member = pokemonStore.getPokemon(mockPokemon.externalId)!
 
     await nextTick()
 
@@ -120,14 +95,9 @@ describe('CompareStrength', () => {
 
     // Check skill value
     const skillValue = StrengthService.skillStrength({
-      skill: mockMemberProduction.member.pokemon.skill,
-      amount:
-        mockMemberProduction.member.pokemon.skill.amount[
-          mockMemberProduction.member.skillLevel - 1
-        ] * mockMemberProduction.skillProcs,
-      berries: mockMemberProduction.berries.filter(
-        (b) => b.level !== mockMemberProduction.member.level
-      ),
+      skill: member.pokemon.skill,
+      amount: member.pokemon.skill.amount[member.skillLevel - 1] * mockMemberProduction.skillProcs,
+      berries: mockMemberProduction.berries.filter((b) => b.level !== member.level),
       favored: [],
       timeWindow: '24H'
     })
@@ -145,6 +115,7 @@ describe('CompareStrength', () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
     comparisonStore.timeWindow = '8H'
+    const member = pokemonStore.getPokemon(mockPokemon.externalId)!
 
     await nextTick()
 
@@ -192,14 +163,9 @@ describe('CompareStrength', () => {
 
     // Check skill value
     const skillValue = StrengthService.skillStrength({
-      skill: mockMemberProduction.member.pokemon.skill,
-      amount:
-        mockMemberProduction.member.pokemon.skill.amount[
-          mockMemberProduction.member.skillLevel - 1
-        ] * mockMemberProduction.skillProcs,
-      berries: mockMemberProduction.berries.filter(
-        (b) => b.level !== mockMemberProduction.member.level
-      ),
+      skill: member.pokemon.skill,
+      amount: member.pokemon.skill.amount[member.skillLevel - 1] * mockMemberProduction.skillProcs,
+      berries: mockMemberProduction.berries.filter((b) => b.level !== member.level),
       favored: [],
       timeWindow: '8H'
     })

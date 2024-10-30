@@ -25,7 +25,8 @@ vi.mock('@/router/server-axios', () => ({
   }
 }))
 
-beforeEach(() => {
+beforeEach(async () => {
+  setActivePinia(createPinia())
   uuid.v4 = vi.fn().mockReturnValue('0'.repeat(36))
 })
 
@@ -46,10 +47,6 @@ describe('createOrUpdateTeam', () => {
 })
 
 describe('getTeams', () => {
-  beforeEach(async () => {
-    setActivePinia(createPinia())
-  })
-
   it('should call server to get teams', async () => {
     const mockTeamStore = useTeamStore()
     const res = await TeamService.getTeams()

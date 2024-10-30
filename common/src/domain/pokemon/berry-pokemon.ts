@@ -44,7 +44,8 @@ import {
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
-} from '../mainskill/mainskill';
+} from '../mainskill/mainskills';
+
 import { Pokemon } from './pokemon';
 
 export const CATERPIE: Pokemon = {

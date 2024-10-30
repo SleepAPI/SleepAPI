@@ -1,6 +1,6 @@
 import { CustomStats } from '@src/domain/combination/custom';
 import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
-import { MathUtils, mainskill, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
+import { Mainskill, MathUtils, mainskill, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 
 export function countErbUsers(erb: number, subskills: subskill.SubSkill[]) {
   const subskillErb = subskills.some(
@@ -56,7 +56,7 @@ export function calculateHelpSpeedSubskills(subskills: subskill.SubSkill[], nrOf
 }
 
 export function getOptimalStats(level: number, pokemon: pokemon.Pokemon): CustomStats {
-  const supportSkills: mainskill.MainSkill[] = [
+  const supportSkills: Mainskill[] = [
     // mainskill.COOKING_POWER_UP_S // in the future maybe
     mainskill.ENERGIZING_CHEER_S,
     mainskill.ENERGY_FOR_EVERYONE,

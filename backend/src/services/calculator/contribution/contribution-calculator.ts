@@ -1,6 +1,7 @@
 import {
   ingredient,
   IngredientSet,
+  Mainskill,
   mainskill,
   MAX_RECIPE_LEVEL,
   pokemon,
@@ -139,7 +140,7 @@ export function calculateMealContributionFor(params: {
   let teamSize = 0;
   let team: PokemonIngredientSet[] | undefined = undefined;
 
-  const supportSkills: mainskill.MainSkill[] = [
+  const supportSkills: Mainskill[] = [
     mainskill.ENERGY_FOR_EVERYONE,
     mainskill.ENERGIZING_CHEER_S,
     mainskill.EXTRA_HELPFUL_S,

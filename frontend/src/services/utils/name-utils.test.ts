@@ -2,7 +2,6 @@ import { randomName } from '@/services/utils/name-utils'
 import { faker } from '@faker-js/faker/locale/en'
 import { describe, expect, it, vi } from 'vitest'
 
-// Mock the faker module to control the output of firstName
 vi.mock('@faker-js/faker/locale/en', () => {
   return {
     faker: {
@@ -17,7 +16,6 @@ describe('randomName', () => {
   it('returns a name within the specified max length', () => {
     const maxLength = 5
 
-    // Mock the firstName method to return names of varying lengths
     faker.person.firstName = vi
       .fn()
       .mockReturnValueOnce('Alex')

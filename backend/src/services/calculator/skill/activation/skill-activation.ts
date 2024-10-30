@@ -1,6 +1,7 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import {
   IngredientSet,
+  Mainskill,
   Produce,
   SkillActivation,
   emptyBerryInventory,
@@ -14,7 +15,7 @@ import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 // TODO: if it just has flat crit chance on every skill proc then we can probably just calc average energy per member from crit
 export function createSkillEvent(
   params: {
-    skill: mainskill.MainSkill;
+    skill: Mainskill;
     skillLevel: number;
     nrOfHelpsToActivate: number;
     adjustedAmount: number;
@@ -187,7 +188,7 @@ export function activateExtraHelpful(params: {
 }
 
 export function activateNonProduceSkills(params: {
-  skill: mainskill.MainSkill;
+  skill: Mainskill;
   skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;

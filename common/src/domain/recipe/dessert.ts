@@ -1,4 +1,4 @@
-import { createDessert } from 'src/utils';
+import { createDessert } from '../../utils/recipe-utils/recipe-utils';
 import {
   FANCY_APPLE,
   FANCY_EGG,

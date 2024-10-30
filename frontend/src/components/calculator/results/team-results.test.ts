@@ -1,6 +1,7 @@
 import TeamResults from '@/components/calculator/results/team-results.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { createMockMemberProduction, createMockTeamProduction } from '@/vitest'
+import { createMockMemberProduction, createMockPokemon, createMockTeamProduction } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry } from 'sleepapi-common'
@@ -50,6 +51,8 @@ describe('TeamResults', () => {
 
   it('renders the stacked bar with correct percentages', async () => {
     const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(createMockPokemon())
 
     teamStore.getCurrentTeam.production = {
       team: {

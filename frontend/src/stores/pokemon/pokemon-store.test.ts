@@ -1,7 +1,11 @@
 import { UserService } from '@/services/user/user-service'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
+import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { createMockPokemon } from '@/vitest'
+import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
+import { createMockSingleProduction } from '@/vitest/mocks/compare/single-production'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -15,7 +19,7 @@ vi.mock('@/services/user/user-service', () => ({
 
 describe('Pokemon Store', () => {
   const externalId = 'external-id'
-  const mockPokemon = createMockPokemon({ externalId })
+  const mockPokemon = createMockPokemon({ externalId, saved: false })
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -59,8 +63,55 @@ describe('Pokemon Store', () => {
       'external-id': mockPokemon
     })
 
-    pokemonStore.removePokemon(externalId)
+    pokemonStore.removePokemon(externalId, 'pokebox')
     expect(pokemonStore.pokemon).toEqual({})
+  })
+
+  it('should not remove a pokemon if it is saved', () => {
+    const pokemonStore = usePokemonStore()
+    const savedMon = { ...mockPokemon, saved: true }
+    pokemonStore.upsertLocalPokemon(savedMon)
+
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': savedMon
+    })
+
+    pokemonStore.removePokemon(externalId, 'pokebox')
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': savedMon
+    })
+  })
+
+  it('should not remove a pokemon if it is used in a team', () => {
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+    const teamStore = useTeamStore()
+    teamStore.teams = createMockTeams(1, { members: [mockPokemon.externalId] })
+
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': mockPokemon
+    })
+
+    pokemonStore.removePokemon(externalId, 'pokebox')
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': mockPokemon
+    })
+  })
+
+  it('should not remove a pokemon if it is used in compare cache', () => {
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(createMockSingleProduction())
+
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': mockPokemon
+    })
+
+    pokemonStore.removePokemon(externalId, 'pokebox')
+    expect(pokemonStore.pokemon).toEqual({
+      'external-id': mockPokemon
+    })
   })
 
   it('should get a pokemon by externalId correctly', () => {

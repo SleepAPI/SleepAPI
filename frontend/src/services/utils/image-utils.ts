@@ -1,12 +1,12 @@
-import { StockpileStrength, berry, island, mainskill, pokemon, unitString } from 'sleepapi-common'
+import { berry, island, mainskill, pokemon } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: pokemon.Pokemon) {
-  if (pokemon.skill.name === mainskill.HELPER_BOOST.name) {
+  if (pokemon.skill.isSameOrModifiedVersionOf(mainskill.HELPER_BOOST)) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
-    const stockpileVersion = pokemon.skill.unit === StockpileStrength
-    const image = stockpileVersion ? 'stockpile_strength' : unitString(pokemon.skill)
-    return `/images/mainskill/${image}.png`
+    const maybeModifier =
+      pokemon.skill.modifier === 'Base' ? '' : `${pokemon.skill.modifier.toLowerCase()}_`
+    return `/images/mainskill/${maybeModifier}${pokemon.skill.unit}.png`
   }
 }
 

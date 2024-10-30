@@ -60,7 +60,8 @@ import {
   MOONLIGHT_CHARGE_ENERGY_S,
   STOCKPILE_CHARGE_STRENGTH_S,
   TASTY_CHANCE_S,
-} from '../mainskill/mainskill';
+} from '../mainskill/mainskills';
+
 import { Pokemon } from './pokemon';
 
 export const PIKACHU_CHRISTMAS: Pokemon = {

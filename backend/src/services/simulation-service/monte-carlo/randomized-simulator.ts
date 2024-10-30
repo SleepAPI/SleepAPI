@@ -21,7 +21,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Produce, Time, emptyProduce, isSkillOrModifierOf, mainskill } from 'sleepapi-common';
+import { MathUtils, Produce, Time, emptyProduce, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -89,9 +89,9 @@ export function randomizedSimulation(params: {
   for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
     const skillActivated = MathUtils.rollRandomChance(skillPercentage);
     if (skillActivated) {
-      if (isSkillOrModifierOf(pokemon.skill, 'energy')) {
+      if (pokemon.skill.isUnit('energy')) {
         let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
-        if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
+        if (pokemon.skill.isSkill(mainskill.ENERGIZING_CHEER_S)) {
           // 20% chance it affects this Pokémon
           if (!MathUtils.rollRandomChance(0.2)) {
             energyAmount = 0;
@@ -137,7 +137,7 @@ export function randomizedSimulation(params: {
 
       if (MathUtils.rollRandomChance(skillPercentage)) {
         skillProcsDay += 1;
-        if (isSkillOrModifierOf(pokemon.skill, 'energy')) {
+        if (pokemon.skill.isUnit('energy')) {
           let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
           if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
             // 20% chance it affects this Pokémon

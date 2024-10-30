@@ -1,13 +1,9 @@
 import { useUserStore } from '@/stores/user-store'
 import type { TimeWindowWeek } from '@/types/time/time-window'
 import {
-  Berries,
-  DreamShards,
+  Mainskill,
   MathUtils,
-  Strength,
   berryPowerForLevel,
-  isSkillOrModifierOf,
-  mainskill,
   type BerrySet,
   type berry
 } from 'sleepapi-common'
@@ -42,34 +38,29 @@ class StrengthServiceImpl {
   }
 
   public skillStrength(params: {
-    skill: mainskill.MainSkill
+    skill: Mainskill
     amount: number
     berries: BerrySet[]
     favored: berry.Berry[]
     timeWindow: TimeWindowWeek
   }) {
     const { skill, berries, favored, timeWindow } = params
-    const isStrengthUnit = isSkillOrModifierOf(skill, Strength)
-    const isBerryUnit = isSkillOrModifierOf(skill, Berries)
-    if (isStrengthUnit) {
+
+    if (skill.isUnit('strength')) {
       return this.skillValue(params)
-    } else if (isBerryUnit) {
+    } else if (skill.isUnit('berries')) {
       return this.berryStrength({ berries, favored, timeWindow })
     }
 
     return 0
   }
 
-  public skillValue(params: {
-    skill: mainskill.MainSkill
-    amount: number
-    timeWindow: TimeWindowWeek
-  }) {
+  public skillValue(params: { skill: Mainskill; amount: number; timeWindow: TimeWindowWeek }) {
     const { skill, amount, timeWindow } = params
     const userStore = useUserStore()
 
-    const isStrengthUnit = isSkillOrModifierOf(skill, Strength)
-    const isShardsUnit = isSkillOrModifierOf(skill, DreamShards)
+    const isStrengthUnit = skill.isUnit('strength')
+    const isShardsUnit = skill.isUnit('dream shards')
 
     const rounding = isStrengthUnit || isShardsUnit ? 0 : 1
 

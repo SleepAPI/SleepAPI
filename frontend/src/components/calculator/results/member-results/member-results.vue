@@ -73,15 +73,15 @@
         </v-col>
 
         <v-col v-if="!isMobile" cols="auto" class="flex-right mr-3" style="max-height: 140px">
-          <SpeechBubble :pokemon-instance="member.member">
+          <SpeechBubble :pokemon-instance="member.pokemonInstance">
             <template #header-text>
               <v-row no-gutters class="flex-start flex-nowrap">
                 <v-col cols="auto" class="mx-1">
-                  <span class="text-surface text-left">Lv.{{ member.member.level }}</span>
+                  <span class="text-surface text-left">Lv.{{ member.pokemonInstance.level }}</span>
                 </v-col>
                 <v-col>
                   <span class="text-primary text-left font-weight-medium">{{
-                    member.member.name
+                    member.pokemonInstance.name
                   }}</span>
                 </v-col>
               </v-row>
@@ -98,7 +98,7 @@
 
         <v-col class="flex-left" style="max-height: 140px; display: inline-block">
           <v-img
-            :src="getMemberImage(member.member.pokemon.name, member.member.shiny)"
+            :src="getMemberImage(member.pokemonInstance.pokemon.name, member.pokemonInstance.shiny)"
             height="140"
             width="140"
             style="
@@ -110,11 +110,11 @@
       </v-row>
 
       <v-row dense class="flex-nowrap flex-center">
-        <v-col v-for="(subskill, i) in member.member.subskills" :key="i">
+        <v-col v-for="(subskill, i) in member.pokemonInstance.subskills" :key="i">
           <v-card
             :color="rarityColor(subskill.subskill)"
             height="20px"
-            :style="subskill.level > member.member.level ? 'opacity: 40%' : ''"
+            :style="subskill.level > member.pokemonInstance.level ? 'opacity: 40%' : ''"
             class="text-body-2 text-center"
           >
             {{ isMobile ? subskill.subskill.shortName : subskill.subskill.name }}
@@ -138,7 +138,9 @@
         </v-col>
         <v-col
           :class="[
-            member.member.nature.positiveModifier === 'neutral' ? 'flex-center' : 'flex-right'
+            member.pokemonInstance.nature.positiveModifier === 'neutral'
+              ? 'flex-center'
+              : 'flex-right'
           ]"
         >
           <v-card
@@ -147,11 +149,14 @@
             style="max-width: 150px"
             rounded="pill"
             elevation="0"
-            >{{ member.member.nature.name }}</v-card
+            >{{ member.pokemonInstance.nature.name }}</v-card
           >
         </v-col>
-        <v-col v-if="!member.member.nature.prettyName.includes('neutral')" class="flex-left">
-          <NatureModifiers :nature="member.member.nature" :short="true" />
+        <v-col
+          v-if="!member.pokemonInstance.nature.prettyName.includes('neutral')"
+          class="flex-left"
+        >
+          <NatureModifiers :nature="member.pokemonInstance.nature" :short="true" />
         </v-col>
       </v-row>
 
@@ -170,7 +175,7 @@
                 <v-row dense justify="center" class="flex-nowrap">
                   <v-col cols="6" class="flex-center flex-column pt-0">
                     <v-img
-                      :src="berryImage(member.member.pokemon.berry)"
+                      :src="berryImage(member.pokemonInstance.pokemon.berry)"
                       height="24"
                       width="24"
                     ></v-img>
@@ -230,12 +235,12 @@
                     }}</span>
                   </v-col>
                   <v-col
-                    v-if="member.member.pokemon.skill.unit !== 'metronome'"
+                    v-if="member.pokemonInstance.pokemon.skill.unit !== 'metronome'"
                     class="flex-center flex-column pt-0"
                   >
                     <v-badge
                       id="skillLevelBadge"
-                      :content="`Lv.${member.member.skillLevel}`"
+                      :content="`Lv.${member.pokemonInstance.skillLevel}`"
                       location="top right"
                       offset-x="10"
                       offset-y="-2"
@@ -243,7 +248,7 @@
                       rounded="pill"
                     >
                       <v-img
-                        :src="mainskillImage(member.member.pokemon)"
+                        :src="mainskillImage(member.pokemonInstance.pokemon)"
                         height="24px"
                         width="24px"
                       ></v-img>
@@ -298,7 +303,7 @@ import { useViewport } from '@/composables/viewport-composable'
 import { ProductionService } from '@/services/production/production-service'
 import { StrengthService } from '@/services/strength/strength-service'
 import { rarityColor } from '@/services/utils/color-utils'
-import { berryImage, islandImage, mainskillImage } from '@/services/utils/image-utils'
+import { avatarImage, berryImage, islandImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
@@ -350,20 +355,22 @@ export default defineComponent({
     const { randomPhrase, getRandomPhrase } = useRandomPhrase()
 
     watchEffect(() => {
-      if (currentMember.value && currentMember.value.member && currentMember.value.member.nature) {
-        getRandomPhrase(currentMember.value.member.nature)
+      if (currentMember.value) {
+        const pokemonInstance = pokemonStore.getPokemon(currentMember.value.memberExternalId)
+        if (pokemonInstance) {
+          getRandomPhrase(pokemonInstance.nature)
+        }
       }
     })
 
     let refreshInterval: number | null = null
     onMounted(() => {
       refreshInterval = window.setInterval(() => {
-        if (
-          currentMember.value &&
-          currentMember.value.member &&
-          currentMember.value.member.nature
-        ) {
-          getRandomPhrase(currentMember.value.member.nature)
+        if (currentMember.value) {
+          const pokemonInstance = pokemonStore.getPokemon(currentMember.value.memberExternalId)
+          if (pokemonInstance) {
+            getRandomPhrase(pokemonInstance.nature)
+          }
         }
       }, 60000)
 
@@ -422,10 +429,14 @@ export default defineComponent({
   },
   computed: {
     members() {
+      const pokemonStore = usePokemonStore()
       const result = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
+        const pokemonInstance = pokemonStore.getPokemon(member.memberExternalId)
+        if (!pokemonInstance) continue
         result.push({
           ...member,
+          pokemonInstance,
           ingredients: this.prepareMemberIngredients(member.produceTotal.ingredients)
         })
       }
@@ -435,7 +446,7 @@ export default defineComponent({
       return this.members[this.teamStore.getCurrentTeam.memberIndex]
     },
     currentMemberExternalId() {
-      return this.currentMember?.member.externalId
+      return this.currentMember?.memberExternalId
     },
     currentMemberSingleProduction() {
       return this.currentMember?.singleProduction
@@ -458,7 +469,7 @@ export default defineComponent({
 
       return compactNumber(
         StrengthService.skillValue({
-          skill: memberProduction.member.pokemon.skill,
+          skill: memberProduction.pokemonInstance.pokemon.skill,
           amount: memberProduction.skillAmount,
           timeWindow: this.teamStore.timeWindow
         })
@@ -500,8 +511,8 @@ export default defineComponent({
     }
   },
   methods: {
-    getMemberImage(name: string, shiny: boolean) {
-      return `/images/avatar/happy/${name.toLowerCase()}_happy${shiny ? '_shiny' : ''}.png`
+    getMemberImage(pokemonName: string, shiny: boolean) {
+      return avatarImage({ pokemonName, happy: true, shiny })
     },
     prepareMemberIngredients(ingredients: IngredientSet[]) {
       if (ingredients.length >= ingredient.INGREDIENTS.length) {
@@ -550,7 +561,7 @@ export default defineComponent({
           }
 
           for (const member of this.teamStore.getCurrentTeam.production.members) {
-            if (member.member.externalId === calculatedExternalId) {
+            if (member.memberExternalId === calculatedExternalId) {
               member.singleProduction = result
             }
           }

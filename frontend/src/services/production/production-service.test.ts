@@ -1,4 +1,5 @@
 import { ProductionService } from '@/services/production/production-service'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
@@ -21,6 +22,7 @@ const mockedAxios = axios as unknown as {
 }
 
 vi.mock('@/router/server-axios', () => ({}))
+let pokemonStore: ReturnType<typeof usePokemonStore>
 
 const mockPokemonInstance = createMockPokemon({ pokemon: pokemon.ABOMASNOW })
 
@@ -71,6 +73,8 @@ const mockResponse: SingleProductionResponse = {
 describe('ProductionService', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemonInstance)
   })
 
   describe('calculateCompareProduction', () => {
@@ -121,19 +125,21 @@ describe('ProductionService', () => {
     it('should calculate team member production', async () => {
       mockedAxios.post.mockResolvedValue({ data: mockResponse })
 
+      const pokemonStore = usePokemonStore()
       const teamStore = useTeamStore()
       const mockTeam = createMockTeams()[0]
       teamStore.teams = [mockTeam]
 
       const params = { teamIndex: 0, memberIndex: 0 }
       const result = await ProductionService.calculateTeamMemberProduction(params)
+      const member = pokemonStore.getPokemon(mockTeam.production?.members[0].memberExternalId ?? '')
 
       expect(result).toEqual(mockResponse)
       expect(mockedAxios.post).toHaveBeenCalledWith(
-        `/api/calculator/production/${mockTeam.production?.members[0].member.pokemon.name}?includeAnalysis=true`,
+        `/api/calculator/production/${member?.pokemon.name}?includeAnalysis=true`,
         expect.objectContaining({
           camp: mockTeam.camp,
-          level: mockTeam.production?.members[0].member.level,
+          level: member?.level,
           mainBedtime: mockTeam.bedtime,
           mainWakeup: mockTeam.wakeup
         })
@@ -142,8 +148,7 @@ describe('ProductionService', () => {
 
     it('should log error if team or member is not found', async () => {
       const teamStore = useTeamStore()
-      const mockTeam = createMockTeams()[0]
-      teamStore.teams = [mockTeam]
+      teamStore.teams = createMockTeams()
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const params = { teamIndex: 999, memberIndex: 999 }

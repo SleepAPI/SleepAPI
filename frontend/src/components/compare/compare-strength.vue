@@ -200,6 +200,7 @@ import {
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
   useComparisonStore
 } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import {
@@ -209,7 +210,8 @@ import {
   compactNumber,
   defaultZero,
   mainskill,
-  recipeLevelBonus
+  recipeLevelBonus,
+  type PokemonInstanceExt
 } from 'sleepapi-common'
 
 type DataTableHeader = {
@@ -225,9 +227,11 @@ export default defineComponent({
   setup() {
     const comparisonStore = useComparisonStore()
     const userStore = useUserStore()
+    const pokemonStore = usePokemonStore()
     return {
       comparisonStore,
       userStore,
+      pokemonStore,
       mainskillImage,
       pokemonImage
     }
@@ -270,8 +274,9 @@ export default defineComponent({
     members() {
       const production = []
       for (const memberProduction of this.comparisonStore.members) {
-        const memberPokemon = memberProduction.member.pokemon
-        const member = memberProduction.member
+        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        if (!member) continue
+        const memberPokemon = member.pokemon
 
         const berryPower = this.showBerries
           ? StrengthService.berryStrength({
@@ -305,9 +310,9 @@ export default defineComponent({
         const total = Math.floor(berryPower + ingredientPower + skillStrength)
 
         production.push({
-          member: memberProduction.member.name,
+          member: member.name,
           pokemon: memberPokemon,
-          shiny: memberProduction.member.shiny,
+          shiny: member.shiny,
           berries: berryPower,
           berryCompact: compactNumber(berryPower),
           ingredients:
@@ -318,7 +323,7 @@ export default defineComponent({
           skill: memberPokemon.skill,
           skillStrength,
           skillCompact: skillStrength > 0 ? compactNumber(skillStrength) : '',
-          energyPerMember: this.energyPerMember(memberProduction),
+          energyPerMember: this.energyPerMember(member),
           total,
           totalCompact: compactNumber(total)
         })
@@ -346,15 +351,14 @@ export default defineComponent({
     }
   },
   methods: {
-    energyPerMember(memberProduction: SingleProductionExt): number | undefined {
-      const skill = memberProduction.member.pokemon.skill
+    energyPerMember(member: PokemonInstanceExt): number | undefined {
+      const skill = member.pokemon.skill
 
       if (
         skill.name === mainskill.ENERGIZING_CHEER_S.name ||
         skill.name === mainskill.ENERGY_FOR_EVERYONE.name
       ) {
-        const amount =
-          memberProduction.member.pokemon.skill.amount[memberProduction.member.skillLevel - 1]
+        const amount = member.pokemon.skill.amount[member.skillLevel - 1]
         const energy = StrengthService.skillValue({
           skill,
           amount,

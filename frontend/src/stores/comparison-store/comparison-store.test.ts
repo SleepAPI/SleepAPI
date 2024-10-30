@@ -1,9 +1,10 @@
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, ingredient } from 'sleepapi-common'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 beforeEach(() => {
   setActivePinia(createPinia())
@@ -11,7 +12,7 @@ beforeEach(() => {
 
 const mockPokemon = createMockPokemon({ name: 'Ash' })
 const mockMemberProduction: SingleProductionExt = {
-  member: mockPokemon,
+  memberExternalId: mockPokemon.externalId,
   ingredients: [
     {
       amount: 10,
@@ -55,7 +56,7 @@ describe('getMemberProduction', () => {
     comparisonStore.addMember(mockMemberProduction)
 
     expect(
-      comparisonStore.getMemberProduction(mockMemberProduction.member.externalId)
+      comparisonStore.getMemberProduction(mockMemberProduction.memberExternalId)
     ).not.toBeUndefined()
   })
 })
@@ -85,6 +86,20 @@ describe('addMember', () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
 
+    expect(comparisonStore.members).toHaveLength(1)
+  })
+})
+
+describe('removeMember', () => {
+  it('shall remove pokemon', () => {
+    const pokemonStore = usePokemonStore()
+    pokemonStore.removePokemon = vi.fn()
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    comparisonStore.addMember({ ...mockMemberProduction, memberExternalId: 'other id' })
+
+    expect(comparisonStore.members).toHaveLength(2)
+    comparisonStore.removeMember(mockMemberProduction.memberExternalId)
     expect(comparisonStore.members).toHaveLength(1)
   })
 })

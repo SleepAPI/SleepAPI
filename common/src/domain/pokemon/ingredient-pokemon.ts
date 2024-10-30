@@ -49,7 +49,8 @@ import {
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   TASTY_CHANCE_S,
-} from '../mainskill/mainskill';
+} from '../mainskill/mainskills';
+
 import { Pokemon } from './pokemon';
 
 export const BULBASAUR: Pokemon = {

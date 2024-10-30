@@ -1,16 +1,23 @@
 import MainskillButton from '@/components/pokemon-input/mainskill-button.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
+import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
-import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { createPinia, setActivePinia } from 'pinia'
+import { Mainskill, createBaseSkill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof MainskillButton>>
-  const samplePokemon = { pokemon: pokemon.PIKACHU, skillLevel: 0 } as PokemonInstanceExt
+  let pokemonStore: ReturnType<typeof usePokemonStore>
+  const mockPokemon = createMockPokemon()
 
   beforeEach(() => {
+    setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     wrapper = mount(MainskillButton, {
       props: {
-        pokemonInstance: samplePokemon
+        pokemonInstance: mockPokemon
       }
     })
   })
@@ -48,16 +55,18 @@ describe('MainskillButton', () => {
   })
 
   it('displays default values dynamically', async () => {
-    const changedPokemon = {
-      skillLevel: samplePokemon.skillLevel,
-      pokemon: {
-        ...samplePokemon.pokemon,
-        skill: {
-          ...samplePokemon.pokemon.skill,
-          maxLevel: 4
-        }
-      }
-    } as PokemonInstanceExt
+    const skillWithLowMaxLevel: Mainskill = createBaseSkill({
+      name: 'Test skill',
+      amount: [1, 2, 3, 4],
+      unit: 'strength',
+      maxLevel: 4,
+      description: 'Test.',
+      RP: [880, 1251, 1726, 2383]
+    })
+    const changedPokemon: PokemonInstanceExt = {
+      ...mockPokemon,
+      pokemon: { ...mockPokemon.pokemon, skill: skillWithLowMaxLevel }
+    }
     await wrapper.setProps({
       pokemonInstance: changedPokemon
     })

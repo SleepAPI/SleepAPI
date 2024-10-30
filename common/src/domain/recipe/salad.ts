@@ -1,4 +1,4 @@
-import { createSalad } from 'src/utils';
+import { createSalad } from '../../utils/recipe-utils/recipe-utils';
 import {
   BEAN_SAUSAGE,
   FANCY_APPLE,

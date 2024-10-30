@@ -10,8 +10,7 @@ export function createMockMemberProduction(
   attrs?: Partial<MemberProductionExt>
 ): MemberProductionExt {
   return {
-    member: createMockPokemon(),
-
+    memberExternalId: createMockPokemon().externalId,
     produceTotal: {
       berries: [
         {

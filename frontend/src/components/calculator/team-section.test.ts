@@ -1,18 +1,22 @@
 import TeamSection from '@/components/calculator/team-section.vue'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { createMockTeamProduction } from '@/vitest'
+import { createMockPokemon, createMockTeamProduction } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
-describe('TeamSettings.vue', () => {
+describe('Team section', () => {
   let wrapper: VueWrapper<InstanceType<typeof TeamSection>>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
   beforeEach(() => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(createMockPokemon())
     wrapper = mount(TeamSection)
   })
 
