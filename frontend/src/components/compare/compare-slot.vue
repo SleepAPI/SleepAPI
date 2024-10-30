@@ -49,6 +49,7 @@
 
 <script lang="ts">
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
+import { pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { RP, type PokemonInstanceExt } from 'sleepapi-common'
@@ -77,9 +78,13 @@ export default defineComponent({
   }),
   computed: {
     imageUrl(): string | undefined {
-      return this.pokemonInstance
-        ? `/images/pokemon/${this.pokemonInstance.pokemon.name.toLowerCase()}${this.pokemonInstance.shiny ? '_shiny' : ''}.png`
-        : ''
+      return (
+        this.pokemonInstance &&
+        pokemonImage({
+          pokemonName: this.pokemonInstance.pokemon.name,
+          shiny: this.pokemonInstance.shiny
+        })
+      )
     },
     level() {
       return `Level ${this.pokemonInstance.level}`

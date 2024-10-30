@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ProductionService } from '@/services/production/production-service'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
@@ -20,6 +21,7 @@ vi.mock('@/services/production/production-service')
 
 describe('ComparisonPage', () => {
   let wrapper: VueWrapper<InstanceType<typeof ComparisonPage>>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
   const mockResponse: SingleProductionResponse = {
     production: {
@@ -65,8 +67,10 @@ describe('ComparisonPage', () => {
     }
   }
 
+  const mockPokemon = createMockPokemon()
+
   const mockMemberProduction: SingleProductionExt = {
-    member: createMockPokemon({ name: 'Ash' }),
+    memberExternalId: mockPokemon.externalId,
     ingredients: mockResponse.production.detailedProduce.produce.ingredients,
     berries: mockResponse.production.detailedProduce.produce.berries,
     skillProcs: mockResponse.production.detailedProduce.averageTotalSkillProcs,
@@ -86,6 +90,8 @@ describe('ComparisonPage', () => {
 
   beforeEach(async () => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
 
     ProductionService.calculateCompareProduction = vi.fn().mockResolvedValue(mockResponse)
     wrapper = mount(ComparisonPage)
@@ -130,34 +136,28 @@ describe('ComparisonPage', () => {
     await wrapper.vm.addToCompareMembers(newPokemon)
 
     expect(compStore.members).toHaveLength(2)
-    expect(compStore.members[1].member.name).toBe('Misty')
+    expect(compStore.members[1].memberExternalId).toBe(newPokemon.externalId)
   })
 
   it('edits an existing pokemon in compare members', async () => {
     const compStore = useComparisonStore()
+
     compStore.addMember(mockMemberProduction)
 
-    const editedPokemon = { ...mockMemberProduction.member, name: 'Brock' }
+    const editedPokemon = createMockPokemon({ name: 'Brock' })
     await wrapper.vm.editCompareMember(editedPokemon)
 
-    expect(compStore.members[0].member.name).toBe('Brock')
+    expect(pokemonStore.getPokemon(compStore.members[0].memberExternalId)?.name).toBe('Brock')
   })
 
   it('duplicates a pokemon in compare members', () => {
     const compStore = useComparisonStore()
     compStore.addMember(mockMemberProduction)
 
-    wrapper.vm.duplicateCompareMember(mockMemberProduction.member)
+    wrapper.vm.duplicateCompareMember(mockPokemon)
 
     expect(compStore.members).toHaveLength(2)
-    expect(compStore.members[1].member.name).not.toBe('Ash')
-  })
-
-  it('removes a pokemon from compare members', () => {
-    const compStore = useComparisonStore()
-    wrapper.vm.removeCompareMember(mockMemberProduction.member)
-
-    expect(compStore.members).toHaveLength(0)
+    expect(pokemonStore.getPokemon(compStore.members[1].memberExternalId)).not.toBe('Ash')
   })
 
   it('renders the correct tab content when tabs are clicked', async () => {

@@ -247,7 +247,7 @@ export default defineComponent({
   },
   mounted() {
     if (this.pokemonFromPreExist) {
-      this.pokemonInstance = JSON.parse(JSON.stringify(this.pokemonFromPreExist))
+      this.pokemonInstance = this.pokemonFromPreExist
     } else if (this.pokemonFromSearch) {
       this.pokemonInstance.pokemon = this.pokemonFromSearch
       this.pokemonInstance.carrySize = maxCarrySize(this.pokemonFromSearch)

@@ -141,6 +141,7 @@ import { defineComponent } from 'vue'
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
 import { useViewport } from '@/composables/viewport-composable'
 import { StrengthService } from '@/services/strength/strength-service'
+import { pokemonImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
@@ -188,14 +189,17 @@ export default defineComponent({
     skillStrength() {
       const members = this.teamStore.getCurrentTeam.production?.members || []
 
-      return members.reduce((sum, member) => {
-        const memberSkillStrength = StrengthService.skillStrength({
-          skill: member.member.pokemon.skill,
-          amount: member.skillAmount,
-          berries: member.produceFromSkill.berries,
-          favored: this.teamStore.getCurrentTeam.favoredBerries,
-          timeWindow: 'WEEK'
-        })
+      return members.reduce((sum, memberProduction) => {
+        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        const memberSkillStrength = member
+          ? StrengthService.skillStrength({
+              skill: member.pokemon.skill,
+              amount: memberProduction.skillAmount,
+              berries: memberProduction.produceFromSkill.berries,
+              favored: this.teamStore.getCurrentTeam.favoredBerries,
+              timeWindow: 'WEEK'
+            })
+          : 0
 
         return sum + memberSkillStrength
       }, 0)
@@ -247,19 +251,20 @@ export default defineComponent({
     },
     memberPercentages() {
       const memberStrengths = []
-      for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
-        const { pokemon } = member.member
+      for (const memberProduction of this.teamStore.getCurrentTeam.production?.members ?? []) {
+        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        if (!member) continue
 
         const berryStrength = StrengthService.berryStrength({
-          berries: member.produceWithoutSkill.berries,
+          berries: memberProduction.produceWithoutSkill.berries,
           favored: this.teamStore.getCurrentTeam.favoredBerries,
           timeWindow: 'WEEK'
         })
 
         const skillStrength = StrengthService.skillStrength({
-          skill: pokemon.skill,
-          amount: member.skillAmount,
-          berries: member.produceFromSkill.berries,
+          skill: member.pokemon.skill,
+          amount: memberProduction.skillAmount,
+          berries: memberProduction.produceFromSkill.berries,
           favored: this.teamStore.getCurrentTeam.favoredBerries,
           timeWindow: 'WEEK'
         })
@@ -269,7 +274,7 @@ export default defineComponent({
           skillStrength,
           berryValue: compactNumber(berryStrength),
           skillValue: compactNumber(skillStrength),
-          image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
+          image: pokemonImage({ pokemonName: member.pokemon.name, shiny: member.shiny })
         })
       }
 

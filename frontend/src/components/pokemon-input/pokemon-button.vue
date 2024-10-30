@@ -12,7 +12,12 @@
       >
         <v-badge icon="mdi-pencil" color="primary" offset-x="30" offset-y="40">
           <v-img
-            :src="`/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}${pokemonInstance.shiny ? '_shiny' : ''}.png`"
+            :src="
+              pokemonImage({
+                pokemonName: pokemonInstance.pokemon.name,
+                shiny: pokemonInstance.shiny
+              })
+            "
             height="150px"
             width="150px"
             cover
@@ -34,6 +39,7 @@
 
 <script lang="ts">
 import GroupList from '@/components/custom-components/group-list.vue'
+import { pokemonImage } from '@/services/utils/image-utils'
 import { usePokedexStore } from '@/stores/pokedex-store/pokedex-store'
 import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
@@ -52,7 +58,7 @@ export default {
   emits: ['update-pokemon'],
   setup() {
     const pokedexStore = usePokedexStore()
-    return { pokedexStore }
+    return { pokedexStore, pokemonImage }
   },
   data: () => ({
     pokemonMenu: false

@@ -8,19 +8,18 @@ import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simula
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
 import {
-  BasicSkillType,
   BerrySet,
   IngredientSet,
+  MAINSKILLS,
+  Mainskill,
+  MainskillUnit,
   MathUtils,
   MemberProduction,
   Produce,
-  StockpileStrength,
   TimePeriod,
   calculatePityProcThreshold,
   emptyProduce,
   ingredient,
-  isModifier,
-  isSkillOrModifierOf,
   mainskill,
   multiplyProduce,
   subskill,
@@ -40,7 +39,7 @@ export class MemberState {
   private cookingState: CookingState;
 
   // quick lookups, static data
-  private skillsWithoutMetronome = mainskill.MAINSKILLS.filter((ms) => ms !== mainskill.METRONOME);
+  private skillsWithoutMetronome = MAINSKILLS.filter((ms) => ms !== mainskill.METRONOME);
 
   // state
   private currentEnergy = 0;
@@ -377,16 +376,16 @@ export class MemberState {
     }
   }
 
-  private activateSkill(skill: mainskill.MainSkill): SkillActivation {
-    if (isModifier(skill.unit)) {
+  private activateSkill(skill: Mainskill): SkillActivation {
+    if (skill.isModified) {
       return this.activateModifier(skill);
     } else {
       return this.activateBasicSkill(skill);
     }
   }
 
-  private activateBasicSkill(skill: mainskill.MainSkill): SkillActivation {
-    const skillActivators: Record<BasicSkillType, (skill: mainskill.MainSkill) => SkillActivation> = {
+  private activateBasicSkill(skill: Mainskill): SkillActivation {
+    const skillActivators: Record<MainskillUnit, (skill: Mainskill) => SkillActivation> = {
       energy: (skill) => this.#activateEnergySkill(skill),
       helps: (skill) => this.#activateHelpSkill(skill),
       ingredients: () => this.#activateIngredientMagnet(),
@@ -398,26 +397,19 @@ export class MemberState {
       strength: (skill) => this.#activateValueSkills(skill),
     };
 
-    return skillActivators[skill.unit as BasicSkillType](skill);
+    return skillActivators[skill.unit](skill);
   }
-  private activateModifier(skill: mainskill.MainSkill): SkillActivation {
-    const modifierActivators: Record<string, (skill: mainskill.MainSkill) => SkillActivation> = {
-      stockpile: (skill) => this.#activateStockpile(skill),
-      moonlight: (skill) => this.#activateMoonlight(skill),
-      disguise: (skill) => this.#activateDisguise(skill),
+  private activateModifier(skill: Mainskill): SkillActivation {
+    const modifierActivators: Record<string, (skill: Mainskill) => SkillActivation> = {
+      Stockpile: (skill) => this.#activateStockpile(skill),
+      Moonlight: (skill) => this.#activateMoonlight(skill),
+      Disguise: (skill) => this.#activateDisguise(skill),
     };
 
-    if (isModifier(skill.unit) && modifierActivators[skill.unit.type]) {
-      return modifierActivators[skill.unit.type](skill);
-    }
-
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return modifierActivators[skill.modifier](skill);
   }
 
-  #activateEnergySkill(skill: mainskill.MainSkill): SkillActivation {
+  #activateEnergySkill(skill: Mainskill): SkillActivation {
     if (skill === mainskill.CHARGE_ENERGY_S) {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
@@ -446,7 +438,7 @@ export class MemberState {
     }
   }
 
-  #activateHelpSkill(skill: mainskill.MainSkill): SkillActivation {
+  #activateHelpSkill(skill: Mainskill): SkillActivation {
     if (skill === mainskill.HELPER_BOOST) {
       // helper boost
       const unique = TeamSimulatorUtils.uniqueMembersWithBerry({
@@ -520,11 +512,11 @@ export class MemberState {
     };
   }
 
-  #activateStockpile(skill: mainskill.MainSkill): SkillActivation {
-    if (skill.unit === StockpileStrength) {
-      const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_SPIT_CHANCE);
-      if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STOCKS[this.skillLevel].length - 1) {
-        const stockpiledValue = mainskill.STOCKPILE_STOCKS[this.skillLevel][this.currentStockpile];
+  #activateStockpile(skill: Mainskill): SkillActivation {
+    if (skill.isModifiedVersionOf(mainskill.CHARGE_STRENGTH_S, 'Stockpile')) {
+      const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_STRENGTH_SPIT_CHANCE);
+      if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STRENGTH_STOCKS[this.skillLevel].length - 1) {
+        const stockpiledValue = mainskill.STOCKPILE_STRENGTH_STOCKS[this.skillLevel][this.currentStockpile];
         this.skillValue += stockpiledValue;
         this.currentStockpile = 0;
       } else {
@@ -543,10 +535,8 @@ export class MemberState {
     };
   }
 
-  #activateMoonlight(skill: mainskill.MainSkill) {
-    if (isSkillOrModifierOf(skill, 'energy')) {
-      // TODO: I want to do isMoonlightOf(mainskill.CHARGE_ENERGY_S)
-      // TODO: currently doesnt support other energy skills for moonlight
+  #activateMoonlight(skill: Mainskill) {
+    if (skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
@@ -564,9 +554,9 @@ export class MemberState {
     };
   }
 
-  #activateDisguise(skill: mainskill.MainSkill) {
+  #activateDisguise(skill: Mainskill) {
     // TODO: missing crit functionality, which is max 1 until sleep reset
-    if (isSkillOrModifierOf(skill, 'berries')) {
+    if (skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')) {
       const selfBerryAmount = this.skillAmount(skill);
       const otherBerryAmount = mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[this.skillLevel - 1];
 
@@ -587,7 +577,7 @@ export class MemberState {
     };
   }
 
-  #activateValueSkills(skill: mainskill.MainSkill): SkillActivation {
+  #activateValueSkills(skill: Mainskill): SkillActivation {
     this.skillValue += this.skillAmount(skill);
     return {
       energyTeam: 0,
@@ -595,7 +585,7 @@ export class MemberState {
     };
   }
 
-  private skillAmount(skill: mainskill.MainSkill) {
+  private skillAmount(skill: Mainskill) {
     const metronomeFactor =
       this.member.pokemonSet.pokemon.skill === mainskill.METRONOME ? this.skillsWithoutMetronome.length : 1;
     return skill.amount[this.member.skillLevel - 1] / metronomeFactor;

@@ -1,4 +1,5 @@
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import axios from 'axios'
 import {
@@ -23,14 +24,30 @@ class ProductionServiceImpl {
   public async calculateTeamMemberProduction(params: { teamIndex: number; memberIndex: number }) {
     const { teamIndex, memberIndex } = params
 
+    const pokemonStore = usePokemonStore()
     const teamStore = useTeamStore()
     const team = teamStore.teams[teamIndex]
-    const member = team?.production?.members[memberIndex].member
-    const otherTeamMembers = team?.production?.members.filter(
-      (m) => m.member.externalId !== member?.externalId
-    )
+    const teamMembers =
+      team?.production?.members.map((m) => {
+        const member = pokemonStore.getPokemon(m.memberExternalId)
+        if (!member) {
+          throw new Error(
+            `Pokemon ${m.memberExternalId} was present in team, but not in Pokémon store, contact developer`
+          )
+        }
+        return {
+          ...m,
+          member
+        }
+      }) ?? []
+    const member = teamMembers[memberIndex]?.member
+    const otherTeamMembers = teamMembers
+      .filter((m) => m.memberExternalId !== member.externalId)
+      .map((otherMember) => ({
+        ...otherMember
+      }))
 
-    if (!team || !member || !otherTeamMembers) {
+    if (!team || !member || !teamMembers || !otherTeamMembers) {
       console.error("Contact developer, can't find team or member for team single production")
       return
     }
@@ -77,7 +94,7 @@ class ProductionServiceImpl {
             : Math.max(e4eLevel, otherMember.member.skillLevel)
 
         const unique =
-          team.production?.members?.filter(
+          teamMembers.filter(
             (m) => m.member.pokemon.berry.name === otherMember.member.pokemon.berry.name
           ).length ?? 1
 

@@ -158,10 +158,10 @@ describe('activateNonProduceSkills', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 1,
-      metronomeFactor: mainskill.MAINSKILLS.length - 1,
+      metronomeFactor: mainskill.METRONOME_FACTOR,
     };
     const result = activateNonProduceSkills(params);
-    const metronomeFactor = mainskill.MAINSKILLS.length - 1;
+    const metronomeFactor = mainskill.METRONOME_FACTOR;
     expect(result).toEqual({
       skill: mainskill.INGREDIENT_MAGNET_S,
       adjustedAmount: mainskill.INGREDIENT_MAGNET_S.amount[5] / metronomeFactor,

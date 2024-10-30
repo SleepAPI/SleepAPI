@@ -121,7 +121,7 @@
                 </span>
               </v-progress-linear>
             </v-col>
-            <v-row v-if="cookedRecipe.showDetails" class="flex-center w-100 py-4">
+            <v-row v-if="cookedRecipe.showDetails" class="flex-center w-100 py-4" dense>
               <v-col cols="12">
                 <v-divider />
               </v-col>

@@ -1,4 +1,5 @@
 // skills
+export const MAX_SKILL_LEVEL = 7;
 export const TASTY_CHANCE_S_CAP = 0.7;
 
 // recipe

@@ -38,14 +38,11 @@ import {
   MathUtils,
   Produce,
   SkillActivation,
-  StockpileStrength,
-  Strength,
   Summary,
   Time,
   combineSameIngredientsInDrop,
   emptyBerryInventory,
   emptyProduce,
-  isSkillOrModifierOf,
   mainskill,
 } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
@@ -242,7 +239,7 @@ export function simulation(params: {
           })
         );
 
-        if (isSkillOrModifierOf(skillActivation.skill, 'energy')) {
+        if (skillActivation.skill.isUnit('energy')) {
           const energyAmountWithNature = skillActivation.adjustedAmount * dayInfo.nature.energy;
           const clampedDelta =
             currentEnergy + energyAmountWithNature > 150 ? 150 - currentEnergy : energyAmountWithNature;
@@ -257,10 +254,8 @@ export function simulation(params: {
           );
           currentEnergy += clampedDelta;
           totalRecovery += clampedDelta;
-          if (
-            skillActivation.skill === mainskill.CHARGE_ENERGY_S ||
-            skillActivation.skill === mainskill.MOONLIGHT_CHARGE_ENERGY_S
-          ) {
+          // TODO: do we need to handle moonlight here?
+          if (skillActivation.skill.isSameOrModifiedVersionOf(mainskill.CHARGE_ENERGY_S)) {
             skillEnergySelfValue += clampedDelta;
           } else {
             skillEnergyOthersValue += energyAmountWithNature;
@@ -275,7 +270,7 @@ export function simulation(params: {
               ] * skillActivation.fractionOfProc;
           }
           skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
-        } else if (skillActivation.skill.unit === Strength || skillActivation.skill.unit === StockpileStrength) {
+        } else if (skillActivation.skill.isUnit('strength')) {
           skillStrengthValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.unit === 'dream shards') {
           skillDreamShardValue += skillActivation.adjustedAmount;

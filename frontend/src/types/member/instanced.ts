@@ -3,7 +3,6 @@ import type {
   CookingResult,
   DetailedProduce,
   IngredientSet,
-  PokemonInstanceExt,
   Produce,
   RecipeType,
   Summary,
@@ -40,12 +39,12 @@ export interface MemberProductionExt {
   produceWithoutSkill: Produce
   skillProcs: number
   skillAmount: number
-  member: PokemonInstanceExt
+  memberExternalId: string
   singleProduction?: SingleMemberProduction
 }
 
 export interface SingleProductionExt {
-  member: PokemonInstanceExt
+  memberExternalId: string
   berries: BerrySet[]
   ingredients: IngredientSet[]
   skillProcs: number

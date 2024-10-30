@@ -70,7 +70,7 @@
 				],
 				"nullable": false
 			},
-			"BasicSkillType": {
+			"MainskillUnit": {
 				"anyOf": [
 					{
 						"$ref": "#/components/schemas/Energy"
@@ -101,36 +101,36 @@
 					}
 				]
 			},
-			"Modifier_BasicSkillType_": {
-				"properties": {
-					"type": {
-						"type": "string"
-					},
-					"value": {
-						"$ref": "#/components/schemas/BasicSkillType"
-					}
-				},
-				"required": [
-					"type",
-					"value"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MainSkillType": {
-				"anyOf": [
-					{
-						"$ref": "#/components/schemas/BasicSkillType"
-					},
-					{
-						"$ref": "#/components/schemas/Modifier_BasicSkillType_"
-					}
+			"ModifierType": {
+				"type": "string",
+				"enum": [
+					"Base",
+					"Stockpile",
+					"Moonlight",
+					"Disguise"
 				]
 			},
-			"MainSkill": {
+			"Mainskill": {
 				"properties": {
-					"name": {
+					"modifier": {
+						"$ref": "#/components/schemas/ModifierType"
+					},
+					"RP": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"description": {
 						"type": "string"
+					},
+					"maxLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"unit": {
+						"$ref": "#/components/schemas/MainskillUnit"
 					},
 					"amount": {
 						"items": {
@@ -139,34 +139,20 @@
 						},
 						"type": "array"
 					},
-					"unit": {
-						"$ref": "#/components/schemas/MainSkillType"
-					},
-					"maxLevel": {
-						"type": "number",
-						"format": "double"
-					},
-					"description": {
+					"name": {
 						"type": "string"
-					},
-					"RP": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
 					}
 				},
 				"required": [
-					"name",
-					"amount",
-					"unit",
-					"maxLevel",
+					"modifier",
+					"RP",
 					"description",
-					"RP"
+					"maxLevel",
+					"unit",
+					"amount",
+					"name"
 				],
-				"type": "object",
-				"additionalProperties": false
+				"type": "object"
 			},
 			"RecipeType": {
 				"type": "string",
@@ -386,7 +372,7 @@
 						"type": "array"
 					},
 					"skill": {
-						"$ref": "#/components/schemas/MainSkill"
+						"$ref": "#/components/schemas/Mainskill"
 					}
 				},
 				"required": [
@@ -654,7 +640,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MainSkill"
+									"$ref": "#/components/schemas/Mainskill"
 								}
 							}
 						}

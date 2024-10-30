@@ -1,3 +1,4 @@
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { defineStore } from 'pinia'
 import { DOMAIN_VERSION, type berry } from 'sleepapi-common'
@@ -45,7 +46,7 @@ export const useComparisonStore = defineStore('comparison', {
   },
   getters: {
     getMemberProduction: (state) => (externalId: string) =>
-      state.members.find((member) => member.member.externalId === externalId),
+      state.members.find((member) => member.memberExternalId === externalId),
     fullTeam: (state) => state.members.length >= MAX_COMPARISON_MEMBERS
   },
   actions: {
@@ -60,6 +61,11 @@ export const useComparisonStore = defineStore('comparison', {
     },
     addMember(member: SingleProductionExt) {
       this.members.push(member)
+    },
+    removeMember(externalId: string) {
+      const pokemonStore = usePokemonStore()
+      pokemonStore.removePokemon(externalId, 'compare')
+      this.members = this.members.filter((pkmn) => pkmn.memberExternalId !== externalId)
     },
     async toggleCamp() {
       this.camp = !this.camp

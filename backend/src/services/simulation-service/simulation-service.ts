@@ -39,7 +39,6 @@ import {
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentageWithPityProc,
   combineSameIngredientsInDrop,
-  isSkillOrModifierOf,
   mainskill,
   maxCarrySize,
   nature,
@@ -240,7 +239,7 @@ export function generateSkillActivations(params: {
 
   // run Monte Carlo simulation to estimate skill activations
   const skill = pokemonWithAverageProduce.pokemon.skill;
-  if (isSkillOrModifierOf(skill, 'energy') || skill === mainskill.METRONOME) {
+  if (skill.unit === 'energy' || skill.isSkill(mainskill.METRONOME)) {
     const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps } = monteCarlo({
       dayInfo,
       helpFrequency,

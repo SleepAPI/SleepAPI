@@ -1,5 +1,5 @@
-import { MathUtils } from 'src/utils/math-utils/math-utils';
 import { describe, expect, it } from 'vitest';
+import { MathUtils } from '../../utils/math-utils/math-utils';
 
 describe('floor', () => {
   it('shall floor to specific decimal precision', () => {

@@ -1,4 +1,4 @@
-import { createCurry } from 'src/utils';
+import { createCurry } from '../../utils/recipe-utils/recipe-utils';
 import {
   BEAN_SAUSAGE,
   FANCY_APPLE,

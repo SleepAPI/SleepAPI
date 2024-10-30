@@ -74,7 +74,7 @@ describe('CompareSettings', () => {
     const member = createMockPokemon()
 
     comparisonStore.addMember({
-      member,
+      memberExternalId: member.externalId,
       ingredients: [],
       skillProcs: 5,
       berries: [

@@ -69,7 +69,7 @@ export const useTeamStore = defineStore('team', {
     },
     getCurrentMember: (state) => {
       const currentTeam = state.teams[state.currentIndex]
-      return currentTeam.production?.members.at(currentTeam.memberIndex)?.member.externalId
+      return currentTeam.production?.members.at(currentTeam.memberIndex)?.memberExternalId
     }
   },
   actions: {
@@ -263,7 +263,8 @@ export const useTeamStore = defineStore('team', {
       const members: PokemonInstanceExt[] = []
       for (const member of this.teams[teamIndex].members) {
         if (member) {
-          members.push(pokemonStore.getPokemon(member))
+          const pokemon = pokemonStore.getPokemon(member)
+          pokemon && members.push(pokemon)
         }
       }
       const settings: TeamSettings = {
@@ -345,18 +346,13 @@ export const useTeamStore = defineStore('team', {
       }
 
       const member = this.getPokemon(memberIndex)
-
-      // check if this is only time this mon is used
-      const nrOfOccurences = this.teams.flatMap((team) =>
-        team.members.filter((m) => m != null && member != null && m === member.externalId)
-      ).length
-      if (member != null && !member.saved && nrOfOccurences === 1) {
-        pokemonStore.removePokemon(member.externalId)
+      if (member != null) {
+        if (this.isSupportMember(member)) {
+          this.resetCurrentTeamSingleProduction()
+        }
+        pokemonStore.removePokemon(member.externalId, 'team')
       }
 
-      if (member && this.isSupportMember(member)) {
-        this.resetCurrentTeamSingleProduction()
-      }
       this.teams[this.currentIndex].members[memberIndex] = undefined
 
       this.loadingMembers[memberIndex] = false

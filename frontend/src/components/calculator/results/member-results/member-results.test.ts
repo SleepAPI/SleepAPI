@@ -60,7 +60,7 @@ describe('TeamResults', () => {
     const members = wrapper.vm.members
     expect(members).toBeDefined()
     expect(members!.length).toBe(1)
-    expect(members![0].member).toEqual({ ...mockPokemon, rp: undefined })
+    expect(members![0].memberExternalId).toEqual(mockPokemon.externalId)
     expect(members![0].produceTotal.berries[0].amount).toBe(10)
   })
 
@@ -77,8 +77,8 @@ describe('TeamResults', () => {
       members: ['member1', 'member2'],
       production: createMockTeamProduction({
         members: [
-          createMockMemberProduction({ member: mockPokemon }),
-          createMockMemberProduction({ member: { ...mockPokemon, externalId: 'mon2' } })
+          createMockMemberProduction({ memberExternalId: mockPokemon.externalId }),
+          createMockMemberProduction({ memberExternalId: 'mon2' })
         ]
       })
     }
