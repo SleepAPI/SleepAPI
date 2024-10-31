@@ -12,19 +12,26 @@
     </template>
     <v-speed-dial v-model="fab" location="top center" transition="fade-transition">
       <template #activator="{ props }">
-        <!-- TODO: add small badge with amount of the ingredient this mon has at this level -->
-        <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
-          <v-avatar>
-            <v-img id="ingredientImage" :src="ingredientImage"></v-img>
-          </v-avatar>
-        </v-btn>
+        <v-badge
+          :content="ingredientSet?.amount"
+          color="accent"
+          text-color="background"
+          offset-x="5"
+          offset-y="5"
+        >
+          <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
+            <v-avatar>
+              <v-img id="ingredientImage" :src="ingredientImage"></v-img>
+            </v-avatar>
+          </v-btn>
+        </v-badge>
       </template>
 
       <v-btn
         v-for="key in otherIngredientOptions"
         :key="key.ingredient.name"
-        color="primary"
-        size="large"
+        color="accent"
+        size="48"
         icon
         @click="handleIngredientClick(key)"
       >
