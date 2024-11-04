@@ -109,7 +109,10 @@ describe('simulator', () => {
               ],
               "description": "Restores ? Energy to the user.",
               "maxLevel": 6,
-              "modifier": "Base",
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Charge Energy S",
               "unit": "energy",
             },

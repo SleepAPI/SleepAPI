@@ -14,7 +14,7 @@ const baseSkill = createBaseSkill(baseSkillAttributes);
 
 const modifiedSkillAttributes: MainskillAttributes = {
   ...baseSkillAttributes,
-  modifier: 'Moonlight',
+  modifier: { type: 'Moonlight', critChance: 0.5 },
   name: 'Moonlight (Charge Energy S)',
 };
 const modifiedSkill = new Mainskill(modifiedSkillAttributes);
@@ -22,18 +22,18 @@ const modifiedSkill = new Mainskill(modifiedSkillAttributes);
 describe('Mainskill', () => {
   it('should create a base skill with createBaseSkill', () => {
     expect(baseSkill.name).toBe('Charge Energy S');
-    expect(baseSkill.amount).toEqual([12, 16, 21, 26, 33, 43]);
+    expect(baseSkill.amounts).toEqual([12, 16, 21, 26, 33, 43]);
     expect(baseSkill.unit).toBe('energy');
     expect(baseSkill.maxLevel).toBe(6);
     expect(baseSkill.description).toBe('Restores ? Energy to the user.');
     expect(baseSkill.RP).toEqual([400, 569, 785, 1083, 1496, 2066]);
-    expect(baseSkill.modifier).toBe('Base');
+    expect(baseSkill.modifier.type).toBe('Base');
     expect(baseSkill.isModified).toBe(false);
   });
 
   it('should create a modified skill', () => {
     expect(modifiedSkill.name).toBe('Moonlight (Charge Energy S)');
-    expect(modifiedSkill.modifier).toBe('Moonlight');
+    expect(modifiedSkill.modifier.type).toBe('Moonlight');
     expect(modifiedSkill.isModified).toBe(true);
   });
 
@@ -64,7 +64,7 @@ describe('Mainskill', () => {
   });
 
   it('should convert skill to JSON using toJSON()', () => {
-    expect(baseSkill.toJSON()).toEqual({ ...baseSkillAttributes, modifier: 'Base' });
+    expect(baseSkill.toJSON()).toEqual({ ...baseSkillAttributes, modifier: { type: 'Base', critChance: 0 } });
     expect(modifiedSkill.toJSON()).toEqual(modifiedSkillAttributes);
   });
 });

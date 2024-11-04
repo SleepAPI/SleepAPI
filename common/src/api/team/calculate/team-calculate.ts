@@ -25,6 +25,10 @@ export interface MemberProductionAdvanced {
   nightHelps: number;
   nightHelpsBeforeSS: number;
   nightHelpsAfterSS: number;
+  skillCrits: number;
+  skillCritValue: number;
+  wastedEnergy: number;
+  morningProcs: number;
 }
 
 export interface MemberProduction {

@@ -160,131 +160,40 @@
         </v-col>
       </v-row>
 
-      <v-row dense>
-        <v-col class="px-4">
-          <v-card color="surface" rounded="xl">
-            <v-row class="flex-center flex-nowrap mx-auto my-1">
-              <!-- Berries -->
-              <v-col cols="4" class="flex-center flex-column">
-                <v-row dense class="flex-center">
-                  <v-col cols="12" class="flex-center text-h6 text-berry font-weight-medium py-0">
-                    Berry
-                  </v-col>
-                </v-row>
-
-                <v-row dense justify="center" class="flex-nowrap">
-                  <v-col cols="6" class="flex-center flex-column pt-0">
-                    <v-img
-                      :src="berryImage(member.pokemonInstance.pokemon.berry)"
-                      height="24"
-                      width="24"
-                    ></v-img>
-                    <span class="font-weight-medium text-center">{{
-                      round(
-                        (member.produceWithoutSkill.berries.at(0)?.amount ?? 0) * timeWindowFactor
-                      )
-                    }}</span>
-                  </v-col>
-                  <v-col cols="auto" class="flex-center flex-column pt-0">
-                    <v-img src="/images/misc/strength.png" height="16px" width="16px"></v-img>
-                    <span class="font-weight-medium text-center">{{ currentBerryStrength }}</span>
-                  </v-col>
-                </v-row>
-              </v-col>
-
-              <!-- Ingredients -->
-              <v-col cols="4" class="flex-center flex-column">
-                <v-row dense class="flex-center">
-                  <v-col
-                    cols="12"
-                    class="flex-center text-h6 text-ingredient font-weight-medium py-0"
-                  >
-                    Ingredient
-                  </v-col>
-                </v-row>
-
-                <v-row dense justify="center" class="flex-nowrap">
-                  <v-col
-                    v-for="({ amount, name }, i) in member.ingredients"
-                    :key="i"
-                    class="flex-center pt-0"
-                  >
-                    <div class="flex-center flex-column">
-                      <v-img :src="name" height="24" width="24"></v-img>
-                      <span class="text-center font-weight-medium">{{
-                        round(amount * timeWindowFactor)
-                      }}</span>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-col>
-
-              <!-- Skills -->
-              <v-col cols="4" class="flex-center flex-column">
-                <v-row dense class="flex-center">
-                  <v-col cols="12" class="flex-center text-h6 text-skill font-weight-medium py-0">
-                    Skill
-                  </v-col>
-                </v-row>
-
-                <v-row dense justify="center" class="flex-nowrap">
-                  <v-col class="flex-center flex-column pt-0">
-                    <v-img src="/images/misc/skillproc.png" height="24" width="24"></v-img>
-                    <span class="font-weight-medium text-center">{{
-                      round(member.skillProcs * timeWindowFactor)
-                    }}</span>
-                  </v-col>
-                  <v-col
-                    v-if="member.pokemonInstance.pokemon.skill.unit !== 'metronome'"
-                    class="flex-center flex-column pt-0"
-                  >
-                    <v-badge
-                      id="skillLevelBadge"
-                      :content="`Lv.${member.pokemonInstance.skillLevel}`"
-                      location="top right"
-                      offset-x="10"
-                      offset-y="-2"
-                      color="subskillWhite"
-                      rounded="pill"
-                    >
-                      <v-img
-                        :src="mainskillImage(member.pokemonInstance.pokemon)"
-                        height="24px"
-                        width="24px"
-                      ></v-img>
-                    </v-badge>
-                    <span class="font-weight-medium text-center">{{ currentSkillValue }}</span>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-        <v-col class="pr-6" style="min-width: 200px">
-          <v-row dense class="flex-center flex-nowrap">
-            <v-col cols="6" class="flex-center flex-column">
-              <span class="text-h6 text-accent">Stats</span>
-              <v-col cols="12" class="flex-left pt-0">
-                <v-divider />
-              </v-col>
-              <span>Some stat</span>
-              <span>Other stat</span>
-              <span>Other stat</span>
-              <span>Other stat</span>
+      <!-- TODO: we probably want to do v-row with cols-auto on MemberProductionHeader so that on desktop stats (or something else) can fit next to it -->
+      <MemberProductionHeader :member="currentMember" />
+      <v-col class="pr-6" style="min-width: 200px">
+        <v-row dense class="flex-top flex-nowrap">
+          <v-col cols="6" class="flex-center flex-column">
+            <span class="text-h6 text-accent">Details</span>
+            <v-col cols="12" class="flex-left pt-0">
+              <v-divider />
             </v-col>
-            <v-col cols="6" class="flex-center flex-column">
-              <span class="text-h6 text-accent text-no-wrap">Team impact</span>
-              <v-col cols="12" class="flex-left pt-0">
-                <v-divider />
-              </v-col>
-              <span>Some stat</span>
-              <span>Other stat</span>
-              <span>Other stat</span>
-              <span>Other stat</span>
+            <span
+              >Crit chance:
+              {{ currentMember.pokemonInstance.pokemon.skill.critChance * 100 }}%</span
+            >
+            <span>Crits per day: {{ MathUtils.round(currentMember.advanced.skillCrits, 2) }}</span>
+            <span
+              >Crit {{ currentMember.pokemonInstance.pokemon.skill.unit }}:
+              {{ Math.floor(currentMember.advanced.skillCritValue) }}
+            </span>
+            <span v-if="currentMember.advanced.wastedEnergy > 0">
+              Wasted energy: {{ Math.floor(currentMember.advanced.wastedEnergy) }}</span
+            >
+          </v-col>
+          <v-col cols="6" class="flex-center flex-column">
+            <span class="text-h6 text-accent text-no-wrap">Team impact</span>
+            <v-col cols="12" class="flex-left pt-0">
+              <v-divider />
             </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
+            <span>Some stat</span>
+            <span>Other stat</span>
+            <span>Other stat</span>
+            <span>Other stat</span>
+          </v-col>
+        </v-row>
+      </v-col>
     </v-window-item>
   </v-window>
 </template>
@@ -295,13 +204,13 @@ import {
   ivOptions,
   ivTextPlugin
 } from '@/components/calculator/results/chart-data/iv-chart'
+import MemberProductionHeader from '@/components/calculator/results/member-results/member-production-header.vue'
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
 import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
 import SpeechBubble from '@/components/speech-bubble/speech-bubble.vue'
 import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phrase'
 import { useViewport } from '@/composables/viewport-composable'
 import { ProductionService } from '@/services/production/production-service'
-import { StrengthService } from '@/services/strength/strength-service'
 import { rarityColor } from '@/services/utils/color-utils'
 import { avatarImage, berryImage, islandImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -313,14 +222,7 @@ import type {
   SingleMemberProduction
 } from '@/types/member/instanced'
 import { Chart } from 'chart.js'
-import {
-  MathUtils,
-  compactNumber,
-  ingredient,
-  type DetailedProduce,
-  type IngredientSet,
-  type SingleProductionResponse
-} from 'sleepapi-common'
+import { MathUtils, type DetailedProduce, type SingleProductionResponse } from 'sleepapi-common'
 import {
   computed,
   defineComponent,
@@ -338,7 +240,8 @@ export default defineComponent({
   components: {
     RadarChart,
     NatureModifiers,
-    SpeechBubble
+    SpeechBubble,
+    MemberProductionHeader
   },
   setup() {
     const teamStore = useTeamStore()
@@ -424,7 +327,8 @@ export default defineComponent({
       berryImage,
       rarityColor,
       ivData,
-      ivOptions
+      ivOptions,
+      MathUtils
     }
   },
   computed: {
@@ -436,8 +340,7 @@ export default defineComponent({
         if (!pokemonInstance) continue
         result.push({
           ...member,
-          pokemonInstance,
-          ingredients: this.prepareMemberIngredients(member.produceTotal.ingredients)
+          pokemonInstance
         })
       }
       return result
@@ -445,38 +348,13 @@ export default defineComponent({
     currentMember() {
       return this.members[this.teamStore.getCurrentTeam.memberIndex]
     },
+    // used by watch to trigger recalc
     currentMemberExternalId() {
       return this.currentMember?.memberExternalId
     },
+    // used by watch to trigger recalc
     currentMemberSingleProduction() {
       return this.currentMember?.singleProduction
-    },
-    currentBerryStrength() {
-      return compactNumber(
-        StrengthService.berryStrength({
-          favored: this.teamStore.getCurrentTeam.favoredBerries,
-          berries:
-            this.members[this.teamStore.getCurrentTeam.memberIndex].produceWithoutSkill.berries,
-          timeWindow: this.teamStore.timeWindow
-        })
-      )
-    },
-    currentSkillValue() {
-      const memberProduction = this.members[this.teamStore.getCurrentTeam.memberIndex]
-      if (!memberProduction) {
-        return 0
-      }
-
-      return compactNumber(
-        StrengthService.skillValue({
-          skill: memberProduction.pokemonInstance.pokemon.skill,
-          amount: memberProduction.skillAmount,
-          timeWindow: this.teamStore.timeWindow
-        })
-      )
-    },
-    timeWindowFactor() {
-      return StrengthService.timeWindowFactor(this.teamStore.timeWindow)
     }
   },
   watch: {
@@ -513,29 +391,6 @@ export default defineComponent({
   methods: {
     getMemberImage(pokemonName: string, shiny: boolean) {
       return avatarImage({ pokemonName, happy: true, shiny })
-    },
-    prepareMemberIngredients(ingredients: IngredientSet[]) {
-      if (ingredients.length >= ingredient.INGREDIENTS.length) {
-        const ingMagnetAmount = ingredients.reduce(
-          (min, cur) => (cur.amount < min ? cur.amount : min),
-          ingredients[0].amount
-        )
-
-        const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
-
-        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount - ingMagnetAmount, 1),
-          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
-        }))
-
-        result.push({ amount: ingMagnetAmount, name: '/images/misc/ingredients.png' })
-        return result
-      } else {
-        return ingredients.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount, 1),
-          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
-        }))
-      }
     },
     async populateSingleProduction() {
       const calculatedExternalId = this.teamStore.getCurrentMember
@@ -662,9 +517,6 @@ export default defineComponent({
     }) {
       const { current, optimalBerry, optimalIng, optimalSkill } = params
       return Math.round((current / Math.max(optimalBerry, optimalIng, optimalSkill)) * 100)
-    },
-    round(num: number) {
-      return MathUtils.round(num, 1)
     }
   }
 })

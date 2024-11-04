@@ -56,6 +56,18 @@ export function createMockMemberProduction(
     skillAmount: 100,
     skillProcs: 5,
     singleProduction: createMockMemberSingleProduction(),
+    advanced: {
+      skillCrits: 0,
+      spilledIngredients: [],
+      totalHelps: 0,
+      dayHelps: 0,
+      nightHelps: 0,
+      nightHelpsBeforeSS: 0,
+      nightHelpsAfterSS: 0,
+      skillCritValue: 0,
+      wastedEnergy: 0,
+      morningProcs: 0
+    },
     ...attrs
   }
 }

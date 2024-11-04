@@ -10,4 +10,6 @@ export const ENERGIZING_CHEER_S: Mainskill = createBaseSkill({
   RP: [880, 1251, 1726, 2383, 3290, 4546],
 });
 
+export const ENERGIZING_CHEER_TARGET_LOWEST_CHANCE = 0.5;
+
 MAINSKILLS.push(ENERGIZING_CHEER_S);

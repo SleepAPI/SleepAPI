@@ -6,6 +6,7 @@ export * from './nature-utils';
 export * from './number-utils';
 export * from './pokemon-utils';
 export * from './produce-utils';
+export * from './random-utils';
 export * from './recipe-utils';
 export * from './rp-utils';
 export * from './stat-utils';

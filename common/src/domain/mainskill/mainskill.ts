@@ -1,6 +1,6 @@
 import { MainskillUnit } from './mainskill-unit';
 
-import { ModifierType } from './modifier';
+import { Modifier, ModifierType } from './modifier';
 
 export type MainskillAttributes = {
   name: string;
@@ -9,7 +9,7 @@ export type MainskillAttributes = {
   maxLevel: number;
   description: string;
   RP: number[];
-  modifier: ModifierType;
+  modifier: Modifier;
 };
 export class Mainskill {
   attributes: MainskillAttributes;
@@ -30,7 +30,7 @@ export class Mainskill {
     return this.attributes.description;
   }
 
-  get amount() {
+  get amounts() {
     return this.attributes.amount;
   }
 
@@ -43,11 +43,27 @@ export class Mainskill {
   }
 
   get isModified(): boolean {
-    return this.modifier !== 'Base';
+    return this.modifier.type !== 'Base';
+  }
+
+  get critChance() {
+    return this.modifier.critChance;
   }
 
   get RP() {
     return this.attributes.RP;
+  }
+
+  get maxAmount() {
+    return this.amounts[this.maxLevel - 1];
+  }
+
+  /**
+   *
+   * @returns amount for given skill level
+   */
+  public amount(skillLevel: number) {
+    return this.amounts[skillLevel - 1];
   }
 
   /**
@@ -64,7 +80,6 @@ export class Mainskill {
    * @param units The units to compare against.
    * @returns True if the current unit matches any of the provided units.
    */
-  // TODO: test that we can invoke like isUnit('strength') and isUnit('strength', 'pot size')
   isUnit(...units: MainskillUnit[]): boolean {
     return units.includes(this.unit);
   }
@@ -76,7 +91,7 @@ export class Mainskill {
    * @returns True if the current skill is a modified version of the provided base skill.
    */
   isModifiedVersionOf(skill: Mainskill, modifierType?: ModifierType): boolean {
-    return this.isModified && (!modifierType || this.modifier === modifierType) && this.name.includes(skill.name);
+    return this.isModified && (!modifierType || this.modifier.type === modifierType) && this.name.includes(skill.name);
   }
 
   /**
@@ -97,7 +112,7 @@ export class Mainskill {
 export const createBaseSkill = (baseSkill: Omit<MainskillAttributes, 'modifier'>): Mainskill => {
   return new Mainskill({
     ...baseSkill,
-    modifier: 'Base',
+    modifier: { type: 'Base', critChance: 0 },
   });
 };
 

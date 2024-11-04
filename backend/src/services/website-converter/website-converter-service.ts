@@ -351,12 +351,12 @@ class WebsiteConverterServiceImpl {
       teamInput.push(`Ribbon level: ${filters.ribbon}`);
     }
     if (filters.e4eProcs > 0) {
-      teamInput.push(`E4E: ${filters.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[filters.e4eLevel - 1]} energy`);
+      teamInput.push(`E4E: ${filters.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount(filters.e4eLevel)} energy`);
     }
     if (filters.helperBoostProcs > 0) {
       teamInput.push(
         `Helper boost: ${filters.helperBoostProcs} x ${
-          mainskill.HELPER_BOOST.amount[filters.helperBoostLevel - 1] +
+          mainskill.HELPER_BOOST.amount(filters.helperBoostLevel) +
           calculateHelperBoostHelpsFromUnique(filters.helperBoostUnique, filters.helperBoostLevel)
         } helps`
       );
@@ -501,12 +501,12 @@ class WebsiteConverterServiceImpl {
       teamInput.push(`Ribbon level: ${details.ribbon}`);
     }
     if (details.e4eProcs > 0) {
-      teamInput.push(`E4E: ${details.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount[details.e4eLevel - 1]} energy`);
+      teamInput.push(`E4E: ${details.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount(details.e4eLevel)} energy`);
     }
     if (details.helperBoostProcs > 0) {
       teamInput.push(
         `Helper boost: ${details.helperBoostProcs} x ${
-          mainskill.HELPER_BOOST.amount[details.helperBoostLevel - 1] +
+          mainskill.HELPER_BOOST.amount(details.helperBoostLevel) +
           calculateHelperBoostHelpsFromUnique(details.helperBoostUnique, details.helperBoostLevel)
         } helps`
       );

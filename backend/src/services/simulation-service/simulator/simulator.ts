@@ -254,20 +254,32 @@ export function simulation(params: {
           );
           currentEnergy += clampedDelta;
           totalRecovery += clampedDelta;
-          // TODO: do we need to handle moonlight here?
           if (skillActivation.skill.isSameOrModifiedVersionOf(mainskill.CHARGE_ENERGY_S)) {
             skillEnergySelfValue += clampedDelta;
+            if (skillActivation.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
+              const energyFromCrit =
+                skillActivation.adjustedAmount * (mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR / 5);
+              skillEnergyOthersValue += energyFromCrit * skillActivation.skill.critChance;
+            }
           } else {
             skillEnergyOthersValue += energyAmountWithNature;
           }
         } else if (skillActivation.adjustedProduce) {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
             skillHelpsValue += skillActivation.adjustedAmount;
-          } else if (skillActivation.skill === mainskill.DISGUISE_BERRY_BURST) {
-            skillBerriesOtherValue +=
-              mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[
-                (input.skillLevel ?? mainskill.DISGUISE_BERRY_BURST.maxLevel) - 1
-              ] * skillActivation.fractionOfProc;
+          } else if (skillActivation.skill.isSkill(mainskill.DISGUISE_BERRY_BURST)) {
+            const skillLevel = input.skillLevel ?? mainskill.DISGUISE_BERRY_BURST.maxLevel;
+            const metronomeUser = pokemon.skill.isSkill(mainskill.METRONOME);
+            const metronomeFactor = metronomeUser ? mainskill.METRONOME_FACTOR : 1;
+
+            const amountNoCrit =
+              mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[skillLevel - 1] * skillActivation.fractionOfProc;
+            const critChance = skillActivation.critChance ?? skillActivation.skill.critChance;
+
+            const averageTeamBerryAmount =
+              (amountNoCrit + critChance * amountNoCrit * mainskill.DISGUISE_CRIT_MULTIPLIER) / metronomeFactor;
+
+            skillBerriesOtherValue += averageTeamBerryAmount;
           }
           skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
         } else if (skillActivation.skill.isUnit('strength')) {

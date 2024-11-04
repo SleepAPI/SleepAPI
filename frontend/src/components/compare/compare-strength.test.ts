@@ -96,7 +96,7 @@ describe('CompareStrength', () => {
     // Check skill value
     const skillValue = StrengthService.skillStrength({
       skill: member.pokemon.skill,
-      amount: member.pokemon.skill.amount[member.skillLevel - 1] * mockMemberProduction.skillProcs,
+      amount: member.pokemon.skill.amount(member.skillLevel) * mockMemberProduction.skillProcs,
       berries: mockMemberProduction.berries.filter((b) => b.level !== member.level),
       favored: [],
       timeWindow: '24H'
@@ -164,7 +164,7 @@ describe('CompareStrength', () => {
     // Check skill value
     const skillValue = StrengthService.skillStrength({
       skill: member.pokemon.skill,
-      amount: member.pokemon.skill.amount[member.skillLevel - 1] * mockMemberProduction.skillProcs,
+      amount: member.pokemon.skill.amount(member.skillLevel) * mockMemberProduction.skillProcs,
       berries: mockMemberProduction.berries.filter((b) => b.level !== member.level),
       favored: [],
       timeWindow: '8H'

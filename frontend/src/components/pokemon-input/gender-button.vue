@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { MathUtils, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { RandomUtils, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -46,7 +46,7 @@ export default {
           const unknownGender = newPokemon.genders.female + newPokemon.genders.male === 0
           const newGender = unknownGender
             ? undefined
-            : MathUtils.rollRandomChance(newPokemon.genders.male)
+            : RandomUtils.roll(newPokemon.genders.male)
               ? 'male'
               : 'female'
 
