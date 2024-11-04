@@ -110,10 +110,27 @@
 					"Disguise"
 				]
 			},
+			"Modifier": {
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/ModifierType"
+					},
+					"critChance": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"type",
+					"critChance"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Mainskill": {
 				"properties": {
 					"modifier": {
-						"$ref": "#/components/schemas/ModifierType"
+						"$ref": "#/components/schemas/Modifier"
 					},
 					"RP": {
 						"items": {

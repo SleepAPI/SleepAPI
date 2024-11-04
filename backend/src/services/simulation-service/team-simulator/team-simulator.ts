@@ -16,10 +16,14 @@
 
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
+import {
+  MemberState,
+  TeamSkillActivation,
+  TeamSkillEnergy,
+} from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse, Time, TimePeriod } from 'sleepapi-common';
+import { CalculateTeamResponse, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;
@@ -83,9 +87,8 @@ export class TeamSimulator {
       this.attemptCooking(minutesSinceWakeup);
 
       for (const member of this.memberStates) {
-        const teamSkillActivated = member.attemptDayHelp(minutesSinceWakeup);
-        if (teamSkillActivated) {
-          this.activateTeamSkill(teamSkillActivated);
+        for (const teamSkillActivated of member.attemptDayHelp(minutesSinceWakeup)) {
+          this.activateTeamSkill(teamSkillActivated, member);
         }
       }
 
@@ -107,6 +110,8 @@ export class TeamSimulator {
   }
 
   public results(): CalculateTeamResponse {
+    this.collectInventory();
+
     const members = this.memberStates.map((m) => m.results(this.run));
     const cooking = this.cookingState.results(this.run);
 
@@ -117,7 +122,7 @@ export class TeamSimulator {
     for (const member of this.memberStates) {
       const morningSkills = member.startDay();
       for (const proc of morningSkills) {
-        this.activateTeamSkill(proc);
+        this.activateTeamSkill(proc, member);
       }
     }
 
@@ -148,21 +153,56 @@ export class TeamSimulator {
     }
   }
 
-  private activateTeamSkill(result: SkillActivation) {
-    if (result.helpsTeam > 0) {
+  private activateTeamSkill(result: TeamSkillActivation, invoker: MemberState) {
+    if (result.helps) {
       for (const mem of this.memberStates) {
-        mem.addHelps(result.helpsTeam);
+        mem.addHelps(result.helps);
+        invoker.addSkillValue(result.helps);
       }
-    } else if (result.energyTeam > 0) {
-      for (const mem of this.memberStates) {
-        mem.recoverEnergy(result.energyTeam);
+    } else if (result.energy) {
+      const regular = this.recoverMemberEnergy(result.energy.regular);
+      const crit = this.recoverMemberEnergy(result.energy.crit);
+      invoker.wasteEnergy(regular.wastedEnergy + crit.wastedEnergy);
+      invoker.addSkillValue({ regular: regular.skillValue, crit: crit.skillValue });
+    }
+  }
+
+  private recoverMemberEnergy(energy: TeamSkillEnergy) {
+    const { amount, chanceTargetLowest, random } = energy;
+    let skillValue = 0;
+    let wastedEnergy = 0;
+
+    if (amount > 0) {
+      const targetGroup = random ? this.energyTargetMember(chanceTargetLowest) : this.memberStates;
+
+      for (const mem of targetGroup) {
+        wastedEnergy += mem.recoverEnergy(amount);
+        skillValue += amount - wastedEnergy;
       }
     }
+
+    return { wastedEnergy, skillValue };
+  }
+
+  /**
+   * @returns array of size 1 containing the randomized member to target
+   */
+  private energyTargetMember(chanceTargetLowest: number): MemberState[] {
+    const sortedMembers = [...this.memberStates].sort((a, b) => a.energy - b.energy);
+    const lowestEnergy = sortedMembers[0]?.energy ?? 0;
+
+    const lowestEnergyMembers = sortedMembers.filter((mem) => mem.energy === lowestEnergy);
+    const otherMembers = sortedMembers.slice(lowestEnergyMembers.length);
+
+    const targetGroup = RandomUtils.roll(chanceTargetLowest) ? lowestEnergyMembers : otherMembers;
+    return [RandomUtils.randomElement(targetGroup)].filter((member): member is MemberState => member !== undefined);
   }
 
   private collectInventory() {
     for (const member of this.memberStates) {
-      member.collectInventory();
+      for (const activation of member.collectInventory()) {
+        this.activateTeamSkill(activation, member);
+      }
     }
   }
 }

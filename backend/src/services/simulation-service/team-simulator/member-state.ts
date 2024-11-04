@@ -1,4 +1,5 @@
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import { MainskillError } from '@src/domain/error/stat/stat-error';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
@@ -16,8 +17,10 @@ import {
   MathUtils,
   MemberProduction,
   Produce,
+  RandomUtils,
   TimePeriod,
   calculatePityProcThreshold,
+  defaultZero,
   emptyProduce,
   ingredient,
   mainskill,
@@ -25,11 +28,28 @@ import {
   subskill,
 } from 'sleepapi-common';
 
+export interface SkillValue {
+  regular: number;
+  crit: number;
+}
+
+export interface TeamSkillEnergy {
+  amount: number;
+  random: boolean;
+  chanceTargetLowest: number;
+}
+export interface TeamSkillActivation {
+  energy?: {
+    regular: TeamSkillEnergy;
+    crit: TeamSkillEnergy;
+  };
+  helps?: SkillValue;
+}
+
 export interface SkillActivation {
-  energyTeam: number;
-  helpsTeam: number;
-  produce?: Produce;
-  other?: number; // TODO: fix strength, pot etc later, not functional now
+  crit: boolean;
+  selfValue?: SkillValue;
+  teamValue?: TeamSkillActivation;
 }
 
 export class MemberState {
@@ -43,6 +63,7 @@ export class MemberState {
 
   // state
   private currentEnergy = 0;
+  private wastedEnergy = 0;
   private nextHelp: number;
   private helpsSinceLastSkillProc = 0;
   private currentNightHelps = 0;
@@ -54,6 +75,7 @@ export class MemberState {
   private totalSneakySnackHelps = 0;
   private voidHelps = 0;
   private currentStockpile = 0;
+  private disguiseBusted = false;
 
   // stats
   private frequency0;
@@ -69,7 +91,8 @@ export class MemberState {
 
   // summary
   private skillProcs = 0;
-  private skillValue = 0;
+  private skillValue: SkillValue = { regular: 0, crit: 0 };
+  private skillCrits = 0;
   private morningProcs = 0;
   private totalDayHelps = 0;
   private totalNightHelps = 0;
@@ -145,6 +168,10 @@ export class MemberState {
     return this.member.level;
   }
 
+  get skill() {
+    return this.member.pokemonSet.pokemon.skill;
+  }
+
   get skillLevel() {
     return this.member.skillLevel;
   }
@@ -165,6 +192,10 @@ export class MemberState {
     return this.currentEnergy;
   }
 
+  get metronomeFactor() {
+    return this.skill === mainskill.METRONOME ? this.skillsWithoutMetronome.length : 1;
+  }
+
   public startDay() {
     const nrOfErb = this.team.filter((member) => member.subskills.includes(subskill.ENERGY_RECOVERY_BONUS)).length;
     const sleepInfo: SleepInfo = {
@@ -178,11 +209,16 @@ export class MemberState {
     const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo));
     this.currentEnergy += recoveredEnergy;
 
+    this.disguiseBusted = false;
+
     this.nextHelp -= this.fullDayDuration;
 
     return this.collectInventory();
   }
 
+  /**
+   * @returns any leftover (wasted) energy
+   */
   public recoverEnergy(recovered: number) {
     const recoveredWithNature = recovered * this.member.nature.energy;
     const clampedEnergyRecovered =
@@ -190,11 +226,27 @@ export class MemberState {
 
     this.currentEnergy += clampedEnergyRecovered;
     this.totalRecovery += clampedEnergyRecovered;
+
+    return recovered - clampedEnergyRecovered;
   }
 
-  public addHelps(helps: number) {
-    this.helpsSinceLastCook += helps;
-    this.totalAverageHelps += helps;
+  public wasteEnergy(wasted: number) {
+    this.wastedEnergy += wasted;
+  }
+
+  public addSkillValue(skillValue: SkillValue) {
+    const { regular, crit } = skillValue;
+
+    this.skillValue.regular += regular;
+    this.skillValue.crit += crit;
+  }
+
+  public addHelps(helps: SkillValue) {
+    const { regular, crit } = helps;
+    const totalHelps = regular + crit;
+
+    this.helpsSinceLastCook += totalHelps;
+    this.totalAverageHelps += totalHelps;
   }
 
   public updateIngredientBag() {
@@ -211,7 +263,7 @@ export class MemberState {
     this.currentEnergy += getMealRecoveryAmount(this.currentEnergy);
   }
 
-  public attemptDayHelp(currentMinutesSincePeriodStart: number): SkillActivation | undefined {
+  public attemptDayHelp(currentMinutesSincePeriodStart: number): TeamSkillActivation[] {
     if (currentMinutesSincePeriodStart >= this.nextHelp) {
       const frequency = this.calculateFrequencyWithEnergy();
 
@@ -224,8 +276,15 @@ export class MemberState {
 
       this.nextHelp += frequency / 60;
 
-      return this.attemptSkill();
+      const skillActivations = this.attemptSkill();
+      if (skillActivations.length === 1) {
+        return skillActivations[0].teamValue ? [skillActivations[0].teamValue] : [];
+      } else {
+        // metronome
+        return this.extractTeamValue(skillActivations);
+      }
     }
+    return [];
   }
 
   public attemptNightHelp(currentMinutesSincePeriodStart: number) {
@@ -260,25 +319,33 @@ export class MemberState {
     }
   }
 
-  public collectInventory(): SkillActivation[] {
-    // roll skill proc on each stored help, stop after if we get a successful roll
+  /**
+   * Rolls chance for skill proc on any unclaimed helps.
+   * Resets carried amount.
+   *
+   * @returns team skill value for any skill procs that were stored in the inventory
+   */
+  public collectInventory(): TeamSkillActivation[] {
+    let currentMorningProcs = 0;
     const bankedSkillProcs: SkillActivation[] = [];
-    for (let i = 0; i < this.currentNightHelps; i++) {
-      this.helpsSinceLastSkillProc += 1;
-      const activatedSkill = this.attemptSkill();
-      if (activatedSkill) {
-        bankedSkillProcs.push(activatedSkill);
-        this.morningProcs += 1;
-        if (bankedSkillProcs.length === 2 || this.member.pokemonSet.pokemon.specialty !== 'skill') {
-          break;
+    for (let help = 0; help < this.currentNightHelps; help++) {
+      if (currentMorningProcs > 1) {
+        break;
+      } else {
+        this.helpsSinceLastSkillProc += 1;
+        const activations = this.attemptSkill();
+        if (activations.length > 0) {
+          bankedSkillProcs.concat(activations);
+          currentMorningProcs += 1;
         }
       }
     }
 
+    this.morningProcs += currentMorningProcs;
     this.currentNightHelps = 0;
     this.carriedAmount = 0;
 
-    return bankedSkillProcs;
+    return this.extractTeamValue(bankedSkillProcs);
   }
 
   public degradeEnergy() {
@@ -287,8 +354,6 @@ export class MemberState {
   }
 
   public results(iterations: number): MemberProduction {
-    this.collectInventory();
-
     const totalHelpProduce: Produce = InventoryUtils.addToInventory(emptyProduce(), {
       berries: this.averageProduce.berries
         .map(({ amount, berry, level }) => ({
@@ -323,8 +388,8 @@ export class MemberState {
       produceTotal: multiplyProduce(this.totalProduce, 1 / iterations),
       produceWithoutSkill: multiplyProduce(totalHelpProduce, 1 / iterations),
       produceFromSkill: multiplyProduce(totalSkillProduce, 1 / iterations),
-      skillAmount: this.skillValue / iterations,
-      skillProcs: this.skillProcs / iterations,
+      skillAmount: (this.skillValue.regular + this.skillValue.crit) / iterations,
+      skillProcs: this.skillProcs / this.metronomeFactor / iterations,
       externalId: this.member.externalId,
       advanced: {
         spilledIngredients: spilledIngredients,
@@ -333,6 +398,10 @@ export class MemberState {
         totalHelps: (this.totalDayHelps + this.totalNightHelps) / iterations,
         nightHelpsAfterSS: this.nightHelpsAfterSS / iterations,
         nightHelpsBeforeSS: this.nightHelpsBeforeSS / iterations,
+        skillCrits: this.skillCrits / iterations,
+        skillCritValue: this.skillValue.crit / iterations,
+        wastedEnergy: this.wastedEnergy / iterations,
+        morningProcs: this.morningProcs / iterations,
       },
     };
 
@@ -353,27 +422,43 @@ export class MemberState {
     }
   }
 
-  private attemptSkill(): SkillActivation | undefined {
-    if (this.helpsSinceLastSkillProc > this.pityProcThreshold || MathUtils.rollRandomChance(this.skillPercentage)) {
-      this.skillProcs += 1;
-      this.helpsSinceLastSkillProc = 0;
-      let result: SkillActivation | undefined = undefined;
-
-      if (this.member.pokemonSet.pokemon.skill === mainskill.METRONOME) {
-        result = { energyTeam: 0, helpsTeam: 0 };
+  private attemptSkill(): SkillActivation[] {
+    const result: SkillActivation[] = [];
+    if (this.helpsSinceLastSkillProc > this.pityProcThreshold || RandomUtils.roll(this.skillPercentage)) {
+      if (this.skill.isSkill(mainskill.METRONOME)) {
         for (const skill of this.skillsWithoutMetronome) {
-          const activationResult = this.activateSkill(skill);
-          if (activationResult) {
-            result.energyTeam += activationResult.energyTeam;
-            result.helpsTeam += activationResult.helpsTeam;
-          }
+          result.push(this.activateSkill(skill));
         }
       } else {
-        result = this.activateSkill(this.member.pokemonSet.pokemon.skill);
+        result.push(this.activateSkill(this.skill));
       }
-
-      return result;
     }
+
+    result.forEach((activation) => this.skillResult(activation));
+    return result;
+  }
+
+  /**
+   * Called when a successful skill activation happens
+   * Resets state and increments counters
+   */
+  private skillResult(activation: SkillActivation) {
+    this.skillProcs += 1;
+    this.skillCrits += activation.crit ? 1 : 0;
+    this.helpsSinceLastSkillProc = 0;
+
+    this.skillValue.regular += defaultZero(activation.selfValue?.regular);
+    this.skillValue.crit += defaultZero(activation.selfValue?.crit);
+  }
+
+  private extractTeamValue(activations: SkillActivation[]): TeamSkillActivation[] {
+    const result: TeamSkillActivation[] = [];
+    for (const activation of activations) {
+      if (activation.teamValue) {
+        result.push(activation.teamValue);
+      }
+    }
+    return result;
   }
 
   private activateSkill(skill: Mainskill): SkillActivation {
@@ -393,8 +478,10 @@ export class MemberState {
       'dream shards': (skill) => this.#activateValueSkills(skill),
       'pot size': () => this.#activateCookingPowerUp(),
       chance: () => this.#activateTastyChance(),
-      metronome: (skill) => this.#activateValueSkills(skill),
       strength: (skill) => this.#activateValueSkills(skill),
+      metronome: function (): SkillActivation {
+        throw new MainskillError('Metronome should not call activateBasicSkill directly');
+      },
     };
 
     return skillActivators[skill.unit](skill);
@@ -406,64 +493,60 @@ export class MemberState {
       Disguise: (skill) => this.#activateDisguise(skill),
     };
 
-    return modifierActivators[skill.modifier](skill);
+    return modifierActivators[skill.modifier.type](skill);
   }
 
   #activateEnergySkill(skill: Mainskill): SkillActivation {
-    if (skill === mainskill.CHARGE_ENERGY_S) {
+    if (skill.isSkill(mainskill.CHARGE_ENERGY_S)) {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
-      this.skillValue += clampedEnergyRecovered;
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
-      return { energyTeam: 0, helpsTeam: 0 };
-    } else if (skill === mainskill.ENERGIZING_CHEER_S) {
-      this.skillValue += this.skillAmount(skill);
-      // TODO: not a fair implementation, it has high chance of hitting lowest pokemon
+      this.wastedEnergy += this.skillAmount(skill) - clampedEnergyRecovered;
 
-      const averageRecoveredEnergy = this.skillAmount(skill) / this.teamSize;
-
+      return { crit: false, selfValue: { regular: clampedEnergyRecovered, crit: 0 } };
+    } else if (skill.isSkill(mainskill.ENERGIZING_CHEER_S)) {
       return {
-        energyTeam: averageRecoveredEnergy,
-        helpsTeam: 0,
+        crit: false,
+        teamValue: {
+          energy: {
+            regular: {
+              amount: this.skillAmount(skill),
+              random: true,
+              chanceTargetLowest: mainskill.ENERGIZING_CHEER_TARGET_LOWEST_CHANCE,
+            },
+            crit: { amount: 0, random: false, chanceTargetLowest: 0 },
+          },
+        },
       };
-    } else {
-      this.skillValue += this.skillAmount(skill);
-
+    } else if (skill.isSkill(mainskill.ENERGY_FOR_EVERYONE)) {
       return {
-        energyTeam: this.skillAmount(skill),
-        helpsTeam: 0,
+        crit: false,
+        teamValue: {
+          energy: {
+            regular: { amount: this.skillAmount(skill), random: false, chanceTargetLowest: 0 },
+            crit: { amount: 0, random: false, chanceTargetLowest: 0 },
+          },
+        },
       };
     }
+    return { crit: false };
   }
 
   #activateHelpSkill(skill: Mainskill): SkillActivation {
-    if (skill === mainskill.HELPER_BOOST) {
-      // helper boost
+    if (skill.isSkill(mainskill.HELPER_BOOST)) {
       const unique = TeamSimulatorUtils.uniqueMembersWithBerry({
         berry: this.berry,
         members: this.team,
       });
+      const uniqueHelps = mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
 
-      const helps =
-        this.skillAmount(skill) + mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
-      this.skillValue += helps;
-
-      return {
-        energyTeam: 0,
-        helpsTeam: helps,
-      };
-    } else {
-      // extra helpful
-      this.skillValue += this.skillAmount(skill);
-
-      const helpsPerMember = this.skillAmount(skill) / this.teamSize;
-      return {
-        energyTeam: 0,
-        helpsTeam: helpsPerMember,
-      };
+      return { crit: false, teamValue: { helps: { regular: this.skillAmount(skill) + uniqueHelps, crit: 0 } } };
+    } else if (skill.isSkill(mainskill.EXTRA_HELPFUL_S)) {
+      return { crit: false, teamValue: { helps: { regular: this.skillAmount(skill) / this.teamSize, crit: 0 } } };
     }
+    return { crit: false }; // shouldn't trigger, but in case new help skill is added this would return empty value
   }
 
   #activateIngredientMagnet(): SkillActivation {
@@ -474,120 +557,112 @@ export class MemberState {
     }));
     const magnetProduce: Produce = { ingredients: magnetIngredients, berries: [] };
 
-    this.skillValue += ingMagnetAmount;
     this.cookingState.addIngredients(magnetProduce.ingredients);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, magnetProduce);
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-      produce: magnetProduce,
-    };
+    return { crit: false, selfValue: { regular: ingMagnetAmount, crit: 0 } };
   }
 
-  #activateTastyChance() {
+  #activateTastyChance(): SkillActivation {
     const critAmount = this.skillAmount(mainskill.TASTY_CHANCE_S);
-    this.skillValue += critAmount;
     this.cookingState.addCritBonus(critAmount / 100);
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false, selfValue: { regular: critAmount, crit: 0 } };
   }
 
-  #activateBerryBurst() {
+  #activateBerryBurst(): SkillActivation {
     // doesn't exist yet
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false };
   }
 
-  #activateCookingPowerUp() {
+  #activateCookingPowerUp(): SkillActivation {
     const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
-    this.skillValue += potAmount;
     this.cookingState.addPotSize(potAmount);
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false, selfValue: { regular: potAmount, crit: 0 } };
   }
 
   #activateStockpile(skill: Mainskill): SkillActivation {
     if (skill.isModifiedVersionOf(mainskill.CHARGE_STRENGTH_S, 'Stockpile')) {
-      const triggerSpitUp = MathUtils.rollRandomChance(mainskill.STOCKPILE_STRENGTH_SPIT_CHANCE);
+      const triggerSpitUp = RandomUtils.roll(skill.critChance);
       if (triggerSpitUp || this.currentStockpile === mainskill.STOCKPILE_STRENGTH_STOCKS[this.skillLevel].length - 1) {
         const stockpiledValue = mainskill.STOCKPILE_STRENGTH_STOCKS[this.skillLevel][this.currentStockpile];
-        this.skillValue += stockpiledValue;
         this.currentStockpile = 0;
+        return { crit: false, selfValue: { regular: stockpiledValue, crit: 0 } };
       } else {
         this.currentStockpile = this.currentStockpile + 1;
       }
-      return {
-        energyTeam: 0,
-        helpsTeam: 0,
-      };
     }
-
-    // default
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false };
   }
 
-  #activateMoonlight(skill: Mainskill) {
+  #activateMoonlight(skill: Mainskill): SkillActivation {
     if (skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
       const clampedEnergyRecovered =
         this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
-      this.skillValue += clampedEnergyRecovered;
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
 
-      // TODO: missing moonlight crit, should give to team
-      return { energyTeam: 0, helpsTeam: 0 };
+      if (RandomUtils.roll(skill.critChance)) {
+        const teamAmount = this.skillAmount(skill) * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
+        // currently uses equal chance to hit every member
+        return {
+          crit: true,
+          selfValue: { regular: clampedEnergyRecovered, crit: 0 },
+          teamValue: {
+            energy: {
+              regular: { amount: 0, random: false, chanceTargetLowest: 0 },
+              crit: { amount: teamAmount, random: true, chanceTargetLowest: 1 / this.team.length },
+            },
+          },
+        };
+      } else {
+        return {
+          crit: false,
+          selfValue: { regular: clampedEnergyRecovered, crit: 0 },
+        };
+      }
     }
-
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false };
   }
 
-  #activateDisguise(skill: Mainskill) {
-    // TODO: missing crit functionality, which is max 1 until sleep reset
+  #activateDisguise(skill: Mainskill): SkillActivation {
     if (skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')) {
-      const selfBerryAmount = this.skillAmount(skill);
-      const otherBerryAmount = mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[this.skillLevel - 1];
+      const regularSelfAmount = this.skillAmount(skill);
+      const regularOtherAmount = mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[this.skillLevel - 1];
+      let critSelfAmount = 0;
+      let critOtherAmount = 0;
+
+      if (!this.disguiseBusted && RandomUtils.roll(skill.critChance)) {
+        this.disguiseBusted = true;
+
+        // -1 because the crit value is the difference between 1x and 3x, so only 2x
+        critSelfAmount = regularSelfAmount * (mainskill.DISGUISE_CRIT_MULTIPLIER - 1);
+        critOtherAmount = regularOtherAmount * (mainskill.DISGUISE_CRIT_MULTIPLIER - 1);
+      }
 
       const berries: BerrySet[] = this.otherMembers.map((member) => ({
         berry: member.pokemonSet.pokemon.berry,
-        amount: otherBerryAmount,
+        amount: regularOtherAmount + critOtherAmount,
         level: member.level,
       }));
-      berries.push({ berry: this.berry, amount: selfBerryAmount, level: this.level });
+      berries.push({ berry: this.berry, amount: regularSelfAmount + critSelfAmount, level: this.level });
 
       this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, { ingredients: [], berries });
-      this.skillValue += selfBerryAmount + otherBerryAmount * this.otherMembers.length;
+      return {
+        crit: critSelfAmount > 0,
+        selfValue: {
+          regular: regularSelfAmount + regularOtherAmount * this.otherMembers.length,
+          crit: critSelfAmount + critOtherAmount * this.otherMembers.length,
+        },
+      };
     }
-
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false };
   }
 
   #activateValueSkills(skill: Mainskill): SkillActivation {
-    this.skillValue += this.skillAmount(skill);
-    return {
-      energyTeam: 0,
-      helpsTeam: 0,
-    };
+    return { crit: false, selfValue: { regular: this.skillAmount(skill), crit: 0 } };
   }
 
   private skillAmount(skill: Mainskill) {
-    const metronomeFactor =
-      this.member.pokemonSet.pokemon.skill === mainskill.METRONOME ? this.skillsWithoutMetronome.length : 1;
-    return skill.amount[this.member.skillLevel - 1] / metronomeFactor;
+    return skill.amount(this.member.skillLevel) / this.metronomeFactor;
   }
 }

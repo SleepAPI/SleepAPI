@@ -3,7 +3,7 @@ import type {
   CookingResult,
   DetailedProduce,
   IngredientSet,
-  Produce,
+  MemberProduction,
   RecipeType,
   Summary,
   Time,
@@ -33,12 +33,7 @@ export interface SingleMemberProduction {
   performanceAnalysis: PerformanceAnalysis
 }
 
-export interface MemberProductionExt {
-  produceTotal: Produce
-  produceFromSkill: Produce
-  produceWithoutSkill: Produce
-  skillProcs: number
-  skillAmount: number
+export interface MemberProductionExt extends MemberProduction {
   memberExternalId: string
   singleProduction?: SingleMemberProduction
 }

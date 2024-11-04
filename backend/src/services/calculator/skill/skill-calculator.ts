@@ -33,24 +33,29 @@ export function scheduleSkillEvents(params: {
   pokemonWithAverageProduce: PokemonProduce;
   oddsOfNightSkillProc: number;
   nrOfDaySkillProcs: number;
+  nrOfSkillCrits: number;
   nrOfDayHelps: number;
   uniqueHelperBoost: number;
 }) {
   const {
     skillLevel,
     pokemonWithAverageProduce,
-    oddsOfNightSkillProc,
-    nrOfDaySkillProcs,
+    oddsOfNightSkillProc: avgMorningSkillProcs,
+    nrOfDaySkillProcs: avgDaytimeSkillProcs,
+    nrOfSkillCrits: avgDailySkillCrits,
     nrOfDayHelps,
     uniqueHelperBoost,
   } = params;
   const skill = pokemonWithAverageProduce.pokemon.skill;
 
   const activationsWithAdjustedAmount = calculateHelpsToProcSchedule({
-    oddsOfNightSkillProc,
-    nrOfDaySkillProcs,
+    oddsOfNightSkillProc: avgMorningSkillProcs,
+    nrOfDaySkillProcs: avgDaytimeSkillProcs,
     nrOfDayHelps,
   });
+
+  const avgDailySkillProcs = avgMorningSkillProcs + avgDaytimeSkillProcs;
+  const avgCritChancePerProc = avgDailySkillCrits / avgDailySkillProcs;
 
   const skillActivations: SkillActivation[] = [];
 
@@ -63,6 +68,7 @@ export function scheduleSkillEvents(params: {
       pokemonSet: pokemonWithAverageProduce,
       skillActivations,
       uniqueHelperBoost,
+      avgCritChancePerProc,
     })
   );
 

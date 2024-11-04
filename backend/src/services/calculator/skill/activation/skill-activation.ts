@@ -11,8 +11,6 @@ import {
 } from 'sleepapi-common';
 import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 
-// TODO: need to support moonlight crit,it's like energizing cheer and can hit umbreon
-// TODO: if it just has flat crit chance on every skill proc then we can probably just calc average energy per member from crit
 export function createSkillEvent(
   params: {
     skill: Mainskill;
@@ -22,11 +20,20 @@ export function createSkillEvent(
     pokemonSet: PokemonProduce;
     skillActivations: SkillActivation[];
     uniqueHelperBoost: number;
+    avgCritChancePerProc: number;
   },
   metronomeFactor = 1
 ) {
-  const { skill, skillLevel, nrOfHelpsToActivate, adjustedAmount, pokemonSet, skillActivations, uniqueHelperBoost } =
-    params;
+  const {
+    skill,
+    skillLevel,
+    nrOfHelpsToActivate,
+    adjustedAmount,
+    pokemonSet,
+    skillActivations,
+    avgCritChancePerProc,
+    uniqueHelperBoost,
+  } = params;
   switch (skill) {
     case mainskill.ENERGIZING_CHEER_S: {
       skillActivations.push(
@@ -42,7 +49,14 @@ export function createSkillEvent(
     }
     case mainskill.DISGUISE_BERRY_BURST: {
       skillActivations.push(
-        activateDisguiseBerryBurst({ skillLevel, nrOfHelpsToActivate, adjustedAmount, pokemonSet, metronomeFactor })
+        activateDisguiseBerryBurst({
+          skillLevel,
+          nrOfHelpsToActivate,
+          adjustedAmount,
+          pokemonSet,
+          avgCritChancePerProc,
+          metronomeFactor,
+        })
       );
       break;
     }
@@ -68,6 +82,12 @@ export function createSkillEvent(
           pokemonSet,
           metronomeFactor,
         })
+      );
+      break;
+    }
+    case mainskill.MOONLIGHT_CHARGE_ENERGY_S: {
+      skillActivations.push(
+        activateMoonlightChargeEnergy({ skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor })
       );
       break;
     }
@@ -97,7 +117,30 @@ export function activateEnergizingCheer(params: {
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
+    nrOfHelpsToActivate,
+    fractionOfProc: adjustedAmount / metronomeFactor,
+  };
+}
+
+export function activateMoonlightChargeEnergy(params: {
+  skillLevel: number;
+  nrOfHelpsToActivate: number;
+  adjustedAmount: number;
+  metronomeFactor: number;
+}): SkillActivation {
+  const { skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+
+  const skill = mainskill.MOONLIGHT_CHARGE_ENERGY_S;
+  const teamSize = 5;
+
+  const energyNormalProc = (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor;
+  const energyFromCrit = energyNormalProc * (mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR / teamSize); // factor is 0.5, crit gives half of normal value to team member
+  const averageEnergyGained = energyNormalProc + energyFromCrit * skill.critChance; // critChance is 0.5 also atm, research WIP
+
+  return {
+    skill,
+    adjustedAmount: averageEnergyGained,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
@@ -116,12 +159,12 @@ export function activateIngredientMagnet(params: {
 
   const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
     ingredient: ing,
-    amount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByAverageIngredientAndMetronome,
+    amount: (skill.amount(skillLevel) * adjustedAmount) / divideByAverageIngredientAndMetronome,
   }));
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     adjustedProduce: {
       berries: emptyBerryInventory(),
@@ -136,21 +179,35 @@ export function activateDisguiseBerryBurst(params: {
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   pokemonSet: PokemonProduce;
+  avgCritChancePerProc: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { skillLevel, nrOfHelpsToActivate, adjustedAmount, pokemonSet, metronomeFactor } = params;
+  const {
+    skillLevel,
+    nrOfHelpsToActivate,
+    adjustedAmount: fractionOfProc,
+    pokemonSet,
+    avgCritChancePerProc,
+    metronomeFactor,
+  } = params;
   const skill = mainskill.DISGUISE_BERRY_BURST;
+
+  const amountNoCrit = skill.amount(skillLevel) * fractionOfProc;
+
+  const averageBerryAmount =
+    (amountNoCrit + avgCritChancePerProc * amountNoCrit * (mainskill.DISGUISE_CRIT_MULTIPLIER - 1)) / metronomeFactor;
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
+    adjustedAmount: averageBerryAmount,
     nrOfHelpsToActivate,
     adjustedProduce: {
       // TODO: level is wrong, but not used in classic calc
-      berries: [{ amount: skill.amount[skillLevel - 1] * adjustedAmount, berry: pokemonSet.pokemon.berry, level: 0 }],
+      berries: [{ amount: averageBerryAmount, berry: pokemonSet.pokemon.berry, level: 0 }],
       ingredients: emptyIngredientInventory(),
     },
-    fractionOfProc: adjustedAmount / metronomeFactor,
+    fractionOfProc: fractionOfProc / metronomeFactor,
+    critChance: avgCritChancePerProc,
   };
 }
 
@@ -169,18 +226,18 @@ export function activateExtraHelpful(params: {
   const extraHelpfulProduce: Produce = {
     berries: pokemonSet.produce.berries.map(({ amount, berry, level }) => ({
       berry,
-      amount: (amount * skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
+      amount: (amount * skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
       level,
     })),
     ingredients: pokemonSet.produce.ingredients.map(({ amount, ingredient }) => ({
       ingredient,
-      amount: (amount * skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
+      amount: (amount * skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
     })),
   };
 
   return {
     skill,
-    adjustedAmount: (adjustedAmount * skill.amount[skillLevel - 1]) / divideByRandomAndMetronome,
+    adjustedAmount: (adjustedAmount * skill.amount(skillLevel)) / divideByRandomAndMetronome,
     nrOfHelpsToActivate,
     adjustedProduce: extraHelpfulProduce,
     fractionOfProc: adjustedAmount / metronomeFactor,
@@ -198,7 +255,7 @@ export function activateNonProduceSkills(params: {
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
@@ -211,6 +268,7 @@ export function activateMetronome(params: {
   pokemonSet: PokemonProduce;
   skillActivations: SkillActivation[];
   uniqueHelperBoost: number;
+  avgCritChancePerProc: number;
 }) {
   const skillsToActivate = mainskill.METRONOME_SKILLS;
 
@@ -232,7 +290,7 @@ export function activateHelperBoost(params: {
 
   const helpAmount =
     uniqueHelperBoost > 0
-      ? skill.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel)
+      ? skill.amount(skillLevel) + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel)
       : 0;
 
   const helperBoostProduce: Produce = {

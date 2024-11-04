@@ -214,7 +214,7 @@ describe('calculateStartingEnergy', () => {
     const skillActivations: SkillActivation[] = [];
     for (let i = 0; i < 15; i++) {
       skillActivations.push({
-        adjustedAmount: mainskill.CHARGE_ENERGY_S.amount[5],
+        adjustedAmount: mainskill.CHARGE_ENERGY_S.amount(6),
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
         skill: mainskill.CHARGE_ENERGY_S,

@@ -1,31 +1,29 @@
 import { Mainskill, MainskillAttributes } from './mainskill';
 
+export type ModifierType = 'Base' | 'Stockpile' | 'Moonlight' | 'Disguise';
 export interface Modifier {
-  type: string;
-  skill: Mainskill;
-  overrides?: Partial<Mainskill>;
+  type: ModifierType;
+  critChance: number;
 }
 
-export type ModifierType = 'Base' | 'Stockpile' | 'Moonlight' | 'Disguise';
-
 export const createModifier = (
-  type: ModifierType,
-  skill: MainskillAttributes,
+  modifier: Modifier,
+  skill: Mainskill,
   overrides?: Partial<MainskillAttributes>,
 ): Mainskill => {
   return new Mainskill({
-    ...skill,
+    ...skill.attributes,
     ...overrides,
-    name: `${type} (${skill.name})`,
-    modifier: type,
+    name: `${modifier.type} (${skill.name})`,
+    modifier,
   });
 };
 
-export const Stockpile = (skill: MainskillAttributes, overrides?: Partial<MainskillAttributes>): Mainskill =>
-  createModifier('Stockpile', skill, overrides);
+export const Stockpile = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
+  createModifier({ type: 'Stockpile', critChance }, skill, overrides);
 
-export const Moonlight = (skill: MainskillAttributes, overrides?: Partial<MainskillAttributes>): Mainskill =>
-  createModifier('Moonlight', skill, overrides);
+export const Moonlight = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
+  createModifier({ type: 'Moonlight', critChance }, skill, overrides);
 
-export const Disguise = (skill: MainskillAttributes, overrides?: Partial<MainskillAttributes>): Mainskill =>
-  createModifier('Disguise', skill, overrides);
+export const Disguise = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
+  createModifier({ type: 'Disguise', critChance }, skill, overrides);

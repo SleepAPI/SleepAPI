@@ -295,8 +295,7 @@ export default defineComponent({
         const skillStrength = this.showSkills
           ? StrengthService.skillStrength({
               skill: memberPokemon.skill,
-              amount:
-                memberPokemon.skill.amount[member.skillLevel - 1] * memberProduction.skillProcs,
+              amount: memberPokemon.skill.amount(member.skillLevel) * memberProduction.skillProcs,
               // classic calc returns berry array with 2 elements, first is own berries, second is berries from skill
               // berries from skill can be identified with level === 0, but we need to update this to real level so
               // that the berries can scale. the classic calc is messy
@@ -358,7 +357,7 @@ export default defineComponent({
         skill.name === mainskill.ENERGIZING_CHEER_S.name ||
         skill.name === mainskill.ENERGY_FOR_EVERYONE.name
       ) {
-        const amount = member.pokemon.skill.amount[member.skillLevel - 1]
+        const amount = member.pokemon.skill.amount(member.skillLevel)
         const energy = StrengthService.skillValue({
           skill,
           amount,

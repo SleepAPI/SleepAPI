@@ -6,5 +6,6 @@ export interface SkillActivation {
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   fractionOfProc: number;
+  critChance?: number;
   adjustedProduce?: Produce;
 }

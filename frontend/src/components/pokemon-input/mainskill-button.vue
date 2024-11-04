@@ -78,7 +78,7 @@ export default {
     description() {
       return this.pokemonInstance.pokemon.skill.description.replace(
         '?',
-        this.pokemonInstance.pokemon.skill.amount[this.mainskillLevel - 1] + '' // convert to string
+        this.pokemonInstance.pokemon.skill.amount(this.mainskillLevel) + '' // convert to string
       )
     },
     pokemon() {

@@ -23,6 +23,7 @@ import { randomizedSimulation } from './randomized-simulator';
 export interface MonteCarloResult {
   skillProcsDay: number;
   skillProcsNight: number;
+  skillCrits: number;
   dayHelps: number;
   nightHelpsBeforeSS: number;
   endingEnergy: number;
@@ -78,6 +79,7 @@ export function monteCarlo(params: {
   const averageDailySkillProcs = results.reduce((sum, cur) => sum + cur.skillProcsDay, 0) / results.length;
   const averageNightlySkillProcOdds = results.reduce((sum, cur) => sum + cur.skillProcsNight, 0) / results.length;
   const dayHelps = results.reduce((sum, cur) => sum + cur.dayHelps, 0) / results.length;
+  const skillCrits = results.reduce((sum, cur) => sum + cur.skillCrits, 0) / results.length;
 
-  return { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps };
+  return { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps, skillCrits };
 }

@@ -236,11 +236,16 @@ export function generateSkillActivations(params: {
   let oddsOfNightSkillProc = 0;
   let nrOfDaySkillProcs = 0;
   let nrOfDayHelps = 0;
+  let nrOfSkillCrits = 0;
 
   // run Monte Carlo simulation to estimate skill activations
   const skill = pokemonWithAverageProduce.pokemon.skill;
-  if (skill.unit === 'energy' || skill.isSkill(mainskill.METRONOME)) {
-    const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps } = monteCarlo({
+  if (
+    skill.isUnit('energy') ||
+    skill.isSkill(mainskill.METRONOME) ||
+    skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')
+  ) {
+    const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps, skillCrits } = monteCarlo({
       dayInfo,
       helpFrequency,
       skillPercentage,
@@ -254,6 +259,7 @@ export function generateSkillActivations(params: {
     nrOfDaySkillProcs = averageDailySkillProcs;
     oddsOfNightSkillProc = averageNightlySkillProcOdds;
     nrOfDayHelps = dayHelps;
+    nrOfSkillCrits = skillCrits;
   } else {
     const { detailedProduce } = simulation({
       dayInfo,
@@ -285,6 +291,7 @@ export function generateSkillActivations(params: {
     pokemonWithAverageProduce,
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,
+    nrOfSkillCrits,
     nrOfDayHelps,
     uniqueHelperBoost: input.helperBoostUnique,
   });

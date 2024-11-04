@@ -188,7 +188,8 @@ class TeamServiceImpl {
           produceWithoutSkill: member.produceWithoutSkill,
           skillAmount: member.skillAmount,
           skillProcs: member.skillProcs,
-          memberExternalId: member.externalId
+          memberExternalId: member.externalId,
+          advanced: member.advanced
         }
       }),
       team: teamProduction

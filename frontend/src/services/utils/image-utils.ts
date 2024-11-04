@@ -5,7 +5,7 @@ export function mainskillImage(pokemon: pokemon.Pokemon) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
     const maybeModifier =
-      pokemon.skill.modifier === 'Base' ? '' : `${pokemon.skill.modifier.toLowerCase()}_`
+      pokemon.skill.modifier.type === 'Base' ? '' : `${pokemon.skill.modifier.type.toLowerCase()}_`
     return `/images/mainskill/${maybeModifier}${pokemon.skill.unit}.png`
   }
 }

@@ -187,18 +187,22 @@ describe('recoverEnergy', () => {
 describe('addHelps', () => {
   it('shall add 1 average produce help', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelps(1);
+    memberState.addHelps({ regular: 1, crit: 1 });
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
         "externalId": undefined,
         "produceFromSkill": {
@@ -208,7 +212,7 @@ describe('addHelps', () => {
         "produceTotal": {
           "berries": [
             {
-              "amount": 0.8,
+              "amount": 1.6,
               "berry": {
                 "name": "BELUE",
                 "type": "steel",
@@ -219,7 +223,7 @@ describe('addHelps', () => {
           ],
           "ingredients": [
             {
-              "amount": 0.2,
+              "amount": 0.4,
               "ingredient": {
                 "longName": "Slowpoke Tail",
                 "name": "Tail",
@@ -232,7 +236,7 @@ describe('addHelps', () => {
         "produceWithoutSkill": {
           "berries": [
             {
-              "amount": 0.8,
+              "amount": 1.6,
               "berry": {
                 "name": "BELUE",
                 "type": "steel",
@@ -243,7 +247,7 @@ describe('addHelps', () => {
           ],
           "ingredients": [
             {
-              "amount": 0.2,
+              "amount": 0.4,
               "ingredient": {
                 "longName": "Slowpoke Tail",
                 "name": "Tail",
@@ -261,18 +265,22 @@ describe('addHelps', () => {
 
   it('shall not add produce if adding 0 helps', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelps(0);
+    memberState.addHelps({ regular: 0, crit: 0 });
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
         "externalId": undefined,
         "produceFromSkill": {
@@ -379,11 +387,15 @@ describe('attemptDayHelp', () => {
       {
         "advanced": {
           "dayHelps": 1,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 1,
+          "wastedEnergy": 0,
         },
         "externalId": undefined,
         "produceFromSkill": {
@@ -460,11 +472,15 @@ describe('attemptDayHelp', () => {
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
         "externalId": undefined,
         "produceFromSkill": {
@@ -644,11 +660,15 @@ describe('attemptNightHelp', () => {
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 1,
           "nightHelps": 1,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 1,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 1,
+          "wastedEnergy": 0,
         },
         "externalId": undefined,
         "produceFromSkill": {
@@ -732,5 +752,22 @@ describe('degradeEnergy', () => {
     expect(memberState.energy).toBe(0);
     memberState.degradeEnergy();
     expect(memberState.energy).toBe(0);
+  });
+});
+
+describe('wasteEnergy', () => {
+  it('should count wasted energy', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.wasteEnergy(10);
+    expect(memberState.results(1).advanced.wastedEnergy).toBe(10);
+  });
+});
+
+describe('addSkillValue', () => {
+  it('should count regular and crit value', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.addSkillValue({ regular: 10, crit: 20 });
+    expect(memberState.results(1).advanced.skillCritValue).toBe(20);
+    expect(memberState.results(1).skillAmount).toBe(30);
   });
 });
