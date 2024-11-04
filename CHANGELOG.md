@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/SleepAPI/SleepAPI/compare/v1.1.5...v1.2.0) (2024-11-04)
+
+
+### Features
+
+* added moonlight support value to tierlist ([d06c9b4](https://github.com/SleepAPI/SleepAPI/commit/d06c9b4253d069ad65c0c1ff98e689181d938893))
+
 ## [1.1.5](https://github.com/SleepAPI/SleepAPI/compare/v1.1.4...v1.1.5) (2024-11-04)
 
 ## [1.1.4](https://github.com/SleepAPI/SleepAPI/compare/v1.1.3...v1.1.4) (2024-11-01)
