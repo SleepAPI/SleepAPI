@@ -191,6 +191,7 @@ class TierlistImpl {
       mainskill.ENERGY_FOR_EVERYONE,
       mainskill.ENERGIZING_CHEER_S,
       mainskill.EXTRA_HELPFUL_S,
+      mainskill.MOONLIGHT_CHARGE_ENERGY_S,
       mainskill.METRONOME,
     ];
     Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
@@ -213,8 +214,13 @@ class TierlistImpl {
           e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           cheer = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+        } else if (currentPokemonSkill.isSkill(mainskill.MOONLIGHT_CHARGE_ENERGY_S)) {
+          // since moonlight works like cheer we implement it through cheer
+          // we calculate moonlight's energy value and divide it into how many cheer procs that would equate
+          const crits = group[0].detailedProduce.averageTotalSkillProcs * currentPokemonSkill.critChance;
+          const totalEnergy = crits * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR * currentPokemonSkill.maxAmount;
+          cheer = totalEnergy / mainskill.ENERGIZING_CHEER_S.maxAmount;
         }
-
         const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
           limit50: details.limit50,
           e4eProcs,

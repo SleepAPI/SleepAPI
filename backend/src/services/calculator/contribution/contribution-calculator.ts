@@ -140,12 +140,14 @@ export function calculateMealContributionFor(params: {
   let teamSize = 0;
   let team: PokemonIngredientSet[] | undefined = undefined;
 
+  // TODO: almost duplicated, tierlist-service also has an array of support skills
   const supportSkills: Mainskill[] = [
     mainskill.ENERGY_FOR_EVERYONE,
     mainskill.ENERGIZING_CHEER_S,
     mainskill.EXTRA_HELPFUL_S,
     mainskill.METRONOME,
     mainskill.HELPER_BOOST,
+    mainskill.MOONLIGHT_CHARGE_ENERGY_S,
   ];
   if (shouldCalculateTeamSolutions && supportSkills.includes(currentPokemon.pokemonCombination.pokemon.skill)) {
     const {
