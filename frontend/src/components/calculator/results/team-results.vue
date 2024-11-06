@@ -17,7 +17,7 @@
             <v-col cols="auto" class="flex-center">
               <v-img
                 color="berry"
-                src="/images/misc/berries.png"
+                src="/images/berries/berries.png"
                 contain
                 width="24"
                 height="24"

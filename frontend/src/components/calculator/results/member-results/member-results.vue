@@ -1,5 +1,11 @@
 <template>
-  <v-window v-model="teamStore.getCurrentTeam.memberIndex" continuous show-arrows class="mb-4">
+  <v-window
+    v-model="teamStore.getCurrentTeam.memberIndex"
+    continuous
+    show-arrows
+    class="mb-4"
+    style="min-height: 485px"
+  >
     <template #prev="{ props }">
       <v-btn
         v-if="teamStore.getTeamSize > 1"
@@ -26,7 +32,7 @@
         @click="props.onClick"
       ></v-btn>
     </template>
-    <v-window-item v-for="(member, index) in members" :key="index">
+    <v-window-item v-for="(member, index) in members" :key="index" style="height: 600px">
       <v-row
         no-gutters
         class="flex-nowrap bg-surface"
@@ -160,40 +166,36 @@
         </v-col>
       </v-row>
 
-      <!-- TODO: we probably want to do v-row with cols-auto on MemberProductionHeader so that on desktop stats (or something else) can fit next to it -->
       <MemberProductionHeader :member="currentMember" />
-      <v-col class="pr-6" style="min-width: 200px">
-        <v-row dense class="flex-top flex-nowrap">
-          <v-col cols="6" class="flex-center flex-column">
-            <span class="text-h6 text-accent">Details</span>
-            <v-col cols="12" class="flex-left pt-0">
-              <v-divider />
-            </v-col>
-            <span
-              >Crit chance:
-              {{ currentMember.pokemonInstance.pokemon.skill.critChance * 100 }}%</span
-            >
-            <span>Crits per day: {{ MathUtils.round(currentMember.advanced.skillCrits, 2) }}</span>
-            <span
-              >Crit {{ currentMember.pokemonInstance.pokemon.skill.unit }}:
-              {{ Math.floor(currentMember.advanced.skillCritValue) }}
-            </span>
-            <span v-if="currentMember.advanced.wastedEnergy > 0">
-              Wasted energy: {{ Math.floor(currentMember.advanced.wastedEnergy) }}</span
-            >
+      <v-row dense class="flex-top flex-nowrap">
+        <v-col cols="6" class="flex-center flex-column">
+          <span class="text-h6 text-accent">Details</span>
+          <v-col cols="12" class="flex-left pt-0">
+            <v-divider />
           </v-col>
-          <v-col cols="6" class="flex-center flex-column">
-            <span class="text-h6 text-accent text-no-wrap">Team impact</span>
-            <v-col cols="12" class="flex-left pt-0">
-              <v-divider />
-            </v-col>
-            <span>Some stat</span>
-            <span>Other stat</span>
-            <span>Other stat</span>
-            <span>Other stat</span>
+          <span
+            >Crit chance: {{ currentMember.pokemonInstance.pokemon.skill.critChance * 100 }}%</span
+          >
+          <span>Crits per day: {{ MathUtils.round(currentMember.advanced.skillCrits, 2) }}</span>
+          <span
+            >Crit {{ currentMember.pokemonInstance.pokemon.skill.unit }}:
+            {{ Math.floor(currentMember.advanced.skillCritValue) }}
+          </span>
+          <span v-if="currentMember.advanced.wastedEnergy > 0">
+            Wasted energy: {{ Math.floor(currentMember.advanced.wastedEnergy) }}</span
+          >
+        </v-col>
+        <v-col cols="6" class="flex-center flex-column">
+          <span class="text-h6 text-accent text-no-wrap">Team impact</span>
+          <v-col cols="12" class="flex-left pt-0">
+            <v-divider />
           </v-col>
-        </v-row>
-      </v-col>
+          <span>Some stat</span>
+          <span>Other stat</span>
+          <span>Other stat</span>
+          <span>Other stat</span>
+        </v-col>
+      </v-row>
     </v-window-item>
   </v-window>
 </template>
@@ -217,12 +219,19 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import type {
+  MemberInstanceProductionExt,
   PerformanceAnalysis,
   PerformanceDetails,
   SingleMemberProduction
 } from '@/types/member/instanced'
 import { Chart } from 'chart.js'
-import { MathUtils, type DetailedProduce, type SingleProductionResponse } from 'sleepapi-common'
+import {
+  MathUtils,
+  ingredient,
+  type DetailedProduce,
+  type IngredientSet,
+  type SingleProductionResponse
+} from 'sleepapi-common'
 import {
   computed,
   defineComponent,
@@ -332,7 +341,7 @@ export default defineComponent({
     }
   },
   computed: {
-    members() {
+    members(): MemberInstanceProductionExt[] {
       const pokemonStore = usePokemonStore()
       const result = []
       for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
@@ -340,7 +349,8 @@ export default defineComponent({
         if (!pokemonInstance) continue
         result.push({
           ...member,
-          pokemonInstance
+          pokemonInstance,
+          ingredients: this.prepareMemberIngredients(member.produceTotal.ingredients)
         })
       }
       return result
@@ -391,6 +401,28 @@ export default defineComponent({
   methods: {
     getMemberImage(pokemonName: string, shiny: boolean) {
       return avatarImage({ pokemonName, happy: true, shiny })
+    },
+    prepareMemberIngredients(ingredients: IngredientSet[]) {
+      if (ingredients.length >= ingredient.INGREDIENTS.length) {
+        const ingMagnetAmount = ingredients.reduce(
+          (min, cur) => (cur.amount < min ? cur.amount : min),
+          ingredients[0].amount
+        )
+
+        const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
+
+        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount - ingMagnetAmount, 1),
+          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+
+        return result
+      } else {
+        return ingredients.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount, 1),
+          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+      }
     },
     async populateSingleProduction() {
       const calculatedExternalId = this.teamStore.getCurrentMember

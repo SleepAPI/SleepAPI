@@ -11,7 +11,7 @@ import {
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { type PokemonInstanceExt } from 'sleepapi-common'
+import { ingredient, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -172,5 +172,40 @@ describe('TeamResults', () => {
 
     const windowItemImage = wrapper.find('.v-window-item img')
     expect(windowItemImage.attributes('src')).toBe('/images/avatar/happy/pikachu_happy.png')
+  })
+
+  it('should prepare member ingredients correctly', () => {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+
+    teamStore.currentIndex = 0
+    teamStore.teams[0] = {
+      ...team,
+      production: createMockTeamProduction({
+        members: [
+          createMockMemberProduction({
+            produceTotal: {
+              berries: [],
+              ingredients: [
+                { amount: 10, ingredient: ingredient.HONEY },
+                { amount: 15, ingredient: ingredient.MOOMOO_MILK }
+              ]
+            }
+          })
+        ]
+      })
+    }
+
+    const members = wrapper.vm.members
+    const preparedIngredients = wrapper.vm.prepareMemberIngredients(
+      members[0].produceTotal.ingredients
+    )
+
+    expect(preparedIngredients).toEqual([
+      { amount: 10, name: '/images/ingredient/honey.png' },
+      { amount: 15, name: '/images/ingredient/milk.png' }
+    ])
   })
 })

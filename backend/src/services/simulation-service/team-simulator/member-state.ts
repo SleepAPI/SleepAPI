@@ -335,7 +335,7 @@ export class MemberState {
         this.helpsSinceLastSkillProc += 1;
         const activations = this.attemptSkill();
         if (activations.length > 0) {
-          bankedSkillProcs.concat(activations);
+          bankedSkillProcs.push(...activations);
           currentMorningProcs += 1;
         }
       }
@@ -498,12 +498,13 @@ export class MemberState {
 
   #activateEnergySkill(skill: Mainskill): SkillActivation {
     if (skill.isSkill(mainskill.CHARGE_ENERGY_S)) {
+      const defaultEnergyAmount = this.skillAmount(skill);
       const clampedEnergyRecovered =
-        this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
+        this.currentEnergy + defaultEnergyAmount > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
 
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
-      this.wastedEnergy += this.skillAmount(skill) - clampedEnergyRecovered;
+      this.wasteEnergy(defaultEnergyAmount - clampedEnergyRecovered);
 
       return { crit: false, selfValue: { regular: clampedEnergyRecovered, crit: 0 } };
     } else if (skill.isSkill(mainskill.ENERGIZING_CHEER_S)) {
@@ -595,14 +596,17 @@ export class MemberState {
 
   #activateMoonlight(skill: Mainskill): SkillActivation {
     if (skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
+      const baseEnergyAmount = this.skillAmount(skill);
       const clampedEnergyRecovered =
-        this.currentEnergy + this.skillAmount(skill) > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
+        this.currentEnergy + baseEnergyAmount > 150 ? 150 - this.currentEnergy : this.skillAmount(skill);
+
+      this.wasteEnergy(baseEnergyAmount - clampedEnergyRecovered);
 
       this.currentEnergy += clampedEnergyRecovered;
       this.totalRecovery += clampedEnergyRecovered;
 
       if (RandomUtils.roll(skill.critChance)) {
-        const teamAmount = this.skillAmount(skill) * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
+        const teamAmount = baseEnergyAmount * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
         // currently uses equal chance to hit every member
         return {
           crit: true,

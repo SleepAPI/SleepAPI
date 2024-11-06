@@ -157,6 +157,7 @@ export class TeamSimulator {
     if (result.helps) {
       for (const mem of this.memberStates) {
         mem.addHelps(result.helps);
+        // TODO: we currently don't track produce generated from helps
         invoker.addSkillValue(result.helps);
       }
     } else if (result.energy) {

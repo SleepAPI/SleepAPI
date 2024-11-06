@@ -1,7 +1,7 @@
 import { useViewport } from '@/composables/viewport-composable'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { defineComponent } from 'vue'
+import { defineComponent, nextTick } from 'vue'
 
 const TestComponent = defineComponent({
   setup() {
@@ -43,6 +43,7 @@ describe('useViewport composable', () => {
     window.innerWidth = 1200
     window.dispatchEvent(new Event('resize'))
     await flushPromises()
+    await nextTick()
 
     expect(vm.viewportWidth).toBe(1200)
     expect(vm.isMobile).toBe(false)

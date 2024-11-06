@@ -4,6 +4,7 @@ import type {
   DetailedProduce,
   IngredientSet,
   MemberProduction,
+  PokemonInstanceExt,
   RecipeType,
   Summary,
   Time,
@@ -36,6 +37,11 @@ export interface SingleMemberProduction {
 export interface MemberProductionExt extends MemberProduction {
   memberExternalId: string
   singleProduction?: SingleMemberProduction
+}
+
+export interface MemberInstanceProductionExt extends MemberProductionExt {
+  pokemonInstance: PokemonInstanceExt
+  ingredients: { amount: number; name: string }[]
 }
 
 export interface SingleProductionExt {
