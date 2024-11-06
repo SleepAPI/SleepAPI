@@ -362,7 +362,7 @@ export default defineComponent({
 
         return nonIngMagnetIngs.concat({
           amount: MathUtils.round(ingMagnetAmount, 1),
-          image: '/images/misc/ingredients.png'
+          image: '/images/ingredient/ingredients.png'
         })
       } else {
         return ingredients.map(({ amount, ingredient }) => ({

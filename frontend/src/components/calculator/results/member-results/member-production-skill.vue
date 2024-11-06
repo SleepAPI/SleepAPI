@@ -4,82 +4,71 @@
       <v-col cols="12" class="flex-center text-h6 text-skill font-weight-medium"> Skill </v-col>
     </v-row>
 
-    <v-row no-gutters class="flex-center fill-height flex-nowrap px-1">
-      <v-col cols="auto" class="flex-center">
-        <v-badge
-          id="skillLevelBadge"
-          :content="`Lv.${parsedMember.pokemonInstance.skillLevel}`"
-          location="bottom center"
-          color="subskillWhite"
-          rounded="pill"
-        >
-          <v-img
-            :src="mainskillImage(parsedMember.pokemonInstance.pokemon)"
-            height="40px"
-            width="40px"
-          ></v-img>
-        </v-badge>
-      </v-col>
-      <v-col cols="auto" class="flex-left flex-column">
-        <div class="flex-center">
-          <span class="text-h6 font-weight-medium text-center">{{
-            MathUtils.round(parsedMember.skillProcs * timeWindowFactor, 1)
-          }}</span>
-          <v-img src="/images/misc/skillproc.png" height="28" width="28"></v-img>
-        </div>
-        <div class="flex-left">
-          <span class="font-weight-light text-body-2 font-italic text-center mr-1"
-            >x{{ currentSkillValue }}</span
-          >
-          <v-img src="/images/misc/ingredients.png" height="20" width="20"></v-img>
-        </div>
-      </v-col>
+    <v-row no-gutters class="flex-center fill-height">
+      <component :is="skillComponent" :member="member"></component>
     </v-row>
   </v-card>
 </template>
 
 <script lang="ts">
-import { StrengthService } from '@/services/strength/strength-service'
+import ChargeEnergySDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-energy-s-details.vue'
+import ChargeStrengthMDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-strength-m-details.vue'
+import ChargeStrengthSDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-strength-s-details.vue'
+import ChargeStrengthSRangeDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-strength-s-range-details.vue'
+import CookingPowerUpSDetails from '@/components/calculator/results/member-results/member-production-skill-details/cooking-power-up-s-details.vue'
+import DisguiseBerryBurstDetails from '@/components/calculator/results/member-results/member-production-skill-details/disguise-berry-burst-details.vue'
+import DreamShardMagnetSDetails from '@/components/calculator/results/member-results/member-production-skill-details/dream-shard-magnet-s-details.vue'
+import DreamShardMagnetSRangeDetails from '@/components/calculator/results/member-results/member-production-skill-details/dream-shard-magnet-s-range-details.vue'
+import EnergizingCheerSDetails from '@/components/calculator/results/member-results/member-production-skill-details/energizing-cheer-s-details.vue'
+import EnergyForEveryoneDetails from '@/components/calculator/results/member-results/member-production-skill-details/energy-for-everyone-details.vue'
+import ExtraHelpfulSDetails from '@/components/calculator/results/member-results/member-production-skill-details/extra-helpful-s-details.vue'
+import HelperBoostDetails from '@/components/calculator/results/member-results/member-production-skill-details/helper-boost-details.vue'
+import IngredientMagnetSDetails from '@/components/calculator/results/member-results/member-production-skill-details/ingredient-magnet-s-details.vue'
+import MetronomeDetails from '@/components/calculator/results/member-results/member-production-skill-details/metronome-details.vue'
+import MoonlightChargeEnergySDetails from '@/components/calculator/results/member-results/member-production-skill-details/moonlight-charge-energy-s-details.vue'
+import StockpileChargeStrengthSDetails from '@/components/calculator/results/member-results/member-production-skill-details/stockpile-charge-strength-s-details.vue'
+import TastyChanceSDetails from '@/components/calculator/results/member-results/member-production-skill-details/tasty-chance-s-details.vue'
 import { mainskillImage } from '@/services/utils/image-utils'
-import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
-import { MathUtils, compactNumber } from 'sleepapi-common'
+import type { MemberInstanceProductionExt } from '@/types/member/instanced'
+import { MathUtils } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'MemberProductionSkill',
+  components: {
+    ChargeEnergySDetails,
+    IngredientMagnetSDetails,
+    DisguiseBerryBurstDetails,
+    EnergizingCheerSDetails,
+    MetronomeDetails,
+    ChargeStrengthSDetails,
+    ChargeStrengthSRangeDetails,
+    ChargeStrengthMDetails,
+    CookingPowerUpSDetails,
+    DreamShardMagnetSDetails,
+    DreamShardMagnetSRangeDetails,
+    EnergyForEveryoneDetails,
+    TastyChanceSDetails,
+    StockpileChargeStrengthSDetails,
+    MoonlightChargeEnergySDetails,
+    HelperBoostDetails,
+    ExtraHelpfulSDetails
+  },
   props: {
     member: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<MemberInstanceProductionExt>,
       required: true
     }
   },
   setup() {
-    const pokemonStore = usePokemonStore()
     const teamStore = useTeamStore()
-    return { pokemonStore, teamStore, MathUtils, mainskillImage }
+    return { teamStore, MathUtils, mainskillImage }
   },
   computed: {
-    // TODO: this is reparsed 3 times, in member-results, header and skill components
-    parsedMember() {
-      const pokemonInstance = this.pokemonStore.getPokemon(this.member.memberExternalId)!
-      return {
-        ...this.member,
-        pokemonInstance
-      }
-    },
-    currentSkillValue() {
-      return compactNumber(
-        StrengthService.skillValue({
-          skill: this.parsedMember.pokemonInstance.pokemon.skill,
-          amount: this.parsedMember.skillAmount,
-          timeWindow: this.teamStore.timeWindow
-        })
-      )
-    },
-    timeWindowFactor() {
-      return StrengthService.timeWindowFactor(this.teamStore.timeWindow)
+    skillComponent() {
+      const skillName = this.member.pokemonInstance.pokemon.skill.name
+      return `${skillName.replace(/[(),\s]/g, '')}Details`
     }
   }
 })

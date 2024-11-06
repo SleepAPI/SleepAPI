@@ -226,7 +226,9 @@ export default defineComponent({
   },
   methods: {
     ingredientImage(name: string) {
-      return name === 'magnet' ? '/images/misc/ingredients.png' : `/images/ingredient/${name}.png`
+      return name === 'magnet'
+        ? '/images/ingredient/ingredients.png'
+        : `/images/ingredient/${name}.png`
     }
   }
 })
