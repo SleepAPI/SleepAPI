@@ -2,7 +2,7 @@ import { MAINSKILLS } from '../mainskill';
 import { Disguise } from '../modifier';
 import { BERRY_BURST } from './berry-burst';
 
-const BERRY_BURST_CRIT_CHANCE = 0.2;
+const BERRY_BURST_CRIT_CHANCE = 0.185;
 export const DISGUISE_BERRY_BURST = Disguise(BERRY_BURST, BERRY_BURST_CRIT_CHANCE, {
   amount: [8, 10, 15, 17, 19, 21],
   description:

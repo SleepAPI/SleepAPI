@@ -44,7 +44,7 @@
       <div class="flex-center">
         <v-img src="/images/unit/energy.png" height="20" width="20"></v-img>
         <span class="font-weight-medium text-no-wrap text-center ml-1">
-          {{ teamSkillValue }} total</span
+          {{ teamSkillValue }} team</span
         >
       </div>
     </v-col>
