@@ -227,7 +227,7 @@ export class MemberState {
     this.currentEnergy += clampedEnergyRecovered;
     this.totalRecovery += clampedEnergyRecovered;
 
-    return recovered - clampedEnergyRecovered;
+    return recoveredWithNature - clampedEnergyRecovered;
   }
 
   public wasteEnergy(wasted: number) {
@@ -614,7 +614,7 @@ export class MemberState {
           teamValue: {
             energy: {
               regular: { amount: 0, random: false, chanceTargetLowest: 0 },
-              crit: { amount: teamAmount, random: true, chanceTargetLowest: 1 / this.team.length },
+              crit: { amount: teamAmount, random: true, chanceTargetLowest: 0 },
             },
           },
         };

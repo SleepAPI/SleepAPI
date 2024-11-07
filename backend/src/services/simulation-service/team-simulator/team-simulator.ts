@@ -193,9 +193,9 @@ export class TeamSimulator {
     const lowestEnergy = sortedMembers[0]?.energy ?? 0;
 
     const lowestEnergyMembers = sortedMembers.filter((mem) => mem.energy === lowestEnergy);
-    const otherMembers = sortedMembers.slice(lowestEnergyMembers.length);
+    const allMembers = this.memberStates;
 
-    const targetGroup = RandomUtils.roll(chanceTargetLowest) ? lowestEnergyMembers : otherMembers;
+    const targetGroup = RandomUtils.roll(chanceTargetLowest) ? lowestEnergyMembers : allMembers;
     return [RandomUtils.randomElement(targetGroup)].filter((member): member is MemberState => member !== undefined);
   }
 
