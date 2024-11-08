@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/SleepAPI/SleepAPI/compare/v1.2.1...v1.2.2) (2024-11-08)
+
+
+### Bug Fixes
+
+* split groups into lowest energy and whole team ([ba368b8](https://github.com/SleepAPI/SleepAPI/commit/ba368b8fc558422e9b9a33a6600ae16c119b8664))
+
 ## [1.2.1](https://github.com/SleepAPI/SleepAPI/compare/v1.2.0...v1.2.1) (2024-11-06)
 
 # [1.2.0](https://github.com/SleepAPI/SleepAPI/compare/v1.1.5...v1.2.0) (2024-11-04)
