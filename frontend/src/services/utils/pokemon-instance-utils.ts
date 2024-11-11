@@ -4,6 +4,7 @@ import {
   getPokemon,
   getSubskill,
   type PokemonInstanceExt,
+  type PokemonInstanceIdentity,
   type PokemonInstanceWithMeta
 } from 'sleepapi-common'
 
@@ -67,6 +68,27 @@ class PokemonInstanceUtilsImpl {
         level: instancedIngredient.level,
         ingredient: instancedIngredient.ingredient.name
       }))
+    }
+  }
+
+  // TODO: test
+  public toPokemonInstanceIdentity(pokemonInstance: PokemonInstanceExt): PokemonInstanceIdentity {
+    return {
+      pokemon: pokemonInstance.pokemon.name,
+      nature: pokemonInstance.nature.name,
+      subskills: pokemonInstance.subskills.map((subskill) => ({
+        level: subskill.level,
+        subskill: subskill.subskill.name
+      })),
+      ingredients: pokemonInstance.ingredients.map((ingredient) => ({
+        level: ingredient.level,
+        ingredient: ingredient.ingredient.name
+      })),
+      carrySize: pokemonInstance.carrySize,
+      level: pokemonInstance.level,
+      ribbon: pokemonInstance.ribbon,
+      skillLevel: pokemonInstance.skillLevel,
+      externalId: pokemonInstance.externalId
     }
   }
 }

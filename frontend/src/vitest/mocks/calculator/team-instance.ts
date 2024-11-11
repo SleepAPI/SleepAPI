@@ -1,8 +1,11 @@
 import type { TeamInstance } from '@/types/member/instanced'
 import { createMockTeamProduction } from '@/vitest/mocks/calculator/team-production'
+import { createMockMemberIv } from '@/vitest/mocks/member-iv'
+import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
 
 export function createMockTeams(nrOfTeams = 1, attrs?: Partial<TeamInstance>) {
   const teams: TeamInstance[] = []
+  const mockPokemonExternalId = createMockPokemon().externalId
   for (let i = 0; i < nrOfTeams; i++) {
     teams.push({
       index: i,
@@ -14,8 +17,9 @@ export function createMockTeams(nrOfTeams = 1, attrs?: Partial<TeamInstance>) {
       recipeType: 'curry',
       favoredBerries: [],
       version: 0,
-      members: new Array(5).fill(undefined),
+      members: [mockPokemonExternalId, ...new Array(4).fill(undefined)],
       production: createMockTeamProduction(),
+      memberIvs: { [mockPokemonExternalId]: createMockMemberIv() },
       ...attrs
     })
   }

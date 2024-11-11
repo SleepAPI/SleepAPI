@@ -2,8 +2,8 @@ import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type { TeamInstance } from '@/types/member/instanced'
-import { createMockMemberProduction, createMockPokemon, createMockTeamProduction } from '@/vitest'
+import type { PerformanceDetails, TeamInstance } from '@/types/member/instanced'
+import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, pokemon, subskill, uuid, type PokemonInstanceExt } from 'sleepapi-common'
@@ -51,6 +51,7 @@ describe('Team Store', () => {
             "favoredBerries": [],
             "index": 0,
             "memberIndex": 0,
+            "memberIvs": {},
             "members": [
               undefined,
               undefined,
@@ -91,6 +92,7 @@ describe('Team Store', () => {
         camp: true,
         version: 1, // will cause re-sim to be called
         members: [externalId, undefined, undefined, undefined, undefined],
+        memberIvs: {},
         production: undefined
       },
       {
@@ -99,6 +101,7 @@ describe('Team Store', () => {
         camp: false,
         version: 0,
         members: [undefined, undefined, undefined, undefined, undefined],
+        memberIvs: {},
         production: undefined
       }
     ])
@@ -141,6 +144,7 @@ describe('Team Store', () => {
             "favoredBerries": [],
             "index": 0,
             "memberIndex": 0,
+            "memberIvs": {},
             "members": [
               undefined,
               undefined,
@@ -174,6 +178,7 @@ describe('Team Store', () => {
         version: 1,
         recipeType: 'curry',
         favoredBerries: [],
+        memberIvs: {},
         production: undefined
       },
       {
@@ -187,6 +192,7 @@ describe('Team Store', () => {
         version: 1,
         recipeType: 'curry',
         favoredBerries: [],
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -212,6 +218,7 @@ describe('Team Store', () => {
         favoredBerries: [],
         members: [],
         version: 1,
+        memberIvs: {},
         production: undefined
       },
       {
@@ -225,6 +232,7 @@ describe('Team Store', () => {
         favoredBerries: [],
         members: [],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -252,6 +260,7 @@ describe('Team Store', () => {
         favoredBerries: [],
         members: [undefined, member, null as any, member, '' as any],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -274,6 +283,7 @@ describe('Team Store', () => {
       favoredBerries: [],
       members: [undefined, 'member1', undefined, 'member2', undefined],
       version: 1,
+      memberIvs: {},
       production: undefined
     }
     const team2: TeamInstance = {
@@ -287,6 +297,7 @@ describe('Team Store', () => {
       favoredBerries: [],
       members: [undefined, 'member3', undefined, 'member4', undefined],
       version: 1,
+      memberIvs: {},
       production: undefined
     }
     teamStore.teams = [team1, team2]
@@ -302,6 +313,7 @@ describe('Team Store', () => {
         "favoredBerries": [],
         "index": 1,
         "memberIndex": 0,
+        "memberIvs": {},
         "members": [
           undefined,
           undefined,
@@ -335,6 +347,7 @@ describe('Team Store', () => {
       favoredBerries: [],
       members: [undefined, 'member1', undefined, 'member2', undefined],
       version: 1,
+      memberIvs: {},
       production: undefined
     }
 
@@ -372,6 +385,7 @@ describe('duplicateMember', () => {
         favoredBerries: [],
         members: [undefined, mockPokemon.externalId, undefined, undefined, undefined],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -404,6 +418,7 @@ describe('duplicateMember', () => {
         favoredBerries: [],
         members: [member, member, member, member, member],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -430,6 +445,7 @@ describe('duplicateMember', () => {
         favoredBerries: [],
         members: [undefined, undefined, undefined, undefined, undefined],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -468,6 +484,7 @@ describe('removeMember', () => {
         favoredBerries: [],
         members: [undefined, member2, undefined, member4, undefined],
         version: 1,
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -492,10 +509,10 @@ describe('removeMember', () => {
   it("should reset every member's single production if member was support mon", async () => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
-    teamStore.resetCurrentTeamSingleProduction = vi.fn()
+    teamStore.resetCurrentTeamIvs = vi.fn()
 
     const mockPokemon1 = createMockPokemon()
-    const mockPokemon2 = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF })
+    const mockPokemon2 = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF, externalId: 'support' })
     pokemonStore.upsertLocalPokemon(mockPokemon1)
     pokemonStore.upsertLocalPokemon(mockPokemon2)
 
@@ -504,24 +521,7 @@ describe('removeMember', () => {
     })
 
     await teamStore.removeMember(1)
-    expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
-  })
-})
-
-describe('calculateProduction', () => {
-  it('shall preserve single production', async () => {
-    const teamStore = useTeamStore()
-    teamStore.teams = createMockTeams()
-
-    TeamService.calculateProduction = vi.fn().mockResolvedValue(
-      createMockTeamProduction({
-        members: [createMockMemberProduction({ singleProduction: undefined })]
-      })
-    )
-
-    expect(teamStore.getCurrentTeam.production?.members[0].singleProduction).toBeDefined()
-    await teamStore.calculateProduction(0)
-    expect(teamStore.getCurrentTeam.production?.members[0].singleProduction).toBeDefined()
+    expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
   })
 })
 
@@ -547,44 +547,43 @@ describe('updateTeamMember', () => {
     `)
   })
 
-  it('shall reset the single production', async () => {
+  it('shall reset the iv', async () => {
     const teamStore = useTeamStore()
 
     teamStore.teams = createMockTeams()
 
     expect(teamStore.teams).toHaveLength(1)
     expect(teamStore.teams[0].production?.members).toHaveLength(1)
-    expect(teamStore.teams[0].production?.members[0].singleProduction).toBeDefined()
+    expect(Object.keys(teamStore.teams[0].memberIvs)).toHaveLength(1)
 
     await teamStore.updateTeamMember(createMockPokemon(), 0)
 
     expect(teamStore.teams).toHaveLength(1)
-    expect(teamStore.teams[0].production?.members).toHaveLength(1)
-    expect(teamStore.teams[0].production?.members[0].singleProduction).toBeUndefined()
+    expect(Object.keys(teamStore.teams[0].memberIvs)).toHaveLength(0)
   })
 
   it("shall reset every member's single production for support mons", async () => {
     const teamStore = useTeamStore()
 
-    teamStore.resetCurrentTeamSingleProduction = vi.fn()
+    teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.calculateProduction = vi.fn()
     await teamStore.updateTeamMember(createMockPokemon({ pokemon: pokemon.WIGGLYTUFF }), 2)
 
-    expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
+    expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
 
   it("shall reset every member's single production if mon has support subskill", async () => {
     const teamStore = useTeamStore()
 
-    teamStore.resetCurrentTeamSingleProduction = vi.fn()
+    teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.calculateProduction = vi.fn()
     await teamStore.updateTeamMember(
       createMockPokemon({ subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }] }),
       2
     )
 
-    expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
+    expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
 })
@@ -628,7 +627,7 @@ describe('toggleCamp', () => {
     const teamStore = useTeamStore()
     teamStore.teams = createMockTeams(1, { camp: false })
 
-    teamStore.resetCurrentTeamSingleProduction = vi.fn()
+    teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.updateTeam = vi.fn()
     teamStore.calculateProduction = vi.fn()
 
@@ -636,7 +635,7 @@ describe('toggleCamp', () => {
     await teamStore.toggleCamp()
     expect(teamStore.getCurrentTeam.camp).toBe(true)
 
-    expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
+    expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.updateTeam).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
@@ -647,7 +646,7 @@ describe('updateSleep', () => {
     const teamStore = useTeamStore()
     teamStore.teams = createMockTeams(1, { bedtime: '22:00', wakeup: '05:00' })
 
-    teamStore.resetCurrentTeamSingleProduction = vi.fn()
+    teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.updateTeam = vi.fn()
     teamStore.calculateProduction = vi.fn()
 
@@ -655,7 +654,7 @@ describe('updateSleep', () => {
     expect(teamStore.getCurrentTeam.bedtime).toEqual('23:00')
     expect(teamStore.getCurrentTeam.wakeup).toEqual('07:00')
 
-    expect(teamStore.resetCurrentTeamSingleProduction).toHaveBeenCalled()
+    expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.updateTeam).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
   })
@@ -693,21 +692,23 @@ describe('updateRecipeType', () => {
   })
 })
 
-describe('resetCurrentTeamSingleProduction', () => {
-  it("shall reset every member's single production", () => {
+describe('resetCurrentTeamIvs', () => {
+  it("shall reset every member's iv", () => {
     const teamStore = useTeamStore()
+    const iv: PerformanceDetails = {
+      berry: 50,
+      ingredient: 50,
+      ingredientsOfTotal: [50],
+      skill: 50
+    }
     teamStore.teams = createMockTeams(1, {
-      production: createMockTeamProduction({
-        members: [createMockMemberProduction(), createMockMemberProduction()]
-      })
+      memberIvs: { 'some id': iv, 'some id2': iv }
     })
 
-    teamStore.resetCurrentTeamSingleProduction()
+    teamStore.resetCurrentTeamIvs()
 
-    expect(teamStore.getCurrentTeam.production?.members).toHaveLength(2)
-    teamStore.getCurrentTeam.production?.members.forEach((member) => {
-      expect(member.singleProduction).toBeUndefined()
-    })
+    expect(teamStore.getCurrentTeam.production?.members).toHaveLength(1)
+    expect(teamStore.getCurrentTeam.memberIvs).toEqual({})
   })
 })
 
@@ -789,6 +790,7 @@ describe('outdate', () => {
 
     teamStore.teams.forEach((team) => {
       expect(team.production).not.toBeUndefined()
+      expect(team.memberIvs).not.toBeUndefined()
     })
 
     teamStore.outdate() // sets production to undefined
@@ -797,5 +799,156 @@ describe('outdate', () => {
       expect(team.production).toBeUndefined()
     })
     expect(teamStore.domainVersion).toBeGreaterThan(0)
+  })
+})
+
+describe('getMemberIvLoading', () => {
+  it('should return false if member iv is not loading', () => {
+    const teamStore = useTeamStore()
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {
+        member1: { berry: 10, ingredient: 20, ingredientsOfTotal: [10], skill: 15 }
+      }
+    })
+    teamStore.teams = mockTeams
+
+    const result = teamStore.getMemberIvLoading('member1')
+    expect(result).toBe(false)
+  })
+
+  it('should return true if member iv is loading (value is undefined)', () => {
+    const teamStore = useTeamStore()
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {
+        member1: undefined
+      }
+    })
+    teamStore.teams = mockTeams
+
+    const result = teamStore.getMemberIvLoading('member1')
+    expect(result).toBe(true)
+  })
+
+  it('should return false if member iv does not exist', () => {
+    const teamStore = useTeamStore()
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {}
+    })
+    teamStore.teams = mockTeams
+
+    const result = teamStore.getMemberIvLoading('member1')
+    expect(result).toBe(false)
+  })
+})
+
+describe('getCurrentMembersWithProduction', () => {
+  it('should return members with production details if available', () => {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+
+    const mockPokemon = createMockPokemon()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+
+    const mockTeams = createMockTeams()
+    teamStore.teams = mockTeams
+
+    const result = teamStore.getCurrentMembersWithProduction
+    expect(result).toHaveLength(5)
+    expect(result[0]).toEqual({
+      member: mockPokemon,
+      production: mockTeams[0].production?.members[0],
+      iv: mockTeams[0].memberIvs[mockPokemon.externalId]
+    })
+    result.slice(1).forEach((res) => expect(res).toBeUndefined())
+  })
+
+  it('should return undefined for members without production details', () => {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+
+    const mockPokemon = createMockPokemon({ externalId: 'member1' })
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+
+    const mockTeams = createMockTeams(1, {
+      members: ['member1'],
+      production: undefined
+    })
+    teamStore.teams = mockTeams
+
+    const result = teamStore.getCurrentMembersWithProduction
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBeUndefined()
+  })
+
+  it('should return undefined if member is not found in pokemon store', () => {
+    const teamStore = useTeamStore()
+
+    teamStore.teams = createMockTeams()
+
+    const result = teamStore.getCurrentMembersWithProduction
+    expect(result).toHaveLength(5)
+    result.forEach((res) => expect(res).toBeUndefined())
+  })
+})
+
+describe('upsertIv', () => {
+  it('should insert a new performance detail if not present', () => {
+    const teamStore = useTeamStore()
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {}
+    })
+    teamStore.teams = mockTeams
+
+    const performanceDetails: PerformanceDetails = {
+      berry: 10,
+      ingredient: 20,
+      ingredientsOfTotal: [10],
+      skill: 15
+    }
+
+    teamStore.upsertIv('member1', performanceDetails)
+
+    expect(teamStore.getCurrentTeam.memberIvs['member1']).toEqual(performanceDetails)
+  })
+
+  it('should update an existing performance detail if already present', () => {
+    const teamStore = useTeamStore()
+    const initialPerformanceDetails: PerformanceDetails = {
+      berry: 5,
+      ingredient: 10,
+      ingredientsOfTotal: [5],
+      skill: 8
+    }
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {
+        member1: initialPerformanceDetails
+      }
+    })
+    teamStore.teams = mockTeams
+
+    const updatedPerformanceDetails: PerformanceDetails = {
+      berry: 15,
+      ingredient: 25,
+      ingredientsOfTotal: [15],
+      skill: 20
+    }
+
+    teamStore.upsertIv('member1', updatedPerformanceDetails)
+
+    expect(teamStore.getCurrentTeam.memberIvs['member1']).toEqual(updatedPerformanceDetails)
+  })
+
+  it('should set performance detail to undefined if no details are provided', () => {
+    const teamStore = useTeamStore()
+    const mockTeams = createMockTeams(1, {
+      memberIvs: {
+        member1: { berry: 10, ingredient: 20, ingredientsOfTotal: [10], skill: 15 }
+      }
+    })
+    teamStore.teams = mockTeams
+
+    teamStore.upsertIv('member1', undefined)
+
+    expect(teamStore.getCurrentTeam.memberIvs['member1']).toBeUndefined()
   })
 })

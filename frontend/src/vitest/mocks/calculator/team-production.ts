@@ -1,5 +1,5 @@
 import type { TeamProductionExt } from '@/types/member/instanced'
-import { createMockMemberProduction } from '@/vitest/mocks/calculator/member-production'
+import { createMockMemberProductionExt } from '@/vitest/mocks/calculator/member-production'
 import { berry, curry, dessert, ingredient, salad } from 'sleepapi-common'
 
 export function createMockTeamProduction(attrs?: Partial<TeamProductionExt>): TeamProductionExt {
@@ -52,7 +52,7 @@ export function createMockTeamProduction(attrs?: Partial<TeamProductionExt>): Te
       berries: [{ amount: 10, berry: berry.BELUE, level: 60 }],
       ingredients: [{ amount: 10, ingredient: ingredient.FANCY_APPLE }]
     },
-    members: [createMockMemberProduction()],
+    members: [createMockMemberProductionExt().production],
     ...attrs
   }
 }

@@ -15,6 +15,7 @@
  */
 
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import {
   MemberState,
@@ -23,13 +24,13 @@ import {
 } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
+import { CalculateTeamResponse, MemberProductionBase, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;
 
   private memberStates: MemberState[] = [];
-  private cookingState;
+  private cookingState?: CookingState = undefined;
 
   private timeIntervals: Time[] = [];
   private dayPeriod: TimePeriod;
@@ -40,10 +41,12 @@ export class TeamSimulator {
   private fullDayDuration = 1440;
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
-  constructor(params: { settings: TeamSettingsExt; members: TeamMember[] }) {
-    const { settings, members } = params;
+  constructor(params: { settings: TeamSettingsExt; members: TeamMember[]; includeCooking: boolean }) {
+    const { settings, members, includeCooking } = params;
 
-    this.cookingState = new CookingState(settings.camp);
+    if (includeCooking) {
+      this.cookingState = new CookingState(settings.camp);
+    }
 
     const dayPeriod = {
       start: settings.wakeup,
@@ -113,9 +116,23 @@ export class TeamSimulator {
     this.collectInventory();
 
     const members = this.memberStates.map((m) => m.results(this.run));
+    if (!this.cookingState) {
+      throw new SleepAPIError('Cooking simulator was not instantiated');
+    }
     const cooking = this.cookingState.results(this.run);
 
     return { members, cooking };
+  }
+
+  public ivResults(variantId: string): MemberProductionBase {
+    this.collectInventory();
+
+    const variant = this.memberStates.filter((member) => variantId === member.id);
+    if (variant.length !== 1) {
+      throw new Error('Team must contain exactly 1 variant');
+    }
+
+    return variant[0].ivResults(this.run);
   }
 
   private init() {
@@ -138,7 +155,7 @@ export class TeamSimulator {
         member.recoverMeal();
       }
       // mod 7 for if Sunday
-      this.cookingState.cook(this.run % 7 === 0);
+      this.cookingState?.cook(this.run % 7 === 0);
       this.cookedMealsCounter++;
     }
   }

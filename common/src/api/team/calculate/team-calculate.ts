@@ -10,12 +10,18 @@ export interface TeamSettings {
 }
 
 export interface PokemonInstanceIdentity extends PokemonInstance {
-  externalId?: string;
+  externalId: string;
 }
 
 export interface CalculateTeamRequest {
   settings: TeamSettings;
   members: PokemonInstanceIdentity[];
+}
+
+export interface CalculateIvRequest {
+  settings: TeamSettings;
+  members: PokemonInstanceIdentity[];
+  variants: PokemonInstanceIdentity[];
 }
 
 export interface MemberProductionAdvanced {
@@ -31,13 +37,16 @@ export interface MemberProductionAdvanced {
   morningProcs: number;
 }
 
-export interface MemberProduction {
+export interface MemberProductionBase {
   produceTotal: Produce;
+  skillProcs: number;
+  externalId: string;
+}
+
+export interface MemberProduction extends MemberProductionBase {
   produceFromSkill: Produce;
   produceWithoutSkill: Produce;
-  skillProcs: number;
   skillAmount: number;
-  externalId?: string;
   advanced: MemberProductionAdvanced;
 }
 
@@ -65,4 +74,8 @@ export interface CookingResult {
 export interface CalculateTeamResponse {
   members: MemberProduction[];
   cooking: CookingResult;
+}
+
+export interface CalculateIvResponse {
+  variants: MemberProductionBase[];
 }

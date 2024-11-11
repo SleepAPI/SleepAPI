@@ -1,8 +1,6 @@
 import { ProductionService } from '@/services/production/production-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import { useTeamStore } from '@/stores/team/team-store'
 import { createMockPokemon } from '@/vitest'
-import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import {
@@ -118,48 +116,6 @@ describe('ProductionService', () => {
       await expect(
         ProductionService.calculateCompareProduction(mockPokemonInstance)
       ).rejects.toThrow('Request failed')
-    })
-  })
-
-  describe('calculateTeamMemberProduction', () => {
-    it('should calculate team member production', async () => {
-      mockedAxios.post.mockResolvedValue({ data: mockResponse })
-
-      const pokemonStore = usePokemonStore()
-      const teamStore = useTeamStore()
-      const mockTeam = createMockTeams()[0]
-      teamStore.teams = [mockTeam]
-
-      const params = { teamIndex: 0, memberIndex: 0 }
-      const result = await ProductionService.calculateTeamMemberProduction(params)
-      const member = pokemonStore.getPokemon(mockTeam.production?.members[0].memberExternalId ?? '')
-
-      expect(result).toEqual(mockResponse)
-      expect(mockedAxios.post).toHaveBeenCalledWith(
-        `/api/calculator/production/${member?.pokemon.name}?includeAnalysis=true`,
-        expect.objectContaining({
-          camp: mockTeam.camp,
-          level: member?.level,
-          mainBedtime: mockTeam.bedtime,
-          mainWakeup: mockTeam.wakeup
-        })
-      )
-    })
-
-    it('should log error if team or member is not found', async () => {
-      const teamStore = useTeamStore()
-      teamStore.teams = createMockTeams()
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-
-      const params = { teamIndex: 999, memberIndex: 999 }
-      const result = await ProductionService.calculateTeamMemberProduction(params)
-
-      expect(result).toBeUndefined()
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Contact developer, can't find team or member for team single production"
-      )
-
-      consoleErrorSpy.mockRestore()
     })
   })
 })

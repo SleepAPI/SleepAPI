@@ -1,14 +1,13 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-skill.vue'
 import { StrengthService } from '@/services/strength/strength-service'
-import { createMockPokemon } from '@/vitest'
-import { createMockMemberInstanceProduction } from '@/vitest/mocks/calculator/member-instance-production'
+import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = createMockMemberInstanceProduction({
-  pokemonInstance: createMockPokemon({ pokemon: pokemon.GALLADE })
+const mockMember = createMockMemberProductionExt({
+  member: createMockPokemon({ pokemon: pokemon.GALLADE })
 })
 
 describe('MemberProductionSkill', () => {
@@ -18,7 +17,7 @@ describe('MemberProductionSkill', () => {
     setActivePinia(createPinia())
     wrapper = mount(MemberProductionSkill, {
       props: {
-        member: mockMember
+        memberWithProduction: mockMember
       }
     })
   })
@@ -47,22 +46,25 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(mockMember.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
+      MathUtils.round(
+        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
+        1
+      ).toString()
     )
   })
 
   it('displays the correct skill value per proc', () => {
     const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
     expect(skillValuePerProc.text()).toBe(
-      `x${mockMember.pokemonInstance.pokemon.skill.amount(mockMember.pokemonInstance.skillLevel)}`
+      `x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`
     )
   })
 
   it('displays the correct total skill value', () => {
     const totalSkillValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center.ml-1')
     const expectedValue = StrengthService.skillValue({
-      skill: mockMember.pokemonInstance.pokemon.skill,
-      amount: mockMember.skillAmount,
+      skill: mockMember.member.pokemon.skill,
+      amount: mockMember.production.skillAmount,
       timeWindow: '24H'
     })
     expect(totalSkillValue.text()).toContain(compactNumber(expectedValue))

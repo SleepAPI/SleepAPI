@@ -38,6 +38,7 @@ const member: TeamMember = {
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],
+  externalId: 'some id',
 };
 
 const settings: TeamSettingsExt = {
@@ -89,6 +90,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -106,6 +108,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const settings: TeamSettingsExt = {
@@ -138,6 +141,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [subskill.ENERGY_RECOVERY_BONUS],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -166,6 +170,7 @@ describe('recoverEnergy', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -204,7 +209,7 @@ describe('addHelps', () => {
           "totalHelps": 0,
           "wastedEnergy": 0,
         },
-        "externalId": undefined,
+        "externalId": "some id",
         "produceFromSkill": {
           "berries": [],
           "ingredients": [],
@@ -282,7 +287,7 @@ describe('addHelps', () => {
           "totalHelps": 0,
           "wastedEnergy": 0,
         },
-        "externalId": undefined,
+        "externalId": "some id",
         "produceFromSkill": {
           "berries": [],
           "ingredients": [],
@@ -376,6 +381,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -397,7 +403,7 @@ describe('attemptDayHelp', () => {
           "totalHelps": 1,
           "wastedEnergy": 0,
         },
-        "externalId": undefined,
+        "externalId": "some id",
         "produceFromSkill": {
           "berries": [],
           "ingredients": [],
@@ -482,7 +488,7 @@ describe('attemptDayHelp', () => {
           "totalHelps": 0,
           "wastedEnergy": 0,
         },
-        "externalId": undefined,
+        "externalId": "some id",
         "produceFromSkill": {
           "berries": [],
           "ingredients": [],
@@ -580,6 +586,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -600,6 +607,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -650,6 +658,7 @@ describe('attemptNightHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -670,7 +679,7 @@ describe('attemptNightHelp', () => {
           "totalHelps": 1,
           "wastedEnergy": 0,
         },
-        "externalId": undefined,
+        "externalId": "some id",
         "produceFromSkill": {
           "berries": [],
           "ingredients": [],

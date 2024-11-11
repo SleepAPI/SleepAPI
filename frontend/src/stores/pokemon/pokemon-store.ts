@@ -13,6 +13,16 @@ export const usePokemonStore = defineStore('pokemon', {
   state: (): PokemonState => ({
     pokemon: {}
   }),
+  getters: {
+    getPokemon: (state) => (externalId: string) => {
+      const pokemonInstance = state.pokemon[externalId]
+      if (pokemonInstance) {
+        return { ...pokemonInstance, pokemon: getPokemon(pokemonInstance.pokemon.name) }
+      } else {
+        console.error(`Pokemon ${externalId} did not exist in Pokémon store, contact developer`)
+      }
+    }
+  },
   actions: {
     upsertLocalPokemon(pokemon: PokemonInstanceExt) {
       // TODO: instead of calcing we probably should store in db on save and load here
@@ -34,7 +44,7 @@ export const usePokemonStore = defineStore('pokemon', {
         team.members.filter((m) => m != null && m === externalId)
       ).length
       const nrOfOccurencesCompare = comparisonStore.members.filter(
-        (member) => member.memberExternalId === externalId
+        (member) => member.externalId === externalId
       ).length
 
       const safeRemoveFromTeam =
@@ -74,16 +84,6 @@ export const usePokemonStore = defineStore('pokemon', {
       }
 
       delete this.pokemon[externalId]
-    }
-  },
-  getters: {
-    getPokemon: (state) => (externalId: string) => {
-      const pokemonInstance = state.pokemon[externalId]
-      if (pokemonInstance) {
-        return { ...pokemonInstance, pokemon: getPokemon(pokemonInstance.pokemon.name) }
-      } else {
-        console.error(`Pokemon ${externalId} did not exist in Pokémon store, contact developer`)
-      }
     }
   },
   persist: true

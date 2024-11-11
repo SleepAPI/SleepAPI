@@ -1,16 +1,13 @@
-import type {
-  MemberProductionExt,
-  PerformanceDetails,
-  SingleMemberProduction
-} from '@/types/member/instanced'
+import type { MemberProductionExt } from '@/types/member/instanced'
+import { createMockMemberIv } from '@/vitest/mocks/member-iv'
 import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
-import { berry, ingredient } from 'sleepapi-common'
+import { berry, ingredient, type MemberProduction } from 'sleepapi-common'
 
-export function createMockMemberProduction(
-  attrs?: Partial<MemberProductionExt>
-): MemberProductionExt {
+export function createMockMemberProduction(attrs?: Partial<MemberProduction>): MemberProduction {
+  const mockPokemon = createMockPokemon()
+
   return {
-    memberExternalId: createMockPokemon().externalId,
+    externalId: mockPokemon.externalId,
     produceTotal: {
       berries: [
         {
@@ -55,7 +52,6 @@ export function createMockMemberProduction(
     },
     skillAmount: 100,
     skillProcs: 5,
-    singleProduction: createMockMemberSingleProduction(),
     advanced: {
       skillCrits: 0,
       spilledIngredients: [],
@@ -72,23 +68,15 @@ export function createMockMemberProduction(
   }
 }
 
-export function createMockMemberSingleProduction(
-  attrs?: Partial<SingleMemberProduction>
-): SingleMemberProduction {
-  const performanceDetails: PerformanceDetails = {
-    berry: 50,
-    ingredient: 50,
-    ingredientsOfTotal: [50],
-    skill: 50
-  }
+export function createMockMemberProductionExt(
+  attrs?: Partial<MemberProductionExt>
+): MemberProductionExt {
+  const mockPokemon = createMockPokemon()
+
   return {
-    summary: {} as any,
-    detailedProduce: {} as any,
-    performanceAnalysis: {
-      neutral: performanceDetails,
-      optimal: performanceDetails,
-      user: performanceDetails
-    },
+    member: mockPokemon,
+    production: createMockMemberProduction(),
+    iv: createMockMemberIv(),
     ...attrs
   }
 }

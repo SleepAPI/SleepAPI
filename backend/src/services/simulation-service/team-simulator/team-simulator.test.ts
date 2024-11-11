@@ -52,6 +52,7 @@ const mockMembers: TeamMember[] = [
     nature: nature.BASHFUL,
     skillLevel: 6,
     subskills: [],
+    externalId: 'some id',
   },
 ];
 
@@ -65,7 +66,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall return expected production from mocked pokemon', () => {
-    const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers });
+    const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, includeCooking: true });
 
     simulator.simulate();
 
@@ -76,6 +77,18 @@ describe('TeamSimulator', () => {
     expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
     expect(result.members[0].advanced.morningProcs).toBe(2);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`35`);
+  });
+
+  it('shall return expected variant production from mocked pokemon', () => {
+    const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, includeCooking: true });
+
+    simulator.simulate();
+
+    const result = simulator.ivResults(mockMembers[0].externalId);
+
+    expect(result.produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.4`);
+    expect(result.produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
+    expect(result.skillProcs).toMatchInlineSnapshot(`35`);
   });
 
   it('shall calculate production with uneven sleep times', () => {
@@ -101,9 +114,10 @@ describe('TeamSimulator', () => {
         nature: nature.MILD,
         skillLevel: 6,
         subskills: [subskill.INGREDIENT_FINDER_M],
+        externalId: 'some id',
       },
     ];
-    const simulator = new TeamSimulator({ settings, members });
+    const simulator = new TeamSimulator({ settings, members, includeCooking: true });
 
     simulator.simulate();
 
@@ -123,10 +137,11 @@ describe('TeamSimulator', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const members: TeamMember[] = [mockMember, mockMember, mockMember, mockMember, mockMember];
-    const simulator = new TeamSimulator({ settings: mockSettings, members });
+    const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
 
@@ -150,6 +165,7 @@ describe('TeamSimulator', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const mockMemberSupport: TeamMember = {
       pokemonSet: {
@@ -162,10 +178,11 @@ describe('TeamSimulator', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const members: TeamMember[] = [mockMember, mockMemberSupport];
-    const simulator = new TeamSimulator({ settings: mockSettings, members });
+    const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
 
@@ -192,9 +209,10 @@ describe('TeamSimulator', () => {
         nature: nature.BASHFUL,
         skillLevel: 6,
         subskills: [],
+        externalId: 'some id',
       },
     ];
-    const simulator = new TeamSimulator({ settings: mockSettings, members });
+    const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
 
@@ -235,9 +253,10 @@ describe('TeamSimulator', () => {
         nature: nature.BASHFUL,
         skillLevel: 6,
         subskills: [],
+        externalId: 'some id',
       },
     ];
-    const simulator = new TeamSimulator({ settings: mockSettings, members });
+    const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
 
@@ -254,7 +273,11 @@ describe('TeamSimulator', () => {
 
 describe('recoverMemberEnergy', () => {
   it("shall recover every member's energy", () => {
-    const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers.concat(mockMembers) }) as any;
+    const simulator = new TeamSimulator({
+      settings: mockSettings,
+      members: mockMembers.concat(mockMembers),
+      includeCooking: true,
+    }) as any;
 
     const energy: TeamSkillEnergy = {
       amount: 50,
@@ -269,7 +292,11 @@ describe('recoverMemberEnergy', () => {
   });
 
   it('shall recover member energy', () => {
-    const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers.concat(mockMembers) }) as any;
+    const simulator = new TeamSimulator({
+      settings: mockSettings,
+      members: mockMembers.concat(mockMembers),
+      includeCooking: true,
+    }) as any;
     simulator.memberStates[0].recoverEnergy(100);
 
     const energy: TeamSkillEnergy = {

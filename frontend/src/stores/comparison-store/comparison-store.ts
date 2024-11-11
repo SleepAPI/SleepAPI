@@ -46,7 +46,7 @@ export const useComparisonStore = defineStore('comparison', {
   },
   getters: {
     getMemberProduction: (state) => (externalId: string) =>
-      state.members.find((member) => member.memberExternalId === externalId),
+      state.members.find((member) => member.externalId === externalId),
     fullTeam: (state) => state.members.length >= MAX_COMPARISON_MEMBERS
   },
   actions: {
@@ -65,7 +65,7 @@ export const useComparisonStore = defineStore('comparison', {
     removeMember(externalId: string) {
       const pokemonStore = usePokemonStore()
       pokemonStore.removePokemon(externalId, 'compare')
-      this.members = this.members.filter((pkmn) => pkmn.memberExternalId !== externalId)
+      this.members = this.members.filter((pkmn) => pkmn.externalId !== externalId)
     },
     async toggleCamp() {
       this.camp = !this.camp

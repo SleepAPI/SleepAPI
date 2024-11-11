@@ -6,13 +6,13 @@
 
     <v-row no-gutters class="fill-height justify-space-around flex-center flex-column">
       <v-row
-        v-for="({ amount, name }, i) in member.ingredients"
+        v-for="({ amount, image }, i) in memberWithIngredientImages.ingredients"
         :key="i"
         no-gutters
         class="ingredient-row"
       >
         <v-col cols="auto">
-          <v-img :src="name" height="28" width="28"></v-img>
+          <v-img :src="image" height="28" width="28"></v-img>
         </v-col>
         <v-col cols="auto" style="min-width: 40px">
           <span class="font-weight-medium">
@@ -27,15 +27,15 @@
 <script lang="ts">
 import { StrengthService } from '@/services/strength/strength-service'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberInstanceProductionExt } from '@/types/member/instanced'
-import { MathUtils } from 'sleepapi-common'
+import type { MemberProductionExt } from '@/types/member/instanced'
+import { MathUtils, ingredient, type IngredientSet } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'MemberProductionIngredient',
   props: {
-    member: {
-      type: Object as PropType<MemberInstanceProductionExt>,
+    memberWithProduction: {
+      type: Object as PropType<MemberProductionExt>,
       required: true
     }
   },
@@ -44,8 +44,40 @@ export default defineComponent({
     return { teamStore, MathUtils }
   },
   computed: {
+    memberWithIngredientImages() {
+      return {
+        ...this.memberWithProduction,
+        ingredients: this.prepareMemberIngredients(
+          this.memberWithProduction.production.produceTotal.ingredients
+        )
+      }
+    },
     timeWindowFactor() {
       return StrengthService.timeWindowFactor(this.teamStore.timeWindow)
+    }
+  },
+  methods: {
+    prepareMemberIngredients(ingredients: IngredientSet[]) {
+      if (ingredients.length >= ingredient.INGREDIENTS.length) {
+        const ingMagnetAmount = ingredients.reduce(
+          (min, cur) => (cur.amount < min ? cur.amount : min),
+          ingredients[0].amount
+        )
+
+        const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
+
+        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount - ingMagnetAmount, 1),
+          image: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+
+        return result
+      } else {
+        return ingredients.map(({ amount, ingredient }) => ({
+          amount: MathUtils.round(amount, 1),
+          image: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
+        }))
+      }
     }
   }
 })

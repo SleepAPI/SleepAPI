@@ -190,7 +190,7 @@ export default defineComponent({
       const members = this.teamStore.getCurrentTeam.production?.members || []
 
       return members.reduce((sum, memberProduction) => {
-        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
         const memberSkillStrength = member
           ? StrengthService.skillStrength({
               skill: member.pokemon.skill,
@@ -252,7 +252,7 @@ export default defineComponent({
     memberPercentages() {
       const memberStrengths = []
       for (const memberProduction of this.teamStore.getCurrentTeam.production?.members ?? []) {
-        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
         if (!member) continue
 
         const berryStrength = StrengthService.berryStrength({

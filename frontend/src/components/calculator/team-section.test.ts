@@ -2,7 +2,7 @@ import TeamSection from '@/components/calculator/team-section.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { createMockPokemon, createMockTeamProduction } from '@/vitest'
+import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
@@ -65,9 +65,10 @@ describe('Team section', () => {
 
   it('switches between tabs correctly', async () => {
     const teamStore = useTeamStore()
+    const mockPokemon = createMockPokemon()
+    // need team size 2 because otherwise tabs are not shown, we dont show tabs for team with 1 member
     teamStore.teams = createMockTeams(1, {
-      members: ['member1', 'member2'],
-      production: createMockTeamProduction()
+      members: [mockPokemon.externalId, mockPokemon.externalId]
     })
     await nextTick()
 

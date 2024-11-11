@@ -12,7 +12,7 @@ beforeEach(() => {
 
 const mockPokemon = createMockPokemon({ name: 'Ash' })
 const mockMemberProduction: SingleProductionExt = {
-  memberExternalId: mockPokemon.externalId,
+  externalId: mockPokemon.externalId,
   ingredients: [
     {
       amount: 10,
@@ -55,9 +55,7 @@ describe('getMemberProduction', () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
 
-    expect(
-      comparisonStore.getMemberProduction(mockMemberProduction.memberExternalId)
-    ).not.toBeUndefined()
+    expect(comparisonStore.getMemberProduction(mockMemberProduction.externalId)).not.toBeUndefined()
   })
 })
 
@@ -96,10 +94,10 @@ describe('removeMember', () => {
     pokemonStore.removePokemon = vi.fn()
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
-    comparisonStore.addMember({ ...mockMemberProduction, memberExternalId: 'other id' })
+    comparisonStore.addMember({ ...mockMemberProduction, externalId: 'other id' })
 
     expect(comparisonStore.members).toHaveLength(2)
-    comparisonStore.removeMember(mockMemberProduction.memberExternalId)
+    comparisonStore.removeMember(mockMemberProduction.externalId)
     expect(comparisonStore.members).toHaveLength(1)
   })
 })

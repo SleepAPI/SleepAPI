@@ -3,13 +3,13 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="`Lv.${member.pokemonInstance.skillLevel}`"
+        :content="`Lv.${memberWithProduction.member.skillLevel}`"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
       >
         <v-img
-          :src="mainskillImage(member.pokemonInstance.pokemon)"
+          :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
         ></v-img>
@@ -17,7 +17,7 @@
       <div class="ml-2">
         <div class="flex-center">
           <span class="font-weight-medium text-center">{{
-            MathUtils.round(member.skillProcs * timeWindowFactor, 1)
+            MathUtils.round(memberWithProduction.production.skillProcs * timeWindowFactor, 1)
           }}</span>
           <v-img src="/images/misc/skillproc.png" max-height="28" max-width="28px"></v-img>
         </div>
@@ -45,14 +45,14 @@
 import { StrengthService } from '@/services/strength/strength-service'
 import { mainskillImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberInstanceProductionExt } from '@/types/member/instanced'
+import type { MemberProductionExt } from '@/types/member/instanced'
 import { MathUtils, compactNumber } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   props: {
-    member: {
-      type: Object as PropType<MemberInstanceProductionExt>,
+    memberWithProduction: {
+      type: Object as PropType<MemberProductionExt>,
       required: true
     }
   },
@@ -62,15 +62,15 @@ export default defineComponent({
   },
   computed: {
     skillValuePerProc() {
-      return this.member.pokemonInstance.pokemon.skill.amount(
-        this.member.pokemonInstance.skillLevel
+      return this.memberWithProduction.member.pokemon.skill.amount(
+        this.memberWithProduction.member.skillLevel
       )
     },
     totalSkillValue() {
       return compactNumber(
         StrengthService.skillValue({
-          skill: this.member.pokemonInstance.pokemon.skill,
-          amount: this.member.skillAmount,
+          skill: this.memberWithProduction.member.pokemon.skill,
+          amount: this.memberWithProduction.production.skillAmount,
           timeWindow: this.teamStore.timeWindow
         })
       )

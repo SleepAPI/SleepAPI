@@ -8,6 +8,7 @@ exports[`migrate > shall migrate old teams to new state 1`] = `
     "favoredBerries": [],
     "index": 0,
     "memberIndex": 0,
+    "memberIvs": {},
     "members": [
       undefined,
       "member1",
@@ -27,6 +28,7 @@ exports[`migrate > shall migrate old teams to new state 1`] = `
     "favoredBerries": [],
     "index": 0,
     "memberIndex": 0,
+    "memberIvs": {},
     "members": [
       undefined,
       "member3",

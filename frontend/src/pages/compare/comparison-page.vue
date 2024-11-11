@@ -125,7 +125,7 @@ export default defineComponent({
     members() {
       const members: PokemonInstanceExt[] = []
       for (const member of this.comparisonStore.members) {
-        const pokemon = this.pokemonStore.getPokemon(member.memberExternalId)
+        const pokemon = this.pokemonStore.getPokemon(member.externalId)
         pokemon && members.push(pokemon)
       }
       return members
@@ -164,7 +164,7 @@ export default defineComponent({
       }
 
       const indexToUpdate = this.comparisonStore.members.findIndex(
-        (pkmn) => pkmn.memberExternalId === pokemonInstance.externalId
+        (pkmn) => pkmn.externalId === pokemonInstance.externalId
       )
 
       this.comparisonStore.members[indexToUpdate] = memberProduction
@@ -177,7 +177,7 @@ export default defineComponent({
       const summary = simulationData.summary
 
       const memberProduction: SingleProductionExt = {
-        memberExternalId: pokemonInstance.externalId,
+        externalId: pokemonInstance.externalId,
         ingredientPercentage: summary.ingredientPercentage,
         skillPercentage: summary.skillPercentage,
         carrySize: summary.carrySize,
@@ -204,7 +204,7 @@ export default defineComponent({
     },
     duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
       const copiedProduction = this.comparisonStore.members.find(
-        (pkmn) => pkmn.memberExternalId === pokemonInstance.externalId
+        (pkmn) => pkmn.externalId === pokemonInstance.externalId
       )
       if (!copiedProduction) {
         console.error("Can't find pokemon to duplicate in the list, contact developer")
@@ -218,7 +218,7 @@ export default defineComponent({
         }
         this.comparisonStore.addMember({
           ...copiedProduction,
-          memberExternalId: duplicatedMember.externalId
+          externalId: duplicatedMember.externalId
         })
         this.pokemonStore.upsertLocalPokemon(duplicatedMember)
       }

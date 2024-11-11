@@ -5,7 +5,7 @@
     </v-row>
 
     <v-row no-gutters class="flex-center fill-height">
-      <component :is="skillComponent" :member="member"></component>
+      <component :is="skillComponent" :member-with-production="memberWithProduction"></component>
     </v-row>
   </v-card>
 </template>
@@ -30,7 +30,7 @@ import StockpileChargeStrengthSDetails from '@/components/calculator/results/mem
 import TastyChanceSDetails from '@/components/calculator/results/member-results/member-production-skill-details/tasty-chance-s-details.vue'
 import { mainskillImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberInstanceProductionExt } from '@/types/member/instanced'
+import type { MemberProductionExt } from '@/types/member/instanced'
 import { MathUtils } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
@@ -56,8 +56,8 @@ export default defineComponent({
     ExtraHelpfulSDetails
   },
   props: {
-    member: {
-      type: Object as PropType<MemberInstanceProductionExt>,
+    memberWithProduction: {
+      type: Object as PropType<MemberProductionExt>,
       required: true
     }
   },
@@ -67,7 +67,7 @@ export default defineComponent({
   },
   computed: {
     skillComponent() {
-      const skillName = this.member.pokemonInstance.pokemon.skill.name
+      const skillName = this.memberWithProduction.member.pokemon.skill.name
       return `${skillName.replace(/[(),\s]/g, '')}Details`
     }
   }

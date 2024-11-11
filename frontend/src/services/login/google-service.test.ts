@@ -6,9 +6,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('axios')
 
-const mockedAxios = axios as unknown as {
-  post: ReturnType<typeof vi.fn>
-}
+const mockedAxios = vi.mocked(axios, true)
+
 vi.mock('@/router/server-axios', () => ({
   default: {
     delete: vi.fn(() => undefined)

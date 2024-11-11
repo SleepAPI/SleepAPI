@@ -14,5 +14,5 @@ export interface TeamMember {
   skillLevel: number;
   nature: nature.Nature;
   subskills: subskill.SubSkill[];
-  externalId?: string;
+  externalId: string;
 }
