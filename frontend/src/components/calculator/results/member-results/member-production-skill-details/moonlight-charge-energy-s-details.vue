@@ -77,11 +77,7 @@ export default defineComponent({
       )
     },
     critValuePerProc() {
-      return (
-        this.memberWithProduction.member.pokemon.skill.amount(
-          this.memberWithProduction.member.skillLevel
-        ) * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR
-      )
+      return mainskill.moonlightCritAmount(this.memberWithProduction.member.skillLevel)
     },
     selfSkillValue() {
       return compactNumber(

@@ -218,7 +218,7 @@ class TierlistImpl {
           // since moonlight works like cheer we implement it through cheer
           // we calculate moonlight's energy value and divide it into how many cheer procs that would equate
           const crits = group[0].detailedProduce.averageTotalSkillProcs * currentPokemonSkill.critChance;
-          const totalEnergy = crits * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR * currentPokemonSkill.maxAmount;
+          const totalEnergy = crits * mainskill.moonlightCritAmount(currentPokemonSkill.maxLevel);
           cheer = totalEnergy / mainskill.ENERGIZING_CHEER_S.maxAmount;
         }
         const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({

@@ -258,7 +258,9 @@ export function simulation(params: {
             skillEnergySelfValue += clampedDelta;
             if (skillActivation.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
               const energyFromCrit =
-                skillActivation.adjustedAmount * (mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR / 5);
+                skillActivation.fractionOfProc *
+                (mainskill.moonlightCritAmount(input.skillLevel ?? skillActivation.skill.maxLevel) / 5);
+
               skillEnergyOthersValue += energyFromCrit * skillActivation.skill.critChance;
             }
           } else {

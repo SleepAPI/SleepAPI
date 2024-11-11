@@ -9,7 +9,9 @@ export const MOONLIGHT_CHARGE_ENERGY_S = Moonlight(CHARGE_ENERGY_S, MOONLIGHT_CH
   RP: [560, 797, 1099, 1516, 2094, 2892],
 });
 
-// TODO: check if this is flat 50% or an array with unique values
-export const MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR = 0.5;
+export function moonlightCritAmount(skillLevel: number) {
+  const critValues = [6.3, 7.7, 10.1, 13.0, 17.2, 22.8];
+  return critValues[skillLevel - 1] ?? 0;
+}
 
 MAINSKILLS.push(MOONLIGHT_CHARGE_ENERGY_S);
