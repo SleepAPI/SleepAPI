@@ -100,7 +100,7 @@ export function randomizedSimulation(params: {
         } else if (pokemon.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
           if (RandomUtils.roll(pokemon.skill.critChance)) {
             skillCrits += 1;
-            energyAmount += energyAmount * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
+            energyAmount += mainskill.moonlightCritAmount(skillLevel);
           }
         }
         currentEnergy = Math.min(currentEnergy + energyAmount, 150);
@@ -157,7 +157,7 @@ export function randomizedSimulation(params: {
           } else if (pokemon.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
             if (RandomUtils.roll(pokemon.skill.critChance)) {
               skillCrits += 1;
-              energyAmount += energyAmount * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
+              energyAmount += mainskill.moonlightCritAmount(skillLevel);
             }
           }
           currentEnergy = Math.min(currentEnergy + energyAmount, 150);

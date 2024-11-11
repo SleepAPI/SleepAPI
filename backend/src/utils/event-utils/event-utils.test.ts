@@ -7,7 +7,7 @@ import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
+import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '../test-utils/defaults';
 import {
   addSneakySnackEvent,
@@ -375,7 +375,9 @@ describe('scheduleEnergyForEveryoneEvents', () => {
       expect(event).toBeInstanceOf(EnergyEvent);
       const energyEvent = event as EnergyEvent;
       expect(energyEvent.description).toEqual('E4E');
-      expect(energyEvent.delta).toEqual(21.6);
+      expect(energyEvent.delta).toEqual(
+        MathUtils.round(mainskill.ENERGY_FOR_EVERYONE.amount(6) * nature.RELAXED.energy, 2)
+      );
     });
   });
 
@@ -436,7 +438,10 @@ describe('getDefaultRecoveryEvents', () => {
     const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0);
 
     expect(recoveryEvents.length).toBe(2);
-    expect(recoveryEvents.map((e) => e.delta)).toEqual([18, 9]);
+    expect(recoveryEvents.map((e) => e.delta)).toEqual([
+      mainskill.ENERGY_FOR_EVERYONE.amount(6),
+      mainskill.ENERGY_FOR_EVERYONE.amount(6) / 2,
+    ]);
   });
 
   it('adds only a nap event when e4eProcs is 0', () => {

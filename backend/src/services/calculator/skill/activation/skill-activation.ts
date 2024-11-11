@@ -135,8 +135,8 @@ export function activateMoonlightChargeEnergy(params: {
   const teamSize = 5;
 
   const energyNormalProc = (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor;
-  const energyFromCrit = energyNormalProc * (mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR / teamSize); // factor is 0.5, crit gives half of normal value to team member
-  const averageEnergyGained = energyNormalProc + energyFromCrit * skill.critChance; // critChance is 0.5 also atm, research WIP
+  const energyFromCrit = mainskill.moonlightCritAmount(skillLevel) / teamSize;
+  const averageEnergyGained = energyNormalProc + energyFromCrit * skill.critChance;
 
   return {
     skill,

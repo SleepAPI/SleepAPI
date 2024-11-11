@@ -3,7 +3,7 @@ import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const ENERGIZING_CHEER_S: Mainskill = createBaseSkill({
   name: 'Energizing Cheer S',
-  amount: [14, 17, 22, 28, 38, 50],
+  amount: [14, 17.1, 22.5, 28.8, 38.2, 50.6],
   unit: 'energy',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Restores ? Energy to one random Pokémon on your team.',

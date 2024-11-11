@@ -153,7 +153,7 @@ describe('activateNonProduceSkills', () => {
     const result = activateNonProduceSkills(params);
     expect(result).toEqual({
       skill: mainskill.ENERGIZING_CHEER_S,
-      adjustedAmount: 25,
+      adjustedAmount: 0.5 * mainskill.ENERGIZING_CHEER_S.amount(6),
       nrOfHelpsToActivate: 5,
       fractionOfProc: 0.5,
     });

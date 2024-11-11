@@ -642,7 +642,7 @@ export class MemberState {
       this.totalRecovery += clampedEnergyRecovered;
 
       if (RandomUtils.roll(skill.critChance)) {
-        const teamAmount = baseEnergyAmount * mainskill.MOONLIGHT_CHARGE_ENERGY_CRIT_FACTOR;
+        const teamAmount = mainskill.moonlightCritAmount(this.skillLevel);
         // currently uses equal chance to hit every member
         return {
           crit: true,
