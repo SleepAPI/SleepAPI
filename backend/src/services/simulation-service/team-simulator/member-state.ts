@@ -16,6 +16,7 @@ import {
   MainskillUnit,
   MathUtils,
   MemberProduction,
+  MemberProductionBase,
   Produce,
   RandomUtils,
   TimePeriod,
@@ -56,7 +57,7 @@ export class MemberState {
   private member: TeamMember;
   private team: TeamMember[];
   private otherMembers: TeamMember[];
-  private cookingState: CookingState;
+  private cookingState?: CookingState;
 
   // quick lookups, static data
   private skillsWithoutMetronome = MAINSKILLS.filter((ms) => ms !== mainskill.METRONOME);
@@ -105,12 +106,13 @@ export class MemberState {
     member: TeamMember;
     team: TeamMember[];
     settings: TeamSettingsExt;
-    cookingState: CookingState;
+    cookingState: CookingState | undefined;
   }) {
     const { member, team, settings, cookingState } = params;
 
     this.cookingState = cookingState;
 
+    // list already filtered for level
     const nrOfHelpingBonus = team.filter((member) => member.subskills.includes(subskill.HELPING_BONUS)).length;
 
     const nightPeriod = {
@@ -196,6 +198,10 @@ export class MemberState {
     return this.skill === mainskill.METRONOME ? this.skillsWithoutMetronome.length : 1;
   }
 
+  get id() {
+    return this.member.externalId;
+  }
+
   public startDay() {
     const nrOfErb = this.team.filter((member) => member.subskills.includes(subskill.ENERGY_RECOVERY_BONUS)).length;
     const sleepInfo: SleepInfo = {
@@ -254,7 +260,7 @@ export class MemberState {
       amount: this.helpsSinceLastCook * amount,
       ingredient,
     }));
-    this.cookingState.addIngredients(ingsSinceLastCook);
+    this.cookingState?.addIngredients(ingsSinceLastCook);
     this.helpsSinceLastCook = 0;
   }
 
@@ -354,6 +360,7 @@ export class MemberState {
   }
 
   public results(iterations: number): MemberProduction {
+    // add to empty since that merges same ingredients/berries
     const totalHelpProduce: Produce = InventoryUtils.addToInventory(emptyProduce(), {
       berries: this.averageProduce.berries
         .map(({ amount, berry, level }) => ({
@@ -384,13 +391,13 @@ export class MemberState {
           }))
         : [];
 
-    const result: MemberProduction = {
+    return {
       produceTotal: multiplyProduce(this.totalProduce, 1 / iterations),
       produceWithoutSkill: multiplyProduce(totalHelpProduce, 1 / iterations),
       produceFromSkill: multiplyProduce(totalSkillProduce, 1 / iterations),
       skillAmount: (this.skillValue.regular + this.skillValue.crit) / iterations,
       skillProcs: this.skillProcs / this.metronomeFactor / iterations,
-      externalId: this.member.externalId,
+      externalId: this.id,
       advanced: {
         spilledIngredients: spilledIngredients,
         dayHelps: this.totalDayHelps / iterations,
@@ -404,8 +411,37 @@ export class MemberState {
         morningProcs: this.morningProcs / iterations,
       },
     };
+  }
 
-    return result;
+  public ivResults(iterations: number): MemberProductionBase {
+    // add to empty since that merges same ingredients/berries
+    const totalHelpProduce: Produce = InventoryUtils.addToInventory(emptyProduce(), {
+      berries: this.averageProduce.berries
+        .map(({ amount, berry, level }) => ({
+          amount: this.totalAverageHelps * amount,
+          berry,
+          level,
+        }))
+        .concat(
+          this.sneakySnackProduce.berries.map(({ amount, berry, level }) => ({
+            amount: this.totalSneakySnackHelps * amount,
+            berry,
+            level,
+          }))
+        ),
+      ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+        amount: this.totalAverageHelps * amount,
+        ingredient,
+      })),
+    });
+
+    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
+
+    return {
+      produceTotal: multiplyProduce(this.totalProduce, 1 / iterations),
+      skillProcs: this.skillProcs / this.metronomeFactor / iterations,
+      externalId: this.id,
+    };
   }
 
   private calculateFrequencyWithEnergy() {
@@ -558,14 +594,14 @@ export class MemberState {
     }));
     const magnetProduce: Produce = { ingredients: magnetIngredients, berries: [] };
 
-    this.cookingState.addIngredients(magnetProduce.ingredients);
+    this.cookingState?.addIngredients(magnetProduce.ingredients);
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, magnetProduce);
     return { crit: false, selfValue: { regular: ingMagnetAmount, crit: 0 } };
   }
 
   #activateTastyChance(): SkillActivation {
     const critAmount = this.skillAmount(mainskill.TASTY_CHANCE_S);
-    this.cookingState.addCritBonus(critAmount / 100);
+    this.cookingState?.addCritBonus(critAmount / 100);
     return { crit: false, selfValue: { regular: critAmount, crit: 0 } };
   }
 
@@ -576,7 +612,7 @@ export class MemberState {
 
   #activateCookingPowerUp(): SkillActivation {
     const potAmount = this.skillAmount(mainskill.COOKING_POWER_UP_S);
-    this.cookingState.addPotSize(potAmount);
+    this.cookingState?.addPotSize(potAmount);
     return { crit: false, selfValue: { regular: potAmount, crit: 0 } };
   }
 

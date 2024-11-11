@@ -7,10 +7,10 @@ import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.DRIFBLIM })
+  member: createMockPokemon({ pokemon: pokemon.UMBREON })
 })
 
-describe('MemberProductionSkill', () => {
+describe('Moonlight details', () => {
   let wrapper: VueWrapper<InstanceType<typeof MemberProductionSkill>>
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('MemberProductionSkill', () => {
   it('renders the correct skill image', () => {
     const skillImage = wrapper.find('img')
     expect(skillImage.exists()).toBe(true)
-    expect(skillImage.attributes('src')).toContain('/images/mainskill/stockpile_strength.png')
+    expect(skillImage.attributes('src')).toContain('/images/mainskill/moonlight_energy.png')
   })
 
   it('displays the correct number of skill procs', () => {
@@ -56,12 +56,12 @@ describe('MemberProductionSkill', () => {
   it('displays the correct skill value per proc', () => {
     const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
     expect(skillValuePerProc.text()).toBe(
-      `${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)} avg.`
+      `x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`
     )
   })
 
   it('displays the correct total skill value', () => {
-    const totalSkillValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center')
+    const totalSkillValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center.ml-1')
     const expectedValue = StrengthService.skillValue({
       skill: mockMember.member.pokemon.skill,
       amount: mockMember.production.skillAmount,

@@ -3,11 +3,21 @@ import { runWorkerFile } from '@src/services/worker/worker';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils';
 import { Request, Response } from 'express';
 import path from 'path';
-import { CalculateTeamRequest, CalculateTeamResponse, SingleProductionRequest } from 'sleepapi-common';
+import {
+  CalculateIvRequest,
+  CalculateIvResponse,
+  CalculateTeamRequest,
+  CalculateTeamResponse,
+  SingleProductionRequest,
+} from 'sleepapi-common';
 import workerpool from 'workerpool';
 import { BaseRouter } from '../base-router';
 
-const pool = workerpool.pool(path.resolve(__dirname, './team-worker.js'), {
+const teamPool = workerpool.pool(path.resolve(__dirname, './team-worker.js'), {
+  minWorkers: 4,
+  maxWorkers: 4,
+});
+const ivPool = workerpool.pool(path.resolve(__dirname, './iv-worker.js'), {
   minWorkers: 4,
   maxWorkers: 4,
 });
@@ -52,7 +62,22 @@ class ProductionRouterImpl {
         try {
           Logger.log('Entered /calculator/team');
 
-          const data = await pool.exec('calculateTeam', [req.body]);
+          const data = await teamPool.exec('calculateTeam', [req.body]);
+          res.json(data);
+        } catch (err) {
+          Logger.error((err as Error).stack);
+          res.sendStatus(500);
+        }
+      }
+    );
+
+    BaseRouter.router.post(
+      '/calculator/iv',
+      async (req: Request<unknown, unknown, CalculateIvRequest, unknown>, res: Response<CalculateIvResponse>) => {
+        try {
+          Logger.log('Entered /calculator/iv');
+
+          const data = await ivPool.exec('calculateIv', [req.body]);
           res.json(data);
         } catch (err) {
           Logger.error((err as Error).stack);

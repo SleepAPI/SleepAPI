@@ -274,7 +274,7 @@ export default defineComponent({
     members() {
       const production = []
       for (const memberProduction of this.comparisonStore.members) {
-        const member = this.pokemonStore.getPokemon(memberProduction.memberExternalId)
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
         if (!member) continue
         const memberPokemon = member.pokemon
 

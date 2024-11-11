@@ -7,7 +7,7 @@
     <v-row no-gutters :class="['flex-center', 'fill-height', isMobile ? 'flex-column' : '']">
       <v-col cols="auto" class="mx-2">
         <v-img
-          :src="berryImage(member.pokemonInstance.pokemon.berry)"
+          :src="berryImage(memberWithProduction.member.pokemon.berry)"
           height="36"
           width="36"
         ></v-img>
@@ -16,7 +16,8 @@
         <span class="font-weight-medium"
           >x{{
             MathUtils.round(
-              (member.produceWithoutSkill.berries.at(0)?.amount ?? 0) * timeWindowFactor,
+              (memberWithProduction.production.produceWithoutSkill.berries.at(0)?.amount ?? 0) *
+                timeWindowFactor,
               1
             )
           }}</span
@@ -35,15 +36,15 @@ import { useViewport } from '@/composables/viewport-composable'
 import { StrengthService } from '@/services/strength/strength-service'
 import { berryImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberInstanceProductionExt } from '@/types/member/instanced'
+import type { MemberProductionExt } from '@/types/member/instanced'
 import { MathUtils, compactNumber } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'MemberProductionBerry',
   props: {
-    member: {
-      type: Object as PropType<MemberInstanceProductionExt>,
+    memberWithProduction: {
+      type: Object as PropType<MemberProductionExt>,
       required: true
     }
   },
@@ -57,7 +58,7 @@ export default defineComponent({
       return compactNumber(
         StrengthService.berryStrength({
           favored: this.teamStore.getCurrentTeam.favoredBerries,
-          berries: this.member.produceWithoutSkill.berries,
+          berries: this.memberWithProduction.production.produceWithoutSkill.berries,
           timeWindow: this.teamStore.timeWindow
         })
       )

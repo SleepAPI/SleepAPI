@@ -1,14 +1,13 @@
 import ChargeEnergySDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-energy-s-details.vue'
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-skill.vue'
-import { createMockPokemon } from '@/vitest'
-import { createMockMemberInstanceProduction } from '@/vitest/mocks/calculator/member-instance-production'
+import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = createMockMemberInstanceProduction({
-  pokemonInstance: createMockPokemon({ pokemon: pokemon.TYRANITAR })
+const mockMember = createMockMemberProductionExt({
+  member: createMockPokemon({ pokemon: pokemon.TYRANITAR })
 })
 
 describe('MemberProductionSkill', () => {
@@ -18,7 +17,7 @@ describe('MemberProductionSkill', () => {
     setActivePinia(createPinia())
     wrapper = mount(MemberProductionSkill, {
       props: {
-        member: mockMember
+        memberWithProduction: mockMember
       },
       global: {
         components: {
@@ -45,10 +44,10 @@ describe('MemberProductionSkill', () => {
 
   it('updates the component when skill name changes', async () => {
     await wrapper.setProps({
-      member: {
+      memberWithProduction: {
         ...mockMember,
-        pokemonInstance: {
-          ...mockMember.pokemonInstance,
+        member: {
+          ...mockMember.member,
           pokemon: pokemon.VAPOREON
         }
       }

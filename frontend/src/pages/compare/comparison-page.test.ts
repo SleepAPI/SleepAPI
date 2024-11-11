@@ -70,7 +70,7 @@ describe('ComparisonPage', () => {
   const mockPokemon = createMockPokemon()
 
   const mockMemberProduction: SingleProductionExt = {
-    memberExternalId: mockPokemon.externalId,
+    externalId: mockPokemon.externalId,
     ingredients: mockResponse.production.detailedProduce.produce.ingredients,
     berries: mockResponse.production.detailedProduce.produce.berries,
     skillProcs: mockResponse.production.detailedProduce.averageTotalSkillProcs,
@@ -136,7 +136,7 @@ describe('ComparisonPage', () => {
     await wrapper.vm.addToCompareMembers(newPokemon)
 
     expect(compStore.members).toHaveLength(2)
-    expect(compStore.members[1].memberExternalId).toBe(newPokemon.externalId)
+    expect(compStore.members[1].externalId).toBe(newPokemon.externalId)
   })
 
   it('edits an existing pokemon in compare members', async () => {
@@ -147,7 +147,7 @@ describe('ComparisonPage', () => {
     const editedPokemon = createMockPokemon({ name: 'Brock' })
     await wrapper.vm.editCompareMember(editedPokemon)
 
-    expect(pokemonStore.getPokemon(compStore.members[0].memberExternalId)?.name).toBe('Brock')
+    expect(pokemonStore.getPokemon(compStore.members[0].externalId)?.name).toBe('Brock')
   })
 
   it('duplicates a pokemon in compare members', () => {
@@ -157,7 +157,7 @@ describe('ComparisonPage', () => {
     wrapper.vm.duplicateCompareMember(mockPokemon)
 
     expect(compStore.members).toHaveLength(2)
-    expect(pokemonStore.getPokemon(compStore.members[1].memberExternalId)).not.toBe('Ash')
+    expect(pokemonStore.getPokemon(compStore.members[1].externalId)).not.toBe('Ash')
   })
 
   it('renders the correct tab content when tabs are clicked', async () => {

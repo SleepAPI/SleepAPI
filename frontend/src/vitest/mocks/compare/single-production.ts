@@ -7,7 +7,7 @@ export function createMockSingleProduction(
 ): SingleProductionExt {
   const mockPokemon = createMockPokemon()
   return {
-    memberExternalId: mockPokemon.externalId,
+    externalId: mockPokemon.externalId,
     ingredients: [
       {
         amount: 10,

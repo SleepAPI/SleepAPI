@@ -1,14 +1,13 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-skill.vue'
 import { StrengthService } from '@/services/strength/strength-service'
-import { createMockPokemon } from '@/vitest'
-import { createMockMemberInstanceProduction } from '@/vitest/mocks/calculator/member-instance-production'
+import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { MathUtils, pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = createMockMemberInstanceProduction({
-  pokemonInstance: createMockPokemon({ pokemon: pokemon.TOGEKISS })
+const mockMember = createMockMemberProductionExt({
+  member: createMockPokemon({ pokemon: pokemon.TOGEKISS })
 })
 
 describe('MemberProductionSkill', () => {
@@ -18,7 +17,7 @@ describe('MemberProductionSkill', () => {
     setActivePinia(createPinia())
     wrapper = mount(MemberProductionSkill, {
       props: {
-        member: mockMember
+        memberWithProduction: mockMember
       }
     })
   })
@@ -47,7 +46,10 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(mockMember.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
+      MathUtils.round(
+        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
+        1
+      ).toString()
     )
   })
 

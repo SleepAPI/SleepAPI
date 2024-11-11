@@ -1,17 +1,25 @@
-import { TeamMember } from '@src/domain/combination/team';
+import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { ProductionStats } from '@src/domain/computed/production';
+import { BadRequestError } from '@src/domain/error/api/api-error';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { calculatePokemonProduction, calculateTeam } from '@src/services/api-service/production/production-service';
+import {
+  calculateIv,
+  calculatePokemonProduction,
+  calculateTeam,
+} from '@src/services/api-service/production/production-service';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
+  CalculateIvRequest,
   CalculateTeamRequest,
   IngredientInstance,
   IngredientSet,
+  PokemonInstanceIdentity,
   SingleProductionRequest,
+  TeamSettings,
   getNature,
   getPokemon,
   getSubskill,
@@ -39,17 +47,35 @@ export default class ProductionController extends Controller {
     return calculateTeam(parsedInput);
   }
 
-  #parseTeamInput(body: CalculateTeamRequest) {
-    const { settings, members } = body;
-    const camp = queryAsBoolean(settings.camp);
-    const bedtime = TimeUtils.parseTime(settings.bedtime);
-    const wakeup = TimeUtils.parseTime(settings.wakeup);
-    const sleepDuration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
-    const dayDuration = TimeUtils.calculateDuration({ start: wakeup, end: bedtime });
-    if (sleepDuration.hour < 1 || dayDuration.hour < 1) {
-      throw new SleepAPIError('Minimum 1 hour of sleep and daytime required');
+  public async calculateIv(body: CalculateIvRequest) {
+    const parsedInput = this.#parseIvInput(body);
+    return calculateIv(parsedInput);
+  }
+
+  #parseIvInput(body: CalculateIvRequest) {
+    const { members, variants } = body;
+    const settings = this.#parseSettings(body.settings);
+
+    if (members.length > 4) {
+      throw new BadRequestError(
+        'Max team length allowed is 4, to allow space for the IV-checked mon, but was: ' + members.length
+      );
+    }
+    if (variants.length > 10) {
+      throw new BadRequestError('Max variants to check is 10');
     }
 
+    const parsedMembers = this.#parseTeamMembers(members, settings.camp);
+    const parsedVariants = this.#parseTeamMembers(variants, settings.camp);
+
+    return {
+      settings,
+      members: parsedMembers,
+      variants: parsedVariants,
+    };
+  }
+
+  #parseTeamMembers(members: PokemonInstanceIdentity[], camp: boolean) {
     const parsedMembers: TeamMember[] = [];
     for (const member of members) {
       const pokemon = getPokemon(member.pokemon);
@@ -77,14 +103,32 @@ export default class ProductionController extends Controller {
         externalId: member.externalId,
       });
     }
+    return parsedMembers;
+  }
+
+  #parseTeamInput(body: CalculateTeamRequest) {
+    const settings = this.#parseSettings(body.settings);
 
     return {
-      settings: {
-        camp,
-        bedtime,
-        wakeup,
-      },
-      members: parsedMembers,
+      settings,
+      members: this.#parseTeamMembers(body.members, settings.camp),
+    };
+  }
+
+  #parseSettings(settings: TeamSettings): TeamSettingsExt {
+    const camp = queryAsBoolean(settings.camp);
+    const bedtime = TimeUtils.parseTime(settings.bedtime);
+    const wakeup = TimeUtils.parseTime(settings.wakeup);
+    const sleepDuration = TimeUtils.calculateDuration({ start: bedtime, end: wakeup });
+    const dayDuration = TimeUtils.calculateDuration({ start: wakeup, end: bedtime });
+    if (sleepDuration.hour < 1 || dayDuration.hour < 1) {
+      throw new SleepAPIError('Minimum 1 hour of sleep and daytime required');
+    }
+
+    return {
+      camp,
+      bedtime,
+      wakeup,
     };
   }
 

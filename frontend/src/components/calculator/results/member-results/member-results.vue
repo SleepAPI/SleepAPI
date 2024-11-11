@@ -32,7 +32,11 @@
         @click="props.onClick"
       ></v-btn>
     </template>
-    <v-window-item v-for="(member, index) in members" :key="index" style="height: 600px">
+    <v-window-item
+      v-for="(memberWithProduction, index) in membersWithProduction"
+      :key="index"
+      style="height: 600px"
+    >
       <v-row
         no-gutters
         class="flex-nowrap bg-surface"
@@ -65,7 +69,7 @@
           }"
         >
           <RadarChart
-            v-if="member.singleProduction"
+            v-if="memberWithProduction.iv"
             :chart-data="ivData"
             :chart-options="ivOptions"
           />
@@ -79,15 +83,17 @@
         </v-col>
 
         <v-col v-if="!isMobile" cols="auto" class="flex-right mr-3" style="max-height: 140px">
-          <SpeechBubble :pokemon-instance="member.pokemonInstance">
+          <SpeechBubble :pokemon-instance="memberWithProduction.member">
             <template #header-text>
               <v-row no-gutters class="flex-start flex-nowrap">
                 <v-col cols="auto" class="mx-1">
-                  <span class="text-surface text-left">Lv.{{ member.pokemonInstance.level }}</span>
+                  <span class="text-surface text-left"
+                    >Lv.{{ memberWithProduction.member.level }}</span
+                  >
                 </v-col>
                 <v-col>
                   <span class="text-primary text-left font-weight-medium">{{
-                    member.pokemonInstance.name
+                    memberWithProduction.member.name
                   }}</span>
                 </v-col>
               </v-row>
@@ -104,7 +110,12 @@
 
         <v-col class="flex-left" style="max-height: 140px; display: inline-block">
           <v-img
-            :src="getMemberImage(member.pokemonInstance.pokemon.name, member.pokemonInstance.shiny)"
+            :src="
+              getMemberImage(
+                memberWithProduction.member.pokemon.name,
+                memberWithProduction.member.shiny
+              )
+            "
             height="140"
             width="140"
             style="
@@ -116,11 +127,11 @@
       </v-row>
 
       <v-row dense class="flex-nowrap flex-center">
-        <v-col v-for="(subskill, i) in member.pokemonInstance.subskills" :key="i">
+        <v-col v-for="(subskill, i) in memberWithProduction.member.subskills" :key="i">
           <v-card
             :color="rarityColor(subskill.subskill)"
             height="20px"
-            :style="subskill.level > member.pokemonInstance.level ? 'opacity: 40%' : ''"
+            :style="subskill.level > memberWithProduction.member.level ? 'opacity: 40%' : ''"
             class="text-body-2 text-center"
           >
             {{ isMobile ? subskill.subskill.shortName : subskill.subskill.name }}
@@ -144,7 +155,7 @@
         </v-col>
         <v-col
           :class="[
-            member.pokemonInstance.nature.positiveModifier === 'neutral'
+            memberWithProduction.member.nature.positiveModifier === 'neutral'
               ? 'flex-center'
               : 'flex-right'
           ]"
@@ -155,18 +166,18 @@
             style="max-width: 150px"
             rounded="pill"
             elevation="0"
-            >{{ member.pokemonInstance.nature.name }}</v-card
+            >{{ memberWithProduction.member.nature.name }}</v-card
           >
         </v-col>
         <v-col
-          v-if="!member.pokemonInstance.nature.prettyName.includes('neutral')"
+          v-if="!memberWithProduction.member.nature.prettyName.includes('neutral')"
           class="flex-left"
         >
-          <NatureModifiers :nature="member.pokemonInstance.nature" :short="true" />
+          <NatureModifiers :nature="memberWithProduction.member.nature" :short="true" />
         </v-col>
       </v-row>
 
-      <MemberProductionHeader :member="currentMember" />
+      <MemberProductionHeader :member="currentMemberWithProduction" />
       <v-row dense class="flex-top flex-nowrap">
         <v-col cols="6" class="flex-center flex-column">
           <span class="text-h6 text-accent">Details</span>
@@ -174,15 +185,22 @@
             <v-divider />
           </v-col>
           <span
-            >Crit chance: {{ currentMember.pokemonInstance.pokemon.skill.critChance * 100 }}%</span
+            >Crit chance:
+            {{ currentMemberWithProduction.member.pokemon.skill.critChance * 100 }}%</span
           >
-          <span>Crits per day: {{ MathUtils.round(currentMember.advanced.skillCrits, 2) }}</span>
           <span
-            >Crit {{ currentMember.pokemonInstance.pokemon.skill.unit }}:
-            {{ Math.floor(currentMember.advanced.skillCritValue) }}
+            >Crits per day:
+            {{
+              MathUtils.round(currentMemberWithProduction.production.advanced.skillCrits, 2)
+            }}</span
+          >
+          <span
+            >Crit {{ currentMemberWithProduction.member.pokemon.skill.unit }}:
+            {{ Math.floor(currentMemberWithProduction.production.advanced.skillCritValue) }}
           </span>
-          <span v-if="currentMember.advanced.wastedEnergy > 0">
-            Wasted energy: {{ Math.floor(currentMember.advanced.wastedEnergy) }}</span
+          <span v-if="currentMemberWithProduction.production.advanced.wastedEnergy > 0">
+            Wasted energy:
+            {{ Math.floor(currentMemberWithProduction.production.advanced.wastedEnergy) }}</span
           >
         </v-col>
         <v-col cols="6" class="flex-center flex-column">
@@ -212,26 +230,16 @@ import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
 import SpeechBubble from '@/components/speech-bubble/speech-bubble.vue'
 import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phrase'
 import { useViewport } from '@/composables/viewport-composable'
-import { ProductionService } from '@/services/production/production-service'
+import { TeamService } from '@/services/team/team-service'
 import { rarityColor } from '@/services/utils/color-utils'
 import { avatarImage, berryImage, islandImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import type {
-  MemberInstanceProductionExt,
-  PerformanceAnalysis,
-  PerformanceDetails,
-  SingleMemberProduction
-} from '@/types/member/instanced'
+import { UnexpectedError } from '@/types/errors/unexpected-error'
+import type { PerformanceDetails } from '@/types/member/instanced'
 import { Chart } from 'chart.js'
-import {
-  MathUtils,
-  ingredient,
-  type DetailedProduce,
-  type IngredientSet,
-  type SingleProductionResponse
-} from 'sleepapi-common'
+import { MathUtils, type MemberProductionBase } from 'sleepapi-common'
 import {
   computed,
   defineComponent,
@@ -268,7 +276,7 @@ export default defineComponent({
 
     watchEffect(() => {
       if (currentMember.value) {
-        const pokemonInstance = pokemonStore.getPokemon(currentMember.value.memberExternalId)
+        const pokemonInstance = pokemonStore.getPokemon(currentMember.value.externalId)
         if (pokemonInstance) {
           getRandomPhrase(pokemonInstance.nature)
         }
@@ -279,7 +287,7 @@ export default defineComponent({
     onMounted(() => {
       refreshInterval = window.setInterval(() => {
         if (currentMember.value) {
-          const pokemonInstance = pokemonStore.getPokemon(currentMember.value.memberExternalId)
+          const pokemonInstance = pokemonStore.getPokemon(currentMember.value.externalId)
           if (pokemonInstance) {
             getRandomPhrase(pokemonInstance.nature)
           }
@@ -341,59 +349,49 @@ export default defineComponent({
     }
   },
   computed: {
-    members(): MemberInstanceProductionExt[] {
-      const pokemonStore = usePokemonStore()
+    membersWithProduction() {
       const result = []
-      for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
-        const pokemonInstance = pokemonStore.getPokemon(member.memberExternalId)
-        if (!pokemonInstance) continue
-        result.push({
-          ...member,
-          pokemonInstance,
-          ingredients: this.prepareMemberIngredients(member.produceTotal.ingredients)
-        })
+      for (const member of this.teamStore.getCurrentMembersWithProduction) {
+        member && result.push(member)
       }
       return result
     },
-    currentMember() {
-      return this.members[this.teamStore.getCurrentTeam.memberIndex]
+    currentMemberWithProduction() {
+      return this.membersWithProduction[this.teamStore.getCurrentTeam.memberIndex]
     },
     // used by watch to trigger recalc
-    currentMemberExternalId() {
-      return this.currentMember?.memberExternalId
+    currentExternalId() {
+      return this.currentMemberWithProduction?.member.externalId
     },
     // used by watch to trigger recalc
-    currentMemberSingleProduction() {
-      return this.currentMember?.singleProduction
+    currentMemberIv() {
+      return this.currentMemberWithProduction?.iv
     }
   },
   watch: {
-    currentMemberSingleProduction: {
+    currentMemberIv: {
       immediate: true,
-      async handler(newProduction?: SingleMemberProduction) {
-        if (!newProduction) {
-          await this.populateSingleProduction()
-        } else {
-          this.ivData = {
-            ...this.ivData,
-            datasets: [
-              {
-                ...this.ivData.datasets[0],
-                data: [
-                  newProduction.performanceAnalysis.user.skill ?? 0,
-                  newProduction.performanceAnalysis.user.ingredient ?? 0,
-                  newProduction.performanceAnalysis.user.berry ?? 0
-                ]
-              }
-            ]
+      async handler(newIv?: PerformanceDetails) {
+        if (!newIv) {
+          if (
+            this.teamStore.getCurrentMember &&
+            !this.teamStore.getMemberIvLoading(this.currentExternalId)
+          ) {
+            await this.populateIv()
           }
+        } else {
+          this.updateIvChart(newIv)
         }
       }
     },
-    currentMemberExternalId: {
-      async handler() {
-        if (!this.currentMember?.singleProduction) {
-          await this.populateSingleProduction()
+    currentExternalId: {
+      async handler(externalId: string) {
+        if (
+          !this.currentMemberWithProduction?.iv &&
+          this.teamStore.getCurrentMember &&
+          !this.teamStore.getMemberIvLoading(externalId)
+        ) {
+          await this.populateIv()
         }
       }
     }
@@ -402,141 +400,79 @@ export default defineComponent({
     getMemberImage(pokemonName: string, shiny: boolean) {
       return avatarImage({ pokemonName, happy: true, shiny })
     },
-    prepareMemberIngredients(ingredients: IngredientSet[]) {
-      if (ingredients.length >= ingredient.INGREDIENTS.length) {
-        const ingMagnetAmount = ingredients.reduce(
-          (min, cur) => (cur.amount < min ? cur.amount : min),
-          ingredients[0].amount
-        )
-
-        const nonIngMagnetIngs = ingredients.filter((ing) => ing.amount !== ingMagnetAmount)
-
-        const result = nonIngMagnetIngs.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount - ingMagnetAmount, 1),
-          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
-        }))
-
-        return result
-      } else {
-        return ingredients.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount, 1),
-          name: `/images/ingredient/${ingredient.name.toLowerCase()}.png`
-        }))
+    updateIvChart(performanceDetails: PerformanceDetails) {
+      const { skill, ingredient, berry } = performanceDetails
+      this.ivData = {
+        ...this.ivData,
+        datasets: [
+          {
+            ...this.ivData.datasets[0],
+            data: [Math.min(skill, 100), Math.min(ingredient, 100), Math.min(berry, 100)]
+          }
+        ]
       }
     },
-    async populateSingleProduction() {
+    async populateIv() {
       const calculatedExternalId = this.teamStore.getCurrentMember
       if (!calculatedExternalId) {
-        console.error(
-          "Can't calculate single production for non-existing member, contact developer"
-        )
-        return
+        throw new UnexpectedError("Can't calculate iv for non-existing member, contact developer")
       }
+      this.teamStore.upsertIv(calculatedExternalId, undefined)
 
-      const response = await ProductionService.calculateTeamMemberProduction({
-        teamIndex: this.teamStore.currentIndex,
-        memberIndex: this.teamStore.getCurrentTeam.memberIndex
-      })
+      const memberProduction = this.currentMemberWithProduction.production
+      const response = await TeamService.calculateCurrentMemberIv()
 
       if (response) {
-        const performanceAnalysis = this.parseMemberSingleProduction(response)
-        if (performanceAnalysis && this.teamStore.getCurrentTeam.production) {
-          const result = {
-            summary: response.summary,
-            detailedProduce: response.production.detailedProduce,
-            performanceAnalysis
-          }
+        const performanceDetails = this.calculatePercentagesOfSetup({
+          ...response,
+          current: memberProduction
+        })
 
-          for (const member of this.teamStore.getCurrentTeam.production.members) {
-            if (member.memberExternalId === calculatedExternalId) {
-              member.singleProduction = result
-            }
-          }
-          return result
-        }
+        this.teamStore.upsertIv(calculatedExternalId, performanceDetails)
       }
-    },
-    parseMemberSingleProduction(result: SingleProductionResponse): PerformanceAnalysis | undefined {
-      const {
-        neutralProduction: neutral,
-        optimalBerryProduction: optimalBerry,
-        optimalIngredientProduction: optimalIng,
-        optimalSkillProduction: optimalSkill
-      } = result
-      const detailedProduce = result.production.detailedProduce
-
-      if (!neutral || !optimalBerry || !optimalIng || !optimalSkill) {
-        console.error(
-          'Contact developer, missing neutral/optimal results in calculate single response'
-        )
-        return
-      }
-
-      const specialty = result.production.pokemonCombination.pokemon.specialty
-      let optimalForSpecialty = optimalBerry
-      if (specialty === 'ingredient') {
-        optimalForSpecialty = optimalIng
-      } else if (specialty === 'skill') {
-        optimalForSpecialty = optimalSkill
-      }
-
-      const neutralPercentages: PerformanceDetails = this.calculatePercentagesOfSetup({
-        current: neutral,
-        optimalBerry,
-        optimalIng,
-        optimalSkill
-      })
-      const userPercentages: PerformanceDetails = this.calculatePercentagesOfSetup({
-        current: detailedProduce,
-        optimalBerry,
-        optimalIng,
-        optimalSkill
-      })
-      const optimalPercentages: PerformanceDetails = this.calculatePercentagesOfSetup({
-        current: optimalForSpecialty,
-        optimalBerry,
-        optimalIng,
-        optimalSkill
-      })
-
-      return { neutral: neutralPercentages, user: userPercentages, optimal: optimalPercentages }
     },
     calculatePercentagesOfSetup(params: {
-      current: DetailedProduce
-      optimalBerry: DetailedProduce
-      optimalIng: DetailedProduce
-      optimalSkill: DetailedProduce
+      current: MemberProductionBase
+      optimalBerry: MemberProductionBase
+      optimalIngredient: MemberProductionBase
+      optimalSkill: MemberProductionBase
     }): PerformanceDetails {
-      const { current, optimalBerry, optimalIng, optimalSkill } = params
+      const { current, optimalBerry, optimalIngredient, optimalSkill } = params
       return {
         berry: this.calculatePercentageOfOptimal({
-          current: current.produce.berries.at(0)?.amount ?? 0,
-          optimalBerry: optimalBerry.produce.berries.at(0)?.amount ?? 0,
-          optimalIng: optimalIng.produce.berries.at(0)?.amount ?? 0,
-          optimalSkill: optimalSkill.produce.berries.at(0)?.amount ?? 0
+          current: current.produceTotal.berries.at(0)?.amount ?? 0,
+          optimalBerry: optimalBerry.produceTotal.berries.at(0)?.amount ?? 0,
+          optimalIng: optimalIngredient.produceTotal.berries.at(0)?.amount ?? 0,
+          optimalSkill: optimalSkill.produceTotal.berries.at(0)?.amount ?? 0
         }),
         ingredient: this.calculatePercentageOfOptimal({
-          current: current.produce.ingredients[0].amount,
-          optimalBerry: optimalBerry.produce.ingredients[0].amount,
-          optimalIng: optimalIng.produce.ingredients[0].amount,
-          optimalSkill: optimalSkill.produce.ingredients[0].amount
+          current: current.produceTotal.ingredients[0].amount,
+          optimalBerry: optimalBerry.produceTotal.ingredients[0].amount,
+          optimalIng: optimalIngredient.produceTotal.ingredients[0].amount,
+          optimalSkill: optimalSkill.produceTotal.ingredients[0].amount
         }),
-        ingredientsOfTotal: current.produce.ingredients.map(({ amount }) =>
+        ingredientsOfTotal: current.produceTotal.ingredients.map(({ amount }) =>
           this.calculatePercentageOfOptimal({
             current: amount,
-            optimalBerry: optimalBerry.produce.ingredients.reduce(
+            optimalBerry: optimalBerry.produceTotal.ingredients.reduce(
               (sum, cur) => sum + cur.amount,
               0
             ),
-            optimalIng: optimalIng.produce.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
-            optimalSkill: optimalSkill.produce.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
+            optimalIng: optimalIngredient.produceTotal.ingredients.reduce(
+              (sum, cur) => sum + cur.amount,
+              0
+            ),
+            optimalSkill: optimalSkill.produceTotal.ingredients.reduce(
+              (sum, cur) => sum + cur.amount,
+              0
+            )
           })
         ),
         skill: this.calculatePercentageOfOptimal({
-          current: current.averageTotalSkillProcs,
-          optimalBerry: optimalBerry.averageTotalSkillProcs,
-          optimalIng: optimalIng.averageTotalSkillProcs,
-          optimalSkill: optimalSkill.averageTotalSkillProcs
+          current: current.skillProcs,
+          optimalBerry: optimalBerry.skillProcs,
+          optimalIng: optimalIngredient.skillProcs,
+          optimalSkill: optimalSkill.skillProcs
         })
       }
     },

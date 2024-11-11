@@ -1,7 +1,11 @@
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { createMockMemberProduction, createMockPokemon, createMockTeamProduction } from '@/vitest'
+import {
+  createMockMemberProductionExt,
+  createMockPokemon,
+  createMockTeamProduction
+} from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry } from 'sleepapi-common'
@@ -69,19 +73,22 @@ describe('TeamResults', () => {
         ingredients: []
       },
       members: [
-        createMockMemberProduction({
-          produceTotal: {
-            ingredients: [],
+        createMockMemberProductionExt({
+          production: {
+            ...createMockMemberProductionExt().production,
+            produceTotal: {
+              ingredients: [],
 
-            berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
-          },
-          produceWithoutSkill: {
-            ingredients: [],
+              berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
+            },
+            produceWithoutSkill: {
+              ingredients: [],
 
-            berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
-          },
-          skillAmount: 400
-        })
+              berries: [{ amount: 10, berry: berry.BELUE, level: 10 }]
+            },
+            skillAmount: 400
+          }
+        }).production
       ]
     }
     await nextTick()

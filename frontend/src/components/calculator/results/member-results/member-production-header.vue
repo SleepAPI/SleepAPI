@@ -1,15 +1,15 @@
 <template>
   <v-row class="align-stretch flex-top flex-nowrap" dense>
     <v-col class="">
-      <MemberProductionBerry :member="member" />
+      <MemberProductionBerry :member-with-production="member" />
     </v-col>
 
     <v-col>
-      <MemberProductionIngredient :member="member" />
+      <MemberProductionIngredient :member-with-production="member" />
     </v-col>
 
     <v-col>
-      <MemberProductionSkill :member="member" />
+      <MemberProductionSkill :member-with-production="member" />
     </v-col>
   </v-row>
 </template>
@@ -22,7 +22,7 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { berryImage, mainskillImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberInstanceProductionExt } from '@/types/member/instanced'
+import type { MemberProductionExt } from '@/types/member/instanced'
 import { MathUtils } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
@@ -35,7 +35,7 @@ export default defineComponent({
   },
   props: {
     member: {
-      type: Object as PropType<MemberInstanceProductionExt>,
+      type: Object as PropType<MemberProductionExt>,
       required: true
     }
   },

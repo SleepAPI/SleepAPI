@@ -109,3 +109,28 @@ describe('toUpsertTeamMemberRequest', () => {
     )
   })
 })
+
+describe('toPokemonInstanceIdentity', () => {
+  it('should convert a valid PokemonInstanceExt to PokemonInstanceIdentity', () => {
+    const mockPokemonInstanceExt: PokemonInstanceExt = createMockPokemon()
+    const result = PokemonInstanceUtils.toPokemonInstanceIdentity(mockPokemonInstanceExt)
+
+    expect(result).toEqual({
+      pokemon: mockPokemonInstanceExt.pokemon.name,
+      nature: mockPokemonInstanceExt.nature.name,
+      subskills: mockPokemonInstanceExt.subskills.map((subskill) => ({
+        level: subskill.level,
+        subskill: subskill.subskill.name
+      })),
+      ingredients: mockPokemonInstanceExt.ingredients.map((ingredient) => ({
+        level: ingredient.level,
+        ingredient: ingredient.ingredient.name
+      })),
+      carrySize: mockPokemonInstanceExt.carrySize,
+      level: mockPokemonInstanceExt.level,
+      ribbon: mockPokemonInstanceExt.ribbon,
+      skillLevel: mockPokemonInstanceExt.skillLevel,
+      externalId: mockPokemonInstanceExt.externalId
+    })
+  })
+})
