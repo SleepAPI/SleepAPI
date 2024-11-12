@@ -38,6 +38,10 @@ describe('setupAndRunProductionSimulation', () => {
             ],
             "description": "Increases Snorlax's Strength by ?.",
             "maxLevel": 7,
+            "modifier": {
+              "critChance": 0,
+              "type": "Base",
+            },
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -67,6 +71,10 @@ describe('setupAndRunProductionSimulation', () => {
             ],
             "description": "Increases Snorlax's Strength by ?.",
             "maxLevel": 7,
+            "modifier": {
+              "critChance": 0,
+              "type": "Base",
+            },
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -96,6 +104,10 @@ describe('setupAndRunProductionSimulation', () => {
             ],
             "description": "Increases Snorlax's Strength by ?.",
             "maxLevel": 7,
+            "modifier": {
+              "critChance": 0,
+              "type": "Base",
+            },
             "name": "Charge Strength M",
             "unit": "strength",
           },
@@ -118,14 +130,17 @@ describe('setupAndRunProductionSimulation', () => {
         "nightHelps": 20,
         "nightHelpsBeforeSS": 20,
         "produce": {
-          "berries": {
-            "amount": 46.64959999999999,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
+          "berries": [
+            {
+              "amount": 46.64959999999999,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
+          ],
           "ingredients": [
             {
               "amount": 9.116800000000003,
@@ -164,6 +179,10 @@ describe('setupAndRunProductionSimulation', () => {
               ],
               "description": "Increases Snorlax's Strength by ?.",
               "maxLevel": 7,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Charge Strength M",
               "unit": "strength",
             },
@@ -193,6 +212,10 @@ describe('setupAndRunProductionSimulation', () => {
               ],
               "description": "Increases Snorlax's Strength by ?.",
               "maxLevel": 7,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Charge Strength M",
               "unit": "strength",
             },
@@ -222,19 +245,16 @@ describe('setupAndRunProductionSimulation', () => {
               ],
               "description": "Increases Snorlax's Strength by ?.",
               "maxLevel": 7,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Charge Strength M",
               "unit": "strength",
             },
           },
         ],
-        "sneakySnack": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
-        },
+        "sneakySnack": [],
         "spilledIngredients": [
           {
             "amount": 0,

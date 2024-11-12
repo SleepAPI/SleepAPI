@@ -1,7 +1,7 @@
-import { PokemonInstance } from '../../../api/pokemon/pokemon-instance';
 import { Recipe } from '../../../domain/recipe/recipe';
-import { BerrySet } from '../../../domain/types/berry-drop';
 import { IngredientSet } from '../../../domain/types/ingredient-set';
+import { PokemonInstance } from '../../pokemon/pokemon-instance';
+import { Produce } from '../../production';
 
 export interface TeamSettings {
   camp: boolean;
@@ -10,12 +10,18 @@ export interface TeamSettings {
 }
 
 export interface PokemonInstanceIdentity extends PokemonInstance {
-  externalId?: string;
+  externalId: string;
 }
 
 export interface CalculateTeamRequest {
   settings: TeamSettings;
   members: PokemonInstanceIdentity[];
+}
+
+export interface CalculateIvRequest {
+  settings: TeamSettings;
+  members: PokemonInstanceIdentity[];
+  variants: PokemonInstanceIdentity[];
 }
 
 export interface MemberProductionAdvanced {
@@ -25,14 +31,22 @@ export interface MemberProductionAdvanced {
   nightHelps: number;
   nightHelpsBeforeSS: number;
   nightHelpsAfterSS: number;
+  skillCrits: number;
+  skillCritValue: number;
+  wastedEnergy: number;
+  morningProcs: number;
 }
 
-export interface MemberProduction {
-  berries?: BerrySet;
-  ingredients: IngredientSet[];
+export interface MemberProductionBase {
+  produceTotal: Produce;
   skillProcs: number;
+  externalId: string;
+}
+
+export interface MemberProduction extends MemberProductionBase {
+  produceFromSkill: Produce;
+  produceWithoutSkill: Produce;
   skillAmount: number;
-  externalId?: string;
   advanced: MemberProductionAdvanced;
 }
 
@@ -60,4 +74,8 @@ export interface CookingResult {
 export interface CalculateTeamResponse {
   members: MemberProduction[];
   cooking: CookingResult;
+}
+
+export interface CalculateIvResponse {
+  variants: MemberProductionBase[];
 }

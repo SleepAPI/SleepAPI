@@ -7,6 +7,8 @@ import {
   PokemonIngredientSet,
   berry,
   dessert,
+  emptyBerryInventory,
+  emptyProduce,
   ingredient,
   maxCarrySize,
   nature,
@@ -14,7 +16,6 @@ import {
   prettifyIngredientDrop,
   subskill,
 } from 'sleepapi-common';
-import { emptyBerrySet } from '../calculator/berry/berry-calculator';
 import { addIngredientSet } from '../calculator/ingredient/ingredient-calculate';
 import { SetCover } from './set-cover';
 
@@ -42,8 +43,8 @@ describe('processOptimalTeamSolutions', () => {
     };
 
     const detailedProduce: DetailedProduce = {
-      produce: { berries: { amount: 0, berry: berry.LEPPA }, ingredients: [] },
-      sneakySnack: { amount: 0, berry: berry.LEPPA },
+      produce: emptyProduce(),
+      sneakySnack: emptyBerryInventory(),
       spilledIngredients: [],
       dayHelps: 0,
       nightHelps: 0,
@@ -187,8 +188,8 @@ describe('findOptimalCombinationFor', () => {
 
     const helps = 6;
 
-    expect(updatedRaichu.detailedProduce.produce.berries?.amount).toBe(
-      helps * updatedRaichu.averageProduce.berries!.amount
+    expect(updatedRaichu.detailedProduce.produce.berries[0].amount).toBe(
+      helps * updatedRaichu.averageProduce.berries[0].amount
     );
     expect(prettifyIngredientDrop(updatedRaichu.detailedProduce.produce.ingredients)).toMatchInlineSnapshot(
       `"4.2 Apple, 18 Ginger"`
@@ -298,10 +299,13 @@ const raichu: CustomPokemonCombinationWithProduce = {
     ],
   },
   averageProduce: {
-    berries: {
-      berry: berry.GREPA,
-      amount: 0.6,
-    },
+    berries: [
+      {
+        berry: berry.GREPA,
+        amount: 0.6,
+        level: 60,
+      },
+    ],
     ingredients: [
       {
         amount: 0.2,
@@ -323,7 +327,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
   },
   detailedProduce: {
     produce: {
-      berries: emptyBerrySet(pokemon.RAICHU.berry),
+      berries: emptyBerryInventory(),
       ingredients: [
         {
           amount: 3,
@@ -340,7 +344,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     skillActivations: [],
-    sneakySnack: emptyBerrySet(pokemon.RAICHU.berry),
+    sneakySnack: emptyBerryInventory(),
     spilledIngredients: [],
   },
 };
@@ -364,10 +368,13 @@ const raikou: CustomPokemonCombinationWithProduce = {
     ],
   },
   averageProduce: {
-    berries: {
-      berry: berry.GREPA,
-      amount: 0.6,
-    },
+    berries: [
+      {
+        berry: berry.GREPA,
+        amount: 0.6,
+        level: 60,
+      },
+    ],
     ingredients: [
       {
         amount: 0.2,
@@ -393,7 +400,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
   },
   detailedProduce: {
     produce: {
-      berries: emptyBerrySet(pokemon.RAIKOU.berry),
+      berries: emptyBerryInventory(),
       ingredients: [
         {
           amount: 3,
@@ -414,7 +421,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     skillActivations: [],
-    sneakySnack: emptyBerrySet(pokemon.RAICHU.berry),
+    sneakySnack: emptyBerryInventory(),
     spilledIngredients: [],
   },
 };
@@ -448,7 +455,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
   },
   detailedProduce: {
     produce: {
-      berries: emptyBerrySet(pokemon.VAPOREON.berry),
+      berries: emptyBerryInventory(),
       ingredients: [
         {
           amount: 9,
@@ -525,7 +532,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     skillActivations: [],
-    sneakySnack: emptyBerrySet(pokemon.RAICHU.berry),
+    sneakySnack: emptyBerryInventory(),
     spilledIngredients: [],
   },
 };

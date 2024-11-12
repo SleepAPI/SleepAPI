@@ -1,17 +1,26 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
-import { BerrySet, IngredientSet, Produce, SkillActivation, ingredient, mainskill } from 'sleepapi-common';
-import { emptyBerrySet } from '../../berry/berry-calculator';
+import {
+  IngredientSet,
+  Mainskill,
+  Produce,
+  SkillActivation,
+  emptyBerryInventory,
+  emptyIngredientInventory,
+  ingredient,
+  mainskill,
+} from 'sleepapi-common';
 import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 
 export function createSkillEvent(
   params: {
-    skill: mainskill.MainSkill;
+    skill: Mainskill;
     skillLevel: number;
     nrOfHelpsToActivate: number;
     adjustedAmount: number;
-    pokemonWithAverageProduce: PokemonProduce;
+    pokemonSet: PokemonProduce;
     skillActivations: SkillActivation[];
     uniqueHelperBoost: number;
+    avgCritChancePerProc: number;
   },
   metronomeFactor = 1
 ) {
@@ -20,8 +29,9 @@ export function createSkillEvent(
     skillLevel,
     nrOfHelpsToActivate,
     adjustedAmount,
-    pokemonWithAverageProduce,
+    pokemonSet,
     skillActivations,
+    avgCritChancePerProc,
     uniqueHelperBoost,
   } = params;
   switch (skill) {
@@ -32,9 +42,21 @@ export function createSkillEvent(
       break;
     }
     case mainskill.INGREDIENT_MAGNET_S: {
-      const berries = emptyBerrySet(pokemonWithAverageProduce.pokemon.berry);
       skillActivations.push(
-        activateIngredientMagnet({ skillLevel, nrOfHelpsToActivate, adjustedAmount, berries, metronomeFactor })
+        activateIngredientMagnet({ skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor })
+      );
+      break;
+    }
+    case mainskill.DISGUISE_BERRY_BURST: {
+      skillActivations.push(
+        activateDisguiseBerryBurst({
+          skillLevel,
+          nrOfHelpsToActivate,
+          adjustedAmount,
+          pokemonSet,
+          avgCritChancePerProc,
+          metronomeFactor,
+        })
       );
       break;
     }
@@ -44,7 +66,7 @@ export function createSkillEvent(
           skillLevel,
           nrOfHelpsToActivate,
           adjustedAmount,
-          pokemonWithAverageProduce,
+          pokemonSet,
           metronomeFactor,
         })
       );
@@ -57,9 +79,15 @@ export function createSkillEvent(
           nrOfHelpsToActivate,
           uniqueHelperBoost,
           adjustedAmount,
-          pokemonWithAverageProduce,
+          pokemonSet,
           metronomeFactor,
         })
+      );
+      break;
+    }
+    case mainskill.MOONLIGHT_CHARGE_ENERGY_S: {
+      skillActivations.push(
+        activateMoonlightChargeEnergy({ skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor })
       );
       break;
     }
@@ -89,7 +117,30 @@ export function activateEnergizingCheer(params: {
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
+    nrOfHelpsToActivate,
+    fractionOfProc: adjustedAmount / metronomeFactor,
+  };
+}
+
+export function activateMoonlightChargeEnergy(params: {
+  skillLevel: number;
+  nrOfHelpsToActivate: number;
+  adjustedAmount: number;
+  metronomeFactor: number;
+}): SkillActivation {
+  const { skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+
+  const skill = mainskill.MOONLIGHT_CHARGE_ENERGY_S;
+  const teamSize = 5;
+
+  const energyNormalProc = (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor;
+  const energyFromCrit = mainskill.moonlightCritAmount(skillLevel) / teamSize;
+  const averageEnergyGained = energyNormalProc + energyFromCrit * skill.critChance;
+
+  return {
+    skill,
+    adjustedAmount: averageEnergyGained,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
@@ -97,61 +148,96 @@ export function activateEnergizingCheer(params: {
 
 export function activateIngredientMagnet(params: {
   skillLevel: number;
-  berries: BerrySet;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { skillLevel, berries, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skillLevel, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
   const skill = mainskill.INGREDIENT_MAGNET_S;
 
   const divideByAverageIngredientAndMetronome = ingredient.INGREDIENTS.length * metronomeFactor;
 
   const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
     ingredient: ing,
-    amount: (skill.amount[skillLevel - 1] * adjustedAmount) / divideByAverageIngredientAndMetronome,
+    amount: (skill.amount(skillLevel) * adjustedAmount) / divideByAverageIngredientAndMetronome,
   }));
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     adjustedProduce: {
-      berries,
+      berries: emptyBerryInventory(),
       ingredients: magnetIngredients,
     },
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
 }
 
+export function activateDisguiseBerryBurst(params: {
+  skillLevel: number;
+  nrOfHelpsToActivate: number;
+  adjustedAmount: number;
+  pokemonSet: PokemonProduce;
+  avgCritChancePerProc: number;
+  metronomeFactor: number;
+}): SkillActivation {
+  const {
+    skillLevel,
+    nrOfHelpsToActivate,
+    adjustedAmount: fractionOfProc,
+    pokemonSet,
+    avgCritChancePerProc,
+    metronomeFactor,
+  } = params;
+  const skill = mainskill.DISGUISE_BERRY_BURST;
+
+  const amountNoCrit = skill.amount(skillLevel) * fractionOfProc;
+
+  const averageBerryAmount =
+    (amountNoCrit + avgCritChancePerProc * amountNoCrit * (mainskill.DISGUISE_CRIT_MULTIPLIER - 1)) / metronomeFactor;
+
+  return {
+    skill,
+    adjustedAmount: averageBerryAmount,
+    nrOfHelpsToActivate,
+    adjustedProduce: {
+      // TODO: level is wrong, but not used in classic calc
+      berries: [{ amount: averageBerryAmount, berry: pokemonSet.pokemon.berry, level: 0 }],
+      ingredients: emptyIngredientInventory(),
+    },
+    fractionOfProc: fractionOfProc / metronomeFactor,
+    critChance: avgCritChancePerProc,
+  };
+}
+
 export function activateExtraHelpful(params: {
   skillLevel: number;
-  pokemonWithAverageProduce: PokemonProduce;
+  pokemonSet: PokemonProduce;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }): SkillActivation {
-  const { skillLevel, pokemonWithAverageProduce, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
+  const { skillLevel, pokemonSet, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
   const skill = mainskill.EXTRA_HELPFUL_S;
 
   const divideByRandomAndMetronome = 5 * metronomeFactor;
 
   const extraHelpfulProduce: Produce = {
-    berries: pokemonWithAverageProduce.produce.berries && {
-      berry: pokemonWithAverageProduce.produce.berries.berry,
-      amount:
-        (pokemonWithAverageProduce.produce.berries.amount * skill.amount[skillLevel - 1] * adjustedAmount) /
-        divideByRandomAndMetronome,
-    },
-    ingredients: pokemonWithAverageProduce.produce.ingredients.map(({ amount, ingredient }) => ({
+    berries: pokemonSet.produce.berries.map(({ amount, berry, level }) => ({
+      berry,
+      amount: (amount * skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
+      level,
+    })),
+    ingredients: pokemonSet.produce.ingredients.map(({ amount, ingredient }) => ({
       ingredient,
-      amount: (amount * skill.amount[skillLevel - 1] * adjustedAmount) / divideByRandomAndMetronome,
+      amount: (amount * skill.amount(skillLevel) * adjustedAmount) / divideByRandomAndMetronome,
     })),
   };
 
   return {
     skill,
-    adjustedAmount: (adjustedAmount * skill.amount[skillLevel - 1]) / divideByRandomAndMetronome,
+    adjustedAmount: (adjustedAmount * skill.amount(skillLevel)) / divideByRandomAndMetronome,
     nrOfHelpsToActivate,
     adjustedProduce: extraHelpfulProduce,
     fractionOfProc: adjustedAmount / metronomeFactor,
@@ -159,7 +245,7 @@ export function activateExtraHelpful(params: {
 }
 
 export function activateNonProduceSkills(params: {
-  skill: mainskill.MainSkill;
+  skill: Mainskill;
   skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
@@ -169,7 +255,7 @@ export function activateNonProduceSkills(params: {
 
   return {
     skill,
-    adjustedAmount: (skill.amount[skillLevel - 1] * adjustedAmount) / metronomeFactor,
+    adjustedAmount: (skill.amount(skillLevel) * adjustedAmount) / metronomeFactor,
     nrOfHelpsToActivate,
     fractionOfProc: adjustedAmount / metronomeFactor,
   };
@@ -179,11 +265,12 @@ export function activateMetronome(params: {
   skillLevel: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
-  pokemonWithAverageProduce: PokemonProduce;
+  pokemonSet: PokemonProduce;
   skillActivations: SkillActivation[];
   uniqueHelperBoost: number;
+  avgCritChancePerProc: number;
 }) {
-  const skillsToActivate = mainskill.MAINSKILLS.filter((s) => s !== mainskill.METRONOME);
+  const skillsToActivate = mainskill.METRONOME_SKILLS;
 
   for (const skillToActivate of skillsToActivate) {
     createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);
@@ -192,33 +279,27 @@ export function activateMetronome(params: {
 
 export function activateHelperBoost(params: {
   skillLevel: number;
-  pokemonWithAverageProduce: PokemonProduce;
+  pokemonSet: PokemonProduce;
   uniqueHelperBoost: number;
   nrOfHelpsToActivate: number;
   adjustedAmount: number;
   metronomeFactor: number;
 }) {
-  const {
-    skillLevel,
-    pokemonWithAverageProduce,
-    uniqueHelperBoost,
-    nrOfHelpsToActivate,
-    adjustedAmount,
-    metronomeFactor,
-  } = params;
+  const { skillLevel, pokemonSet, uniqueHelperBoost, nrOfHelpsToActivate, adjustedAmount, metronomeFactor } = params;
   const skill = mainskill.HELPER_BOOST;
 
   const helpAmount =
     uniqueHelperBoost > 0
-      ? skill.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel)
+      ? skill.amount(skillLevel) + calculateHelperBoostHelpsFromUnique(uniqueHelperBoost, skillLevel)
       : 0;
 
   const helperBoostProduce: Produce = {
-    berries: pokemonWithAverageProduce.produce.berries && {
-      berry: pokemonWithAverageProduce.produce.berries.berry,
-      amount: (pokemonWithAverageProduce.produce.berries.amount * helpAmount * adjustedAmount) / metronomeFactor,
-    },
-    ingredients: pokemonWithAverageProduce.produce.ingredients.map(({ amount, ingredient }) => ({
+    berries: pokemonSet.produce.berries.map(({ amount, berry, level }) => ({
+      berry,
+      amount: (amount * helpAmount * adjustedAmount) / metronomeFactor,
+      level,
+    })),
+    ingredients: pokemonSet.produce.ingredients.map(({ amount, ingredient }) => ({
       ingredient,
       amount: (amount * helpAmount * adjustedAmount) / metronomeFactor,
     })),

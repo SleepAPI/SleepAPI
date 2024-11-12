@@ -23,7 +23,7 @@
                 >
                 <v-img
                   style="transform: translateY(-20px)"
-                  :src="`/images/pokemon/${item.pokemonName.toLowerCase()}${item.shiny ? '_shiny' : ''}.png`"
+                  :src="pokemonImage({ pokemonName: item.pokemonName, shiny: item.shiny })"
                   cover
                 ></v-img>
               </div>
@@ -67,7 +67,9 @@
           <template #item.sneakySnack="{ item }">
             <div class="flex-center" style="padding-right: 11px">
               <v-img
-                :src="`/images/berries/${item.sneakySnackProduce?.berry.name?.toLowerCase()}.png`"
+                v-for="berrySet in item.sneakySnackProduce"
+                :key="berrySet.berry.name"
+                :src="`/images/berries/${berrySet.berry.name?.toLowerCase()}.png`"
                 height="24"
                 width="24"
               ></v-img>
@@ -122,8 +124,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import { pokemonImage } from '@/services/utils/image-utils'
 import { TimeUtils } from '@/services/utils/time-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { MathUtils } from 'sleepapi-common'
 
 type DataTableHeader = {
@@ -137,8 +141,11 @@ export default defineComponent({
   name: 'CompareMisc',
   setup() {
     const comparisonStore = useComparisonStore()
+    const pokemonStore = usePokemonStore()
     return {
-      comparisonStore
+      comparisonStore,
+      pokemonStore,
+      pokemonImage
     }
   },
   data: () => ({
@@ -178,12 +185,14 @@ export default defineComponent({
     members() {
       const production = []
       for (const memberProduction of this.comparisonStore.members) {
-        const memberPokemon = memberProduction.member.pokemon
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
+        if (!member) continue
+        const memberPokemon = member.pokemon
 
         production.push({
-          member: memberProduction.member.name,
+          member: member.name,
           pokemonName: memberPokemon.name,
-          shiny: memberProduction.member.shiny,
+          shiny: member.shiny,
           ingredientPercentage: MathUtils.round(memberProduction.ingredientPercentage * 100, 1),
           skillPercentage: MathUtils.round(memberProduction.skillPercentage * 100, 1),
           carryLimit: memberProduction.carrySize,
@@ -197,7 +206,7 @@ export default defineComponent({
               amount: MathUtils.round(amount, 1)
             })
           ),
-          sneakySnack: memberProduction.sneakySnack?.amount ?? 0,
+          sneakySnack: memberProduction.sneakySnack.reduce((sum, cur) => sum + cur.amount, 0),
           sneakySnackProduce: memberProduction.sneakySnack,
           totalHelps: memberProduction.nrOfHelps,
           dayHelps: memberProduction.dayHelps,
@@ -217,7 +226,9 @@ export default defineComponent({
   },
   methods: {
     ingredientImage(name: string) {
-      return name === 'magnet' ? '/images/misc/ingredients.png' : `/images/ingredient/${name}.png`
+      return name === 'magnet'
+        ? '/images/ingredient/ingredients.png'
+        : `/images/ingredient/${name}.png`
     }
   }
 })

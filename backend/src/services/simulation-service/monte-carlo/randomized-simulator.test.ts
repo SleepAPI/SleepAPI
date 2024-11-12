@@ -46,7 +46,7 @@ describe('randomizedSimulation', () => {
 const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: MOCKED_POKEMON,
   produce: {
-    berries: { berry: berry.BELUE, amount: 2 },
+    berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
   },
 };

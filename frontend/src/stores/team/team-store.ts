@@ -2,7 +2,14 @@ import { TeamService } from '@/services/team/team-service'
 import { randomName } from '@/services/utils/name-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
-import { MAX_TEAMS, MAX_TEAM_MEMBERS, type TeamInstance } from '@/types/member/instanced'
+import {
+  MAX_TEAMS,
+  MAX_TEAM_MEMBERS,
+  type MemberProductionExt,
+  type PerformanceDetails,
+  type TeamInstance
+} from '@/types/member/instanced'
+import type { TimeWindowDay } from '@/types/time/time-window'
 import { defineStore } from 'pinia'
 import {
   DOMAIN_VERSION,
@@ -21,12 +28,13 @@ export interface TeamState {
   loadingTeams: boolean
   loadingMembers: boolean[]
   domainVersion: number
-  timeWindow: '8H' | '24H'
+  timeWindow: TimeWindowDay
   tab: 'overview' | 'members' | 'cooking'
   teams: TeamInstance[]
 }
 
 export const useTeamStore = defineStore('team', {
+  // NOTE: If state is changed, migration/outdate must be updated
   state: (): TeamState => ({
     currentIndex: 0,
     maxAvailableTeams: MAX_TEAMS,
@@ -47,6 +55,7 @@ export const useTeamStore = defineStore('team', {
         favoredBerries: [],
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+        memberIvs: {},
         production: undefined
       }
     ]
@@ -68,9 +77,42 @@ export const useTeamStore = defineStore('team', {
     },
     getCurrentMember: (state) => {
       const currentTeam = state.teams[state.currentIndex]
-      return currentTeam.production?.members.at(currentTeam.memberIndex)?.member.externalId
+      return currentTeam.members.at(currentTeam.memberIndex)
     },
-    timewindowDivider: (state) => (state.timeWindow === '24H' ? 1 : 3)
+    getMemberIvLoading: (state) => (externalId: string) => {
+      const currentTeam = state.teams[state.currentIndex]
+      // member is loading if key exists, but value is undefined
+      if (externalId in currentTeam.memberIvs) {
+        return currentTeam.memberIvs[externalId] === undefined
+      } else return false
+    },
+    getCurrentMembersWithProduction: (state) => {
+      const pokemonStore = usePokemonStore()
+
+      const currentTeam = state.teams[state.currentIndex]
+      const result: (MemberProductionExt | undefined)[] = []
+      for (const memberId of currentTeam.members) {
+        const memberInstance = memberId && pokemonStore.getPokemon(memberId)
+        const production = currentTeam.production?.members.find(
+          (member) => member.externalId === memberId
+        )
+
+        if (!memberId || !memberInstance || !production) {
+          result.push(undefined)
+          continue
+        }
+
+        const iv: PerformanceDetails | undefined =
+          state.teams[state.currentIndex].memberIvs[memberId]
+
+        result.push({
+          member: memberInstance,
+          production,
+          iv
+        })
+      }
+      return result
+    }
   },
   actions: {
     migrate() {
@@ -80,14 +122,25 @@ export const useTeamStore = defineStore('team', {
       if (!this.tab) {
         this.tab = 'overview'
       }
+      if (this.maxAvailableTeams < MAX_TEAMS) {
+        this.maxAvailableTeams = MAX_TEAMS
+      }
+
       for (const team of this.teams) {
         if (!team.memberIndex) {
           team.memberIndex = 0
         }
+        if (!team.memberIvs) {
+          team.memberIvs = {}
+        }
       }
-      if (this.maxAvailableTeams < MAX_TEAMS) {
-        this.maxAvailableTeams = MAX_TEAMS
+    },
+    outdate() {
+      for (const team of this.teams) {
+        team.production = undefined
+        team.memberIvs = {}
       }
+      this.domainVersion = DOMAIN_VERSION
     },
     async syncTeams() {
       const userStore = useUserStore()
@@ -139,18 +192,10 @@ export const useTeamStore = defineStore('team', {
             // if neither team nor members have been update we copy production from cache
             if (!memberUpdated) {
               this.teams[serverTeam.index].production = previousTeam.production
+              this.teams[serverTeam.index].memberIvs = previousTeam.memberIvs
             }
           }
         }
-      }
-
-      // we do this last since we want to fetch teams from server and update anyways first
-      // if domain version is bumped this indicates the base pokemon data has changed (buffs, new patch etc)
-      if (this.domainVersion < DOMAIN_VERSION) {
-        for (const team of this.teams) {
-          team.production = undefined
-        }
-        this.domainVersion = DOMAIN_VERSION
       }
     },
     next() {
@@ -212,6 +257,7 @@ export const useTeamStore = defineStore('team', {
         favoredBerries: [],
         version: 0,
         members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+        memberIvs: {},
         production: undefined
       }
 
@@ -248,15 +294,16 @@ export const useTeamStore = defineStore('team', {
       await this.calculateProduction(this.currentIndex)
       // reset single production to trigger radar chart recalc
       if (this.isSupportMember(updatedMember)) {
-        this.resetCurrentTeamSingleProduction()
-      } else if (
-        this.teams[this.currentIndex]?.production &&
-        this.teams[this.currentIndex].production?.members[memberIndex]
-      ) {
-        this.teams[this.currentIndex].production!.members[memberIndex].singleProduction = undefined
+        this.resetCurrentTeamIvs()
+      } else {
+        delete this.getCurrentTeam.memberIvs[updatedMember.externalId]
       }
 
       this.loadingMembers[memberIndex] = false
+    },
+    // setting to undefined indicates a calculation has started and we're awaiting value
+    upsertIv(externalId: string, performanceDetails?: PerformanceDetails) {
+      this.getCurrentTeam.memberIvs[externalId] = performanceDetails
     },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
@@ -265,7 +312,8 @@ export const useTeamStore = defineStore('team', {
       const members: PokemonInstanceExt[] = []
       for (const member of this.teams[teamIndex].members) {
         if (member) {
-          members.push(pokemonStore.getPokemon(member))
+          const pokemon = pokemonStore.getPokemon(member)
+          pokemon && members.push(pokemon)
         }
       }
       const settings: TeamSettings = {
@@ -273,36 +321,11 @@ export const useTeamStore = defineStore('team', {
         bedtime: this.teams[teamIndex].bedtime,
         wakeup: this.teams[teamIndex].wakeup
       }
-      try {
-        const newProduction = await TeamService.calculateProduction({ members, settings })
+      this.teams[teamIndex].production = await TeamService.calculateProduction({
+        members,
+        settings
+      })
 
-        const existingProduction = this.teams[teamIndex].production
-
-        if (!existingProduction || !newProduction) {
-          this.teams[teamIndex].production = newProduction
-        } else {
-          // preserve the cached single production results
-          const mergedMembers = newProduction.members.map((newMemberProduction, index) => {
-            const existingMemberProduction = existingProduction.members[index]
-
-            if (existingMemberProduction && existingMemberProduction.singleProduction) {
-              return {
-                ...newMemberProduction,
-                singleProduction: existingMemberProduction.singleProduction
-              }
-            }
-
-            return newMemberProduction
-          })
-
-          this.teams[teamIndex].production = {
-            ...newProduction,
-            members: mergedMembers
-          }
-        }
-      } catch {
-        console.error('Could not calculate production, contact developer')
-      }
       this.loadingTeams = false
     },
     async duplicateMember(memberIndex: number) {
@@ -346,20 +369,15 @@ export const useTeamStore = defineStore('team', {
         }
       }
 
-      const member = this.getPokemon(memberIndex)
+      const member = this.getPokemon(memberIndex) // grab mon
 
-      // check if this is only time this mon is used
-      const nrOfOccurences = this.teams.flatMap((team) =>
-        team.members.filter((m) => m != null && member != null && m === member.externalId)
-      ).length
-      if (member != null && !member.saved && nrOfOccurences === 1) {
-        pokemonStore.removePokemon(member.externalId)
+      this.teams[this.currentIndex].members[memberIndex] = undefined // remove mon from team
+      if (member != null) {
+        if (this.isSupportMember(member)) {
+          this.resetCurrentTeamIvs()
+        }
+        pokemonStore.removePokemon(member.externalId, 'team')
       }
-
-      if (member && this.isSupportMember(member)) {
-        this.resetCurrentTeamSingleProduction()
-      }
-      this.teams[this.currentIndex].members[memberIndex] = undefined
 
       this.loadingMembers[memberIndex] = false
       await this.calculateProduction(this.currentIndex)
@@ -367,18 +385,18 @@ export const useTeamStore = defineStore('team', {
     async toggleCamp() {
       this.getCurrentTeam.camp = !this.getCurrentTeam.camp
 
-      this.resetCurrentTeamSingleProduction()
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs() // reset after production is available
     },
     async updateSleep(params: { bedtime: string; wakeup: string }) {
       const { bedtime, wakeup } = params
       this.getCurrentTeam.bedtime = bedtime
       this.getCurrentTeam.wakeup = wakeup
 
-      this.resetCurrentTeamSingleProduction()
       this.updateTeam()
       await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs() // reset after production is available
     },
     async updateRecipeType(recipeType: RecipeType) {
       this.getCurrentTeam.recipeType = recipeType
@@ -390,14 +408,8 @@ export const useTeamStore = defineStore('team', {
 
       this.updateTeam()
     },
-    resetCurrentTeamSingleProduction() {
-      if (this.getCurrentTeam.production) {
-        this.getCurrentTeam.production.members.forEach((member) => {
-          if (member.singleProduction) {
-            member.singleProduction = undefined
-          }
-        })
-      }
+    resetCurrentTeamIvs() {
+      this.getCurrentTeam.memberIvs = {}
     },
     isSupportMember(member: PokemonInstanceExt) {
       const hbOrErb = member.subskills.some(

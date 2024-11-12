@@ -1,3 +1,45 @@
+## [1.2.4](https://github.com/SleepAPI/SleepAPI/compare/v1.2.3...v1.2.4) (2024-11-11)
+
+## [1.2.3](https://github.com/SleepAPI/SleepAPI/compare/v1.2.2...v1.2.3) (2024-11-11)
+
+## [1.2.2](https://github.com/SleepAPI/SleepAPI/compare/v1.2.1...v1.2.2) (2024-11-08)
+
+
+### Bug Fixes
+
+* split groups into lowest energy and whole team ([ba368b8](https://github.com/SleepAPI/SleepAPI/commit/ba368b8fc558422e9b9a33a6600ae16c119b8664))
+
+## [1.2.1](https://github.com/SleepAPI/SleepAPI/compare/v1.2.0...v1.2.1) (2024-11-06)
+
+# [1.2.0](https://github.com/SleepAPI/SleepAPI/compare/v1.1.5...v1.2.0) (2024-11-04)
+
+
+### Features
+
+* added moonlight support value to tierlist ([d06c9b4](https://github.com/SleepAPI/SleepAPI/commit/d06c9b4253d069ad65c0c1ff98e689181d938893))
+
+## [1.1.5](https://github.com/SleepAPI/SleepAPI/compare/v1.1.4...v1.1.5) (2024-11-04)
+
+## [1.1.4](https://github.com/SleepAPI/SleepAPI/compare/v1.1.3...v1.1.4) (2024-11-01)
+
+## [1.1.3](https://github.com/SleepAPI/SleepAPI/compare/v1.1.2...v1.1.3) (2024-10-31)
+
+
+### Bug Fixes
+
+* duplicate mons got linked ([03947b0](https://github.com/SleepAPI/SleepAPI/commit/03947b0fc6d10de85e50ff4e9a0061d6aa2d244f))
+
+## [1.1.2](https://github.com/SleepAPI/SleepAPI/compare/v1.1.1...v1.1.2) (2024-10-30)
+
+## [1.1.1](https://github.com/SleepAPI/SleepAPI/compare/v1.1.0...v1.1.1) (2024-10-29)
+
+# [1.1.0](https://github.com/SleepAPI/SleepAPI/compare/v1.0.1...v1.1.0) (2024-10-29)
+
+
+### Features
+
+* added Mimikyu and cache busting ([31bf1ab](https://github.com/SleepAPI/SleepAPI/commit/31bf1abf2271697fb1e24b7c24a69d24b2612344))
+
 ## [1.0.1](https://github.com/SleepAPI/SleepAPI/compare/v1.0.0...v1.0.1) (2024-10-21)
 
 

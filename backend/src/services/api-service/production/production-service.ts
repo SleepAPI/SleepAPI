@@ -4,7 +4,15 @@ import { setupAndRunProductionSimulation } from '@src/services/simulation-servic
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { DetailedProduce, maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
+import {
+  CalculateIvResponse,
+  DetailedProduce,
+  MemberProductionBase,
+  maxCarrySize,
+  nature,
+  pokemon,
+  subskill,
+} from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
@@ -126,11 +134,32 @@ export function calculatePokemonProduction(
 // 5110 days is 14 years or 730 weeks
 export function calculateTeam(params: { settings: TeamSettingsExt; members: TeamMember[] }, iterations = 5110) {
   const { settings, members } = params;
-  const teamSimulator = new TeamSimulator({ settings, members });
+  const teamSimulator = new TeamSimulator({ settings, members, includeCooking: true });
 
   for (let i = 0; i < iterations; i++) {
     teamSimulator.simulate();
   }
 
   return teamSimulator.results();
+}
+
+export function calculateIv(
+  params: { settings: TeamSettingsExt; members: TeamMember[]; variants: TeamMember[] },
+  iterations = 1400
+): CalculateIvResponse {
+  const { settings, members, variants } = params;
+
+  const variantResults: MemberProductionBase[] = [];
+  for (const variant of variants) {
+    const teamWithVariant = [variant, ...members];
+    const teamSimulator = new TeamSimulator({ settings, members: teamWithVariant, includeCooking: false });
+
+    for (let i = 0; i < iterations; i++) {
+      teamSimulator.simulate();
+    }
+
+    variantResults.push(teamSimulator.ivResults(variant.externalId));
+  }
+
+  return { variants: variantResults };
 }

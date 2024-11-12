@@ -15,17 +15,22 @@
  */
 
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { MemberState, SkillActivation } from '@src/services/simulation-service/team-simulator/member-state';
+import {
+  MemberState,
+  TeamSkillActivation,
+  TeamSkillEnergy,
+} from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse, Time, TimePeriod } from 'sleepapi-common';
+import { CalculateTeamResponse, MemberProductionBase, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;
 
   private memberStates: MemberState[] = [];
-  private cookingState;
+  private cookingState?: CookingState = undefined;
 
   private timeIntervals: Time[] = [];
   private dayPeriod: TimePeriod;
@@ -36,10 +41,12 @@ export class TeamSimulator {
   private fullDayDuration = 1440;
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
-  constructor(params: { settings: TeamSettingsExt; members: TeamMember[] }) {
-    const { settings, members } = params;
+  constructor(params: { settings: TeamSettingsExt; members: TeamMember[]; includeCooking: boolean }) {
+    const { settings, members, includeCooking } = params;
 
-    this.cookingState = new CookingState(settings.camp);
+    if (includeCooking) {
+      this.cookingState = new CookingState(settings.camp);
+    }
 
     const dayPeriod = {
       start: settings.wakeup,
@@ -83,9 +90,8 @@ export class TeamSimulator {
       this.attemptCooking(minutesSinceWakeup);
 
       for (const member of this.memberStates) {
-        const teamSkillActivated = member.attemptDayHelp(minutesSinceWakeup);
-        if (teamSkillActivated) {
-          this.activateTeamSkill(teamSkillActivated);
+        for (const teamSkillActivated of member.attemptDayHelp(minutesSinceWakeup)) {
+          this.activateTeamSkill(teamSkillActivated, member);
         }
       }
 
@@ -107,17 +113,33 @@ export class TeamSimulator {
   }
 
   public results(): CalculateTeamResponse {
+    this.collectInventory();
+
     const members = this.memberStates.map((m) => m.results(this.run));
+    if (!this.cookingState) {
+      throw new SleepAPIError('Cooking simulator was not instantiated');
+    }
     const cooking = this.cookingState.results(this.run);
 
     return { members, cooking };
+  }
+
+  public ivResults(variantId: string): MemberProductionBase {
+    this.collectInventory();
+
+    const variant = this.memberStates.filter((member) => variantId === member.id);
+    if (variant.length !== 1) {
+      throw new Error('Team must contain exactly 1 variant');
+    }
+
+    return variant[0].ivResults(this.run);
   }
 
   private init() {
     for (const member of this.memberStates) {
       const morningSkills = member.startDay();
       for (const proc of morningSkills) {
-        this.activateTeamSkill(proc);
+        this.activateTeamSkill(proc, member);
       }
     }
 
@@ -133,7 +155,7 @@ export class TeamSimulator {
         member.recoverMeal();
       }
       // mod 7 for if Sunday
-      this.cookingState.cook(this.run % 7 === 0);
+      this.cookingState?.cook(this.run % 7 === 0);
       this.cookedMealsCounter++;
     }
   }
@@ -148,21 +170,57 @@ export class TeamSimulator {
     }
   }
 
-  private activateTeamSkill(result: SkillActivation) {
-    if (result.helpsTeam > 0) {
+  private activateTeamSkill(result: TeamSkillActivation, invoker: MemberState) {
+    if (result.helps) {
       for (const mem of this.memberStates) {
-        mem.addHelps(result.helpsTeam);
+        mem.addHelps(result.helps);
+        // TODO: we currently don't track produce generated from helps
+        invoker.addSkillValue(result.helps);
       }
-    } else if (result.energyTeam > 0) {
-      for (const mem of this.memberStates) {
-        mem.recoverEnergy(result.energyTeam);
+    } else if (result.energy) {
+      const regular = this.recoverMemberEnergy(result.energy.regular);
+      const crit = this.recoverMemberEnergy(result.energy.crit);
+      invoker.wasteEnergy(regular.wastedEnergy + crit.wastedEnergy);
+      invoker.addSkillValue({ regular: regular.skillValue, crit: crit.skillValue });
+    }
+  }
+
+  private recoverMemberEnergy(energy: TeamSkillEnergy) {
+    const { amount, chanceTargetLowest, random } = energy;
+    let skillValue = 0;
+    let wastedEnergy = 0;
+
+    if (amount > 0) {
+      const targetGroup = random ? this.energyTargetMember(chanceTargetLowest) : this.memberStates;
+
+      for (const mem of targetGroup) {
+        wastedEnergy += mem.recoverEnergy(amount);
+        skillValue += amount - wastedEnergy;
       }
     }
+
+    return { wastedEnergy, skillValue };
+  }
+
+  /**
+   * @returns array of size 1 containing the randomized member to target
+   */
+  private energyTargetMember(chanceTargetLowest: number): MemberState[] {
+    const sortedMembers = [...this.memberStates].sort((a, b) => a.energy - b.energy);
+    const lowestEnergy = sortedMembers[0]?.energy ?? 0;
+
+    const lowestEnergyMembers = sortedMembers.filter((mem) => mem.energy === lowestEnergy);
+    const allMembers = this.memberStates;
+
+    const targetGroup = RandomUtils.roll(chanceTargetLowest) ? lowestEnergyMembers : allMembers;
+    return [RandomUtils.randomElement(targetGroup)].filter((member): member is MemberState => member !== undefined);
   }
 
   private collectInventory() {
     for (const member of this.memberStates) {
-      member.collectInventory();
+      for (const activation of member.collectInventory()) {
+        this.activateTeamSkill(activation, member);
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ export * as ingredient from './ingredient';
 export * as island from './island';
 export * from './mainskill';
 export * as nature from './nature';
+export * from './optimal';
 export * as pokemon from './pokemon';
 export * from './recipe';
 export * as subskill from './subskill';

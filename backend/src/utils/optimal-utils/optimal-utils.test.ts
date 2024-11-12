@@ -222,10 +222,10 @@ describe('removeDuplicatePokemonCombinations', () => {
       },
       detailedProduce: {
         produce: {
-          berries: { amount: 2, berry: berry.LEPPA },
+          berries: [{ amount: 2, berry: berry.LEPPA, level: 60 }],
           ingredients: [],
         },
-        sneakySnack: { amount: 10, berry: berry.LEPPA },
+        sneakySnack: [{ amount: 10, berry: berry.LEPPA, level: 60 }],
         spilledIngredients: [],
         dayHelps: 0,
         nightHelps: 0,

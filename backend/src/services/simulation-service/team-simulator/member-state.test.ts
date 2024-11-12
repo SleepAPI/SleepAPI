@@ -38,6 +38,7 @@ const member: TeamMember = {
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],
+  externalId: 'some id',
 };
 
 const settings: TeamSettingsExt = {
@@ -89,6 +90,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -106,6 +108,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const settings: TeamSettingsExt = {
@@ -138,6 +141,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [subskill.ENERGY_RECOVERY_BONUS],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -166,6 +170,7 @@ describe('recoverEnergy', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -187,39 +192,76 @@ describe('recoverEnergy', () => {
 describe('addHelps', () => {
   it('shall add 1 average produce help', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelps(1);
+    memberState.addHelps({ regular: 1, crit: 1 });
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
+        "externalId": "some id",
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
         },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 1.6,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.4,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 1.6,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.4,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -228,39 +270,76 @@ describe('addHelps', () => {
 
   it('shall not add produce if adding 0 helps', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelps(0);
+    memberState.addHelps({ regular: 0, crit: 0 });
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
-        "berries": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
+        "externalId": "some id",
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
         },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -302,6 +381,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -313,32 +393,69 @@ describe('attemptDayHelp', () => {
       {
         "advanced": {
           "dayHelps": 1,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 1,
+          "wastedEnergy": 0,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
+        "externalId": "some id",
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
         },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -361,32 +478,69 @@ describe('attemptDayHelp', () => {
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 0,
           "nightHelps": 0,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 0,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 0,
+          "wastedEnergy": 0,
         },
-        "berries": {
-          "amount": 0,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
+        "externalId": "some id",
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
         },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 0,
         "skillProcs": 0,
       }
@@ -432,6 +586,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -452,6 +607,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -488,7 +644,7 @@ describe('attemptNightHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1).skillProcs).toEqual(0);
-    expect(memberState.results(1).ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toEqual(0);
+    expect(memberState.results(1).produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toEqual(0);
     expect(memberState.results(1).advanced.nightHelps).toEqual(1);
     expect(memberState.results(1).advanced.totalHelps).toEqual(1);
   });
@@ -502,6 +658,7 @@ describe('attemptNightHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
+      externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.startDay();
@@ -512,32 +669,69 @@ describe('attemptNightHelp', () => {
       {
         "advanced": {
           "dayHelps": 0,
+          "morningProcs": 1,
           "nightHelps": 1,
           "nightHelpsAfterSS": 0,
           "nightHelpsBeforeSS": 1,
+          "skillCritValue": 0,
+          "skillCrits": 0,
           "spilledIngredients": [],
           "totalHelps": 1,
+          "wastedEnergy": 0,
         },
-        "berries": {
-          "amount": 0.8,
-          "berry": {
-            "name": "BELUE",
-            "type": "steel",
-            "value": 33,
-          },
+        "externalId": "some id",
+        "produceFromSkill": {
+          "berries": [],
+          "ingredients": [],
         },
-        "externalId": undefined,
-        "ingredients": [
-          {
-            "amount": 0.2,
-            "ingredient": {
-              "longName": "Slowpoke Tail",
-              "name": "Tail",
-              "taxedValue": 342,
-              "value": 342,
+        "produceTotal": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
             },
-          },
-        ],
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
+        "produceWithoutSkill": {
+          "berries": [
+            {
+              "amount": 0.8,
+              "berry": {
+                "name": "BELUE",
+                "type": "steel",
+                "value": 33,
+              },
+              "level": 60,
+            },
+          ],
+          "ingredients": [
+            {
+              "amount": 0.2,
+              "ingredient": {
+                "longName": "Slowpoke Tail",
+                "name": "Tail",
+                "taxedValue": 342,
+                "value": 342,
+              },
+            },
+          ],
+        },
         "skillAmount": 2066,
         "skillProcs": 1,
       }
@@ -567,5 +761,22 @@ describe('degradeEnergy', () => {
     expect(memberState.energy).toBe(0);
     memberState.degradeEnergy();
     expect(memberState.energy).toBe(0);
+  });
+});
+
+describe('wasteEnergy', () => {
+  it('should count wasted energy', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.wasteEnergy(10);
+    expect(memberState.results(1).advanced.wastedEnergy).toBe(10);
+  });
+});
+
+describe('addSkillValue', () => {
+  it('should count regular and crit value', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.addSkillValue({ regular: 10, crit: 20 });
+    expect(memberState.results(1).advanced.skillCritValue).toBe(20);
+    expect(memberState.results(1).skillAmount).toBe(30);
   });
 });

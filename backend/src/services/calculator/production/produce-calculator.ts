@@ -14,39 +14,24 @@
  * limitations under the License.
  */
 
-import { PokemonIngredientSet, Produce } from 'sleepapi-common';
+import { PokemonIngredientSet, Produce, multiplyIngredients, multiplyProduce } from 'sleepapi-common';
 
 export function calculateAverageProduce(
-  averagePokemonCombination: PokemonIngredientSet,
+  pokemonSet: PokemonIngredientSet,
   ingredientPercentage: number,
-  berriesPerDrop: number
+  berriesPerDrop: number,
+  level: number
 ): Produce {
-  const result = {
-    berries: {
-      amount: berriesPerDrop * (1 - ingredientPercentage),
-      berry: averagePokemonCombination.pokemon.berry,
-    },
-    ingredients: averagePokemonCombination.ingredientList.map(({ amount, ingredient }) => ({
-      amount: amount * ingredientPercentage,
-      ingredient: ingredient,
-    })),
+  return {
+    berries: [{ berry: pokemonSet.pokemon.berry, amount: berriesPerDrop * (1 - ingredientPercentage), level }],
+    ingredients: multiplyIngredients(pokemonSet.ingredientList, ingredientPercentage),
   };
-  return result;
 }
 
 export function clampHelp(params: { inventorySpace: number; averageProduce: Produce; amount: number }) {
   const { inventorySpace, averageProduce, amount } = params;
 
   const spillFactor = Math.min(1, inventorySpace / amount);
-  const clampedProduce: Produce = {
-    berries: averageProduce.berries && {
-      amount: averageProduce.berries.amount * spillFactor,
-      berry: averageProduce.berries.berry,
-    },
-    ingredients: averageProduce.ingredients.map(({ amount, ingredient }) => ({
-      amount: amount * spillFactor,
-      ingredient,
-    })),
-  };
+  const clampedProduce: Produce = multiplyProduce(averageProduce, spillFactor);
   return clampedProduce;
 }

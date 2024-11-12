@@ -1,17 +1,18 @@
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, ingredient } from 'sleepapi-common'
-import { beforeEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 beforeEach(() => {
   setActivePinia(createPinia())
 })
 
+const mockPokemon = createMockPokemon({ name: 'Ash' })
 const mockMemberProduction: SingleProductionExt = {
-  member: createMockPokemon({ name: 'Ash' }),
+  externalId: mockPokemon.externalId,
   ingredients: [
     {
       amount: 10,
@@ -23,10 +24,13 @@ const mockMemberProduction: SingleProductionExt = {
     }
   ],
   skillProcs: 5,
-  berries: {
-    amount: 100,
-    berry: berry.BELUE
-  },
+  berries: [
+    {
+      amount: 100,
+      berry: berry.BELUE,
+      level: mockPokemon.level
+    }
+  ],
   ingredientPercentage: 0.2,
   skillPercentage: 0.02,
   carrySize: 10,
@@ -37,7 +41,8 @@ const mockMemberProduction: SingleProductionExt = {
   nrOfHelps: 10,
   sneakySnackHelps: 10,
   spilledIngredients: [],
-  totalRecovery: 10
+  totalRecovery: 10,
+  sneakySnack: []
 }
 
 describe('getMemberProduction', () => {
@@ -50,9 +55,7 @@ describe('getMemberProduction', () => {
     const comparisonStore = useComparisonStore()
     comparisonStore.addMember(mockMemberProduction)
 
-    expect(
-      comparisonStore.getMemberProduction(mockMemberProduction.member.externalId)
-    ).not.toBeUndefined()
+    expect(comparisonStore.getMemberProduction(mockMemberProduction.externalId)).not.toBeUndefined()
   })
 })
 
@@ -85,6 +88,20 @@ describe('addMember', () => {
   })
 })
 
+describe('removeMember', () => {
+  it('shall remove pokemon', () => {
+    const pokemonStore = usePokemonStore()
+    pokemonStore.removePokemon = vi.fn()
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    comparisonStore.addMember({ ...mockMemberProduction, externalId: 'other id' })
+
+    expect(comparisonStore.members).toHaveLength(2)
+    comparisonStore.removeMember(mockMemberProduction.externalId)
+    expect(comparisonStore.members).toHaveLength(1)
+  })
+})
+
 describe('toggleCamp', () => {
   it('shall toggle camp', () => {
     const comparisonStore = useComparisonStore()
@@ -112,15 +129,21 @@ describe('updateSleep', () => {
   })
 })
 
-describe('timeWindowDivider', () => {
-  it('shall handle 8h and 24h correctly', async () => {
+describe('migrate', () => {
+  it('shall set domainVersion if not already set', () => {
     const comparisonStore = useComparisonStore()
-    comparisonStore.timeWindow = '24H'
-    await nextTick()
-    expect(comparisonStore.timewindowDivider).toEqual(1)
+    comparisonStore.domainVersion = 0
+    comparisonStore.migrate()
+    expect(comparisonStore.domainVersion).toBeGreaterThan(0)
+  })
+})
 
-    comparisonStore.timeWindow = '8H'
-    await nextTick()
-    expect(comparisonStore.timewindowDivider).toEqual(3)
+describe('outdate', () => {
+  it('shall reset the store and set domainVersion', () => {
+    const comparisonStore = useComparisonStore()
+    comparisonStore.addMember(mockMemberProduction)
+    comparisonStore.outdate()
+    expect(comparisonStore.members).toHaveLength(0)
+    expect(comparisonStore.domainVersion).toBeGreaterThan(0)
   })
 })

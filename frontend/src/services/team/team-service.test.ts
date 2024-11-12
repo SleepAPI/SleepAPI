@@ -4,6 +4,8 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { MAX_TEAM_MEMBERS } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
+import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
+import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import {
   ingredient,
@@ -11,11 +13,15 @@ import {
   pokemon,
   subskill,
   uuid,
+  type CalculateIvResponse,
   type GetTeamResponse,
   type PokemonInstanceExt,
   type UpsertTeamMetaRequest
 } from 'sleepapi-common'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('axios')
+const mockedAxios = vi.mocked(axios, true)
 
 vi.mock('@/router/server-axios', () => ({
   default: {
@@ -25,8 +31,13 @@ vi.mock('@/router/server-axios', () => ({
   }
 }))
 
-beforeEach(() => {
+beforeEach(async () => {
+  setActivePinia(createPinia())
   uuid.v4 = vi.fn().mockReturnValue('0'.repeat(36))
+})
+
+afterEach(() => {
+  vi.clearAllMocks()
 })
 
 describe('createOrUpdateTeam', () => {
@@ -46,10 +57,6 @@ describe('createOrUpdateTeam', () => {
 })
 
 describe('getTeams', () => {
-  beforeEach(async () => {
-    setActivePinia(createPinia())
-  })
-
   it('should call server to get teams', async () => {
     const mockTeamStore = useTeamStore()
     const res = await TeamService.getTeams()
@@ -75,7 +82,8 @@ describe('getTeams', () => {
         recipeType: 'curry',
         favoredBerries: [],
         version: 0,
-        members: new Array(MAX_TEAM_MEMBERS).fill(undefined)
+        members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+        memberIvs: {}
       })
     })
   })
@@ -130,7 +138,8 @@ describe('getTeams', () => {
       recipeType: 'curry',
       favoredBerries: [],
       version: 1,
-      members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined]
+      members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined],
+      memberIvs: {}
     })
   })
 
@@ -182,7 +191,8 @@ describe('getTeams', () => {
           '000000000000000000000000000000000000',
           '000000000000000000000000000000000000',
           '000000000000000000000000000000000000'
-        ]
+        ],
+        memberIvs: {}
       })
     })
     const pokemonStore = usePokemonStore()
@@ -305,5 +315,180 @@ describe('deleteTeam', () => {
     await TeamService.deleteTeam(2)
 
     expect(serverAxios.delete).toHaveBeenCalledWith('team/2')
+  })
+})
+
+describe('calculateProduction', () => {
+  it('should call server to calculate team production', async () => {
+    const members: PokemonInstanceExt[] = [createMockPokemon()]
+    const settings = {
+      camp: false,
+      bedtime: '21:00',
+      wakeup: '07:00'
+    }
+
+    mockedAxios.post.mockResolvedValueOnce({
+      data: {
+        members: [
+          {
+            produceTotal: {
+              berries: [
+                { amount: 10, berry: { name: 'Oran', type: 'normal', value: 5 }, level: 5 }
+              ],
+              ingredients: [
+                {
+                  amount: 3,
+                  ingredient: {
+                    longName: 'Honey',
+                    name: 'Honey',
+                    taxedValue: 10,
+                    value: 15
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        cooking: {
+          score: 50,
+          rank: 'S'
+        }
+      }
+    })
+
+    const result = await TeamService.calculateProduction({ members, settings })
+
+    expect(mockedAxios.post).toHaveBeenCalledWith('/api/calculator/team', {
+      members: members.map((member) => ({
+        externalId: member.externalId,
+        ribbon: member.ribbon,
+        pokemon: member.pokemon.name,
+        level: member.level,
+        carrySize: member.carrySize,
+        skillLevel: member.skillLevel,
+        nature: member.nature.name,
+        subskills: member.subskills.map((s) => ({ level: s.level, subskill: s.subskill.name })),
+        ingredients: member.ingredients.map((i) => ({
+          level: i.level,
+          ingredient: i.ingredient.name
+        }))
+      })),
+      settings
+    })
+
+    expect(result).toEqual({
+      members: [
+        {
+          produceTotal: {
+            berries: [{ amount: 10, berry: { name: 'Oran', type: 'normal', value: 5 }, level: 5 }],
+            ingredients: [
+              {
+                amount: 3,
+                ingredient: {
+                  longName: 'Honey',
+                  name: 'Honey',
+                  taxedValue: 10,
+                  value: 15
+                }
+              }
+            ]
+          }
+        }
+      ],
+      team: {
+        berries: [{ amount: 10, berry: { name: 'Oran', type: 'normal', value: 5 }, level: 5 }],
+        ingredients: [
+          {
+            amount: 3,
+            ingredient: {
+              longName: 'Honey',
+              name: 'Honey',
+              taxedValue: 10,
+              value: 15
+            }
+          }
+        ],
+        cooking: {
+          score: 50,
+          rank: 'S'
+        }
+      }
+    })
+  })
+})
+
+describe('calculateIv', () => {
+  it('should calculate IV for the current team member', async () => {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+
+    const currentMember = createMockPokemon({ externalId: 'member1' })
+    const otherMember = createMockPokemon({ externalId: 'member2' })
+
+    teamStore.teams = createMockTeams(1, {
+      members: [currentMember.externalId, otherMember.externalId]
+    })
+
+    pokemonStore.upsertLocalPokemon(currentMember)
+    pokemonStore.upsertLocalPokemon(otherMember)
+
+    const responseVariant =
+      // uuid.v4() is mocked to 0 repeat x36
+      {
+        externalId: uuid.v4(),
+        produceTotal: {
+          berries: [{ amount: 10, berry: currentMember.pokemon.berry, level: 1 }],
+          ingredients: []
+        },
+        skillProcs: 0
+      }
+    const response: CalculateIvResponse = {
+      variants: [responseVariant]
+    }
+
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        ...response
+      }
+    })
+
+    const result = await TeamService.calculateCurrentMemberIv()
+
+    expect(mockedAxios.post).toHaveBeenCalledWith('/api/calculator/iv', {
+      members: [
+        {
+          externalId: 'member2',
+          ribbon: otherMember.ribbon,
+          pokemon: otherMember.pokemon.name,
+          level: otherMember.level,
+          carrySize: otherMember.carrySize,
+          skillLevel: otherMember.skillLevel,
+          nature: otherMember.nature.name,
+          subskills: otherMember.subskills.map((s) => ({
+            level: s.level,
+            subskill: s.subskill.name
+          })),
+          ingredients: otherMember.ingredients.map((i) => ({
+            level: i.level,
+            ingredient: i.ingredient.name
+          }))
+        }
+      ],
+      variants: expect.any(Array),
+      settings: {
+        camp: false,
+        bedtime: '21:30',
+        wakeup: '06:00'
+      }
+    })
+
+    const [[, requestData]]: any = mockedAxios.post.mock.calls
+    expect(requestData.variants).toHaveLength(3)
+
+    expect(result).toEqual({
+      optimalBerry: responseVariant,
+      optimalIngredient: responseVariant,
+      optimalSkill: responseVariant
+    })
   })
 })

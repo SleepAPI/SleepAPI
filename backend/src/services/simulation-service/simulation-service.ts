@@ -111,10 +111,13 @@ export function setupAndRunProductionSimulation(params: {
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
   const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, subskills);
-  const sneakySnackBerries: BerrySet = {
-    amount: berriesPerDrop,
-    berry: averagedPokemonCombination.pokemon.berry,
-  };
+  const sneakySnackBerries: BerrySet[] = [
+    {
+      amount: berriesPerDrop,
+      berry: averagedPokemonCombination.pokemon.berry,
+      level,
+    },
+  ];
 
   const inventoryLimit = InventoryUtils.calculateCarrySize({
     baseWithEvolutions: input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon),
@@ -126,7 +129,7 @@ export function setupAndRunProductionSimulation(params: {
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
-    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop),
+    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop, level),
   };
 
   const helpFrequency = calculateHelpSpeedBeforeEnergy({
@@ -185,10 +188,7 @@ export function setupAndRunProductionSimulation(params: {
     detailedProduce: {
       ...detailedProduce,
       produce: {
-        berries: detailedProduce.produce.berries && {
-          amount: detailedProduce.produce.berries.amount,
-          berry: detailedProduce.produce.berries.berry,
-        },
+        berries: detailedProduce.produce.berries,
         ingredients: detailedProduce.produce.ingredients.map(({ amount, ingredient }) => ({
           amount: amount / MEALS_IN_DAY,
           ingredient: ingredient,
@@ -215,7 +215,7 @@ export function generateSkillActivations(params: {
   input: ProductionStats;
   pokemonWithAverageProduce: PokemonProduce;
   inventoryLimit: number;
-  sneakySnackBerries: BerrySet;
+  sneakySnackBerries: BerrySet[];
   monteCarloIterations: number;
 }) {
   const {
@@ -236,13 +236,16 @@ export function generateSkillActivations(params: {
   let oddsOfNightSkillProc = 0;
   let nrOfDaySkillProcs = 0;
   let nrOfDayHelps = 0;
+  let nrOfSkillCrits = 0;
 
   // run Monte Carlo simulation to estimate skill activations
+  const skill = pokemonWithAverageProduce.pokemon.skill;
   if (
-    pokemonWithAverageProduce.pokemon.skill.unit === 'energy' ||
-    pokemonWithAverageProduce.pokemon.skill === mainskill.METRONOME
+    skill.isUnit('energy') ||
+    skill.isSkill(mainskill.METRONOME) ||
+    skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')
   ) {
-    const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps } = monteCarlo({
+    const { averageDailySkillProcs, averageNightlySkillProcOdds, dayHelps, skillCrits } = monteCarlo({
       dayInfo,
       helpFrequency,
       skillPercentage,
@@ -256,6 +259,7 @@ export function generateSkillActivations(params: {
     nrOfDaySkillProcs = averageDailySkillProcs;
     oddsOfNightSkillProc = averageNightlySkillProcOdds;
     nrOfDayHelps = dayHelps;
+    nrOfSkillCrits = skillCrits;
   } else {
     const { detailedProduce } = simulation({
       dayInfo,
@@ -287,6 +291,7 @@ export function generateSkillActivations(params: {
     pokemonWithAverageProduce,
     oddsOfNightSkillProc,
     nrOfDaySkillProcs,
+    nrOfSkillCrits,
     nrOfDayHelps,
     uniqueHelperBoost: input.helperBoostUnique,
   });

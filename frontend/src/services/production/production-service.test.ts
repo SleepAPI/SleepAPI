@@ -1,10 +1,16 @@
 import { ProductionService } from '@/services/production/production-service'
-import { useTeamStore } from '@/stores/team/team-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createMockPokemon } from '@/vitest'
-import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
-import { mainskill, maxCarrySize, pokemon, type SingleProductionResponse } from 'sleepapi-common'
+import {
+  emptyBerryInventory,
+  emptyProduce,
+  mainskill,
+  maxCarrySize,
+  pokemon,
+  type SingleProductionResponse
+} from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('axios')
@@ -14,6 +20,7 @@ const mockedAxios = axios as unknown as {
 }
 
 vi.mock('@/router/server-axios', () => ({}))
+let pokemonStore: ReturnType<typeof usePokemonStore>
 
 const mockPokemonInstance = createMockPokemon({ pokemon: pokemon.ABOMASNOW })
 
@@ -24,9 +31,8 @@ const mockResponse: SingleProductionResponse = {
       dayHelps: 10,
       nightHelps: 10,
       nightHelpsBeforeSS: 10,
-      produce: {
-        ingredients: []
-      },
+      produce: emptyProduce(),
+      sneakySnack: emptyBerryInventory(),
       skillActivations: [],
       spilledIngredients: []
     },
@@ -48,16 +54,15 @@ const mockResponse: SingleProductionResponse = {
     skillDreamShardValue: 10,
     skillEnergyOthersValue: 10,
     skillEnergySelfValue: 10,
+    skillBerriesOtherValue: 10,
     skillHelpsValue: 10,
     skillPotSizeValue: 10,
     skillProcs: 10,
-    skillProduceValue: { ingredients: [] },
+    skillProduceValue: emptyProduce(),
     skillStrengthValue: 10,
     skillTastyChanceValue: 10,
     spilledIngredients: [],
-    totalProduce: {
-      ingredients: []
-    },
+    totalProduce: emptyProduce(),
     totalRecovery: 10,
     collectFrequency: { hour: 1, minute: 0, second: 0 }
   }
@@ -66,6 +71,8 @@ const mockResponse: SingleProductionResponse = {
 describe('ProductionService', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemonInstance)
   })
 
   describe('calculateCompareProduction', () => {
@@ -109,47 +116,6 @@ describe('ProductionService', () => {
       await expect(
         ProductionService.calculateCompareProduction(mockPokemonInstance)
       ).rejects.toThrow('Request failed')
-    })
-  })
-
-  describe('calculateTeamMemberProduction', () => {
-    it('should calculate team member production', async () => {
-      mockedAxios.post.mockResolvedValue({ data: mockResponse })
-
-      const teamStore = useTeamStore()
-      const mockTeam = createMockTeams()[0]
-      teamStore.teams = [mockTeam]
-
-      const params = { teamIndex: 0, memberIndex: 0 }
-      const result = await ProductionService.calculateTeamMemberProduction(params)
-
-      expect(result).toEqual(mockResponse)
-      expect(mockedAxios.post).toHaveBeenCalledWith(
-        `/api/calculator/production/${mockTeam.production?.members[0].member.pokemon.name}?includeAnalysis=true`,
-        expect.objectContaining({
-          camp: mockTeam.camp,
-          level: mockTeam.production?.members[0].member.level,
-          mainBedtime: mockTeam.bedtime,
-          mainWakeup: mockTeam.wakeup
-        })
-      )
-    })
-
-    it('should log error if team or member is not found', async () => {
-      const teamStore = useTeamStore()
-      const mockTeam = createMockTeams()[0]
-      teamStore.teams = [mockTeam]
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-
-      const params = { teamIndex: 999, memberIndex: 999 }
-      const result = await ProductionService.calculateTeamMemberProduction(params)
-
-      expect(result).toBeUndefined()
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Contact developer, can't find team or member for team single production"
-      )
-
-      consoleErrorSpy.mockRestore()
     })
   })
 })

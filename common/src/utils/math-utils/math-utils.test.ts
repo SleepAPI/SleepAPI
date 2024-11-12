@@ -1,5 +1,5 @@
-import { MathUtils } from 'src/utils/math-utils/math-utils';
 import { describe, expect, it } from 'vitest';
+import { MathUtils } from '../../utils/math-utils/math-utils';
 
 describe('floor', () => {
   it('shall floor to specific decimal precision', () => {
@@ -30,15 +30,5 @@ describe('round', () => {
 
   it('shall calculate and round to 1 decimal negative', () => {
     expect(MathUtils.round(-0.26, 1)).toBe(-0.3);
-  });
-});
-
-describe('rollRandomChance', () => {
-  it('shall return false for 0% chance', () => {
-    expect(MathUtils.rollRandomChance(0)).toBeFalsy();
-  });
-
-  it('shall return true for 100% chance', () => {
-    expect(MathUtils.rollRandomChance(1)).toBeTruthy();
   });
 });

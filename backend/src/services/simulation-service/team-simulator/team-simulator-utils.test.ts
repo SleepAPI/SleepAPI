@@ -34,6 +34,7 @@ const member: TeamMember = {
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],
+  externalId: 'some id',
 };
 describe('calculateSkillPercentage', () => {
   it('shall calculate skill percentage for member', () => {

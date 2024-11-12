@@ -12,7 +12,7 @@ describe('InventoryEvent', () => {
       max: 3,
       contents: {
         ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
-        berries: { amount: 1, berry: berry.BELUE },
+        berries: [{ amount: 1, berry: berry.BELUE, level: 60 }],
       },
     });
     expect(event.format()).toMatchInlineSnapshot(

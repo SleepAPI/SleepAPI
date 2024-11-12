@@ -1,12 +1,12 @@
-import { StockpileStrength, berry, island, mainskill, pokemon, unitString } from 'sleepapi-common'
+import { berry, island, mainskill, pokemon } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: pokemon.Pokemon) {
-  if (pokemon.skill.name === mainskill.HELPER_BOOST.name) {
+  if (pokemon.skill.isSameOrModifiedVersionOf(mainskill.HELPER_BOOST)) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
-    const stockpileVersion = pokemon.skill.unit === StockpileStrength
-    const image = stockpileVersion ? 'stockpile_strength' : unitString(pokemon.skill)
-    return `/images/mainskill/${image}.png`
+    const maybeModifier =
+      pokemon.skill.modifier.type === 'Base' ? '' : `${pokemon.skill.modifier.type.toLowerCase()}_`
+    return `/images/mainskill/${maybeModifier}${pokemon.skill.unit}.png`
   }
 }
 
@@ -18,6 +18,10 @@ export function pokemonImage(params: { pokemonName: string; shiny: boolean }) {
 export function avatarImage(params: { pokemonName: string; shiny: boolean; happy: boolean }) {
   const { pokemonName, shiny, happy } = params
   return `/images/avatar/${happy ? 'happy' : 'portrait'}/${pokemonName.toLowerCase()}${happy ? '_happy' : ''}${shiny ? '_shiny' : ''}.png`
+}
+
+export function berryImage(berry: berry.Berry) {
+  return `/images/berries/${berry.name.toLowerCase()}.png`
 }
 
 export function islandImage(params: { favoredBerries: berry.Berry[]; background: boolean }) {

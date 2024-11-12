@@ -5,7 +5,8 @@
 import { BELUE, Berry } from '../berry/berry';
 import { BALANCED_GENDER, GenderRatio } from '../gender';
 import { SLOWPOKE_TAIL } from '../ingredient';
-import { HELPER_BOOST, MainSkill } from '../mainskill/mainskill';
+import { Mainskill } from '../mainskill/mainskill';
+import { HELPER_BOOST } from '../mainskill/mainskills/helper-boost';
 import { IngredientSet } from '../types';
 import { ALL_BERRY_SPECIALISTS, INFERIOR_BERRY_SPECIALISTS, OPTIMAL_BERRY_SPECIALISTS } from './berry-pokemon';
 import {
@@ -30,7 +31,7 @@ export interface Pokemon {
   ingredient0: IngredientSet;
   ingredient30: IngredientSet[];
   ingredient60: IngredientSet[];
-  skill: MainSkill;
+  skill: Mainskill;
 }
 
 export const MOCK_POKEMON: Pokemon = {

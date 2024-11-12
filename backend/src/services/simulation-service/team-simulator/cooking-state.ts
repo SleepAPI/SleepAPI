@@ -3,7 +3,7 @@ import {
   CookingResult,
   IngredientSet,
   MAX_POT_SIZE,
-  MathUtils,
+  RandomUtils,
   Recipe,
   curry,
   dessert,
@@ -82,7 +82,7 @@ export class CookingState {
         skippedRecipesGrouped: this.skippedDesserts,
       }) ?? dessert.MIXED_JUICE;
 
-    const extraTasty = MathUtils.rollRandomChance(currentCritChance);
+    const extraTasty = RandomUtils.roll(currentCritChance);
     const extraTastyFactor = extraTasty ? (sunday ? 3 : 2) : 1;
 
     if (extraTasty) {

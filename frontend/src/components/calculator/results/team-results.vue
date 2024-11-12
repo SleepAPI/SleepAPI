@@ -16,25 +16,25 @@
           <v-row dense class="flex-center totals-row">
             <v-col cols="auto" class="flex-center">
               <div class="legend bg-berry">
-                <v-img src="/images/misc/berries-icon-alt.png" contain width="30" height="30" />
+                <v-img src="/images/berries/berries.png" contain width="28" height="28" />
               </div>
-              <span class="text-body-1 text-berry text-center font-weight-medium ml-2">
-                {{ berryStrengthString }}</span
-              >
+              <span class="text-body-1 text-berry w-100 text-center font-weight-medium ml-2">
+                {{ berryStrengthString }}
+              </span>
             </v-col>
 
             <v-col cols="auto" class="flex-center">
               <div class="legend bg-skill">
-                <v-img src="/images/misc/skillproc.png" contain width="24" height="24" />
+                <v-img src="/images/misc/skillproc.png" contain width="28" height="28" />
               </div>
               <span class="text-body-1 text-skill text-center font-weight-medium ml-2">
-                {{ skillStrengthString }}</span
-              >
+                {{ skillStrengthString }}
+              </span>
             </v-col>
 
             <v-col cols="auto" class="flex-center">
               <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}`">
-                <v-img :src="recipeTypeImage" contain width="30" height="30" />
+                <v-img :src="recipeTypeImage" contain width="32" height="32" />
               </div>
               <span
                 :class="[
@@ -120,17 +120,12 @@ import { defineComponent } from 'vue'
 
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
 import { useViewport } from '@/composables/viewport-composable'
+import { StrengthService } from '@/services/strength/strength-service'
+import { pokemonImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import {
-  MathUtils,
-  Strength,
-  berryPowerForLevel,
-  compactNumber,
-  isSkillOrStockpileOf,
-  type RecipeTypeResult
-} from 'sleepapi-common'
+import { MathUtils, compactNumber, type RecipeTypeResult } from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   components: { StackedBar },
@@ -142,7 +137,6 @@ export default defineComponent({
 
     return { teamStore, pokemonStore, userStore, isMobile }
   },
-  data: () => ({ DAYS_IN_WEEK: 7 }),
   computed: {
     currentRecipeTypeResult(): RecipeTypeResult | undefined {
       if (this.teamStore.getCurrentTeam.recipeType === 'curry') {
@@ -158,24 +152,16 @@ export default defineComponent({
     },
     berryStrength() {
       const members = this.teamStore.getCurrentTeam.production?.members || []
-      const favoredBerries = this.teamStore.getCurrentTeam.favoredBerries || []
+      const favoredBerries = this.teamStore.getCurrentTeam.favoredBerries
 
       return members.reduce((sum, member) => {
-        const { berries, member: memberInfo } = member
+        const { berries } = member.produceWithoutSkill
 
-        if (!berries) {
-          return sum
-        }
-
-        const berryPower = berryPowerForLevel(berries.berry, memberInfo.level)
-        const isFavoredBerry = favoredBerries.some((b) => b.name === berries.berry.name)
-        const berryMultiplier = isFavoredBerry ? 2 : 1
-        const berryStrength =
-          berries.amount *
-          berryPower *
-          berryMultiplier *
-          this.userStore.islandBonus *
-          this.DAYS_IN_WEEK
+        const berryStrength = StrengthService.berryStrength({
+          favored: favoredBerries,
+          berries,
+          timeWindow: 'WEEK'
+        })
 
         return sum + berryStrength
       }, 0)
@@ -183,13 +169,16 @@ export default defineComponent({
     skillStrength() {
       const members = this.teamStore.getCurrentTeam.production?.members || []
 
-      return members.reduce((sum, member) => {
-        const { pokemon } = member.member
-        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
-        const skillAmount = isStrengthUnit ? member.skillAmount : 0
-
-        const memberSkillStrength = isStrengthUnit
-          ? skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
+      return members.reduce((sum, memberProduction) => {
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
+        const memberSkillStrength = member
+          ? StrengthService.skillStrength({
+              skill: member.pokemon.skill,
+              amount: memberProduction.skillAmount,
+              berries: memberProduction.produceFromSkill.berries,
+              favored: this.teamStore.getCurrentTeam.favoredBerries,
+              timeWindow: 'WEEK'
+            })
           : 0
 
         return sum + memberSkillStrength
@@ -242,34 +231,30 @@ export default defineComponent({
     },
     memberPercentages() {
       const memberStrengths = []
-      for (const member of this.teamStore.getCurrentTeam.production?.members ?? []) {
-        const { berries, skillProcs } = member
-        const { pokemon, skillLevel } = member.member
+      for (const memberProduction of this.teamStore.getCurrentTeam.production?.members ?? []) {
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
+        if (!member) continue
 
-        const isFavoredBerry = this.teamStore.getCurrentTeam.favoredBerries.some(
-          (b) => b.name === berries?.berry.name
-        )
-        const berryMultiplier = isFavoredBerry ? 2 : 1
-        const berryStrength = berries
-          ? berries.amount *
-            berryPowerForLevel(berries.berry, member.member.level) *
-            berryMultiplier *
-            this.userStore.islandBonus *
-            this.DAYS_IN_WEEK
-          : 0
+        const berryStrength = StrengthService.berryStrength({
+          berries: memberProduction.produceWithoutSkill.berries,
+          favored: this.teamStore.getCurrentTeam.favoredBerries,
+          timeWindow: 'WEEK'
+        })
 
-        const isStrengthUnit = isSkillOrStockpileOf(pokemon.skill, Strength)
-        const skillAmount = isStrengthUnit ? pokemon.skill.amount[skillLevel - 1] : 0
-        const skillStrength = isStrengthUnit
-          ? skillProcs * skillAmount * this.userStore.islandBonus * this.DAYS_IN_WEEK
-          : 0
+        const skillStrength = StrengthService.skillStrength({
+          skill: member.pokemon.skill,
+          amount: memberProduction.skillAmount,
+          berries: memberProduction.produceFromSkill.berries,
+          favored: this.teamStore.getCurrentTeam.favoredBerries,
+          timeWindow: 'WEEK'
+        })
 
         memberStrengths.push({
           berryStrength,
           skillStrength,
           berryValue: compactNumber(berryStrength),
           skillValue: compactNumber(skillStrength),
-          image: `/images/pokemon/${member.member.pokemon.name.toLowerCase()}${member.member.shiny ? '_shiny' : ''}.png`
+          image: pokemonImage({ pokemonName: member.pokemon.name, shiny: member.shiny })
         })
       }
 
@@ -300,11 +285,12 @@ export default defineComponent({
 @import '@/assets/main.scss';
 
 .legend {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
-  width: 30px;
+  height: 34px;
+  width: 34px;
   border-radius: 30px;
 }
 </style>

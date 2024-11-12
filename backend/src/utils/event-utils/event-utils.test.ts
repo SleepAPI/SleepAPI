@@ -7,7 +7,7 @@ import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
+import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '../test-utils/defaults';
 import {
   addSneakySnackEvent,
@@ -39,14 +39,17 @@ describe('getExtraHelpfulEvents', () => {
           "skillActivation": {
             "adjustedAmount": 2.2,
             "adjustedProduce": {
-              "berries": {
-                "amount": 4.4,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 4.4,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 2.2,
@@ -82,6 +85,10 @@ describe('getExtraHelpfulEvents', () => {
               ],
               "description": "Instantly gets you x? the usual help from a helper Pokémon.",
               "maxLevel": 7,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Extra Helpful S",
               "unit": "helps",
             },
@@ -98,14 +105,17 @@ describe('getExtraHelpfulEvents', () => {
           "skillActivation": {
             "adjustedAmount": 1.1,
             "adjustedProduce": {
-              "berries": {
-                "amount": 2.2,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 2.2,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 1.1,
@@ -141,6 +151,10 @@ describe('getExtraHelpfulEvents', () => {
               ],
               "description": "Instantly gets you x? the usual help from a helper Pokémon.",
               "maxLevel": 7,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Extra Helpful S",
               "unit": "helps",
             },
@@ -175,14 +189,17 @@ describe('getHelperBoostEvents', () => {
           "skillActivation": {
             "adjustedAmount": 6,
             "adjustedProduce": {
-              "berries": {
-                "amount": 12,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 12,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 6,
@@ -216,6 +233,10 @@ describe('getHelperBoostEvents', () => {
               ],
               "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
               "maxLevel": 6,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Helper Boost",
               "unit": "helps",
             },
@@ -232,14 +253,17 @@ describe('getHelperBoostEvents', () => {
           "skillActivation": {
             "adjustedAmount": 3,
             "adjustedProduce": {
-              "berries": {
-                "amount": 6,
-                "berry": {
-                  "name": "GREPA",
-                  "type": "electric",
-                  "value": 25,
+              "berries": [
+                {
+                  "amount": 6,
+                  "berry": {
+                    "name": "GREPA",
+                    "type": "electric",
+                    "value": 25,
+                  },
+                  "level": 60,
                 },
-              },
+              ],
               "ingredients": [
                 {
                   "amount": 3,
@@ -273,6 +297,10 @@ describe('getHelperBoostEvents', () => {
               ],
               "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
               "maxLevel": 6,
+              "modifier": {
+                "critChance": 0,
+                "type": "Base",
+              },
               "name": "Helper Boost",
               "unit": "helps",
             },
@@ -347,7 +375,9 @@ describe('scheduleEnergyForEveryoneEvents', () => {
       expect(event).toBeInstanceOf(EnergyEvent);
       const energyEvent = event as EnergyEvent;
       expect(energyEvent.description).toEqual('E4E');
-      expect(energyEvent.delta).toEqual(21.6);
+      expect(energyEvent.delta).toEqual(
+        MathUtils.round(mainskill.ENERGY_FOR_EVERYONE.amount(6) * nature.RELAXED.energy, 2)
+      );
     });
   });
 
@@ -408,7 +438,10 @@ describe('getDefaultRecoveryEvents', () => {
     const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0);
 
     expect(recoveryEvents.length).toBe(2);
-    expect(recoveryEvents.map((e) => e.delta)).toEqual([18, 9]);
+    expect(recoveryEvents.map((e) => e.delta)).toEqual([
+      mainskill.ENERGY_FOR_EVERYONE.amount(6),
+      mainskill.ENERGY_FOR_EVERYONE.amount(6) / 2,
+    ]);
   });
 
   it('adds only a nap event when e4eProcs is 0', () => {
@@ -707,10 +740,13 @@ describe('triggerTeamHelpsEvent', () => {
           fractionOfProc: 2,
           nrOfHelpsToActivate: 2,
           adjustedProduce: {
-            berries: {
-              amount: 2,
-              berry: berry.BLUK,
-            },
+            berries: [
+              {
+                amount: 2,
+                berry: berry.BLUK,
+                level: 60,
+              },
+            ],
             ingredients: [
               {
                 amount: 2,
@@ -734,14 +770,17 @@ describe('triggerTeamHelpsEvent', () => {
     expect(result.helpEventsProcessed).toMatchInlineSnapshot(`2`);
     expect(result.helpsProduce).toMatchInlineSnapshot(`
       {
-        "berries": {
-          "amount": 2,
-          "berry": {
-            "name": "BLUK",
-            "type": "ghost",
-            "value": 26,
+        "berries": [
+          {
+            "amount": 2,
+            "berry": {
+              "name": "BLUK",
+              "type": "ghost",
+              "value": 26,
+            },
+            "level": 60,
           },
-        },
+        ],
         "ingredients": [
           {
             "amount": 2,

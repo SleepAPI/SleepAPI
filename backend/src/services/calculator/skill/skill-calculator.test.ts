@@ -165,6 +165,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 3.1,
       nrOfDayHelps: 9,
       uniqueHelperBoost: 0,
+      nrOfSkillCrits: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -188,6 +189,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 0,
       nrOfDayHelps: 0,
       uniqueHelperBoost: 0,
+      nrOfSkillCrits: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -218,6 +220,10 @@ describe('scheduleSkillEvents', () => {
           ],
           "description": "Increases Snorlax's Strength by ?.",
           "maxLevel": 7,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
+          },
           "name": "Charge Strength S",
           "unit": "strength",
         },
@@ -249,6 +255,10 @@ describe('scheduleSkillEvents', () => {
           ],
           "description": "Increases Snorlax's Strength by ?.",
           "maxLevel": 7,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
+          },
           "name": "Charge Strength S",
           "unit": "strength",
         },
@@ -264,6 +274,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 2,
       nrOfDayHelps: 10,
       uniqueHelperBoost: 0,
+      nrOfSkillCrits: 0,
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -288,7 +299,7 @@ describe('scheduleSkillEvents', () => {
 const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: pokemon.PINSIR,
   produce: {
-    berries: { berry: berry.BELUE, amount: 10 },
+    berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
   },
 };

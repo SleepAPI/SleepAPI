@@ -38,12 +38,14 @@ import {
 } from '../ingredient/ingredient';
 import {
   CHARGE_ENERGY_S,
+  CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S,
   CHARGE_STRENGTH_S_RANGE,
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
-} from '../mainskill/mainskill';
+} from '../mainskill/mainskills';
+
 import { Pokemon } from './pokemon';
 
 export const CATERPIE: Pokemon = {
@@ -181,9 +183,9 @@ export const PIKACHU: Pokemon = {
 export const PIKACHU_HALLOWEEN: Pokemon = {
   name: 'PIKACHU_HALLOWEEN',
   specialty: 'berry',
-  frequency: toSeconds(0, 43, 20),
+  frequency: toSeconds(0, 41, 40),
   ingredientPercentage: 21.8,
-  skillPercentage: 2.1,
+  skillPercentage: 2.8,
   berry: GREPA,
   genders: BALANCED_GENDER, // unverified for Sleep
   carrySize: 18,
@@ -557,7 +559,7 @@ export const HOUNDOUR: Pokemon = {
   specialty: 'berry',
   frequency: toSeconds(1, 21, 40),
   ingredientPercentage: 20.1,
-  skillPercentage: 4.4,
+  skillPercentage: 3.7,
   berry: WIKI,
   genders: BALANCED_GENDER,
   carrySize: 10,
@@ -573,7 +575,7 @@ export const HOUNDOUR: Pokemon = {
     { amount: 4, ingredient: WARMING_GINGER },
     { amount: 3, ingredient: LARGE_LEEK },
   ],
-  skill: CHARGE_STRENGTH_S,
+  skill: CHARGE_STRENGTH_M,
 };
 
 export const HOUNDOOM: Pokemon = {
@@ -581,7 +583,7 @@ export const HOUNDOOM: Pokemon = {
   name: 'HOUNDOOM',
   frequency: toSeconds(0, 55, 0),
   ingredientPercentage: 20.3,
-  skillPercentage: 4.6,
+  skillPercentage: 4,
   carrySize: 16,
 };
 

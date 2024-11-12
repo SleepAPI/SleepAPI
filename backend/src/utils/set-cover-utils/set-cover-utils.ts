@@ -148,7 +148,7 @@ export function countNrOfHelperBoostHelps(params: {
 
   return (
     skillProcs *
-    (mainskill.HELPER_BOOST.amount[skillLevel - 1] + calculateHelperBoostHelpsFromUnique(uniqueBoostedMons, skillLevel))
+    (mainskill.HELPER_BOOST.amount(skillLevel) + calculateHelperBoostHelpsFromUnique(uniqueBoostedMons, skillLevel))
   );
 }
 

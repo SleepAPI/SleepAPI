@@ -36,6 +36,7 @@ import {
   LARGE_LEEK,
   MOOMOO_MILK,
   PURE_OIL,
+  ROUSING_COFFEE,
   SLOWPOKE_TAIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -44,10 +45,10 @@ import {
   WARMING_GINGER,
 } from '../ingredient/ingredient';
 import {
-  CHARGE_ENERGY_S,
   CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S_RANGE,
   COOKING_POWER_UP_S,
+  DISGUISE_BERRY_BURST,
   DREAM_SHARD_MAGNET_S,
   DREAM_SHARD_MAGNET_S_RANGE,
   ENERGIZING_CHEER_S,
@@ -56,9 +57,11 @@ import {
   HELPER_BOOST,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  MOONLIGHT_CHARGE_ENERGY_S,
   STOCKPILE_CHARGE_STRENGTH_S,
   TASTY_CHANCE_S,
-} from '../mainskill/mainskill';
+} from '../mainskill/mainskills';
+
 import { Pokemon } from './pokemon';
 
 export const PIKACHU_CHRISTMAS: Pokemon = {
@@ -461,10 +464,10 @@ export const UMBREON: Pokemon = {
   name: 'UMBREON',
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 21.9,
-  skillPercentage: 14.1,
+  skillPercentage: 10.1,
   berry: WIKI,
   carrySize: 14,
-  skill: CHARGE_ENERGY_S,
+  skill: MOONLIGHT_CHARGE_ENERGY_S,
 };
 
 export const SLOWKING: Pokemon = {
@@ -865,6 +868,30 @@ export const DEDENNE: Pokemon = {
   skill: TASTY_CHANCE_S,
 };
 
+export const MIMIKYU: Pokemon = {
+  name: 'MIMIKYU',
+  specialty: 'skill',
+  frequency: toSeconds(0, 41, 40),
+  ingredientPercentage: 15.3,
+  skillPercentage: 3.3,
+  berry: BLUK,
+  genders: BALANCED_GENDER,
+  carrySize: 19,
+  previousEvolutions: 0,
+  remainingEvolutions: 0,
+  ingredient0: { amount: 1, ingredient: FANCY_APPLE },
+  ingredient30: [
+    { amount: 2, ingredient: FANCY_APPLE },
+    { amount: 1, ingredient: ROUSING_COFFEE },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 2, ingredient: ROUSING_COFFEE },
+    { amount: 2, ingredient: TASTY_MUSHROOM },
+  ],
+  skill: DISGUISE_BERRY_BURST,
+};
+
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   PIKACHU_CHRISTMAS,
   WIGGLYTUFF,
@@ -897,6 +924,7 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   GALLADE,
   SYLVEON,
   DEDENNE,
+  MIMIKYU,
 ];
 
 export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [

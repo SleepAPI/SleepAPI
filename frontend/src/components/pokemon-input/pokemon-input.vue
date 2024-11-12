@@ -172,6 +172,7 @@ import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
   RP,
+  getPokemon,
   ingredient,
   maxCarrySize,
   nature,
@@ -247,7 +248,11 @@ export default defineComponent({
   },
   mounted() {
     if (this.pokemonFromPreExist) {
-      this.pokemonInstance = JSON.parse(JSON.stringify(this.pokemonFromPreExist))
+      // if we don't reparse here then pokemonInstance gets linked to the original pokemonInstance and both get updated
+      this.pokemonInstance = {
+        ...JSON.parse(JSON.stringify(this.pokemonFromPreExist)),
+        pokemon: getPokemon(this.pokemonFromPreExist.pokemon.name)
+      }
     } else if (this.pokemonFromSearch) {
       this.pokemonInstance.pokemon = this.pokemonFromSearch
       this.pokemonInstance.carrySize = maxCarrySize(this.pokemonFromSearch)

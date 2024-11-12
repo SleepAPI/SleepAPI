@@ -24,7 +24,7 @@
                   height="60px"
                   width="60px"
                   style="transform: translate(20px, -25px)"
-                  :src="`/images/pokemon/${item.pokemonName.toLowerCase()}${item.shiny ? '_shiny' : ''}.png`"
+                  :src="pokemonImage({ pokemonName: item.pokemonName, shiny: item.shiny })"
                   cover
                 ></v-img>
               </div>
@@ -79,7 +79,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import { StrengthService } from '@/services/strength/strength-service'
+import { pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { MathUtils, ingredient, type IngredientSet } from 'sleepapi-common'
 
 type DataTableHeader = {
@@ -93,8 +96,11 @@ export default defineComponent({
   name: 'CompareOverview',
   setup() {
     const comparisonStore = useComparisonStore()
+    const pokemonStore = usePokemonStore()
     return {
-      comparisonStore
+      comparisonStore,
+      pokemonStore,
+      pokemonImage
     }
   },
   data: () => ({
@@ -109,23 +115,28 @@ export default defineComponent({
     members() {
       const production = []
       for (const memberProduction of this.comparisonStore.members) {
-        const memberPokemon = memberProduction.member.pokemon
+        const member = this.pokemonStore.getPokemon(memberProduction.externalId)
+        if (!member) continue
+        const memberPokemon = member.pokemon
+        const memberBerry = memberProduction.berries.at(0)
 
         production.push({
-          member: memberProduction.member.name,
+          member: member.name,
           pokemonName: memberPokemon.name,
-          shiny: memberProduction.member.shiny,
+          shiny: member.shiny,
           berries: MathUtils.round(
-            (memberProduction.berries?.amount ?? 0) / this.comparisonStore.timewindowDivider,
+            (memberBerry?.amount ?? 0) *
+              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
-          berryName: memberProduction.berries?.berry.name,
+          berryName: memberBerry?.berry.name ?? member.pokemon.berry.name,
           ingredients:
-            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) /
-            this.comparisonStore.timewindowDivider,
+            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
+            StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
           ingredientList: this.splitIngredientMagnetIngredients(memberProduction.ingredients),
           skillProcs: MathUtils.round(
-            memberProduction.skillProcs / this.comparisonStore.timewindowDivider,
+            memberProduction.skillProcs *
+              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
           skillUnit: memberPokemon.skill.unit
@@ -147,20 +158,26 @@ export default defineComponent({
 
         return nonIngMagnetIngs.map(({ amount, ingredient }) => ({
           amount: MathUtils.round(
-            (amount - ingMagnetAmount) / this.comparisonStore.timewindowDivider,
+            (amount - ingMagnetAmount) *
+              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
           name: ingredient.name.toLowerCase()
         }))
       } else {
         return ingredients.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(amount / this.comparisonStore.timewindowDivider, 1),
+          amount: MathUtils.round(
+            amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
+            1
+          ),
           name: ingredient.name.toLowerCase()
         }))
       }
     },
     ingredientImage(name: string) {
-      return name === 'magnet' ? '/images/misc/ingredients.png' : `/images/ingredient/${name}.png`
+      return name === 'magnet'
+        ? '/images/ingredient/ingredients.png'
+        : `/images/ingredient/${name}.png`
     }
   }
 })

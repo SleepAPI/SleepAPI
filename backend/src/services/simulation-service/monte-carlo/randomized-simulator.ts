@@ -21,7 +21,7 @@ import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Produce, Time, mainskill } from 'sleepapi-common';
+import { MathUtils, Produce, RandomUtils, Time, emptyProduce, mainskill } from 'sleepapi-common';
 import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
 import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
 import { MonteCarloResult } from './monte-carlo';
@@ -57,25 +57,20 @@ export function randomizedSimulation(params: {
   const nature = dayInfo.nature;
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
 
-  // TODO: only needed before refactor
   const eventLog: ScheduledEvent[] = [];
-  let currentInventory: Produce = {
-    ingredients: [],
-    berries: {
-      amount: 0,
-      berry: pokemonWithAverageProduce.pokemon.berry,
-    },
-  };
+  let currentInventory: Produce = emptyProduce();
 
   // summary values
   let skillProcsDay = 0;
   let skillProcsNight = 0;
+  let skillCrits = 0;
   let dayHelps = 0;
   let nightHelpsBeforeSS = 0;
 
   // event array indices
   let energyIndex = 0;
   let mealIndex = 0;
+  let disguiseBusted = false;
 
   // Set up start values
   let currentEnergy = Math.min(
@@ -93,17 +88,27 @@ export function randomizedSimulation(params: {
 
   // check skill procs at night
   for (let i = 0; i < nightHelpsBeforeCarryFromYesterday; i++) {
-    const skillActivated = MathUtils.rollRandomChance(skillPercentage);
+    const skillActivated = RandomUtils.roll(skillPercentage);
     if (skillActivated) {
-      if (pokemon.skill.unit === 'energy') {
-        let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
-        if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
+      if (pokemon.skill.isUnit('energy')) {
+        let energyAmount = pokemon.skill.amount(skillLevel) * nature.energy;
+        if (pokemon.skill.isSkill(mainskill.ENERGIZING_CHEER_S)) {
           // 20% chance it affects this Pokémon
-          if (!MathUtils.rollRandomChance(0.2)) {
+          if (!RandomUtils.roll(0.2)) {
             energyAmount = 0;
+          }
+        } else if (pokemon.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
+          if (RandomUtils.roll(pokemon.skill.critChance)) {
+            skillCrits += 1;
+            energyAmount += mainskill.moonlightCritAmount(skillLevel);
           }
         }
         currentEnergy = Math.min(currentEnergy + energyAmount, 150);
+      } else if (!disguiseBusted && pokemon.skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')) {
+        if (RandomUtils.roll(pokemon.skill.critChance)) {
+          disguiseBusted = true;
+          skillCrits += 1;
+        }
       }
       skillProcsNight += 1;
       if (skillProcsNight === 2 || pokemon.specialty !== 'skill') {
@@ -140,17 +145,27 @@ export function randomizedSimulation(params: {
       const frequency = calculateFrequencyWithEnergy(helpFrequency, currentEnergy);
       const nextHelp = TimeUtils.addTime(nextHelpEvent, TimeUtils.secondsToTime(frequency));
 
-      if (MathUtils.rollRandomChance(skillPercentage)) {
+      if (RandomUtils.roll(skillPercentage)) {
         skillProcsDay += 1;
-        if (pokemon.skill.unit === 'energy') {
-          let energyAmount = pokemon.skill.amount[skillLevel - 1] * nature.energy;
+        if (pokemon.skill.isUnit('energy')) {
+          let energyAmount = pokemon.skill.amount(skillLevel) * nature.energy;
           if (pokemon.skill === mainskill.ENERGIZING_CHEER_S) {
             // 20% chance it affects this Pokémon
-            if (!MathUtils.rollRandomChance(0.2)) {
+            if (!RandomUtils.roll(0.2)) {
               energyAmount = 0;
+            }
+          } else if (pokemon.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
+            if (RandomUtils.roll(pokemon.skill.critChance)) {
+              skillCrits += 1;
+              energyAmount += mainskill.moonlightCritAmount(skillLevel);
             }
           }
           currentEnergy = Math.min(currentEnergy + energyAmount, 150);
+        } else if (!disguiseBusted && pokemon.skill.isModifiedVersionOf(mainskill.BERRY_BURST, 'Disguise')) {
+          if (RandomUtils.roll(pokemon.skill.critChance)) {
+            disguiseBusted = true;
+            skillCrits += 1;
+          }
         }
       }
 
@@ -208,6 +223,7 @@ export function randomizedSimulation(params: {
   return {
     dayHelps,
     nightHelpsBeforeSS,
+    skillCrits,
     skillProcsDay,
     skillProcsNight,
     endingEnergy: currentEnergy,

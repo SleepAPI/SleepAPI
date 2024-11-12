@@ -2,16 +2,19 @@ import serverAxios from '@/router/server-axios'
 import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { UnexpectedError } from '@/types/errors/unexpected-error'
 import {
   MAX_TEAM_MEMBERS,
   type TeamCombinedProduction,
-  type TeamInstance,
-  type TeamProductionExt
+  type TeamInstance
 } from '@/types/member/instanced'
 import axios from 'axios'
 import {
+  Optimal,
   berry,
+  uuid,
   type BerrySet,
+  type CalculateIvResponse,
   type CalculateTeamResponse,
   type GetTeamsResponse,
   type IngredientSet,
@@ -67,6 +70,7 @@ class TeamServiceImpl {
           favoredBerries: [],
           version: 0,
           members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+          memberIvs: {},
           production: undefined
         }
         teams.push(emptyTeam)
@@ -112,6 +116,7 @@ class TeamServiceImpl {
           favoredBerries,
           version: serverTeam.version,
           members,
+          memberIvs: {},
           production: undefined
         }
         teams.push(instancedTeam)
@@ -130,7 +135,6 @@ class TeamServiceImpl {
     await serverAxios.delete(`team/${teamIndex}/member/${memberIndex}`)
   }
 
-  // TODO: not tested?
   public async calculateProduction(params: {
     members: PokemonInstanceExt[]
     settings: TeamSettings
@@ -140,60 +144,104 @@ class TeamServiceImpl {
       return undefined
     }
 
-    const parsedMembers: PokemonInstanceIdentity[] = members.map((member) => ({
-      pokemon: member.pokemon.name,
-      nature: member.nature.name,
-      subskills: member.subskills.map((subskill) => ({
-        level: subskill.level,
-        subskill: subskill.subskill.name
-      })),
-      ingredients: member.ingredients.map((ingredient) => ({
-        level: ingredient.level,
-        ingredient: ingredient.ingredient.name
-      })),
-      carrySize: member.carrySize,
-      level: member.level,
-      ribbon: member.ribbon,
-      skillLevel: member.skillLevel,
-      externalId: member.externalId
-    }))
+    const parsedMembers: PokemonInstanceIdentity[] = members.map((member) =>
+      PokemonInstanceUtils.toPokemonInstanceIdentity(member)
+    )
 
     const response = await axios.post<CalculateTeamResponse>('/api/calculator/team', {
       members: parsedMembers,
       settings
     })
 
-    const teamBerries: BerrySet[] = response.data.members.flatMap((member) =>
-      member.berries ? member.berries : []
+    const teamBerries: BerrySet[] = response.data.members.flatMap(
+      (member) => member.produceTotal.berries
     )
     const teamIngredients: IngredientSet[] = response.data.members.flatMap(
-      (member) => member.ingredients
+      (member) => member.produceTotal.ingredients
     )
+    // TODO: is team production used?
     const teamProduction: TeamCombinedProduction = {
       berries: teamBerries,
       ingredients: teamIngredients,
       cooking: response.data.cooking
     }
 
-    const pokemonStore = usePokemonStore()
-    const result: TeamProductionExt = {
-      members: response.data.members.map((member) => {
-        if (!member.externalId) {
-          console.error('Unidentified member in team calculation, contact developer')
-          throw new Error('Unidentified member in team calculation')
-        }
-        return {
-          berries: member.berries,
-          ingredients: member.ingredients,
-          skillAmount: member.skillAmount,
-          skillProcs: member.skillProcs,
-          member: pokemonStore.getPokemon(member.externalId)
-        }
-      }),
+    return {
+      members: response.data.members,
       team: teamProduction
     }
+  }
 
-    return result
+  public async calculateCurrentMemberIv() {
+    const teamStore = useTeamStore()
+    const pokemonStore = usePokemonStore()
+    const currentMember = pokemonStore.getPokemon(teamStore.getCurrentMember ?? 'missing')
+    if (!currentMember) {
+      console.error(`Can't calculate iv for Pokémon not found: ${teamStore.getCurrentMember}`)
+      return
+    }
+    const currentTeam = teamStore.getCurrentTeam
+
+    const members: PokemonInstanceExt[] = []
+    for (const memberId of currentTeam.members) {
+      if (memberId && memberId !== teamStore.getCurrentMember) {
+        const member = pokemonStore.getPokemon(memberId)
+        member && members.push(member)
+      }
+    }
+
+    const settings: TeamSettings = {
+      camp: currentTeam.camp,
+      bedtime: currentTeam.bedtime,
+      wakeup: currentTeam.wakeup
+    }
+
+    const berrySetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity({
+      ...currentMember,
+      ...Optimal.berry(currentMember.pokemon),
+      externalId: uuid.v4()
+    })
+    const ingredientSetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity(
+      {
+        ...currentMember,
+        ...Optimal.ingredient(currentMember.pokemon),
+        externalId: uuid.v4()
+      }
+    )
+    const skillSetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity({
+      ...currentMember,
+      ...Optimal.skill(currentMember.pokemon),
+      externalId: uuid.v4()
+    })
+
+    const parsedMembers: PokemonInstanceIdentity[] = members.map((member) =>
+      PokemonInstanceUtils.toPokemonInstanceIdentity(member)
+    )
+
+    const response = await axios.post<CalculateIvResponse>('/api/calculator/iv', {
+      members: parsedMembers,
+      variants: [berrySetup, ingredientSetup, skillSetup],
+      settings
+    })
+
+    const berryProduction = response.data.variants.find(
+      (variant) => variant.externalId === berrySetup.externalId
+    )
+    const ingredientProduction = response.data.variants.find(
+      (variant) => variant.externalId === ingredientSetup.externalId
+    )
+    const skillProduction = response.data.variants.find(
+      (variant) => variant.externalId === skillSetup.externalId
+    )
+    if (!berryProduction || !ingredientProduction || !skillProduction) {
+      throw new UnexpectedError('Iv variants not returned in response')
+    }
+
+    return {
+      optimalBerry: berryProduction,
+      optimalIngredient: ingredientProduction,
+      optimalSkill: skillProduction
+    }
   }
 }
 

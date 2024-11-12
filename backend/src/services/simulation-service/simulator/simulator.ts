@@ -38,11 +38,11 @@ import {
   MathUtils,
   Produce,
   SkillActivation,
-  StockpileStrength,
-  Strength,
   Summary,
   Time,
   combineSameIngredientsInDrop,
+  emptyBerryInventory,
+  emptyProduce,
   mainskill,
 } from 'sleepapi-common';
 import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
@@ -60,7 +60,7 @@ export function simulation(params: {
   skillPercentage: number;
   pokemonWithAverageProduce: PokemonProduce;
   inventoryLimit: number;
-  sneakySnackBerries: BerrySet;
+  sneakySnackBerries: BerrySet[];
   recoveryEvents: EnergyEvent[];
   extraHelpfulEvents: SkillEvent[];
   helperBoostEvents: SkillEvent[];
@@ -92,6 +92,7 @@ export function simulation(params: {
   let skillEnergySelfValue = 0;
   let skillEnergyOthersValue = 0;
   let skillProduceValue: Produce = InventoryUtils.getEmptyInventory();
+  let skillBerriesOtherValue = 0;
   let skillStrengthValue = 0;
   let skillDreamShardValue = 0;
   let skillPotSizeValue = 0;
@@ -127,10 +128,7 @@ export function simulation(params: {
 
   let totalProduce: Produce = InventoryUtils.getEmptyInventory();
   let spilledIngredients: Produce = InventoryUtils.getEmptyInventory();
-  let totalSneakySnack: Produce = {
-    ingredients: [],
-    berries: { amount: 0, berry: pokemonWithAverageProduce.pokemon.berry },
-  };
+  let totalSneakySnack: Produce = emptyProduce();
 
   let currentEnergy = startingEnergy;
   let currentInventory: Produce = InventoryUtils.getEmptyInventory();
@@ -241,31 +239,52 @@ export function simulation(params: {
           })
         );
 
-        if (skillActivation.skill.unit === 'energy') {
+        if (skillActivation.skill.isUnit('energy')) {
+          const energyAmountWithNature = skillActivation.adjustedAmount * dayInfo.nature.energy;
           const clampedDelta =
-            currentEnergy + skillActivation.adjustedAmount > 150 ? 150 - currentEnergy : skillActivation.adjustedAmount;
+            currentEnergy + energyAmountWithNature > 150 ? 150 - currentEnergy : energyAmountWithNature;
 
           eventLog.push(
             new EnergyEvent({
               time: currentTime,
-              delta: clampedDelta * dayInfo.nature.energy,
+              delta: clampedDelta,
               description,
               before: currentEnergy,
             })
           );
-          currentEnergy += clampedDelta * dayInfo.nature.energy;
-          totalRecovery += clampedDelta * dayInfo.nature.energy;
-          if (skillActivation.skill === mainskill.CHARGE_ENERGY_S) {
-            skillEnergySelfValue += clampedDelta * dayInfo.nature.energy;
+          currentEnergy += clampedDelta;
+          totalRecovery += clampedDelta;
+          if (skillActivation.skill.isSameOrModifiedVersionOf(mainskill.CHARGE_ENERGY_S)) {
+            skillEnergySelfValue += clampedDelta;
+            if (skillActivation.skill.isModifiedVersionOf(mainskill.CHARGE_ENERGY_S, 'Moonlight')) {
+              const energyFromCrit =
+                skillActivation.fractionOfProc *
+                (mainskill.moonlightCritAmount(input.skillLevel ?? skillActivation.skill.maxLevel) / 5);
+
+              skillEnergyOthersValue += energyFromCrit * skillActivation.skill.critChance;
+            }
           } else {
-            skillEnergyOthersValue += clampedDelta;
+            skillEnergyOthersValue += energyAmountWithNature;
           }
         } else if (skillActivation.adjustedProduce) {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
             skillHelpsValue += skillActivation.adjustedAmount;
+          } else if (skillActivation.skill.isSkill(mainskill.DISGUISE_BERRY_BURST)) {
+            const skillLevel = input.skillLevel ?? mainskill.DISGUISE_BERRY_BURST.maxLevel;
+            const metronomeUser = pokemon.skill.isSkill(mainskill.METRONOME);
+            const metronomeFactor = metronomeUser ? mainskill.METRONOME_FACTOR : 1;
+
+            const amountNoCrit =
+              mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[skillLevel - 1] * skillActivation.fractionOfProc;
+            const critChance = skillActivation.critChance ?? skillActivation.skill.critChance;
+
+            const averageTeamBerryAmount =
+              (amountNoCrit + critChance * amountNoCrit * mainskill.DISGUISE_CRIT_MULTIPLIER) / metronomeFactor;
+
+            skillBerriesOtherValue += averageTeamBerryAmount;
           }
           skillProduceValue = InventoryUtils.addToInventory(skillProduceValue, skillActivation.adjustedProduce);
-        } else if (skillActivation.skill.unit === Strength || skillActivation.skill.unit === StockpileStrength) {
+        } else if (skillActivation.skill.isUnit('strength')) {
           skillStrengthValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.unit === 'dream shards') {
           skillDreamShardValue += skillActivation.adjustedAmount;
@@ -308,6 +327,7 @@ export function simulation(params: {
       if (InventoryUtils.countInventory(currentInventory) >= inventoryLimit) {
         // sneaky snacking
         const spilledProduce: Produce = {
+          berries: emptyBerryInventory(),
           ingredients: averageProduce.ingredients,
         };
 
@@ -387,6 +407,7 @@ export function simulation(params: {
   }
 
   totalProduce = InventoryUtils.addToInventory(totalProduce, currentInventory);
+  // for skill berries we set level 0, so skill berries will always add a new index
   totalProduce = InventoryUtils.addToInventory(totalProduce, skillProduceValue);
   totalProduce = InventoryUtils.addToInventory(totalProduce, totalSneakySnack);
   const summary: Summary = {
@@ -398,6 +419,7 @@ export function simulation(params: {
     skillEnergySelfValue,
     skillEnergyOthersValue,
     skillProduceValue,
+    skillBerriesOtherValue,
     skillStrengthValue,
     skillDreamShardValue,
     skillPotSizeValue,

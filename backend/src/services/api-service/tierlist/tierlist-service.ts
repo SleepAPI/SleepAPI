@@ -21,7 +21,7 @@ import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-util
 import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { MAX_POT_SIZE, MathUtils, mainskill } from 'sleepapi-common';
+import { MAX_POT_SIZE, Mainskill, MathUtils, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
 const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
@@ -187,10 +187,11 @@ class TierlistImpl {
     const { critMultiplier: defaultCritMultiplier } = calculateCritMultiplier([], critCache);
     let counter = 0;
 
-    const supportSkills: mainskill.MainSkill[] = [
+    const supportSkills: Mainskill[] = [
       mainskill.ENERGY_FOR_EVERYONE,
       mainskill.ENERGIZING_CHEER_S,
       mainskill.EXTRA_HELPFUL_S,
+      mainskill.MOONLIGHT_CHARGE_ENERGY_S,
       mainskill.METRONOME,
     ];
     Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
@@ -213,8 +214,13 @@ class TierlistImpl {
           e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           cheer = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+        } else if (currentPokemonSkill.isSkill(mainskill.MOONLIGHT_CHARGE_ENERGY_S)) {
+          // since moonlight works like cheer we implement it through cheer
+          // we calculate moonlight's energy value and divide it into how many cheer procs that would equate
+          const crits = group[0].detailedProduce.averageTotalSkillProcs * currentPokemonSkill.critChance;
+          const totalEnergy = crits * mainskill.moonlightCritAmount(currentPokemonSkill.maxLevel);
+          cheer = totalEnergy / mainskill.ENERGIZING_CHEER_S.maxAmount;
         }
-
         const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
           limit50: details.limit50,
           e4eProcs,

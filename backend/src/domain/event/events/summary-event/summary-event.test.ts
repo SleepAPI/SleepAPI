@@ -28,6 +28,7 @@ describe('SummaryEvent', () => {
       totalProduce: MOCKED_PRODUCE,
       totalRecovery: 6,
       collectFrequency: TimeUtils.parseTime('00:10'),
+      skillBerriesOtherValue: 10,
     };
     const event = new SummaryEvent({
       time: TimeUtils.parseTime('06:00'),
@@ -46,6 +47,7 @@ describe('SummaryEvent', () => {
       Energy self skill value: 11 energy
       Energy team skill value: 11 energy
       Produce skill value: 2 GREPA + 1 Apple
+      Berries team skill value: 10
       Strength skill value: 11 strength
       Dream shards skill value: 11 shards
       Pot size skill value: 11 pot size

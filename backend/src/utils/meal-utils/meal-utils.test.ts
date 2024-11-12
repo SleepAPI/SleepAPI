@@ -243,19 +243,19 @@ describe('calculateCritMultiplier', () => {
   it('shall calculate crit multplier for TASTY_CHANCE_S', () => {
     const skillActivations: SkillActivation[] = [
       {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
         skill: mainskill.TASTY_CHANCE_S,
       },
       {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
         skill: mainskill.TASTY_CHANCE_S,
       },
       {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.amount[mainskill.TASTY_CHANCE_S.maxLevel - 1],
+        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
         skill: mainskill.TASTY_CHANCE_S,

@@ -9,7 +9,7 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { Produce, Time, TimePeriod, mainskill, nature } from 'sleepapi-common';
+import { Produce, Time, TimePeriod, mainskill, multiplyBerries, nature } from 'sleepapi-common';
 import { splitNumber } from '../calculator-utils/calculator-utils';
 import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
 
@@ -25,8 +25,7 @@ export function getExtraHelpfulEvents(
   const extraHelpfulFractions: number[] = splitNumber(extraHelpfulProcs);
   for (let i = 0; i < extraHelpfulPeriods.length; i++) {
     const time = extraHelpfulPeriods[i].start;
-    const adjustedAmount =
-      (extraHelpfulFractions[i] * mainskill.EXTRA_HELPFUL_S.amount[mainskill.EXTRA_HELPFUL_S.maxLevel - 1]) / 5;
+    const adjustedAmount = (extraHelpfulFractions[i] * mainskill.EXTRA_HELPFUL_S.maxAmount) / 5;
 
     const event: SkillEvent = new SkillEvent({
       time,
@@ -37,10 +36,7 @@ export function getExtraHelpfulEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: averageBerries && {
-            berry: averageBerries.berry,
-            amount: averageBerries.amount * adjustedAmount,
-          },
+          berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
             amount: amount * adjustedAmount,
@@ -68,7 +64,7 @@ export function getHelperBoostEvents(
   const { berries: averageBerries, ingredients: averageIngredients } = averageProduce.produce;
 
   const nrOfHelps =
-    mainskill.HELPER_BOOST.amount[helperBoostLevel - 1] +
+    mainskill.HELPER_BOOST.amount(helperBoostLevel) +
     calculateHelperBoostHelpsFromUnique(helperBoostUnique, helperBoostLevel);
 
   const helperBoostPeriods: TimePeriod[] = TimeUtils.divideTimePeriod(period, helperBoostProcs);
@@ -86,10 +82,7 @@ export function getHelperBoostEvents(
         adjustedAmount,
         nrOfHelpsToActivate: 0,
         adjustedProduce: {
-          berries: averageBerries && {
-            berry: averageBerries.berry,
-            amount: averageBerries.amount * adjustedAmount,
-          },
+          berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
             amount: amount * adjustedAmount,
@@ -138,7 +131,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: e4ePeriods[i].start,
       description: 'E4E',
-      delta: e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount[e4eLevel - 1] * nature.energy,
+      delta: e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount(e4eLevel) * nature.energy,
     });
     recoveryEvents.push(event);
   }
@@ -149,10 +142,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: cheerPeriods[i].start,
       description: 'Energizing Cheer',
-      delta:
-        (cheerDeltas[i] *
-          (mainskill.ENERGIZING_CHEER_S.amount[mainskill.ENERGIZING_CHEER_S.maxLevel - 1] * nature.energy)) /
-        5,
+      delta: (cheerDeltas[i] * (mainskill.ENERGIZING_CHEER_S.maxAmount * nature.energy)) / 5,
     });
     recoveryEvents.push(event);
   }

@@ -3,6 +3,7 @@ import {
   MEALS_IN_DAY,
   MathUtils,
   RECIPES,
+  RandomUtils,
   Recipe,
   SUNDAY_CRIT_CHANCE,
   SUNDAY_CRIT_MULTIPLIER,
@@ -206,7 +207,7 @@ export function monteCarloCrits(bonusChance: number) {
 
   const WEEKDAY_MEALS = 18;
   for (let i = 0; i < WEEKDAY_MEALS; i++) {
-    const critRoll = MathUtils.rollRandomChance(WEEKDAY_CRIT_CHANCE + currentBonus);
+    const critRoll = RandomUtils.roll(WEEKDAY_CRIT_CHANCE + currentBonus);
     if (critRoll) {
       weekdayMultipliers.push(WEEKDAY_CRIT_MULTIPLIER);
       currentBonus = bonusChance;
@@ -219,7 +220,7 @@ export function monteCarloCrits(bonusChance: number) {
 
   const SUNDAY_MEALS = 3;
   for (let i = 0; i < SUNDAY_MEALS; i++) {
-    const critRoll = MathUtils.rollRandomChance(SUNDAY_CRIT_CHANCE + currentBonus);
+    const critRoll = RandomUtils.roll(SUNDAY_CRIT_CHANCE + currentBonus);
     if (critRoll) {
       sundayMultipliers.push(SUNDAY_CRIT_MULTIPLIER);
       currentBonus = bonusChance;

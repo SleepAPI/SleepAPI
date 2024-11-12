@@ -1,5 +1,5 @@
 import { Produce } from '../../api/production/produce';
-import { MainSkill } from '../../domain/mainskill/mainskill';
+import { Mainskill } from '../../domain/mainskill/mainskill';
 import { IngredientSet } from '../../domain/types/ingredient-set';
 import { Time } from '../../domain/types/time';
 
@@ -8,11 +8,12 @@ export interface Summary {
   skillPercentage: number;
   carrySize: number;
 
-  skill: MainSkill;
+  skill: Mainskill;
   skillProcs: number;
   skillEnergySelfValue: number;
   skillEnergyOthersValue: number;
   skillProduceValue: Produce;
+  skillBerriesOtherValue: number;
   skillStrengthValue: number;
   skillDreamShardValue: number;
   skillPotSizeValue: number;

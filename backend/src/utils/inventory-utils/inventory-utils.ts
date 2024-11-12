@@ -5,14 +5,25 @@ import { Produce as Inventory, subskill } from 'sleepapi-common';
 class InventoryUtilsImpl {
   public addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {
     const newInventory: Inventory = {
-      berries: currentInventory.berries
-        ? {
-            amount: currentInventory.berries.amount + (produce.berries?.amount ?? 0),
-            berry: currentInventory.berries.berry,
-          }
-        : produce.berries,
+      berries: [...currentInventory.berries],
       ingredients: [...currentInventory.ingredients],
     };
+
+    produce.berries.forEach((produceBerrySet) => {
+      const index = newInventory.berries.findIndex(
+        (item) => item.berry.name === produceBerrySet.berry.name && item.level === produceBerrySet.level
+      );
+
+      if (index !== -1) {
+        newInventory.berries[index] = {
+          berry: newInventory.berries[index].berry,
+          amount: newInventory.berries[index].amount + produceBerrySet.amount,
+          level: newInventory.berries[index].level,
+        };
+      } else {
+        newInventory.berries.push({ ...produceBerrySet });
+      }
+    });
 
     produce.ingredients.forEach((produceIngredientSet) => {
       const index = newInventory.ingredients.findIndex(
@@ -33,11 +44,15 @@ class InventoryUtilsImpl {
   }
 
   public countInventory(inventory: Inventory) {
-    return (inventory.berries?.amount ?? 0) + inventory.ingredients.reduce((sum, cur) => sum + cur.amount, 0);
+    return (
+      inventory.berries.reduce((sum, cur) => sum + cur.amount, 0) +
+      inventory.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
+    );
   }
 
   public getEmptyInventory(): Inventory {
     return {
+      berries: [],
       ingredients: [],
     };
   }

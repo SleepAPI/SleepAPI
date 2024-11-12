@@ -1,5 +1,5 @@
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, Produce, Time, prettifyIngredientDrop } from 'sleepapi-common';
+import { Produce, Time, prettifyBerries, prettifyIngredientDrop } from 'sleepapi-common';
 import { EventType, ScheduledEvent } from '../../event';
 
 export class HelpEvent extends ScheduledEvent {
@@ -27,7 +27,7 @@ export class HelpEvent extends ScheduledEvent {
     const berries = this.produce.berries;
     const ings = this.produce.ingredients;
 
-    const prettifiedProduce = `${berries && MathUtils.round(berries.amount, 2) + ' ' + berries.berry.name} ${
+    const prettifiedProduce = `${berries.length > 0 ? prettifyBerries(berries) : ''} ${
       ings.length > 0 ? `+ ${prettifyIngredientDrop(ings)}` : ''
     }`;
     return (

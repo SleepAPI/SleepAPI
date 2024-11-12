@@ -1,48 +1,26 @@
 import CompareOverview from '@/components/compare/compare-overview.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import type { SingleProductionExt } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
+import { createMockSingleProduction } from '@/vitest/mocks/compare/single-production'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, berry, ingredient } from 'sleepapi-common'
+import { MathUtils } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
 describe('CompareOverview', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareOverview>>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
-  const mockMemberProduction: SingleProductionExt = {
-    member: createMockPokemon({ name: 'Ash' }),
-    ingredients: [
-      {
-        amount: 10,
-        ingredient: ingredient.FANCY_APPLE
-      },
-      {
-        amount: 20,
-        ingredient: ingredient.HONEY
-      }
-    ],
-    skillProcs: 5,
-    berries: {
-      amount: 100,
-      berry: berry.BELUE
-    },
-    ingredientPercentage: 0.2,
-    skillPercentage: 0.02,
-    carrySize: 10,
-    averageEnergy: 10,
-    averageFrequency: 10,
-    dayHelps: 10,
-    nightHelps: 10,
-    nrOfHelps: 10,
-    sneakySnackHelps: 10,
-    spilledIngredients: [],
-    totalRecovery: 10
-  }
+  const mockPokemon = createMockPokemon({ name: 'Ash' })
+  const mockMemberProduction: SingleProductionExt = createMockSingleProduction()
 
   beforeEach(() => {
     setActivePinia(createPinia())
+    pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
     wrapper = mount(CompareOverview, {})
   })
 
@@ -69,7 +47,7 @@ describe('CompareOverview', () => {
     expect(firstRowCells.length).toBe(4)
 
     // Check member name
-    expect(firstRowCells[0].text()).toContain('Ash')
+    expect(firstRowCells[0].text()).toContain(mockPokemon.name)
 
     // Check berries
     expect(firstRowCells[1].text()).toContain('100')

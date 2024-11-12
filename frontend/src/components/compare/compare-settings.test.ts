@@ -71,15 +71,19 @@ describe('CompareSettings', () => {
 
   it('deletes the team and resets the state', async () => {
     const comparisonStore = useComparisonStore()
+    const member = createMockPokemon()
 
     comparisonStore.addMember({
-      member: createMockPokemon(),
+      externalId: member.externalId,
       ingredients: [],
       skillProcs: 5,
-      berries: {
-        amount: 10,
-        berry: berry.BELUE
-      },
+      berries: [
+        {
+          amount: 10,
+          berry: berry.BELUE,
+          level: member.level
+        }
+      ],
       ingredientPercentage: 0,
       skillPercentage: 0,
       carrySize: 0,
@@ -90,7 +94,8 @@ describe('CompareSettings', () => {
       nrOfHelps: 0,
       sneakySnackHelps: 0,
       spilledIngredients: [],
-      totalRecovery: 0
+      totalRecovery: 0,
+      sneakySnack: []
     })
 
     expect(comparisonStore.members.length).toBe(1)
