@@ -194,8 +194,9 @@ export class TeamSimulator {
       const targetGroup = random ? this.energyTargetMember(chanceTargetLowest) : this.memberStates;
 
       for (const mem of targetGroup) {
-        wastedEnergy += mem.recoverEnergy(amount);
-        skillValue += amount - wastedEnergy;
+        const { recovered, wasted } = mem.recoverEnergy(amount);
+        wastedEnergy += wasted;
+        skillValue += recovered;
       }
     }
 

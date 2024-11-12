@@ -195,6 +195,44 @@ describe('TeamSimulator', () => {
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`42`);
   });
 
+  it('shall count wasted energy', () => {
+    const mockMemberSupport: TeamMember = {
+      pokemonSet: {
+        ...mockPokemonSet,
+        pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: mainskill.ENERGY_FOR_EVERYONE },
+      },
+      carrySize: 10,
+      level: 60,
+      ribbon: 0,
+      nature: nature.ADAMANT,
+      skillLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
+      subskills: [subskill.HELPING_SPEED_M],
+      externalId: 'some id',
+    };
+
+    const members: TeamMember[] = [
+      mockMemberSupport,
+      mockMemberSupport,
+      mockMemberSupport,
+      mockMemberSupport,
+      mockMemberSupport,
+    ];
+    const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
+
+    simulator.simulate();
+
+    const result = simulator.results();
+
+    expect(result.members).toHaveLength(5);
+    const skillAmount = result.members[0].skillAmount;
+    const wasteAmount = result.members[0].advanced.wastedEnergy;
+    expect(skillAmount).toMatchInlineSnapshot(`726.5`);
+    expect(wasteAmount).toMatchInlineSnapshot(`4070`);
+    expect(5 * result.members[0].skillProcs * mainskill.ENERGY_FOR_EVERYONE.maxAmount).toEqual(
+      skillAmount + wasteAmount
+    );
+  });
+
   it('shall give pity procs when threshold met', () => {
     const mockMember = {
       ...mockPokemonSet,

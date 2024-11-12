@@ -233,7 +233,7 @@ export class MemberState {
     this.currentEnergy += clampedEnergyRecovered;
     this.totalRecovery += clampedEnergyRecovered;
 
-    return recoveredWithNature - clampedEnergyRecovered;
+    return { recovered: clampedEnergyRecovered, wasted: recoveredWithNature - clampedEnergyRecovered };
   }
 
   public wasteEnergy(wasted: number) {
