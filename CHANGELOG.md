@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/SleepAPI/SleepAPI/compare/v1.2.4...v1.2.5) (2024-11-12)
+
+
+### Bug Fixes
+
+* wasted energy to subtract total waste once ([bd87911](https://github.com/SleepAPI/SleepAPI/commit/bd8791115d18cab88e6ad89c56505f6109816de2))
+
 ## [1.2.4](https://github.com/SleepAPI/SleepAPI/compare/v1.2.3...v1.2.4) (2024-11-11)
 
 ## [1.2.3](https://github.com/SleepAPI/SleepAPI/compare/v1.2.2...v1.2.3) (2024-11-11)
