@@ -3,18 +3,27 @@ $surface: #403d58;
 $primary: #e63946;
 $secondary: #5e5a7f;
 $accent: #9a95c3;
+
 $strength: #ffb81f;
+
 $nature-up: #ff683a;
 $nature-down: #2ba0ed;
+
 $subskill-white: #fafafa;
 $subskill-silver: #dcf2ff;
 $subskill-gold: #ffe570;
-$curry: #fc9c36;
-$salad: #8fc549;
-$dessert: #fbe346;
-$ingredient: #fbe346; // same as dessert, could also use'#fec34f'
+
+$curry: #ff9f4b;
+$salad: #a8cf5c;
+$dessert: #f2df61;
+$curry-dark: #e47615;
+$salad-dark: #a8cf5c;
+$dessert-dark: #e1c405;
+
+$ingredient: #fbe346;
 $berry: #b297e7;
 $skill: #ff616e;
+
 $on-background: #ffffff;
 $on-surface: #ffffff;
 $on-primary: #ffffff;
@@ -43,14 +52,6 @@ $on-secondary: #ffffff;
   --v-theme-on-primary: #{$on-primary};
   --v-theme-on-secondary: #{$on-secondary};
 }
-
-$curry: #ff9f4b;
-$salad: #a8cf5c;
-$dessert: #f2df61;
-$ingredient: #fc9c36; // same as curry?
-// ingredient: #fec34f; // default ingredient specialty orange
-$berry: #b99feb;
-$skill: #fc4f5d;
 
 .frosted-glass {
   background: rgba($surface, 0.4) !important;

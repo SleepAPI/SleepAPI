@@ -283,14 +283,4 @@ export default defineComponent({
 
 <style lang="scss">
 @import '@/assets/main.scss';
-
-.legend {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 34px;
-  width: 34px;
-  border-radius: 30px;
-}
 </style>

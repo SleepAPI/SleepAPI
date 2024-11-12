@@ -83,7 +83,7 @@
           <v-img width="48" height="48" src="/images/misc/pot1.png"></v-img>
         </template>
         <v-card
-          class="flex-center"
+          class="flex-center meal-option"
           color="curry"
           height="72"
           aria-label="curry button"
@@ -98,7 +98,7 @@
         </v-card>
 
         <v-card
-          class="flex-center"
+          class="flex-center meal-option"
           color="salad"
           height="72"
           aria-label="salad button"
@@ -113,7 +113,7 @@
         </v-card>
 
         <v-card
-          class="flex-center"
+          class="flex-center meal-option"
           color="dessert"
           height="72"
           aria-label="dessert button"
@@ -406,5 +406,11 @@ export default defineComponent({
 
 .camp-disabled {
   filter: grayscale(100%);
+}
+
+.meal-option {
+  border-radius: 8px;
+  margin: 8px 24px;
+  border: 2px solid $background;
 }
 </style>

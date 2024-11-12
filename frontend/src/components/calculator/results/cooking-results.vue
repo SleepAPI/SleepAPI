@@ -20,14 +20,17 @@
                 id="weekdayStrength"
                 :class="[
                   'text-body-1',
-                  'ml-2',
+                  'mx-2',
                   `text-${teamStore.getCurrentTeam.recipeType}`,
                   'font-weight-medium'
                 ]"
               >
                 {{ weekdayStrength }}</span
               >
-              <v-img src="/images/misc/strength.png" class="ml-2" width="20" height="20" contain />
+
+              <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}`">
+                <v-img src="/images/misc/strength.png" width="20" height="20" contain />
+              </div>
             </v-col>
             <v-col cols="auto" class="flex-right pt-0">
               <span class="text-body-1 flex-right">Sun </span>
@@ -35,17 +38,18 @@
                 id="sundayStrength"
                 :class="[
                   'text-body-1',
-                  'ml-2',
+                  'mx-2',
                   'flex-right',
-                  `text-${teamStore.getCurrentTeam.recipeType}`,
+                  `text-${teamStore.getCurrentTeam.recipeType}-dark`,
                   'font-weight-medium'
                 ]"
-                style="opacity: 50%"
               >
                 {{ sundayStrength }}
               </span>
 
-              <v-img src="/images/misc/strength.png" class="ml-2" width="20" height="20" contain />
+              <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}-dark`">
+                <v-img src="/images/misc/strength.png" width="20" height="20" contain />
+              </div>
             </v-col>
           </v-row>
 
@@ -106,9 +110,9 @@
               <v-progress-linear
                 v-model="cookedRecipe.weekdayPercentage"
                 :buffer-value="cookedRecipe.fullWeekPercentage"
-                :buffer-color="teamStore.getCurrentTeam.recipeType"
-                buffer-opacity="0.5"
+                :buffer-color="`${teamStore.getCurrentTeam.recipeType}-dark`"
                 :color="teamStore.getCurrentTeam.recipeType"
+                buffer-opacity="1"
                 height="25"
                 class="flex-grow-1"
               >

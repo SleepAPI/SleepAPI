@@ -28,18 +28,27 @@ const darkTheme: ThemeDefinition = {
     primary: '#E63946',
     secondary: '#5E5A7F',
     accent: '#9A95C3',
+
     strength: '#FFB81F',
+
     natureUp: 'FF683A',
     natureDown: '2BA0ED',
+
     subskillWhite: '#FAFAFA',
     subskillSilver: '#DCF2FF',
     subskillGold: '#FFE570',
+
     curry: '#ff9f4b',
+    'curry-dark': '#e47615',
     salad: '#a8cf5c',
+    'salad-dark': '#a8cf5c',
     dessert: '#f2df61',
-    ingredient: '#fc9c36',
-    berry: '#b99feb',
+    'dessert-dark': '#e1c405',
+
+    ingredient: '#fbe346',
+    berry: '#b297e7',
     skill: '#ff616e',
+
     'on-background': '#ffffff',
     'on-surface': '#ffffff',
     'on-primary': '#ffffff',
@@ -70,7 +79,7 @@ migrateStores()
 app.use(vuetify)
 app.use(router)
 app.use(vue3GoogleLogin, {
-  clientId: '983013278971-m60s443rk30e8sjk04aof0ltaanogck0.apps.googleusercontent.com'
+  clientId: '493172605844-co84oe12lgh8v534q01l7t6n8lel75gm.apps.googleusercontent.com'
 })
 
 app.mount('#app')
