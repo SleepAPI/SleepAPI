@@ -200,7 +200,9 @@
           </span>
           <span v-if="currentMemberWithProduction.production.advanced.wastedEnergy > 0">
             Wasted energy:
-            {{ Math.floor(currentMemberWithProduction.production.advanced.wastedEnergy) }}</span
+            {{
+              MathUtils.round(currentMemberWithProduction.production.advanced.wastedEnergy, 1)
+            }}</span
           >
         </v-col>
         <v-col cols="6" class="flex-center flex-column">
