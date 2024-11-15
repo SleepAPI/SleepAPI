@@ -1,14 +1,16 @@
 import CompareSettings from '@/components/compare/compare-settings.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createMockPokemon } from '@/vitest'
+import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry } from 'sleepapi-common'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { nextTick } from 'vue'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('CompareSettings', () => {
   let wrapper: VueWrapper<InstanceType<typeof CompareSettings>>
+  const mockPokemon = createMockPokemon()
+  const mockTeam = createMockTeams()
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -25,134 +27,55 @@ describe('CompareSettings', () => {
     expect(wrapper.exists()).toBe(true)
   })
 
-  it('opens advanced menu on button click', async () => {
-    const button = wrapper.find('button[aria-label="open advanced menu"]')
-    expect(wrapper.vm.advancedMenu).toBe(false)
-
+  it('toggles teamMenu when the button is clicked', async () => {
+    const button = wrapper.find('.v-btn')
+    expect(wrapper.vm.teamMenu).toBe(false)
     await button.trigger('click')
-    expect(wrapper.vm.advancedMenu).toBe(true)
+
+    expect(wrapper.vm.teamMenu).toBe(true)
   })
 
-  it('opens sleep menu on button click', async () => {
-    const openMenu = wrapper.find('button[aria-label="open advanced menu"]')
-    await openMenu.trigger('click')
-
-    const button = document.querySelector('[aria-label="sleep score"]') as HTMLElement
-    expect(wrapper.vm.isTimePickerOpen).toBe(false)
-    expect(button).not.toBeNull()
-    button.click()
-
-    expect(wrapper.vm.isTimePickerOpen).toBe(true)
-  })
-
-  it('toggles camp icon greyscale class correctly', async () => {
+  it('updates comparisonStore when a team is selected', async () => {
     const comparisonStore = useComparisonStore()
-    const openMenu = wrapper.find('button[aria-label="open advanced menu"]')
-    await openMenu.trigger('click')
-
-    expect(comparisonStore.camp).toBe(false)
-    const campButton = document.querySelector('[aria-label="camp icon"]') as HTMLElement
-
-    expect(campButton.classList).toContain('greyscale')
-
-    campButton.click()
-    await nextTick()
-    expect(comparisonStore.camp).toBe(true)
-    expect(campButton.classList).not.toContain('greyscale')
+    expect(comparisonStore.team).toBeUndefined()
+    wrapper.vm.selectTeam(mockTeam[0])
+    expect(comparisonStore.team).not.toBeUndefined()
   })
 
-  it('calculates sleepScore correctly', async () => {
-    wrapper.vm.bedtime = '21:30'
-    wrapper.vm.wakeup = '06:00'
-
-    const sleepScore = wrapper.vm.sleepScore
-    expect(sleepScore).toBe(100) // For 8.5 hours, it should return 100%
+  it('disables teams with less than 1 or more than 4 members', () => {
+    let result = wrapper.vm.teamDisabled(['member1', 'member2', 'member3', 'member4', 'member5'])
+    expect(result).toBe(true)
+    result = wrapper.vm.teamDisabled([])
+    expect(result).toBe(true)
+    result = wrapper.vm.teamDisabled(['member1', 'member2', 'member3', 'member4', undefined])
+    expect(result).toBe(false)
   })
 
-  it('deletes the team and resets the state', async () => {
+  it('correctly provides member image when member exists', () => {
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(mockPokemon)
+
+    const imageUrl = wrapper.vm.memberImage(mockPokemon.externalId)
+    expect(imageUrl).toMatchInlineSnapshot(`"/images/avatar/portrait/pikachu.png"`)
+  })
+
+  it('correctly toggles comparisonStore time window on clock container click', async () => {
     const comparisonStore = useComparisonStore()
-    const member = createMockPokemon()
+    comparisonStore.timeWindow = '8H'
 
-    comparisonStore.addMember({
-      externalId: member.externalId,
-      ingredients: [],
-      skillProcs: 5,
-      berries: [
-        {
-          amount: 10,
-          berry: berry.BELUE,
-          level: member.level
-        }
-      ],
-      ingredientPercentage: 0,
-      skillPercentage: 0,
-      carrySize: 0,
-      averageEnergy: 0,
-      averageFrequency: 0,
-      dayHelps: 0,
-      nightHelps: 0,
-      nrOfHelps: 0,
-      sneakySnackHelps: 0,
-      spilledIngredients: [],
-      totalRecovery: 0,
-      sneakySnack: []
-    })
+    const clockContainer = wrapper.find('.clock-container')
+    await clockContainer.trigger('click')
 
-    expect(comparisonStore.members.length).toBe(1)
-    await wrapper.vm.deleteTeam()
-    expect(comparisonStore.members.length).toBe(0)
-    expect(wrapper.vm.bedtime).toBe(comparisonStore.bedtime)
-    expect(wrapper.vm.wakeup).toBe(comparisonStore.wakeup)
-  })
-
-  it('displays tooltip correctly', async () => {
-    const openMenu = wrapper.find('button[aria-label="open advanced menu"]')
-    await openMenu.trigger('click')
-
-    const button = document.querySelector('[aria-label="show tooltip"]') as HTMLElement
-    expect(wrapper.vm.tooltipMenu).toBe(false)
-
-    expect(button).not.toBeNull()
-    button.click()
-    expect(wrapper.vm.tooltipMenu).toBe(true)
-  })
-
-  it('toggles timeWindow correctly', async () => {
-    const comparisonStore = useComparisonStore()
-
-    const openMenuButton = wrapper.find('button[aria-label="open advanced menu"]')
-    await openMenuButton.trigger('click')
-
-    const twentyFourHourBtn = document.querySelector('button[value="24H"]') as HTMLElement
-    const eightHourBtn = document.querySelector('button[value="8H"]') as HTMLElement
-
-    expect(twentyFourHourBtn).not.toBeNull()
-    expect(eightHourBtn).not.toBeNull()
-
-    expect(comparisonStore.timeWindow).toBe('24H')
-
-    eightHourBtn.click()
-    await nextTick()
-    expect(comparisonStore.timeWindow).toBe('8H')
-
-    twentyFourHourBtn.click()
-    await nextTick()
     expect(comparisonStore.timeWindow).toBe('24H')
   })
 
-  it('updates favored berries correctly', async () => {
+  it('calls comparisonStore.$reset() when the delete button is clicked', async () => {
     const comparisonStore = useComparisonStore()
+    comparisonStore.$reset = vi.fn()
 
-    const openMenuButton = wrapper.find('button[aria-label="open advanced menu"]')
-    await openMenuButton.trigger('click')
+    const deleteButton = wrapper.find('button.v-btn.v-btn--icon')
+    await deleteButton.trigger('click')
 
-    await nextTick()
-
-    const berriesToAdd = [berry.BELUE, berry.LUM]
-
-    wrapper.vm.updateFavoredBerries(berriesToAdd)
-    await nextTick()
-
-    expect(comparisonStore.favoredBerries).toEqual(berriesToAdd)
+    expect(comparisonStore.$reset).toHaveBeenCalled()
   })
 })

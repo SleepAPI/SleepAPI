@@ -6,7 +6,8 @@ import { UnexpectedError } from '@/types/errors/unexpected-error'
 import {
   MAX_TEAM_MEMBERS,
   type TeamCombinedProduction,
-  type TeamInstance
+  type TeamInstance,
+  type TeamProductionExt
 } from '@/types/member/instanced'
 import axios from 'axios'
 import {
@@ -138,7 +139,7 @@ class TeamServiceImpl {
   public async calculateProduction(params: {
     members: PokemonInstanceExt[]
     settings: TeamSettings
-  }) {
+  }): Promise<TeamProductionExt | undefined> {
     const { members, settings } = params
     if (members.length === 0) {
       return undefined

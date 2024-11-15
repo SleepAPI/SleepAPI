@@ -1,4 +1,5 @@
 import { Recipe } from '../../../domain/recipe/recipe';
+import { BerrySet } from '../../../domain/types/berry-set';
 import { IngredientSet } from '../../../domain/types/ingredient-set';
 import { PokemonInstance } from '../../pokemon/pokemon-instance';
 import { Produce } from '../../production';
@@ -25,16 +26,21 @@ export interface CalculateIvRequest {
 }
 
 export interface MemberProductionAdvanced {
+  ingredientPercentage: number;
+  skillPercentage: number;
+  carrySize: number;
   spilledIngredients: IngredientSet[];
   totalHelps: number;
   dayHelps: number;
   nightHelps: number;
   nightHelpsBeforeSS: number;
   nightHelpsAfterSS: number;
+  sneakySnack: BerrySet;
   skillCrits: number;
   skillCritValue: number;
   wastedEnergy: number;
   morningProcs: number;
+  totalRecovery: number;
 }
 
 export interface MemberProductionBase {

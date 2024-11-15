@@ -13,7 +13,7 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
         {
           amount: 10,
           berry: berry.BELUE,
-          level: 60
+          level: mockPokemon.level
         }
       ],
       ingredients: [
@@ -36,7 +36,7 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
         {
           amount: 10,
           berry: berry.BELUE,
-          level: 60
+          level: mockPokemon.level
         }
       ],
       ingredients: [
@@ -62,7 +62,12 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
       nightHelpsAfterSS: 0,
       skillCritValue: 0,
       wastedEnergy: 0,
-      morningProcs: 0
+      morningProcs: 0,
+      carrySize: 0,
+      ingredientPercentage: 0,
+      skillPercentage: 0,
+      sneakySnack: { amount: 0, berry: mockPokemon.pokemon.berry, level: mockPokemon.level },
+      totalRecovery: 0
     },
     ...attrs
   }

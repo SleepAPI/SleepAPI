@@ -1,12 +1,10 @@
 import CompareOverview from '@/components/compare/compare-overview.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { SingleProductionExt } from '@/types/member/instanced'
-import { createMockPokemon } from '@/vitest'
-import { createMockSingleProduction } from '@/vitest/mocks/compare/single-production'
+import { createMockMemberProduction, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils } from 'sleepapi-common'
+import { MathUtils, type MemberProduction } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -15,7 +13,7 @@ describe('CompareOverview', () => {
   let pokemonStore: ReturnType<typeof usePokemonStore>
 
   const mockPokemon = createMockPokemon({ name: 'Ash' })
-  const mockMemberProduction: SingleProductionExt = createMockSingleProduction()
+  const mockMemberProduction: MemberProduction = createMockMemberProduction()
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -50,7 +48,7 @@ describe('CompareOverview', () => {
     expect(firstRowCells[0].text()).toContain(mockPokemon.name)
 
     // Check berries
-    expect(firstRowCells[1].text()).toContain('100')
+    expect(firstRowCells[1].text()).toContain('10')
 
     // Check ingredients
     expect(firstRowCells[2].text()).toContain('10')
@@ -77,7 +75,7 @@ describe('CompareOverview', () => {
     expect(firstRowCells[0].text()).toContain('Ash')
 
     // Check berries
-    expect(firstRowCells[1].text()).toContain('33.3')
+    expect(firstRowCells[1].text()).toContain('3.3')
 
     // Check ingredients
     expect(firstRowCells[2].text()).toContain('3.3')
@@ -93,9 +91,11 @@ describe('CompareOverview', () => {
 
     await nextTick()
 
-    const members = wrapper.vm.members as any[]
-    expect(members[0].berries).toBe(MathUtils.round(100, 1))
-    expect(members[0].skillProcs).toBe(MathUtils.round(5, 1))
+    const members = wrapper.vm.members
+    expect(members[0].berries).toBe(
+      MathUtils.round(mockMemberProduction.produceTotal.berries[0].amount, 1)
+    )
+    expect(members[0].skillProcs).toBe(MathUtils.round(mockMemberProduction.skillProcs, 1))
   })
 
   it('displays ingredient images correctly', async () => {

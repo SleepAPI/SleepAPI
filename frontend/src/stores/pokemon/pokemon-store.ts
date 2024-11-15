@@ -19,7 +19,7 @@ export const usePokemonStore = defineStore('pokemon', {
       if (pokemonInstance) {
         return { ...pokemonInstance, pokemon: getPokemon(pokemonInstance.pokemon.name) }
       } else {
-        console.error(`Pokemon ${externalId} did not exist in Pokémon store, contact developer`)
+        console.debug(`Pokemon ${externalId} did not exist in Pokémon store`)
       }
     }
   },
