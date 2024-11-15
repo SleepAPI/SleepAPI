@@ -1,5 +1,13 @@
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { Produce, berry, emptyBerryInventory, ingredient, prettifyIngredientDrop, subskill } from 'sleepapi-common';
+import {
+  Produce,
+  berry,
+  emptyBerryInventory,
+  emptyProduce,
+  ingredient,
+  prettifyIngredientDrop,
+  subskill,
+} from 'sleepapi-common';
 
 describe('emptyInventory', () => {
   it('shall empty inventory', () => {
@@ -178,6 +186,18 @@ describe('addToInventory', () => {
     inventory = InventoryUtils.addToInventory(inventory, added);
     expect(inventory.berries).toEqual([]);
     expect(prettifyIngredientDrop(inventory.ingredients)).toMatchInlineSnapshot(`"2 Tomato, 2 Mushroom"`);
+  });
+
+  it('shall skip berries and ingredients with 0 amount', () => {
+    let inventory: Produce = {
+      berries: [{ amount: 0, berry: berry.BELUE, level: 1 }],
+      ingredients: [{ amount: 0, ingredient: ingredient.SNOOZY_TOMATO }],
+    };
+
+    inventory = InventoryUtils.addToInventory(emptyProduce(), inventory);
+
+    expect(inventory.berries).toEqual([]);
+    expect(inventory.ingredients).toEqual([]);
   });
 });
 

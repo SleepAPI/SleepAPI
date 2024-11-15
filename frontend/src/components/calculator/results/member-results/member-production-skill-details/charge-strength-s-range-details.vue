@@ -16,7 +16,7 @@
       </v-badge>
       <div class="ml-2">
         <div class="flex-center">
-          <span class="font-weight-medium text-center">{{
+          <span class="font-weight-medium text-center text-h6">{{
             MathUtils.round(memberWithProduction.production.skillProcs * timeWindowFactor, 1)
           }}</span>
           <v-img src="/images/misc/skillproc.png" max-height="28" max-width="28px"></v-img>
@@ -25,7 +25,6 @@
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
             >{{ skillValuePerProc }} avg.</span
           >
-          <v-img src="/images/unit/strength.png" height="20" width="20"></v-img>
         </div>
       </div>
     </v-col>

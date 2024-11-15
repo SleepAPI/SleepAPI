@@ -10,33 +10,37 @@ class InventoryUtilsImpl {
     };
 
     produce.berries.forEach((produceBerrySet) => {
-      const index = newInventory.berries.findIndex(
-        (item) => item.berry.name === produceBerrySet.berry.name && item.level === produceBerrySet.level
-      );
+      if (produceBerrySet.amount > 0) {
+        const index = newInventory.berries.findIndex(
+          (item) => item.berry.name === produceBerrySet.berry.name && item.level === produceBerrySet.level
+        );
 
-      if (index !== -1) {
-        newInventory.berries[index] = {
-          berry: newInventory.berries[index].berry,
-          amount: newInventory.berries[index].amount + produceBerrySet.amount,
-          level: newInventory.berries[index].level,
-        };
-      } else {
-        newInventory.berries.push({ ...produceBerrySet });
+        if (index !== -1) {
+          newInventory.berries[index] = {
+            berry: newInventory.berries[index].berry,
+            amount: newInventory.berries[index].amount + produceBerrySet.amount,
+            level: newInventory.berries[index].level,
+          };
+        } else {
+          newInventory.berries.push({ ...produceBerrySet });
+        }
       }
     });
 
     produce.ingredients.forEach((produceIngredientSet) => {
-      const index = newInventory.ingredients.findIndex(
-        (item) => item.ingredient.name === produceIngredientSet.ingredient.name
-      );
+      if (produceIngredientSet.amount > 0) {
+        const index = newInventory.ingredients.findIndex(
+          (item) => item.ingredient.name === produceIngredientSet.ingredient.name
+        );
 
-      if (index !== -1) {
-        newInventory.ingredients[index] = {
-          ingredient: newInventory.ingredients[index].ingredient,
-          amount: newInventory.ingredients[index].amount + produceIngredientSet.amount,
-        };
-      } else {
-        newInventory.ingredients.push({ ...produceIngredientSet });
+        if (index !== -1) {
+          newInventory.ingredients[index] = {
+            ingredient: newInventory.ingredients[index].ingredient,
+            amount: newInventory.ingredients[index].amount + produceIngredientSet.amount,
+          };
+        } else {
+          newInventory.ingredients.push({ ...produceIngredientSet });
+        }
       }
     });
 

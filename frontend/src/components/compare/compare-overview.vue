@@ -118,7 +118,7 @@ export default defineComponent({
         const member = this.pokemonStore.getPokemon(memberProduction.externalId)
         if (!member) continue
         const memberPokemon = member.pokemon
-        const memberBerry = memberProduction.berries.at(0)
+        const memberBerry = memberProduction.produceTotal.berries.at(0)
 
         production.push({
           member: member.name,
@@ -131,9 +131,11 @@ export default defineComponent({
           ),
           berryName: memberBerry?.berry.name ?? member.pokemon.berry.name,
           ingredients:
-            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
+            memberProduction.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
             StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
-          ingredientList: this.splitIngredientMagnetIngredients(memberProduction.ingredients),
+          ingredientList: this.splitIngredientMagnetIngredients(
+            memberProduction.produceTotal.ingredients
+          ),
           skillProcs: MathUtils.round(
             memberProduction.skillProcs *
               StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),

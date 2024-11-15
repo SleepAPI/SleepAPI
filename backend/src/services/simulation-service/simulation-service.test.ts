@@ -255,17 +255,7 @@ describe('setupAndRunProductionSimulation', () => {
           },
         ],
         "sneakySnack": [],
-        "spilledIngredients": [
-          {
-            "amount": 0,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-        ],
+        "spilledIngredients": [],
       }
     `);
   });

@@ -41,9 +41,9 @@
       />
     </v-row>
 
-    <CompareSettings />
+    <CompareSettings class="my-2" />
 
-    <v-row>
+    <v-row dense>
       <v-col cols="12">
         <v-card color="transparent" :loading="loading">
           <v-tabs v-model="tab" class="d-flex justify-space-around">
@@ -83,17 +83,12 @@ import CompareSettings from '@/components/compare/compare-settings.vue'
 import CompareSlot from '@/components/compare/compare-slot.vue'
 import CompareStrength from '@/components/compare/compare-strength.vue'
 import PokemonSlotMenu from '@/components/pokemon-input/menus/pokemon-slot-menu.vue'
-import { ProductionService } from '@/services/production/production-service'
+import { TeamService } from '@/services/team/team-service'
 import { randomName } from '@/services/utils/name-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { SingleProductionExt } from '@/types/member/instanced'
-import {
-  uuid,
-  type DetailedProduce,
-  type PokemonInstanceExt,
-  type SingleProductionResponse
-} from 'sleepapi-common'
+import { UnexpectedError } from '@/types/errors/unexpected-error'
+import { uuid, type PokemonInstanceExt, type TeamSettings } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -137,7 +132,7 @@ export default defineComponent({
     },
     async addToCompareMembers(pokemonInstance: PokemonInstanceExt) {
       this.loading = true
-      const memberProduction = await this.fetchSingleProductionResult(pokemonInstance)
+      const memberProduction = await this.fetchCompareMemberProduction(pokemonInstance)
       this.comparisonStore.members.push(memberProduction)
 
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
@@ -154,7 +149,7 @@ export default defineComponent({
     },
     async editCompareMember(pokemonInstance: PokemonInstanceExt) {
       this.loading = true
-      const memberProduction = await this.fetchSingleProductionResult(pokemonInstance)
+      const memberProduction = await this.fetchCompareMemberProduction(pokemonInstance)
 
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
       if (previouslyExisted?.saved || pokemonInstance.saved) {
@@ -170,37 +165,32 @@ export default defineComponent({
       this.comparisonStore.members[indexToUpdate] = memberProduction
       this.loading = false
     },
-    async fetchSingleProductionResult(pokemonInstance: PokemonInstanceExt) {
-      const simulationData: SingleProductionResponse =
-        await ProductionService.calculateCompareProduction(pokemonInstance)
-      const production: DetailedProduce = simulationData.production.detailedProduce
-      const summary = simulationData.summary
-
-      const memberProduction: SingleProductionExt = {
-        externalId: pokemonInstance.externalId,
-        ingredientPercentage: summary.ingredientPercentage,
-        skillPercentage: summary.skillPercentage,
-        carrySize: summary.carrySize,
-        // classic API returns ingredients per meal-window, but berries / skill procs per day
-        ingredients: production.produce.ingredients.map(({ amount, ingredient }) => ({
-          amount: amount * 3,
-          ingredient
-        })),
-        skillProcs: production.averageTotalSkillProcs,
-        berries: production.produce.berries,
-        spilledIngredients: production.spilledIngredients,
-        nrOfHelps: summary.nrOfHelps,
-        dayHelps: production.dayHelps,
-        nightHelps: production.nightHelps,
-        sneakySnackHelps: summary.helpsAfterSS,
-        sneakySnack: production.sneakySnack,
-        totalRecovery: summary.totalRecovery,
-        averageEnergy: summary.averageEnergy,
-        averageFrequency: summary.averageFrequency,
-        collectFrequency: summary.collectFrequency
+    async fetchCompareMemberProduction(pokemonInstance: PokemonInstanceExt) {
+      const members: PokemonInstanceExt[] = [pokemonInstance]
+      const maybeTeam = this.comparisonStore.team
+      for (const member of maybeTeam?.members ?? []) {
+        if (member) {
+          const pokemon = this.pokemonStore.getPokemon(member)
+          pokemon && members.push(pokemon)
+        }
+      }
+      const settings: TeamSettings = {
+        camp: maybeTeam?.camp ?? false,
+        bedtime: maybeTeam?.bedtime ?? '21:30',
+        wakeup: maybeTeam?.wakeup ?? '06:00'
       }
 
-      return memberProduction
+      const result = await TeamService.calculateProduction({ members, settings })
+      const production = result?.members.find(
+        (member) => member.externalId === pokemonInstance.externalId
+      )
+      if (!production) {
+        throw new UnexpectedError(
+          `Team sim did not return expected compare member with id: ${pokemonInstance.externalId}`
+        )
+      }
+
+      return production
     },
     duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
       const copiedProduction = this.comparisonStore.members.find(

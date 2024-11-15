@@ -45,19 +45,19 @@
           <template #item.spilledIngredients="{ item }">
             <v-row dense style="flex-wrap: nowrap; overflow-x: auto">
               <v-col
-                v-for="(ingredient, index) in item.spilledIngredientsProduce"
+                v-for="(ingredientSet, index) in item.spilledIngredientsProduce"
                 :key="index"
                 class="flex-start"
                 cols="4"
               >
                 <div class="flex-center flex-column">
                   <v-img
-                    :src="ingredientImage(ingredient.ingredient.name.toLowerCase())"
+                    :src="ingredientImage(ingredientSet.ingredient.name.toLowerCase())"
                     height="24"
                     width="24"
                   ></v-img>
                   <div class="text-center">
-                    {{ ingredient.amount }}
+                    {{ ingredientSet.amount }}
                   </div>
                 </div>
               </v-col>
@@ -67,9 +67,7 @@
           <template #item.sneakySnack="{ item }">
             <div class="flex-center" style="padding-right: 11px">
               <v-img
-                v-for="berrySet in item.sneakySnackProduce"
-                :key="berrySet.berry.name"
-                :src="`/images/berries/${berrySet.berry.name?.toLowerCase()}.png`"
+                :src="berryImage(item.sneakySnackProduce.berry)"
                 height="24"
                 width="24"
               ></v-img>
@@ -77,15 +75,6 @@
             <div class="text-center" style="padding-right: 11px">
               {{ item.sneakySnack }}
             </div>
-          </template>
-
-          <template #item.collectFrequency="{ item }">
-            <div v-if="item.collectFrequency">
-              <div>
-                {{ item.collectFrequency }}
-              </div>
-            </div>
-            <div v-else>Not reached</div>
           </template>
 
           <template #item.totalHelps="{ item }">
@@ -107,14 +96,6 @@
           <template #item.totalRecovery="{ item }">
             <div>{{ item.totalRecovery }}</div>
           </template>
-
-          <template #item.averageEnergy="{ item }">
-            <div>{{ item.averageEnergy }}</div>
-          </template>
-
-          <template #item.averageFrequency="{ item }">
-            <div>{{ item.averageFrequency }}</div>
-          </template>
         </v-data-table>
       </v-card>
     </v-col>
@@ -124,8 +105,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import { pokemonImage } from '@/services/utils/image-utils'
-import { TimeUtils } from '@/services/utils/time-utils'
+import { berryImage, pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { MathUtils } from 'sleepapi-common'
@@ -145,7 +125,8 @@ export default defineComponent({
     return {
       comparisonStore,
       pokemonStore,
-      pokemonImage
+      pokemonImage,
+      berryImage
     }
   },
   data: () => ({
@@ -161,19 +142,6 @@ export default defineComponent({
       { title: 'Carry limit', key: 'carryLimit', sortable: true, align: 'center' },
       { title: 'Spilled ingredients', key: 'spilledIngredients', sortable: true, align: 'center' },
       { title: 'Sneaky snack', key: 'sneakySnack', sortable: true, align: 'center' },
-      {
-        title: 'Time to full carry\n(hh:mm:ss)',
-        key: 'collectFrequency',
-        sortable: true,
-        align: 'center'
-      },
-      {
-        title: 'Average frequency\n(hh:mm:ss)',
-        key: 'averageFrequency',
-        sortable: true,
-        align: 'center'
-      },
-      { title: 'Average energy', key: 'averageEnergy', sortable: true, align: 'center' },
       { title: 'Total recovered energy', key: 'totalRecovery', sortable: true, align: 'center' },
       { title: 'Total helps', key: 'totalHelps', sortable: true, align: 'center' },
       { title: 'Day helps', key: 'dayHelps', sortable: true, align: 'center' },
@@ -193,31 +161,29 @@ export default defineComponent({
           member: member.name,
           pokemonName: memberPokemon.name,
           shiny: member.shiny,
-          ingredientPercentage: MathUtils.round(memberProduction.ingredientPercentage * 100, 1),
-          skillPercentage: MathUtils.round(memberProduction.skillPercentage * 100, 1),
-          carryLimit: memberProduction.carrySize,
-          spilledIngredients: memberProduction.spilledIngredients.reduce(
+          ingredientPercentage: MathUtils.round(
+            memberProduction.advanced.ingredientPercentage * 100,
+            1
+          ),
+          skillPercentage: MathUtils.round(memberProduction.advanced.skillPercentage * 100, 1),
+          carryLimit: memberProduction.advanced.carrySize,
+          spilledIngredients: memberProduction.advanced.spilledIngredients.reduce(
             (sum, cur) => sum + cur.amount,
             0
           ),
-          spilledIngredientsProduce: memberProduction.spilledIngredients.map(
+          spilledIngredientsProduce: memberProduction.advanced.spilledIngredients.map(
             ({ amount, ingredient }) => ({
               ingredient,
               amount: MathUtils.round(amount, 1)
             })
           ),
-          sneakySnack: memberProduction.sneakySnack.reduce((sum, cur) => sum + cur.amount, 0),
-          sneakySnackProduce: memberProduction.sneakySnack,
-          totalHelps: memberProduction.nrOfHelps,
-          dayHelps: memberProduction.dayHelps,
-          nightHelps: memberProduction.nightHelps,
-          sneakySnackHelps: memberProduction.sneakySnackHelps,
-          totalRecovery: MathUtils.round(memberProduction.totalRecovery, 1),
-          averageEnergy: MathUtils.round(memberProduction.averageEnergy, 1),
-          averageFrequency: TimeUtils.formatTime(Math.floor(memberProduction.averageFrequency)),
-          collectFrequency:
-            memberProduction.collectFrequency &&
-            TimeUtils.prettifyTime(memberProduction.collectFrequency)
+          sneakySnack: MathUtils.round(memberProduction.advanced.sneakySnack.amount, 1),
+          sneakySnackProduce: memberProduction.advanced.sneakySnack,
+          totalHelps: MathUtils.round(memberProduction.advanced.totalHelps, 1),
+          dayHelps: MathUtils.round(memberProduction.advanced.dayHelps, 1),
+          nightHelps: MathUtils.round(memberProduction.advanced.nightHelps, 1),
+          sneakySnackHelps: MathUtils.round(memberProduction.advanced.nightHelpsAfterSS, 1),
+          totalRecovery: MathUtils.round(memberProduction.advanced.totalRecovery, 1)
         })
       }
 

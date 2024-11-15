@@ -1,19 +1,13 @@
 import ComparisonPage from '@/pages/compare/comparison-page.vue'
 import { mount, VueWrapper } from '@vue/test-utils'
-import {
-  emptyBerryInventory,
-  emptyProduce,
-  mainskill,
-  pokemon,
-  type SingleProductionResponse
-} from 'sleepapi-common'
+import { type MemberProduction } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { ProductionService } from '@/services/production/production-service'
+import { TeamService } from '@/services/team/team-service'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { SingleProductionExt } from '@/types/member/instanced'
-import { createMockPokemon } from '@/vitest'
+import type { TeamProductionExt } from '@/types/member/instanced'
+import { createMockMemberProduction, createMockPokemon, createMockTeamProduction } from '@/vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
 
@@ -23,77 +17,16 @@ describe('ComparisonPage', () => {
   let wrapper: VueWrapper<InstanceType<typeof ComparisonPage>>
   let pokemonStore: ReturnType<typeof usePokemonStore>
 
-  const mockResponse: SingleProductionResponse = {
-    production: {
-      detailedProduce: {
-        averageTotalSkillProcs: 10,
-        dayHelps: 10,
-        nightHelps: 10,
-        nightHelpsBeforeSS: 10,
-        produce: emptyProduce(),
-        sneakySnack: emptyBerryInventory(),
-        skillActivations: [],
-        spilledIngredients: []
-      },
-      pokemonCombination: {
-        ingredientList: [],
-        pokemon: pokemon.ABOMASNOW
-      }
-    },
-    summary: {
-      ingredientPercentage: 0.2,
-      skillPercentage: 0.02,
-      carrySize: 10,
-      averageEnergy: 10,
-      averageFrequency: 10,
-      helpsAfterSS: 10,
-      helpsBeforeSS: 10,
-      nrOfHelps: 10,
-      skill: mainskill.CHARGE_ENERGY_S,
-      skillDreamShardValue: 10,
-      skillBerriesOtherValue: 10,
-      skillEnergyOthersValue: 10,
-      skillEnergySelfValue: 10,
-      skillHelpsValue: 10,
-      skillPotSizeValue: 10,
-      skillProcs: 10,
-      skillProduceValue: emptyProduce(),
-      skillStrengthValue: 10,
-      skillTastyChanceValue: 10,
-      spilledIngredients: [],
-      totalProduce: emptyProduce(),
-      totalRecovery: 10,
-      collectFrequency: { hour: 1, minute: 0, second: 0 }
-    }
-  }
-
+  const mockResponse: TeamProductionExt = createMockTeamProduction()
   const mockPokemon = createMockPokemon()
-
-  const mockMemberProduction: SingleProductionExt = {
-    externalId: mockPokemon.externalId,
-    ingredients: mockResponse.production.detailedProduce.produce.ingredients,
-    berries: mockResponse.production.detailedProduce.produce.berries,
-    skillProcs: mockResponse.production.detailedProduce.averageTotalSkillProcs,
-    ingredientPercentage: 0.2,
-    skillPercentage: 0.02,
-    carrySize: 10,
-    averageEnergy: 10,
-    averageFrequency: 10,
-    dayHelps: 10,
-    nightHelps: 10,
-    nrOfHelps: 10,
-    sneakySnackHelps: 10,
-    spilledIngredients: [],
-    totalRecovery: 10,
-    sneakySnack: []
-  }
+  const mockMemberProduction: MemberProduction = createMockMemberProduction()
 
   beforeEach(async () => {
     setActivePinia(createPinia())
     pokemonStore = usePokemonStore()
     pokemonStore.upsertLocalPokemon(mockPokemon)
 
-    ProductionService.calculateCompareProduction = vi.fn().mockResolvedValue(mockResponse)
+    TeamService.calculateProduction = vi.fn().mockResolvedValue(mockResponse)
     wrapper = mount(ComparisonPage)
     wrapper.setData({
       showDialog: false,

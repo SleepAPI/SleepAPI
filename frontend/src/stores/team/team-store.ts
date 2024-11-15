@@ -33,33 +33,36 @@ export interface TeamState {
   teams: TeamInstance[]
 }
 
+const defaultState = (attrs?: Partial<TeamState>): TeamState => ({
+  currentIndex: 0,
+  maxAvailableTeams: MAX_TEAMS,
+  loadingTeams: false,
+  loadingMembers: [false, false, false, false, false],
+  domainVersion: 0,
+  timeWindow: '24H',
+  tab: 'overview',
+  teams: [
+    {
+      index: 0,
+      memberIndex: 0,
+      name: 'Log in to save your teams',
+      camp: false,
+      bedtime: '21:30',
+      wakeup: '06:00',
+      recipeType: 'curry',
+      favoredBerries: [],
+      version: 0,
+      members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
+      memberIvs: {},
+      production: undefined
+    }
+  ],
+  ...attrs
+})
+
 export const useTeamStore = defineStore('team', {
   // NOTE: If state is changed, migration/outdate must be updated
-  state: (): TeamState => ({
-    currentIndex: 0,
-    maxAvailableTeams: MAX_TEAMS,
-    loadingTeams: false,
-    loadingMembers: [false, false, false, false, false],
-    domainVersion: 0,
-    timeWindow: '24H',
-    tab: 'overview',
-    teams: [
-      {
-        index: 0,
-        memberIndex: 0,
-        name: 'Log in to save your teams',
-        camp: false,
-        bedtime: '21:30',
-        wakeup: '06:00',
-        recipeType: 'curry',
-        favoredBerries: [],
-        version: 0,
-        members: new Array(MAX_TEAM_MEMBERS).fill(undefined),
-        memberIvs: {},
-        production: undefined
-      }
-    ]
-  }),
+  state: (): TeamState => defaultState(),
   getters: {
     getCurrentTeam: (state) => state.teams[state.currentIndex],
     getPokemon: (state) => {
@@ -140,6 +143,15 @@ export const useTeamStore = defineStore('team', {
         team.production = undefined
         team.memberIvs = {}
       }
+      const updatedKeys = Object.keys(defaultState()) as Array<keyof TeamState>
+      const cachedKeys = Object.keys(this.$state) as Array<keyof TeamState>
+
+      cachedKeys.forEach((key) => {
+        if (!updatedKeys.includes(key)) {
+          delete this.$state[key]
+        }
+      })
+
       this.domainVersion = DOMAIN_VERSION
     },
     async syncTeams() {

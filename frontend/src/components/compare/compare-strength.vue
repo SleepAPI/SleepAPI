@@ -202,7 +202,6 @@ import {
 } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
-import type { SingleProductionExt } from '@/types/member/instanced'
 import {
   MAX_RECIPE_BONUS,
   MAX_RECIPE_LEVEL,
@@ -211,6 +210,7 @@ import {
   defaultZero,
   mainskill,
   recipeLevelBonus,
+  type MemberProduction,
   type PokemonInstanceExt
 } from 'sleepapi-common'
 
@@ -280,8 +280,10 @@ export default defineComponent({
 
         const berryPower = this.showBerries
           ? StrengthService.berryStrength({
-              favored: this.comparisonStore.favoredBerries,
-              berries: memberProduction.berries.filter((b) => b.level === member.level),
+              favored: this.comparisonStore.team?.favoredBerries ?? [],
+              berries: memberProduction.produceTotal.berries.filter(
+                (b) => b.level === member.level
+              ),
               timeWindow: this.comparisonStore.timeWindow
             })
           : 0
@@ -299,10 +301,10 @@ export default defineComponent({
               // classic calc returns berry array with 2 elements, first is own berries, second is berries from skill
               // berries from skill can be identified with level === 0, but we need to update this to real level so
               // that the berries can scale. the classic calc is messy
-              berries: memberProduction.berries
+              berries: memberProduction.produceTotal.berries
                 .filter((b) => b.level !== member.level)
                 .map((b) => ({ amount: b.amount, berry: b.berry, level: member.level })),
-              favored: this.comparisonStore.favoredBerries,
+              favored: this.comparisonStore.team?.favoredBerries ?? [],
               timeWindow: this.comparisonStore.timeWindow
             })
           : 0
@@ -315,7 +317,7 @@ export default defineComponent({
           berries: berryPower,
           berryCompact: compactNumber(berryPower),
           ingredients:
-            memberProduction.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
+            memberProduction.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
             StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
           ingredientPower,
           ingredientCompact: compactNumber(ingredientPower),
@@ -367,8 +369,8 @@ export default defineComponent({
         return MathUtils.round(energy / factor, 1)
       }
     },
-    lowestIngredientPower(memberProduction: SingleProductionExt) {
-      const amount = memberProduction.ingredients.reduce(
+    lowestIngredientPower(memberProduction: MemberProduction) {
+      const amount = memberProduction.produceTotal.ingredients.reduce(
         (sum, cur) =>
           sum +
           cur.amount *
@@ -379,14 +381,14 @@ export default defineComponent({
       )
       return Math.floor(amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow))
     },
-    highestIngredientPower(memberProduction: SingleProductionExt) {
+    highestIngredientPower(memberProduction: MemberProduction) {
       const recipeBonus = 1 + MAX_RECIPE_BONUS / 100
       const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL]
       const amount =
         recipeBonus *
         maxLevelRecipeMultiplier *
         this.userStore.islandBonus *
-        memberProduction.ingredients.reduce(
+        memberProduction.produceTotal.ingredients.reduce(
           (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
           0
         )

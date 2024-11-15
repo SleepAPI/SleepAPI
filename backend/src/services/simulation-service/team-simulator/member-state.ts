@@ -85,7 +85,8 @@ export class MemberState {
   private frequency60;
   private frequency80;
   private skillPercentage: number;
-  private sneakySnackProduce: Produce;
+  private ingredientPercentage: number;
+  private sneakySnackBerries: BerrySet;
   private averageProduce: Produce;
   private averageProduceAmount: number;
   private pityProcThreshold;
@@ -124,27 +125,22 @@ export class MemberState {
     this.nextHelp = this.fullDayDuration; // set to 1440, first start of day subtracts 1440
 
     this.skillPercentage = TeamSimulatorUtils.calculateSkillPercentage(member);
-    const ingredientPercentage = TeamSimulatorUtils.calculateIngredientPercentage(member);
+    this.ingredientPercentage = TeamSimulatorUtils.calculateIngredientPercentage(member);
 
     const averagedPokemonCombination = calculateAveragePokemonIngredientSet(member.pokemonSet);
     const berriesPerDrop = TeamSimulatorUtils.calculateNrOfBerriesPerDrop(member);
     this.averageProduce = calculateAverageProduce(
       averagedPokemonCombination,
-      ingredientPercentage,
+      this.ingredientPercentage,
       berriesPerDrop,
       member.level
     );
     this.averageProduceAmount = InventoryUtils.countInventory(this.averageProduce);
 
-    this.sneakySnackProduce = {
-      ingredients: [],
-      berries: [
-        {
-          amount: berriesPerDrop,
-          berry: member.pokemonSet.pokemon.berry,
-          level: member.level,
-        },
-      ],
+    this.sneakySnackBerries = {
+      amount: berriesPerDrop,
+      berry: member.pokemonSet.pokemon.berry,
+      level: member.level,
     };
 
     const frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
@@ -187,6 +183,7 @@ export class MemberState {
   }
 
   get inventoryLimit() {
+    // camp, subskills, ribbon etc already calculated in controller
     return this.member.carrySize;
   }
 
@@ -368,13 +365,10 @@ export class MemberState {
           berry,
           level,
         }))
-        .concat(
-          this.sneakySnackProduce.berries.map(({ amount, berry, level }) => ({
-            amount: this.totalSneakySnackHelps * amount,
-            berry,
-            level,
-          }))
-        ),
+        .concat({
+          ...this.sneakySnackBerries,
+          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount,
+        }),
       ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: this.totalAverageHelps * amount,
         ingredient,
@@ -383,13 +377,13 @@ export class MemberState {
     const totalSkillProduce: Produce = this.totalProduce; // so far only skill value has been added to totalProduce
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
     const spilledHelps = this.voidHelps + this.totalSneakySnackHelps;
-    const spilledIngredients =
-      spilledHelps < 0
-        ? this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
-            amount: spilledHelps * amount,
-            ingredient,
-          }))
-        : [];
+    const spilledIngredients = InventoryUtils.addToInventory(emptyProduce(), {
+      berries: [],
+      ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
+        amount: (spilledHelps * amount) / iterations,
+        ingredient,
+      })),
+    });
 
     return {
       produceTotal: multiplyProduce(this.totalProduce, 1 / iterations),
@@ -399,15 +393,23 @@ export class MemberState {
       skillProcs: this.skillProcs / this.metronomeFactor / iterations,
       externalId: this.id,
       advanced: {
-        spilledIngredients: spilledIngredients,
+        ingredientPercentage: this.ingredientPercentage,
+        skillPercentage: this.skillPercentage,
+        carrySize: this.inventoryLimit,
+        spilledIngredients: spilledIngredients.ingredients,
         dayHelps: this.totalDayHelps / iterations,
         nightHelps: this.totalNightHelps / iterations,
         totalHelps: (this.totalDayHelps + this.totalNightHelps) / iterations,
         nightHelpsAfterSS: this.nightHelpsAfterSS / iterations,
         nightHelpsBeforeSS: this.nightHelpsBeforeSS / iterations,
+        sneakySnack: {
+          ...this.sneakySnackBerries,
+          amount: (this.sneakySnackBerries.amount * this.totalSneakySnackHelps) / iterations,
+        },
         skillCrits: this.skillCrits / iterations,
         skillCritValue: this.skillValue.crit / iterations,
         wastedEnergy: this.wastedEnergy / iterations,
+        totalRecovery: this.totalRecovery / iterations,
         morningProcs: this.morningProcs / iterations,
       },
     };
@@ -422,13 +424,10 @@ export class MemberState {
           berry,
           level,
         }))
-        .concat(
-          this.sneakySnackProduce.berries.map(({ amount, berry, level }) => ({
-            amount: this.totalSneakySnackHelps * amount,
-            berry,
-            level,
-          }))
-        ),
+        .concat({
+          ...this.sneakySnackBerries,
+          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount,
+        }),
       ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: this.totalAverageHelps * amount,
         ingredient,

@@ -3,9 +3,8 @@ import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { createMockPokemon } from '@/vitest'
+import { createMockMemberProduction, createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
-import { createMockSingleProduction } from '@/vitest/mocks/compare/single-production'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -102,7 +101,7 @@ describe('Pokemon Store', () => {
     const pokemonStore = usePokemonStore()
     pokemonStore.upsertLocalPokemon(mockPokemon)
     const comparisonStore = useComparisonStore()
-    comparisonStore.addMember(createMockSingleProduction())
+    comparisonStore.addMember(createMockMemberProduction())
 
     expect(pokemonStore.pokemon).toEqual({
       'external-id': mockPokemon
