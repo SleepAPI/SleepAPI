@@ -94,6 +94,9 @@ export class TeamSimulator {
           this.activateTeamSkill(teamSkillActivated, member);
         }
       }
+      for (const member of this.memberStates) {
+        member.scheduleHelp(minutesSinceWakeup);
+      }
 
       this.maybeDegradeEnergy();
       minutesSinceWakeup += 5;
@@ -137,8 +140,11 @@ export class TeamSimulator {
 
   private init() {
     for (const member of this.memberStates) {
-      const morningSkills = member.startDay();
-      for (const proc of morningSkills) {
+      member.wakeUp();
+    }
+
+    for (const member of this.memberStates) {
+      for (const proc of member.collectInventory()) {
         this.activateTeamSkill(proc, member);
       }
     }
