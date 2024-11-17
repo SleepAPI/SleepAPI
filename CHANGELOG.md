@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/SleepAPI/SleepAPI/compare/v1.2.6...v1.2.7) (2024-11-17)
+
+
+### Bug Fixes
+
+* wakeup whole team before collecting ([5a53e4f](https://github.com/SleepAPI/SleepAPI/commit/5a53e4f8fa892c8df726004e7151a41674d6f7e2))
+
 ## [1.2.6](https://github.com/SleepAPI/SleepAPI/compare/v1.2.5...v1.2.6) (2024-11-15)
 
 ## [1.2.5](https://github.com/SleepAPI/SleepAPI/compare/v1.2.4...v1.2.5) (2024-11-12)
