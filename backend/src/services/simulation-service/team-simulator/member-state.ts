@@ -199,7 +199,7 @@ export class MemberState {
     return this.member.externalId;
   }
 
-  public startDay() {
+  public wakeUp() {
     const nrOfErb = this.team.filter((member) => member.subskills.includes(subskill.ENERGY_RECOVERY_BONUS)).length;
     const sleepInfo: SleepInfo = {
       period: this.nightPeriod,
@@ -215,8 +215,6 @@ export class MemberState {
     this.disguiseBusted = false;
 
     this.nextHelp -= this.fullDayDuration;
-
-    return this.collectInventory();
   }
 
   /**
@@ -268,16 +266,12 @@ export class MemberState {
 
   public attemptDayHelp(currentMinutesSincePeriodStart: number): TeamSkillActivation[] {
     if (currentMinutesSincePeriodStart >= this.nextHelp) {
-      const frequency = this.calculateFrequencyWithEnergy();
-
       // update stats
       this.totalDayHelps += 1;
       this.helpsSinceLastSkillProc += 1;
 
       this.totalAverageHelps += 1;
       this.helpsSinceLastCook += 1;
-
-      this.nextHelp += frequency / 60;
 
       const skillActivations = this.attemptSkill();
       if (skillActivations.length === 1) {
@@ -288,6 +282,13 @@ export class MemberState {
       }
     }
     return [];
+  }
+
+  public scheduleHelp(currentMinutesSincePeriodStart: number) {
+    if (currentMinutesSincePeriodStart >= this.nextHelp) {
+      const frequency = this.calculateFrequencyWithEnergy();
+      this.nextHelp += frequency / 60;
+    }
   }
 
   public attemptNightHelp(currentMinutesSincePeriodStart: number) {

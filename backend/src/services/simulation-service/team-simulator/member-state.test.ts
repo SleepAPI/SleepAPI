@@ -77,7 +77,8 @@ describe('startDay', () => {
   it('shall recover full sleep', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     expect(memberState.energy).toBe(100);
   });
 
@@ -95,7 +96,8 @@ describe('startDay', () => {
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     expect(memberState.energy).toBe(88);
   });
 
@@ -119,7 +121,8 @@ describe('startDay', () => {
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     expect(Math.round(memberState.energy)).toBe(67);
   });
 
@@ -128,7 +131,8 @@ describe('startDay', () => {
     expect(memberState.energy).toBe(0);
     memberState.recoverEnergy(50);
     expect(memberState.energy).toBe(50);
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     expect(Math.round(memberState.energy)).toBe(100);
   });
 
@@ -146,7 +150,8 @@ describe('startDay', () => {
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     expect(memberState.energy).toBe(100);
   });
 });
@@ -371,7 +376,8 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptDayHelp(0);
     memberState.collectInventory();
 
@@ -469,7 +475,8 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptDayHelp(-1);
     memberState.collectInventory();
 
@@ -527,8 +534,10 @@ describe('attemptDayHelp', () => {
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptDayHelp(0);
+    memberState.scheduleHelp(0);
 
     expect(memberState.results(1).advanced.totalHelps).toEqual(1);
 
@@ -561,7 +570,8 @@ describe('attemptDayHelp', () => {
       externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptDayHelp(0);
 
     expect(memberState.results(1).skillProcs).toBe(1);
@@ -582,7 +592,8 @@ describe('attemptDayHelp', () => {
       externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     // fill inv
     memberState.attemptDayHelp(0);
 
@@ -593,7 +604,8 @@ describe('attemptDayHelp', () => {
 describe('attemptNightHelp', () => {
   it('shall not perform night help if the time has not passed scheduled time', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptNightHelp(-1);
 
     expect(memberState.results(1).advanced.totalHelps).toEqual(0);
@@ -602,7 +614,8 @@ describe('attemptNightHelp', () => {
 
   it('shall add 1 night help', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptNightHelp(0);
 
     expect(memberState.results(1).advanced.nightHelps).toEqual(1);
@@ -611,7 +624,8 @@ describe('attemptNightHelp', () => {
   it('shall add any excess helps to sneaky snacking, and shall not roll skill proc on those', () => {
     const noCarryMember: TeamMember = { ...member, carrySize: 0 };
     const memberState = new MemberState({ member: noCarryMember, settings, team: [noCarryMember], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptNightHelp(0);
     memberState.collectInventory();
 
@@ -633,7 +647,8 @@ describe('attemptNightHelp', () => {
       externalId: 'some id',
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.startDay();
+    memberState.wakeUp();
+    memberState.collectInventory();
     memberState.attemptNightHelp(0);
     memberState.collectInventory();
 
