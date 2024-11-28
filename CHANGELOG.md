@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/SleepAPI/SleepAPI/compare/v1.2.7...v1.2.8) (2024-11-28)
+
+
+### Bug Fixes
+
+* nature no longer affects energy other ([194534e](https://github.com/SleepAPI/SleepAPI/commit/194534e6a04077559e108ae053ae07269557ca5c))
+
 ## [1.2.7](https://github.com/SleepAPI/SleepAPI/compare/v1.2.6...v1.2.7) (2024-11-17)
 
 
