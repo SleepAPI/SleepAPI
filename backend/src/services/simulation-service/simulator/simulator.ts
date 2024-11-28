@@ -264,7 +264,7 @@ export function simulation(params: {
               skillEnergyOthersValue += energyFromCrit * skillActivation.skill.critChance;
             }
           } else {
-            skillEnergyOthersValue += energyAmountWithNature;
+            skillEnergyOthersValue += skillActivation.adjustedAmount;
           }
         } else if (skillActivation.adjustedProduce) {
           if (skillActivation.skill === mainskill.EXTRA_HELPFUL_S || skillActivation.skill === mainskill.HELPER_BOOST) {
