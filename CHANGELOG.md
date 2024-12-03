@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/SleepAPI/SleepAPI/compare/v1.2.8...v1.3.0) (2024-12-03)
+
+
+### Features
+
+* added Sneasel ([d76e563](https://github.com/SleepAPI/SleepAPI/commit/d76e56368cb56f4a06346e1980db02ae63786b56))
+
 ## [1.2.8](https://github.com/SleepAPI/SleepAPI/compare/v1.2.7...v1.2.8) (2024-11-28)
 
 
