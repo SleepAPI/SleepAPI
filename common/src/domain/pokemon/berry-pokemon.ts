@@ -44,6 +44,7 @@ import {
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
+  TASTY_CHANCE_S,
 } from '../mainskill/mainskills';
 
 import { Pokemon } from './pokemon';
@@ -554,6 +555,30 @@ export const STEELIX: Pokemon = {
   carrySize: 25,
 };
 
+export const SNEASEL: Pokemon = {
+  name: 'SNEASEL',
+  specialty: 'berry',
+  frequency: toSeconds(0, 53, 20),
+  ingredientPercentage: 25.5,
+  skillPercentage: 1.9,
+  berry: WIKI,
+  genders: BALANCED_GENDER,
+  carrySize: 17,
+  previousEvolutions: 0,
+  remainingEvolutions: 1,
+  ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
+  ingredient30: [
+    { amount: 2, ingredient: BEAN_SAUSAGE },
+    { amount: 2, ingredient: FANCY_EGG },
+  ],
+  ingredient60: [
+    { amount: 3, ingredient: BEAN_SAUSAGE },
+    { amount: 4, ingredient: FANCY_EGG },
+    { amount: 4, ingredient: GREENGRASS_SOYBEANS },
+  ],
+  skill: TASTY_CHANCE_S,
+};
+
 export const HOUNDOUR: Pokemon = {
   name: 'HOUNDOUR',
   specialty: 'berry',
@@ -738,6 +763,15 @@ export const WALREIN: Pokemon = {
   carrySize: 18,
 };
 
+export const WEAVILE: Pokemon = {
+  ...evolvesFrom(SNEASEL),
+  name: 'WEAVILE',
+  frequency: toSeconds(0, 45, 0),
+  ingredientPercentage: 25.2,
+  skillPercentage: 1.8,
+  carrySize: 21,
+};
+
 export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
   BUTTERFREE,
   RATICATE,
@@ -760,6 +794,7 @@ export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
   ALTARIA,
   BANETTE,
   WALREIN,
+  WEAVILE,
 ];
 
 export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
@@ -781,6 +816,7 @@ export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
   CROCONAW,
   PICHU,
   CLEFFA,
+  SNEASEL,
   HOUNDOUR,
   SLAKOTH,
   SWABLU,
