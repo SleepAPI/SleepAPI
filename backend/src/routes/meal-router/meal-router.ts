@@ -1,7 +1,7 @@
-import MealController from '@src/controllers/meal/meal.controller';
-import { Logger } from '@src/services/logger/logger';
+import MealController from '@src/controllers/meal/meal.controller.js';
+import { Logger } from '@src/services/logger/logger.js';
 import { Request, Response } from 'express';
-import { BaseRouter } from '../base-router';
+import { BaseRouter } from '../base-router.js';
 
 export interface MealNamesQueryParams {
   curry?: boolean;

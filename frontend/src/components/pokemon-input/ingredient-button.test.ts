@@ -1,8 +1,9 @@
 import IngredientButton from '@/components/pokemon-input/ingredient-button.vue'
-import { VueWrapper, mount } from '@vue/test-utils'
+import { mount, VueWrapper } from '@vue/test-utils'
 import {
-  ingredient,
-  pokemon,
+  PIKACHU,
+  PINSIR,
+  type Ingredient,
   type IngredientInstanceExt,
   type IngredientSet,
   type PokemonInstanceExt
@@ -14,7 +15,7 @@ describe('IngredientButton', () => {
 
   const mockPokemon: PokemonInstanceExt = {
     level: 60,
-    pokemon: pokemon.PIKACHU,
+    pokemon: PIKACHU,
     ingredients: [] as IngredientInstanceExt[]
   } as PokemonInstanceExt
 
@@ -54,7 +55,7 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
 
@@ -72,15 +73,13 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
     await wrapper.setData({ fab: true })
 
     expect(wrapper.vm.otherIngredientOptions).toHaveLength(2)
-    const speedDialBtns = wrapper
-      .findAllComponents({ name: 'v-btn' })
-      .filter((btn) => btn.vm.$props.icon)
+    const speedDialBtns = wrapper.findAllComponents({ name: 'v-btn' }).filter((btn) => btn.vm.$props.icon)
     expect(speedDialBtns.length).toBe(3) // including the activator button
 
     const ingredientBtns = speedDialBtns.slice(1)
@@ -95,7 +94,7 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
     // Use fake timers
@@ -117,7 +116,7 @@ describe('IngredientButton', () => {
     expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('Apple')
 
     const emitted = wrapper.emitted('update-ingredient') as Array<
-      Array<{ ingredient: ingredient.Ingredient; ingredientLevel: number }>
+      Array<{ ingredient: Ingredient; ingredientLevel: number }>
     >
 
     expect(emitted).toHaveLength(2)

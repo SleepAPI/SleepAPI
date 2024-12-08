@@ -24,14 +24,14 @@
 
 <script lang="ts">
 import { rarityColor } from '@/services/utils/color-utils'
-import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'SubskillButton',
   props: {
     subskill: {
-      type: Object as PropType<subskill.SubSkill>,
+      type: Object as PropType<Subskill>,
       required: true
     },
     label: {

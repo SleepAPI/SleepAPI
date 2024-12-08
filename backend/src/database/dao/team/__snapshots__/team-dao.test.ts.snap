@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`findTeamsWithMembers shall get team with members 1`] = `
+exports[`findTeamsWithMembers > shall get team with members 1`] = `
 [
   {
     "bedtime": "21:30",

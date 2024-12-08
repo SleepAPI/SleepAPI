@@ -1,39 +1,71 @@
-import { PokemonIngredientSet, Produce, emptyBerryInventory, ingredient, pokemon } from 'sleepapi-common';
-import { calculateAverageProduce, clampHelp } from './produce-calculator';
+import {
+  PINSIR,
+  PokemonWithIngredients,
+  Produce,
+  berry,
+  berrySetToFlat,
+  emptyBerryInventory,
+  ingredient,
+  ingredientSetToFlat
+} from 'sleepapi-common';
+import { calculateAverageProduce, clampHelp } from './produce-calculator.js';
 
 describe('calculateAverageProduce', () => {
   it('shall average a Pokemons produce based on ingredient percentage', () => {
-    const averagePokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.PINSIR,
-      ingredientList: [{ amount: 1, ingredient: ingredient.FANCY_APPLE }],
+    const averagePokemonCombination: PokemonWithIngredients = {
+      pokemon: PINSIR,
+      ingredientList: [{ amount: 1, ingredient: ingredient.FANCY_APPLE }]
     };
     const ingredientPercentage = 0.5;
     const berriesPerDrop = 1;
 
-    expect(calculateAverageProduce(averagePokemonCombination, ingredientPercentage, berriesPerDrop, 60))
-      .toMatchInlineSnapshot(`
+    expect(
+      calculateAverageProduce({
+        ingredients: ingredientSetToFlat(averagePokemonCombination.ingredientList),
+        berries: berrySetToFlat([{ amount: 1, berry: berry.LUM, level: 60 }]),
+        ingredientPercentage,
+        berriesPerDrop
+      })
+    ).toMatchInlineSnapshot(`
       {
-        "berries": [
-          {
-            "amount": 0.5,
-            "berry": {
-              "name": "LUM",
-              "type": "bug",
-              "value": 24,
-            },
-            "level": 60,
-          },
+        "berries": Float32Array [
+          0,
+          0.5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
         ],
-        "ingredients": [
-          {
-            "amount": 0.5,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
+        "ingredients": Float32Array [
+          0.5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
         ],
       }
     `);
@@ -44,7 +76,7 @@ describe('clampHelp', () => {
   it('shall clamp help if not enough space left in inventory', () => {
     const produce: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.BEAN_SAUSAGE }],
+      ingredients: [{ amount: 2, ingredient: ingredient.BEAN_SAUSAGE }]
     };
     const result = clampHelp({ amount: 2, averageProduce: produce, inventorySpace: 1 });
     expect(result).toMatchInlineSnapshot(`
@@ -68,7 +100,7 @@ describe('clampHelp', () => {
   it('shall not clamp help if space left in inventory', () => {
     const produce: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
+      ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }]
     };
     const result = clampHelp({ amount: 1, averageProduce: produce, inventorySpace: 2 });
     expect(result).toMatchInlineSnapshot(`

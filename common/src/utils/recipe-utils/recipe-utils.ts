@@ -1,6 +1,8 @@
 import { MAX_RECIPE_LEVEL } from '../../domain/constants';
-import { Recipe, RecipeType } from '../../domain/recipe';
-import { IngredientSet } from '../../domain/types';
+import { IngredientSet } from '../../domain/ingredient';
+import { Recipe, RecipeFlat, RecipeType } from '../../domain/recipe';
+import { emptyIngredientInventoryFlat } from '../../utils/flat-utils';
+import { ING_ID_LOOKUP } from '../ingredient-utils/ingredient-utils';
 
 export function createCurry(params: { name: string; ingredients: IngredientSet[]; bonus: number }): Recipe {
   return createRecipe({ ...params, type: 'curry' });
@@ -14,6 +16,30 @@ export function createDessert(params: { name: string; ingredients: IngredientSet
   return createRecipe({ ...params, type: 'dessert' });
 }
 
+export function recipesToFlat<T extends Recipe | Recipe[]>(recipes: T): T extends Recipe[] ? RecipeFlat[] : RecipeFlat {
+  const recipeArray: Recipe[] = Array.isArray(recipes) ? recipes : [recipes];
+
+  const result = recipeArray.map((recipe) => {
+    const ingredientsFlat = emptyIngredientInventoryFlat();
+
+    recipe.ingredients.forEach((ingredientSet) => {
+      const index = ING_ID_LOOKUP[ingredientSet.ingredient.name];
+      ingredientsFlat[index] = ingredientSet.amount;
+    });
+
+    return {
+      name: recipe.name,
+      ingredients: ingredientsFlat,
+      value: recipe.value,
+      valueMax: recipe.valueMax,
+      type: recipe.type,
+      bonus: recipe.bonus,
+      nrOfIngredients: recipe.nrOfIngredients
+    };
+  });
+
+  return (Array.isArray(recipes) ? result : result[0]) as T extends Recipe[] ? RecipeFlat[] : RecipeFlat;
+}
 function createRecipe(params: { name: string; ingredients: IngredientSet[]; bonus: number; type: RecipeType }): Recipe {
   const { name, ingredients, bonus, type } = params;
   const nrOfIngredients = ingredients.reduce((sum, cur) => sum + cur.amount, 0);
@@ -24,7 +50,7 @@ function createRecipe(params: { name: string; ingredients: IngredientSet[]; bonu
     type,
     ingredients,
     bonus,
-    nrOfIngredients,
+    nrOfIngredients
   };
 }
 
@@ -88,7 +114,7 @@ export const recipeLevelBonus: { [level: number]: number } = {
   57: 2.83,
   58: 2.9,
   59: 2.97,
-  60: 3.03,
+  60: 3.03
 };
 
 export function calculateRecipeValue(params: { level: number; ingredients: IngredientSet[]; bonus: number }) {

@@ -1,7 +1,7 @@
-import { DBUser } from '@src/database/dao/user/user-dao';
-import { AuthorizationError } from '@src/domain/error/api/api-error';
-import { verify } from '@src/services/api-service/login/login-service';
-import { Logger } from '@src/services/logger/logger';
+import { DBUser } from '@src/database/dao/user/user-dao.js';
+import { AuthorizationError } from '@src/domain/error/api/api-error.js';
+import { verify } from '@src/services/api-service/login/login-service.js';
+import { Logger } from '@src/services/logger/logger.js';
 import { NextFunction, Request, Response } from 'express';
 
 export interface AuthenticatedRequest extends Request<unknown, unknown, unknown, unknown> {

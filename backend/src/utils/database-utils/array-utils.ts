@@ -7,12 +7,12 @@ export function chunkArray<T>(array: Array<T>, chunkSize: number): Iterable<Arra
         if (shallowCopy.length === 0) {
           return {
             done: true,
-            value: [],
+            value: []
           };
         } else {
           return { done: false, value: shallowCopy.splice(0, chunkSize) };
         }
-      },
-    }),
+      }
+    })
   };
 }

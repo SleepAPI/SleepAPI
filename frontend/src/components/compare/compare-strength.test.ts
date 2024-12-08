@@ -1,15 +1,13 @@
 import CompareStrength from '@/components/compare/compare-strength.vue'
 import { StrengthService } from '@/services/strength/strength-service'
-import {
-  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
-  useComparisonStore
-} from '@/stores/comparison-store/comparison-store'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import { createMockMemberProduction, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import {
+  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
   MAX_RECIPE_BONUS,
   MAX_RECIPE_LEVEL,
   berryPowerForLevel,
@@ -79,10 +77,7 @@ describe('CompareStrength', () => {
         recipeLevelBonus[MAX_RECIPE_LEVEL] *
         userStore.islandBonus *
         AVERAGE_WEEKLY_CRIT_MULTIPLIER *
-        mockMemberProduction.produceTotal.ingredients.reduce(
-          (sum, cur) => sum + cur.amount * cur.ingredient.value,
-          0
-        )
+        mockMemberProduction.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount * cur.ingredient.value, 0)
     )
     expect(wrapper.vm.highestIngredientPower(mockMemberProduction)).toEqual(highestIngredientValue)
 

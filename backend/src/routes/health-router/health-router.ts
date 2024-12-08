@@ -1,6 +1,6 @@
-import HealthController from '@src/controllers/health/health.controller';
-import { Logger } from '@src/services/logger/logger';
-import { BaseRouter } from '../base-router';
+import HealthController from '@src/controllers/health/health.controller.js';
+import { Logger } from '@src/services/logger/logger.js';
+import { BaseRouter } from '../base-router.js';
 
 class HealthRouterImpl {
   public async register(controller: HealthController) {

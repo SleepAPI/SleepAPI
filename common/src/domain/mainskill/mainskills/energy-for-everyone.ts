@@ -7,7 +7,7 @@ export const ENERGY_FOR_EVERYONE: Mainskill = createBaseSkill({
   unit: 'energy',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Restores ? Energy to each helper Pokémon on your team.',
-  RP: [1120, 1593, 2197, 3033, 4187, 5785],
+  RP: [1120, 1593, 2197, 3033, 4187, 5785]
 });
 
 MAINSKILLS.push(ENERGY_FOR_EVERYONE);

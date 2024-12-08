@@ -1,6 +1,6 @@
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { MathUtils, Time, TimePeriod } from 'sleepapi-common';
-import { EventType, ScheduledEvent } from '../../event';
+import { EventType, ScheduledEvent } from '../../event.js';
 
 export class SleepEvent extends ScheduledEvent {
   time: Time;

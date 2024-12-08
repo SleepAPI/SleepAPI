@@ -5,11 +5,11 @@ import { useTeamStore } from '@/stores/team/team-store'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, berry, pokemon } from 'sleepapi-common'
+import { GENGAR, MathUtils, berry } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.GENGAR }),
+  member: createMockPokemon({ pokemon: GENGAR }),
   production: {
     ...createMockMemberProductionExt().production,
     produceWithoutSkill: {
@@ -43,9 +43,7 @@ describe('MemberProductionBerry', () => {
 
   it('displays the correct berry image', () => {
     const berryImg = wrapper.find('img')
-    expect(berryImg.attributes('src')).toBe(
-      berryImage(mockMember.production.produceWithoutSkill.berries[0].berry)
-    )
+    expect(berryImg.attributes('src')).toBe(berryImage(mockMember.production.produceWithoutSkill.berries[0].berry))
   })
 
   it('displays the correct berry amount', () => {

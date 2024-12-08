@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import { PokemonIngredientSet, Produce, multiplyIngredients, multiplyProduce } from 'sleepapi-common';
+import { Produce, ProduceFlat, multiplyProduce } from 'sleepapi-common';
 
-export function calculateAverageProduce(
-  pokemonSet: PokemonIngredientSet,
-  ingredientPercentage: number,
-  berriesPerDrop: number,
-  level: number
-): Produce {
+export function calculateAverageProduce(params: {
+  ingredients: Float32Array;
+  berries: Float32Array;
+  ingredientPercentage: number;
+  berriesPerDrop: number;
+}): ProduceFlat {
+  const { ingredients, berries, ingredientPercentage, berriesPerDrop } = params;
   return {
-    berries: [{ berry: pokemonSet.pokemon.berry, amount: berriesPerDrop * (1 - ingredientPercentage), level }],
-    ingredients: multiplyIngredients(pokemonSet.ingredientList, ingredientPercentage),
+    berries: Float32Array.from(berries, (value) => value * (berriesPerDrop * (1 - ingredientPercentage))),
+    ingredients: Float32Array.from(ingredients, (value) => value * ingredientPercentage)
   };
 }
 

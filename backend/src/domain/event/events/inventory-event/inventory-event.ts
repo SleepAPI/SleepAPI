@@ -1,6 +1,6 @@
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { MathUtils, Produce, Time, prettifyBerries, prettifyIngredientDrop } from 'sleepapi-common';
-import { EventType, ScheduledEvent } from '../../event';
+import { EventType, ScheduledEvent } from '../../event.js';
 
 export class InventoryEvent extends ScheduledEvent {
   time: Time;

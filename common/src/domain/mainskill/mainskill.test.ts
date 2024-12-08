@@ -8,14 +8,14 @@ const baseSkillAttributes: Omit<MainskillAttributes, 'modifier'> = {
   unit: 'energy' as MainskillUnit,
   maxLevel: 6,
   description: 'Restores ? Energy to the user.',
-  RP: [400, 569, 785, 1083, 1496, 2066],
+  RP: [400, 569, 785, 1083, 1496, 2066]
 };
 const baseSkill = createBaseSkill(baseSkillAttributes);
 
 const modifiedSkillAttributes: MainskillAttributes = {
   ...baseSkillAttributes,
   modifier: { type: 'Moonlight', critChance: 0.5 },
-  name: 'Moonlight (Charge Energy S)',
+  name: 'Moonlight (Charge Energy S)'
 };
 const modifiedSkill = new Mainskill(modifiedSkillAttributes);
 

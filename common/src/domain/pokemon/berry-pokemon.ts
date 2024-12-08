@@ -17,8 +17,8 @@ import {
   RAWST,
   SITRUS,
   WIKI,
-  YACHE,
-} from '../berry/berry';
+  YACHE
+} from '../berry/berries';
 import { BALANCED_GENDER, SEVEN_EIGHTHS_MALE, THREE_FOURTHS_FEMALE } from '../gender';
 import {
   BEAN_SAUSAGE,
@@ -34,8 +34,8 @@ import {
   SOFT_POTATO,
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
-  WARMING_GINGER,
-} from '../ingredient/ingredient';
+  WARMING_GINGER
+} from '../ingredient/ingredients';
 import {
   CHARGE_ENERGY_S,
   CHARGE_STRENGTH_M,
@@ -44,7 +44,7 @@ import {
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
-  TASTY_CHANCE_S,
+  TASTY_CHANCE_S
 } from '../mainskill/mainskills';
 
 import { Pokemon } from './pokemon';
@@ -63,14 +63,14 @@ export const CATERPIE: Pokemon = {
   ingredient0: { amount: 1, ingredient: HONEY },
   ingredient30: [
     { amount: 2, ingredient: HONEY },
-    { amount: 2, ingredient: SNOOZY_TOMATO },
+    { amount: 2, ingredient: SNOOZY_TOMATO }
   ],
   ingredient60: [
     { amount: 4, ingredient: HONEY },
     { amount: 3, ingredient: SNOOZY_TOMATO },
-    { amount: 4, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 4, ingredient: GREENGRASS_SOYBEANS }
   ],
-  skill: INGREDIENT_MAGNET_S,
+  skill: INGREDIENT_MAGNET_S
 };
 
 export const METAPOD: Pokemon = {
@@ -79,7 +79,7 @@ export const METAPOD: Pokemon = {
   frequency: toSeconds(1, 10, 0),
   ingredientPercentage: 20.8,
   skillPercentage: 1.8,
-  carrySize: 13,
+  carrySize: 13
 };
 
 export const BUTTERFREE: Pokemon = {
@@ -88,7 +88,7 @@ export const BUTTERFREE: Pokemon = {
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 19.7,
   skillPercentage: 1.4,
-  carrySize: 21,
+  carrySize: 21
 };
 
 export const RATTATA: Pokemon = {
@@ -105,14 +105,14 @@ export const RATTATA: Pokemon = {
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
-    { amount: 2, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 2, ingredient: GREENGRASS_SOYBEANS }
   ],
   ingredient60: [
     { amount: 4, ingredient: FANCY_APPLE },
     { amount: 3, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 3, ingredient: BEAN_SAUSAGE },
+    { amount: 3, ingredient: BEAN_SAUSAGE }
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_ENERGY_S
 };
 
 export const RATICATE: Pokemon = {
@@ -121,7 +121,7 @@ export const RATICATE: Pokemon = {
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 23.7,
   skillPercentage: 3.0,
-  carrySize: 16,
+  carrySize: 16
 };
 
 export const EKANS: Pokemon = {
@@ -138,14 +138,14 @@ export const EKANS: Pokemon = {
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
-    { amount: 2, ingredient: FANCY_EGG },
+    { amount: 2, ingredient: FANCY_EGG }
   ],
   ingredient60: [
     { amount: 4, ingredient: BEAN_SAUSAGE },
     { amount: 3, ingredient: FANCY_EGG },
-    { amount: 3, ingredient: FIERY_HERB },
+    { amount: 3, ingredient: FIERY_HERB }
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_ENERGY_S
 };
 
 export const ARBOK: Pokemon = {
@@ -154,7 +154,7 @@ export const ARBOK: Pokemon = {
   frequency: toSeconds(1, 1, 40),
   ingredientPercentage: 26.4,
   skillPercentage: 5.7,
-  carrySize: 14,
+  carrySize: 14
 };
 
 export const PIKACHU: Pokemon = {
@@ -171,14 +171,14 @@ export const PIKACHU: Pokemon = {
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
-    { amount: 2, ingredient: WARMING_GINGER },
+    { amount: 2, ingredient: WARMING_GINGER }
   ],
   ingredient60: [
     { amount: 4, ingredient: FANCY_APPLE },
     { amount: 3, ingredient: FANCY_EGG },
-    { amount: 3, ingredient: WARMING_GINGER },
+    { amount: 3, ingredient: WARMING_GINGER }
   ],
-  skill: CHARGE_STRENGTH_S,
+  skill: CHARGE_STRENGTH_S
 };
 
 export const PIKACHU_HALLOWEEN: Pokemon = {
@@ -195,14 +195,14 @@ export const PIKACHU_HALLOWEEN: Pokemon = {
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
-    { amount: 2, ingredient: WARMING_GINGER },
+    { amount: 2, ingredient: WARMING_GINGER }
   ],
   ingredient60: [
     { amount: 4, ingredient: FANCY_APPLE },
     { amount: 3, ingredient: FANCY_EGG },
-    { amount: 3, ingredient: WARMING_GINGER },
+    { amount: 3, ingredient: WARMING_GINGER }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const RAICHU: Pokemon = {
@@ -211,7 +211,7 @@ export const RAICHU: Pokemon = {
   frequency: toSeconds(0, 36, 40),
   ingredientPercentage: 22.4,
   skillPercentage: 3.2,
-  carrySize: 21,
+  carrySize: 21
 };
 
 export const CLEFAIRY: Pokemon = {
@@ -228,14 +228,14 @@ export const CLEFAIRY: Pokemon = {
   ingredient0: { amount: 1, ingredient: FANCY_APPLE },
   ingredient30: [
     { amount: 2, ingredient: FANCY_APPLE },
-    { amount: 2, ingredient: HONEY },
+    { amount: 2, ingredient: HONEY }
   ],
   ingredient60: [
     { amount: 4, ingredient: FANCY_APPLE },
     { amount: 3, ingredient: HONEY },
-    { amount: 3, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 3, ingredient: GREENGRASS_SOYBEANS }
   ],
-  skill: METRONOME,
+  skill: METRONOME
 };
 
 export const CLEFABLE: Pokemon = {
@@ -244,7 +244,7 @@ export const CLEFABLE: Pokemon = {
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 16.8,
   skillPercentage: 3.6,
-  carrySize: 24,
+  carrySize: 24
 };
 
 export const VULPIX: Pokemon = {
@@ -261,14 +261,14 @@ export const VULPIX: Pokemon = {
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
     { amount: 2, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 2, ingredient: GREENGRASS_CORN },
+    { amount: 2, ingredient: GREENGRASS_CORN }
   ],
   ingredient60: [
     { amount: 4, ingredient: GREENGRASS_SOYBEANS },
     { amount: 3, ingredient: GREENGRASS_CORN },
-    { amount: 3, ingredient: SOFT_POTATO },
+    { amount: 3, ingredient: SOFT_POTATO }
   ],
-  skill: ENERGIZING_CHEER_S,
+  skill: ENERGIZING_CHEER_S
 };
 
 export const NINETALES: Pokemon = {
@@ -277,7 +277,7 @@ export const NINETALES: Pokemon = {
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 16.4,
   skillPercentage: 2.5,
-  carrySize: 23,
+  carrySize: 23
 };
 
 export const MANKEY: Pokemon = {
@@ -294,14 +294,14 @@ export const MANKEY: Pokemon = {
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
-    { amount: 1, ingredient: TASTY_MUSHROOM },
+    { amount: 1, ingredient: TASTY_MUSHROOM }
   ],
   ingredient60: [
     { amount: 4, ingredient: BEAN_SAUSAGE },
     { amount: 2, ingredient: TASTY_MUSHROOM },
-    { amount: 4, ingredient: HONEY },
+    { amount: 4, ingredient: HONEY }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const PRIMEAPE: Pokemon = {
@@ -310,7 +310,7 @@ export const PRIMEAPE: Pokemon = {
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 20.0,
   skillPercentage: 2.4,
-  carrySize: 17,
+  carrySize: 17
 };
 
 export const DODUO: Pokemon = {
@@ -327,14 +327,14 @@ export const DODUO: Pokemon = {
   ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
   ingredient30: [
     { amount: 2, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 1, ingredient: SOOTHING_CACAO },
+    { amount: 1, ingredient: SOOTHING_CACAO }
   ],
   ingredient60: [
     { amount: 4, ingredient: GREENGRASS_SOYBEANS },
     { amount: 2, ingredient: SOOTHING_CACAO },
-    { amount: 3, ingredient: BEAN_SAUSAGE },
+    { amount: 3, ingredient: BEAN_SAUSAGE }
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_ENERGY_S
 };
 
 export const DODRIO: Pokemon = {
@@ -343,7 +343,7 @@ export const DODRIO: Pokemon = {
   frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 18.4,
   skillPercentage: 2.0,
-  carrySize: 21,
+  carrySize: 21
 };
 
 export const ONIX: Pokemon = {
@@ -360,14 +360,14 @@ export const ONIX: Pokemon = {
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 2, ingredient: SNOOZY_TOMATO },
-    { amount: 2, ingredient: BEAN_SAUSAGE },
+    { amount: 2, ingredient: BEAN_SAUSAGE }
   ],
   ingredient60: [
     { amount: 4, ingredient: SNOOZY_TOMATO },
     { amount: 4, ingredient: BEAN_SAUSAGE },
-    { amount: 3, ingredient: SOFT_POTATO },
+    { amount: 3, ingredient: SOFT_POTATO }
   ],
-  skill: INGREDIENT_MAGNET_S,
+  skill: INGREDIENT_MAGNET_S
 };
 
 export const CUBONE: Pokemon = {
@@ -384,13 +384,13 @@ export const CUBONE: Pokemon = {
   ingredient0: { amount: 1, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 2, ingredient: WARMING_GINGER },
-    { amount: 2, ingredient: SOOTHING_CACAO },
+    { amount: 2, ingredient: SOOTHING_CACAO }
   ],
   ingredient60: [
     { amount: 4, ingredient: WARMING_GINGER },
-    { amount: 3, ingredient: SOOTHING_CACAO },
+    { amount: 3, ingredient: SOOTHING_CACAO }
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_ENERGY_S
 };
 
 export const MAROWAK: Pokemon = {
@@ -399,7 +399,7 @@ export const MAROWAK: Pokemon = {
   frequency: toSeconds(0, 58, 20),
   ingredientPercentage: 22.5,
   skillPercentage: 4.5,
-  carrySize: 15,
+  carrySize: 15
 };
 
 export const CHIKORITA: Pokemon = {
@@ -416,14 +416,14 @@ export const CHIKORITA: Pokemon = {
   ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
   ingredient30: [
     { amount: 2, ingredient: SOOTHING_CACAO },
-    { amount: 3, ingredient: HONEY },
+    { amount: 3, ingredient: HONEY }
   ],
   ingredient60: [
     { amount: 4, ingredient: SOOTHING_CACAO },
     { amount: 5, ingredient: HONEY },
-    { amount: 3, ingredient: LARGE_LEEK },
+    { amount: 3, ingredient: LARGE_LEEK }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const BAYLEEF: Pokemon = {
@@ -432,7 +432,7 @@ export const BAYLEEF: Pokemon = {
   frequency: toSeconds(0, 55, 0),
   ingredientPercentage: 16.8,
   skillPercentage: 3.8,
-  carrySize: 17,
+  carrySize: 17
 };
 
 export const MEGANIUM: Pokemon = {
@@ -441,7 +441,7 @@ export const MEGANIUM: Pokemon = {
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 17.5,
   skillPercentage: 4.6,
-  carrySize: 20,
+  carrySize: 20
 };
 
 export const CYNDAQUIL: Pokemon = {
@@ -458,14 +458,14 @@ export const CYNDAQUIL: Pokemon = {
   ingredient0: { amount: 1, ingredient: WARMING_GINGER },
   ingredient30: [
     { amount: 2, ingredient: WARMING_GINGER },
-    { amount: 2, ingredient: FIERY_HERB },
+    { amount: 2, ingredient: FIERY_HERB }
   ],
   ingredient60: [
     { amount: 4, ingredient: WARMING_GINGER },
     { amount: 3, ingredient: FIERY_HERB },
-    { amount: 3, ingredient: PURE_OIL },
+    { amount: 3, ingredient: PURE_OIL }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const QUILAVA: Pokemon = {
@@ -474,7 +474,7 @@ export const QUILAVA: Pokemon = {
   frequency: toSeconds(0, 50, 0),
   ingredientPercentage: 21.1,
   skillPercentage: 4.1,
-  carrySize: 18,
+  carrySize: 18
 };
 
 export const TYPHLOSION: Pokemon = {
@@ -483,7 +483,7 @@ export const TYPHLOSION: Pokemon = {
   frequency: toSeconds(0, 40, 0),
   ingredientPercentage: 20.8,
   skillPercentage: 3.9,
-  carrySize: 23,
+  carrySize: 23
 };
 
 export const TOTODILE: Pokemon = {
@@ -500,13 +500,13 @@ export const TOTODILE: Pokemon = {
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
-    { amount: 2, ingredient: PURE_OIL },
+    { amount: 2, ingredient: PURE_OIL }
   ],
   ingredient60: [
     { amount: 4, ingredient: BEAN_SAUSAGE },
-    { amount: 3, ingredient: PURE_OIL },
+    { amount: 3, ingredient: PURE_OIL }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const CROCONAW: Pokemon = {
@@ -515,7 +515,7 @@ export const CROCONAW: Pokemon = {
   frequency: toSeconds(0, 56, 40),
   ingredientPercentage: 25.3,
   skillPercentage: 5.2,
-  carrySize: 15,
+  carrySize: 15
 };
 
 export const FERALIGATR: Pokemon = {
@@ -524,7 +524,7 @@ export const FERALIGATR: Pokemon = {
   frequency: toSeconds(0, 46, 40),
   ingredientPercentage: 25.7,
   skillPercentage: 5.5,
-  carrySize: 19,
+  carrySize: 19
 };
 
 export const PICHU: Pokemon = {
@@ -533,7 +533,7 @@ export const PICHU: Pokemon = {
   frequency: toSeconds(1, 11, 40),
   ingredientPercentage: 21.0,
   skillPercentage: 2.3,
-  carrySize: 10,
+  carrySize: 10
 };
 
 export const CLEFFA: Pokemon = {
@@ -542,7 +542,7 @@ export const CLEFFA: Pokemon = {
   frequency: toSeconds(1, 33, 20),
   ingredientPercentage: 16.4,
   skillPercentage: 3.4,
-  carrySize: 10,
+  carrySize: 10
 };
 
 export const STEELIX: Pokemon = {
@@ -552,7 +552,7 @@ export const STEELIX: Pokemon = {
   ingredientPercentage: 15.4,
   skillPercentage: 3.2,
   berry: BELUE,
-  carrySize: 25,
+  carrySize: 25
 };
 
 export const SNEASEL: Pokemon = {
@@ -569,14 +569,14 @@ export const SNEASEL: Pokemon = {
   ingredient0: { amount: 1, ingredient: BEAN_SAUSAGE },
   ingredient30: [
     { amount: 2, ingredient: BEAN_SAUSAGE },
-    { amount: 2, ingredient: FANCY_EGG },
+    { amount: 2, ingredient: FANCY_EGG }
   ],
   ingredient60: [
     { amount: 3, ingredient: BEAN_SAUSAGE },
     { amount: 4, ingredient: FANCY_EGG },
-    { amount: 4, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 4, ingredient: GREENGRASS_SOYBEANS }
   ],
-  skill: TASTY_CHANCE_S,
+  skill: TASTY_CHANCE_S
 };
 
 export const HOUNDOUR: Pokemon = {
@@ -593,14 +593,14 @@ export const HOUNDOUR: Pokemon = {
   ingredient0: { amount: 1, ingredient: FIERY_HERB },
   ingredient30: [
     { amount: 2, ingredient: FIERY_HERB },
-    { amount: 3, ingredient: WARMING_GINGER },
+    { amount: 3, ingredient: WARMING_GINGER }
   ],
   ingredient60: [
     { amount: 4, ingredient: FIERY_HERB },
     { amount: 4, ingredient: WARMING_GINGER },
-    { amount: 3, ingredient: LARGE_LEEK },
+    { amount: 3, ingredient: LARGE_LEEK }
   ],
-  skill: CHARGE_STRENGTH_M,
+  skill: CHARGE_STRENGTH_M
 };
 
 export const HOUNDOOM: Pokemon = {
@@ -609,7 +609,7 @@ export const HOUNDOOM: Pokemon = {
   frequency: toSeconds(0, 55, 0),
   ingredientPercentage: 20.3,
   skillPercentage: 4,
-  carrySize: 16,
+  carrySize: 16
 };
 
 export const SLAKOTH: Pokemon = {
@@ -626,14 +626,14 @@ export const SLAKOTH: Pokemon = {
   ingredient0: { amount: 1, ingredient: SNOOZY_TOMATO },
   ingredient30: [
     { amount: 2, ingredient: SNOOZY_TOMATO },
-    { amount: 2, ingredient: HONEY },
+    { amount: 2, ingredient: HONEY }
   ],
   ingredient60: [
     { amount: 4, ingredient: SNOOZY_TOMATO },
     { amount: 4, ingredient: HONEY },
-    { amount: 4, ingredient: FANCY_APPLE },
+    { amount: 4, ingredient: FANCY_APPLE }
   ],
-  skill: INGREDIENT_MAGNET_S,
+  skill: INGREDIENT_MAGNET_S
 };
 
 export const VIGOROTH: Pokemon = {
@@ -642,7 +642,7 @@ export const VIGOROTH: Pokemon = {
   frequency: toSeconds(0, 53, 20),
   ingredientPercentage: 20.4,
   skillPercentage: 1.5,
-  carrySize: 9,
+  carrySize: 9
 };
 
 export const SLAKING: Pokemon = {
@@ -651,7 +651,7 @@ export const SLAKING: Pokemon = {
   frequency: toSeconds(1, 3, 20),
   ingredientPercentage: 33.9,
   skillPercentage: 6.7,
-  carrySize: 12,
+  carrySize: 12
 };
 
 export const SWABLU: Pokemon = {
@@ -668,14 +668,14 @@ export const SWABLU: Pokemon = {
   ingredient0: { amount: 1, ingredient: FANCY_EGG },
   ingredient30: [
     { amount: 2, ingredient: FANCY_EGG },
-    { amount: 3, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 3, ingredient: GREENGRASS_SOYBEANS }
   ],
   ingredient60: [
     { amount: 4, ingredient: FANCY_EGG },
     { amount: 4, ingredient: GREENGRASS_SOYBEANS },
-    { amount: 5, ingredient: FANCY_APPLE },
+    { amount: 5, ingredient: FANCY_APPLE }
   ],
-  skill: CHARGE_ENERGY_S,
+  skill: CHARGE_ENERGY_S
 };
 
 export const ALTARIA: Pokemon = {
@@ -685,7 +685,7 @@ export const ALTARIA: Pokemon = {
   ingredientPercentage: 25.8,
   skillPercentage: 6.1,
   berry: YACHE,
-  carrySize: 14,
+  carrySize: 14
 };
 
 export const SHUPPET: Pokemon = {
@@ -702,14 +702,14 @@ export const SHUPPET: Pokemon = {
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 2, ingredient: PURE_OIL },
-    { amount: 2, ingredient: WARMING_GINGER },
+    { amount: 2, ingredient: WARMING_GINGER }
   ],
   ingredient60: [
     { amount: 4, ingredient: PURE_OIL },
     { amount: 4, ingredient: WARMING_GINGER },
-    { amount: 3, ingredient: TASTY_MUSHROOM },
+    { amount: 3, ingredient: TASTY_MUSHROOM }
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: CHARGE_STRENGTH_S_RANGE
 };
 
 export const BANETTE: Pokemon = {
@@ -718,7 +718,7 @@ export const BANETTE: Pokemon = {
   frequency: toSeconds(0, 43, 20),
   ingredientPercentage: 17.9,
   skillPercentage: 3.3,
-  carrySize: 19,
+  carrySize: 19
 };
 
 export const SPHEAL: Pokemon = {
@@ -735,14 +735,14 @@ export const SPHEAL: Pokemon = {
   ingredient0: { amount: 1, ingredient: PURE_OIL },
   ingredient30: [
     { amount: 2, ingredient: PURE_OIL },
-    { amount: 3, ingredient: BEAN_SAUSAGE },
+    { amount: 3, ingredient: BEAN_SAUSAGE }
   ],
   ingredient60: [
     { amount: 4, ingredient: PURE_OIL },
     { amount: 4, ingredient: BEAN_SAUSAGE },
-    { amount: 4, ingredient: WARMING_GINGER },
+    { amount: 4, ingredient: WARMING_GINGER }
   ],
-  skill: INGREDIENT_MAGNET_S,
+  skill: INGREDIENT_MAGNET_S
 };
 
 export const SEALEO: Pokemon = {
@@ -751,7 +751,7 @@ export const SEALEO: Pokemon = {
   frequency: toSeconds(1, 6, 40),
   ingredientPercentage: 22.1,
   skillPercentage: 2.1,
-  carrySize: 13,
+  carrySize: 13
 };
 
 export const WALREIN: Pokemon = {
@@ -760,7 +760,7 @@ export const WALREIN: Pokemon = {
   frequency: toSeconds(0, 50, 0),
   ingredientPercentage: 22.3,
   skillPercentage: 2.2,
-  carrySize: 18,
+  carrySize: 18
 };
 
 export const WEAVILE: Pokemon = {
@@ -769,7 +769,7 @@ export const WEAVILE: Pokemon = {
   frequency: toSeconds(0, 45, 0),
   ingredientPercentage: 25.2,
   skillPercentage: 1.8,
-  carrySize: 21,
+  carrySize: 21
 };
 
 export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
@@ -794,7 +794,7 @@ export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
   ALTARIA,
   BANETTE,
   WALREIN,
-  WEAVILE,
+  WEAVILE
 ];
 
 export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
@@ -822,7 +822,7 @@ export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
   SWABLU,
   SHUPPET,
   SPHEAL,
-  SEALEO,
+  SEALEO
 ];
 
 export const ALL_BERRY_SPECIALISTS: Pokemon[] = [...OPTIMAL_BERRY_SPECIALISTS, ...INFERIOR_BERRY_SPECIALISTS];

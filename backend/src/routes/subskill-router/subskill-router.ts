@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import SubskillController from '../../controllers/subskill/subskill.controller';
-import { Logger } from '../../services/logger/logger';
-import { BaseRouter } from '../base-router';
+import SubskillController from '../../controllers/subskill/subskill.controller.js';
+import { Logger } from '../../services/logger/logger.js';
+import { BaseRouter } from '../base-router.js';
 
 class SubskillRouterImpl {
   public async register(controller: SubskillController) {

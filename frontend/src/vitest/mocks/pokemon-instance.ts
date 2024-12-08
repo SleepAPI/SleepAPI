@@ -1,10 +1,10 @@
-import { ingredient, nature, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { ingredient, nature, PIKACHU, type PokemonInstanceExt } from 'sleepapi-common'
 
 export function createMockPokemon(attrs?: Partial<PokemonInstanceExt>): PokemonInstanceExt {
   return {
     name: 'Bubbles',
     externalId: 'external-id',
-    pokemon: pokemon.PIKACHU,
+    pokemon: PIKACHU,
     carrySize: 10,
     ingredients: [
       { level: 0, ingredient: ingredient.FANCY_APPLE },

@@ -1,9 +1,16 @@
-import { TeamMember } from '@src/domain/combination/team';
-import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { BALANCED_GENDER, PokemonIngredientSet, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
+import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import {
+  BALANCED_GENDER,
+  berry,
+  ingredient,
+  mainskill,
+  nature,
+  PokemonWithIngredients,
+  TeamMemberExt
+} from 'sleepapi-common';
 
-const mockPokemonSet: PokemonIngredientSet = {
+const mockPokemonSet: PokemonWithIngredients = {
   pokemon: {
     name: 'Mockemon',
     berry: berry.BELUE,
@@ -18,51 +25,54 @@ const mockPokemonSet: PokemonIngredientSet = {
     remainingEvolutions: 0,
     skill: mainskill.CHARGE_STRENGTH_S,
     skillPercentage: 2,
-    specialty: 'skill',
+    specialty: 'skill'
   },
   ingredientList: [
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-  ],
+    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
+  ]
 };
-const member: TeamMember = {
-  pokemonSet: mockPokemonSet,
-  carrySize: 10,
-  level: 60,
-  ribbon: 0,
-  nature: nature.BASHFUL,
-  skillLevel: 6,
-  subskills: [],
-  externalId: 'some id',
+const member: TeamMemberExt = {
+  pokemonWithIngredients: mockPokemonSet,
+  settings: {
+    carrySize: 10,
+    level: 60,
+    ribbon: 0,
+    nature: nature.BASHFUL,
+    skillLevel: 6,
+    subskills: new Set(),
+    externalId: 'some id'
+  }
 };
 describe('calculateSkillPercentage', () => {
   it('shall calculate skill percentage for member', () => {
-    expect(TeamSimulatorUtils.calculateSkillPercentage({ ...member, nature: nature.SASSY })).toBe(0.024);
+    expect(
+      TeamSimulatorUtils.calculateSkillPercentage({ ...member, settings: { ...member.settings, nature: nature.SASSY } })
+    ).toBe(0.024);
   });
 });
 
 describe('calculateIngredientPercentage', () => {
   it('shall calculate ingredient percentage for member', () => {
-    expect(TeamSimulatorUtils.calculateIngredientPercentage({ ...member, nature: nature.QUIET })).toBe(0.24);
+    expect(
+      TeamSimulatorUtils.calculateIngredientPercentage({
+        ...member,
+        settings: { ...member.settings, nature: nature.QUIET }
+      })
+    ).toBe(0.24);
   });
 });
 
 describe('calculateHelpSpeedBeforeEnergy', () => {
-  expect(
-    TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
-      member: { ...member, nature: nature.LONELY, level: 1 },
-      helpingBonus: 0,
-      settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false },
-    })
-  ).toBe(3240);
-});
-
-describe('calculateNrOfBerriesPerDrop', () => {
-  it('shall calculate the correct number of berries per drop', () => {
-    expect(TeamSimulatorUtils.calculateNrOfBerriesPerDrop({ ...member, subskills: [subskill.BERRY_FINDING_S] })).toBe(
-      2
-    );
+  it('should calculate help speed without energy applied', () => {
+    expect(
+      TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
+        member: { ...member, settings: { ...member.settings, nature: nature.LONELY, level: 1 } },
+        helpingBonus: 0,
+        settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false }
+      })
+    ).toBe(3240);
   });
 });
 

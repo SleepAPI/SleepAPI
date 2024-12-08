@@ -20,8 +20,7 @@
 
       <v-list>
         <v-list-item class="text-center text-subtitle-1">
-          With just $1/month, you can support the development of Sleep API and help keep it free for
-          everyone!
+          With just $1/month, you can support the development of Sleep API and help keep it free for everyone!
         </v-list-item>
         <v-list-item>
           <!-- TODO: should not hard code color -->

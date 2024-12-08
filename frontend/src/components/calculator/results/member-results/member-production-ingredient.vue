@@ -15,9 +15,7 @@
           <v-img :src="image" height="28" width="28"></v-img>
         </v-col>
         <v-col cols="auto" style="min-width: 40px">
-          <span class="font-weight-medium">
-            x{{ MathUtils.round(amount * timeWindowFactor, 1) }}
-          </span>
+          <span class="font-weight-medium"> x{{ MathUtils.round(amount * timeWindowFactor, 1) }} </span>
         </v-col>
       </v-row>
     </v-row>
@@ -47,9 +45,7 @@ export default defineComponent({
     memberWithIngredientImages() {
       return {
         ...this.memberWithProduction,
-        ingredients: this.prepareMemberIngredients(
-          this.memberWithProduction.production.produceTotal.ingredients
-        )
+        ingredients: this.prepareMemberIngredients(this.memberWithProduction.production.produceTotal.ingredients)
       }
     },
     timeWindowFactor() {
