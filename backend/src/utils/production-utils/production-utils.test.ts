@@ -1,6 +1,6 @@
-import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error.js';
 import { IngredientSet, ingredient } from 'sleepapi-common';
-import { getIngredientSet } from './production-utils';
+import { getIngredientSet } from './production-utils.js';
 
 describe('getIngredientSets', () => {
   it('shall return the matching set for a valid ingredientSet', () => {
@@ -9,23 +9,23 @@ describe('getIngredientSets', () => {
       [
         {
           amount: 1,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 1,
-          ingredient: ingredient.MOOMOO_MILK,
-        },
+          ingredient: ingredient.MOOMOO_MILK
+        }
       ],
       [
         {
           amount: 1,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 1,
-          ingredient: ingredient.FANCY_APPLE,
-        },
-      ],
+          ingredient: ingredient.FANCY_APPLE
+        }
+      ]
     ];
 
     expect(getIngredientSet(allIngredientSets, ingredientSet)).toEqual(allIngredientSets[1]);
@@ -37,13 +37,13 @@ describe('getIngredientSets', () => {
       [
         {
           amount: 1,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 1,
-          ingredient: ingredient.MOOMOO_MILK,
-        },
-      ],
+          ingredient: ingredient.MOOMOO_MILK
+        }
+      ]
     ];
 
     expect(() => getIngredientSet(allIngredientSets, ingredientSet)).toThrow(

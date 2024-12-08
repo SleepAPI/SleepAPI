@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { mockPokemon } from '../../vitest';
 import { Mainskill } from '../mainskill';
 import { ADAMANT, CAREFUL, QUIET } from '../nature/nature';
-import { MOCK_POKEMON, Pokemon } from '../pokemon/pokemon';
+import { Pokemon } from '../pokemon/pokemon';
 import {
   BERRY_FINDING_S,
   HELPING_BONUS,
@@ -11,8 +12,8 @@ import {
   INGREDIENT_FINDER_S,
   INVENTORY_L,
   SKILL_TRIGGER_M,
-  SKILL_TRIGGER_S,
-} from '../subskill/subskill';
+  SKILL_TRIGGER_S
+} from '../subskill/subskills';
 import { Optimal } from './optimal';
 
 describe('Optimal', () => {
@@ -23,12 +24,12 @@ describe('Optimal', () => {
     maxLevel: 6,
     description: 'Restores ? Energy to the user.',
     RP: [400, 569, 785, 1083, 1496, 2066],
-    modifier: { type: 'Base', critChance: 0 },
+    modifier: { type: 'Base', critChance: 0 }
   });
-  const mockPokemon: Pokemon = { ...MOCK_POKEMON, skill: baseSkill };
+  const mockedPokemon: Pokemon = { ...mockPokemon(), skill: baseSkill };
 
   it('should return correct optimal setup for berry production', () => {
-    const optimalBerry = Optimal.berry(mockPokemon);
+    const optimalBerry = Optimal.berry(mockedPokemon);
 
     expect(optimalBerry).toEqual({
       subskills: [
@@ -36,16 +37,16 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: HELPING_SPEED_S },
         { level: 75, subskill: HELPING_BONUS },
-        { level: 100, subskill: SKILL_TRIGGER_M },
+        { level: 100, subskill: SKILL_TRIGGER_M }
       ],
       nature: ADAMANT,
-      skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize,
+      skillLevel: mockedPokemon.skill.maxLevel,
+      carrySize: mockedPokemon.carrySize
     });
   });
 
   it('should return correct optimal setup for ingredient production', () => {
-    const optimalIngredient = Optimal.ingredient(mockPokemon);
+    const optimalIngredient = Optimal.ingredient(mockedPokemon);
 
     expect(optimalIngredient).toEqual({
       subskills: [
@@ -53,16 +54,16 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: INGREDIENT_FINDER_S },
         { level: 75, subskill: INVENTORY_L },
-        { level: 100, subskill: HELPING_SPEED_S },
+        { level: 100, subskill: HELPING_SPEED_S }
       ],
       nature: QUIET,
-      skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5,
+      skillLevel: mockedPokemon.skill.maxLevel,
+      carrySize: mockedPokemon.carrySize + mockedPokemon.previousEvolutions * 5
     });
   });
 
   it('should return correct optimal setup for skill production', () => {
-    const optimalSkill = Optimal.skill(mockPokemon);
+    const optimalSkill = Optimal.skill(mockedPokemon);
 
     expect(optimalSkill).toEqual({
       subskills: [
@@ -70,11 +71,11 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: SKILL_TRIGGER_S },
         { level: 75, subskill: HELPING_SPEED_S },
-        { level: 100, subskill: HELPING_BONUS },
+        { level: 100, subskill: HELPING_BONUS }
       ],
       nature: CAREFUL,
-      skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5,
+      skillLevel: mockedPokemon.skill.maxLevel,
+      carrySize: mockedPokemon.carrySize + mockedPokemon.previousEvolutions * 5
     });
   });
 });

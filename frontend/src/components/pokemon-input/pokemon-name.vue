@@ -11,9 +11,7 @@
         <v-textarea
           v-model="editedName"
           :rules="[
-            (v: any) =>
-              (v || '').length <= maxNameLength ||
-              `Description must be ${maxNameLength} characters or less`
+            (v: any) => (v || '').length <= maxNameLength || `Description must be ${maxNameLength} characters or less`
           ]"
           :counter="maxNameLength"
           clearable
@@ -31,12 +29,7 @@
         </v-btn>
         <v-spacer />
         <v-btn id="cancelButton" @click="closeEditDialog">Cancel</v-btn>
-        <v-btn
-          id="saveButton"
-          :disabled="remainingChars < 0"
-          rounded="lg"
-          color="primary"
-          @click="saveEditDialog"
+        <v-btn id="saveButton" :disabled="remainingChars < 0" rounded="lg" color="primary" @click="saveEditDialog"
           >OK</v-btn
         >
       </v-card-actions>

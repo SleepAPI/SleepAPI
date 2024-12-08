@@ -38,9 +38,7 @@ describe('ProfilePage', () => {
   })
 
   it('displays user externalId correctly', () => {
-    const externalId = wrapper
-      .findAll('.text-center')
-      .find((el) => el.text() === mockUserStoreData.externalId)
+    const externalId = wrapper.findAll('.text-center').find((el) => el.text() === mockUserStoreData.externalId)
     expect(externalId).toBeDefined()
   })
 

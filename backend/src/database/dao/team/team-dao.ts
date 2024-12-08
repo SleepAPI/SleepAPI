@@ -1,7 +1,7 @@
 import { Static, Type } from '@sinclair/typebox';
-import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
-import { DBPokemon, PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
+import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
+import { DBPokemon, PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
 import { GetTeamResponse, MemberInstance, SubskillInstance } from 'sleepapi-common';
 
 const DBTeamSchema = Type.Composite([
@@ -14,8 +14,8 @@ const DBTeamSchema = Type.Composite([
     bedtime: Type.String(),
     wakeup: Type.String(),
     recipe_type: Type.Union([Type.Literal('curry'), Type.Literal('salad'), Type.Literal('dessert')]),
-    favored_berries: Type.Optional(Type.String()),
-  }),
+    favored_berries: Type.Optional(Type.String())
+  })
 ]);
 export type DBTeam = Static<typeof DBTeamSchema>;
 export type DBTeamWithoutVersion = Omit<DBTeam, 'id' | 'version'>;
@@ -69,17 +69,17 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
           ingredients: [
             {
               level: 0,
-              ingredient: member.ingredient_0,
+              ingredient: member.ingredient_0
             },
             {
               level: 30,
-              ingredient: member.ingredient_30,
+              ingredient: member.ingredient_30
             },
             {
               level: 60,
-              ingredient: member.ingredient_60,
-            },
-          ],
+              ingredient: member.ingredient_60
+            }
+          ]
         });
       }
 
@@ -92,7 +92,7 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
         recipeType: team.recipe_type,
         favoredBerries: team.favored_berries?.split(','),
         version: team.version,
-        members,
+        members
       });
     }
     return teamsWithMembers;

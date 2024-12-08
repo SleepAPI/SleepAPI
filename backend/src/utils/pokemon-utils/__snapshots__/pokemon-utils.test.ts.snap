@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`getPokemonNames shall return all cyan pokemon 1`] = `
+exports[`getPokemonNames > shall return all cyan pokemon 1`] = `
 [
   "CLEFABLE",
   "DODRIO",
@@ -38,7 +38,7 @@ exports[`getPokemonNames shall return all cyan pokemon 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all lapis pokemon 1`] = `
+exports[`getPokemonNames > shall return all lapis pokemon 1`] = `
 [
   "PRIMEAPE",
   "MEGANIUM",
@@ -71,7 +71,7 @@ exports[`getPokemonNames shall return all lapis pokemon 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all pokemon by default 1`] = `
+exports[`getPokemonNames > shall return all pokemon by default 1`] = `
 [
   "BUTTERFREE",
   "RATICATE",
@@ -242,7 +242,7 @@ exports[`getPokemonNames shall return all pokemon by default 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
+exports[`getPokemonNames > shall return all pokemon for multiple islands 1`] = `
 [
   "RATICATE",
   "PIKACHU_HALLOWEEN",
@@ -395,7 +395,7 @@ exports[`getPokemonNames shall return all pokemon for multiple islands 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all power plant pokemon 1`] = `
+exports[`getPokemonNames > shall return all power plant pokemon 1`] = `
 [
   "PIKACHU_HALLOWEEN",
   "RAICHU",
@@ -433,7 +433,7 @@ exports[`getPokemonNames shall return all power plant pokemon 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all snowdrop pokemon 1`] = `
+exports[`getPokemonNames > shall return all snowdrop pokemon 1`] = `
 [
   "RATICATE",
   "NINETALES_ALOLAN",
@@ -466,7 +466,7 @@ exports[`getPokemonNames shall return all snowdrop pokemon 1`] = `
 ]
 `;
 
-exports[`getPokemonNames shall return all taupe pokemon 1`] = `
+exports[`getPokemonNames > shall return all taupe pokemon 1`] = `
 [
   "NINETALES",
   "ONIX",

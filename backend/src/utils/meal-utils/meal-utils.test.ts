@@ -1,15 +1,8 @@
-import { MealError } from '@src/domain/error/meal/meal-error';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, RECIPES, SkillActivation, curry, dessert, mainskill, salad } from 'sleepapi-common';
-import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
-import {
-  CritInfo,
-  calculateCritMultiplier,
-  getDefaultMealTimes,
-  getMeal,
-  getMealRecoveryAmount,
-  getMealsForFilter,
-} from './meal-utils';
+import { MealError } from '@src/domain/error/meal/meal-error.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { RECIPES, curry, dessert, salad } from 'sleepapi-common';
+import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults.js';
+import { getDefaultMealTimes, getMeal, getMealRecoveryAmount, getMealsForFilter } from './meal-utils.js';
 
 describe('getMeal', () => {
   it('shall return Lovely Kiss for lovely_kIsS_smOOthie name', () => {
@@ -27,7 +20,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: true,
         salad: false,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(curry.CURRIES);
   });
@@ -37,7 +30,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: true,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(salad.SALADS);
   });
@@ -47,7 +40,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: false,
-        dessert: true,
+        dessert: true
       })
     ).toEqual(dessert.DESSERTS);
   });
@@ -57,7 +50,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: false,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(RECIPES);
   });
@@ -68,7 +61,7 @@ describe('getMealsForFilter', () => {
         curry: false,
         salad: false,
         dessert: false,
-        minRecipeBonus: 35,
+        minRecipeBonus: 35
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
@@ -99,7 +92,7 @@ describe('getMealsForFilter', () => {
         curry: false,
         salad: false,
         dessert: false,
-        maxPotSize: 57,
+        maxPotSize: 57
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
@@ -180,7 +173,7 @@ describe('getDefaultMealTimes', () => {
   it('shall skip dinner if we are sleeping', () => {
     const mealTimes = getDefaultMealTimes({
       start: TimeUtils.parseTime('06:00'),
-      end: TimeUtils.parseTime('17:00'),
+      end: TimeUtils.parseTime('17:00')
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
@@ -194,7 +187,7 @@ describe('getDefaultMealTimes', () => {
   it('shall work with night schedule', () => {
     const mealTimes = getDefaultMealTimes({
       start: TimeUtils.parseTime('17:00'),
-      end: TimeUtils.parseTime('05:00'),
+      end: TimeUtils.parseTime('05:00')
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
@@ -236,80 +229,5 @@ describe('getMealRecoveryAmount', () => {
   it('shall return 5 for currentEnergy < 20', () => {
     expect(getMealRecoveryAmount(19)).toBe(5);
     expect(getMealRecoveryAmount(0)).toBe(5);
-  });
-});
-
-describe('calculateCritMultiplier', () => {
-  it('shall calculate crit multplier for TASTY_CHANCE_S', () => {
-    const skillActivations: SkillActivation[] = [
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
-      },
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
-      },
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
-      },
-    ];
-    const {
-      critMultiplier,
-      weekdayMultiplier,
-      sundayMultiplier,
-      fullWeekCritChance,
-      weekdayCritChance,
-      sundayCritChance,
-    } = calculateCritMultiplier(skillActivations, new Map());
-    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
-    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
-    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`2`);
-    expect(Math.abs(fullWeekCritChance - 35)).toBeLessThanOrEqual(2);
-    expect(Math.abs(weekdayCritChance - 33)).toBeLessThanOrEqual(2);
-    expect(Math.abs(sundayCritChance - 50)).toBeLessThanOrEqual(2);
-  });
-
-  it('shall calculate default crit multiplier', () => {
-    const skillActivations: SkillActivation[] = [
-      { adjustedAmount: 18, fractionOfProc: 1, nrOfHelpsToActivate: 0, skill: mainskill.ENERGY_FOR_EVERYONE },
-    ];
-    const {
-      critMultiplier,
-      weekdayMultiplier,
-      sundayMultiplier,
-      fullWeekCritChance,
-      weekdayCritChance,
-      sundayCritChance,
-    } = calculateCritMultiplier(skillActivations, new Map());
-    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
-    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
-    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`1.6`);
-    expect(Math.abs(fullWeekCritChance - 13)).toBeLessThanOrEqual(2);
-    expect(Math.abs(weekdayCritChance - 10)).toBeLessThanOrEqual(2);
-    expect(Math.abs(sundayCritChance - 30)).toBeLessThanOrEqual(2);
-  });
-
-  it('shall use cached results', () => {
-    const cache = new Map();
-    const critInfo: CritInfo = {
-      critMultiplier: 0,
-      fullWeekCritChance: 0,
-      sundayCritChance: 0,
-      sundayMultiplier: 0,
-      weekdayCritChance: 0,
-      weekdayMultiplier: 0,
-    };
-    cache.set(0, critInfo);
-
-    const result = calculateCritMultiplier([], cache);
-    expect(result).toEqual(critInfo);
   });
 });

@@ -22,22 +22,8 @@
       </v-row>
     </div>
 
-    <v-sheet
-      color="surface"
-      width="100%"
-      :height="85"
-      location="top left"
-      position="absolute"
-      style="margin-top: 50px"
-    >
-      <v-btn
-        icon
-        color="surface"
-        elevation="0"
-        style="right: 4px; position: absolute"
-        size="40"
-        @click="toggleShiny"
-      >
+    <v-sheet color="surface" width="100%" :height="85" location="top left" position="absolute" style="margin-top: 50px">
+      <v-btn icon color="surface" elevation="0" style="right: 4px; position: absolute" size="40" @click="toggleShiny">
         <v-icon v-if="pokemonInstance.shiny" color="strength" size="24">mdi-creation</v-icon>
         <v-icon v-else size="24">mdi-creation-outline</v-icon>
       </v-btn>
@@ -77,9 +63,7 @@
     <!-- Ingredients -->
     <v-row no-gutters class="mt-2">
       <v-col cols="4" class="mr-2 flex-center">
-        <v-card rounded="pill" class="w-100 h-50 text-center responsive-text flex-center"
-          >Ingredients</v-card
-        >
+        <v-card rounded="pill" class="w-100 h-50 text-center responsive-text flex-center">Ingredients</v-card>
       </v-col>
       <v-col class="flex-center">
         <IngredientButton
@@ -107,10 +91,7 @@
     <!-- Mainskill -->
     <v-row no-gutters class="mt-2">
       <v-col cols="12">
-        <MainskillButton
-          :pokemon-instance="pokemonInstance"
-          @update-skill-level="updateSkillLevel"
-        />
+        <MainskillButton :pokemon-instance="pokemonInstance" @update-skill-level="updateSkillLevel" />
       </v-col>
     </v-row>
 
@@ -132,24 +113,12 @@
 
     <v-row dense class="mt-2">
       <v-col cols="6">
-        <v-btn
-          id="cancelButton"
-          class="w-100 responsive-text"
-          size="large"
-          rounded="lg"
-          color="surface"
-          @click="cancel"
+        <v-btn id="cancelButton" class="w-100 responsive-text" size="large" rounded="lg" color="surface" @click="cancel"
           >Cancel</v-btn
         >
       </v-col>
       <v-col cols="6">
-        <v-btn
-          id="saveButton"
-          class="w-100 responsive-text"
-          size="large"
-          rounded="lg"
-          color="primary"
-          @click="save"
+        <v-btn id="saveButton" class="w-100 responsive-text" size="large" rounded="lg" color="primary" @click="save"
           >Save</v-btn
         >
       </v-col>
@@ -171,13 +140,14 @@ import RibbonButton from '@/components/pokemon-input/ribbon-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
-  RP,
   getPokemon,
-  ingredient,
   maxCarrySize,
+  mockPokemon,
   nature,
-  pokemon,
+  RP,
   uuid,
+  type Ingredient,
+  type Pokemon,
   type PokemonGender,
   type PokemonInstanceExt,
   type SubskillInstanceExt
@@ -205,7 +175,7 @@ export default defineComponent({
       default: undefined
     },
     pokemonFromSearch: {
-      type: undefined as PropType<pokemon.Pokemon> | undefined,
+      type: undefined as PropType<Pokemon> | undefined,
       required: false,
       default: undefined
     }
@@ -223,7 +193,7 @@ export default defineComponent({
       saved: false,
       shiny: false,
       gender: undefined,
-      pokemon: pokemon.MOCK_POKEMON,
+      pokemon: mockPokemon(),
       name: '',
       level: 60,
       ribbon: 0,
@@ -275,7 +245,7 @@ export default defineComponent({
       this.pokemonInstance.subskills = updatedSubskills
       this.pokemonInstance.subskills.sort((a, b) => a.level - b.level)
     },
-    updatePokemon(pokemon: pokemon.Pokemon) {
+    updatePokemon(pokemon: Pokemon) {
       this.pokemonInstance.pokemon = pokemon
     },
     updateName(newName: string) {
@@ -287,10 +257,8 @@ export default defineComponent({
     updateCarry(newLimit: number) {
       this.pokemonInstance.carrySize = newLimit
     },
-    updateIngredient(params: { ingredient: ingredient.Ingredient; ingredientLevel: number }) {
-      const ingredientToUpdate = this.pokemonInstance.ingredients.find(
-        (sub) => sub.level === params.ingredientLevel
-      )
+    updateIngredient(params: { ingredient: Ingredient; ingredientLevel: number }) {
+      const ingredientToUpdate = this.pokemonInstance.ingredients.find((sub) => sub.level === params.ingredientLevel)
       if (ingredientToUpdate) {
         ingredientToUpdate.ingredient = params.ingredient
       } else {

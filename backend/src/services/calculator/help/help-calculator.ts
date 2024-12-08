@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { energyFactorFromEnergy } from '@src/services/calculator/energy/energy-calculator';
-import { calculateHelpSpeedSubskills } from '@src/services/calculator/stats/stats-calculator';
-import { MathUtils, calculateRibbonFrequency, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
+import { energyFactorFromEnergy } from '@src/services/calculator/energy/energy-calculator.js';
+import { calculateHelpSpeedSubskills } from '@src/services/calculator/stats/stats-calculator.js';
+import { MathUtils, Pokemon, calculateRibbonFrequency, invertNatureFrequency, nature } from 'sleepapi-common';
 
 export function calculateHelpSpeedBeforeEnergy(stats: {
-  pokemon: pokemon.Pokemon;
+  pokemon: Pokemon;
   level: number;
   nature: nature.Nature;
-  subskills: subskill.SubSkill[];
+  subskills: Set<string>;
   helpingBonus: number;
   ribbonLevel: number;
   camp: boolean;

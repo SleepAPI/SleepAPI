@@ -8,11 +8,7 @@
         color="subskillWhite"
         rounded="pill"
       >
-        <v-img
-          :src="mainskillImage(memberWithProduction.member.pokemon)"
-          height="40px"
-          width="40px"
-        ></v-img>
+        <v-img :src="mainskillImage(memberWithProduction.member.pokemon)" height="40px" width="40px"></v-img>
       </v-badge>
       <div class="ml-2">
         <div class="flex-center">

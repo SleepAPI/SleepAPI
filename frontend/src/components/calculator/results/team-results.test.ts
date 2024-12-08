@@ -1,11 +1,7 @@
 import TeamResults from '@/components/calculator/results/team-results.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import {
-  createMockMemberProductionExt,
-  createMockPokemon,
-  createMockTeamProduction
-} from '@/vitest'
+import { createMockMemberProductionExt, createMockPokemon, createMockTeamProduction } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry } from 'sleepapi-common'
@@ -38,7 +34,8 @@ describe('TeamResults', () => {
             cookedRecipes: []
           },
           salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
-          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          critInfo: createMockTeamProduction().team.cooking!.critInfo
         },
         berries: [],
         ingredients: []
@@ -67,7 +64,8 @@ describe('TeamResults', () => {
             cookedRecipes: []
           },
           salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
-          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          critInfo: createMockTeamProduction().team.cooking!.critInfo
         },
         berries: [],
         ingredients: []

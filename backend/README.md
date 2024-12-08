@@ -1,3 +1,5 @@
+# TODO: bump node in server
+
 # Sleep API - Backend
 
 As explained in [Development Setup](../DEVELOPMENT_SETUP.md) you should now have Node installed with NVM, set up your development environment and built the common module. We'll now talk about getting the backend up and running.

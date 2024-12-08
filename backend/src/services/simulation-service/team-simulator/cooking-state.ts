@@ -1,36 +1,40 @@
 import {
   CookedRecipeResult,
   CookingResult,
-  IngredientSet,
+  IngredientIndexToFloatAmount,
   MAX_POT_SIZE,
   RandomUtils,
-  Recipe,
+  RecipeFlat,
   curry,
   dessert,
-  salad,
+  emptyIngredientInventoryFloat,
+  flatToIngredientSet,
+  ingredient,
+  salad
 } from 'sleepapi-common';
 
-interface CookedRecipe extends Recipe {
+interface CookedRecipe extends RecipeFlat {
   name: string;
   extraTasty: boolean;
   sunday: boolean;
   nrOfFiller: number;
   strength: number;
 }
-interface SkippedRecipe extends Recipe {
-  reason: 'pot' | 'ingredients';
+type IngredientsMissing = Record<number, { count: number; totalAmountMissing: number }>;
+interface SkippedRecipe extends RecipeFlat {
   totalCount: number;
   potMissing: { count: number; totalAmountMissing: number };
-  ingredientMissing: Map<string, { count: number; totalAmountMissing: number }>;
+  ingredientMissing: IngredientsMissing;
 }
 
-const allCurries: Recipe[] = curry.CURRIES.sort((a, b) => b.valueMax - a.valueMax);
-const allSalads: Recipe[] = salad.SALADS.sort((a, b) => b.valueMax - a.valueMax);
-const allDesserts: Recipe[] = dessert.DESSERTS.sort((a, b) => b.valueMax - a.valueMax);
+const allCurries: RecipeFlat[] = curry.CURRIES_FLAT.sort((a, b) => b.valueMax - a.valueMax);
+const allSalads: RecipeFlat[] = salad.SALADS_FLAT.sort((a, b) => b.valueMax - a.valueMax);
+const allDesserts: RecipeFlat[] = dessert.DESSERTS_FLAT.sort((a, b) => b.valueMax - a.valueMax);
 export class CookingState {
   private camp;
   private bonusPotSize = 0;
   private bonusCritChance = 0;
+  private totalCritChance = 0;
 
   private cookedCurries: CookedRecipe[] = [];
   private cookedSalads: CookedRecipe[] = [];
@@ -40,47 +44,50 @@ export class CookingState {
   private skippedSalads: Map<string, SkippedRecipe> = new Map();
   private skippedDesserts: Map<string, SkippedRecipe> = new Map();
 
-  private currentCurryInventory: IngredientSet[] = [];
-  private currentSaladInventory: IngredientSet[] = [];
-  private currentDessertInventory: IngredientSet[] = [];
+  private currentCurryInventory: IngredientIndexToFloatAmount = emptyIngredientInventoryFloat();
+  private currentSaladInventory: IngredientIndexToFloatAmount = emptyIngredientInventoryFloat();
+  private currentDessertInventory: IngredientIndexToFloatAmount = emptyIngredientInventoryFloat();
 
   constructor(camp: boolean) {
     this.camp = camp;
   }
 
-  public addIngredients(ingredients: IngredientSet[]) {
-    this.addIngredientsToInventory(this.currentCurryInventory, ingredients);
-    this.addIngredientsToInventory(this.currentSaladInventory, ingredients);
-    this.addIngredientsToInventory(this.currentDessertInventory, ingredients);
+  public addIngredients(ingredients: IngredientIndexToFloatAmount) {
+    for (let i = 0; i < ingredients.length; i++) {
+      this.currentCurryInventory[i] += ingredients[i];
+      this.currentSaladInventory[i] += ingredients[i];
+      this.currentDessertInventory[i] += ingredients[i];
+    }
   }
 
   public cook(sunday: boolean) {
     const currentPotSize = this.currentPotSize(sunday);
     const currentCritChance = this.currentCritChance(sunday);
+    this.totalCritChance += currentCritChance;
 
     const potLimitedCurries = this.findRecipesWithinPotLimit(allCurries, currentPotSize, this.skippedCurries);
     const cookedCurry =
       this.cookRecipeType({
         availableRecipes: potLimitedCurries,
         currentIngredients: this.currentCurryInventory,
-        skippedRecipesGrouped: this.skippedCurries,
-      }) ?? curry.MIXED_CURRY;
+        skippedRecipesGrouped: this.skippedCurries
+      }) ?? curry.MIXED_CURRY_FLAT;
 
     const potLimitedSalads = this.findRecipesWithinPotLimit(allSalads, currentPotSize, this.skippedSalads);
     const cookedSalad =
       this.cookRecipeType({
         availableRecipes: potLimitedSalads,
         currentIngredients: this.currentSaladInventory,
-        skippedRecipesGrouped: this.skippedSalads,
-      }) ?? salad.MIXED_SALAD;
+        skippedRecipesGrouped: this.skippedSalads
+      }) ?? salad.MIXED_SALAD_FLAT;
 
     const potLimitedDesserts = this.findRecipesWithinPotLimit(allDesserts, currentPotSize, this.skippedDesserts);
     const cookedDessert =
       this.cookRecipeType({
         availableRecipes: potLimitedDesserts,
         currentIngredients: this.currentDessertInventory,
-        skippedRecipesGrouped: this.skippedDesserts,
-      }) ?? dessert.MIXED_JUICE;
+        skippedRecipesGrouped: this.skippedDesserts
+      }) ?? dessert.MIXED_JUICE_FLAT;
 
     const extraTasty = RandomUtils.roll(currentCritChance);
     const extraTastyFactor = extraTasty ? (sunday ? 3 : 2) : 1;
@@ -94,7 +101,7 @@ export class CookingState {
       sunday,
       strength: cookedCurry.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedCurry.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedCurry.nrOfIngredients
     });
 
     this.cookedSalads.push({
@@ -102,7 +109,7 @@ export class CookingState {
       sunday,
       strength: cookedSalad.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedSalad.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedSalad.nrOfIngredients
     });
 
     this.cookedDesserts.push({
@@ -110,7 +117,7 @@ export class CookingState {
       sunday,
       strength: cookedDessert.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedDessert.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedDessert.nrOfIngredients
     });
 
     this.bonusPotSize = 0;
@@ -124,40 +131,84 @@ export class CookingState {
     this.bonusPotSize = Math.min(200, this.bonusPotSize + amount);
   }
 
+  private cookRecipeType(params: {
+    availableRecipes: RecipeFlat[];
+    currentIngredients: IngredientIndexToFloatAmount;
+    skippedRecipesGrouped: Map<string, SkippedRecipe>;
+  }): RecipeFlat | undefined {
+    const { availableRecipes, currentIngredients, skippedRecipesGrouped } = params;
+
+    for (let recipeIndex = 0; recipeIndex < availableRecipes.length; ++recipeIndex) {
+      const recipe = availableRecipes[recipeIndex];
+
+      // If this recipe has failed before, get it; otherwise, create a new entry with default values.
+      const existingEntry: SkippedRecipe = this.getOrInitSkippedRecipe(recipe, skippedRecipesGrouped);
+
+      let canCook = true;
+      const ingredientMissing = existingEntry.ingredientMissing;
+      for (let ingredientIndex = 0; ingredientIndex < recipe.ingredients.length; ingredientIndex++) {
+        const missingAmount = recipe.ingredients[ingredientIndex] - currentIngredients[ingredientIndex];
+
+        if (missingAmount > 0) {
+          canCook = false;
+          ingredientMissing[ingredientIndex].count += 1;
+          ingredientMissing[ingredientIndex].totalAmountMissing += missingAmount;
+        }
+      }
+
+      if (canCook) {
+        currentIngredients._mapCombine(recipe.ingredients, (a, b) => a - b);
+        return recipe;
+      } else {
+        existingEntry.totalCount += 1;
+      }
+    }
+
+    return undefined;
+  }
+
   private findRecipesWithinPotLimit(
-    recipes: Recipe[],
+    recipes: RecipeFlat[],
     potSize: number,
     skippedRecipesGrouped: Map<string, SkippedRecipe>
-  ): Recipe[] {
-    const allowedRecipes: Recipe[] = [];
+  ): RecipeFlat[] {
+    const allowedRecipes: RecipeFlat[] = [];
 
     for (const recipe of recipes) {
       const missingPotSize = recipe.nrOfIngredients - potSize;
       if (missingPotSize <= 0) {
         allowedRecipes.push(recipe);
       } else {
-        let existingSkippedRecipe = skippedRecipesGrouped.get(recipe.name);
+        const existingSkippedRecipe = this.getOrInitSkippedRecipe(recipe, skippedRecipesGrouped);
 
-        if (!existingSkippedRecipe) {
-          existingSkippedRecipe = {
-            ...recipe,
-            reason: 'pot',
-            totalCount: 0,
-            potMissing: { count: 0, totalAmountMissing: 0 },
-            ingredientMissing: new Map(),
-          };
-          skippedRecipesGrouped.set(recipe.name, existingSkippedRecipe);
-        }
-
-        if (existingSkippedRecipe.potMissing) {
-          existingSkippedRecipe.totalCount += 1;
-          existingSkippedRecipe.potMissing.count += 1;
-          existingSkippedRecipe.potMissing.totalAmountMissing += missingPotSize;
-        }
+        existingSkippedRecipe.totalCount += 1;
+        existingSkippedRecipe.potMissing.count += 1;
+        existingSkippedRecipe.potMissing.totalAmountMissing += missingPotSize;
       }
     }
 
     return allowedRecipes;
+  }
+
+  private getOrInitSkippedRecipe(recipe: RecipeFlat, skippedRecipesGrouped: Map<string, SkippedRecipe>): SkippedRecipe {
+    return (
+      skippedRecipesGrouped.get(recipe.name) ??
+      (() => {
+        const ingredientMissing: IngredientsMissing = {};
+        for (let j = 0; j < ingredient.INGREDIENTS.length; j++) {
+          ingredientMissing[j] = { count: 0, totalAmountMissing: 0 };
+        }
+
+        const newEntry: SkippedRecipe = {
+          ...recipe,
+          totalCount: 0,
+          potMissing: { count: 0, totalAmountMissing: 0 },
+          ingredientMissing
+        };
+        skippedRecipesGrouped.set(recipe.name, newEntry);
+        return newEntry;
+      })()
+    );
   }
 
   private currentCritChance(sunday: boolean) {
@@ -174,22 +225,30 @@ export class CookingState {
     // TODO: calc fillers, iterate recipes and don't forget about checking if crit and if sunday (2x or 3x, or 1x base)
 
     const nrOfWeeks = Math.max(days / 7, 1);
+    // TODO: we can solve this in fewer iterations.
+    // TODO: CookedCurries/salads etc are all same length always, we can do the entire thing in a single loop
     return {
       curry: {
         weeklyStrength: this.cookedCurries.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedCurries.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedCurries, this.skippedCurries),
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedCurries, this.skippedCurries)
       },
       salad: {
         weeklyStrength: this.cookedSalads.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedSalads.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedSalads, this.skippedSalads),
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedSalads, this.skippedSalads)
       },
       dessert: {
         weeklyStrength: this.cookedDesserts.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedDesserts.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedDesserts, this.skippedDesserts),
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedDesserts, this.skippedDesserts)
       },
+      critInfo: {
+        averageCritMultiplierPerCook:
+          this.cookedCurries.reduce((sum, cur) => sum + (cur.extraTasty ? (cur.sunday ? 3 : 2) : 1), 0) /
+          this.cookedCurries.length,
+        averageCritChancePerCook: this.totalCritChance / this.cookedCurries.length
+      }
     };
   }
 
@@ -197,7 +256,7 @@ export class CookingState {
     cookedRecipes: CookedRecipe[],
     skippedRecipesGrouped: Map<string, SkippedRecipe>
   ): CookedRecipeResult[] {
-    const recipeCounts = new Map<string, { recipe: Recipe; count: number; sunday: number }>();
+    const recipeCounts = new Map<string, { recipe: RecipeFlat; count: number; sunday: number }>();
 
     for (const recipe of cookedRecipes) {
       const recipeName = recipe.name;
@@ -218,17 +277,20 @@ export class CookingState {
 
       const ingredientLimited = [];
       if (skippedRecipe) {
-        for (const [ingredientName, { count, totalAmountMissing }] of skippedRecipe.ingredientMissing) {
-          ingredientLimited.push({
-            count,
-            averageMissing: totalAmountMissing / count,
-            ingredientName,
-          });
+        for (const [ingredientIndex, { count, totalAmountMissing }] of Object.entries(
+          skippedRecipe.ingredientMissing
+        )) {
+          count > 0 &&
+            ingredientLimited.push({
+              count,
+              averageMissing: totalAmountMissing / count,
+              ingredientName: ingredient.INGREDIENTS[+ingredientIndex].name
+            });
         }
       }
 
       cookedRecipeResults.push({
-        recipe: cookedRecipe.recipe,
+        recipe: { ...cookedRecipe.recipe, ingredients: flatToIngredientSet(cookedRecipe.recipe.ingredients) },
         count: cookedRecipe.count,
         sunday: cookedRecipe.sunday,
         totalSkipped: skippedRecipe?.totalCount ?? 0,
@@ -236,90 +298,12 @@ export class CookingState {
           count: skippedRecipe?.potMissing.count ?? 0,
           averageMissing: skippedRecipe?.potMissing.count
             ? skippedRecipe.potMissing.totalAmountMissing / skippedRecipe.potMissing.count
-            : 0,
+            : 0
         },
-        ingredientLimited,
+        ingredientLimited
       });
     }
 
     return cookedRecipeResults;
-  }
-
-  private addIngredientsToInventory(inventory: IngredientSet[], ingredientSets: IngredientSet[]) {
-    for (const { ingredient, amount } of ingredientSets) {
-      const existingIngredientSet = inventory.find((set) => set.ingredient.name === ingredient.name);
-      if (existingIngredientSet) {
-        existingIngredientSet.amount += amount;
-      } else {
-        inventory.push({ ingredient, amount });
-      }
-    }
-  }
-
-  private removeIngredientsFromInventory(inventory: IngredientSet[], ingredientSets: IngredientSet[]) {
-    for (const { ingredient, amount } of ingredientSets) {
-      const existingIngredientSet = inventory.find((set) => set.ingredient.name === ingredient.name);
-      if (existingIngredientSet) {
-        existingIngredientSet.amount -= amount;
-
-        if (existingIngredientSet.amount <= 0) {
-          const index = inventory.indexOf(existingIngredientSet);
-          if (index > -1) {
-            inventory.splice(index, 1);
-          }
-        }
-      }
-    }
-  }
-
-  private cookRecipeType(params: {
-    availableRecipes: Recipe[];
-    currentIngredients: IngredientSet[];
-    skippedRecipesGrouped: Map<string, SkippedRecipe>;
-  }): Recipe | undefined {
-    const { availableRecipes, currentIngredients, skippedRecipesGrouped } = params;
-
-    for (const recipe of availableRecipes) {
-      let canCook = true;
-
-      let existingEntry = skippedRecipesGrouped.get(recipe.name);
-      if (!existingEntry) {
-        existingEntry = {
-          ...recipe,
-          reason: 'ingredients',
-          totalCount: 0,
-          potMissing: { count: 0, totalAmountMissing: 0 },
-          ingredientMissing: new Map(),
-        };
-        skippedRecipesGrouped.set(recipe.name, existingEntry);
-      }
-
-      for (const requiredSet of recipe.ingredients) {
-        const availableSet = currentIngredients.find((set) => set.ingredient.name === requiredSet.ingredient.name);
-        const missingAmount = requiredSet.amount - (availableSet?.amount ?? 0);
-
-        if (missingAmount > 0) {
-          canCook = false;
-
-          const ingredientEntry = existingEntry.ingredientMissing.get(requiredSet.ingredient.name);
-          if (ingredientEntry) {
-            ingredientEntry.count += 1;
-            ingredientEntry.totalAmountMissing += missingAmount;
-          } else {
-            existingEntry.ingredientMissing.set(requiredSet.ingredient.name, {
-              count: 1,
-              totalAmountMissing: missingAmount,
-            });
-          }
-        }
-      }
-
-      if (canCook) {
-        this.removeIngredientsFromInventory(currentIngredients, recipe.ingredients);
-        return recipe;
-      } else {
-        existingEntry.totalCount += 1;
-      }
-    }
   }
 }

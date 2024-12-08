@@ -3,7 +3,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { Mainskill, createBaseSkill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { GENGAR, Mainskill, createBaseSkill, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {
@@ -28,7 +28,7 @@ describe('MainskillButton', () => {
 
   it('renders correctly with provided data', async () => {
     await wrapper.setProps({
-      pokemonInstance: { pokemon: pokemon.GENGAR, skillLevel: 0 } as PokemonInstanceExt
+      pokemonInstance: { pokemon: GENGAR, skillLevel: 0 } as PokemonInstanceExt
     })
     expect(wrapper.find('.responsive-text').text()).toBe('Charge Strength S RangeLv.3')
     expect(wrapper.find('.responsive-text-small').text()).toContain(

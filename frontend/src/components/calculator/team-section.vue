@@ -31,11 +31,7 @@
         <v-window v-model="teamStore.currentIndex" continuous class="mt-2">
           <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
             <v-row class="flex-column" dense style="height: 75dvh">
-              <v-col
-                v-for="member in teamSlots"
-                :key="member"
-                :class="[teamSlots > 1 ? 'team-slot' : '']"
-              >
+              <v-col v-for="member in teamSlots" :key="member" :class="[teamSlots > 1 ? 'team-slot' : '']">
                 <TeamSlot :member-index="member - 1" />
               </v-col>
             </v-row>
@@ -52,10 +48,7 @@
                 :key="tabItem.value"
                 :value="tabItem.value"
                 :data-index="index"
-                :class="[
-                  teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
-                  'tab-item'
-                ]"
+                :class="[teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
               >
                 {{ tabItem.label }}
               </v-tab>
@@ -129,12 +122,7 @@
       <v-window v-model="teamStore.currentIndex" continuous style="margin-top: -5px">
         <v-window-item v-for="(team, index) in teamStore.teams" :key="index">
           <v-row class="flex-nowrap" dense>
-            <v-col
-              v-for="member in teamSlots"
-              :key="member"
-              class="team-slot"
-              style="position: relative"
-            >
+            <v-col v-for="member in teamSlots" :key="member" class="team-slot" style="position: relative">
               <TeamSlot :member-index="member - 1" />
             </v-col>
           </v-row>
@@ -153,10 +141,7 @@
                   :key="tabItem.value"
                   :value="tabItem.value"
                   :data-index="index"
-                  :class="[
-                    teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface',
-                    'tab-item'
-                  ]"
+                  :class="[teamStore.tab === tabItem.value ? 'frosted-tab' : 'bg-surface', 'tab-item']"
                 >
                   {{ tabItem.label }}
                 </v-tab>

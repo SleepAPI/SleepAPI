@@ -1,4 +1,4 @@
-import { chunkArray } from './array-utils';
+import { chunkArray } from './array-utils.js';
 
 describe('chunkArray', () => {
   it('shall chunk an array into specified sizes', () => {

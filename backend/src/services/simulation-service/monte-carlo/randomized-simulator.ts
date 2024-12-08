@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { PokemonProduce } from '@src/domain/combination/produce.js';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { MathUtils, Produce, RandomUtils, Time, emptyProduce, mainskill } from 'sleepapi-common';
-import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
-import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
-import { MonteCarloResult } from './monte-carlo';
+import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator.js';
+import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator.js';
+import { MonteCarloResult } from './monte-carlo.js';
 
 /**
  * Runs the randomized simulation for Monte Carlo
@@ -52,7 +52,7 @@ export function randomizedSimulation(params: {
     recoveryEvents,
     mealTimes,
     energyFromYesterday,
-    nightHelpsBeforeCarryFromYesterday,
+    nightHelpsBeforeCarryFromYesterday
   } = params;
   const nature = dayInfo.nature;
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
@@ -126,7 +126,7 @@ export function randomizedSimulation(params: {
       period,
       eventLog,
       mealTimes,
-      mealIndex,
+      mealIndex
     });
     const { recoveredEnergy: eventRecovery, energyEventsProcessed } = recoverEnergyEvents({
       energyEvents,
@@ -134,7 +134,7 @@ export function randomizedSimulation(params: {
       currentTime,
       currentEnergy,
       period,
-      eventLog,
+      eventLog
     });
 
     mealIndex = mealsProcessed;
@@ -181,7 +181,7 @@ export function randomizedSimulation(params: {
           timeToDegrade: chunksOf5Minutes++ % 2 === 0 && chunksOf5Minutes >= 2,
           currentTime,
           currentEnergy,
-          eventLog,
+          eventLog
         }),
       2
     );
@@ -212,7 +212,7 @@ export function randomizedSimulation(params: {
           timeToDegrade: chunksOf5Minutes++ % 2 === 0,
           currentTime,
           currentEnergy,
-          eventLog,
+          eventLog
         }),
       2
     );
@@ -226,6 +226,6 @@ export function randomizedSimulation(params: {
     skillCrits,
     skillProcsDay,
     skillProcsNight,
-    endingEnergy: currentEnergy,
+    endingEnergy: currentEnergy
   };
 }

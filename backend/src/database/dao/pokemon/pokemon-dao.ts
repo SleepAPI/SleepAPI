@@ -1,6 +1,6 @@
 import { Static, Type } from '@sinclair/typebox';
-import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
-import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
+import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
+import { IngredientError } from '@src/domain/error/ingredient/ingredient-error.js';
 import { IngredientInstance, SubskillInstance } from 'sleepapi-common';
 
 const DBPokemonSchema = Type.Composite([
@@ -25,8 +25,8 @@ const DBPokemonSchema = Type.Composite([
     subskill_100: Type.Optional(Type.String()),
     ingredient_0: Type.String(),
     ingredient_30: Type.String(),
-    ingredient_60: Type.String(),
-  }),
+    ingredient_60: Type.String()
+  })
 ]);
 export type DBPokemon = Static<typeof DBPokemonSchema>;
 export type DBPokemonWithoutVersion = Omit<DBPokemon, 'id' | 'version'>;

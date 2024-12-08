@@ -1,26 +1,35 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // rules
     "allowJs": true,
-    "outDir": "dist",
     "strict": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    // paths
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "declaration": true,
+
+    // types
+    "types": ["vitest/globals", "node", "sleepapi-common"],
     "paths": {
       "@src/*": ["./src/*"],
       "@test/*": ["./test/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist"],
+  "include": ["src/**/*.ts", "**/migrations"],
+  "exclude": ["node_modules", "dist"],
   "watchOptions": {
     "excludeDirectories": ["dist", "tmp"]
   }

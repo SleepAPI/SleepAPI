@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import { PokemonProduce } from '@src/domain/combination/produce.js';
+import { ProductionStats } from '@src/domain/computed/production.js';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js';
+import { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import {
   addSneakySnackEvent,
   helpEvent,
   inventoryFull,
   recoverEnergyEvents,
   recoverFromMeal,
-  triggerTeamHelpsEvent,
-} from '@src/utils/event-utils/event-utils';
-import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simulation-utils/simulation-utils';
+  triggerTeamHelpsEvent
+} from '@src/utils/event-utils/event-utils.js';
+import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simulation-utils/simulation-utils.js';
 
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import {
   BerrySet,
   DetailedProduce,
@@ -44,11 +44,11 @@ import {
   combineSameIngredientsInDrop,
   emptyBerryInventory,
   emptyProduce,
-  mainskill,
+  mainskill
 } from 'sleepapi-common';
-import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
-import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
-import { clampHelp } from '../../calculator/production/produce-calculator';
+import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator.js';
+import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator.js';
+import { clampHelp } from '../../calculator/production/produce-calculator.js';
 
 /**
  * Runs the production simulation
@@ -82,7 +82,7 @@ export function simulation(params: {
     extraHelpfulEvents,
     helperBoostEvents,
     skillActivations,
-    mealTimes,
+    mealTimes
   } = params;
   const sneakySnackProduce: Produce = { berries: sneakySnackBerries, ingredients: [] };
   const { pokemon, produce: averageProduce } = pokemonWithAverageProduce;
@@ -152,7 +152,7 @@ export function simulation(params: {
       period,
       eventLog,
       mealTimes,
-      mealIndex,
+      mealIndex
     });
     const { recoveredEnergy: eventRecovery, energyEventsProcessed } = recoverEnergyEvents({
       energyEvents,
@@ -160,7 +160,7 @@ export function simulation(params: {
       currentTime,
       currentEnergy,
       period,
-      eventLog,
+      eventLog
     });
     const { helpsProduce: helpfulProduce, helpEventsProcessed: helpfulEventsProcessed } = triggerTeamHelpsEvent({
       helpEvents: helpfulEvents,
@@ -168,7 +168,7 @@ export function simulation(params: {
       emptyProduce: InventoryUtils.getEmptyInventory(),
       currentTime,
       period,
-      eventLog,
+      eventLog
     });
     const { helpsProduce: boostProduce, helpEventsProcessed: boostEventsProcessed } = triggerTeamHelpsEvent({
       helpEvents: boostEvents,
@@ -176,7 +176,7 @@ export function simulation(params: {
       emptyProduce: InventoryUtils.getEmptyInventory(),
       currentTime,
       period,
-      eventLog,
+      eventLog
     });
     totalProduce = InventoryUtils.addToInventory(totalProduce, helpfulProduce);
     totalProduce = InventoryUtils.addToInventory(totalProduce, boostProduce);
@@ -200,7 +200,7 @@ export function simulation(params: {
         currentInventory,
         inventoryLimit,
         nextHelp,
-        eventLog,
+        eventLog
       });
       ++helpsBeforeSS;
       ++dayHelps;
@@ -236,7 +236,7 @@ export function simulation(params: {
           new SkillEvent({
             time: currentTime,
             description,
-            skillActivation,
+            skillActivation
           })
         );
 
@@ -250,7 +250,7 @@ export function simulation(params: {
               time: currentTime,
               delta: clampedDelta,
               description,
-              before: currentEnergy,
+              before: currentEnergy
             })
           );
           currentEnergy += clampedDelta;
@@ -303,7 +303,7 @@ export function simulation(params: {
           timeToDegrade: chunksOf5Minutes++ % 2 === 0 && chunksOf5Minutes >= 2,
           currentTime,
           currentEnergy,
-          eventLog,
+          eventLog
         }),
       2
     );
@@ -329,7 +329,7 @@ export function simulation(params: {
         // sneaky snacking
         const spilledProduce: Produce = {
           berries: emptyBerryInventory(),
-          ingredients: averageProduce.ingredients,
+          ingredients: averageProduce.ingredients
         };
 
         addSneakySnackEvent({
@@ -340,7 +340,7 @@ export function simulation(params: {
           spilledProduce,
           totalSpilledIngredients: spilledIngredients,
           nextHelp,
-          eventLog,
+          eventLog
         });
         ++helpsAfterSS;
 
@@ -353,7 +353,7 @@ export function simulation(params: {
         const voidProduce = clampHelp({
           inventorySpace: averageProduceAmount - inventorySpace,
           averageProduce,
-          amount: averageProduceAmount,
+          amount: averageProduceAmount
         });
 
         helpEvent({
@@ -364,7 +364,7 @@ export function simulation(params: {
           currentInventory,
           inventoryLimit,
           nextHelp,
-          eventLog,
+          eventLog
         });
         ++helpsBeforeSS;
 
@@ -380,7 +380,7 @@ export function simulation(params: {
           currentInventory,
           inventoryLimit,
           nextHelp,
-          eventLog,
+          eventLog
         });
         ++helpsBeforeSS;
 
@@ -398,7 +398,7 @@ export function simulation(params: {
           timeToDegrade: chunksOf5Minutes++ % 2 === 0,
           currentTime,
           currentEnergy,
-          eventLog,
+          eventLog
         }),
       2
     );
@@ -434,7 +434,7 @@ export function simulation(params: {
     averageFrequency: frequencyIntervals.reduce((sum, cur) => sum + cur, 0) / frequencyIntervals.length,
     spilledIngredients: spilledIngredients.ingredients,
     collectFrequency,
-    totalRecovery,
+    totalRecovery
   };
   finishSimulation({ period, currentInventory, totalSneakySnack, inventoryLimit, summary, eventLog });
 
@@ -442,7 +442,7 @@ export function simulation(params: {
     detailedProduce: {
       produce: {
         berries: totalProduce.berries,
-        ingredients: combineSameIngredientsInDrop(totalProduce.ingredients),
+        ingredients: combineSameIngredientsInDrop(totalProduce.ingredients)
       },
       spilledIngredients: combineSameIngredientsInDrop(spilledIngredients.ingredients),
       sneakySnack: totalSneakySnack.berries,
@@ -450,9 +450,9 @@ export function simulation(params: {
       nightHelps,
       nightHelpsBeforeSS: nightHelps - helpsAfterSS,
       averageTotalSkillProcs: skillProcs,
-      skillActivations,
+      skillActivations
     },
     log: eventLog,
-    summary,
+    summary
   };
 }
