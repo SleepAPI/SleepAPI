@@ -1,4 +1,4 @@
-import { berry, island } from 'sleepapi-common';
+import { Berry, berry, island } from 'sleepapi-common';
 
 export function getBerriesForFilter(islands: {
   cyan: boolean;
@@ -20,6 +20,6 @@ export function getBerriesForFilter(islands: {
     : berry.BERRIES;
 }
 
-export function getBerriesForIsland(island?: island.Island): berry.Berry[] {
+export function getBerriesForIsland(island?: island.Island): Berry[] {
   return island?.berries ?? berry.BERRIES;
 }

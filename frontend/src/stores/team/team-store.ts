@@ -17,6 +17,7 @@ import {
   mainskill,
   subskill,
   uuid,
+  type Berry,
   type PokemonInstanceExt,
   type RecipeType,
   type TeamSettings
@@ -96,17 +97,14 @@ export const useTeamStore = defineStore('team', {
       const result: (MemberProductionExt | undefined)[] = []
       for (const memberId of currentTeam.members) {
         const memberInstance = memberId && pokemonStore.getPokemon(memberId)
-        const production = currentTeam.production?.members.find(
-          (member) => member.externalId === memberId
-        )
+        const production = currentTeam.production?.members.find((member) => member.externalId === memberId)
 
         if (!memberId || !memberInstance || !production) {
           result.push(undefined)
           continue
         }
 
-        const iv: PerformanceDetails | undefined =
-          state.teams[state.currentIndex].memberIvs[memberId]
+        const iv: PerformanceDetails | undefined = state.teams[state.currentIndex].memberIvs[memberId]
 
         result.push({
           member: memberInstance,
@@ -162,9 +160,7 @@ export const useTeamStore = defineStore('team', {
         // grab previous teams so we may compare it to updated teams from server
         const previousTeams = this.teams.map((team) => ({
           ...team,
-          members: team.members.map((member) =>
-            member ? pokemonStore.getPokemon(member) : undefined
-          )
+          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined))
         }))
 
         // get updated teams from server
@@ -185,9 +181,7 @@ export const useTeamStore = defineStore('team', {
             let memberUpdated = false
             for (let i = 0; i < serverTeam.members.length; i++) {
               const updatedMember = serverTeam.members[i]
-              const populatedUpdateMember = updatedMember
-                ? pokemonStore.getPokemon(updatedMember)
-                : undefined
+              const populatedUpdateMember = updatedMember ? pokemonStore.getPokemon(updatedMember) : undefined
 
               const previousMember = previousTeam.members.find(
                 (member, previousIndex) =>
@@ -220,14 +214,7 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          const {
-            favoredBerries: teamBerries,
-            name,
-            camp,
-            bedtime,
-            wakeup,
-            recipeType
-          } = this.getCurrentTeam
+          const { favoredBerries: teamBerries, name, camp, bedtime, wakeup, recipeType } = this.getCurrentTeam
 
           const anyFavoredBerries = teamBerries?.length > 0
           const favoredBerries = anyFavoredBerries
@@ -254,9 +241,7 @@ export const useTeamStore = defineStore('team', {
     async deleteTeam() {
       const userStore = useUserStore()
 
-      const newName = userStore.loggedIn
-        ? `Helper team ${this.currentIndex + 1}`
-        : 'Log in to save your teams'
+      const newName = userStore.loggedIn ? `Helper team ${this.currentIndex + 1}` : 'Log in to save your teams'
 
       this.teams[this.currentIndex] = {
         index: this.currentIndex,
@@ -415,7 +400,7 @@ export const useTeamStore = defineStore('team', {
 
       this.updateTeam()
     },
-    async updateFavoredBerries(berries: berry.Berry[]) {
+    async updateFavoredBerries(berries: Berry[]) {
       this.getCurrentTeam.favoredBerries = berries
 
       this.updateTeam()

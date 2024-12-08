@@ -1,4 +1,4 @@
-import { EnergyEvent } from './energy-event';
+import { EnergyEvent } from './energy-event.js';
 
 describe('EnergyEvent', () => {
   it('format shall list before and after if provided', () => {
@@ -6,7 +6,7 @@ describe('EnergyEvent', () => {
       time: { hour: 6, minute: 0, second: 0 },
       description: 'Sleep',
       delta: 88,
-      before: 12,
+      before: 12
     });
     expect(energyEvent.format()).toMatchInlineSnapshot(
       `"[06:00:00][Energy] (Sleep): Recovery: +88%, Energy: 12% -> 100%, Energy coefficient: 0.45"`

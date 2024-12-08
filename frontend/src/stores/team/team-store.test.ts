@@ -6,7 +6,7 @@ import type { PerformanceDetails, TeamInstance } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, pokemon, subskill, uuid, type PokemonInstanceExt } from 'sleepapi-common'
+import { berry, LEAFEON, subskill, uuid, WIGGLYTUFF, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -493,13 +493,7 @@ describe('removeMember', () => {
 
     await teamStore.removeMember(1)
 
-    expect(teamStore.teams[0].members).toEqual([
-      undefined,
-      undefined,
-      undefined,
-      member4,
-      undefined
-    ])
+    expect(teamStore.teams[0].members).toEqual([undefined, undefined, undefined, member4, undefined])
     expect(TeamService.removeMember).toHaveBeenCalledWith({
       teamIndex: 0,
       memberIndex: 1
@@ -512,7 +506,7 @@ describe('removeMember', () => {
     teamStore.resetCurrentTeamIvs = vi.fn()
 
     const mockPokemon1 = createMockPokemon()
-    const mockPokemon2 = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF, externalId: 'support' })
+    const mockPokemon2 = createMockPokemon({ pokemon: WIGGLYTUFF, externalId: 'support' })
     pokemonStore.upsertLocalPokemon(mockPokemon1)
     pokemonStore.upsertLocalPokemon(mockPokemon2)
 
@@ -567,7 +561,7 @@ describe('updateTeamMember', () => {
 
     teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.calculateProduction = vi.fn()
-    await teamStore.updateTeamMember(createMockPokemon({ pokemon: pokemon.WIGGLYTUFF }), 2)
+    await teamStore.updateTeamMember(createMockPokemon({ pokemon: WIGGLYTUFF }), 2)
 
     expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
@@ -746,20 +740,20 @@ describe('isSupportMember', () => {
 
   it('shall return true if member has energy for everyone', () => {
     const teamStore = useTeamStore()
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF })
+    const mockPokemon = createMockPokemon({ pokemon: WIGGLYTUFF })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
   })
 
   it('shall return true if member has energizing cheer', () => {
     const teamStore = useTeamStore()
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.LEAFEON })
+    const mockPokemon = createMockPokemon({ pokemon: LEAFEON })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
   })
 
   it('shall return true if member has energizing cheer and helping bonus', () => {
     const teamStore = useTeamStore()
     const mockPokemon = createMockPokemon({
-      pokemon: pokemon.LEAFEON,
+      pokemon: LEAFEON,
       subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
     })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)

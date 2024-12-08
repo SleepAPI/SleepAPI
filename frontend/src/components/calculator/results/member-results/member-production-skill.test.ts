@@ -1,13 +1,13 @@
 import ChargeEnergySDetails from '@/components/calculator/results/member-results/member-production-skill-details/charge-energy-s-details.vue'
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-skill.vue'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
+import { TYRANITAR, VAPOREON } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.TYRANITAR })
+  member: createMockPokemon({ pokemon: TYRANITAR })
 })
 
 describe('MemberProductionSkill', () => {
@@ -48,7 +48,7 @@ describe('MemberProductionSkill', () => {
         ...mockMember,
         member: {
           ...mockMember.member,
-          pokemon: pokemon.VAPOREON
+          pokemon: VAPOREON
         }
       }
     })

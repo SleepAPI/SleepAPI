@@ -13,20 +13,13 @@
           ]"
           @click="openDetailsDialog"
         >
-          <div
-            class="text-center vertical-text"
-            style="position: absolute; top: 0%; width: 100%; height: 100%"
-          >
+          <div class="text-center vertical-text" style="position: absolute; top: 0%; width: 100%; height: 100%">
             {{ pokemonInstance.name }}
           </div>
           <v-img :src="imageUrl" class="pokemon-image" style="left: 10%" />
 
           <div style="position: absolute; bottom: 0%; width: 100%">
-            <v-card
-              class="text-center responsive-text rounded-t-0"
-              color="subskillGold"
-              location="bottom center"
-            >
+            <v-card class="text-center responsive-text rounded-t-0" color="subskillGold" location="bottom center">
               {{ subskillBadge }}
             </v-card>
           </div>
@@ -55,11 +48,7 @@
       style="max-height: 14dvh"
       @click="openDetailsDialog"
     >
-      <v-row
-        class="flex-bottom fill-height"
-        no-gutters
-        :style="['position: absolute', 'bottom: 0', 'width: 50%']"
-      >
+      <v-row class="flex-bottom fill-height" no-gutters :style="['position: absolute', 'bottom: 0', 'width: 50%']">
         <v-col v-for="(subskill, i) in supportSubskills" :key="i">
           <v-card
             :color="rarityColor(subskill.subskill)"
@@ -166,16 +155,10 @@ export default defineComponent({
       return this.teamStore.getPokemon(this.memberIndex)
     },
     currentMemberSelected() {
-      return (
-        this.teamStore.getCurrentMember === this.pokemonInstance?.externalId &&
-        this.teamStore.tab === 'members'
-      )
+      return this.teamStore.getCurrentMember === this.pokemonInstance?.externalId && this.teamStore.tab === 'members'
     },
     isLeader() {
-      return (
-        this.memberIndex === 0 &&
-        this.teamStore.getCurrentTeam.members.at(0) === this.pokemonInstance?.externalId
-      )
+      return this.memberIndex === 0 && this.teamStore.getCurrentTeam.members.at(0) === this.pokemonInstance?.externalId
     },
     speechBubbleText() {
       return 'You can find our production in the members tab'
@@ -202,10 +185,9 @@ export default defineComponent({
     supportSubskills() {
       return (
         this.pokemonInstance?.subskills.filter((s) =>
-          [
-            subskill.HELPING_BONUS.name.toLowerCase(),
-            subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase()
-          ].includes(s.subskill.name.toLowerCase())
+          [subskill.HELPING_BONUS.name.toLowerCase(), subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase()].includes(
+            s.subskill.name.toLowerCase()
+          )
         ) ?? []
       )
     },

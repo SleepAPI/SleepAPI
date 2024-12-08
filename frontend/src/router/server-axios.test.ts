@@ -64,9 +64,7 @@ describe('serverAxios', () => {
 
     mock.onGet('/test').networkError()
 
-    await expect(serverAxios.get('/test')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: Network Error]`
-    )
+    await expect(serverAxios.get('/test')).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Network Error]`)
     expect(console.error).toHaveBeenCalledWith('Something went wrong')
   })
 })

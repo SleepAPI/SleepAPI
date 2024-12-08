@@ -1,4 +1,4 @@
-import { MainskillError } from '@src/domain/error/stat/stat-error';
+import { MainskillError } from '@src/domain/error/stat/stat-error.js';
 import { MAINSKILLS } from 'sleepapi-common';
 
 export function getMainskillNames() {

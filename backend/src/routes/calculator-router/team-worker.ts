@@ -1,4 +1,4 @@
-import ProductionController from '@src/controllers/calculator/production.controller';
+import ProductionController from '@src/controllers/calculator/production.controller.js';
 import workerpool from 'workerpool';
 
 async function calculateTeam(body: any) {
@@ -7,5 +7,5 @@ async function calculateTeam(body: any) {
 }
 
 workerpool.worker({
-  calculateTeam,
+  calculateTeam
 });

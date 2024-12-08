@@ -3,13 +3,7 @@
   <v-row dense>
     <v-col cols="12">
       <v-card class="d-flex flex-column rounded-t-0 frosted-glass">
-        <v-data-table
-          key="key"
-          :items="members"
-          :headers="headers"
-          hide-default-footer
-          class="bg-transparent"
-        >
+        <v-data-table key="key" :items="members" :headers="headers" hide-default-footer class="bg-transparent">
           <template #item.member="{ item }">
             <div class="flex-center">
               <div style="overflow: hidden; width: 60px; height: 60px">
@@ -66,11 +60,7 @@
 
           <template #item.sneakySnack="{ item }">
             <div class="flex-center" style="padding-right: 11px">
-              <v-img
-                :src="berryImage(item.sneakySnackProduce.berry)"
-                height="24"
-                width="24"
-              ></v-img>
+              <v-img :src="berryImage(item.sneakySnackProduce.berry)" height="24" width="24"></v-img>
             </div>
             <div class="text-center" style="padding-right: 11px">
               {{ item.sneakySnack }}
@@ -161,22 +151,14 @@ export default defineComponent({
           member: member.name,
           pokemonName: memberPokemon.name,
           shiny: member.shiny,
-          ingredientPercentage: MathUtils.round(
-            memberProduction.advanced.ingredientPercentage * 100,
-            1
-          ),
+          ingredientPercentage: MathUtils.round(memberProduction.advanced.ingredientPercentage * 100, 1),
           skillPercentage: MathUtils.round(memberProduction.advanced.skillPercentage * 100, 1),
           carryLimit: memberProduction.advanced.carrySize,
-          spilledIngredients: memberProduction.advanced.spilledIngredients.reduce(
-            (sum, cur) => sum + cur.amount,
-            0
-          ),
-          spilledIngredientsProduce: memberProduction.advanced.spilledIngredients.map(
-            ({ amount, ingredient }) => ({
-              ingredient,
-              amount: MathUtils.round(amount, 1)
-            })
-          ),
+          spilledIngredients: memberProduction.advanced.spilledIngredients.reduce((sum, cur) => sum + cur.amount, 0),
+          spilledIngredientsProduce: memberProduction.advanced.spilledIngredients.map(({ amount, ingredient }) => ({
+            ingredient,
+            amount: MathUtils.round(amount, 1)
+          })),
           sneakySnack: MathUtils.round(memberProduction.advanced.sneakySnack.amount, 1),
           sneakySnackProduce: memberProduction.advanced.sneakySnack,
           totalHelps: MathUtils.round(memberProduction.advanced.totalHelps, 1),
@@ -192,9 +174,7 @@ export default defineComponent({
   },
   methods: {
     ingredientImage(name: string) {
-      return name === 'magnet'
-        ? '/images/ingredient/ingredients.png'
-        : `/images/ingredient/${name}.png`
+      return name === 'magnet' ? '/images/ingredient/ingredients.png' : `/images/ingredient/${name}.png`
     }
   }
 })

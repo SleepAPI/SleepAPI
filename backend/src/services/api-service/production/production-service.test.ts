@@ -1,13 +1,21 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
-import { calculateIv, calculatePokemonProduction, calculateTeam } from './production-service';
+import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import {
+  BULBASAUR,
+  CHARMANDER,
+  ingredient,
+  nature,
+  PINSIR,
+  subskill,
+  TeamMemberExt,
+  TeamSettingsExt
+} from 'sleepapi-common';
+import { calculateIv, calculatePokemonProduction, calculateTeam } from './production-service.js';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
     const result = calculatePokemonProduction(
-      pokemon.PINSIR,
+      PINSIR,
       MOCKED_OPTIMAL_PRODUCTION_STATS,
       [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
       false,
@@ -28,7 +36,7 @@ describe('calculatePokemonProduction', () => {
 
   it('should calculate production for PINSIR with production analysis', () => {
     const result = calculatePokemonProduction(
-      pokemon.PINSIR,
+      PINSIR,
       MOCKED_OPTIMAL_PRODUCTION_STATS,
       [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
       true,
@@ -53,27 +61,29 @@ describe('calculateTeam', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:01'),
-      camp: false,
+      camp: false
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.PINSIR,
+        pokemonWithIngredients: {
+          pokemon: PINSIR,
           ingredientList: [
             { amount: 2, ingredient: ingredient.HONEY },
             { amount: 5, ingredient: ingredient.HONEY },
-            { amount: 7, ingredient: ingredient.HONEY },
-          ],
+            { amount: 7, ingredient: ingredient.HONEY }
+          ]
         },
-        carrySize: 24,
-        level: 60,
-        ribbon: 0,
-        nature: nature.MILD,
-        skillLevel: 6,
-        subskills: [subskill.INGREDIENT_FINDER_M],
-        externalId: 'some id',
-      },
+        settings: {
+          carrySize: 24,
+          level: 60,
+          ribbon: 0,
+          nature: nature.MILD,
+          skillLevel: 6,
+          subskills: new Set([subskill.INGREDIENT_FINDER_M.name]),
+          externalId: 'some id'
+        }
+      }
     ];
 
     const result = calculateTeam({ members, settings }, 5000);
@@ -83,7 +93,7 @@ describe('calculateTeam', () => {
       {
         "berries": [
           {
-            "amount": 39.98336504575599,
+            "amount": 39.98336410522461,
             "berry": {
               "name": "LUM",
               "type": "bug",
@@ -94,7 +104,7 @@ describe('calculateTeam', () => {
         ],
         "ingredients": [
           {
-            "amount": 90.93165396225288,
+            "amount": 90.93164825439453,
             "ingredient": {
               "longName": "Honey",
               "name": "Honey",
@@ -113,39 +123,43 @@ describe('calculateIv', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('22:00'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: true,
+      camp: true
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.BULBASAUR,
-          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+        pokemonWithIngredients: {
+          pokemon: BULBASAUR,
+          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
         },
-        carrySize: 10,
-        level: 15,
-        ribbon: 0,
-        nature: nature.JOLLY,
-        skillLevel: 4,
-        subskills: [subskill.HELPING_SPEED_S],
-        externalId: 'bulbasaur-1',
-      },
+        settings: {
+          carrySize: 10,
+          level: 15,
+          ribbon: 0,
+          nature: nature.JOLLY,
+          skillLevel: 4,
+          subskills: new Set([subskill.HELPING_SPEED_S.name]),
+          externalId: 'bulbasaur-1'
+        }
+      }
     ];
 
-    const variants: TeamMember[] = [
+    const variants: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.CHARMANDER,
-          ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }],
+        pokemonWithIngredients: {
+          pokemon: CHARMANDER,
+          ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }]
         },
-        carrySize: 8,
-        level: 12,
-        ribbon: 0,
-        nature: nature.BRAVE,
-        skillLevel: 3,
-        subskills: [subskill.SKILL_TRIGGER_S],
-        externalId: 'charmander-variant',
-      },
+        settings: {
+          carrySize: 8,
+          level: 12,
+          ribbon: 0,
+          nature: nature.BRAVE,
+          skillLevel: 3,
+          subskills: new Set([subskill.SKILL_TRIGGER_S.name]),
+          externalId: 'charmander-variant'
+        }
+      }
     ];
 
     const result = calculateIv({ settings, members, variants });

@@ -1,7 +1,7 @@
-import LoginController from '@src/controllers/login/login.controller';
-import { Logger } from '@src/services/logger/logger';
+import LoginController from '@src/controllers/login/login.controller.js';
+import { Logger } from '@src/services/logger/logger.js';
 import { Request, Response } from 'express';
-import { BaseRouter } from '../base-router';
+import { BaseRouter } from '../base-router.js';
 
 class LoginRouterImpl {
   public async register(controller: LoginController) {

@@ -1,7 +1,4 @@
-import { DetailedProduce } from '../../api/production/produce';
-import { Summary } from '../../api/production/summary';
-import { PokemonIngredientSet } from '../../domain/types/pokemon-ingredient-set';
-
+// TODO: remove in sleep api 2
 export interface SingleProductionRequest {
   level: number;
   ribbon: number;
@@ -23,16 +20,4 @@ export interface SingleProductionRequest {
   mainWakeup: string;
   ingredientSet: string[];
   nrOfEvolutions?: number;
-}
-
-export interface SingleProductionResponse {
-  summary: Summary;
-  production: {
-    pokemonCombination: PokemonIngredientSet; // TODO: remove in Sleep API 2
-    detailedProduce: DetailedProduce;
-  };
-  neutralProduction?: DetailedProduce;
-  optimalIngredientProduction?: DetailedProduce;
-  optimalBerryProduction?: DetailedProduce;
-  optimalSkillProduction?: DetailedProduce;
 }

@@ -1,4 +1,4 @@
-import { MockError } from '../../domain/error/test/mock-error';
+import { MockError } from '@src/domain/error/test/mock-error.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type RecordedCall = {
@@ -45,7 +45,7 @@ class MockServiceImpl {
     };
 
     return this.#recordedCalls.map(patchCalls).map((recordedCall) => ({
-      [`${recordedCall.name}.${String(recordedCall.method)}`]: recordedCall.arguments,
+      [`${recordedCall.name}.${String(recordedCall.method)}`]: recordedCall.arguments
     }));
   }
 
@@ -67,13 +67,13 @@ class MockServiceImpl {
             self.#recordedCalls.push({
               name,
               method: p,
-              arguments: args,
+              arguments: args
             });
             return newValue(...args);
           };
         }
         return true;
-      },
+      }
     });
   }
 }

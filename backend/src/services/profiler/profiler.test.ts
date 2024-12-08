@@ -1,8 +1,8 @@
-import { Profile, printProfilingResults } from '@src/services/profiler/profiler';
+import { Profile, printProfilingResults } from '@src/services/profiler/profiler.js';
 
 describe('profiler', () => {
   it('shall count the iterations correctly', () => {
-    console.log = jest.fn();
+    console.log = vi.fn();
     class TestClass {
       @Profile
       public someFunction() {

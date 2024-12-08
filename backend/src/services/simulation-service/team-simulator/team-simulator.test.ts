@@ -1,21 +1,23 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { TeamSkillEnergy } from '@src/services/simulation-service/team-simulator/member-state';
-import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { TeamSkillEnergy } from '@src/services/simulation-service/team-simulator/member-state.js';
+import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import {
   BALANCED_GENDER,
-  PokemonIngredientSet,
+  MOCK_POKEMON,
+  PINSIR,
+  PokemonWithIngredients,
   RandomUtils,
+  TeamMemberExt,
+  TeamSettingsExt,
   berry,
   calculatePityProcThreshold,
   ingredient,
   mainskill,
   nature,
-  pokemon,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
-const mockPokemonSet: PokemonIngredientSet = {
+const mockpokemonWithIngredients: PokemonWithIngredients = {
   pokemon: {
     name: 'Mockemon',
     berry: berry.BELUE,
@@ -30,39 +32,41 @@ const mockPokemonSet: PokemonIngredientSet = {
     remainingEvolutions: 0,
     skill: mainskill.CHARGE_STRENGTH_S,
     skillPercentage: 100,
-    specialty: 'skill',
+    specialty: 'skill'
   },
   ingredientList: [
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-  ],
+    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
+  ]
 };
 const mockSettings: TeamSettingsExt = {
   bedtime: TimeUtils.parseTime('21:30'),
   wakeup: TimeUtils.parseTime('06:00'),
-  camp: false,
+  camp: false
 };
-const mockMembers: TeamMember[] = [
+const mockMembers: TeamMemberExt[] = [
   {
-    pokemonSet: mockPokemonSet,
-    carrySize: 10,
-    level: 60,
-    ribbon: 0,
-    nature: nature.BASHFUL,
-    skillLevel: 6,
-    subskills: [],
-    externalId: 'some id',
-  },
+    pokemonWithIngredients: mockpokemonWithIngredients,
+    settings: {
+      carrySize: 10,
+      level: 60,
+      ribbon: 0,
+      nature: nature.BASHFUL,
+      skillLevel: 6,
+      subskills: new Set(),
+      externalId: 'some id'
+    }
+  }
 ];
 
 describe('TeamSimulator', () => {
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('shall return expected production from mocked pokemon', () => {
@@ -73,8 +77,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.4`);
-    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
+    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.400001525878906`);
+    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.600000381469727`);
     expect(result.members[0].advanced.morningProcs).toBe(2);
     expect(result.members[0].skillProcs).toMatchInlineSnapshot(`35`);
   });
@@ -84,10 +88,10 @@ describe('TeamSimulator', () => {
 
     simulator.simulate();
 
-    const result = simulator.ivResults(mockMembers[0].externalId);
+    const result = simulator.ivResults(mockMembers[0].settings.externalId);
 
-    expect(result.produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.4`);
-    expect(result.produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.6`);
+    expect(result.produceTotal.berries[0].amount).toMatchInlineSnapshot(`35.400001525878906`);
+    expect(result.produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8.600000381469727`);
     expect(result.skillProcs).toMatchInlineSnapshot(`35`);
   });
 
@@ -95,27 +99,29 @@ describe('TeamSimulator', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:01'),
-      camp: false,
+      camp: false
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.PINSIR,
+        pokemonWithIngredients: {
+          pokemon: PINSIR,
           ingredientList: [
             { amount: 2, ingredient: ingredient.HONEY },
             { amount: 5, ingredient: ingredient.HONEY },
-            { amount: 7, ingredient: ingredient.HONEY },
-          ],
+            { amount: 7, ingredient: ingredient.HONEY }
+          ]
         },
-        carrySize: 24,
-        level: 60,
-        ribbon: 0,
-        nature: nature.MILD,
-        skillLevel: 6,
-        subskills: [subskill.INGREDIENT_FINDER_M],
-        externalId: 'some id',
-      },
+        settings: {
+          carrySize: 24,
+          level: 60,
+          ribbon: 0,
+          nature: nature.MILD,
+          skillLevel: 6,
+          subskills: new Set([subskill.INGREDIENT_FINDER_M.name]),
+          externalId: 'some id'
+        }
+      }
     ];
     const simulator = new TeamSimulator({ settings, members, includeCooking: true });
 
@@ -124,23 +130,25 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(1);
-    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`40.56281822975349`);
-    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`92.89420577024654`);
+    expect(result.members[0].produceTotal.berries[0].amount).toMatchInlineSnapshot(`40.56281661987305`);
+    expect(result.members[0].produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`92.89420318603516`);
   });
 
   it('shall calculate team with multiple members', () => {
-    const mockMember: TeamMember = {
-      pokemonSet: mockPokemonSet,
-      carrySize: 10,
-      level: 60,
-      ribbon: 0,
-      nature: nature.BASHFUL,
-      skillLevel: 6,
-      subskills: [],
-      externalId: 'some id',
+    const mockMember: TeamMemberExt = {
+      pokemonWithIngredients: mockpokemonWithIngredients,
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.BASHFUL,
+        skillLevel: 6,
+        subskills: new Set(),
+        externalId: 'some id'
+      }
     };
 
-    const members: TeamMember[] = [mockMember, mockMember, mockMember, mockMember, mockMember];
+    const members: TeamMemberExt[] = [mockMember, mockMember, mockMember, mockMember, mockMember];
     const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
@@ -150,38 +158,42 @@ describe('TeamSimulator', () => {
     expect(result.members).toHaveLength(5);
 
     for (const member of result.members) {
-      expect(member.produceTotal.berries[0].amount).toEqual(35.4);
-      expect(member.produceTotal.ingredients[0].amount).toEqual(8.6);
+      expect(member.produceTotal.berries[0].amount).toEqual(35.400001525878906);
+      expect(member.produceTotal.ingredients[0].amount).toEqual(8.600000381469727);
       expect(member.skillProcs).toEqual(35);
     }
   });
 
   it('team members shall affect each other', () => {
-    const mockMember: TeamMember = {
-      pokemonSet: mockPokemonSet,
-      carrySize: 10,
-      level: 60,
-      ribbon: 0,
-      nature: nature.BASHFUL,
-      skillLevel: 6,
-      subskills: [],
-      externalId: 'some id',
+    const mockMember: TeamMemberExt = {
+      pokemonWithIngredients: mockpokemonWithIngredients,
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.BASHFUL,
+        skillLevel: 6,
+        subskills: new Set(),
+        externalId: 'some id'
+      }
     };
-    const mockMemberSupport: TeamMember = {
-      pokemonSet: {
-        ...mockPokemonSet,
-        pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: mainskill.ENERGY_FOR_EVERYONE },
+    const mockMemberSupport: TeamMemberExt = {
+      pokemonWithIngredients: {
+        ...mockpokemonWithIngredients,
+        pokemon: { ...mockpokemonWithIngredients.pokemon, skillPercentage: 100, skill: mainskill.ENERGY_FOR_EVERYONE }
       },
-      carrySize: 10,
-      level: 60,
-      ribbon: 0,
-      nature: nature.BASHFUL,
-      skillLevel: 6,
-      subskills: [],
-      externalId: 'some id',
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.BASHFUL,
+        skillLevel: 6,
+        subskills: new Set(),
+        externalId: 'some id'
+      }
     };
 
-    const members: TeamMember[] = [mockMember, mockMemberSupport];
+    const members: TeamMemberExt[] = [mockMember, mockMemberSupport];
     const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
     simulator.simulate();
@@ -196,26 +208,28 @@ describe('TeamSimulator', () => {
   });
 
   it('shall count wasted energy', () => {
-    const mockMemberSupport: TeamMember = {
-      pokemonSet: {
-        ...mockPokemonSet,
-        pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: mainskill.ENERGY_FOR_EVERYONE },
+    const mockMemberSupport: TeamMemberExt = {
+      pokemonWithIngredients: {
+        ...mockpokemonWithIngredients,
+        pokemon: { ...mockpokemonWithIngredients.pokemon, skillPercentage: 100, skill: mainskill.ENERGY_FOR_EVERYONE }
       },
-      carrySize: 10,
-      level: 60,
-      ribbon: 0,
-      nature: nature.ADAMANT,
-      skillLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
-      subskills: [subskill.HELPING_SPEED_M],
-      externalId: 'some id',
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.ADAMANT,
+        skillLevel: mainskill.ENERGY_FOR_EVERYONE.maxLevel,
+        subskills: new Set([subskill.HELPING_SPEED_M.name]),
+        externalId: 'some id'
+      }
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       mockMemberSupport,
       mockMemberSupport,
       mockMemberSupport,
       mockMemberSupport,
-      mockMemberSupport,
+      mockMemberSupport
     ];
     const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
@@ -235,20 +249,22 @@ describe('TeamSimulator', () => {
 
   it('shall give pity procs when threshold met', () => {
     const mockMember = {
-      ...mockPokemonSet,
-      pokemon: { ...mockPokemonSet.pokemon, frequency: 3000, skillPercentage: 0 },
+      ...mockpokemonWithIngredients,
+      pokemon: { ...mockpokemonWithIngredients.pokemon, frequency: 3000, skillPercentage: 0 }
     };
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: mockMember,
-        carrySize: 10,
-        level: 60,
-        ribbon: 0,
-        nature: nature.BASHFUL,
-        skillLevel: 6,
-        subskills: [],
-        externalId: 'some id',
-      },
+        pokemonWithIngredients: mockMember,
+        settings: {
+          carrySize: 10,
+          level: 60,
+          ribbon: 0,
+          nature: nature.BASHFUL,
+          skillLevel: 6,
+          subskills: new Set(),
+          externalId: 'some id'
+        }
+      }
     ];
     const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
@@ -270,29 +286,31 @@ describe('TeamSimulator', () => {
   });
 
   it('shall only allow 1 disguise crit until sleep reset', () => {
-    jest.spyOn(RandomUtils, 'roll').mockReturnValue(true);
+    vi.spyOn(RandomUtils, 'roll').mockReturnValue(true);
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          ...mockPokemonSet,
+        pokemonWithIngredients: {
+          ...mockpokemonWithIngredients,
           pokemon: {
-            ...pokemon.MOCK_POKEMON,
+            ...MOCK_POKEMON,
             skill: mainskill.DISGUISE_BERRY_BURST,
             // one help every ~12 hours, final x2 multiplication is to account for energy frequency
             frequency: 60 * 60 * 12 * 2,
             // 100% chance to activate skill per help
-            skillPercentage: 100,
-          },
+            skillPercentage: 100
+          }
         },
-        carrySize: 10,
-        level: 1,
-        ribbon: 0,
-        nature: nature.BASHFUL,
-        skillLevel: 6,
-        subskills: [],
-        externalId: 'some id',
-      },
+        settings: {
+          carrySize: 10,
+          level: 1,
+          ribbon: 0,
+          nature: nature.BASHFUL,
+          skillLevel: 6,
+          subskills: new Set(),
+          externalId: 'some id'
+        }
+      }
     ];
     const simulator = new TeamSimulator({ settings: mockSettings, members, includeCooking: true });
 
@@ -314,13 +332,13 @@ describe('recoverMemberEnergy', () => {
     const simulator = new TeamSimulator({
       settings: mockSettings,
       members: mockMembers.concat(mockMembers),
-      includeCooking: true,
+      includeCooking: true
     }) as any;
 
     const energy: TeamSkillEnergy = {
       amount: 50,
       chanceTargetLowest: 0,
-      random: false,
+      random: false
     };
 
     simulator.recoverMemberEnergy(energy);
@@ -333,14 +351,14 @@ describe('recoverMemberEnergy', () => {
     const simulator = new TeamSimulator({
       settings: mockSettings,
       members: mockMembers.concat(mockMembers),
-      includeCooking: true,
+      includeCooking: true
     }) as any;
     simulator.memberStates[0].recoverEnergy(100);
 
     const energy: TeamSkillEnergy = {
       amount: 50,
       chanceTargetLowest: 1, // guaranteed to hit lowest member
-      random: true,
+      random: true
     };
 
     simulator.recoverMemberEnergy(energy);

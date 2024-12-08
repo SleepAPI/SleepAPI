@@ -1,57 +1,66 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator';
+import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator.js';
 import {
-  berry,
+  Berry,
   calculateIngredientPercentage,
-  calculateNrOfBerriesPerDrop,
   calculateSkillPercentage,
-  subskill,
+  TeamMemberExt,
+  TeamSettingsExt
 } from 'sleepapi-common';
 
 class TeamSimulatorUtilsImpl {
-  public calculateSkillPercentage(member: TeamMember) {
-    return calculateSkillPercentage(member.pokemonSet.pokemon.skillPercentage, member.subskills, member.nature);
+  public calculateSkillPercentage(member: TeamMemberExt) {
+    return calculateSkillPercentage(
+      member.pokemonWithIngredients.pokemon.skillPercentage,
+      member.settings.subskills,
+      member.settings.nature
+    );
   }
 
-  public calculateIngredientPercentage(member: TeamMember) {
+  public calculateIngredientPercentage(member: TeamMemberExt) {
     return calculateIngredientPercentage({
-      pokemon: member.pokemonSet.pokemon,
-      nature: member.nature,
-      subskills: member.subskills,
+      pokemon: member.pokemonWithIngredients.pokemon,
+      nature: member.settings.nature,
+      subskills: member.settings.subskills
     });
   }
 
-  public calculateNrOfBerriesPerDrop(member: TeamMember) {
-    return calculateNrOfBerriesPerDrop(member.pokemonSet.pokemon, member.subskills);
-  }
-
   public calculateHelpSpeedBeforeEnergy(params: {
-    member: TeamMember;
+    member: TeamMemberExt;
     settings: TeamSettingsExt;
     helpingBonus: number;
   }) {
     const { member, settings, helpingBonus } = params;
 
-    // all hb are already counted for team
-    const subskillsWithoutHB = member.subskills.filter((s) => s.name !== subskill.HELPING_BONUS.name);
-
     return calculateHelpSpeedBeforeEnergy({
-      pokemon: member.pokemonSet.pokemon,
-      level: member.level,
-      nature: member.nature,
-      subskills: subskillsWithoutHB,
+      pokemon: member.pokemonWithIngredients.pokemon,
+      level: member.settings.level,
+      nature: member.settings.nature,
+      subskills: member.settings.subskills,
       camp: settings.camp,
-      ribbonLevel: member.ribbon,
-      helpingBonus,
+      ribbonLevel: member.settings.ribbon,
+      helpingBonus
     });
   }
 
-  public uniqueMembersWithBerry(params: { berry: berry.Berry; members: TeamMember[] }) {
+  public countMembersWithSubskill(team: TeamMemberExt[], subskill: string): number {
+    let count = 0;
+    for (const member of team) {
+      if (member.settings.subskills.has(subskill)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public uniqueMembersWithBerry(params: { berry: Berry; members: TeamMemberExt[] }) {
     const { berry, members } = params;
     const { count } = members.reduce(
       (accumulator, cur) => {
-        if (cur.pokemonSet.pokemon.berry === berry && !accumulator.names.has(cur.pokemonSet.pokemon.name)) {
-          accumulator.names.add(cur.pokemonSet.pokemon.name);
+        if (
+          cur.pokemonWithIngredients.pokemon.berry === berry &&
+          !accumulator.names.has(cur.pokemonWithIngredients.pokemon.name)
+        ) {
+          accumulator.names.add(cur.pokemonWithIngredients.pokemon.name);
           accumulator.count += 1;
         }
         return accumulator;

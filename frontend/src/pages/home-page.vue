@@ -48,9 +48,7 @@
         <v-col cols="auto">
           <h1 class="title text-h1 font-weight-bold mb-3">Neroli's Lab</h1>
           <p class="text-h6 mx-auto text-left">Helping you overthink sleep tracking.</p>
-          <p class="text-h6 mb-6 mx-auto text-left">
-            Optimize your strategies with our simulations.
-          </p>
+          <p class="text-h6 mb-6 mx-auto text-left">Optimize your strategies with our simulations.</p>
           <v-btn
             class="w-100 fx01"
             title="Get started"
@@ -105,8 +103,7 @@ export default defineComponent({
   data: () => ({
     features: [
       {
-        description:
-          "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations.",
+        description: "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations.",
         title: 'Calculator',
         src: '/images/misc/doctor4.png',
         icon: 'mdi-square-root',

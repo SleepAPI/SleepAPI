@@ -11,8 +11,8 @@ import {
   INGREDIENT_FINDER_S,
   INVENTORY_L,
   SKILL_TRIGGER_M,
-  SKILL_TRIGGER_S,
-} from '../subskill/subskill';
+  SKILL_TRIGGER_S
+} from '../subskill/subskills';
 import { Optimal } from './optimal';
 
 describe('Optimal', () => {
@@ -23,7 +23,7 @@ describe('Optimal', () => {
     maxLevel: 6,
     description: 'Restores ? Energy to the user.',
     RP: [400, 569, 785, 1083, 1496, 2066],
-    modifier: { type: 'Base', critChance: 0 },
+    modifier: { type: 'Base', critChance: 0 }
   });
   const mockPokemon: Pokemon = { ...MOCK_POKEMON, skill: baseSkill };
 
@@ -36,11 +36,11 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: HELPING_SPEED_S },
         { level: 75, subskill: HELPING_BONUS },
-        { level: 100, subskill: SKILL_TRIGGER_M },
+        { level: 100, subskill: SKILL_TRIGGER_M }
       ],
       nature: ADAMANT,
       skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize,
+      carrySize: mockPokemon.carrySize
     });
   });
 
@@ -53,11 +53,11 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: INGREDIENT_FINDER_S },
         { level: 75, subskill: INVENTORY_L },
-        { level: 100, subskill: HELPING_SPEED_S },
+        { level: 100, subskill: HELPING_SPEED_S }
       ],
       nature: QUIET,
       skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5,
+      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5
     });
   });
 
@@ -70,11 +70,11 @@ describe('Optimal', () => {
         { level: 25, subskill: HELPING_SPEED_M },
         { level: 50, subskill: SKILL_TRIGGER_S },
         { level: 75, subskill: HELPING_SPEED_S },
-        { level: 100, subskill: HELPING_BONUS },
+        { level: 100, subskill: HELPING_BONUS }
       ],
       nature: CAREFUL,
       skillLevel: mockPokemon.skill.maxLevel,
-      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5,
+      carrySize: mockPokemon.carrySize + mockPokemon.previousEvolutions * 5
     });
   });
 });
