@@ -16,15 +16,7 @@ import {
 } from 'chart.js'
 import { Radar } from 'vue-chartjs'
 
-ChartJS.register(
-  RadarController,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
-  Filler,
-  Tooltip,
-  Legend
-)
+ChartJS.register(RadarController, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend)
 
 export default {
   name: 'RadarChart',

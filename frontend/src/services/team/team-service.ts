@@ -14,6 +14,7 @@ import {
   Optimal,
   berry,
   uuid,
+  type Berry,
   type BerrySet,
   type CalculateIvResponse,
   type CalculateTeamResponse,
@@ -34,19 +35,12 @@ class TeamServiceImpl {
     return response.data
   }
 
-  public async createOrUpdateMember(params: {
-    teamIndex: number
-    memberIndex: number
-    member: PokemonInstanceExt
-  }) {
+  public async createOrUpdateMember(params: { teamIndex: number; memberIndex: number; member: PokemonInstanceExt }) {
     const { teamIndex, memberIndex, member } = params
 
     const request = PokemonInstanceUtils.toUpsertTeamMemberRequest(member)
 
-    return await serverAxios.put<UpsertTeamMemberResponse>(
-      `team/${teamIndex}/member/${memberIndex}`,
-      request
-    )
+    return await serverAxios.put<UpsertTeamMemberResponse>(`team/${teamIndex}/member/${memberIndex}`, request)
   }
 
   public async getTeams(): Promise<TeamInstance[]> {
@@ -78,9 +72,7 @@ class TeamServiceImpl {
       } else {
         const members: (string | undefined)[] = []
         for (let memberIndex = 0; memberIndex < MAX_TEAM_MEMBERS; memberIndex++) {
-          const serverMember = serverTeam.members.find(
-            (member) => member.memberIndex === memberIndex
-          )
+          const serverMember = serverTeam.members.find((member) => member.memberIndex === memberIndex)
 
           if (!serverMember) {
             members.push(undefined)
@@ -91,16 +83,14 @@ class TeamServiceImpl {
           }
         }
 
-        const favoredBerries: berry.Berry[] = []
+        const favoredBerries: Berry[] = []
         if (serverTeam.favoredBerries?.length === 1 && serverTeam.favoredBerries[0] === 'all') {
           favoredBerries.push(...berry.BERRIES)
         } else {
           for (const berryName of serverTeam.favoredBerries ?? []) {
             const favoredBerry = berry.BERRIES.find((berry) => berry.name === berryName)
             if (!favoredBerry) {
-              console.error(
-                `Couldn't find favored berry with name: ${berryName}, contact developer`
-              )
+              console.error(`Couldn't find favored berry with name: ${berryName}, contact developer`)
               continue
             }
             favoredBerries.push(favoredBerry)
@@ -154,13 +144,9 @@ class TeamServiceImpl {
       settings
     })
 
-    const teamBerries: BerrySet[] = response.data.members.flatMap(
-      (member) => member.produceTotal.berries
-    )
-    const teamIngredients: IngredientSet[] = response.data.members.flatMap(
-      (member) => member.produceTotal.ingredients
-    )
-    // TODO: is team production used?
+    const teamBerries: BerrySet[] = response.data.members.flatMap((member) => member.produceTotal.berries)
+    const teamIngredients: IngredientSet[] = response.data.members.flatMap((member) => member.produceTotal.ingredients)
+    // TODO: is team production used? cooking is used of course, but rest?
     const teamProduction: TeamCombinedProduction = {
       berries: teamBerries,
       ingredients: teamIngredients,
@@ -202,13 +188,11 @@ class TeamServiceImpl {
       ...Optimal.berry(currentMember.pokemon),
       externalId: uuid.v4()
     })
-    const ingredientSetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity(
-      {
-        ...currentMember,
-        ...Optimal.ingredient(currentMember.pokemon),
-        externalId: uuid.v4()
-      }
-    )
+    const ingredientSetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity({
+      ...currentMember,
+      ...Optimal.ingredient(currentMember.pokemon),
+      externalId: uuid.v4()
+    })
     const skillSetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity({
       ...currentMember,
       ...Optimal.skill(currentMember.pokemon),
@@ -225,15 +209,11 @@ class TeamServiceImpl {
       settings
     })
 
-    const berryProduction = response.data.variants.find(
-      (variant) => variant.externalId === berrySetup.externalId
-    )
+    const berryProduction = response.data.variants.find((variant) => variant.externalId === berrySetup.externalId)
     const ingredientProduction = response.data.variants.find(
       (variant) => variant.externalId === ingredientSetup.externalId
     )
-    const skillProduction = response.data.variants.find(
-      (variant) => variant.externalId === skillSetup.externalId
-    )
+    const skillProduction = response.data.variants.find((variant) => variant.externalId === skillSetup.externalId)
     if (!berryProduction || !ingredientProduction || !skillProduction) {
       throw new UnexpectedError('Iv variants not returned in response')
     }

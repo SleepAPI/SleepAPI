@@ -7,7 +7,7 @@ export const CHARGE_STRENGTH_S: Mainskill = createBaseSkill({
   unit: 'strength',
   maxLevel: MAX_SKILL_LEVEL,
   description: "Increases Snorlax's Strength by ?.",
-  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656]
 });
 
 export const CHARGE_STRENGTH_S_RANGE: Mainskill = createBaseSkill({
@@ -19,12 +19,12 @@ export const CHARGE_STRENGTH_S_RANGE: Mainskill = createBaseSkill({
     (CHARGE_STRENGTH_S.amounts[3] * 2 + CHARGE_STRENGTH_S.amounts[3] * 0.5) / 2,
     (CHARGE_STRENGTH_S.amounts[4] * 2 + CHARGE_STRENGTH_S.amounts[4] * 0.5) / 2,
     (CHARGE_STRENGTH_S.amounts[5] * 2 + CHARGE_STRENGTH_S.amounts[5] * 0.5) / 2,
-    (CHARGE_STRENGTH_S.amounts[6] * 2 + CHARGE_STRENGTH_S.amounts[6] * 0.5) / 2,
+    (CHARGE_STRENGTH_S.amounts[6] * 2 + CHARGE_STRENGTH_S.amounts[6] * 0.5) / 2
   ],
   unit: 'strength',
   maxLevel: MAX_SKILL_LEVEL,
   description: "Increases Snorlax's Strength on average by ?.",
-  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656]
 });
 
 MAINSKILLS.push(CHARGE_STRENGTH_S);

@@ -1,24 +1,12 @@
 <template>
-  <v-badge
-    color="secondary"
-    class="flex-center"
-    location="top left"
-    offset-x="auto"
-    :model-value="locked"
-  >
+  <v-badge color="secondary" class="flex-center" location="top left" offset-x="auto" :model-value="locked">
     <template #badge>
       <v-icon left class="mr-1">mdi-lock</v-icon>
       Lv.{{ ingredientLevel }}
     </template>
     <v-speed-dial v-model="fab" location="top center" transition="fade-transition">
       <template #activator="{ props }">
-        <v-badge
-          :content="ingredientSet?.amount"
-          color="accent"
-          text-color="background"
-          offset-x="5"
-          offset-y="5"
-        >
+        <v-badge :content="ingredientSet?.amount" color="accent" text-color="background" offset-x="5" offset-y="5">
           <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
             <v-avatar>
               <v-img id="ingredientImage" :src="ingredientImage"></v-img>
@@ -44,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { pokemon, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
+import { mockPokemon, type IngredientSet, type Pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -88,20 +76,18 @@ export default {
         return []
       } else if (this.ingredientLevel < 60) {
         return this.pokemonInstance.pokemon.ingredient30.filter(
-          (ing) =>
-            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+          (ing) => ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
       } else
         return this.pokemonInstance.pokemon.ingredient60.filter(
-          (ing) =>
-            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+          (ing) => ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
     }
   },
   watch: {
     pokemon: {
       deep: false,
-      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
+      handler(newPokemon: Pokemon, oldPokemon: Pokemon) {
         // only grab from cache on initial setup, if pre-existing value exists
         if (this.ingredientLevel < 30) {
           this.ingredientSet = newPokemon.ingredient0
@@ -161,11 +147,11 @@ export default {
         ingredientLevel: this.ingredientLevel
       })
     },
-    loadFromExisting(oldPokemon: pokemon.Pokemon) {
+    loadFromExisting(oldPokemon: Pokemon) {
       const existingIngredients =
         this.pokemonInstance.ingredients.filter((ing) => ing.ingredient !== undefined).length === 3
 
-      return oldPokemon.name === pokemon.MOCK_POKEMON.name && existingIngredients
+      return oldPokemon.name === mockPokemon.name && existingIngredients
     }
   }
 }

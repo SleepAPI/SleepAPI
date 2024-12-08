@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
 import { IngredientInstance, SubskillInstance, uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  uuid.v4 = vi.fn().mockReturnValue('0'.repeat(36));
 });
 
 describe('PokemonDAO insert', () => {
@@ -30,7 +30,7 @@ describe('PokemonDAO insert', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
     expect(pokemon).toBeDefined();
 
@@ -86,7 +86,7 @@ describe('PokemonDAO insert', () => {
         subskill_100: 'Thunder',
         ingredient_0: 'Berry',
         ingredient_30: 'Potion',
-        ingredient_60: 'Elixir',
+        ingredient_60: 'Elixir'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: pokemon.fk_user_id/);
   });
@@ -112,7 +112,7 @@ describe('PokemonDAO insert', () => {
         subskill_100: 'Thunder',
         ingredient_0: 'Berry',
         ingredient_30: 'Potion',
-        ingredient_60: 'Elixir',
+        ingredient_60: 'Elixir'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: pokemon.pokemon/);
   });
@@ -139,7 +139,7 @@ describe('PokemonDAO update', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
     expect(pokemon.name).toEqual('Sparky');
 
@@ -198,7 +198,7 @@ describe('PokemonDAO delete', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     await PokemonDAO.delete({ id: pokemon.id });
@@ -229,7 +229,7 @@ describe('filterFilledSubskills', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     expect(PokemonDAO.filterFilledSubskills(pokemon)).toMatchInlineSnapshot(`
@@ -273,7 +273,7 @@ describe('filterFilledSubskills', () => {
       nature: 'Brave',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     expect(PokemonDAO.filterFilledSubskills(pokemon)).toMatchInlineSnapshot(`[]`);
@@ -297,7 +297,7 @@ describe('filterFilledSubskills', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     expect(PokemonDAO.filterFilledSubskills(pokemon)).toMatchInlineSnapshot(`
@@ -325,8 +325,8 @@ describe('subskillForLevel', () => {
       { level: 1, subskill: 'subskill1' },
       {
         level: 2,
-        subskill: 'subskill2',
-      },
+        subskill: 'subskill2'
+      }
     ];
 
     expect(PokemonDAO.subskillForLevel(1, subskills)).toEqual('subskill1');
@@ -338,7 +338,7 @@ describe('ingredientForLevel', () => {
   it('shall return the ingredient matching the level', () => {
     const ingredients: IngredientInstance[] = [
       { level: 1, ingredient: 'ingredient1' },
-      { level: 2, ingredient: 'ingredient2' },
+      { level: 2, ingredient: 'ingredient2' }
     ];
 
     expect(PokemonDAO.ingredientForLevel(1, ingredients)).toEqual('ingredient1');

@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Worker } from 'worker_threads';
 
 export async function runWorkerFile(workerFile: string, params: any): Promise<any> {
   return new Promise((resolve, reject) => {
     const worker = new Worker(workerFile, {
       workerData: {
-        params,
-      },
+        params
+      }
     });
 
     worker.on('message', (message) => {

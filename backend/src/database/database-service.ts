@@ -1,6 +1,6 @@
+import { config } from '@src/config/config.js';
+import { DatabaseConnectionError } from '@src/domain/error/database/database-error.js';
 import knex, { Knex } from 'knex';
-import { config } from '../config/config';
-import { DatabaseConnectionError } from '../domain/error/database/database-error';
 
 class DatabaseServiceImpl {
   #knex: Knex | undefined;
@@ -23,11 +23,11 @@ class DatabaseServiceImpl {
           port: +port,
           user,
           password,
-          database: 'pokemonsleep',
+          database: 'pokemonsleep'
         },
         migrations: {
-          loadExtensions: ['.js'],
-        },
+          loadExtensions: ['.js']
+        }
       });
     }
 

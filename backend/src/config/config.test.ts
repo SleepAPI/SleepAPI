@@ -1,4 +1,4 @@
-import { BackendConfig } from './config';
+import { BackendConfig } from './config.js';
 
 describe('config', () => {
   it('shall use default values', () => {
@@ -55,7 +55,7 @@ describe('config', () => {
     process.env.DATABASE_MIGRATION = 'incorrect';
 
     expect(() => backendConfig.config).toThrowErrorMatchingInlineSnapshot(
-      `"DATABASE_MIGRATION is optional, but if set must be one of [UP, DOWN]"`
+      `[DatabaseMigrationError: DATABASE_MIGRATION is optional, but if set must be one of [UP, DOWN]]`
     );
   });
 });

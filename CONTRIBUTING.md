@@ -16,7 +16,7 @@ The goal is for everyone to get familiar with the code standard and recognize pa
 
 ## Quality Assurance
 
-Please write automated tests for any new functionality added. There are plenty of examples in the code, they are written using [Jest][jest].
+Please write automated tests for any new functionality added. There are plenty of examples in the code, they are written using vitest.
 
 ## Commit standard
 
@@ -38,7 +38,6 @@ Finally, you are always welcome to contribute to the Sleep API community directl
 
 Thank you!
 
-[jest]: https://jestjs.io/
 [conventional]: https://www.conventionalcommits.org/
 [good first issues]: https://github.com/SleepAPI/SleepAPI/contribute
 [Discord]: https://discord.gg/w97qFff8n4

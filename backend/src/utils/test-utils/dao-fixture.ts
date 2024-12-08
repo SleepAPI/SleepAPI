@@ -1,7 +1,12 @@
+import { register } from 'ts-node';
+register();
+
+import { DatabaseService } from '@src/database/database-service.js';
+import DatabaseMigration from '@src/database/migration/database-migration.js';
+import { DatabaseConnectionError } from '@src/domain/error/database/database-error.js';
+import { MockService } from '@src/utils/test-utils/mock-service.js';
 import knex, { Knex } from 'knex';
-import { DatabaseService } from '../../database/database-service';
-import DatabaseMigration from '../../database/migration/database-migration';
-import { MockService } from './mock-service';
+import { Logger } from 'sleepapi-common';
 
 type InitParams = {
   enforceForeignKeyConstraints?: boolean;
@@ -35,7 +40,7 @@ async function truncateAllTables(params?: InitParams, knex?: Knex): Promise<void
 
 export const DaoFixture = {
   init(params?: InitParams) {
-    let pokemonsleepDB: Knex;
+    let pokemonsleepDB: Knex | undefined = undefined;
 
     if (params?.recreateDatabasesBeforeEachTest) {
       beforeEach(async () => {
@@ -54,31 +59,50 @@ export const DaoFixture = {
         client: 'sqlite3',
         useNullAsDefault: true,
         connection: ':memory:',
-        acquireConnectionTimeout: 10000,
+        acquireConnectionTimeout: 10000
       });
 
       Object.defineProperty(DatabaseService, '#knex', {
         configurable: true,
-        value: pokemonsleepDB,
+        value: pokemonsleepDB
       });
 
       if (params?.enforceForeignKeyConstraints) {
-        await pokemonsleepDB?.raw('PRAGMA foreign_keys = ON');
+        await pokemonsleepDB.raw('PRAGMA foreign_keys = ON');
       }
 
-      DatabaseService.getKnex = () => Promise.resolve(pokemonsleepDB);
+      DatabaseService.getKnex = () => {
+        if (!pokemonsleepDB) {
+          throw new DatabaseConnectionError('Fixture DB is not initialized.');
+        }
+        return Promise.resolve(pokemonsleepDB);
+      };
       await DatabaseMigration.migrate();
     }
 
     async function destroyDatabases() {
-      await pokemonsleepDB.destroy();
+      if (pokemonsleepDB) {
+        await pokemonsleepDB.destroy();
+      }
     }
+
+    beforeEach(() => {
+      global.logger = {
+        debug: vi.fn() as unknown,
+        log: vi.fn() as unknown,
+        info: vi.fn() as unknown,
+        warn: vi.fn() as unknown,
+        error: vi.fn() as unknown
+      } as Logger;
+    });
 
     afterEach(async () => {
       if (params?.recreateDatabasesBeforeEachTest) {
         await destroyDatabases();
       } else {
-        await truncateAllTables(params, pokemonsleepDB);
+        if (pokemonsleepDB) {
+          await truncateAllTables(params, pokemonsleepDB);
+        }
       }
 
       MockService.restore();
@@ -89,5 +113,5 @@ export const DaoFixture = {
         await destroyDatabases();
       }
     });
-  },
+  }
 };
