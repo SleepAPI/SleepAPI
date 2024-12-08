@@ -10,7 +10,7 @@ describe('Nature Modifiers', () => {
         skill: nature.skill,
         energy: nature.energy,
         exp: nature.exp,
-        neutral: 1, // Neutral is always 1 for all stats
+        neutral: 1 // Neutral is always 1 for all stats
       };
 
       const positiveStat = statValues[nature.positiveModifier];

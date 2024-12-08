@@ -1,4 +1,4 @@
-import { splitNumber } from './calculator-utils';
+import { splitNumber } from './calculator-utils.js';
 
 describe('splitNumber', () => {
   it('shall split decimal number into whole number array with ending decimal', () => {

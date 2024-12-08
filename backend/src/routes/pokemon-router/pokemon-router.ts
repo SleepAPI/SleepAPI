@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { IngredientSet } from 'sleepapi-common';
-import PokemonController from '../../controllers/pokemon/pokemon.controller';
-import { Logger } from '../../services/logger/logger';
-import { BaseRouter } from '../base-router';
+import PokemonController from '../../controllers/pokemon/pokemon.controller.js';
+import { Logger } from '../../services/logger/logger.js';
+import { BaseRouter } from '../base-router.js';
 
 export interface GetPokemonQueryParams {
   cyan?: boolean;

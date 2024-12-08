@@ -9,13 +9,13 @@ export interface Modifier {
 export const createModifier = (
   modifier: Modifier,
   skill: Mainskill,
-  overrides?: Partial<MainskillAttributes>,
+  overrides?: Partial<MainskillAttributes>
 ): Mainskill => {
   return new Mainskill({
     ...skill.attributes,
     ...overrides,
     name: `${modifier.type} (${skill.name})`,
-    modifier,
+    modifier
   });
 };
 

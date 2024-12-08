@@ -8,11 +8,7 @@
         color="subskillWhite"
         rounded="pill"
       >
-        <v-img
-          :src="mainskillImage(memberWithProduction.member.pokemon)"
-          height="40px"
-          width="40px"
-        ></v-img>
+        <v-img :src="mainskillImage(memberWithProduction.member.pokemon)" height="40px" width="40px"></v-img>
       </v-badge>
       <div class="ml-2">
         <div class="flex-center">
@@ -36,9 +32,7 @@
 
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
-        <span class="font-weight-medium text-no-wrap text-center ml-1">
-          {{ totalSkillValue }} total helps
-        </span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }} total helps </span>
       </div>
     </v-col>
   </v-row>
@@ -84,13 +78,9 @@ export default defineComponent({
         { count: 0, names: new Set<string>() }
       )
       const uniqueHelps =
-        mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[count - 1][
-          this.memberWithProduction.member.skillLevel - 1
-        ]
+        mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[count - 1][this.memberWithProduction.member.skillLevel - 1]
       return (
-        this.memberWithProduction.member.pokemon.skill.amount(
-          this.memberWithProduction.member.skillLevel
-        ) + uniqueHelps
+        this.memberWithProduction.member.pokemon.skill.amount(this.memberWithProduction.member.skillLevel) + uniqueHelps
       )
     },
     totalSkillValue() {

@@ -2,7 +2,7 @@ import PokemonButton from '@/components/pokemon-input/pokemon-button.vue'
 import { createMockPokemon } from '@/vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
+import { ABOMASNOW, PIKACHU } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -30,7 +30,7 @@ describe('PokemonButton', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.ABOMASNOW })
+    const mockPokemon = createMockPokemon({ pokemon: ABOMASNOW })
     wrapper = mount(PokemonButton, {
       props: {
         pokemonInstance: mockPokemon
@@ -74,7 +74,7 @@ describe('PokemonButton', () => {
   })
 
   it('selects Pokémon correctly', async () => {
-    const pkmn = pokemon.PIKACHU
+    const pkmn = PIKACHU
     wrapper.vm.selectPokemon(pkmn.name)
 
     expect(wrapper.emitted('update-pokemon')).toBeTruthy()

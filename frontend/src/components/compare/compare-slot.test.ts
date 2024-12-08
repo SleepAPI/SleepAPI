@@ -34,9 +34,7 @@ describe('CompareSlot', () => {
   })
 
   it('computed properties return correct values', () => {
-    expect(wrapper.vm.imageUrl).toBe(
-      `/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`
-    )
+    expect(wrapper.vm.imageUrl).toBe(`/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`)
     expect(wrapper.vm.level).toBe('Level 10')
     expect(wrapper.vm.rpBadge).toBe('RP 674')
   })

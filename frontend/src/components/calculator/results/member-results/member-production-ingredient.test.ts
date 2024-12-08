@@ -41,20 +41,14 @@ describe('MemberProductionIngredient', () => {
       const img = ingredientRow?.find('img')
       const amountSpan = ingredientRow?.find('span.font-weight-medium')
 
-      expect(img?.attributes('src')).toBe(
-        `/images/ingredient/${ingredient.ingredient.name.toLowerCase()}.png`
-      )
+      expect(img?.attributes('src')).toBe(`/images/ingredient/${ingredient.ingredient.name.toLowerCase()}.png`)
       const timeWindowFactor = StrengthService.timeWindowFactor(useTeamStore().timeWindow)
-      expect(amountSpan?.text()).toBe(
-        `x${Math.round(ingredient.amount * timeWindowFactor * 10) / 10}`
-      )
+      expect(amountSpan?.text()).toBe(`x${Math.round(ingredient.amount * timeWindowFactor * 10) / 10}`)
     })
   })
 
   it('should prepare member ingredients correctly', () => {
-    const preparedIngredients = wrapper.vm.prepareMemberIngredients(
-      mockMember.production.produceTotal.ingredients
-    )
+    const preparedIngredients = wrapper.vm.prepareMemberIngredients(mockMember.production.produceTotal.ingredients)
 
     expect(preparedIngredients).toMatchInlineSnapshot(`
       [

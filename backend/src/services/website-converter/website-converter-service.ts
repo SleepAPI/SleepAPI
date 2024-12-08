@@ -1,35 +1,30 @@
-import { SurplusIngredients } from '@src/domain/combination/combination';
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import {
-  IngredientRankerResult,
-  OptimalFlexibleResult,
-  OptimalSetResult,
-} from '@src/routes/optimal-router/optimal-router';
-import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import { SurplusIngredients } from '@src/domain/combination/combination.js';
+import { SetCoverPokemonStats } from '@src/domain/computed/production.js';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { IngredientRankerResult, OptimalSetResult } from '@src/routes/solve-router/solve-router.js';
+// import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router.js';
 import {
   DetailedProduce,
   IngredientSet,
   MEALS_IN_DAY,
   MathUtils,
-  PokemonIngredientSet,
+  PokemonWithIngredients,
   Summary,
+  flatToIngredientSet,
   mainskill,
   nature,
   prettifyBerries,
   prettifyIngredientDrop,
-  shortPrettifyIngredientDrop,
-  subskill,
+  shortPrettifyIngredientDrop
 } from 'sleepapi-common';
-import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
-import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
+import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator.js';
 
 // --- production calculator
 interface ProductionFilters {
   level: number;
   ribbon: number;
   nature?: nature.Nature;
-  subskills?: subskill.SubSkill[];
+  subskills?: Set<string>;
   skillLevel?: number;
   inventoryLimit?: number;
   e4eProcs: number;
@@ -44,7 +39,7 @@ interface ProductionFilters {
 interface ProductionCombination {
   filters: ProductionFilters;
   production: {
-    pokemonCombination: PokemonIngredientSet;
+    pokemonCombination: PokemonWithIngredients;
     detailedProduce: DetailedProduce;
   };
   summary: Summary;
@@ -68,12 +63,12 @@ class WebsiteConverterServiceImpl {
         logName: `eventlog-${pokemonProduction.production.pokemonCombination.pokemon.name}${
           pokemonProduction.filters.level
         }-${Date.now()}.txt`,
-        prettyLog: pokemonProduction.log.map((event) => event.format()).join('\n'),
+        prettyLog: pokemonProduction.log.map((event) => event.format()).join('\n')
       },
       neutralProduction: pokemonProduction.neutralProduction && {
         ingredients: pokemonProduction.neutralProduction.produce.ingredients,
         berries: pokemonProduction.neutralProduction.produce.berries,
-        skills: pokemonProduction.neutralProduction.skillActivations.reduce((sum, cur) => sum + cur.adjustedAmount, 0),
+        skills: pokemonProduction.neutralProduction.skillActivations.reduce((sum, cur) => sum + cur.adjustedAmount, 0)
       },
       userProduction: {
         ingredients: pokemonProduction.production.detailedProduce.produce.ingredients,
@@ -81,7 +76,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.production.detailedProduce.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalIngredientProduction: pokemonProduction.optimalIngredientProduction && {
         ingredients: pokemonProduction.optimalIngredientProduction.produce.ingredients,
@@ -89,7 +84,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalIngredientProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalBerryProduction: pokemonProduction.optimalBerryProduction && {
         ingredients: pokemonProduction.optimalBerryProduction.produce.ingredients,
@@ -97,7 +92,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalBerryProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalSkillProduction: pokemonProduction.optimalSkillProduction && {
         ingredients: pokemonProduction.optimalSkillProduction.produce.ingredients,
@@ -105,113 +100,104 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalSkillProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
-      },
+        )
+      }
     };
   }
 
-  public toTierList(tieredData: TieredPokemonCombinationContribution[]) {
-    const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; diff?: number; details: string }[]> =
-      new Map();
-    for (const tieredEntry of tieredData) {
-      const allEntriesOfPokemon = tieredData.filter(
-        (allPokemon) =>
-          allPokemon.pokemonCombinationContribution.pokemonCombination.pokemon.name ===
-          tieredEntry.pokemonCombinationContribution.pokemonCombination.pokemon.name
-      );
+  // public toTierList(tieredData: TieredPokemonCombinationContribution[]) {
+  //   const mapWithTiering: Map<string, { pokemon: string; ingredientList: string; diff?: number; details: string }[]> =
+  //     new Map();
+  //   for (const tieredEntry of tieredData) {
+  //     const allEntriesOfPokemon = tieredData.filter(
+  //       (allPokemon) =>
+  //         allPokemon.pokemonCombinationContribution.pokemonCombination.pokemon ===
+  //         tieredEntry.pokemonCombinationContribution.pokemonCombination.pokemon
+  //     );
 
-      const prettyEntry = {
-        pokemon: tieredEntry.pokemonCombinationContribution.pokemonCombination.pokemon.name,
-        ingredientList: prettifyIngredientDrop(
-          tieredEntry.pokemonCombinationContribution.pokemonCombination.ingredientList
-        ),
-        diff: tieredEntry.diff,
-        details: allEntriesOfPokemon
-          .map(
-            ({ tier, pokemonCombinationContribution: otherPairingsEntry }) =>
-              `[${tier}] (${prettifyIngredientDrop(otherPairingsEntry.pokemonCombination.ingredientList)})\n` +
-              `Total score: ${Math.round(otherPairingsEntry.combinedContribution.score)}` +
-              `${
-                (otherPairingsEntry.combinedContribution.contributions[0].skillValue ?? 0) > 0
-                  ? `, support value: ${Math.round(
-                      otherPairingsEntry.combinedContribution.contributions.reduce(
-                        (sum, cur) => sum + (cur.skillValue ?? 0),
-                        0
-                      )
-                    )}`
-                  : ''
-              }\n` +
-              `${otherPairingsEntry.combinedContribution.contributions
-                .map(
-                  (meal) =>
-                    `[${Math.round(meal.contributedPower)} ${MathUtils.round(meal.percentage, 1)}%] ${meal.meal.name
-                      .toLowerCase()
-                      .replace(/_/g, ' ')}`
-                  // \nExample solve: ${
-                  // meal.team
-                  //   ?.map(
-                  //     (member) =>
-                  //       `${capitalize(member.pokemon.name)}(${shortPrettifyIngredientDrop(
-                  //         member.ingredientList
-                  //       )})`
-                  //   )
-                  //   .join(', ') ?? 'no team'
-                  // }`
-                )
-                .join('\n')}`
-          )
-          .join('\n\n'),
-      };
+  //     const prettyEntry = {
+  //       pokemon: tieredEntry.pokemonCombinationContribution.pokemonCombination.pokemon,
+  //       ingredientList: prettifyIngredientDrop(
+  //         tieredEntry.pokemonCombinationContribution.pokemonCombination.ingredients
+  //       ),
+  //       diff: tieredEntry.diff,
+  //       details: allEntriesOfPokemon
+  //         .map(
+  //           ({ tier, pokemonCombinationContribution: otherPairingsEntry }) =>
+  //             `[${tier}] (${prettifyIngredientDrop(otherPairingsEntry.pokemonCombination.ingredients)})\n` +
+  //             `Total score: ${Math.round(otherPairingsEntry.combinedContribution.score)}` +
+  //             `${
+  //               (otherPairingsEntry.combinedContribution.contributions[0].skillValue ?? 0) > 0
+  //                 ? `, support value: ${Math.round(
+  //                     otherPairingsEntry.combinedContribution.contributions.reduce(
+  //                       (sum, cur) => sum + (cur.skillValue ?? 0),
+  //                       0
+  //                     )
+  //                   )}`
+  //                 : ''
+  //             }\n` +
+  //             `${otherPairingsEntry.combinedContribution.contributions
+  //               .map(
+  //                 (meal) =>
+  //                   `[${Math.round(meal.contributedPower)} ${MathUtils.round(meal.percentage, 1)}%] ${meal.meal.name
+  //                     .toLowerCase()
+  //                     .replace(/_/g, ' ')}`
+  //                 // \nExample solve: ${
+  //                 // meal.team
+  //                 //   ?.map(
+  //                 //     (member) =>
+  //                 //       `${capitalize(member.pokemon.name)}(${shortPrettifyIngredientDrop(
+  //                 //         member.ingredientList
+  //                 //       )})`
+  //                 //   )
+  //                 //   .join(', ') ?? 'no team'
+  //                 // }`
+  //               )
+  //               .join('\n')}`
+  //         )
+  //         .join('\n\n'),
+  //     };
 
-      if (!mapWithTiering.has(tieredEntry.tier)) {
-        mapWithTiering.set(tieredEntry.tier, [prettyEntry]);
-      } else {
-        const array = mapWithTiering.get(tieredEntry.tier);
-        if (array !== undefined) {
-          array.push(prettyEntry);
-        }
-      }
-    }
+  //     if (!mapWithTiering.has(tieredEntry.tier)) {
+  //       mapWithTiering.set(tieredEntry.tier, [prettyEntry]);
+  //     } else {
+  //       const array = mapWithTiering.get(tieredEntry.tier);
+  //       if (array !== undefined) {
+  //         array.push(prettyEntry);
+  //       }
+  //     }
+  //   }
 
-    const tiersWithPokemonDetails: {
-      tier: string;
-      pokemonWithDetails: { pokemon: string; ingredientList: string; diff?: number; details: string }[];
-    }[] = [];
-    for (const [tier, pokemonWithDetails] of mapWithTiering) {
-      tiersWithPokemonDetails.push({ tier, pokemonWithDetails });
-    }
+  //   const tiersWithPokemonDetails: {
+  //     tier: string;
+  //     pokemonWithDetails: { pokemon: string; ingredientList: string; diff?: number; details: string }[];
+  //   }[] = [];
+  //   for (const [tier, pokemonWithDetails] of mapWithTiering) {
+  //     tiersWithPokemonDetails.push({ tier, pokemonWithDetails });
+  //   }
 
-    return this.#filterOnlyBest(tiersWithPokemonDetails);
-  }
+  //   return this.#filterOnlyBest(tiersWithPokemonDetails);
+  // }
 
   public toIngredientRanker(optimalMons: IngredientRankerResult) {
     const prettifiedCombinations = optimalMons.teams.slice(0, 500).map((solution) => ({
       team: solution.team
-        .map(
-          (member) =>
-            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-              member.pokemonCombination.ingredientList
-            )})`
-        )
+        .map((member) => `${member.pokemonSet.pokemon}(${shortPrettifyIngredientDrop(member.pokemonSet.ingredients)})`)
         .join(),
       details: `👨🏻‍🍳 Ingredient ranker - https://sleepapi.net 👨🏻‍🍳\n\nIngredient: ${
         optimalMons.ingredient
       }\n\nPokemon\n- ${solution.team
-        .map(
-          (member) =>
-            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-              member.pokemonCombination.ingredientList
-            )})`
-        )
+        .map((member) => `${member.pokemonSet.pokemon}(${shortPrettifyIngredientDrop(member.pokemonSet.ingredients)})`)
         .join()}
         \n\nProduce per meal window\n${solution.team
           .map(
             (member) =>
-              `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-                member.detailedProduce.produce.ingredients
-              )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
+              `${member.pokemonSet.pokemon}: ${prettifyIngredientDrop(member.totalIngredients)} (${MathUtils.round(
+                member.skillProcs / MEALS_IN_DAY,
+                1
+              )} skill procs)`
           )
-          .join()}`,
+          .join()}`
     }));
 
     return {
@@ -222,7 +208,7 @@ class WebsiteConverterServiceImpl {
             ? `Showing ${prettifiedCombinations.length} of ${optimalMons.teams.length} Pokemon.\nTimeout of 10 seconds reached, results may not be exhaustive`
             : `${prettifiedCombinations.length} Pokemon found`
           : "No possible Pokemon found, can't be found with current filter",
-      teams: prettifiedCombinations,
+      teams: prettifiedCombinations
     };
   }
 
@@ -230,22 +216,12 @@ class WebsiteConverterServiceImpl {
     const prettifiedRecipe = prettifyIngredientDrop(optimalCombinations.recipe);
     const prettifiedCombinations = optimalCombinations.teams.slice(0, 500).map((solution) => ({
       team: solution.team
-        .map(
-          (member) =>
-            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-              member.pokemonCombination.ingredientList
-            )})`
-        )
+        .map((member) => `${member.pokemonSet.pokemon}(${shortPrettifyIngredientDrop(member.pokemonSet.ingredients)})`)
         .join(', '),
       details: `👨🏻‍🍳 Team finder - https://sleepapi.net 👨🏻‍🍳\n\nRecipe: ${
         optimalCombinations.meal
       } (${prettifiedRecipe})\n\nTeam\n- ${solution.team
-        .map(
-          (member) =>
-            `${member.pokemonCombination.pokemon.name}(${shortPrettifyIngredientDrop(
-              member.pokemonCombination.ingredientList
-            )})`
-        )
+        .map((member) => `${member.pokemonSet.pokemon}(${shortPrettifyIngredientDrop(member.pokemonSet.ingredients)})`)
         .join('\n- ')}\n${this.#prettifyInput(optimalCombinations.filter)}\nFiller ingredients produced\n${
         solution.surplus.relevant.length > 0
           ? `${this.#prettifyFillersForRecipe(optimalCombinations.recipe, solution.surplus)}`
@@ -253,11 +229,12 @@ class WebsiteConverterServiceImpl {
       }\n\nIndividual produce per meal window\n${solution.team
         .map(
           (member) =>
-            `${member.pokemonCombination.pokemon.name}: ${prettifyIngredientDrop(
-              member.detailedProduce.produce.ingredients
-            )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
+            `${member.pokemonSet.pokemon}: ${prettifyIngredientDrop(member.totalIngredients)} (${MathUtils.round(
+              member.skillProcs / MEALS_IN_DAY,
+              1
+            )} skill procs)`
         )
-        .join('\n')}`,
+        .join('\n')}`
     }));
 
     return {
@@ -277,51 +254,8 @@ class WebsiteConverterServiceImpl {
       recipe: prettifiedRecipe,
       bonus: optimalCombinations.bonus,
       value: optimalCombinations.value,
-      teams: prettifiedCombinations,
+      teams: prettifiedCombinations
     };
-  }
-
-  public toOptimalFlexible(pokemonCombinationCombinedContributions: OptimalFlexibleResult[]) {
-    return pokemonCombinationCombinedContributions.map((pokemonCombinationWithContribution, i) => {
-      const mealsMap = new Map(
-        pokemonCombinationWithContribution.scoreResult.contributions.map((contribution) => [
-          contribution.meal.name,
-          contribution.contributedPower,
-        ])
-      );
-
-      const meals = pokemonCombinationWithContribution.scoreResult.contributions.map(
-        (contribution) => `[${contribution.contributedPower}] ${contribution.meal.name}`
-      );
-
-      const countedMeals = pokemonCombinationWithContribution.scoreResult.countedMeals.map((contribution) => {
-        const basePower = mealsMap.get(contribution.meal.name);
-        const is20PercentHigher =
-          basePower && contribution.contributedPower === basePower * FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER;
-
-        const powerDisplay = is20PercentHigher
-          ? `[${MathUtils.round(
-              contribution.contributedPower / FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER,
-              0
-            )} x ${FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER})]`
-          : `[${MathUtils.round(contribution.contributedPower, 0)}]`;
-
-        return `${powerDisplay} ${contribution.meal.name}`;
-      });
-
-      return {
-        pokemon: pokemonCombinationWithContribution.pokemonCombination.pokemon.name,
-        ingredientList: pokemonCombinationWithContribution.pokemonCombination.ingredientList,
-        score: MathUtils.round(pokemonCombinationWithContribution.scoreResult.score, 0),
-        rank: i + 1,
-        meals,
-        countedMeals,
-        prettyPokemonCombination: `${
-          pokemonCombinationWithContribution.pokemonCombination.pokemon.name
-        } (${prettifyIngredientDrop(pokemonCombinationWithContribution.pokemonCombination.ingredientList)})`,
-        input: this.#prettifyInput(pokemonCombinationWithContribution.input),
-      };
-    });
   }
 
   #prettifyFiltersDetails(productionCombination: ProductionCombination) {
@@ -342,9 +276,7 @@ class WebsiteConverterServiceImpl {
             }`
           : ''
       }\n` +
-      `Subskills: ${
-        filters.subskills && filters.subskills.length > 0 ? filters.subskills.map((s) => s.name).join(', ') : 'None'
-      }\n`;
+      `Subskills: ${filters.subskills && filters.subskills.size > 0 ? [...filters.subskills].join(', ') : 'None'}\n`;
 
     const teamInput: string[] = [];
     if (filters.ribbon > 0) {
@@ -401,7 +333,7 @@ class WebsiteConverterServiceImpl {
       skillDreamShardValue,
       skillPotSizeValue,
       skillHelpsValue,
-      skillTastyChanceValue,
+      skillTastyChanceValue
     } = summary;
     const prettifiedSkillProduce: string[] = [];
     if (skillProduceValue.berries.length > 0) {
@@ -412,7 +344,7 @@ class WebsiteConverterServiceImpl {
         `${prettifyIngredientDrop(
           skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
             amount: MathUtils.round(amount, 1),
-            ingredient,
+            ingredient
           }))
         )}`
       );
@@ -490,30 +422,17 @@ class WebsiteConverterServiceImpl {
     return filteredArray;
   }
 
-  #prettifyInput(details: ProductionStats) {
+  #prettifyInput(details: SetCoverPokemonStats) {
     let prettyString = '\n-------------\n';
 
     prettyString += `Level: ${details.level}` + `, Nature: ${details.nature?.prettyName ?? 'None'}` + '\n';
-    prettyString += `Subskills: ${details.subskills?.map((s) => s.name).join(', ') ?? 'None'}\n`;
+    prettyString += `Subskills: ${details.subskills ? Array.from(details.subskills).join(', ') : 'None'}\n`;
 
     const teamInput: string[] = [];
     if (details.ribbon > 0) {
       teamInput.push(`Ribbon level: ${details.ribbon}`);
     }
-    if (details.e4eProcs > 0) {
-      teamInput.push(`E4E: ${details.e4eProcs} x ${mainskill.ENERGY_FOR_EVERYONE.amount(details.e4eLevel)} energy`);
-    }
-    if (details.helperBoostProcs > 0) {
-      teamInput.push(
-        `Helper boost: ${details.helperBoostProcs} x ${
-          mainskill.HELPER_BOOST.amount(details.helperBoostLevel) +
-          calculateHelperBoostHelpsFromUnique(details.helperBoostUnique, details.helperBoostLevel)
-        } helps`
-      );
-    }
-    if (details.helpingBonus > 0) {
-      teamInput.push(`Helping bonus: ${details.helpingBonus}`);
-    }
+
     if (details.camp) {
       teamInput.push(`Good camp: ${details.camp}`);
     }
@@ -527,15 +446,15 @@ class WebsiteConverterServiceImpl {
   }
 
   #prettifyFillersForRecipe(recipe: IngredientSet[], surplus: SurplusIngredients): string {
-    const fillers = surplus.relevant.map((filler) => {
+    const fillers = flatToIngredientSet(surplus.relevant).map((filler) => {
       const recipeIngredient = recipe.find((r) => r.ingredient.name === filler.ingredient.name);
       const percentage = recipeIngredient ? (filler.amount / recipeIngredient.amount) * 100 : 0;
-      return `${MathUtils.round(filler.amount, 1)} ${filler.ingredient.name} (${MathUtils.round(percentage, 0)}%)`;
+      return `${MathUtils.round(filler.amount, 1)} ${filler.ingredient} (${MathUtils.round(percentage, 0)}%)`;
     });
 
     fillers.push(
-      `${surplus.extra
-        .map((filler) => `${MathUtils.round(filler.amount, 1)} ${filler.ingredient.name} (N/A)`)
+      `${flatToIngredientSet(surplus.extra)
+        .map((filler) => `${MathUtils.round(filler.amount, 1)} ${filler.ingredient} (N/A)`)
         .join(', ')}`
     );
 

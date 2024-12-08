@@ -31,7 +31,7 @@
     },
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "eslint.validate": ["javascript", "typescript"],
+    "eslint.validate": ["javascript", "typescript", "json", "markdown"],
     "files.exclude": {
       "common": true,
       "backend": true,
@@ -43,14 +43,14 @@
       "package-lock.json": true,
       "*.tsbuildinfo": true,
       "coverage": true,
-      ".prettierignore": true,
-      "*.d.*": true,
-      "*.mjs": true
+      "test-results": true,
+      "*.d.*": true
     },
     "files.eol": "\n",
     "search.exclude": {
       "**/node_modules": true,
-      "**/dist": true
+      "**/dist": true,
+      "bot": true
     },
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "javascript.preferences.importModuleSpecifier": "non-relative"
@@ -59,7 +59,8 @@
     "recommendations": [
       "EditorConfig.EditorConfig",
       "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode"
+      "esbenp.prettier-vscode",
+      "gruntfuggly.todo-tree"
     ]
   }
 }

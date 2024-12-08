@@ -31,18 +31,10 @@
       <v-divider />
 
       <v-list>
-        <v-list-item
-          :to="'/profile'"
-          :disabled="!userStore.loggedIn"
-          prepend-icon="mdi-account-box"
-          @click="toggleMenu"
+        <v-list-item :to="'/profile'" :disabled="!userStore.loggedIn" prepend-icon="mdi-account-box" @click="toggleMenu"
           >Profile</v-list-item
         >
-        <v-list-item
-          :to="'/user-settings'"
-          :disabled="!userStore.loggedIn"
-          prepend-icon="mdi-cog"
-          @click="toggleMenu"
+        <v-list-item :to="'/user-settings'" :disabled="!userStore.loggedIn" prepend-icon="mdi-cog" @click="toggleMenu"
           >User Settings</v-list-item
         >
       </v-list>
@@ -53,13 +45,7 @@
         <v-list-item v-if="!userStore.loggedIn">
           <GoogleLogin :callback="callback" style="width: 100%">
             <!-- TODO: should not hard code color -->
-            <v-card
-              title="Login"
-              class="text-center"
-              rounded="xl"
-              color="#181717"
-              style="cursor: pointer"
-            >
+            <v-card title="Login" class="text-center" rounded="xl" color="#181717" style="cursor: pointer">
               <template #prepend>
                 <GoogleIcon />
               </template>
@@ -69,9 +55,7 @@
             </v-card>
           </GoogleLogin>
         </v-list-item>
-        <v-list-item v-else id="logoutButton" prepend-icon="mdi-logout" @click="logout">
-          Log out
-        </v-list-item>
+        <v-list-item v-else id="logoutButton" prepend-icon="mdi-logout" @click="logout"> Log out </v-list-item>
       </v-list>
     </v-card>
   </v-menu>

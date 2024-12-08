@@ -13,16 +13,14 @@
     "test": "jest"
   },
   "nodemonConfig": {
-    "watch": [
-      "src"
-    ],
+    "watch": ["src"],
     "ext": "ts",
     "exec": "ts-node src/app.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.12.1",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.3.1",
     "express": "^4.19.2",
     "morgan": "~1.9.1"

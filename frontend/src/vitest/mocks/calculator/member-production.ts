@@ -73,9 +73,7 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
   }
 }
 
-export function createMockMemberProductionExt(
-  attrs?: Partial<MemberProductionExt>
-): MemberProductionExt {
+export function createMockMemberProductionExt(attrs?: Partial<MemberProductionExt>): MemberProductionExt {
   const mockPokemon = createMockPokemon()
 
   return {

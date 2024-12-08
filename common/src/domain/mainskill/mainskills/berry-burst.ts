@@ -8,6 +8,6 @@ export const BERRY_BURST: Mainskill = createBaseSkill({
   unit: 'berries',
   maxLevel: MAX_SKILL_LEVEL - 1,
   description: 'Gets ? Berries.',
-  RP: [1400, 1991, 2747, 3791, 5234, 7232],
+  RP: [1400, 1991, 2747, 3791, 5234, 7232]
 });
 MAINSKILLS.push(BERRY_BURST);

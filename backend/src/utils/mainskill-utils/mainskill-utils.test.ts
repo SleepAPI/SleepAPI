@@ -1,5 +1,5 @@
-import { MAINSKILLS, Mainskill } from 'sleepapi-common';
-import { getMainskill, getMainskillNames } from './mainskill-utils';
+import { Mainskill, MAINSKILLS } from 'sleepapi-common';
+import { getMainskill, getMainskillNames } from './mainskill-utils.js';
 
 describe('getMainskillNames', () => {
   it('shall get all mainskill names', () => {
@@ -29,14 +29,14 @@ describe('getMainskillNames', () => {
 });
 
 describe('getMainskill', () => {
-  it.each(MAINSKILLS)('finds mainskill "%s"', (ms: Mainskill) => {
-    const result = getMainskill(ms.name);
+  it.each(MAINSKILLS.map((ms) => [ms.name, ms]))('finds mainskill %s', (name: string, ms: Mainskill) => {
+    const result = getMainskill(name);
     expect(result).toEqual(ms);
   });
 
   it('shall throw if looking up missing mainskill', () => {
     expect(() => getMainskill('missing')).toThrowErrorMatchingInlineSnapshot(
-      `"Can't find Main skill with name missing"`
+      `[MainskillError: Can't find Main skill with name missing]`
     );
   });
 });

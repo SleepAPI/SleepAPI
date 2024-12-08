@@ -1,24 +1,24 @@
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamDAO } from '@src/database/dao/team/team-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { UserDAO } from '@src/database/dao/user/user-dao';
-import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
-import { client } from '@src/services/api-service/login/login-service';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamDAO } from '@src/database/dao/team/team-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import { UserDAO } from '@src/database/dao/user/user-dao.js';
+import { IngredientError } from '@src/domain/error/ingredient/ingredient-error.js';
+import { client } from '@src/services/api-service/login/login-service.js';
 import {
   deleteMember,
   deleteTeam,
   getTeams,
   upsertTeamMember,
-  upsertTeamMeta,
-} from '@src/services/api-service/team/team-service';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
-import { MockService } from '@src/utils/test-utils/mock-service';
+  upsertTeamMeta
+} from '@src/services/api-service/team/team-service.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
+import { MockService } from '@src/utils/test-utils/mock-service.js';
 import { UpsertTeamMemberRequest, uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true, enforceForeignKeyConstraints: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  uuid.v4 = vi.fn().mockReturnValue('0'.repeat(36));
   MockService.init({ TeamDAO, PokemonDAO, TeamMemberDAO, UserDAO, client });
 });
 
@@ -31,7 +31,7 @@ describe('upsertTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([]);
@@ -43,7 +43,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -57,8 +57,8 @@ describe('upsertTeam', () => {
         team_index: 0,
         version: 1,
         recipe_type: 'curry',
-        favored_berries: undefined,
-      },
+        favored_berries: undefined
+      }
     ]);
   });
 
@@ -66,7 +66,7 @@ describe('upsertTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     await TeamDAO.insert({
@@ -76,7 +76,7 @@ describe('upsertTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     await upsertTeamMeta({
       fk_user_id: user.id,
@@ -85,7 +85,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -99,8 +99,8 @@ describe('upsertTeam', () => {
         team_index: 0,
         version: 2,
         recipe_type: 'curry',
-        favored_berries: undefined,
-      },
+        favored_berries: undefined
+      }
     ]);
   });
 
@@ -108,7 +108,7 @@ describe('upsertTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     await TeamDAO.insert({
@@ -118,7 +118,7 @@ describe('upsertTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     await upsertTeamMeta({
       fk_user_id: user.id,
@@ -127,7 +127,7 @@ describe('upsertTeam', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -141,7 +141,7 @@ describe('upsertTeam', () => {
         team_index: 0,
         version: 1,
         recipe_type: 'curry',
-        favored_berries: undefined,
+        favored_berries: undefined
       },
       {
         camp: false,
@@ -153,8 +153,8 @@ describe('upsertTeam', () => {
         team_index: 1,
         version: 1,
         recipe_type: 'curry',
-        favored_berries: undefined,
-      },
+        favored_berries: undefined
+      }
     ]);
   });
 });
@@ -170,7 +170,7 @@ describe('getTeams', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     await TeamDAO.insert({
@@ -180,7 +180,7 @@ describe('getTeams', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     await TeamDAO.insert({
       fk_user_id: user.id,
@@ -189,7 +189,7 @@ describe('getTeams', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const response = await getTeams(user);
@@ -205,7 +205,7 @@ describe('getTeams', () => {
           wakeup: '06:00',
           version: 1,
           recipeType: 'curry',
-          favoredBerries: undefined,
+          favoredBerries: undefined
         },
         {
           index: 1,
@@ -216,9 +216,9 @@ describe('getTeams', () => {
           members: [],
           version: 1,
           recipeType: 'curry',
-          favoredBerries: undefined,
-        },
-      ],
+          favoredBerries: undefined
+        }
+      ]
     });
   });
 
@@ -226,12 +226,12 @@ describe('getTeams', () => {
     const user1 = await UserDAO.insert({
       external_id: 'ext id 1',
       name: 'name1',
-      sub: 'sub1',
+      sub: 'sub1'
     });
     const user2 = await UserDAO.insert({
       external_id: 'ext id 2',
       name: 'name2',
-      sub: 'sub2',
+      sub: 'sub2'
     });
 
     await TeamDAO.insert({
@@ -241,7 +241,7 @@ describe('getTeams', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     await TeamDAO.insert({
       fk_user_id: user2.id,
@@ -250,7 +250,7 @@ describe('getTeams', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const response = await getTeams(user1);
@@ -266,9 +266,9 @@ describe('getTeams', () => {
           wakeup: '06:00',
           version: 1,
           recipeType: 'curry',
-          favoredBerries: undefined,
-        },
-      ],
+          favoredBerries: undefined
+        }
+      ]
     });
   });
 });
@@ -278,7 +278,7 @@ describe('upsertTeamMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const request: UpsertTeamMemberRequest = {
@@ -298,8 +298,8 @@ describe('upsertTeamMember', () => {
       ingredients: [
         { level: 0, ingredient: 'apple' },
         { level: 30, ingredient: 'apple' },
-        { level: 60, ingredient: 'apple' },
-      ],
+        { level: 60, ingredient: 'apple' }
+      ]
     };
 
     const result = await upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user });
@@ -322,8 +322,8 @@ describe('upsertTeamMember', () => {
       ingredients: [
         { level: 0, ingredient: 'apple' },
         { level: 30, ingredient: 'apple' },
-        { level: 60, ingredient: 'apple' },
-      ],
+        { level: 60, ingredient: 'apple' }
+      ]
     });
 
     expect(await PokemonDAO.get({ external_id: result.externalId })).toEqual({
@@ -348,7 +348,7 @@ describe('upsertTeamMember', () => {
       ingredient_0: 'apple',
       ingredient_30: 'apple',
       ingredient_60: 'apple',
-      version: 1,
+      version: 1
     });
 
     expect(await TeamMemberDAO.findMultiple()).toEqual([
@@ -357,8 +357,8 @@ describe('upsertTeamMember', () => {
         fk_pokemon_id: 1,
         member_index: 0,
         id: 1,
-        version: 1,
-      },
+        version: 1
+      }
     ]);
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -372,8 +372,8 @@ describe('upsertTeamMember', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         recipe_type: 'curry',
-        favoredBerries: undefined,
-      },
+        favoredBerries: undefined
+      }
     ]);
   });
 
@@ -381,7 +381,7 @@ describe('upsertTeamMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const request: UpsertTeamMemberRequest = {
@@ -399,13 +399,13 @@ describe('upsertTeamMember', () => {
       nature: 'bold',
       subskills: [
         { level: 10, subskill: 'quick-attack' },
-        { level: 25, subskill: 'solar-beam' },
+        { level: 25, subskill: 'solar-beam' }
       ],
       ingredients: [
         { level: 0, ingredient: 'apple' },
         { level: 30, ingredient: 'berry' },
-        { level: 60, ingredient: 'pearl' },
-      ],
+        { level: 60, ingredient: 'pearl' }
+      ]
     };
 
     // should get updated to version 2
@@ -416,7 +416,7 @@ describe('upsertTeamMember', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     await PokemonDAO.insert({
@@ -438,7 +438,7 @@ describe('upsertTeamMember', () => {
       subskill_100: undefined,
       ingredient_0: 'apple',
       ingredient_30: 'apple',
-      ingredient_60: 'apple',
+      ingredient_60: 'apple'
     });
 
     const result = await upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user });
@@ -459,13 +459,13 @@ describe('upsertTeamMember', () => {
       nature: 'bold',
       subskills: [
         { level: 10, subskill: 'quick-attack' },
-        { level: 25, subskill: 'solar-beam' },
+        { level: 25, subskill: 'solar-beam' }
       ],
       ingredients: [
         { level: 0, ingredient: 'apple' },
         { level: 30, ingredient: 'berry' },
-        { level: 60, ingredient: 'pearl' },
-      ],
+        { level: 60, ingredient: 'pearl' }
+      ]
     });
 
     expect(await PokemonDAO.get({ external_id: result.externalId })).toEqual({
@@ -490,7 +490,7 @@ describe('upsertTeamMember', () => {
       ingredient_0: 'apple',
       ingredient_30: 'berry',
       ingredient_60: 'pearl',
-      version: 2,
+      version: 2
     });
 
     expect(await TeamMemberDAO.get({ fk_team_id: 1, member_index: 0 })).toEqual({
@@ -498,7 +498,7 @@ describe('upsertTeamMember', () => {
       fk_pokemon_id: 1,
       member_index: 0,
       id: 1,
-      version: 1,
+      version: 1
     });
 
     expect(await TeamDAO.findMultiple()).toEqual([
@@ -512,8 +512,8 @@ describe('upsertTeamMember', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         recipe_type: 'curry',
-        favoredBerries: undefined,
-      },
+        favoredBerries: undefined
+      }
     ]);
   });
 
@@ -521,7 +521,7 @@ describe('upsertTeamMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const request: UpsertTeamMemberRequest = {
@@ -539,13 +539,13 @@ describe('upsertTeamMember', () => {
       nature: 'bold',
       subskills: [
         { level: 10, subskill: 'quick-attack' },
-        { level: 25, subskill: 'solar-beam' },
+        { level: 25, subskill: 'solar-beam' }
       ],
       ingredients: [
         { level: 0, ingredient: 'apple' },
-        { level: 30, ingredient: 'berry' },
+        { level: 30, ingredient: 'berry' }
         // Missing ingredient for level 60
-      ],
+      ]
     };
 
     await expect(upsertTeamMember({ teamIndex: 0, memberIndex: 0, request, user })).rejects.toThrow(IngredientError);
@@ -557,7 +557,7 @@ describe('deleteMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team = await TeamDAO.insert({
@@ -567,7 +567,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -589,7 +589,7 @@ describe('deleteMember', () => {
       subskill_100: 'tackle',
       ingredient_0: 'apple',
       ingredient_30: 'berry',
-      ingredient_60: 'pearl',
+      ingredient_60: 'pearl'
     });
 
     await TeamMemberDAO.insert({ fk_team_id: team.id, fk_pokemon_id: pokemon.id, member_index: 0 });
@@ -604,7 +604,7 @@ describe('deleteMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team = await TeamDAO.insert({
@@ -614,7 +614,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -636,7 +636,7 @@ describe('deleteMember', () => {
       subskill_100: 'tackle',
       ingredient_0: 'apple',
       ingredient_30: 'berry',
-      ingredient_60: 'pearl',
+      ingredient_60: 'pearl'
     });
 
     await TeamMemberDAO.insert({ fk_team_id: team.id, fk_pokemon_id: pokemon.id, member_index: 0 });
@@ -651,7 +651,7 @@ describe('deleteMember', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team1 = await TeamDAO.insert({
@@ -661,7 +661,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     const team2 = await TeamDAO.insert({
       fk_user_id: user.id,
@@ -670,7 +670,7 @@ describe('deleteMember', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const pokemon = await PokemonDAO.insert({
@@ -692,7 +692,7 @@ describe('deleteMember', () => {
       subskill_100: 'tackle',
       ingredient_0: 'apple',
       ingredient_30: 'berry',
-      ingredient_60: 'pearl',
+      ingredient_60: 'pearl'
     });
 
     await TeamMemberDAO.insert({ fk_team_id: team1.id, fk_pokemon_id: pokemon.id, member_index: 0 });
@@ -701,7 +701,7 @@ describe('deleteMember', () => {
     await deleteMember({ teamIndex: 0, memberIndex: 0, user });
 
     expect(await TeamMemberDAO.findMultiple()).toEqual([
-      { fk_team_id: team2.id, fk_pokemon_id: pokemon.id, member_index: 1, id: 2, version: 1 },
+      { fk_team_id: team2.id, fk_pokemon_id: pokemon.id, member_index: 1, id: 2, version: 1 }
     ]);
     expect(await PokemonDAO.findMultiple()).toEqual([pokemon]);
   });
@@ -712,7 +712,7 @@ describe('deleteTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team = await TeamDAO.insert({
@@ -722,7 +722,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const pkmn = await PokemonDAO.insert({
@@ -744,13 +744,13 @@ describe('deleteTeam', () => {
       subskill_100: undefined,
       ingredient_0: 'apple',
       ingredient_30: 'apple',
-      ingredient_60: 'apple',
+      ingredient_60: 'apple'
     });
 
     await TeamMemberDAO.insert({
       fk_pokemon_id: pkmn.id,
       fk_team_id: team.id,
-      member_index: 0,
+      member_index: 0
     });
 
     await deleteTeam(team.team_index, user);
@@ -765,7 +765,7 @@ describe('deleteTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team = await TeamDAO.insert({
@@ -775,7 +775,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     await deleteTeam(team.team_index, user);
@@ -788,7 +788,7 @@ describe('deleteTeam', () => {
     const user = await UserDAO.insert({
       external_id: 'user id',
       name: 'name',
-      sub: 'sub',
+      sub: 'sub'
     });
 
     const team = await TeamDAO.insert({
@@ -798,7 +798,7 @@ describe('deleteTeam', () => {
       team_index: 0,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     const pkmn = await PokemonDAO.insert({
@@ -820,13 +820,13 @@ describe('deleteTeam', () => {
       subskill_100: undefined,
       ingredient_0: 'apple',
       ingredient_30: 'apple',
-      ingredient_60: 'apple',
+      ingredient_60: 'apple'
     });
 
     await TeamMemberDAO.insert({
       fk_pokemon_id: pkmn.id,
       fk_team_id: team.id,
-      member_index: 0,
+      member_index: 0
     });
 
     await deleteTeam(team.team_index, user);

@@ -1,14 +1,7 @@
+import { BerrySet, IngredientSet, PokemonWithIngredientsIndexed, TeamSettings } from '../../../domain';
 import { Recipe } from '../../../domain/recipe/recipe';
-import { BerrySet } from '../../../domain/types/berry-set';
-import { IngredientSet } from '../../../domain/types/ingredient-set';
 import { PokemonInstance } from '../../pokemon/pokemon-instance';
 import { Produce } from '../../production';
-
-export interface TeamSettings {
-  camp: boolean;
-  bedtime: string;
-  wakeup: string;
-}
 
 export interface PokemonInstanceIdentity extends PokemonInstance {
   externalId: string;
@@ -47,6 +40,7 @@ export interface MemberProductionBase {
   produceTotal: Produce;
   skillProcs: number;
   externalId: string;
+  pokemonWithIngredients: PokemonWithIngredientsIndexed;
 }
 
 export interface MemberProduction extends MemberProductionBase {
@@ -75,6 +69,10 @@ export interface CookingResult {
   curry: RecipeTypeResult;
   salad: RecipeTypeResult;
   dessert: RecipeTypeResult;
+  critInfo: {
+    averageCritMultiplierPerCook: number;
+    averageCritChancePerCook: number;
+  };
 }
 
 export interface CalculateTeamResponse {

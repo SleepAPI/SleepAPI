@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error.js';
+import { SimpleTeamResult } from '@src/services/api-service/production/production-service.js';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
 import {
   MemberState,
   TeamSkillActivation,
-  TeamSkillEnergy,
-} from '@src/services/simulation-service/team-simulator/member-state';
-import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse, MemberProductionBase, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
+  TeamSkillEnergy
+} from '@src/services/simulation-service/team-simulator/member-state.js';
+import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import {
+  CalculateTeamResponse,
+  MemberProductionBase,
+  RandomUtils,
+  TeamMemberExt,
+  TeamSettingsExt,
+  Time,
+  TimePeriod
+} from 'sleepapi-common';
 
+// TODO: can we use simplifiedingredientset for pokemon
 export class TeamSimulator {
   private run = 0;
 
@@ -41,7 +50,7 @@ export class TeamSimulator {
   private fullDayDuration = 1440;
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
-  constructor(params: { settings: TeamSettingsExt; members: TeamMember[]; includeCooking: boolean }) {
+  constructor(params: { settings: TeamSettingsExt; members: TeamMemberExt[]; includeCooking: boolean }) {
     const { settings, members, includeCooking } = params;
 
     if (includeCooking) {
@@ -50,12 +59,12 @@ export class TeamSimulator {
 
     const dayPeriod = {
       start: settings.wakeup,
-      end: settings.bedtime,
+      end: settings.bedtime
     };
     this.dayPeriod = dayPeriod;
     const nightPeriod = {
       start: settings.bedtime,
-      end: settings.wakeup,
+      end: settings.wakeup
     };
     this.nightPeriod = nightPeriod;
 
@@ -115,6 +124,7 @@ export class TeamSimulator {
     }
   }
 
+  // @Profile
   public results(): CalculateTeamResponse {
     this.collectInventory();
 
@@ -136,6 +146,12 @@ export class TeamSimulator {
     }
 
     return variant[0].ivResults(this.run);
+  }
+
+  public simpleResults(): SimpleTeamResult[] {
+    this.collectInventory();
+
+    return this.memberStates.map((member) => member.simpleResults(this.run));
   }
 
   private init() {

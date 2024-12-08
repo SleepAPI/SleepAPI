@@ -6,8 +6,7 @@
           v-model="teamStore.getCurrentTeam.name"
           :rules="[
             (v: any) =>
-              (v || '').length <= maxTeamNameLength ||
-              `Description must be ${maxTeamNameLength} characters or less`
+              (v || '').length <= maxTeamNameLength || `Description must be ${maxTeamNameLength} characters or less`
           ]"
           append-inner-icon="mdi-pencil"
           label="Team name"
@@ -63,10 +62,7 @@ export default defineComponent({
       const input = event.target as HTMLInputElement
       const regex = /^[a-zA-Z0-9 ]*$/
       if (!regex.test(input.value)) {
-        this.teamStore.getCurrentTeam.name = this.teamStore.getCurrentTeam.name.replace(
-          /[^a-zA-Z0-9 ]/g,
-          ''
-        )
+        this.teamStore.getCurrentTeam.name = this.teamStore.getCurrentTeam.name.replace(/[^a-zA-Z0-9 ]/g, '')
       }
       if (input.value.length > this.maxTeamNameLength) {
         this.teamStore.getCurrentTeam.name = this.teamStore.getCurrentTeam.name.slice(0, -1)

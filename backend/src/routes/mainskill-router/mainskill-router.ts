@@ -1,7 +1,7 @@
-import MainskillController from '@src/controllers/mainskill/mainskill.controller';
+import MainskillController from '@src/controllers/mainskill/mainskill.controller.js';
 import { Request, Response } from 'express';
-import { Logger } from '../../services/logger/logger';
-import { BaseRouter } from '../base-router';
+import { Logger } from '../../services/logger/logger.js';
+import { BaseRouter } from '../base-router.js';
 
 class MainskillRouterImpl {
   public async register(controller: MainskillController) {

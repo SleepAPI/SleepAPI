@@ -1,25 +1,26 @@
-import { Logger } from '@src/services/logger/logger';
-import { runWorkerFile } from '@src/services/worker/worker';
-import { queryAsBoolean } from '@src/utils/routing/routing-utils';
+import { Logger } from '@src/services/logger/logger.js';
+import { runWorkerFile } from '@src/services/worker/worker.js';
+import { relativePath } from '@src/utils/file-utils/file-utils.js';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
 import { Request, Response } from 'express';
-import path from 'path';
 import {
   CalculateIvRequest,
   CalculateIvResponse,
   CalculateTeamRequest,
   CalculateTeamResponse,
-  SingleProductionRequest,
+  SingleProductionRequest
 } from 'sleepapi-common';
-import workerpool from 'workerpool';
-import { BaseRouter } from '../base-router';
 
-const teamPool = workerpool.pool(path.resolve(__dirname, './team-worker.js'), {
+import workerpool from 'workerpool';
+import { BaseRouter } from '../base-router.js';
+
+const teamPool = workerpool.pool(relativePath('./team-worker.js', import.meta.url), {
   minWorkers: 4,
-  maxWorkers: 4,
+  maxWorkers: 4
 });
-const ivPool = workerpool.pool(path.resolve(__dirname, './iv-worker.js'), {
+const ivPool = workerpool.pool(relativePath('./iv-worker.js', import.meta.url), {
   minWorkers: 4,
-  maxWorkers: 4,
+  maxWorkers: 4
 });
 
 class ProductionRouterImpl {
@@ -42,11 +43,11 @@ class ProductionRouterImpl {
           const pretty = queryAsBoolean(req.query.pretty);
           const includeAnalysis = queryAsBoolean(req.query.includeAnalysis);
 
-          const result = await runWorkerFile(path.resolve(__dirname, './production-worker.js'), {
+          const result = await runWorkerFile(relativePath('./production-worker.js', import.meta.url), {
             name,
             body: req.body,
             pretty,
-            includeAnalysis,
+            includeAnalysis
           });
           res.header('Content-Type', 'application/json').send(JSON.stringify(result, null, 4));
         } catch (err) {

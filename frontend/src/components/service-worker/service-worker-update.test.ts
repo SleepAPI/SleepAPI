@@ -61,8 +61,6 @@ describe('Service worker update', () => {
     mount(ServiceWorkerUpdate)
     await flushPromises()
 
-    expect(consoleDebugSpy).toHaveBeenCalledWith(
-      `Client cache up to date with version ${versionStore.version}`
-    )
+    expect(consoleDebugSpy).toHaveBeenCalledWith(`Client cache up to date with version ${versionStore.version}`)
   })
 })
