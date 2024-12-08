@@ -2,7 +2,7 @@ import { PokemonGender } from '../../domain/gender/gender';
 import { Ingredient } from '../../domain/ingredient';
 import { Nature } from '../../domain/nature';
 import { Pokemon } from '../../domain/pokemon';
-import { SubSkill } from '../../domain/subskill';
+import { Subskill } from '../../domain/subskill';
 
 export interface IngredientInstanceExt {
   level: number;
@@ -10,7 +10,7 @@ export interface IngredientInstanceExt {
 }
 export interface SubskillInstanceExt {
   level: number;
-  subskill: SubSkill;
+  subskill: Subskill;
 }
 
 // TODO: maybe should split into meta that extends this with version, saved etc

@@ -5,10 +5,7 @@
         <template #activator="{ props }">
           <v-btn v-bind="props" append-icon="mdi-chevron-down" :class="isMobile ? 'w-100' : ''">
             <!-- TODO: would prefer not setting explicit max width -->
-            <span
-              class="text-body-2 text-truncate"
-              :style="{ width: isMobile ? '40dvw' : '200px' }"
-            >
+            <span class="text-body-2 text-truncate" :style="{ width: isMobile ? '40dvw' : '200px' }">
               {{ comparisonStore.team?.name ?? 'No team selected' }}
             </span>
           </v-btn>

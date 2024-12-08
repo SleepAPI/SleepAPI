@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
+import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
 
 const DBUserSchema = Type.Composite([
   DBWithVersionedIdSchema,
@@ -7,8 +7,8 @@ const DBUserSchema = Type.Composite([
     sub: Type.String(),
     external_id: Type.String({ minLength: 36, maxLength: 36 }),
     name: Type.String(),
-    avatar: Type.Optional(Type.String()),
-  }),
+    avatar: Type.Optional(Type.String())
+  })
 ]);
 export type DBUser = Static<typeof DBUserSchema>;
 

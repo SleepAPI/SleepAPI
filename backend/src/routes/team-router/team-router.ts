@@ -1,20 +1,19 @@
-import TeamController from '@src/controllers/team/team.controller';
-import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
-import { Logger } from '@src/services/logger/logger';
+import TeamController from '@src/controllers/team/team.controller.js';
+import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware.js';
 import { Request, Response } from 'express';
 import {
   UpsertTeamMemberRequest,
   UpsertTeamMemberResponse,
   UpsertTeamMetaRequest,
-  UpsertTeamMetaResponse,
+  UpsertTeamMetaResponse
 } from 'sleepapi-common';
-import { BaseRouter } from '../base-router';
+import { BaseRouter } from '../base-router.js';
 
 class TeamRouterImpl {
   public async register(controller: TeamController) {
     BaseRouter.router.get('/team', validateAuthHeader, async (req: Request, res: Response) => {
       try {
-        Logger.log('Entered /team');
+        logger.log('Entered /team');
 
         const user = (req as AuthenticatedRequest).user;
         if (!user) {
@@ -24,7 +23,7 @@ class TeamRouterImpl {
         const teams = await controller.getTeams(user);
         res.json(teams);
       } catch (err) {
-        Logger.error(err as Error);
+        logger.error(err as Error);
         res.status(500).send('Something went wrong');
       }
     });
@@ -34,7 +33,7 @@ class TeamRouterImpl {
       validateAuthHeader,
       async (req: Request<{ index: string }, unknown, unknown, unknown>, res: Response) => {
         try {
-          Logger.log('Entered /team/:index DEL');
+          logger.log('Entered /team/:index DEL');
 
           const user = (req as AuthenticatedRequest).user;
           if (!user) {
@@ -44,7 +43,7 @@ class TeamRouterImpl {
           const teams = await controller.deleteTeam(+req.params.index, user);
           res.json(teams);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -58,7 +57,7 @@ class TeamRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered /team/meta/:index');
+          logger.log('Entered /team/meta/:index');
 
           const { index } = req.params;
 
@@ -70,7 +69,7 @@ class TeamRouterImpl {
           const data = await controller.upsertMeta(+index, req.body, user);
           res.json(data);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -89,7 +88,7 @@ class TeamRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered PUT /team/:teamIndex/member/:memberIndex');
+          logger.log('Entered PUT /team/:teamIndex/member/:memberIndex');
 
           const { teamIndex, memberIndex } = req.params;
 
@@ -102,12 +101,12 @@ class TeamRouterImpl {
             teamIndex: +teamIndex,
             memberIndex: +memberIndex,
             request: req.body,
-            user,
+            user
           });
 
           res.json(updatedMember);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -118,7 +117,7 @@ class TeamRouterImpl {
       validateAuthHeader,
       async (req: Request<{ teamIndex: string; memberIndex: string }, unknown, unknown, unknown>, res: Response) => {
         try {
-          Logger.log('Entered DEL /team/:teamIndex/member/:memberIndex');
+          logger.log('Entered DEL /team/:teamIndex/member/:memberIndex');
 
           const { teamIndex, memberIndex } = req.params;
 
@@ -131,7 +130,7 @@ class TeamRouterImpl {
 
           res.sendStatus(204);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }

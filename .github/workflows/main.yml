@@ -44,7 +44,6 @@ jobs:
           npm ci
           npm run build
           npm run test
-          npm run lint
 
       - name: Install and Test Backend
         run: |
@@ -52,7 +51,6 @@ jobs:
           npm ci
           npm run build
           npm run test
-          npm run lint
 
       - name: Install and Test Frontend
         run: |
@@ -60,6 +58,8 @@ jobs:
           npm ci
           npm run build
           npm run test
+      - name: Lint project
+        run: |
           npm run lint
 
       - name: Upload coverage to Codecov

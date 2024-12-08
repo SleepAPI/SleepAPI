@@ -1,12 +1,15 @@
-import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
-import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { Produce as Inventory, subskill } from 'sleepapi-common';
+import {
+  calculateRibbonCarrySize,
+  calculateSubskillCarrySize
+} from '@src/services/calculator/stats/stats-calculator.js';
+import { Produce as Inventory } from 'sleepapi-common';
 
 class InventoryUtilsImpl {
+  // TODO: probably reimpl and move to flat-utils
   public addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {
     const newInventory: Inventory = {
       berries: [...currentInventory.berries],
-      ingredients: [...currentInventory.ingredients],
+      ingredients: [...currentInventory.ingredients]
     };
 
     produce.berries.forEach((produceBerrySet) => {
@@ -19,7 +22,7 @@ class InventoryUtilsImpl {
           newInventory.berries[index] = {
             berry: newInventory.berries[index].berry,
             amount: newInventory.berries[index].amount + produceBerrySet.amount,
-            level: newInventory.berries[index].level,
+            level: newInventory.berries[index].level
           };
         } else {
           newInventory.berries.push({ ...produceBerrySet });
@@ -27,6 +30,20 @@ class InventoryUtilsImpl {
       }
     });
 
+    // TODO: seems like this might be significantly faster
+    //   const result: IngredientSet[] = target;
+
+    // for (const { amount, ingredient: addedIngredient } of toAdd) {
+    //   const existingIngredient = result.find(({ ingredient }) => ingredient.name === addedIngredient.name);
+
+    //   if (existingIngredient) {
+    //     existingIngredient.amount += amount;
+    //   } else {
+    //     result.push({ ingredient: addedIngredient, amount });
+    //   }
+    // }
+
+    // return result;
     produce.ingredients.forEach((produceIngredientSet) => {
       if (produceIngredientSet.amount > 0) {
         const index = newInventory.ingredients.findIndex(
@@ -36,7 +53,7 @@ class InventoryUtilsImpl {
         if (index !== -1) {
           newInventory.ingredients[index] = {
             ingredient: newInventory.ingredients[index].ingredient,
-            amount: newInventory.ingredients[index].amount + produceIngredientSet.amount,
+            amount: newInventory.ingredients[index].amount + produceIngredientSet.amount
           };
         } else {
           newInventory.ingredients.push({ ...produceIngredientSet });
@@ -57,22 +74,20 @@ class InventoryUtilsImpl {
   public getEmptyInventory(): Inventory {
     return {
       berries: [],
-      ingredients: [],
+      ingredients: []
     };
   }
 
   public calculateCarrySize(params: {
     baseWithEvolutions: number;
-    subskills: subskill.SubSkill[];
+    subskillsLevelLimited: Set<string>;
     level: number;
     ribbon: number;
     camp: boolean;
   }) {
-    const { baseWithEvolutions, subskills, level, ribbon, camp } = params;
+    const { baseWithEvolutions, subskillsLevelLimited, ribbon, camp } = params;
     return Math.ceil(
-      (baseWithEvolutions +
-        calculateSubskillCarrySize(limitSubSkillsToLevel(subskills, level)) +
-        calculateRibbonCarrySize(ribbon)) *
+      (baseWithEvolutions + calculateSubskillCarrySize(subskillsLevelLimited) + calculateRibbonCarrySize(ribbon)) *
         (camp ? 1.2 : 1)
     );
   }

@@ -5,7 +5,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { clearCacheAndLogout, clearCacheKeepLogin, migrateStores } from '@/stores/store-service'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
-import { createMockPokemon } from '@/vitest'
+import { createMockMemberProduction, createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -29,7 +29,7 @@ describe('Store Service', () => {
     pokemonStore.upsertLocalPokemon(createMockPokemon())
     pokedexStore.groupedPokedex = []
     notificationStore.showTeamNameNotification = false
-    comparisonStore.members = [{ name: 'Charizard' }] as any
+    comparisonStore.members = [createMockMemberProduction()]
 
     clearCacheAndLogout()
 
@@ -55,7 +55,7 @@ describe('Store Service', () => {
     pokemonStore.upsertLocalPokemon(createMockPokemon())
     pokedexStore.groupedPokedex = []
     notificationStore.showTeamNameNotification = false
-    comparisonStore.members = [{ name: 'Charizard' }] as any
+    comparisonStore.members = [createMockMemberProduction()]
 
     clearCacheKeepLogin()
 

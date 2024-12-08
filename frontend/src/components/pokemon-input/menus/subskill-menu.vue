@@ -4,12 +4,7 @@
       <v-col cols="12" class="py-5">
         <div v-if="lowestAvailableLevel" style="height: 50px">
           <CustomLabel>
-            <v-badge
-              location="right center"
-              color="primary"
-              rounded="lg"
-              :content="lowestAvailableLevel"
-            >
+            <v-badge location="right center" color="primary" rounded="lg" :content="lowestAvailableLevel">
               <v-container>
                 <span>Choose the subskill for level</span>
               </v-container>
@@ -232,7 +227,7 @@
 <script lang="ts">
 import CustomLabel from '@/components/custom-components/custom-label.vue'
 import SubskillButton from '@/components/pokemon-input/menus/subskill-button.vue'
-import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
 
 export default {
   name: 'SubskillMenu',
@@ -268,13 +263,11 @@ export default {
     this.selectedSubskills = this.currentSubskills
   },
   methods: {
-    subskillForLevel(subskillLevel: number): subskill.SubSkill | undefined {
+    subskillForLevel(subskillLevel: number): Subskill | undefined {
       return this.currentSubskills.find((ssExt) => ssExt.level === subskillLevel)?.subskill
     },
-    toggleSubskill(ss: subskill.SubSkill) {
-      const index = this.selectedSubskills.findIndex(
-        (s) => s.subskill.name.toLowerCase() === ss.name.toLowerCase()
-      )
+    toggleSubskill(ss: Subskill) {
+      const index = this.selectedSubskills.findIndex((s) => s.subskill.name.toLowerCase() === ss.name.toLowerCase())
 
       if (index !== -1) {
         // Subskill is already selected, remove it

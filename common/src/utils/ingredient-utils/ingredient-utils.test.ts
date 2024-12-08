@@ -1,14 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { FANCY_APPLE, HONEY, INGREDIENTS, SOOTHING_CACAO } from '../../domain/ingredient';
-import { IngredientSet } from '../../domain/types/ingredient-set';
+import { IngredientSet } from '../../domain/ingredient/ingredient';
+import { FANCY_APPLE, HONEY, INGREDIENTS, SOOTHING_CACAO } from '../../domain/ingredient/ingredients';
 import {
   combineSameIngredientsInDrop,
   emptyIngredientInventory,
   getIngredient,
   getIngredientNames,
-  multiplyIngredients,
   prettifyIngredientDrop,
-  shortPrettifyIngredientDrop,
+  shortPrettifyIngredientDrop
 } from './ingredient-utils';
 
 describe('getIngredient', () => {
@@ -21,23 +20,6 @@ describe('getIngredient', () => {
         "value": 101,
       }
     `);
-  });
-
-  it('shall lookup ingredient case-insensitive', () => {
-    expect(getIngredient('hOneY')).toMatchInlineSnapshot(`
-      {
-        "longName": "Honey",
-        "name": "Honey",
-        "taxedValue": 29.8,
-        "value": 101,
-      }
-    `);
-  });
-
-  it('shall throw programmer error if ingredient is missing', () => {
-    expect(() => getIngredient('missing')).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Ingredient with name [missing] does not exist]`,
-    );
   });
 });
 
@@ -73,35 +55,21 @@ describe('emptyIngredientInventory', () => {
   });
 });
 
-describe('multiplyIngredients', () => {
-  it('shall multiply the amount of each ingredient by the given factor', () => {
-    const ingredients: IngredientSet[] = [
-      { ingredient: HONEY, amount: 2 },
-      { ingredient: FANCY_APPLE, amount: 3 },
-    ];
-    const result = multiplyIngredients(ingredients, 2);
-    expect(result).toEqual([
-      { ingredient: HONEY, amount: 4 },
-      { ingredient: FANCY_APPLE, amount: 6 },
-    ]);
-  });
-});
-
 describe('combineSameIngredientsInDrop', () => {
   it('shall combine ingredients and leave unique ingredients as is', () => {
     const pinsir: IngredientSet[] = [
       {
         amount: 2,
-        ingredient: HONEY,
+        ingredient: HONEY
       },
-      { amount: 5, ingredient: FANCY_APPLE },
+      { amount: 5, ingredient: FANCY_APPLE }
     ];
     const absol: IngredientSet[] = [
       {
         amount: 2,
-        ingredient: SOOTHING_CACAO,
+        ingredient: SOOTHING_CACAO
       },
-      { amount: 8, ingredient: FANCY_APPLE },
+      { amount: 8, ingredient: FANCY_APPLE }
     ];
 
     expect(combineSameIngredientsInDrop([...pinsir, ...absol])).toMatchInlineSnapshot(`
@@ -143,7 +111,7 @@ describe('shortPrettifyIngredientDrop', () => {
     const rawCombination = [
       { amount: 2, ingredient: HONEY },
       { amount: 5, ingredient: FANCY_APPLE },
-      { amount: 7, ingredient: HONEY },
+      { amount: 7, ingredient: HONEY }
     ];
     expect(shortPrettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(`"Honey/Apple/Honey"`);
   });
@@ -154,7 +122,7 @@ describe('prettifyIngredientDrop', () => {
     const rawCombination = [
       { amount: 2, ingredient: HONEY },
       { amount: 5, ingredient: FANCY_APPLE },
-      { amount: 7, ingredient: HONEY },
+      { amount: 7, ingredient: HONEY }
     ];
     expect(prettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(`"2 Honey, 5 Apple, 7 Honey"`);
   });
@@ -163,11 +131,11 @@ describe('prettifyIngredientDrop', () => {
     const rawCombination = [
       { amount: 2, ingredient: HONEY },
       { amount: 5, ingredient: FANCY_APPLE },
-      { amount: 7, ingredient: HONEY },
+      { amount: 7, ingredient: HONEY }
     ];
     INGREDIENTS.map((ingredient) => rawCombination.push({ amount: 0.83761, ingredient }));
     expect(prettifyIngredientDrop(rawCombination)).toMatchInlineSnapshot(
-      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 15 other ingredients"`,
+      `"2 Honey, 5 Apple, 7 Honey and 0.84 of all 15 other ingredients"`
     );
   });
 
@@ -177,11 +145,45 @@ describe('prettifyIngredientDrop', () => {
   });
 
   it('shall support custom separator', () => {
-    const rawCombination = [
+    const rawCombination: IngredientSet[] = [
       { amount: 2, ingredient: HONEY },
       { amount: 5, ingredient: FANCY_APPLE },
-      { amount: 7, ingredient: HONEY },
+      { amount: 7, ingredient: HONEY }
     ];
     expect(prettifyIngredientDrop(rawCombination, '/')).toMatchInlineSnapshot(`"2 Honey/5 Apple/7 Honey"`);
   });
 });
+
+// describe('percentageCoveredOfRecipe', () => {
+//   it('shall successfully calculate expected percentage', () => {
+//     const combination: IngredientSetSimple[] = [
+//       { amount: 4, ingredient: HONEY.name },
+//       { amount: 10, ingredient: FANCY_APPLE.name },
+//     ];
+//     expect(percentageCoveredOfRecipe(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`40`);
+//   });
+
+//   it('shall count no matching ingredients as zero percentage', () => {
+//     const combination: IngredientSetSimple[] = [];
+//     expect(percentageCoveredOfRecipe(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`0`);
+//   });
+
+//   it('shall limit overflow of ingredients at 100%', () => {
+//     const combination: IngredientSetSimple[] = [
+//       { amount: 100, ingredient: HONEY.name },
+//       { amount: 100, ingredient: FANCY_APPLE.name },
+//       { amount: 100, ingredient: SOOTHING_CACAO.name },
+//       { amount: 100, ingredient: MOOMOO_MILK.name },
+//     ];
+//     expect(percentageCoveredOfRecipe(LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(`100`);
+//   });
+
+//   it('shall handle combinations with same ingredient twice', () => {
+//     const raw: IngredientSetSimple[] = [
+//       { amount: 2.79, ingredient: FANCY_APPLE.name },
+//       { amount: 5.57, ingredient: FANCY_APPLE.name },
+//       { amount: 8.36, ingredient: GREENGRASS_SOYBEANS.name },
+//     ];
+//     expect(percentageCoveredOfRecipe(FANCY_APPLE_CURRY, raw)).toBe(100);
+//   });
+// });

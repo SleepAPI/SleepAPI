@@ -3,16 +3,16 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, berry, compactNumber, mainskill, pokemon } from 'sleepapi-common'
+import { MIMIKYU, MathUtils, berry, compactNumber, mainskill } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.MIMIKYU }),
+  member: createMockPokemon({ pokemon: MIMIKYU }),
   production: {
     ...createMockMemberProductionExt().production,
     produceFromSkill: {
       berries: [
-        { amount: 100, berry: pokemon.MIMIKYU.berry, level: 1 },
+        { amount: 100, berry: MIMIKYU.berry, level: 1 },
         { amount: 20, berry: berry.BELUE, level: 1 }
       ],
       ingredients: []
@@ -56,10 +56,7 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(
-        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
-        1
-      ).toString()
+      MathUtils.round(mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
     )
   })
 
@@ -75,7 +72,7 @@ describe('MemberProductionSkill', () => {
     const expectedValue = StrengthService.skillValue({
       skill: mockMember.member.pokemon.skill,
       amount: mockMember.production.produceFromSkill.berries.reduce(
-        (sum, cur) => (sum + cur.berry.name === pokemon.MIMIKYU.berry.name ? cur.amount : 0),
+        (sum, cur) => (sum + cur.berry.name === MIMIKYU.berry.name ? cur.amount : 0),
         0
       ),
       timeWindow: '24H'
@@ -83,13 +80,13 @@ describe('MemberProductionSkill', () => {
     const expectedTeam = StrengthService.skillValue({
       skill: mockMember.member.pokemon.skill,
       amount: mockMember.production.produceFromSkill.berries.reduce(
-        (sum, cur) => (sum + cur.berry.name !== pokemon.MIMIKYU.berry.name ? cur.amount : 0),
+        (sum, cur) => (sum + cur.berry.name !== MIMIKYU.berry.name ? cur.amount : 0),
         0
       ),
       timeWindow: '24H'
     })
     expect(totalSkillValue.at(0)?.text()).toContain(
-      `${compactNumber(expectedValue)} ${pokemon.MIMIKYU.berry.name.toLowerCase()}`
+      `${compactNumber(expectedValue)} ${MIMIKYU.berry.name.toLowerCase()}`
     )
     expect(totalSkillValue.at(1)?.text()).toContain(`${compactNumber(expectedTeam)} team`)
   })

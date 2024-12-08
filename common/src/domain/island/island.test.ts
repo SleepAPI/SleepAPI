@@ -14,8 +14,8 @@ import {
   PERSIM,
   RAWST,
   SITRUS,
-  WIKI,
-} from '../berry/berry';
+  WIKI
+} from '../berry/berries';
 import { CYAN, ISLANDS, LAPIS, POWER_PLANT, SNOWDROP, TAUPE } from './island';
 
 describe('island', () => {

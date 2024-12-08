@@ -19,7 +19,6 @@ const defaultState = (attrs?: Partial<ComparisonState>): ComparisonState => ({
 })
 
 const MAX_COMPARISON_MEMBERS = 10
-export const AVERAGE_WEEKLY_CRIT_MULTIPLIER = 1.171428571
 
 export const useComparisonStore = defineStore('comparison', {
   state: (): ComparisonState => defaultState(),

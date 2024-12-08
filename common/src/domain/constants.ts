@@ -17,6 +17,10 @@ export const WEEKDAY_CRIT_CHANCE = 0.1;
 export const WEEKDAY_CRIT_MULTIPLIER = 2;
 export const SUNDAY_CRIT_CHANCE = 0.3;
 export const SUNDAY_CRIT_MULTIPLIER = 3;
+export const AVERAGE_WEEKLY_CRIT_MULTIPLIER = 1.171428571;
 
 // island
 export const MAX_ISLAND_BONUS = 75;
+
+// misc
+export const MAX_TEAM_SIZE = 5;

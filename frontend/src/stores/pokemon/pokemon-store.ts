@@ -43,16 +43,12 @@ export const usePokemonStore = defineStore('pokemon', {
       const nrOfOccurencesTeam = teamStore.teams.flatMap((team) =>
         team.members.filter((m) => m != null && m === externalId)
       ).length
-      const nrOfOccurencesCompare = comparisonStore.members.filter(
-        (member) => member.externalId === externalId
-      ).length
+      const nrOfOccurencesCompare = comparisonStore.members.filter((member) => member.externalId === externalId).length
 
       const safeRemoveFromTeam =
-        (source === 'team' && nrOfOccurencesTeam < 2) ||
-        (source !== 'team' && nrOfOccurencesTeam === 0)
+        (source === 'team' && nrOfOccurencesTeam < 2) || (source !== 'team' && nrOfOccurencesTeam === 0)
       const safeRemoveFromCompare =
-        (source === 'compare' && nrOfOccurencesCompare < 2) ||
-        (source !== 'compare' && nrOfOccurencesCompare === 0)
+        (source === 'compare' && nrOfOccurencesCompare < 2) || (source !== 'compare' && nrOfOccurencesCompare === 0)
       const safeRemoval = safeRemoveFromTeam && safeRemoveFromCompare
 
       if (!member.saved && safeRemoval) {
@@ -65,7 +61,7 @@ export const usePokemonStore = defineStore('pokemon', {
       if (userStore.loggedIn) {
         try {
           UserService.upsertPokemon(pokemon)
-        } catch (error) {
+        } catch {
           console.error('Error upserting pokemon in server')
         }
       }
@@ -78,7 +74,7 @@ export const usePokemonStore = defineStore('pokemon', {
       if (userStore.loggedIn) {
         try {
           UserService.deletePokemon(externalId)
-        } catch (error) {
+        } catch {
           console.error('Error deleting pokemon in server')
         }
       }

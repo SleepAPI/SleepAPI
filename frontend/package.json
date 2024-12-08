@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "dev": "vite",
     "clean": "rimraf dist",
@@ -15,14 +13,7 @@
     "preview": "vite preview",
     "test": "vitest --run --coverage",
     "test-watch": "vitest --changed",
-    "test-watch-all": "vitest",
-    "type-check": "vue-tsc --build --force",
-    "eslint-check": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "eslint-fix": "npm run eslint-check -- --fix",
-    "prettier-check": "prettier --check .",
-    "prettier-fix": "prettier --write .",
-    "lint": "npm run eslint-check && npm run prettier-check",
-    "lint-fix": "npm run eslint-fix && npm run prettier-fix"
+    "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -38,22 +29,18 @@
     "vue3-google-login": "^2.0.26"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.3.3",
     "@tsconfig/node20": "^20.1.2",
     "@types/jsdom": "^21.1.6",
     "@types/node": "^20.11.28",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitest/coverage-v8": "^1.5.0",
-    "@vue/eslint-config-prettier": "^8.0.0",
-    "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8.49.0",
-    "eslint-plugin-vue": "^9.17.0",
     "jsdom": "^24.0.0",
-    "npm-run-all2": "^6.1.2",
+    "npm-run-all2": "^7.0.1",
     "prettier": "^3.0.3",
     "resize-observer-polyfill": "^1.5.1",
+    "rimraf": "^6.0.1",
     "sass": "^1.74.1",
     "sleepapi-common": "file:../common",
     "typescript": "~5.4.0",
@@ -66,7 +53,5 @@
     "vue-tsc": "^2.0.6",
     "vuetify": "~3.6.8"
   },
-  "bundleDependencies": [
-    "sleepapi-common"
-  ]
+  "bundleDependencies": ["sleepapi-common"]
 }

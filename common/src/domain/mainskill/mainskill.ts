@@ -113,9 +113,10 @@ export class Mainskill {
 export const createBaseSkill = (baseSkill: Omit<MainskillAttributes, 'modifier'>): Mainskill => {
   return new Mainskill({
     ...baseSkill,
-    modifier: { type: 'Base', critChance: 0 },
+    modifier: { type: 'Base', critChance: 0 }
   });
 };
 
 export const MAINSKILLS: Mainskill[] = [];
 export const METRONOME_SKILLS: Mainskill[] = [];
+export const INGREDIENT_SUPPORT_MAINSKILLS: Mainskill[] = [];

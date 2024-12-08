@@ -27,8 +27,7 @@ describe('HomePage.vue', () => {
     const expectedFeatures = [
       {
         title: 'Calculator',
-        description:
-          "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations."
+        description: "Calculate your team's or pokemon's production with our realistic Sleep API-powered simulations."
       },
       {
         title: 'Compare',

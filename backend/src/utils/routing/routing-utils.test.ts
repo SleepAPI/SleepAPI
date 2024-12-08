@@ -1,4 +1,4 @@
-import { queryAsBoolean, queryAsNumber, queryParamsToString } from './routing-utils';
+import { queryAsBoolean, queryAsNumber, queryParamsToString } from './routing-utils.js';
 
 describe('queryAsBoolean', () => {
   it('shall convert true to true', () => {

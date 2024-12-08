@@ -92,9 +92,7 @@ describe('CompareOverview', () => {
     await nextTick()
 
     const members = wrapper.vm.members
-    expect(members[0].berries).toBe(
-      MathUtils.round(mockMemberProduction.produceTotal.berries[0].amount, 1)
-    )
+    expect(members[0].berries).toBe(MathUtils.round(mockMemberProduction.produceTotal.berries[0].amount, 1))
     expect(members[0].skillProcs).toBe(MathUtils.round(mockMemberProduction.skillProcs, 1))
   })
 

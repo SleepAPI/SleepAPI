@@ -1,5 +1,5 @@
 import { island } from 'sleepapi-common';
-import { findIslandForName } from './island-utils';
+import { findIslandForName } from './island-utils.js';
 
 describe('findIslandForName Function Tests', () => {
   it.each(island.ISLANDS)('finds existing island "%s"', (island: island.Island) => {

@@ -1,11 +1,6 @@
 <template>
   <v-row id="subskills" dense>
-    <v-col
-      v-for="subskillLevel in subskillLevels"
-      :key="subskillLevel"
-      cols="6"
-      class="flex-center"
-    >
+    <v-col v-for="subskillLevel in subskillLevels" :key="subskillLevel" cols="6" class="flex-center">
       <v-badge
         id="subskillBadge"
         color="secondary"
@@ -47,7 +42,7 @@
 <script lang="ts">
 import SubskillMenu from '@/components/pokemon-input/menus/subskill-menu.vue'
 import { rarityColor } from '@/services/utils/color-utils'
-import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { subskill, type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
 
 export default {
   name: 'SubskillButtons',
@@ -97,7 +92,7 @@ export default {
     }
   },
   methods: {
-    subskillForLevel(subskillLevel: number): subskill.SubSkill | undefined {
+    subskillForLevel(subskillLevel: number): Subskill | undefined {
       return this.selectedSubskills.find((ssExt) => ssExt.level === subskillLevel)?.subskill
     },
     updateSubskills(updatedSubskills: SubskillInstanceExt[]) {

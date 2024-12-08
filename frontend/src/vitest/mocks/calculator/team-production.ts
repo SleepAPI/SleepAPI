@@ -47,6 +47,10 @@ export function createMockTeamProduction(attrs?: Partial<TeamProductionExt>): Te
               ingredientLimited: []
             }
           ]
+        },
+        critInfo: {
+          averageCritChancePerCook: 20,
+          averageCritMultiplierPerCook: 1.2
         }
       },
       berries: [{ amount: 10, berry: berry.BELUE, level: 60 }],

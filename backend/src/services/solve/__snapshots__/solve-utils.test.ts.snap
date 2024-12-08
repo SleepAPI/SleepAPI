@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`solve-utils > bogusMembers > should create an array of mocked Pokémon 2`] = `
+{
+  "carrySize": 0,
+  "externalId": "mock id",
+  "level": 0,
+  "nature": {
+    "energy": 1,
+    "exp": 1,
+    "frequency": 1,
+    "ingredient": 1,
+    "name": "Bashful",
+    "negativeModifier": "neutral",
+    "positiveModifier": "neutral",
+    "prettyName": "Bashful (neutral)",
+    "skill": 1,
+  },
+  "ribbon": 0,
+  "skillLevel": 0,
+  "subskills": Set {},
+}
+`;

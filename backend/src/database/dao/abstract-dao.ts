@@ -1,14 +1,13 @@
 import { Kind, Static, TSchema, Type } from '@sinclair/typebox';
 import { Knex } from 'knex';
-import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error';
-import { Logger } from '../../services/logger/logger';
-import { chunkArray } from '../../utils/database-utils/array-utils';
-import { AbstractFilterOperator, Filter } from '../../utils/database-utils/find-filter';
-import { DatabaseService } from '../database-service';
+import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error.js';
+import { chunkArray } from '../../utils/database-utils/array-utils.js';
+import { AbstractFilterOperator, Filter } from '../../utils/database-utils/find-filter.js';
+import { DatabaseService } from '../database-service.js';
 
 export const DBWithVersionedIdSchema = Type.Object({
   id: Type.Number({ minimum: 0 }),
-  version: Type.Number({ minimum: 1 }),
+  version: Type.Number({ minimum: 1 })
 });
 
 export const DBEntitySchema = DBWithVersionedIdSchema;
@@ -73,7 +72,7 @@ export abstract class AbstractDAO<
         this.preProcess({
           ...entity,
           id: undefined,
-          version: 1,
+          version: 1
         })
       )
       .into(this.tableName);
@@ -93,7 +92,7 @@ export abstract class AbstractDAO<
       .update(
         this.preProcess({
           ...entity,
-          version: (entity.version ?? 0) + 1,
+          version: (entity.version ?? 0) + 1
         })
       )
       .into(this.tableName)
@@ -138,12 +137,12 @@ export abstract class AbstractDAO<
           this.preProcess({
             ...entity,
             id: undefined,
-            version: 1,
+            version: 1
           })
         )
       );
       amountInserted += chunk.length;
-      if (enableLogging && amountInserted > 1) Logger.debug(`Inserted ${amountInserted} into ${this.tableName}`);
+      if (enableLogging && amountInserted > 1) logger.debug(`Inserted ${amountInserted} into ${this.tableName}`);
     }
   }
 

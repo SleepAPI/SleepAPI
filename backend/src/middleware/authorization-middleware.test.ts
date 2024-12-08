@@ -1,11 +1,12 @@
-import { DBUser } from '@src/database/dao/user/user-dao';
-import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
-import { verify } from '@src/services/api-service/login/login-service';
-import { Logger } from '@src/services/logger/logger';
-import { NextFunction, Request, Response } from 'express';
+import { vi } from 'vitest';
 
-jest.mock('@src/services/api-service/login/login-service.ts');
-jest.mock('@src/services/logger/logger.ts');
+import { validateAuthHeader } from '@src/middleware/authorization-middleware.js';
+
+import { DBUser } from '@src/database/dao/user/user-dao.js';
+import { AuthenticatedRequest } from '@src/middleware/authorization-middleware.js';
+import * as loginService from '@src/services/api-service/login/login-service.js';
+import { NextFunction, Request, Response } from 'express';
+import { Logger } from 'sleepapi-common';
 
 describe('validateAuthHeader middleware', () => {
   let req: Partial<Request>;
@@ -14,17 +15,25 @@ describe('validateAuthHeader middleware', () => {
 
   beforeEach(() => {
     req = {
-      headers: {},
+      headers: {}
     };
     res = {
-      sendStatus: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      sendStatus: vi.fn().mockReturnThis(),
+      json: vi.fn()
     };
-    next = jest.fn();
+    next = vi.fn() as unknown as NextFunction;
+
+    global.logger = {
+      debug: vi.fn() as unknown,
+      log: vi.fn() as unknown,
+      info: vi.fn() as unknown,
+      warn: vi.fn() as unknown,
+      error: vi.fn() as unknown
+    } as Logger;
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should respond with 401 if no Authorization header is present', async () => {
@@ -37,7 +46,7 @@ describe('validateAuthHeader middleware', () => {
     req.headers!.authorization = 'Basic token';
     await validateAuthHeader(req as Request, res as Response, next);
     expect(res.sendStatus).toHaveBeenCalledWith(401);
-    expect(Logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid access token');
+    expect(logger.error).toHaveBeenCalledWith('Unauthorized: AuthorizationError: Invalid access token');
     expect(next).not.toHaveBeenCalled();
   });
 
@@ -49,9 +58,10 @@ describe('validateAuthHeader middleware', () => {
       sub: 'test-sub',
       external_id: '00000000-0000-0000-0000-000000000000',
       name: 'Test User',
-      avatar: 'test-avatar',
+      avatar: 'test-avatar'
     };
-    (verify as jest.Mock).mockResolvedValue(mockUser);
+    const spy = vi.spyOn(loginService, 'verify');
+    spy.mockResolvedValue(mockUser);
 
     await validateAuthHeader(req as Request, res as Response, next);
     expect(next).toHaveBeenCalled();
@@ -62,11 +72,12 @@ describe('validateAuthHeader middleware', () => {
   it('should respond with 401 if token verification fails', async () => {
     req.headers!.authorization = 'Bearer invalidtoken';
 
-    (verify as jest.Mock).mockRejectedValue(new Error('Invalid token'));
+    const spy = vi.spyOn(loginService, 'verify');
+    spy.mockRejectedValue(new Error('Invalid token'));
 
     await validateAuthHeader(req as Request, res as Response, next);
     expect(res.sendStatus).toHaveBeenCalledWith(401);
     expect(next).not.toHaveBeenCalled();
-    expect(Logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid token');
+    expect(logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid token');
   });
 });
