@@ -154,9 +154,7 @@ describe('TeamSettings', () => {
     await nextTick()
     expect(wrapper.vm.isDeleteOpen).toBe(true)
 
-    const deleteModalButton = document.querySelector(
-      'button[aria-label="delete button"]'
-    ) as HTMLElement
+    const deleteModalButton = document.querySelector('button[aria-label="delete button"]') as HTMLElement
     deleteModalButton.click()
 
     await nextTick()

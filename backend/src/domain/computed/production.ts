@@ -1,11 +1,11 @@
-import { berry, nature, Recipe, subskill, Time } from 'sleepapi-common';
-import { CustomPokemonCombinationWithProduce } from '../combination/custom';
+import { nature, Time } from 'sleepapi-common';
 
+// TODO: we should delete this after Sleep API 2, we wont take e4e as input anymore
 export interface ProductionStats {
   level: number;
   ribbon: number;
   nature?: nature.Nature;
-  subskills?: subskill.SubSkill[];
+  subskills?: Set<string>;
   skillLevel?: number;
   inventoryLimit?: number;
   e4eProcs: number;
@@ -22,15 +22,4 @@ export interface ProductionStats {
   mainBedtime: Time;
   mainWakeup: Time;
   maxPotSize?: number;
-}
-
-export interface SetCoverProductionStats extends ProductionStats {
-  berries: berry.Berry[];
-}
-
-export type TeamWithProduce = CustomPokemonCombinationWithProduce[];
-
-export interface TeamsForMeal {
-  teams: TeamWithProduce[];
-  meal: Recipe;
 }

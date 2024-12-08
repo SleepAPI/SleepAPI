@@ -122,9 +122,7 @@ describe('IslandSelect', () => {
     wrapper.vm.favoredBerries = island.CYAN.berries
     await wrapper.vm.$nextTick()
 
-    const allButton = document.querySelector(
-      'button[aria-label="select all button"]'
-    ) as HTMLElement
+    const allButton = document.querySelector('button[aria-label="select all button"]') as HTMLElement
     expect(allButton).not.toBeNull()
 
     allButton.click()

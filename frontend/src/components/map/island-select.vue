@@ -2,12 +2,7 @@
   <v-dialog v-model="menu" max-width="500px" class="flex-center">
     <template #activator="{ props }">
       <v-btn icon color="transparent" elevation="0" v-bind="props">
-        <v-img
-          height="48"
-          width="48"
-          :src="islandImage({ favoredBerries, background: false })"
-          alt="island icon"
-        />
+        <v-img height="48" width="48" :src="islandImage({ favoredBerries, background: false })" alt="island icon" />
       </v-btn>
     </template>
 
@@ -22,13 +17,7 @@
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="taupe island"
-              @click="selectTaupe"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="taupe island" @click="selectTaupe">
               <v-avatar size="64">
                 <v-img src="/images/island/taupe.png" alt="taupe icon" />
               </v-avatar>
@@ -38,39 +27,21 @@
 
         <v-row>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="snowdrop island"
-              @click="selectSnowdrop"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="snowdrop island" @click="selectSnowdrop">
               <v-avatar size="64">
                 <v-img src="/images/island/snowdrop.png" alt="snowdrop icon" />
               </v-avatar>
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="lapis island"
-              @click="selectLapis"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="lapis island" @click="selectLapis">
               <v-avatar size="64">
                 <v-img src="/images/island/lapis.png" alt="lapis icon" />
               </v-avatar>
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="power plant island"
-              @click="selectPowerPlant"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="power plant island" @click="selectPowerPlant">
               <v-avatar size="64">
                 <v-img src="/images/island/powerplant.png" alt="power plant icon" />
               </v-avatar>
@@ -116,14 +87,14 @@
 
 <script lang="ts">
 import { islandImage } from '@/services/utils/image-utils'
-import { berry, island } from 'sleepapi-common'
+import { berry, island, type Berry } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'IslandSelect',
   props: {
     previousBerries: {
-      type: Array<berry.Berry>,
+      type: Array<Berry>,
       default: []
     }
   },
@@ -133,7 +104,7 @@ export default defineComponent({
   },
   data: () => ({
     menu: false,
-    favoredBerries: [] as berry.Berry[]
+    favoredBerries: [] as Berry[]
   }),
   computed: {
     berries() {
@@ -142,7 +113,7 @@ export default defineComponent({
   },
   watch: {
     previousBerries: {
-      handler(newBerries: berry.Berry[]) {
+      handler(newBerries: Berry[]) {
         this.favoredBerries = newBerries
       },
       immediate: true
@@ -153,7 +124,7 @@ export default defineComponent({
       this.menu = false
       this.updateBerries()
     },
-    toggleBerry(berry: berry.Berry) {
+    toggleBerry(berry: Berry) {
       const index = this.favoredBerries.findIndex((item) => item.name === berry.name)
 
       if (index === -1) {

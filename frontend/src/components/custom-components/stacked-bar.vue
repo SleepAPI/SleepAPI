@@ -13,19 +13,9 @@
         borderBottomRightRadius: index === sections.length - 1 ? '10px' : '0'
       }"
     >
-      <v-tooltip
-        v-model="activeTooltips[index]"
-        theme="light"
-        bottom
-        :close-on-content-click="false"
-      >
+      <v-tooltip v-model="activeTooltips[index]" theme="light" bottom :close-on-content-click="false">
         <template #activator="{ props }">
-          <div
-            v-bind="props"
-            class="flex-center"
-            style="width: 100%; height: 100%"
-            @click="toggleTooltip(index)"
-          >
+          <div v-bind="props" class="flex-center" style="width: 100%; height: 100%" @click="toggleTooltip(index)">
             <span
               v-if="section.percentage > minDisplayPercentage"
               :style="{ zIndex: sections.length - index }"

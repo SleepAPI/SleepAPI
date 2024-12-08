@@ -1,14 +1,14 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import { PokemonProduce } from "@src/domain/combination/produce.js";
 import {
   METRONOME_SKILLS,
+  PINSIR,
   SkillActivation,
   berry,
   emptyBerryInventory,
   emptyIngredientInventory,
   ingredient,
   mainskill,
-  pokemon,
-} from 'sleepapi-common';
+} from "sleepapi-common";
 import {
   activateDisguiseBerryBurst,
   activateEnergizingCheer,
@@ -18,10 +18,10 @@ import {
   activateMetronome,
   activateNonProduceSkills,
   createSkillEvent,
-} from './skill-activation';
+} from "./skill-activation.js";
 
-describe('createSkillEvent', () => {
-  it('shall create an Energizing Cheer skill event', () => {
+describe("createSkillEvent", () => {
+  it("shall create an Energizing Cheer skill event", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.ENERGIZING_CHEER_S,
@@ -36,10 +36,12 @@ describe('createSkillEvent', () => {
     createSkillEvent(params, 2);
     expect(skillActivations.length).toBe(1);
     expect(skillActivations[0].skill).toBe(mainskill.ENERGIZING_CHEER_S);
-    expect(skillActivations[0].adjustedAmount).toBe((mainskill.ENERGIZING_CHEER_S.amount(6) * 0.7) / (5 * 2));
+    expect(skillActivations[0].adjustedAmount).toBe(
+      (mainskill.ENERGIZING_CHEER_S.amount(6) * 0.7) / (5 * 2)
+    );
   });
 
-  it('shall create an Ingredient Magnet skill event', () => {
+  it("shall create an Ingredient Magnet skill event", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.INGREDIENT_MAGNET_S,
@@ -54,10 +56,12 @@ describe('createSkillEvent', () => {
     createSkillEvent(params, 1);
     expect(skillActivations.length).toBe(1);
     expect(skillActivations[0].skill).toBe(mainskill.INGREDIENT_MAGNET_S);
-    expect(skillActivations[0].adjustedAmount).toBe((mainskill.INGREDIENT_MAGNET_S.amount(6) * 0.5) / 1);
+    expect(skillActivations[0].adjustedAmount).toBe(
+      (mainskill.INGREDIENT_MAGNET_S.amount(6) * 0.5) / 1
+    );
   });
 
-  it('shall create an Extra Helpful skill event', () => {
+  it("shall create an Extra Helpful skill event", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.EXTRA_HELPFUL_S,
@@ -74,7 +78,7 @@ describe('createSkillEvent', () => {
     expect(skillActivations[0].skill).toBe(mainskill.EXTRA_HELPFUL_S);
   });
 
-  it('shall create a Helper Boost skill event', () => {
+  it("shall create a Helper Boost skill event", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.HELPER_BOOST,
@@ -91,7 +95,7 @@ describe('createSkillEvent', () => {
     expect(skillActivations[0].skill).toBe(mainskill.HELPER_BOOST);
   });
 
-  it('shall create empty helper boost produce skill events if unique mons in team is zero', () => {
+  it("shall create empty helper boost produce skill events if unique mons in team is zero", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.HELPER_BOOST,
@@ -105,10 +109,15 @@ describe('createSkillEvent', () => {
     };
     createSkillEvent(params);
     expect(skillActivations.length).toBe(1);
-    expect(skillActivations[0].adjustedProduce?.ingredients.reduce((sum, cur) => sum + cur.amount, 0)).toBe(0);
+    expect(
+      skillActivations[0].adjustedProduce?.ingredients.reduce(
+        (sum, cur) => sum + cur.amount,
+        0
+      )
+    ).toBe(0);
   });
 
-  it('shall handle Metronome skill activation differently', () => {
+  it("shall handle Metronome skill activation differently", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.METRONOME,
@@ -124,7 +133,7 @@ describe('createSkillEvent', () => {
     expect(skillActivations.length).toBe(METRONOME_SKILLS.length);
   });
 
-  it('shall default to non-produce skills activation for non-productive/non-random skills', () => {
+  it("shall default to non-produce skills activation for non-productive/non-random skills", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skill: mainskill.CHARGE_STRENGTH_M,
@@ -142,8 +151,8 @@ describe('createSkillEvent', () => {
   });
 });
 
-describe('activateNonProduceSkills', () => {
-  it('shall correctly apply adjusted amount for energy skill', () => {
+describe("activateNonProduceSkills", () => {
+  it("shall correctly apply adjusted amount for energy skill", () => {
     const params = {
       skill: mainskill.ENERGIZING_CHEER_S,
       skillLevel: 6,
@@ -160,7 +169,7 @@ describe('activateNonProduceSkills', () => {
     });
   });
 
-  it('shall adjust skill amount based on metronome factor for INGREDIENT_MAGNET skill', () => {
+  it("shall adjust skill amount based on metronome factor for INGREDIENT_MAGNET skill", () => {
     const params = {
       skill: mainskill.INGREDIENT_MAGNET_S,
       skillLevel: 6,
@@ -178,7 +187,7 @@ describe('activateNonProduceSkills', () => {
     });
   });
 
-  it('shall handle strength skill with specific range', () => {
+  it("shall handle strength skill with specific range", () => {
     const params = {
       skill: mainskill.CHARGE_STRENGTH_S_RANGE,
       skillLevel: 6,
@@ -186,7 +195,8 @@ describe('activateNonProduceSkills', () => {
       adjustedAmount: 0.8,
       metronomeFactor: 1,
     };
-    const expectedAdjustedAmount = (mainskill.CHARGE_STRENGTH_S_RANGE.amount(6) * 0.8) / 1;
+    const expectedAdjustedAmount =
+      (mainskill.CHARGE_STRENGTH_S_RANGE.amount(6) * 0.8) / 1;
     const result = activateNonProduceSkills(params);
     expect(result).toEqual({
       skill: mainskill.CHARGE_STRENGTH_S_RANGE,
@@ -196,7 +206,7 @@ describe('activateNonProduceSkills', () => {
     });
   });
 
-  it('shall apply no adjustment for zero-adjustment amount', () => {
+  it("shall apply no adjustment for zero-adjustment amount", () => {
     const params = {
       skill: mainskill.CHARGE_ENERGY_S,
       skillLevel: 6,
@@ -213,7 +223,7 @@ describe('activateNonProduceSkills', () => {
     });
   });
 
-  it('shall process skills with non-standard units', () => {
+  it("shall process skills with non-standard units", () => {
     const params = {
       skill: mainskill.COOKING_POWER_UP_S,
       skillLevel: 6,
@@ -231,8 +241,8 @@ describe('activateNonProduceSkills', () => {
   });
 });
 
-describe('activateExtraHelpful', () => {
-  it('shall correctly calculate extra helpful produce for a given pokemon', () => {
+describe("activateExtraHelpful", () => {
+  it("shall correctly calculate extra helpful produce for a given pokemon", () => {
     const params = {
       pokemonSet,
       skillLevel: 6,
@@ -242,9 +252,13 @@ describe('activateExtraHelpful', () => {
     };
     const result = activateExtraHelpful(params);
 
-    const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5;
+    const expectedBerriesAmount =
+      (10 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5;
     const expectedIngredientsAmount = [
-      { ingredient: ingredient.BEAN_SAUSAGE, amount: (20 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5 },
+      {
+        ingredient: ingredient.BEAN_SAUSAGE,
+        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5,
+      },
     ];
 
     expect(result).toEqual({
@@ -252,14 +266,16 @@ describe('activateExtraHelpful', () => {
       adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount(6) / 5,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
+        berries: [
+          { berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 },
+        ],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1,
     });
   });
 
-  it('shall handle zero adjusted amount', () => {
+  it("shall handle zero adjusted amount", () => {
     const params = {
       pokemonSet: pokemonSet,
       skillLevel: 6,
@@ -282,7 +298,7 @@ describe('activateExtraHelpful', () => {
     });
   });
 
-  it('shall process with high metronome factor', () => {
+  it("shall process with high metronome factor", () => {
     const params = {
       pokemonSet,
       skillLevel: 6,
@@ -292,20 +308,26 @@ describe('activateExtraHelpful', () => {
     };
     const result = activateExtraHelpful(params);
     const metronomeAndRandomFactor = 5 * 10;
-    const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount(6) * 1) / metronomeAndRandomFactor;
+    const expectedBerriesAmount =
+      (10 * mainskill.EXTRA_HELPFUL_S.amount(6) * 1) / metronomeAndRandomFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount(6) * 1) / metronomeAndRandomFactor,
+        amount:
+          (20 * mainskill.EXTRA_HELPFUL_S.amount(6) * 1) /
+          metronomeAndRandomFactor,
       },
     ];
 
     expect(result).toEqual({
       skill: mainskill.EXTRA_HELPFUL_S,
-      adjustedAmount: mainskill.EXTRA_HELPFUL_S.amount(6) / metronomeAndRandomFactor,
+      adjustedAmount:
+        mainskill.EXTRA_HELPFUL_S.amount(6) / metronomeAndRandomFactor,
       nrOfHelpsToActivate: 4,
       adjustedProduce: {
-        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
+        berries: [
+          { berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 },
+        ],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1 / (metronomeAndRandomFactor / 5),
@@ -313,8 +335,8 @@ describe('activateExtraHelpful', () => {
   });
 });
 
-describe('activateHelperBoost', () => {
-  it('shall correctly calculate helper boost produce for a given pokemon', () => {
+describe("activateHelperBoost", () => {
+  it("shall correctly calculate helper boost produce for a given pokemon", () => {
     const params = {
       pokemonSet,
       skillLevel: 6,
@@ -325,11 +347,15 @@ describe('activateHelperBoost', () => {
     };
     const result = activateHelperBoost(params);
 
-    const expectedBerriesAmount = pokemonSet.produce.berries[0].amount * (mainskill.HELPER_BOOST.amount(6) + 6);
+    const expectedBerriesAmount =
+      pokemonSet.produce.berries[0].amount *
+      (mainskill.HELPER_BOOST.amount(6) + 6);
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: pokemonSet.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount(6) + 6),
+        amount:
+          pokemonSet.produce.ingredients[0].amount *
+          (mainskill.HELPER_BOOST.amount(6) + 6),
       },
     ];
 
@@ -338,14 +364,16 @@ describe('activateHelperBoost', () => {
       adjustedAmount: mainskill.HELPER_BOOST.amount(6) + 6,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
+        berries: [
+          { berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 },
+        ],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1,
     });
   });
 
-  it('shall handle zero adjusted amount', () => {
+  it("shall handle zero adjusted amount", () => {
     const params = {
       pokemonSet,
       skillLevel: 6,
@@ -368,7 +396,7 @@ describe('activateHelperBoost', () => {
     });
   });
 
-  it('shall process with high metronome factor', () => {
+  it("shall process with high metronome factor", () => {
     const params = {
       pokemonSet,
       skillLevel: 6,
@@ -381,11 +409,16 @@ describe('activateHelperBoost', () => {
     const metronomeFactor = 15;
 
     const expectedBerriesAmount =
-      (pokemonSet.produce.berries[0].amount * (mainskill.HELPER_BOOST.amount(6) + 6)) / metronomeFactor;
+      (pokemonSet.produce.berries[0].amount *
+        (mainskill.HELPER_BOOST.amount(6) + 6)) /
+      metronomeFactor;
     const expectedIngredientsAmount = [
       {
         ingredient: ingredient.BEAN_SAUSAGE,
-        amount: (pokemonSet.produce.ingredients[0].amount * (mainskill.HELPER_BOOST.amount(6) + 6)) / metronomeFactor,
+        amount:
+          (pokemonSet.produce.ingredients[0].amount *
+            (mainskill.HELPER_BOOST.amount(6) + 6)) /
+          metronomeFactor,
       },
     ];
 
@@ -394,7 +427,9 @@ describe('activateHelperBoost', () => {
       adjustedAmount: (mainskill.HELPER_BOOST.amount(6) + 6) / metronomeFactor,
       nrOfHelpsToActivate: 1,
       adjustedProduce: {
-        berries: [{ berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 }],
+        berries: [
+          { berry: berry.BELUE, amount: expectedBerriesAmount, level: 60 },
+        ],
         ingredients: expectedIngredientsAmount,
       },
       fractionOfProc: 1 / metronomeFactor,
@@ -402,8 +437,8 @@ describe('activateHelperBoost', () => {
   });
 });
 
-describe('activateIngredientMagnet', () => {
-  it('shall correctly calculate ingredient amounts for a given berry set', () => {
+describe("activateIngredientMagnet", () => {
+  it("shall correctly calculate ingredient amounts for a given berry set", () => {
     const berries = emptyBerryInventory();
     const params = {
       berries: berries,
@@ -415,7 +450,8 @@ describe('activateIngredientMagnet', () => {
     const result = activateIngredientMagnet(params);
     const metronomeFactor = 2;
     const expectedAmount =
-      (mainskill.INGREDIENT_MAGNET_S.amount(6) * 0.5) / (ingredient.INGREDIENTS.length * metronomeFactor);
+      (mainskill.INGREDIENT_MAGNET_S.amount(6) * 0.5) /
+      (ingredient.INGREDIENTS.length * metronomeFactor);
     const expectedIngredients = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
       amount: expectedAmount,
@@ -433,7 +469,7 @@ describe('activateIngredientMagnet', () => {
     });
   });
 
-  it('shall handle zero adjusted amount', () => {
+  it("shall handle zero adjusted amount", () => {
     const berries = emptyBerryInventory();
     const params = {
       berries: berries,
@@ -460,7 +496,7 @@ describe('activateIngredientMagnet', () => {
     });
   });
 
-  it('shall apply adjustment with high metronome factor', () => {
+  it("shall apply adjustment with high metronome factor", () => {
     const berries = emptyBerryInventory();
     const params = {
       berries: berries,
@@ -472,7 +508,8 @@ describe('activateIngredientMagnet', () => {
     const result = activateIngredientMagnet(params);
     const metronomeFactor = 10;
     const expectedAmount =
-      (mainskill.INGREDIENT_MAGNET_S.amount(6) * 1) / (ingredient.INGREDIENTS.length * metronomeFactor);
+      (mainskill.INGREDIENT_MAGNET_S.amount(6) * 1) /
+      (ingredient.INGREDIENTS.length * metronomeFactor);
     const expectedIngredients = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
       amount: expectedAmount,
@@ -491,12 +528,18 @@ describe('activateIngredientMagnet', () => {
   });
 });
 
-describe('activateEnergizingCheer', () => {
-  it('shall correctly calculate adjusted amount with given parameters', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 3, adjustedAmount: 0.6, metronomeFactor: 2 };
+describe("activateEnergizingCheer", () => {
+  it("shall correctly calculate adjusted amount with given parameters", () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 3,
+      adjustedAmount: 0.6,
+      metronomeFactor: 2,
+    };
     const result = activateEnergizingCheer(params);
     const metronomeFactor = 2;
-    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount(6) * 0.6) / (5 * metronomeFactor);
+    const expectedAdjustedAmount =
+      (mainskill.ENERGIZING_CHEER_S.amount(6) * 0.6) / (5 * metronomeFactor);
 
     expect(result).toEqual({
       skill: mainskill.ENERGIZING_CHEER_S,
@@ -506,8 +549,13 @@ describe('activateEnergizingCheer', () => {
     });
   });
 
-  it('shall handle zero adjusted amount', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 5, adjustedAmount: 0, metronomeFactor: 1 };
+  it("shall handle zero adjusted amount", () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 5,
+      adjustedAmount: 0,
+      metronomeFactor: 1,
+    };
     const result = activateEnergizingCheer(params);
 
     expect(result).toEqual({
@@ -518,11 +566,17 @@ describe('activateEnergizingCheer', () => {
     });
   });
 
-  it('shall calculate adjusted amount with high metronome factor', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 2, adjustedAmount: 1, metronomeFactor: 8 };
+  it("shall calculate adjusted amount with high metronome factor", () => {
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 2,
+      adjustedAmount: 1,
+      metronomeFactor: 8,
+    };
     const result = activateEnergizingCheer(params);
     const metronomeFactor = 8;
-    const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount(6) * 1) / (5 * metronomeFactor);
+    const expectedAdjustedAmount =
+      (mainskill.ENERGIZING_CHEER_S.amount(6) * 1) / (5 * metronomeFactor);
 
     expect(result).toEqual({
       skill: mainskill.ENERGIZING_CHEER_S,
@@ -533,8 +587,8 @@ describe('activateEnergizingCheer', () => {
   });
 });
 
-describe('activateMetronome', () => {
-  it('shall activate all skills except METRONOME', () => {
+describe("activateMetronome", () => {
+  it("shall activate all skills except METRONOME", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skillLevel: 6,
@@ -552,7 +606,7 @@ describe('activateMetronome', () => {
     });
   });
 
-  it('shall use the correct metronomeFactor for each skill activation', () => {
+  it("shall use the correct metronomeFactor for each skill activation", () => {
     const skillActivations: SkillActivation[] = [];
     const params = {
       skillLevel: 6,
@@ -567,7 +621,7 @@ describe('activateMetronome', () => {
     expect(skillActivations).toMatchSnapshot();
   });
 
-  it('shall not alter existing skill activations in the array', () => {
+  it("shall not alter existing skill activations in the array", () => {
     const existingSkillActivation = {
       skill: mainskill.CHARGE_ENERGY_S,
       adjustedAmount: 50,
@@ -592,15 +646,15 @@ describe('activateMetronome', () => {
 });
 
 const pokemonSet: PokemonProduce = {
-  pokemon: pokemon.PINSIR,
+  pokemon: PINSIR,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
   },
 };
 
-describe('activateDisguiseBerryBurst', () => {
-  it('shall correctly calculate berry burst for given pokemon', () => {
+describe("activateDisguiseBerryBurst", () => {
+  it("shall correctly calculate berry burst for given pokemon", () => {
     const params = {
       skillLevel: 6,
       nrOfHelpsToActivate: 3,
@@ -630,7 +684,7 @@ describe('activateDisguiseBerryBurst', () => {
     });
   });
 
-  it('shall handle zero adjusted amount', () => {
+  it("shall handle zero adjusted amount", () => {
     const params = {
       skillLevel: 6,
       nrOfHelpsToActivate: 2,
@@ -660,7 +714,7 @@ describe('activateDisguiseBerryBurst', () => {
     });
   });
 
-  it('shall calculate adjusted amount with high metronome factor', () => {
+  it("shall calculate adjusted amount with high metronome factor", () => {
     const params = {
       skillLevel: 6,
       nrOfHelpsToActivate: 4,
@@ -670,7 +724,8 @@ describe('activateDisguiseBerryBurst', () => {
       metronomeFactor: 5,
     };
     const result = activateDisguiseBerryBurst(params);
-    const expectedAdjustedAmount = (mainskill.DISGUISE_BERRY_BURST.amount(6) * 1) / 5;
+    const expectedAdjustedAmount =
+      (mainskill.DISGUISE_BERRY_BURST.amount(6) * 1) / 5;
 
     expect(result).toEqual<SkillActivation>({
       skill: mainskill.DISGUISE_BERRY_BURST,

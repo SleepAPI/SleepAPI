@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { SkillActivation, Time, TimePeriod, subskill } from 'sleepapi-common';
 
 /**
@@ -103,7 +103,7 @@ export function maybeDegradeEnergy(params: {
       time: currentTime,
       description: 'Degrade',
       delta: -energyToDegrade,
-      before: currentEnergy,
+      before: currentEnergy
     });
 
     eventLog.push(energyLossEvent);

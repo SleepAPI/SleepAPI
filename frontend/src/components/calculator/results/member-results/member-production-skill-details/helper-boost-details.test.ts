@@ -6,11 +6,11 @@ import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
+import { ENTEI, MathUtils, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.ENTEI, skillLevel: 6 })
+  member: createMockPokemon({ pokemon: ENTEI, skillLevel: 6 })
 })
 
 describe('MemberProductionSkill', () => {
@@ -20,7 +20,7 @@ describe('MemberProductionSkill', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.ENTEI })
+    const mockPokemon = createMockPokemon({ pokemon: ENTEI })
     teamStore = useTeamStore()
     teamStore.teams = createMockTeams(1, { members: [mockPokemon.externalId] })
     pokemonStore = usePokemonStore()
@@ -57,18 +57,13 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(
-        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
-        1
-      ).toString()
+      MathUtils.round(mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
     )
   })
 
   it('displays the correct skill value per proc', () => {
     const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(
-      `x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`
-    )
+    expect(skillValuePerProc.text()).toBe(`x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`)
   })
 
   it('displays the correct total skill value', () => {

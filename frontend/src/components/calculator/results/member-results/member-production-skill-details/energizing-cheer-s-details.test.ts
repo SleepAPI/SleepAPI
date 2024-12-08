@@ -3,11 +3,11 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
+import { MathUtils, SLOWKING, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.SLOWKING })
+  member: createMockPokemon({ pokemon: SLOWKING })
 })
 
 describe('MemberProductionSkill', () => {
@@ -46,18 +46,13 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(
-        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
-        1
-      ).toString()
+      MathUtils.round(mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
     )
   })
 
   it('displays the correct skill value per proc', () => {
     const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(
-      `x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`
-    )
+    expect(skillValuePerProc.text()).toBe(`x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`)
   })
 
   it('displays the correct total skill value', () => {

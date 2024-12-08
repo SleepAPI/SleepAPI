@@ -32,7 +32,7 @@ export const useUserStore = defineStore('user', {
   getters: {
     // loggedIn doesnt check if access token valid/expired, just that the user is logged in
     loggedIn: (state) => state.tokens !== null,
-    islandBonus: (state) => 1 + MAX_ISLAND_BONUS / 100 // TODO: user should probably hold island bonuses and recipe levels
+    islandBonus: () => 1 + MAX_ISLAND_BONUS / 100 // TODO: user should probably hold island bonuses and recipe levels
   },
   actions: {
     setUserData(userData: { name: string; avatar?: string; email: string; externalId: string }) {

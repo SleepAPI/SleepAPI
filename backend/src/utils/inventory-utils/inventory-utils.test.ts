@@ -1,4 +1,4 @@
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
 import {
   Produce,
   berry,
@@ -6,7 +6,7 @@ import {
   emptyProduce,
   ingredient,
   prettifyIngredientDrop,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
 describe('emptyInventory', () => {
@@ -16,10 +16,10 @@ describe('emptyInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.getEmptyInventory();
@@ -35,10 +35,10 @@ describe('countInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(4);
@@ -47,7 +47,7 @@ describe('countInventory', () => {
   it('shall count inventory size and ignore berries if no berries', () => {
     const inventory: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(2);
@@ -59,10 +59,10 @@ describe('countInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [],
+      ingredients: []
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(2);
@@ -80,10 +80,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, inventory);
@@ -98,10 +98,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, addedProduce);
@@ -140,10 +140,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, InventoryUtils.getEmptyInventory());
@@ -156,15 +156,15 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     const added: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
+      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
@@ -175,12 +175,12 @@ describe('addToInventory', () => {
   it('shall add produce without berries to inventory without berries', () => {
     let inventory: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     const added: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
+      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
@@ -191,7 +191,7 @@ describe('addToInventory', () => {
   it('shall skip berries and ingredients with 0 amount', () => {
     let inventory: Produce = {
       berries: [{ amount: 0, berry: berry.BELUE, level: 1 }],
-      ingredients: [{ amount: 0, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 0, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(emptyProduce(), inventory);
@@ -204,19 +204,23 @@ describe('addToInventory', () => {
 describe('calculateCarrySize', () => {
   it('shall give same for default', () => {
     const baseWithEvolutions = 10;
-    const subskills: subskill.SubSkill[] = [];
+    const subskillsLevelLimited = new Set<string>();
     const level = 10;
     const ribbon = 0;
     const camp = false;
-    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(10);
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskillsLevelLimited, level, ribbon, camp })).toBe(
+      10
+    );
   });
 
   it('shall give correct for subskills, ribbon and camp', () => {
     const baseWithEvolutions = 31;
-    const subskills: subskill.SubSkill[] = [subskill.INVENTORY_S];
+    const subskillsLevelLimited = new Set([subskill.INVENTORY_S.name]);
     const level = 54;
     const ribbon = 2;
     const camp = true;
-    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(48);
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskillsLevelLimited, level, ribbon, camp })).toBe(
+      48
+    );
   });
 });

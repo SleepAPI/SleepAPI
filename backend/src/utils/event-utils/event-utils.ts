@@ -1,17 +1,17 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
-import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
-import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
-import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { PokemonProduce } from '@src/domain/combination/produce.js';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { HelpEvent } from '@src/domain/event/events/help-event/help-event.js';
+import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event.js';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js';
+import { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator.js';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { Produce, Time, TimePeriod, mainskill, multiplyBerries, nature } from 'sleepapi-common';
-import { splitNumber } from '../calculator-utils/calculator-utils';
-import { getMealRecoveryAmount } from '../meal-utils/meal-utils';
+import { splitNumber } from '../calculator-utils/calculator-utils.js';
+import { getMealRecoveryAmount } from '../meal-utils/meal-utils.js';
 
 export function getExtraHelpfulEvents(
   period: TimePeriod,
@@ -39,10 +39,10 @@ export function getExtraHelpfulEvents(
           berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
-            amount: amount * adjustedAmount,
-          })),
-        },
-      },
+            amount: amount * adjustedAmount
+          }))
+        }
+      }
     });
     helpfulEvents.push(event);
   }
@@ -85,10 +85,10 @@ export function getHelperBoostEvents(
           berries: multiplyBerries(averageBerries, adjustedAmount),
           ingredients: averageIngredients.map(({ amount, ingredient }) => ({
             ingredient,
-            amount: amount * adjustedAmount,
-          })),
-        },
-      },
+            amount: amount * adjustedAmount
+          }))
+        }
+      }
     });
     helpfulEvents.push(event);
   }
@@ -131,7 +131,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: e4ePeriods[i].start,
       description: 'E4E',
-      delta: e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount(e4eLevel) * nature.energy,
+      delta: e4eDeltas[i] * mainskill.ENERGY_FOR_EVERYONE.amount(e4eLevel) * nature.energy
     });
     recoveryEvents.push(event);
   }
@@ -142,7 +142,7 @@ export function scheduleTeamEnergyEvents(
     const event: EnergyEvent = new EnergyEvent({
       time: cheerPeriods[i].start,
       description: 'Energizing Cheer',
-      delta: (cheerDeltas[i] * (mainskill.ENERGIZING_CHEER_S.maxAmount * nature.energy)) / 5,
+      delta: (cheerDeltas[i] * (mainskill.ENERGIZING_CHEER_S.maxAmount * nature.energy)) / 5
     });
     recoveryEvents.push(event);
   }
@@ -155,7 +155,7 @@ export function scheduleNapEvent(recoveryEvents: EnergyEvent[], nap?: SleepInfo)
     const napEvent: EnergyEvent = new EnergyEvent({
       time: nap.period.start,
       description: 'Nap',
-      delta: calculateSleepEnergyRecovery(nap),
+      delta: calculateSleepEnergyRecovery(nap)
     });
 
     recoveryEvents.push(napEvent);
@@ -187,7 +187,7 @@ export function recoverEnergyEvents(params: {
         time: currentTime,
         description,
         delta: clampedDelta,
-        before: currentEnergy + recoveredEnergy,
+        before: currentEnergy + recoveredEnergy
       });
 
       recoveredEnergy += clampedDelta;
@@ -219,7 +219,7 @@ export function recoverFromMeal(params: {
         time: mealTime,
         description: 'Meal',
         delta: recoveredAmount,
-        before: currentEnergy,
+        before: currentEnergy
       });
 
       eventLog.push(mealEvent);
@@ -267,7 +267,7 @@ export function inventoryFull(params: {
       delta: -InventoryUtils.countInventory(currentInventory),
       before: InventoryUtils.countInventory(currentInventory),
       max: inventoryLimit,
-      contents: InventoryUtils.getEmptyInventory(),
+      contents: InventoryUtils.getEmptyInventory()
     });
 
     eventLog.push(emptyInventoryEvent);
@@ -291,7 +291,7 @@ export function helpEvent(params: {
     description: 'Help',
     frequency,
     produce,
-    nextHelp,
+    nextHelp
   });
   const addInventoryEvent: InventoryEvent = new InventoryEvent({
     time,
@@ -299,7 +299,7 @@ export function helpEvent(params: {
     delta: amount,
     before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: InventoryUtils.addToInventory(currentInventory, produce),
+    contents: InventoryUtils.addToInventory(currentInventory, produce)
   });
 
   eventLog.push(helpEvent);
@@ -324,7 +324,7 @@ export function addSneakySnackEvent(params: {
     spilledProduce,
     totalSpilledIngredients,
     nextHelp,
-    eventLog,
+    eventLog
   } = params;
 
   const sneakySnackEvent: HelpEvent = new HelpEvent({
@@ -332,21 +332,21 @@ export function addSneakySnackEvent(params: {
     description: 'Sneaky snack',
     frequency,
     produce: sneakySnackProduce,
-    nextHelp,
+    nextHelp
   });
   const addInventoryEvent: InventoryEvent = new InventoryEvent({
     time: currentTime,
     description: 'Sneaky snack',
     delta: InventoryUtils.countInventory(sneakySnackProduce),
     before: InventoryUtils.countInventory(totalSneakySnack),
-    contents: InventoryUtils.addToInventory(totalSneakySnack, sneakySnackProduce),
+    contents: InventoryUtils.addToInventory(totalSneakySnack, sneakySnackProduce)
   });
   const spilledIngsEvent: InventoryEvent = new InventoryEvent({
     time: currentTime,
     description: 'Spilled ingredients',
     delta: InventoryUtils.countInventory(spilledProduce),
     before: InventoryUtils.countInventory(totalSpilledIngredients),
-    contents: InventoryUtils.addToInventory(totalSpilledIngredients, spilledProduce),
+    contents: InventoryUtils.addToInventory(totalSpilledIngredients, spilledProduce)
   });
 
   eventLog.push(sneakySnackEvent);

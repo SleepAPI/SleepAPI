@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { BELUE, Berry, ORAN } from '../../domain/berry';
-import { BerrySet } from '../../domain/types/berry-set';
+import { Berry, BerrySet } from '../../domain/berry';
+import { BELUE, ORAN } from '../../domain/berry/berries';
 import { berryPowerForLevel, emptyBerryInventory, multiplyBerries, prettifyBerries, roundBerries } from './berry-utils';
 
 const testBerry: Berry = { name: 'Oran', value: 10, type: 'water' };
 const testBerries: BerrySet[] = [
   { berry: testBerry, amount: 15, level: 3 },
   { berry: testBerry, amount: 10, level: 2 },
-  { berry: testBerry, amount: 5, level: 1 },
+  { berry: testBerry, amount: 5, level: 1 }
 ];
 
 describe('berryPowerForLevel', () => {
@@ -36,7 +36,7 @@ describe('multiplyBerries', () => {
     expect(result).toEqual([
       { berry: testBerry, amount: 30, level: 3 },
       { berry: testBerry, amount: 20, level: 2 },
-      { berry: testBerry, amount: 10, level: 1 },
+      { berry: testBerry, amount: 10, level: 1 }
     ]);
   });
 });
@@ -46,13 +46,13 @@ describe('roundBerries', () => {
     const result = roundBerries(
       [
         { berry: testBerry, amount: 15.128361, level: 3 },
-        { berry: testBerry, amount: 10.128361, level: 2 },
+        { berry: testBerry, amount: 10.128361, level: 2 }
       ],
-      1,
+      1
     );
     expect(result).toEqual([
       { berry: testBerry, amount: 15.1, level: 3 },
-      { berry: testBerry, amount: 10.1, level: 2 },
+      { berry: testBerry, amount: 10.1, level: 2 }
     ]);
   });
 });

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`activateMetronome shall use the correct metronomeFactor for each skill activation 1`] = `
+exports[`activateMetronome > shall use the correct metronomeFactor for each skill activation 1`] = `
 [
   {
     "adjustedAmount": 1.12,

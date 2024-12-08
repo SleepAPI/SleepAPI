@@ -1,0 +1,19 @@
+# file types
+**/*.yml
+**/*.yaml
+**/*.sql
+*.d.ts
+
+# specific files
+.gitignore
+.prettierignore
+.nvmrc
+.releaserc
+package-lock.json
+
+# directories
+dist
+coverage
+node_modules
+**/data/tierlist
+dev-dist

@@ -3,11 +3,11 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { VueWrapper, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
+import { DRIFBLIM, MathUtils, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.DRIFBLIM })
+  member: createMockPokemon({ pokemon: DRIFBLIM })
 })
 
 describe('MemberProductionSkill', () => {
@@ -46,10 +46,7 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(
-        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
-        1
-      ).toString()
+      MathUtils.round(mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
     )
   })
 

@@ -1,25 +1,25 @@
-import { Logger } from '@src/services/logger/logger';
-import { runWorkerFile } from '@src/services/worker/worker';
-import { queryAsBoolean } from '@src/utils/routing/routing-utils';
+import { runWorkerFile } from '@src/services/worker/worker.js';
+import { relativePath } from '@src/utils/file-utils/file-utils.js';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
 import { Request, Response } from 'express';
-import path from 'path';
 import {
   CalculateIvRequest,
   CalculateIvResponse,
   CalculateTeamRequest,
   CalculateTeamResponse,
-  SingleProductionRequest,
+  SingleProductionRequest
 } from 'sleepapi-common';
-import workerpool from 'workerpool';
-import { BaseRouter } from '../base-router';
 
-const teamPool = workerpool.pool(path.resolve(__dirname, './team-worker.js'), {
+import workerpool from 'workerpool';
+import { BaseRouter } from '../base-router.js';
+
+const teamPool = workerpool.pool(relativePath('./team-worker.js', import.meta.url), {
   minWorkers: 4,
-  maxWorkers: 4,
+  maxWorkers: 4
 });
-const ivPool = workerpool.pool(path.resolve(__dirname, './iv-worker.js'), {
+const ivPool = workerpool.pool(relativePath('./iv-worker.js', import.meta.url), {
   minWorkers: 4,
-  maxWorkers: 4,
+  maxWorkers: 4
 });
 
 class ProductionRouterImpl {
@@ -36,21 +36,21 @@ class ProductionRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered /calculator/production/:name');
+          logger.log('Entered /calculator/production/:name');
           const { name } = req.params;
 
           const pretty = queryAsBoolean(req.query.pretty);
           const includeAnalysis = queryAsBoolean(req.query.includeAnalysis);
 
-          const result = await runWorkerFile(path.resolve(__dirname, './production-worker.js'), {
+          const result = await runWorkerFile(relativePath('./production-worker.js', import.meta.url), {
             name,
             body: req.body,
             pretty,
-            includeAnalysis,
+            includeAnalysis
           });
           res.header('Content-Type', 'application/json').send(JSON.stringify(result, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -60,12 +60,12 @@ class ProductionRouterImpl {
       '/calculator/team',
       async (req: Request<unknown, unknown, CalculateTeamRequest, unknown>, res: Response<CalculateTeamResponse>) => {
         try {
-          Logger.log('Entered /calculator/team');
+          logger.log('Entered /calculator/team');
 
           const data = await teamPool.exec('calculateTeam', [req.body]);
           res.json(data);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(500);
         }
       }
@@ -75,12 +75,12 @@ class ProductionRouterImpl {
       '/calculator/iv',
       async (req: Request<unknown, unknown, CalculateIvRequest, unknown>, res: Response<CalculateIvResponse>) => {
         try {
-          Logger.log('Entered /calculator/iv');
+          logger.log('Entered /calculator/iv');
 
           const data = await ivPool.exec('calculateIv', [req.body]);
           res.json(data);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(500);
         }
       }

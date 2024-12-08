@@ -7,9 +7,7 @@
     class="flex-center"
     style="z-index: 2000"
   >
-    <span class="text-center text-body-1"
-      >A new version of Sleep API is available. Please refresh the page.
-    </span>
+    <span class="text-center text-body-1">A new version of Sleep API is available. Please refresh the page. </span>
   </v-banner>
 </template>
 

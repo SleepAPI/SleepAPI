@@ -7,7 +7,7 @@ export const DREAM_SHARD_MAGNET_S: Mainskill = createBaseSkill({
   unit: 'dream shards',
   maxLevel: MAX_SKILL_LEVEL,
   description: 'Obtain ? Dream Shards.',
-  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656]
 });
 
 export const DREAM_SHARD_MAGNET_S_RANGE: Mainskill = createBaseSkill({
@@ -19,12 +19,12 @@ export const DREAM_SHARD_MAGNET_S_RANGE: Mainskill = createBaseSkill({
     (DREAM_SHARD_MAGNET_S.amounts[3] * 2 + DREAM_SHARD_MAGNET_S.amounts[3] * 0.5) / 2,
     (DREAM_SHARD_MAGNET_S.amounts[4] * 2 + DREAM_SHARD_MAGNET_S.amounts[4] * 0.5) / 2,
     (DREAM_SHARD_MAGNET_S.amounts[5] * 2 + DREAM_SHARD_MAGNET_S.amounts[5] * 0.5) / 2,
-    (DREAM_SHARD_MAGNET_S.amounts[6] * 2 + DREAM_SHARD_MAGNET_S.amounts[6] * 0.5) / 2,
+    (DREAM_SHARD_MAGNET_S.amounts[6] * 2 + DREAM_SHARD_MAGNET_S.amounts[6] * 0.5) / 2
   ],
   unit: 'dream shards',
   maxLevel: MAX_SKILL_LEVEL,
   description: 'Obtain ? Dream Shards on average.',
-  RP: [400, 569, 785, 1083, 1496, 2066, 2656],
+  RP: [400, 569, 785, 1083, 1496, 2066, 2656]
 });
 
 MAINSKILLS.push(DREAM_SHARD_MAGNET_S);
