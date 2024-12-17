@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/SleepAPI/SleepAPI/compare/v1.3.0...v1.4.0) (2024-12-17)
+
+
+### Features
+
+* added skill copy and balance patch ([3c0a819](https://github.com/SleepAPI/SleepAPI/commit/3c0a819b68263c2324d3a9087f83dc956dab16b9))
+
 # [1.3.0](https://github.com/SleepAPI/SleepAPI/compare/v1.2.8...v1.3.0) (2024-12-03)
 
 
