@@ -1,6 +1,7 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import {
   IngredientSet,
+  METRONOME_SKILLS,
   Mainskill,
   Produce,
   SkillActivation,
@@ -270,7 +271,7 @@ export function activateMetronome(params: {
   uniqueHelperBoost: number;
   avgCritChancePerProc: number;
 }) {
-  const skillsToActivate = mainskill.METRONOME_SKILLS;
+  const skillsToActivate = METRONOME_SKILLS;
 
   for (const skillToActivate of skillsToActivate) {
     createSkillEvent({ ...params, skill: skillToActivate }, skillsToActivate.length);

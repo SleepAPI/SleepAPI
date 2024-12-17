@@ -70,6 +70,13 @@
 				],
 				"nullable": false
 			},
+			"Copy": {
+				"type": "string",
+				"enum": [
+					"copy"
+				],
+				"nullable": false
+			},
 			"MainskillUnit": {
 				"anyOf": [
 					{
@@ -98,6 +105,9 @@
 					},
 					{
 						"$ref": "#/components/schemas/Metronome"
+					},
+					{
+						"$ref": "#/components/schemas/Copy"
 					}
 				]
 			},
@@ -107,7 +117,9 @@
 					"Base",
 					"Stockpile",
 					"Moonlight",
-					"Disguise"
+					"Disguise",
+					"Mimic",
+					"Transform"
 				]
 			},
 			"Modifier": {

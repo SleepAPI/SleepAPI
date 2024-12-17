@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const CHARGE_ENERGY_S: Mainskill = createBaseSkill({
   name: 'Charge Energy S',
@@ -9,4 +9,6 @@ export const CHARGE_ENERGY_S: Mainskill = createBaseSkill({
   description: 'Restores ? Energy to the user.',
   RP: [400, 569, 785, 1083, 1496, 2066],
 });
+
 MAINSKILLS.push(CHARGE_ENERGY_S);
+METRONOME_SKILLS.push(CHARGE_ENERGY_S);

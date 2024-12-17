@@ -10,6 +10,3 @@ export const METRONOME: Mainskill = createBaseSkill({
   RP: [880, 1251, 1726, 2383, 3290, 4546],
 });
 MAINSKILLS.push(METRONOME);
-// TODO: I think metronome can trigger Moonlight, but needs confirmation. Also how about Stockpile and Disguise?
-export const METRONOME_SKILLS = MAINSKILLS.filter((s) => s !== METRONOME && !s.isModified);
-export const METRONOME_FACTOR = METRONOME_SKILLS.length;

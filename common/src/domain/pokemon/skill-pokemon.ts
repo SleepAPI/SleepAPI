@@ -67,7 +67,7 @@ import { Pokemon } from './pokemon';
 export const PIKACHU_CHRISTMAS: Pokemon = {
   name: 'PIKACHU_CHRISTMAS',
   specialty: 'skill',
-  frequency: toSeconds(0, 43, 20),
+  frequency: toSeconds(0, 41, 40),
   ingredientPercentage: 13.1,
   skillPercentage: 4.2,
   berry: GREPA,

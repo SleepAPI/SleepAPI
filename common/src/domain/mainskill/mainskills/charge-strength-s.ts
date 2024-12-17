@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const CHARGE_STRENGTH_S: Mainskill = createBaseSkill({
   name: 'Charge Strength S',
@@ -29,3 +29,6 @@ export const CHARGE_STRENGTH_S_RANGE: Mainskill = createBaseSkill({
 
 MAINSKILLS.push(CHARGE_STRENGTH_S);
 MAINSKILLS.push(CHARGE_STRENGTH_S_RANGE);
+
+METRONOME_SKILLS.push(CHARGE_STRENGTH_S);
+METRONOME_SKILLS.push(CHARGE_STRENGTH_S_RANGE);

@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const INGREDIENT_MAGNET_S: Mainskill = createBaseSkill({
   name: 'Ingredient Magnet S',
@@ -11,3 +11,4 @@ export const INGREDIENT_MAGNET_S: Mainskill = createBaseSkill({
 });
 
 MAINSKILLS.push(INGREDIENT_MAGNET_S);
+METRONOME_SKILLS.push(INGREDIENT_MAGNET_S);

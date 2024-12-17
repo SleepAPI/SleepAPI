@@ -35,6 +35,7 @@ import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import {
   BerrySet,
   DetailedProduce,
+  METRONOME_SKILLS,
   MathUtils,
   Produce,
   SkillActivation,
@@ -272,7 +273,7 @@ export function simulation(params: {
           } else if (skillActivation.skill.isSkill(mainskill.DISGUISE_BERRY_BURST)) {
             const skillLevel = input.skillLevel ?? mainskill.DISGUISE_BERRY_BURST.maxLevel;
             const metronomeUser = pokemon.skill.isSkill(mainskill.METRONOME);
-            const metronomeFactor = metronomeUser ? mainskill.METRONOME_FACTOR : 1;
+            const metronomeFactor = metronomeUser ? METRONOME_SKILLS.length : 1;
 
             const amountNoCrit =
               mainskill.DISGUISE_BERRY_BURST_TEAM_AMOUNT[skillLevel - 1] * skillActivation.fractionOfProc;

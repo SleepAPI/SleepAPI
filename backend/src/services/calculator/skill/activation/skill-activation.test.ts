@@ -1,5 +1,6 @@
 import { PokemonProduce } from '@src/domain/combination/produce';
 import {
+  METRONOME_SKILLS,
   SkillActivation,
   berry,
   emptyBerryInventory,
@@ -120,7 +121,7 @@ describe('createSkillEvent', () => {
       avgCritChancePerProc: 1,
     };
     createSkillEvent(params, 10);
-    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR);
+    expect(skillActivations.length).toBe(METRONOME_SKILLS.length);
   });
 
   it('shall default to non-produce skills activation for non-productive/non-random skills', () => {
@@ -165,10 +166,10 @@ describe('activateNonProduceSkills', () => {
       skillLevel: 6,
       nrOfHelpsToActivate: 1,
       adjustedAmount: 1,
-      metronomeFactor: mainskill.METRONOME_FACTOR,
+      metronomeFactor: METRONOME_SKILLS.length,
     };
     const result = activateNonProduceSkills(params);
-    const metronomeFactor = mainskill.METRONOME_FACTOR;
+    const metronomeFactor = METRONOME_SKILLS.length;
     expect(result).toEqual({
       skill: mainskill.INGREDIENT_MAGNET_S,
       adjustedAmount: mainskill.INGREDIENT_MAGNET_S.amount(6) / metronomeFactor,
@@ -545,8 +546,8 @@ describe('activateMetronome', () => {
       avgCritChancePerProc: 1,
     };
     activateMetronome(params);
-    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR);
-    mainskill.METRONOME_SKILLS.forEach((skill) => {
+    expect(skillActivations.length).toBe(METRONOME_SKILLS.length);
+    METRONOME_SKILLS.forEach((skill) => {
       expect(skillActivations.some((sa) => sa.skill === skill)).toBe(true);
     });
   });
@@ -586,7 +587,7 @@ describe('activateMetronome', () => {
     };
     activateMetronome(params);
     expect(skillActivations[0]).toEqual(existingSkillActivation);
-    expect(skillActivations.length).toBe(mainskill.METRONOME_FACTOR + 1);
+    expect(skillActivations.length).toBe(METRONOME_SKILLS.length + 1);
   });
 });
 

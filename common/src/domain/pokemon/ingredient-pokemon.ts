@@ -48,6 +48,8 @@ import {
   COOKING_POWER_UP_S,
   ENERGIZING_CHEER_S,
   INGREDIENT_MAGNET_S,
+  SKILL_COPY_MIMIC,
+  SKILL_COPY_TRANSFORM,
   TASTY_CHANCE_S,
 } from '../mainskill/mainskills';
 
@@ -383,7 +385,7 @@ export const MR_MIME: Pokemon = {
     { amount: 6, ingredient: SOFT_POTATO },
     { amount: 4, ingredient: LARGE_LEEK },
   ],
-  skill: CHARGE_STRENGTH_S,
+  skill: SKILL_COPY_MIMIC,
 };
 
 export const PINSIR: Pokemon = {
@@ -431,7 +433,7 @@ export const DITTO: Pokemon = {
     { amount: 5, ingredient: LARGE_LEEK },
     { amount: 3, ingredient: SLOWPOKE_TAIL },
   ],
-  skill: CHARGE_STRENGTH_S_RANGE,
+  skill: SKILL_COPY_TRANSFORM,
 };
 
 export const DRATINI: Pokemon = {
@@ -837,8 +839,8 @@ export const COMFEY: Pokemon = {
   name: 'COMFEY',
   specialty: 'ingredient',
   frequency: toSeconds(0, 41, 40),
-  ingredientPercentage: 13.9,
-  skillPercentage: 2.2,
+  ingredientPercentage: 16.7,
+  skillPercentage: 3,
   berry: PECHA,
   genders: THREE_FOURTHS_FEMALE,
   carrySize: 20,
@@ -862,7 +864,7 @@ export const CRAMORANT: Pokemon = {
   specialty: 'ingredient',
   frequency: toSeconds(0, 45, 0),
   ingredientPercentage: 16.5,
-  skillPercentage: 3.3,
+  skillPercentage: 3.9,
   berry: PAMTRE,
   genders: BALANCED_GENDER,
   carrySize: 19,

@@ -2,6 +2,7 @@ import { MainskillUnit } from './mainskill-unit';
 
 import { Modifier, ModifierType } from './modifier';
 
+// TODO: maxLevel could be calced auto from amount.length
 export type MainskillAttributes = {
   name: string;
   amount: number[];
@@ -117,3 +118,4 @@ export const createBaseSkill = (baseSkill: Omit<MainskillAttributes, 'modifier'>
 };
 
 export const MAINSKILLS: Mainskill[] = [];
+export const METRONOME_SKILLS: Mainskill[] = [];

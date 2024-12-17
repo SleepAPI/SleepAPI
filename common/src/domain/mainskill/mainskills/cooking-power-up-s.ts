@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const COOKING_POWER_UP_S: Mainskill = createBaseSkill({
   name: 'Cooking Power-up S',
@@ -9,4 +9,6 @@ export const COOKING_POWER_UP_S: Mainskill = createBaseSkill({
   description: 'Gives your pot room for ? more ingredients next time you cook.',
   RP: [880, 1251, 1726, 2383, 3290, 4546, 5843],
 });
+
 MAINSKILLS.push(COOKING_POWER_UP_S);
+METRONOME_SKILLS.push(COOKING_POWER_UP_S);
