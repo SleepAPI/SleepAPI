@@ -21,6 +21,9 @@ describe('getMainskillNames', () => {
         "Ingredient Magnet S",
         "Metronome",
         "Moonlight (Charge Energy S)",
+        "Skill Copy",
+        "Mimic (Skill Copy)",
+        "Transform (Skill Copy)",
         "Stockpile (Charge Strength S)",
         "Tasty Chance S",
       ]

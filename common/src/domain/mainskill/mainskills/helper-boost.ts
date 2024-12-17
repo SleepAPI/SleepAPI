@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const HELPER_BOOST: Mainskill = createBaseSkill({
   name: 'Helper Boost',
@@ -21,3 +21,4 @@ export const HELPER_BOOST_UNIQUE_BOOST_TABLE: number[][] = [
 ];
 
 MAINSKILLS.push(HELPER_BOOST);
+METRONOME_SKILLS.push(HELPER_BOOST);

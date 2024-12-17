@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const DREAM_SHARD_MAGNET_S: Mainskill = createBaseSkill({
   name: 'Dream Shard Magnet S',
@@ -29,3 +29,5 @@ export const DREAM_SHARD_MAGNET_S_RANGE: Mainskill = createBaseSkill({
 
 MAINSKILLS.push(DREAM_SHARD_MAGNET_S);
 MAINSKILLS.push(DREAM_SHARD_MAGNET_S_RANGE);
+METRONOME_SKILLS.push(DREAM_SHARD_MAGNET_S);
+METRONOME_SKILLS.push(DREAM_SHARD_MAGNET_S_RANGE);

@@ -1,6 +1,7 @@
 import { Mainskill, MainskillAttributes } from './mainskill';
 
-export type ModifierType = 'Base' | 'Stockpile' | 'Moonlight' | 'Disguise';
+// TODO: this is rapidly increasing, they might be moving into each skill's own file, they seem to be mon-specific
+export type ModifierType = 'Base' | 'Stockpile' | 'Moonlight' | 'Disguise' | 'Mimic' | 'Transform';
 export interface Modifier {
   type: ModifierType;
   critChance: number;
@@ -27,3 +28,9 @@ export const Moonlight = (skill: Mainskill, critChance: number, overrides?: Part
 
 export const Disguise = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
   createModifier({ type: 'Disguise', critChance }, skill, overrides);
+
+export const Mimic = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
+  createModifier({ type: 'Mimic', critChance }, skill, overrides);
+
+export const Transform = (skill: Mainskill, critChance: number, overrides?: Partial<MainskillAttributes>): Mainskill =>
+  createModifier({ type: 'Transform', critChance }, skill, overrides);

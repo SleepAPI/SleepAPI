@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const ENERGIZING_CHEER_S: Mainskill = createBaseSkill({
   name: 'Energizing Cheer S',
@@ -13,3 +13,4 @@ export const ENERGIZING_CHEER_S: Mainskill = createBaseSkill({
 export const ENERGIZING_CHEER_TARGET_LOWEST_CHANCE = 0.5;
 
 MAINSKILLS.push(ENERGIZING_CHEER_S);
+METRONOME_SKILLS.push(ENERGIZING_CHEER_S);

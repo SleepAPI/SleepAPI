@@ -12,5 +12,8 @@ export * from './helper-boost';
 export * from './ingredient-magnet';
 export * from './metronome';
 export * from './moonlight-charge-energy-s';
+export * from './skill-copy';
+export * from './skill-copy_mimic';
+export * from './skill-copy_transform';
 export * from './stockpile-charge-strength-s';
 export * from './tasty-chance-s';

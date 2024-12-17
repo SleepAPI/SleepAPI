@@ -1,4 +1,6 @@
 import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import { NotImplementedError } from '@src/domain/error/programming/not-implemented-error';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { MainskillError } from '@src/domain/error/stat/stat-error';
 import { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
@@ -11,12 +13,13 @@ import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
 import {
   BerrySet,
   IngredientSet,
-  MAINSKILLS,
+  METRONOME_SKILLS,
   Mainskill,
   MainskillUnit,
   MathUtils,
   MemberProduction,
   MemberProductionBase,
+  ModifierType,
   Produce,
   RandomUtils,
   TimePeriod,
@@ -60,7 +63,6 @@ export class MemberState {
   private cookingState?: CookingState;
 
   // quick lookups, static data
-  private skillsWithoutMetronome = MAINSKILLS.filter((ms) => ms !== mainskill.METRONOME);
 
   // state
   private currentEnergy = 0;
@@ -192,7 +194,7 @@ export class MemberState {
   }
 
   get metronomeFactor() {
-    return this.skill === mainskill.METRONOME ? this.skillsWithoutMetronome.length : 1;
+    return this.skill === mainskill.METRONOME ? METRONOME_SKILLS.length : 1;
   }
 
   get id() {
@@ -460,9 +462,16 @@ export class MemberState {
 
   private attemptSkill(): SkillActivation[] {
     const result: SkillActivation[] = [];
+
+    // TODO: apparently returning early here makes the team sim insanely fast, so skill handling is slower than expected
+    // FIXME: implement once skill copy is known
+    if (this.skill.isSameOrModifiedVersionOf(mainskill.SKILL_COPY)) {
+      return [];
+    }
+
     if (this.helpsSinceLastSkillProc > this.pityProcThreshold || RandomUtils.roll(this.skillPercentage)) {
       if (this.skill.isSkill(mainskill.METRONOME)) {
-        for (const skill of this.skillsWithoutMetronome) {
+        for (const skill of METRONOME_SKILLS) {
           result.push(this.activateSkill(skill));
         }
       } else {
@@ -515,18 +524,30 @@ export class MemberState {
       'pot size': () => this.#activateCookingPowerUp(),
       chance: () => this.#activateTastyChance(),
       strength: (skill) => this.#activateValueSkills(skill),
-      metronome: function (): SkillActivation {
+      metronome: () => {
         throw new MainskillError('Metronome should not call activateBasicSkill directly');
+      },
+      copy: () => {
+        throw new NotImplementedError('Skill copy not yet implemented');
       },
     };
 
     return skillActivators[skill.unit](skill);
   }
   private activateModifier(skill: Mainskill): SkillActivation {
-    const modifierActivators: Record<string, (skill: Mainskill) => SkillActivation> = {
+    const modifierActivators: Record<ModifierType, (skill: Mainskill) => SkillActivation> = {
       Stockpile: (skill) => this.#activateStockpile(skill),
       Moonlight: (skill) => this.#activateMoonlight(skill),
       Disguise: (skill) => this.#activateDisguise(skill),
+      Mimic: () => {
+        throw new NotImplementedError('Skill copy not yet implemented');
+      },
+      Transform: () => {
+        throw new NotImplementedError('Skill copy not yet implemented');
+      },
+      Base: () => {
+        throw new ProgrammingError('Base skills should not enter the modifier function');
+      },
     };
 
     return modifierActivators[skill.modifier.type](skill);

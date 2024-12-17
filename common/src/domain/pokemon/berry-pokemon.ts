@@ -151,7 +151,7 @@ export const EKANS: Pokemon = {
 export const ARBOK: Pokemon = {
   ...evolvesFrom(EKANS),
   name: 'ARBOK',
-  frequency: toSeconds(1, 1, 40),
+  frequency: toSeconds(0, 56, 40),
   ingredientPercentage: 26.4,
   skillPercentage: 5.7,
   carrySize: 14,

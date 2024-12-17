@@ -7,6 +7,7 @@ export type Strength = 'strength';
 export type PotSize = 'pot size';
 export type TastyChance = 'chance';
 export type Metronome = 'metronome';
+export type Copy = 'copy';
 
 export type MainskillUnit =
   | Energy
@@ -17,4 +18,5 @@ export type MainskillUnit =
   | Strength
   | PotSize
   | TastyChance
-  | Metronome;
+  | Metronome
+  | Copy;

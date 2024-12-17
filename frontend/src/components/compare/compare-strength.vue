@@ -162,7 +162,7 @@
 
           <template #item.skillProcs="{ item }">
             <div class="flex-center">
-              <div v-if="item.skill.unit !== 'metronome'">
+              <div v-if="!item.skill.isUnit('metronome', 'copy')">
                 <div class="flex-center">
                   <v-img :src="mainskillImage(item.pokemon)" height="24" width="24"></v-img>
                 </div>

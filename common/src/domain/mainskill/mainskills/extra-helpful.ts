@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const EXTRA_HELPFUL_S: Mainskill = createBaseSkill({
   name: 'Extra Helpful S',
@@ -11,3 +11,4 @@ export const EXTRA_HELPFUL_S: Mainskill = createBaseSkill({
 });
 
 MAINSKILLS.push(EXTRA_HELPFUL_S);
+METRONOME_SKILLS.push(EXTRA_HELPFUL_S);

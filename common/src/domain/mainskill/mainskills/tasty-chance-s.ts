@@ -1,5 +1,5 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
 
 export const TASTY_CHANCE_S: Mainskill = createBaseSkill({
   name: 'Tasty Chance S',
@@ -12,3 +12,4 @@ export const TASTY_CHANCE_S: Mainskill = createBaseSkill({
 });
 
 MAINSKILLS.push(TASTY_CHANCE_S);
+METRONOME_SKILLS.push(TASTY_CHANCE_S);

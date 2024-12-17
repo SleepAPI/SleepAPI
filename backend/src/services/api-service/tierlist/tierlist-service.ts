@@ -21,7 +21,7 @@ import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-util
 import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { MAX_POT_SIZE, Mainskill, MathUtils, mainskill } from 'sleepapi-common';
+import { MAX_POT_SIZE, METRONOME_SKILLS, Mainskill, MathUtils, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
 const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
@@ -211,9 +211,9 @@ class TierlistImpl {
         } else if (currentPokemonSkill === mainskill.EXTRA_HELPFUL_S) {
           extraHelpful = group[0].detailedProduce.averageTotalSkillProcs;
         } else if (currentPokemonSkill === mainskill.METRONOME) {
-          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
-          cheer = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
-          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / mainskill.METRONOME_FACTOR;
+          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
+          cheer = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
+          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
         } else if (currentPokemonSkill.isSkill(mainskill.MOONLIGHT_CHARGE_ENERGY_S)) {
           // since moonlight works like cheer we implement it through cheer
           // we calculate moonlight's energy value and divide it into how many cheer procs that would equate
