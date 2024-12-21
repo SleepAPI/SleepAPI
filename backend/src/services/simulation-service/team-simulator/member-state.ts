@@ -377,6 +377,7 @@ export class MemberState {
     this.currentEnergy = Math.max(0, MathUtils.round(this.currentEnergy - energyToDegrade, 2));
   }
 
+  // TEST: none of the results functions caught that ingredient magnet inflates totalProduce massively, since totalProduce was not divided by iterations
   public results(iterations: number): MemberProduction {
     const totalSkillProduce: Produce = multiplyProduce(this.totalProduce, 1 / iterations); // so far only skill value has been added to totalProduce
 
@@ -394,7 +395,7 @@ export class MemberState {
       berries: flatToBerrySet(totalHelpProduceFlat.berries, this.level),
       ingredients: flatToIngredientSet(totalHelpProduceFlat.ingredients)
     };
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
+    const produceTotal = InventoryUtils.addToInventory(totalSkillProduce, totalHelpProduce);
 
     const spilledHelps = this.voidHelps + this.totalSneakySnackHelps;
     const spilledIngredients = flatToIngredientSet(
@@ -407,7 +408,7 @@ export class MemberState {
     )[0]; // can grab first since sneaky snack can only return 1 berry type
 
     return {
-      produceTotal: this.totalProduce,
+      produceTotal,
       produceWithoutSkill: totalHelpProduce,
       produceFromSkill: totalSkillProduce,
       skillAmount: (this.skillValue.regular + this.skillValue.crit) / iterations,
@@ -435,6 +436,8 @@ export class MemberState {
   }
 
   public ivResults(iterations: number): MemberProductionBase {
+    const totalSkillProduce: Produce = multiplyProduce(this.totalProduce, 1 / iterations); // so far only skill value has been added to totalProduce
+
     const totalHelpProduceFlat: ProduceFlat = {
       berries: this.averageProduce.berries._mapCombine(
         this.sneakySnackBerries,
@@ -446,10 +449,11 @@ export class MemberState {
       berries: flatToBerrySet(totalHelpProduceFlat.berries, this.level),
       ingredients: flatToIngredientSet(totalHelpProduceFlat.ingredients)
     };
-    this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
+
+    const produceTotal = InventoryUtils.addToInventory(totalSkillProduce, totalHelpProduce);
 
     return {
-      produceTotal: this.totalProduce,
+      produceTotal,
       skillProcs: this.skillProcs / this.metronomeFactor / iterations,
       externalId: this.id,
       pokemonWithIngredients: this.pokemonWithIngredients
@@ -457,10 +461,12 @@ export class MemberState {
   }
 
   public simpleResults(iterations: number): SimpleTeamResult {
+    const skillIngredients = multiplyProduce(this.totalProduce, 1 / iterations).ingredients;
+
     return {
       skillProcs: this.skillProcs / this.metronomeFactor / iterations,
       totalHelps: this.totalAverageHelps / iterations,
-      skillIngredients: multiplyProduce(this.totalProduce, 1 / iterations).ingredients,
+      skillIngredients,
       critMultiplier: this.averageCritMultiplier(iterations),
       member: this.member,
       ingredientPercentage: this.ingredientPercentage

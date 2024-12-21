@@ -1,4 +1,4 @@
-import { IngredientIndexToIntAmount, PokemonWithIngredientsIndexed, TeamMemberSettingsExt } from 'sleepapi-common';
+import { IngredientIndexToIntAmount, PokemonWithIngredientsIndexed, TeamMemberSettingsResult } from 'sleepapi-common';
 
 /**
  * This type represents a Pokémon setup used as input for the set cover algorithm.
@@ -22,6 +22,6 @@ export type ProducersByIngredientIndex = IngredientProducers[];
  * Used to cache and track the settings associated with a Pokémon setup.
  */
 export interface SetCoverPokemonSetupWithSettings extends SetCoverPokemonSetup {
-  settings: TeamMemberSettingsExt;
+  settings: TeamMemberSettingsResult;
 }
 export type IngredientProducersWithSettings = SetCoverPokemonSetupWithSettings[];

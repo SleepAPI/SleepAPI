@@ -78,4 +78,57 @@ describe('Optimal', () => {
       carrySize: mockedPokemon.carrySize + mockedPokemon.previousEvolutions * 5
     });
   });
+
+  describe('toMemberSettings', () => {
+    it('should return correct team member settings for given level', () => {
+      const optimalStats: Optimal = Optimal.berry(mockedPokemon, 2);
+
+      const memberSettings = Optimal.toMemberSettings({
+        stats: optimalStats,
+        level: 50,
+        externalId: 'test-id'
+      });
+
+      expect(memberSettings).toEqual({
+        carrySize: mockedPokemon.carrySize,
+        nature: ADAMANT,
+        ribbon: 2,
+        skillLevel: mockedPokemon.skill.maxLevel,
+        subskills: new Set(optimalStats.subskills.slice(0, 3).map((subskill) => subskill.subskill.name)),
+        level: 50,
+        externalId: 'test-id'
+      });
+    });
+
+    it('should return correct team member settings with no ribbon', () => {
+      const optimalStats: Optimal = {
+        subskills: [
+          { level: 10, subskill: INGREDIENT_FINDER_M },
+          { level: 25, subskill: HELPING_SPEED_M },
+          { level: 50, subskill: INGREDIENT_FINDER_S },
+          { level: 75, subskill: INVENTORY_L },
+          { level: 100, subskill: HELPING_SPEED_S }
+        ],
+        nature: QUIET,
+        skillLevel: mockedPokemon.skill.maxLevel,
+        carrySize: mockedPokemon.carrySize + mockedPokemon.previousEvolutions * 5
+      };
+
+      const memberSettings = Optimal.toMemberSettings({
+        stats: optimalStats,
+        level: 75,
+        externalId: 'test-id-2'
+      });
+
+      expect(memberSettings).toEqual({
+        carrySize: mockedPokemon.carrySize + mockedPokemon.previousEvolutions * 5,
+        nature: QUIET,
+        ribbon: 0,
+        skillLevel: mockedPokemon.skill.maxLevel,
+        subskills: new Set(optimalStats.subskills.slice(0, 4).map((subskill) => subskill.subskill.name)),
+        level: 75,
+        externalId: 'test-id-2'
+      });
+    });
+  });
 });

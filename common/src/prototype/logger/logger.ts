@@ -1,3 +1,4 @@
+/* eslint-disable SleepAPILogger/no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type LogLevel = 'debug' | 'log' | 'info' | 'warn' | 'error';
 type Loggable = string | number | boolean | object | any[] | null | Error;

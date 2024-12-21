@@ -1,5 +1,5 @@
 import { mockBerrySet } from '@src/vitest/mocks/berry/mock-berry-set.js';
-import { mockPokemonWithIngredientsIndexed } from '@src/vitest/mocks/pokemon/mock-pokemon-with-ingredients.js';
+import { pokemonWithIngredientsIndexed } from '@src/vitest/mocks/pokemon/mock-pokemon-with-ingredients.js';
 import { mockProduce } from '@src/vitest/mocks/produce/mock-produce.js';
 import { MemberProduction, MemberProductionAdvanced } from 'sleepapi-common';
 
@@ -7,7 +7,7 @@ export function mockMemberProduction(attrs?: Partial<MemberProduction>): MemberP
   return {
     advanced: mockMemberProductionAdvanced(),
     externalId: 'Mock id',
-    pokemonWithIngredients: mockPokemonWithIngredientsIndexed(),
+    pokemonWithIngredients: pokemonWithIngredientsIndexed(),
     produceFromSkill: mockProduce(),
     produceTotal: mockProduce(),
     produceWithoutSkill: mockProduce(),

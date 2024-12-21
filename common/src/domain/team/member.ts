@@ -29,8 +29,9 @@ export interface TeamMemberExt {
   pokemonWithIngredients: PokemonWithIngredients;
   settings: TeamMemberSettingsExt;
 }
+export type TeamMemberSettingsResult = Omit<TeamMemberSettingsExt, 'subskills'> & { subskills: string[] };
 
 export interface TeamMemberWithProduce {
-  member: TeamMemberExt;
+  member: Omit<TeamMemberExt, 'settings'> & { settings: TeamMemberSettingsResult };
   producedIngredients: IngredientSet[];
 }

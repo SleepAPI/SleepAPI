@@ -62,7 +62,7 @@ export function calculateAveragePokemonIngredientSet(
   ingredients: IngredientIndexToIntAmount,
   level: number
 ): IngredientIndexToFloatAmount {
-  const ingredientsUnlocked = Math.floor(level / 30) + 1;
+  const ingredientsUnlocked = Math.min(Math.floor(level / 30) + 1, 3);
   const multiplier = 1 / ingredientsUnlocked;
   const dividedIngredients = Float32Array.from(ingredients, (value) => value * multiplier);
   return dividedIngredients;

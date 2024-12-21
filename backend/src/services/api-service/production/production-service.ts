@@ -11,7 +11,6 @@ import {
   TeamMemberExt,
   TeamSettingsExt,
   limitSubSkillsToLevel,
-  mainskill,
   maxCarrySize,
   nature,
   subskill
@@ -162,14 +161,15 @@ export function calculateTeam(
 }
 
 // TODO: could tweak iterations
-export function calculateSimple(params: { settings: TeamSettingsExt; members: TeamMemberExt[] }, iterations = 700) {
-  const { settings, members } = params;
+export function calculateSimple(
+  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; includeCooking: boolean },
+  iterations = 700
+) {
+  const { settings, members, includeCooking } = params;
   const teamSimulator = new TeamSimulator({
     settings,
     members,
-    includeCooking: members.some((member) =>
-      member.pokemonWithIngredients.pokemon.skill.isSkill(mainskill.TASTY_CHANCE_S)
-    )
+    includeCooking: includeCooking === true
   });
 
   for (let i = 0; i < iterations; i++) {

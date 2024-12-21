@@ -1,6 +1,6 @@
 import { calculateSimple, calculateTeam } from '@src/services/api-service/production/production-service.js';
-import { SolveRecipeResult } from '@src/services/solve/solve-service.js';
 import { SetCoverPokemonSetupWithSettings } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
+import { SolveRecipeResult } from '@src/services/solve/types/solution-types.js';
 import {
   bogusMembers,
   calculateProductionAll,
@@ -17,7 +17,7 @@ import {
 } from '@src/services/solve/utils/solve-utils.js';
 import { splitArrayByCondition } from '@src/utils/database-utils/array-utils.js';
 import { mocks } from '@src/vitest/index.js';
-import { mockPokemonWithIngredientsIndexed } from '@src/vitest/mocks/index.js';
+import { pokemonWithIngredientsIndexed } from '@src/vitest/mocks/index.js';
 import { mockIngredientSet } from '@src/vitest/mocks/ingredient/mock-ingredient-set.js';
 import { setCoverPokemonWithSettings } from '@src/vitest/mocks/solve/mock-set-cover-pokemon-with-settings.js';
 import { mockMemberProduction } from '@src/vitest/mocks/team/mock-member-production.js';
@@ -50,20 +50,21 @@ describe('solve-utils', () => {
     vi.resetAllMocks();
   });
 
+  // TODO: // TEST: this function is tested too little, function is probably also too big
   describe('calculateProductionAll', () => {
     it('should calculate all pokemon, including user pokemon', () => {
       const mockedCalculateSimple = calculateSimple as MockedFunction<typeof calculateSimple>;
       const mockedCalculateTeam = calculateTeam as MockedFunction<typeof calculateTeam>;
 
       const userIncludedMembers = [
-        mocks.mockTeamMemberExt({ settings: mocks.teamMemberSettingsExt({ externalId: 'user1' }) })
+        mocks.teamMemberExt({ settings: mocks.teamMemberSettingsExt({ externalId: 'user1' }) })
       ];
       const settings: SolveSettingsExt = { ...mockTeamSettingsExt(), level: 60 };
 
       mockedCalculateTeam.mockReturnValueOnce(
         mockTeamResults({ members: [mockMemberProduction({ externalId: userIncludedMembers[0].settings.externalId })] })
       );
-      mockedCalculateSimple.mockReturnValue([mocks.mockSimpleTeamResult({ member: mocks.mockTeamMemberExt() })]);
+      mockedCalculateSimple.mockReturnValue([mocks.mockSimpleTeamResult({ member: mocks.teamMemberExt() })]);
 
       const result = calculateProductionAll({ userIncludedMembers, settings });
 
@@ -82,7 +83,7 @@ describe('solve-utils', () => {
 
   describe('filterPokedex', () => {
     it('should return COMPLETE_POKEDEX if input array has no helper boost Pokémon', () => {
-      expect(filterPokedex([mocks.mockTeamMemberExt()])).toEqual(OPTIMAL_POKEDEX);
+      expect(filterPokedex([mocks.teamMemberExt()])).toEqual(OPTIMAL_POKEDEX);
     });
 
     it('should return COMPLETE_POKEDEX if input array is empty', () => {
@@ -91,8 +92,8 @@ describe('solve-utils', () => {
 
     it('should remove helper boost pokemon in input array from COMPLETE_POKEDEX', () => {
       const filteredPokedex = filterPokedex([
-        mocks.mockTeamMemberExt({ pokemonWithIngredients: mocks.mockPokemonWithIngredients({ pokemon: SUICUNE }) }),
-        mocks.mockTeamMemberExt({ pokemonWithIngredients: mocks.mockPokemonWithIngredients({ pokemon: RAIKOU }) })
+        mocks.teamMemberExt({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: SUICUNE }) }),
+        mocks.teamMemberExt({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: RAIKOU }) })
       ]);
 
       expect(filteredPokedex).toContain(ENTEI);
@@ -104,7 +105,7 @@ describe('solve-utils', () => {
   describe('pokedexToMembers', () => {
     it('should convert a basic Pokémon to a team member', () => {
       const pokedex: Pokedex = [mockPokemon({ carrySize: 10, previousEvolutions: 2 })];
-      const members = pokedexToMembers({ pokedex, level: 60, support: false });
+      const members = pokedexToMembers({ pokedex, level: 60 });
       expect(members).toHaveLength(1);
 
       const member = members[0];
@@ -135,18 +136,18 @@ describe('solve-utils', () => {
 
     it('should provide as many subskills as the level allows', () => {
       const pokedex: Pokedex = [mockPokemon()];
-      const level24Members = pokedexToMembers({ pokedex, level: 24, support: false });
+      const level24Members = pokedexToMembers({ pokedex, level: 24 });
       expect(level24Members).toHaveLength(1);
       expect(level24Members[0].settings.subskills.size).toBe(1);
 
-      const level26Members = pokedexToMembers({ pokedex, level: 26, support: false });
+      const level26Members = pokedexToMembers({ pokedex, level: 26 });
       expect(level26Members).toHaveLength(1);
       expect(level26Members[0].settings.subskills.size).toBe(2);
     });
 
     it('should use skill setup for skill specialist support Pokémon', () => {
       const pokedex: Pokedex = [mockPokemon({ specialty: 'skill', skill: INGREDIENT_SUPPORT_MAINSKILLS[0] })];
-      const supportMembers = pokedexToMembers({ pokedex, level: 50, support: true });
+      const supportMembers = pokedexToMembers({ pokedex, level: 50 });
       expect(supportMembers).toHaveLength(1);
       expect(supportMembers[0].settings.subskills.size).toBe(3);
       const member = supportMembers[0];
@@ -162,17 +163,17 @@ describe('solve-utils', () => {
 
     it('should return as many team members as were provided in the Pokédex', () => {
       const pokedex: Pokedex = [mockPokemon(), mockPokemon()];
-      const members = pokedexToMembers({ pokedex, level: 50, support: true });
+      const members = pokedexToMembers({ pokedex, level: 50 });
       expect(members).toHaveLength(2);
     });
   });
 
   describe('calculateSupportPokemon', () => {
     it('should calculate production one by one for each support member', () => {
-      const supportPokemon1 = mocks.mockTeamMemberExt({
+      const supportPokemon1 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
       });
-      const supportPokemon2 = mocks.mockTeamMemberExt({
+      const supportPokemon2 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon2' })
       });
 
@@ -194,7 +195,7 @@ describe('solve-utils', () => {
     });
 
     it('should not return supportMembers not returned by simulator', () => {
-      const supportPokemon1 = mocks.mockTeamMemberExt({
+      const supportPokemon1 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
       });
 
@@ -212,16 +213,16 @@ describe('solve-utils', () => {
     });
 
     it("should include user's members in every simulation", () => {
-      const userPokemon1 = mocks.mockTeamMemberExt({
+      const userPokemon1 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'userPokemon1' })
       });
-      const userPokemon2 = mocks.mockTeamMemberExt({
+      const userPokemon2 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'userPokemon2' })
       });
-      const supportPokemon1 = mocks.mockTeamMemberExt({
+      const supportPokemon1 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
       });
-      const supportPokemon2 = mocks.mockTeamMemberExt({
+      const supportPokemon2 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon2' })
       });
 
@@ -260,7 +261,7 @@ describe('solve-utils', () => {
     });
 
     it('should include a bogus member for each empty space in the simulator', () => {
-      const supportPokemon1 = mocks.mockTeamMemberExt({
+      const supportPokemon1 = mocks.teamMemberExt({
         settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
       });
 
@@ -276,7 +277,7 @@ describe('solve-utils', () => {
       expect(result).toHaveLength(1);
       expect(result[0].member.settings.externalId).toEqual(supportPokemon1.settings.externalId);
 
-      const bogusMember = mocks.mockTeamMemberExt();
+      const bogusMember = mocks.teamMemberExt();
 
       expect(mockedCalculateSimple).toHaveBeenCalledTimes(1);
       expect(mockedCalculateSimple.mock.calls[0][0]).toEqual(
@@ -315,8 +316,8 @@ describe('solve-utils', () => {
         ingredient30: [ingredientListA],
         ingredient60: [ingredientListA, ingredientListB]
       });
-      const member = mocks.mockTeamMemberExt({
-        pokemonWithIngredients: mocks.mockPokemonWithIngredients({ pokemon }),
+      const member = mocks.teamMemberExt({
+        pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon }),
         settings: mocks.teamMemberSettingsExt({ level: 60 })
       });
       const simpleResults = mocks.mockSimpleTeamResult({ member });
@@ -341,8 +342,8 @@ describe('solve-utils', () => {
         ingredient60: [ingredientListA],
         ingredientPercentage: 100
       });
-      const member = mocks.mockTeamMemberExt({
-        pokemonWithIngredients: mocks.mockPokemonWithIngredients({ pokemon }),
+      const member = mocks.teamMemberExt({
+        pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon }),
         settings: mocks.teamMemberSettingsExt({ level: 60 })
       });
       const simpleResults = mocks.mockSimpleTeamResult({ member, totalHelps: 10 });
@@ -450,10 +451,10 @@ describe('solve-utils', () => {
   describe('createSettingsLookupTable', () => {
     it('should create a valid Map from pokemonWithSettings array', () => {
       const member1 = mocks.setCoverPokemonWithSettings({
-        pokemonSet: mocks.mockPokemonWithIngredientsIndexed({ pokemon: 'mcmomo' })
+        pokemonSet: mocks.pokemonWithIngredientsIndexed({ pokemon: 'mcmomo' })
       });
       const member2 = mocks.setCoverPokemonWithSettings({
-        pokemonSet: mocks.mockPokemonWithIngredientsIndexed({ pokemon: 'abunzu' })
+        pokemonSet: mocks.pokemonWithIngredientsIndexed({ pokemon: 'abunzu' })
       });
 
       const member1Key = hashPokemonSetIndexed(member1.pokemonSet);
@@ -527,7 +528,7 @@ describe('solve-utils', () => {
         { amount: 10, ingredient: ingredient.FANCY_APPLE },
         { amount: 5, ingredient: ingredient.MOOMOO_MILK }
       ];
-      const member = mockPokemonWithIngredientsIndexed({ ingredients: ingredientSetToIntFlat(ings) });
+      const member = pokemonWithIngredientsIndexed({ ingredients: ingredientSetToIntFlat(ings) });
       expect(hashPokemonSetIndexed(member)).toMatchInlineSnapshot(`"Mockemon:10,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"`);
     });
   });

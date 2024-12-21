@@ -1,9 +1,9 @@
 import { SetCover } from '@src/services/solve/set-cover.js';
 import {
   ProducersByIngredientIndex,
-  SetCoverPokemonSetup
+  SetCoverPokemonSetupWithSettings
 } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import { SolveRecipeSolution, SolveRecipeSolutionWithSettings } from '@src/services/solve/types/solution-types.js';
+import { SolveRecipeInput, SolveRecipeResultWithSettings } from '@src/services/solve/types/solution-types.js';
 import {
   calculateProductionAll,
   combineProduction,
@@ -12,37 +12,16 @@ import {
   groupProducersByIngredientIndex,
   pokemonProductionToRecipeSolutions
 } from '@src/services/solve/utils/solve-utils.js';
-import {
-  Ingredient,
-  ingredientSetToIntFlat,
-  Recipe,
-  SolveSettingsExt,
-  TeamMemberExt,
-  TeamMemberSettingsExt
-} from 'sleepapi-common';
+import { Ingredient, ingredientSetToIntFlat, Recipe, SolveSettingsExt } from 'sleepapi-common';
 
-export interface SetCoverPokemonWithSettings extends SetCoverPokemonSetup {
-  settings: TeamMemberSettingsExt;
-}
-export interface SolveRecipeInput {
-  includedMembers: TeamMemberExt[];
-  solveSettings: SolveSettingsExt;
-  maxTeamSize: number;
-}
-export interface SolveRecipeResult {
-  teams: SolveRecipeSolution[];
-  exhaustive: boolean;
-}
-export interface SolveRecipeResultWithSettings {
-  teams: SolveRecipeSolutionWithSettings[];
-  exhaustive: boolean;
-}
 // TODO: maybe consider breaking out private functions into separate class
 class SolveServiceImpl {
   // TEST
+  // TEST: Make sure we don't calculate other pokemon if user pokemon are 5, since nothing more fits in team anyway
   public solveRecipe(recipe: Recipe, input: SolveRecipeInput): SolveRecipeResultWithSettings {
     const flatRecipeIngredients = ingredientSetToIntFlat(recipe.ingredients);
 
+    // TODO: is calculateProductionAll the bottleneck now? Is set cover fast now?
     const { userProduction, nonSupportProduction, supportProduction } = calculateProductionAll({
       settings: input.solveSettings,
       userIncludedMembers: input.includedMembers
@@ -64,10 +43,13 @@ class SolveServiceImpl {
 
     const allProducers = [...nonSupportProduction, ...supportProduction];
     const producersByIngredientIndex: ProducersByIngredientIndex = groupProducersByIngredientIndex(allProducers);
-    const settingsCache: Map<string, SetCoverPokemonWithSettings> = createSettingsLookupTable(allProducers);
+    const settingsCache: Map<string, SetCoverPokemonSetupWithSettings> = createSettingsLookupTable(allProducers);
 
     const cache = new Map();
     const maxTeamSize = input.maxTeamSize - input.includedMembers.length;
+    // TODO: // BUG // FIXME: Looks like subskills are not propagated here, member's settings show no subskills at least.
+    // TODO: Are they used in the calc or also not?
+    // TODO: maybe the enrichSolutions just doesnt work with coupling the settings right?
     const setCover = new SetCover(producersByIngredientIndex, cache);
     const solutions = setCover.solveRecipe(flatRecipeIngredients, maxTeamSize);
 

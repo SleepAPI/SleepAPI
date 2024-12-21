@@ -7,17 +7,18 @@ import {
 import { getAllIngredientLists } from '@src/services/calculator/ingredient/ingredient-calculate.js';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
 import {
-  SetCoverPokemonWithSettings,
-  SolveRecipeResult,
-  SolveRecipeResultWithSettings
-} from '@src/services/solve/solve-service.js';
-import {
+  IngredientProducersWithSettings,
   ProducersByIngredientIndex,
-  SetCoverPokemonSetup
+  SetCoverPokemonSetup,
+  SetCoverPokemonSetupWithSettings
 } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import { SolveRecipeSolutionWithSettings } from '@src/services/solve/types/solution-types.js';
+import {
+  SolveRecipeResult,
+  SolveRecipeResultWithSettings,
+  SolveRecipeSolutionWithSettings
+} from '@src/services/solve/types/solution-types.js';
 import { convertFloat32ToInt16, splitArrayByCondition } from '@src/utils/database-utils/array-utils.js';
-import { mockTeamMemberExt } from '@src/vitest/mocks/team/mock-team-member-ext.js';
+import { teamMemberExt } from '@src/vitest/mocks/team/mock-team-member-ext.js';
 import {
   ingredient,
   INGREDIENT_SUPPORT_MAINSKILLS,
@@ -34,43 +35,54 @@ import {
   PokemonWithIngredientsIndexed,
   SolveSettingsExt,
   TeamMemberExt,
+  TeamMemberSettingsExt,
   TeamSettingsExt
 } from 'sleepapi-common';
 
 export function calculateProductionAll(params: { settings: SolveSettingsExt; userIncludedMembers: TeamMemberExt[] }): {
-  userProduction: SetCoverPokemonWithSettings[];
-  nonSupportProduction: SetCoverPokemonWithSettings[];
-  supportProduction: SetCoverPokemonWithSettings[];
+  userProduction: SetCoverPokemonSetupWithSettings[];
+  nonSupportProduction: SetCoverPokemonSetupWithSettings[];
+  supportProduction: SetCoverPokemonSetupWithSettings[];
 } {
   const { settings, userIncludedMembers: members } = params;
 
   const filteredPokedex = filterPokedex(members);
 
+  // TEST: add case that the big array for non-support mons doesn't contain any support skills
   const [supportMons, nonSupportMons] = splitArrayByCondition(filteredPokedex, (pkmn) =>
     INGREDIENT_SUPPORT_MAINSKILLS.some((skill) => skill.isSkill(pkmn.skill))
   );
 
-  const nonSupportMembers = pokedexToMembers({ pokedex: nonSupportMons, support: false, level: settings.level });
-  const supportMembers = pokedexToMembers({ pokedex: supportMons, support: true, level: settings.level });
+  const nonSupportMembers = pokedexToMembers({ pokedex: nonSupportMons, level: settings.level });
+  const supportMembers = pokedexToMembers({ pokedex: supportMons, level: settings.level });
 
   const userIncludedProduction = calculateTeam({ settings, members }, 1400, false);
-  const nonSupportProductionStats = calculateSimple({ settings, members: [...members, ...nonSupportMembers] });
+  const nonSupportProductionStats = calculateSimple({
+    settings,
+    members: [...members, ...nonSupportMembers],
+    includeCooking: false // TODO: if we end up re-using this for tier list, then this will be true for tasty chance mons. Also should probably split those to own calculate call, so not every mon has to include cooking only tasty mons
+  });
   const supportProductionStats: SimpleTeamResult[] = calculateSupportPokemon({
     supportMembers,
     settings,
     userMembers: members
   });
 
-  const userProduction: SetCoverPokemonWithSettings[] = userIncludedProduction.members.map((member) => ({
+  const userProduction: SetCoverPokemonSetupWithSettings[] = userIncludedProduction.members.map((member) => ({
     pokemonSet: member.pokemonWithIngredients,
-    totalIngredients: ingredientSetToIntFlat(member.produceTotal.ingredients),
-    settings: members.find((m) => m.settings.externalId === member.externalId)!.settings
+    totalIngredients: ingredientSetToIntFlat(member.produceTotal.ingredients)._mutateUnary((ing) => ing / MEALS_IN_DAY),
+    settings: settingsToArraySubskills(members.find((m) => m.settings.externalId === member.externalId)!.settings)
   }));
 
   const nonSupportProduction = convertSimpleStatsToIngredientSets(nonSupportProductionStats);
   const supportProduction = convertSimpleStatsToIngredientSets(supportProductionStats);
 
   return { userProduction, nonSupportProduction, supportProduction };
+}
+
+// TEST:
+export function settingsToArraySubskills(settings: TeamMemberSettingsExt) {
+  return { ...settings, subskills: [...settings.subskills] };
 }
 
 /**
@@ -112,8 +124,8 @@ export function filterPokedex(members: TeamMemberExt[]) {
  *   2. The Pokémon is classified as a skill specialist.
  *   3. The Pokémon's skill belongs to the set of predefined supporting skills (e.g., "E4E", "Extra Helpful").
  */
-export function pokedexToMembers(params: { pokedex: Pokedex; support: boolean; level: number }): TeamMemberExt[] {
-  const { pokedex, support, level } = params;
+export function pokedexToMembers(params: { pokedex: Pokedex; level: number }): TeamMemberExt[] {
+  const { pokedex, level } = params;
   const pokedexAsMembers: TeamMemberExt[] = [];
 
   const INGREDIENT_SUPPORT_MAINSKILLS_SET = new Set(INGREDIENT_SUPPORT_MAINSKILLS.map((ms) => ms.name));
@@ -122,7 +134,7 @@ export function pokedexToMembers(params: { pokedex: Pokedex; support: boolean; l
     const AAA: IngredientSet[] = [pkmn.ingredient0, pkmn.ingredient30[0], pkmn.ingredient60[0]];
     const pokemonWithIngredients: PokemonWithIngredients = { pokemon: pkmn, ingredientList: AAA };
 
-    const isSupportSkillMon = support && INGREDIENT_SUPPORT_MAINSKILLS_SET.has(pkmn.skill.name);
+    const isSupportSkillMon = pkmn.specialty === 'skill' && INGREDIENT_SUPPORT_MAINSKILLS_SET.has(pkmn.skill.name);
     const optimalSettings: Optimal = isSupportSkillMon ? Optimal.skill(pkmn, 4) : Optimal.ingredient(pkmn, 4);
     const settings = Optimal.toMemberSettings({ stats: optimalSettings, level, externalId: pkmn.name });
 
@@ -143,7 +155,8 @@ export function calculateSupportPokemon(params: {
     const emptyTeamSpace = MAX_TEAM_SIZE - (userMembers.length + 1); // user mons + the support member we're calculating
     const simpleResults = calculateSimple({
       settings,
-      members: [...userMembers, supportMember, ...bogusMembers(emptyTeamSpace)]
+      members: [...userMembers, supportMember, ...bogusMembers(emptyTeamSpace)],
+      includeCooking: false
     });
     const simpleResult = simpleResults.find(
       (result) =>
@@ -154,11 +167,19 @@ export function calculateSupportPokemon(params: {
   return supportProductionStats;
 }
 
-export function convertSimpleStatsToIngredientSets(simpleResults: SimpleTeamResult[]): SetCoverPokemonWithSettings[] {
-  const result: SetCoverPokemonWithSettings[] = [];
+// TEST skill ingredients and produced ingredients are divided for per meal window
+// TEST skill ingredients are added to the total ingredients
+// TEST every ing list is calculated for every input simpleResult
+export function convertSimpleStatsToIngredientSets(
+  simpleResults: SimpleTeamResult[]
+): SetCoverPokemonSetupWithSettings[] {
+  const result: SetCoverPokemonSetupWithSettings[] = [];
   for (const simpleResult of simpleResults) {
     const pokemon = simpleResult.member.pokemonWithIngredients.pokemon;
     const helpsPerMealWindow = simpleResult.totalHelps / MEALS_IN_DAY;
+    const skillIngredientsPerMealWindow = ingredientSetToFloatFlat(simpleResult.skillIngredients)._mutateUnary(
+      (ing) => ing / MEALS_IN_DAY
+    );
 
     for (const ingredientList of getAllIngredientLists(pokemon, simpleResult.member.settings.level)) {
       const memberWithIngList: TeamMemberExt = {
@@ -172,9 +193,9 @@ export function convertSimpleStatsToIngredientSets(simpleResults: SimpleTeamResu
         totalIngredients: convertFloat32ToInt16(
           averageProduce.ingredients
             ._mutateUnary((ing) => ing * helpsPerMealWindow)
-            ._mutateCombine(ingredientSetToFloatFlat(simpleResult.skillIngredients), (a, b) => a + b)
+            ._mutateCombine(skillIngredientsPerMealWindow, (a, b) => a + b)
         ),
-        settings: simpleResult.member.settings
+        settings: settingsToArraySubskills(simpleResult.member.settings)
       });
     }
   }
@@ -202,7 +223,7 @@ export function groupProducersByIngredientIndex(producers: SetCoverPokemonSetup[
 }
 
 export function pokemonProductionToRecipeSolutions(
-  production: SetCoverPokemonWithSettings[]
+  production: SetCoverPokemonSetupWithSettings[]
 ): SolveRecipeSolutionWithSettings {
   const combinedProduction = combineProduction(production);
 
@@ -213,9 +234,9 @@ export function pokemonProductionToRecipeSolutions(
 }
 
 export function createSettingsLookupTable(
-  pokemonWithSettings: SetCoverPokemonWithSettings[]
-): Map<string, SetCoverPokemonWithSettings> {
-  const map: Map<string, SetCoverPokemonWithSettings> = new Map();
+  pokemonWithSettings: SetCoverPokemonSetupWithSettings[]
+): Map<string, SetCoverPokemonSetupWithSettings> {
+  const map: Map<string, SetCoverPokemonSetupWithSettings> = new Map();
   for (const pkmn of pokemonWithSettings) {
     map.set(hashPokemonSetIndexed(pkmn.pokemonSet), pkmn);
   }
@@ -230,7 +251,7 @@ export function combineProduction(members: SetCoverPokemonSetup[]) {
 }
 
 export function bogusMembers(nrOfMembers: number): TeamMemberExt[] {
-  const bogusMember: TeamMemberExt = mockTeamMemberExt();
+  const bogusMember: TeamMemberExt = teamMemberExt();
   return new Array(nrOfMembers).fill(bogusMember);
 }
 
@@ -241,11 +262,11 @@ export function hashPokemonSetIndexed(pokemonSet: PokemonWithIngredientsIndexed)
 
 export function enrichSolutions(
   result: SolveRecipeResult,
-  settingsCache: Map<string, SetCoverPokemonWithSettings>
+  settingsCache: Map<string, SetCoverPokemonSetupWithSettings>
 ): SolveRecipeResultWithSettings {
   const enrichedTeams: SolveRecipeSolutionWithSettings[] = [];
   for (const team of result.teams) {
-    const enrichedMembers = [];
+    const enrichedMembers: IngredientProducersWithSettings = [];
     for (const member of team.members) {
       const settings = settingsCache.get(hashPokemonSetIndexed(member.pokemonSet))?.settings;
       if (!settings) {
@@ -257,7 +278,7 @@ export function enrichSolutions(
       enrichedMembers.push({
         pokemonSet: member.pokemonSet,
         totalIngredients: member.totalIngredients,
-        settings
+        settings: { ...settings, subskills: [...settings.subskills] }
       });
     }
     enrichedTeams.push({

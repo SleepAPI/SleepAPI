@@ -13,7 +13,7 @@
     "build-watch": "concurrently \"tsc -w\" \"tsc-alias -w\"",
     "start": "npm run build && node ./dist/app.js",
     "predev": "npm run build",
-    "dev": "concurrently -k -n \"Build,Backend\" -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
+    "dev": "concurrently -k --raw -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
     "dev-start": "nodemon --delay 3 --watch dist dist/app.js -- -P -l debug --debug --debug-port=9230",
     "frontend": "npm run postbuild && node dist/app.js",
     "test": "vitest --run --coverage",
@@ -42,7 +42,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
     "typescript": "^5.7.2",
-    "vimic": "^1.0.4",
+    "vimic": "^1.0.7",
     "vitest": "^1.6.0"
   },
   "dependencies": {

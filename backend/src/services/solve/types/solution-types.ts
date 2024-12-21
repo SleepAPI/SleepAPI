@@ -3,7 +3,13 @@ import {
   IngredientProducersWithSettings,
   SetCoverPokemonSetup
 } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import { IngredientIndexToIntAmount } from 'sleepapi-common';
+import { IngredientIndexToIntAmount, SolveSettingsExt, TeamMemberExt } from 'sleepapi-common';
+
+export interface SolveRecipeInput {
+  includedMembers: TeamMemberExt[];
+  solveSettings: SolveSettingsExt;
+  maxTeamSize: number;
+}
 
 export interface SubRecipeMeta {
   remainingRecipeWithSpotsLeft: IngredientIndexToIntAmount;
@@ -20,4 +26,13 @@ export interface SolveRecipeSolution {
 export interface SolveRecipeSolutionWithSettings {
   members: IngredientProducersWithSettings;
   producedIngredients: IngredientIndexToIntAmount;
+}
+
+export interface SolveRecipeResult {
+  teams: SolveRecipeSolution[];
+  exhaustive: boolean;
+}
+export interface SolveRecipeResultWithSettings {
+  teams: SolveRecipeSolutionWithSettings[];
+  exhaustive: boolean;
 }

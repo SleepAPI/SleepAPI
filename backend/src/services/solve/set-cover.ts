@@ -1,6 +1,5 @@
-import { SolveRecipeResult } from '@src/services/solve/solve-service.js';
 import { ProducersByIngredientIndex } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import { RecipeSolutions, SubRecipeMeta } from '@src/services/solve/types/solution-types.js';
+import { RecipeSolutions, SolveRecipeResult, SubRecipeMeta } from '@src/services/solve/types/solution-types.js';
 import {
   addMemberToSubTeams,
   addSpotsLeftToRecipe,
@@ -31,42 +30,33 @@ export class SetCover {
   public solveRecipe(recipe: IngredientIndexToIntAmount, maxTeamSize: number): SolveRecipeResult {
     const recipeWithSpotsLeft = addSpotsLeftToRecipe(recipe, maxTeamSize);
 
-    const memoKey = createMemoKey(recipeWithSpotsLeft);
-    const maybeSolutions = this.cachedSubRecipeSolves.get(memoKey);
     this.startTime = Date.now();
 
-    if (maybeSolutions) {
-      return formatResult({ solutions: maybeSolutions, startTime: this.startTime, timeout: this.timeout });
-    } else {
-      const ingredientIndices = findSortedRecipeIngredientIndices(recipe);
-      const solutions = this.solve(recipeWithSpotsLeft, ingredientIndices);
-      return formatResult({ solutions, startTime: this.startTime, timeout: this.timeout });
-    }
+    const ingredientIndices = findSortedRecipeIngredientIndices(recipe);
+    const solutions = this.solve(recipeWithSpotsLeft, ingredientIndices);
+    return formatResult({ solutions, startTime: this.startTime, timeout: this.timeout });
   }
 
   private solve(subRecipeWithSpotsLeft: IngredientIndexToIntAmount, ingredientIndices: number[]): RecipeSolutions {
     const memoKey = createMemoKey(subRecipeWithSpotsLeft);
-    let spotsLeftInTeam = subRecipeWithSpotsLeft[ingredient.TOTAL_NUMBER_OF_INGREDIENTS];
+    const spotsLeftInTeam = subRecipeWithSpotsLeft[ingredient.TOTAL_NUMBER_OF_INGREDIENTS];
 
     const maybeCachedSolution = this.ifStopSearching({ memoKey, spotsLeftInTeam, ingredientIndices });
     if (maybeCachedSolution) {
       return maybeCachedSolution;
     }
 
-    // there was space left in team, and now we're adding 1 new member
-    spotsLeftInTeam -= 1;
-
     // recipeIngredientIndices is sorted by difficult to solve DESC, grab the most difficult remaining ingredient
     const firstIngredientIndex = ingredientIndices[0];
     const producersOfFirstIngredient = this.producersByIngredientIndex[firstIngredientIndex];
 
-    const subRecipesAfterProducerSubtract = sortSubRecipesAfterProducerSubtract(
+    const subRecipesAfterProducerSubtract: SubRecipeMeta[] = sortSubRecipesAfterProducerSubtract(
       subRecipeWithSpotsLeft,
       ingredientIndices,
       producersOfFirstIngredient
     );
 
-    const teams = this.findTeams(subRecipesAfterProducerSubtract, spotsLeftInTeam);
+    const teams = this.findTeams(subRecipesAfterProducerSubtract);
 
     this.cachedSubRecipeSolves.set(memoKey, teams);
     return teams;
@@ -94,12 +84,14 @@ export class SetCover {
    * @param spotsLeftInTeam - The number of spots left in the team.
    * @returns The optimal teams that can solve the given sub-recipes.
    */
-  private findTeams(subRecipesAfterProducerSubtract: SubRecipeMeta[], spotsLeftInTeam: number): RecipeSolutions {
+  // TODO: missleading function name, all this does is check if we should search deeper or finish the search (add the member to team etc)
+  private findTeams(subRecipesAfterProducerSubtract: SubRecipeMeta[]): RecipeSolutions {
     const teams: RecipeSolutions = [];
 
     for (let i = 0; i < subRecipesAfterProducerSubtract.length; ++i) {
       const { remainingRecipeWithSpotsLeft, remainingIngredientIndices, sumRemainingRecipeIngredients, member } =
         subRecipesAfterProducerSubtract[i];
+      let spotsLeftInTeam = remainingRecipeWithSpotsLeft[ingredient.TOTAL_NUMBER_OF_INGREDIENTS];
 
       if (sumRemainingRecipeIngredients === 0) {
         // if the producer solved the remaining ingredients alone

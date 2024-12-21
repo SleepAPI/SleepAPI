@@ -1,6 +1,10 @@
-import { SolveRecipeResult } from '@src/services/solve/solve-service.js';
 import { SetCoverPokemonSetup } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import { RecipeSolutions, SolveRecipeSolution, SubRecipeMeta } from '@src/services/solve/types/solution-types.js';
+import {
+  RecipeSolutions,
+  SolveRecipeResult,
+  SolveRecipeSolution,
+  SubRecipeMeta
+} from '@src/services/solve/types/solution-types.js';
 import { combineProduction } from '@src/services/solve/utils/solve-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { ingredient, IngredientIndexToIntAmount } from 'sleepapi-common';
@@ -68,14 +72,18 @@ export function subtractAndCount(
 ) {
   const recipeWithSpotsLeftLength = recipeWithSpotsLeft.length;
   const remainingRecipeWithSpotsLeft = new Int16Array(recipeWithSpotsLeftLength);
-  remainingRecipeWithSpotsLeft[recipeWithSpotsLeftLength] = recipeWithSpotsLeft[recipeWithSpotsLeftLength];
+  // set new array's spots left to old current spots left -1 (subtract this producer since it takes a spot)
+  remainingRecipeWithSpotsLeft[recipeWithSpotsLeftLength - 1] = recipeWithSpotsLeft[recipeWithSpotsLeftLength - 1] - 1;
   const remainingIngredientIndices = [];
 
   let sumRemainingRecipeIngredients = 0;
 
   for (let i = 0; i < ingredientIndices.length; ++i) {
     const ingredientIndex = ingredientIndices[i];
-    const ingredientLeftInRecipe = recipeWithSpotsLeft[ingredientIndex] - producedIngredients[ingredientIndex];
+    const ingredientLeftInRecipe = Math.max(
+      0,
+      recipeWithSpotsLeft[ingredientIndex] - producedIngredients[ingredientIndex]
+    );
 
     if (ingredientLeftInRecipe !== 0) {
       remainingRecipeWithSpotsLeft[ingredientIndex] = ingredientLeftInRecipe;
@@ -99,7 +107,6 @@ export function subtractAndCount(
  *   - `sumRemainingRecipeIngredients`: The sum of the remaining ingredients in the sub-recipe.
  *   - `member`: The producer that was subtracted.
  */
-// TODO: // TEST: with sort
 export function sortSubRecipesAfterProducerSubtract(
   recipeWithSpotsLeft: IngredientIndexToIntAmount,
   ingredientIndices: number[],
@@ -109,8 +116,10 @@ export function sortSubRecipesAfterProducerSubtract(
 
   for (let i = 0; i < producersOfFirstIngredient.length; ++i) {
     const member = producersOfFirstIngredient[i];
+
     const { remainingRecipeWithSpotsLeft, remainingIngredientIndices, sumRemainingRecipeIngredients } =
       subtractAndCount(recipeWithSpotsLeft, member.totalIngredients, ingredientIndices);
+
     subRecipesAfterProducerSubtract.push({
       remainingRecipeWithSpotsLeft,
       remainingIngredientIndices,

@@ -116,7 +116,8 @@ describe('set-cover-utils', () => {
 
       expect(remainingRecipeWithSpotsLeft).toHaveLength(ingredient.INGREDIENTS.length + 1);
       expect(remainingRecipeWithSpotsLeft).toEqual(
-        new Int16Array([0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0])
+        // verify on -1 is fine since in practice we will never call this function with 0 spots, dont want to add additional computational logic for the clamp
+        new Int16Array([0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, -1])
       );
       expect(sumRemainingRecipeIngredients).toBe(6);
       expect(remainingIngredientIndices).toEqual([9, 6]);
@@ -133,7 +134,9 @@ describe('set-cover-utils', () => {
       const result = subtractAndCount(recipeWithSpotsLeft, producedIngredients, ingredientIndices);
 
       expect(result.remainingRecipeWithSpotsLeft).toHaveLength(ingredient.INGREDIENTS.length + 1);
-      expect(result.remainingRecipeWithSpotsLeft).toEqual(new Int16Array(ingredient.INGREDIENTS.length + 1));
+      expect(result.remainingRecipeWithSpotsLeft).toEqual(
+        new Int16Array([...new Array(ingredient.INGREDIENTS.length).fill(0), 4])
+      );
       expect(result.sumRemainingRecipeIngredients).toBe(0);
       expect(result.remainingIngredientIndices).toEqual([]);
     });
@@ -143,7 +146,11 @@ describe('set-cover-utils', () => {
       const producedIngredients = new Int16Array([0, 0, 0]);
       const ingredientIndices = [0, 1, 2];
       const result = subtractAndCount(defaultIngredientArray, producedIngredients, ingredientIndices);
-      expect(result.remainingRecipeWithSpotsLeft).toEqual(defaultIngredientArray);
+      expect(result.remainingRecipeWithSpotsLeft).toEqual(
+        // verify on -1 is fine since in practice we will never call this function with 0 spots, dont want to add additional computational logic for the clamp
+
+        new Int16Array([...defaultIngredientArray.slice(0, defaultIngredientArray.length - 1), -1])
+      );
       expect(result.sumRemainingRecipeIngredients).toBe(10);
       expect(result.remainingIngredientIndices).toEqual([0, 1, 2]);
     });
@@ -152,9 +159,32 @@ describe('set-cover-utils', () => {
       const producedIngredients = new Int16Array([10, 5, 10]);
       const ingredientIndices: number[] = [];
       const result = subtractAndCount(defaultIngredientArray, producedIngredients, ingredientIndices);
-      expect(result.remainingRecipeWithSpotsLeft).toEqual(defaultIngredientArray);
+      expect(result.remainingRecipeWithSpotsLeft).toEqual(
+        // verify on -1 is fine since in practice we will never call this function with 0 spots, dont want to add additional computational logic for the clamp
+        new Int16Array([...defaultIngredientArray.slice(0, defaultIngredientArray.length - 1), -1])
+      );
       expect(result.sumRemainingRecipeIngredients).toBe(0);
       expect(result.remainingIngredientIndices).toEqual([]);
+    });
+
+    it('should not subtract below 0 remaining ingredients', () => {
+      defaultIngredientArray.set([5]); // we dont want this to become -5
+      const producedIngredients = new Int16Array([10]);
+      const ingredientIndices: number[] = [0];
+      const result = subtractAndCount(defaultIngredientArray, producedIngredients, ingredientIndices);
+      expect(result.remainingRecipeWithSpotsLeft[0]).toBe(0);
+      expect(result.sumRemainingRecipeIngredients).toBe(0);
+      expect(result.remainingIngredientIndices).toEqual([]);
+    });
+
+    it('should subtact 1 from spots left', () => {
+      const recipeWithSpotsLeft = new Int16Array(ingredient.INGREDIENTS.length + 1);
+      recipeWithSpotsLeft[ingredient.INGREDIENTS.length] = 3;
+      const producedIngredients = new Int16Array([10]);
+      const ingredientIndices: number[] = [0];
+
+      const result = subtractAndCount(recipeWithSpotsLeft, producedIngredients, ingredientIndices);
+      expect(result.remainingRecipeWithSpotsLeft[ingredient.INGREDIENTS.length]).toBe(2);
     });
   });
 
@@ -205,8 +235,9 @@ describe('set-cover-utils', () => {
   });
 
   describe('createSubRecipesAfterProducerSubtract', () => {
-    it('should create sub-recipes after producer subtract', () => {
-      const subRecipeWithSpotsLeft = new Int16Array([5, 3, 2, 0]);
+    it('should create sub-recipes and sort after producer subtract', () => {
+      const subRecipeWithSpotsLeft = new Int16Array(ingredient.INGREDIENTS.length + 1);
+      subRecipeWithSpotsLeft.set([5, 3, 2]);
       const ingredientIndices = [0, 1, 2];
       const producersOfFirstIngredient = [
         mocks.setCoverPokemonSetup({ totalIngredients: new Int16Array([2, 1, 1]) }),
@@ -220,15 +251,44 @@ describe('set-cover-utils', () => {
       );
 
       expect(result).toHaveLength(2);
-      expect(result[0].remainingRecipeWithSpotsLeft).toEqual(new Int16Array([3, 2, 1, 0]));
-      expect(result[0].remainingIngredientIndices).toEqual([0, 1, 2]);
-      expect(result[0].sumRemainingRecipeIngredients).toBe(6);
-      expect(result[0].member).toEqual(producersOfFirstIngredient[0]);
 
-      expect(result[1].remainingRecipeWithSpotsLeft).toEqual(new Int16Array([2, 1, 1, 0]));
+      // expect 2nd team to be first now in results since it has the least amount of ingredients left
+      expect(result[0].remainingRecipeWithSpotsLeft).toEqual(
+        // verify on -1 is fine since in practice we will never call this function with 0 spots, dont want to add additional computational logic for the clamp
+        new Int16Array([2, 1, 1, ...new Int16Array(ingredient.INGREDIENTS.length - 3), -1])
+      );
+      expect(result[0].remainingIngredientIndices).toEqual([0, 1, 2]);
+      expect(result[0].sumRemainingRecipeIngredients).toBe(4);
+      expect(result[0].member).toEqual(producersOfFirstIngredient[1]);
+
+      expect(result[1].remainingRecipeWithSpotsLeft).toEqual(
+        // verify on -1 is fine since in practice we will never call this function with 0 spots, dont want to add additional computational logic for the clamp
+        new Int16Array([3, 2, 1, ...new Int16Array(ingredient.INGREDIENTS.length - 3), -1])
+      );
       expect(result[1].remainingIngredientIndices).toEqual([0, 1, 2]);
-      expect(result[1].sumRemainingRecipeIngredients).toBe(4);
-      expect(result[1].member).toEqual(producersOfFirstIngredient[1]);
+      expect(result[1].sumRemainingRecipeIngredients).toBe(6);
+      expect(result[1].member).toEqual(producersOfFirstIngredient[0]);
+    });
+
+    it('should subtract 1 from spots left', () => {
+      const subRecipeWithSpotsLeft = new Int16Array(ingredient.INGREDIENTS.length + 1);
+      subRecipeWithSpotsLeft.set([5, 3, 2]);
+      subRecipeWithSpotsLeft[ingredient.INGREDIENTS.length] = 3;
+      const ingredientIndices = [0, 1, 2];
+      const producersOfFirstIngredient = [
+        mocks.setCoverPokemonSetup({ totalIngredients: new Int16Array([2, 1, 1]) }),
+        mocks.setCoverPokemonSetup({ totalIngredients: new Int16Array([3, 2, 1]) })
+      ];
+
+      const result = sortSubRecipesAfterProducerSubtract(
+        subRecipeWithSpotsLeft,
+        ingredientIndices,
+        producersOfFirstIngredient
+      );
+      expect(result).toHaveLength(2);
+      result.forEach((subRecipe) => {
+        expect(subRecipe.remainingRecipeWithSpotsLeft[ingredient.INGREDIENTS.length]).toBe(2);
+      });
     });
   });
 

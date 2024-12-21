@@ -1,8 +1,8 @@
 import { BadRequestError } from '@src/domain/error/api/api-error.js';
 import { mocks } from '@src/vitest/index.js';
-import { mimic } from '@src/vitest/mocks/index.js';
 import * as common from 'sleepapi-common'; // Import the module to be mocked
 import { nature } from 'sleepapi-common';
+import { vimic } from 'vimic';
 import { beforeEach, describe, expect, it } from 'vitest';
 import SolveController from './solve.controller.js';
 
@@ -47,7 +47,7 @@ describe('solve.controller', () => {
     it('should enrich member settings with valid inputs', () => {
       const settings = mocks.teamMemberSettings();
 
-      const natureMock = mimic(common, 'getNature', () => nature.BASHFUL);
+      const natureMock = vimic(common, 'getNature', () => nature.BASHFUL);
 
       const enrichMemberSettings = controller._testAccess().enrichMemberSettings;
       const result = enrichMemberSettings({ ...settings });
@@ -72,8 +72,8 @@ describe('solve.controller', () => {
       ];
       const mockedPokemon = common.mockPokemon();
 
-      const flatToIngredientSetMock = mimic(common, 'flatToIngredientSet', () => mockedIngredientSet);
-      const getPokemonMock = mimic(common, 'getPokemon', () => mockedPokemon);
+      const flatToIngredientSetMock = vimic(common, 'flatToIngredientSet', () => mockedIngredientSet);
+      const getPokemonMock = vimic(common, 'getPokemon', () => mockedPokemon);
 
       const resultToResponse = controller._testAccess().resultToResponse;
       const response = resultToResponse(result);

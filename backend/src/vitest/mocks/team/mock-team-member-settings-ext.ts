@@ -1,4 +1,4 @@
-import { nature, TeamMemberSettings, TeamMemberSettingsExt } from 'sleepapi-common';
+import { nature, TeamMemberSettings, TeamMemberSettingsExt, TeamMemberSettingsResult } from 'sleepapi-common';
 
 export function teamMemberSettings(attrs?: Partial<TeamMemberSettings>): TeamMemberSettings {
   return {
@@ -22,6 +22,19 @@ export function teamMemberSettingsExt(attrs?: Partial<TeamMemberSettingsExt>): T
     ribbon: 0,
     skillLevel: 0,
     subskills: new Set(),
+    ...attrs
+  };
+}
+
+export function teamMemberSettingsResult(attrs?: Partial<TeamMemberSettingsResult>): TeamMemberSettingsResult {
+  return {
+    carrySize: 0,
+    externalId: 'mock id',
+    level: 0,
+    nature: nature.BASHFUL,
+    ribbon: 0,
+    skillLevel: 0,
+    subskills: [],
     ...attrs
   };
 }

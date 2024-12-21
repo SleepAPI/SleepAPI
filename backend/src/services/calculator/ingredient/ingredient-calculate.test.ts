@@ -291,6 +291,47 @@ describe('getAllIngredientCombinationsFor', () => {
 // });
 
 describe('calculateAveragePokemonIngredientSet', () => {
+  it('shall average an ingredient set for level 100', () => {
+    const pokemonSet: PokemonWithIngredients = {
+      pokemon: PINSIR,
+      ingredientList: [
+        {
+          amount: 3,
+          ingredient: ingredient.FANCY_APPLE
+        },
+        {
+          amount: 3,
+          ingredient: ingredient.FANCY_EGG
+        },
+        {
+          amount: 3,
+          ingredient: ingredient.MOOMOO_MILK
+        }
+      ]
+    };
+    const averagedResult = calculateAveragePokemonIngredientSet(ingredientSetToIntFlat(pokemonSet.ingredientList), 100);
+    expect(averagedResult).toMatchInlineSnapshot(`
+      Float32Array [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ]
+    `);
+  });
   it('shall average an ingredient set for level 60', () => {
     const pokemonSet: PokemonWithIngredients = {
       pokemon: PINSIR,

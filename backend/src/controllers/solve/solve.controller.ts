@@ -1,5 +1,6 @@
 import { BadRequestError } from '@src/domain/error/api/api-error.js';
-import { SolveRecipeInput, SolveRecipeResultWithSettings, SolveService } from '@src/services/solve/solve-service.js';
+import { SolveService } from '@src/services/solve/solve-service.js';
+import { SolveRecipeInput, SolveRecipeResultWithSettings } from '@src/services/solve/types/solution-types.js';
 import { getMeal } from '@src/utils/meal-utils/meal-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import {

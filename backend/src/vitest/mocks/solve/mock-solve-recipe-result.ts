@@ -1,4 +1,4 @@
-import { SolveRecipeResult, SolveRecipeResultWithSettings } from '@src/services/solve/solve-service.js';
+import { SolveRecipeResult, SolveRecipeResultWithSettings } from '@src/services/solve/types/solution-types.js';
 import {
   solveRecipeSolution,
   solveRecipeSolutionWithSettings
