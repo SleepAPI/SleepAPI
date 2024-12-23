@@ -29,6 +29,7 @@ import {
   GREENGRASS_SOYBEANS,
   HONEY,
   LARGE_LEEK,
+  MOOMOO_MILK,
   PURE_OIL,
   SNOOZY_TOMATO,
   SOFT_POTATO,
@@ -41,7 +42,9 @@ import {
   CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S,
   CHARGE_STRENGTH_S_RANGE,
+  DREAM_SHARD_MAGNET_S,
   ENERGIZING_CHEER_S,
+  EXTRA_HELPFUL_S,
   INGREDIENT_MAGNET_S,
   METRONOME,
   TASTY_CHANCE_S,
@@ -271,6 +274,30 @@ export const VULPIX: Pokemon = {
   skill: ENERGIZING_CHEER_S,
 };
 
+export const VULPIX_ALOLAN: Pokemon = {
+  name: 'VULPIX_ALOLAN',
+  specialty: 'berry',
+  frequency: toSeconds(1, 33, 20),
+  ingredientPercentage: 23,
+  skillPercentage: 2.8,
+  berry: RAWST,
+  genders: THREE_FOURTHS_FEMALE,
+  carrySize: 10,
+  previousEvolutions: 0,
+  remainingEvolutions: 1,
+  ingredient0: { amount: 1, ingredient: GREENGRASS_SOYBEANS },
+  ingredient30: [
+    { amount: 2, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 2, ingredient: GREENGRASS_CORN },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: GREENGRASS_SOYBEANS },
+    { amount: 3, ingredient: GREENGRASS_CORN },
+    { amount: 3, ingredient: SOFT_POTATO },
+  ],
+  skill: EXTRA_HELPFUL_S,
+};
+
 export const NINETALES: Pokemon = {
   ...evolvesFrom(VULPIX),
   name: 'NINETALES',
@@ -278,6 +305,15 @@ export const NINETALES: Pokemon = {
   ingredientPercentage: 16.4,
   skillPercentage: 2.5,
   carrySize: 23,
+};
+
+export const NINETALES_ALOLAN: Pokemon = {
+  ...evolvesFrom(VULPIX_ALOLAN),
+  name: 'NINETALES_ALOLAN',
+  frequency: toSeconds(0, 48, 20),
+  ingredientPercentage: 23.1,
+  skillPercentage: 2.8,
+  carrySize: 20,
 };
 
 export const MANKEY: Pokemon = {
@@ -400,6 +436,30 @@ export const MAROWAK: Pokemon = {
   ingredientPercentage: 22.5,
   skillPercentage: 4.5,
   carrySize: 15,
+};
+
+export const EEVEE_CHRISTMAS: Pokemon = {
+  name: 'EEVEE_CHRISTMAS',
+  specialty: 'berry',
+  frequency: toSeconds(0, 51, 40),
+  ingredientPercentage: 15.6,
+  skillPercentage: 3.2,
+  berry: PERSIM,
+  genders: SEVEN_EIGHTHS_MALE,
+  carrySize: 20,
+  previousEvolutions: 0,
+  remainingEvolutions: 0,
+  ingredient0: { amount: 1, ingredient: MOOMOO_MILK },
+  ingredient30: [
+    { amount: 2, ingredient: MOOMOO_MILK },
+    { amount: 1, ingredient: SOOTHING_CACAO },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: MOOMOO_MILK },
+    { amount: 2, ingredient: SOOTHING_CACAO },
+    { amount: 3, ingredient: BEAN_SAUSAGE },
+  ],
+  skill: DREAM_SHARD_MAGNET_S,
 };
 
 export const CHIKORITA: Pokemon = {
@@ -780,6 +840,7 @@ export const OPTIMAL_BERRY_SPECIALISTS: Pokemon[] = [
   RAICHU,
   CLEFABLE,
   NINETALES,
+  NINETALES_ALOLAN,
   PRIMEAPE,
   DODRIO,
   ONIX,
@@ -805,9 +866,11 @@ export const INFERIOR_BERRY_SPECIALISTS: Pokemon[] = [
   PIKACHU,
   CLEFAIRY,
   VULPIX,
+  VULPIX_ALOLAN,
   MANKEY,
   DODUO,
   CUBONE,
+  EEVEE_CHRISTMAS,
   CHIKORITA,
   BAYLEEF,
   CYNDAQUIL,

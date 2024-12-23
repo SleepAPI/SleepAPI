@@ -892,8 +892,49 @@ export const MIMIKYU: Pokemon = {
   skill: DISGUISE_BERRY_BURST,
 };
 
+export const PAWMI: Pokemon = {
+  name: 'PAWMI',
+  specialty: 'skill',
+  frequency: toSeconds(1, 16, 40),
+  ingredientPercentage: 11.1,
+  skillPercentage: 3.6,
+  berry: GREPA,
+  genders: BALANCED_GENDER,
+  carrySize: 9,
+  previousEvolutions: 0,
+  remainingEvolutions: 2,
+  ingredient0: { amount: 1, ingredient: SOOTHING_CACAO },
+  ingredient30: [
+    { amount: 2, ingredient: SOOTHING_CACAO },
+    { amount: 3, ingredient: MOOMOO_MILK },
+  ],
+  ingredient60: [
+    { amount: 4, ingredient: SOOTHING_CACAO },
+    { amount: 6, ingredient: MOOMOO_MILK },
+    { amount: 5, ingredient: FANCY_EGG },
+  ],
+  skill: ENERGY_FOR_EVERYONE,
+};
+
+export const PAWMO: Pokemon = {
+  ...evolvesFrom(PAWMI),
+  name: 'PAWMO',
+  frequency: toSeconds(0, 55, 0),
+  ingredientPercentage: 10.9,
+  skillPercentage: 3.6,
+  carrySize: 12,
+};
+
+export const PAWMOT: Pokemon = {
+  ...evolvesFrom(PAWMO),
+  name: 'PAWMOT',
+  frequency: toSeconds(0, 40, 0),
+  ingredientPercentage: 14.1,
+  skillPercentage: 3.9,
+  carrySize: 18,
+};
+
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
-  PIKACHU_CHRISTMAS,
   WIGGLYTUFF,
   PERSIAN,
   GOLDUCK,
@@ -925,9 +966,11 @@ export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
   SYLVEON,
   DEDENNE,
   MIMIKYU,
+  PAWMOT,
 ];
 
 export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [
+  PIKACHU_CHRISTMAS,
   JIGGLYPUFF,
   MEOWTH,
   PSYDUCK,
@@ -948,6 +991,8 @@ export const INFERIOR_SKILL_SPECIALISTS: Pokemon[] = [
   BONSLY,
   DRIFLOON,
   RIOLU,
+  PAWMI,
+  PAWMO,
 ];
 
 export const ALL_SKILL_SPECIALISTS: Pokemon[] = [...OPTIMAL_SKILL_SPECIALISTS, ...INFERIOR_SKILL_SPECIALISTS];
