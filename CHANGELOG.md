@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/SleepAPI/SleepAPI/compare/v1.4.0...v1.5.0) (2024-12-23)
+
+
+### Features
+
+* add alolan Vulpix and Pawmi lines ([9a08dfb](https://github.com/SleepAPI/SleepAPI/commit/9a08dfbef0a527f175f54fe351a0cf69369a29cc))
+
 # [1.4.0](https://github.com/SleepAPI/SleepAPI/compare/v1.3.0...v1.4.0) (2024-12-17)
 
 
