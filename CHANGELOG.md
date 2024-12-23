@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/SleepAPI/SleepAPI/compare/v1.5.0...v1.5.1) (2024-12-23)
+
+
+### Bug Fixes
+
+* adds Pawmi and alolan Vulpix lines to prod calc ([32da465](https://github.com/SleepAPI/SleepAPI/commit/32da46529c1c3d2c71fa186edcab0603052b5021))
+
 # [1.5.0](https://github.com/SleepAPI/SleepAPI/compare/v1.4.0...v1.5.0) (2024-12-23)
 
 
