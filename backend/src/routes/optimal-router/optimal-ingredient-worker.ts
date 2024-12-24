@@ -1,5 +1,5 @@
 import OptimalController from '@src/controllers/optimal/optimal.controller';
-import { IngredientRankerResult } from '@src/routes/optimal-router/optimal-router';
+import type { IngredientRankerResult } from '@src/routes/optimal-router/optimal-router';
 import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
 import { parentPort, workerData } from 'worker_threads';
 

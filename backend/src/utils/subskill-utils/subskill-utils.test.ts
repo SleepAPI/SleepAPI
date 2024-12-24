@@ -34,14 +34,14 @@ describe('extractSubskillsBasedOnLevel', () => {
       subskill.INGREDIENT_FINDER_M.name,
       subskill.HELPING_SPEED_M.name,
       subskill.INVENTORY_L.name,
-      subskill.INGREDIENT_FINDER_S.name,
+      subskill.INGREDIENT_FINDER_S.name
     ];
     const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
       [
         subskill.INGREDIENT_FINDER_M.name,
         subskill.HELPING_SPEED_M.name,
         subskill.INVENTORY_L.name,
-        subskill.INGREDIENT_FINDER_S.name,
+        subskill.INGREDIENT_FINDER_S.name
       ]
         .map((name) => name.toUpperCase())
         .includes(s.name.toUpperCase())
@@ -55,7 +55,7 @@ describe('extractSubskillsBasedOnLevel', () => {
       subskill.HELPING_SPEED_M.name,
       subskill.INVENTORY_L.name,
       subskill.INGREDIENT_FINDER_S.name,
-      subskill.INVENTORY_M.name,
+      subskill.INVENTORY_M.name
     ];
     const expectedSubskills = subskill.SUBSKILLS.filter((s) =>
       [
@@ -63,7 +63,7 @@ describe('extractSubskillsBasedOnLevel', () => {
         subskill.HELPING_SPEED_M.name,
         subskill.INVENTORY_L.name,
         subskill.INGREDIENT_FINDER_S.name,
-        subskill.INVENTORY_M.name,
+        subskill.INVENTORY_M.name
       ]
         .map((name) => name.toUpperCase())
         .includes(s.name.toUpperCase())
@@ -84,7 +84,7 @@ describe('subskillsForFilter', () => {
   it('should return the correct subskills for level 25', () => {
     expect(subskillsForFilter('ingredient', 25, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
-      subskill.HELPING_SPEED_M,
+      subskill.HELPING_SPEED_M
     ]);
   });
 
@@ -92,7 +92,7 @@ describe('subskillsForFilter', () => {
     expect(subskillsForFilter('ingredient', 50, pokemon.BLASTOISE)).toEqual([
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
-      subskill.INGREDIENT_FINDER_S,
+      subskill.INGREDIENT_FINDER_S
     ]);
   });
 
@@ -101,7 +101,7 @@ describe('subskillsForFilter', () => {
       subskill.INGREDIENT_FINDER_M,
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
-      subskill.INVENTORY_L,
+      subskill.INVENTORY_L
     ]);
   });
 
@@ -111,7 +111,7 @@ describe('subskillsForFilter', () => {
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
       subskill.INVENTORY_L,
-      subskill.HELPING_SPEED_S,
+      subskill.HELPING_SPEED_S
     ]);
   });
 
@@ -121,7 +121,7 @@ describe('subskillsForFilter', () => {
       subskill.HELPING_SPEED_M,
       subskill.INVENTORY_L,
       subskill.INGREDIENT_FINDER_S,
-      subskill.HELPING_SPEED_S,
+      subskill.HELPING_SPEED_S
     ]);
   });
 
@@ -131,7 +131,7 @@ describe('subskillsForFilter', () => {
       subskill.HELPING_SPEED_M,
       subskill.HELPING_SPEED_S,
       subskill.SKILL_TRIGGER_M,
-      subskill.SKILL_TRIGGER_S,
+      subskill.SKILL_TRIGGER_S
     ]);
   });
 
@@ -141,7 +141,7 @@ describe('subskillsForFilter', () => {
       subskill.HELPING_SPEED_M,
       subskill.SKILL_TRIGGER_S,
       subskill.HELPING_SPEED_S,
-      subskill.INVENTORY_L,
+      subskill.INVENTORY_L
     ]);
   });
 
@@ -159,7 +159,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         100
       )
@@ -168,7 +168,7 @@ describe('limitSubSkillsToLevel', () => {
       subskill.HELPING_SPEED_M,
       subskill.INGREDIENT_FINDER_S,
       subskill.INVENTORY_L,
-      subskill.HELPING_SPEED_S,
+      subskill.HELPING_SPEED_S
     ]);
   });
 
@@ -180,7 +180,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         60
       )
@@ -195,7 +195,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         50
       )
@@ -210,7 +210,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         49
       )
@@ -225,7 +225,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         25
       )
@@ -240,7 +240,7 @@ describe('limitSubSkillsToLevel', () => {
           subskill.HELPING_SPEED_M,
           subskill.INGREDIENT_FINDER_S,
           subskill.INVENTORY_L,
-          subskill.HELPING_SPEED_S,
+          subskill.HELPING_SPEED_S
         ],
         24
       )

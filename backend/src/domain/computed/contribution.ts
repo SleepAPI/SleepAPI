@@ -1,4 +1,4 @@
-import { PokemonIngredientSet, Recipe } from 'sleepapi-common';
+import type { PokemonIngredientSet, Recipe } from 'sleepapi-common';
 
 export interface Contribution {
   meal: Recipe;

@@ -1,6 +1,8 @@
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, SkillActivation, Time } from 'sleepapi-common';
-import { EventType, ScheduledEvent } from '../../event';
+import type { SkillActivation, Time } from 'sleepapi-common';
+import { MathUtils } from 'sleepapi-common';
+import type { EventType } from '../../event';
+import { ScheduledEvent } from '../../event';
 
 export class SkillEvent extends ScheduledEvent {
   time: Time;

@@ -19,7 +19,7 @@ describe('UserDAO insert', () => {
     const user = await UserDAO.insert({
       sub: 'some-sub',
       external_id: uuid.v4(),
-      name: 'some-name',
+      name: 'some-name'
     });
     expect(user).toBeDefined();
 
@@ -43,7 +43,7 @@ describe('UserDAO insert', () => {
       UserDAO.insert({
         external_id: uuid.v4(),
         name: 'some-name',
-        sub: undefined as any,
+        sub: undefined as any
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: user.sub/);
   });
@@ -53,7 +53,7 @@ describe('UserDAO insert', () => {
       UserDAO.insert({
         external_id: undefined as any,
         name: 'some-name',
-        sub: 'some-sub',
+        sub: 'some-sub'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: user.external_id/);
   });
@@ -62,13 +62,13 @@ describe('UserDAO insert', () => {
     await UserDAO.insert({
       external_id: uuid.v4(),
       sub: 'sub1',
-      name: 'some-name',
+      name: 'some-name'
     });
     await expect(
       UserDAO.insert({
         external_id: uuid.v4(),
         sub: 'sub1',
-        name: 'some-name',
+        name: 'some-name'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: UNIQUE constraint failed: user.external_id/);
   });
@@ -79,7 +79,7 @@ describe('UserDAO update', () => {
     const user = await UserDAO.insert({
       sub: 'some-sub',
       external_id: uuid.v4(),
-      name: 'some-name',
+      name: 'some-name'
     });
     expect(user.name).toEqual('some-name');
 

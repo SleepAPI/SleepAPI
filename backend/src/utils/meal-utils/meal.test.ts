@@ -1,4 +1,5 @@
-import { MAX_RECIPE_LEVEL, RECIPES, Recipe, recipeLevelBonus } from 'sleepapi-common';
+import type { Recipe } from 'sleepapi-common';
+import { MAX_RECIPE_LEVEL, RECIPES, recipeLevelBonus } from 'sleepapi-common';
 describe('MEALS', () => {
   it.each(RECIPES)('meal "%s" shall match nrOfIngredients with summed amounts', (meal: Recipe) => {
     const summedAmount = meal.ingredients.reduce((sum, cur) => sum + cur.amount, 0);

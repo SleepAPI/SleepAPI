@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils';
+import type { IngredientSet, Recipe } from 'sleepapi-common';
 import {
-  IngredientSet,
   MAX_RECIPE_LEVEL,
   MathUtils,
-  Recipe,
   curry,
   dessert,
   emptyBerryInventory,
@@ -17,9 +16,9 @@ import {
   prettifyIngredientDrop,
   recipeLevelBonus,
   salad,
-  subskill,
+  subskill
 } from 'sleepapi-common';
-import { Contribution } from '../../../domain/computed/contribution';
+import type { Contribution } from '../../../domain/computed/contribution';
 import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
 import { SetCover } from '../../set-cover/set-cover';
 import {
@@ -34,7 +33,7 @@ import {
   selectTopNContributions,
   sortByContributedPowerDesc,
   sumContributedPower,
-  summarizeTeamProducedIngredientSources,
+  summarizeTeamProducedIngredientSources
 } from './contribution-calculator';
 
 describe('getAllOptimalIngredientPokemonProduce', () => {
@@ -44,7 +43,7 @@ describe('getAllOptimalIngredientPokemonProduce', () => {
       cheer: 0,
       e4eProcs: 0,
       extraHelpful: 0,
-      monteCarloIterations: 1,
+      monteCarloIterations: 1
     });
     const pinsirData = data.filter((entry) => entry.pokemonCombination.pokemon === pokemon.PINSIR);
     expect(pinsirData).toHaveLength(6);
@@ -60,7 +59,7 @@ describe('calculateMealContributionFor', () => {
       cheer: 0,
       extraHelpful: 0,
       e4eProcs: 0,
-      monteCarloIterations: 1,
+      monteCarloIterations: 1
     });
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
     const currentPokemon = reverseIndex
@@ -71,7 +70,7 @@ describe('calculateMealContributionFor', () => {
           `${pokemon.GENGAR.name}:${[
             ingredient.FIERY_HERB.name,
             ingredient.FIERY_HERB.name,
-            ingredient.PURE_OIL.name,
+            ingredient.PURE_OIL.name
           ].join(',')}`
       )[0];
 
@@ -85,7 +84,7 @@ describe('calculateMealContributionFor', () => {
       timeout: 1000,
       critMultiplier: 1,
       defaultCritMultiplier: 1,
-      defaultProduceMap,
+      defaultProduceMap
     });
 
     expect(contribution.percentage).toBe(71.42857142857143);
@@ -100,7 +99,7 @@ describe('calculateMealContributionFor', () => {
       cheer: 0,
       extraHelpful: 0,
       e4eProcs: 0,
-      monteCarloIterations: 1,
+      monteCarloIterations: 1
     });
     const reverseIndex = createPokemonByIngredientReverseIndex(allPokemonWithProduce);
     const defaultProduceMap = createProduceMap(allPokemonWithProduce);
@@ -117,7 +116,7 @@ describe('calculateMealContributionFor', () => {
       timeout: 1000,
       critMultiplier: 1.17,
       defaultCritMultiplier: 1.17,
-      defaultProduceMap,
+      defaultProduceMap
     });
 
     expect(Math.round(contribution.percentage)).toBe(61);
@@ -137,7 +136,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       fillerSupportIngredients: [],
       usedSupportIngredients: [],
       critMultiplier: 1,
-      defaultCritMultiplier: 1,
+      defaultCritMultiplier: 1
     });
     const expectedContribution =
       producedTomato.amount *
@@ -162,7 +161,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       fillerSupportIngredients: [],
       usedSupportIngredients: [],
       critMultiplier: 1,
-      defaultCritMultiplier: 1,
+      defaultCritMultiplier: 1
     });
 
     const expectedContribution =
@@ -189,7 +188,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       fillerSupportIngredients: [],
       usedSupportIngredients: [],
       critMultiplier: 1,
-      defaultCritMultiplier: 1,
+      defaultCritMultiplier: 1
     });
 
     const expectedContribution =
@@ -215,7 +214,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       usedSupportIngredients: [],
       fillerSupportIngredients: [],
       critMultiplier: 1,
-      defaultCritMultiplier: 1,
+      defaultCritMultiplier: 1
     });
 
     const expectedFiller = producedFiller.amount * ingredient.FANCY_APPLE.taxedValue;
@@ -236,7 +235,7 @@ describe('calculateContributionForMealWithPunishment', () => {
       usedSupportIngredients: [support],
       fillerSupportIngredients: [support],
       critMultiplier: 1,
-      defaultCritMultiplier: 1,
+      defaultCritMultiplier: 1
     });
     const teamPenalty = 0.8;
 
@@ -260,17 +259,17 @@ describe('groupContributionsByType', () => {
     const contributionCurry: Contribution = {
       contributedPower: 1,
       meal: curry.DREAM_EATER_BUTTER_CURRY,
-      percentage: 100,
+      percentage: 100
     };
     const contributionSalad: Contribution = {
       contributedPower: 2,
       meal: salad.NINJA_SALAD,
-      percentage: 100,
+      percentage: 100
     };
     const contributionDessert: Contribution = {
       contributedPower: 3,
       meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
-      percentage: 100,
+      percentage: 100
     };
 
     const groupedContributions = groupContributionsByType([contributionCurry, contributionSalad, contributionDessert]);
@@ -285,20 +284,20 @@ describe('selectTopNContributions', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const contribution2: Contribution = {
       ...contribution1,
-      contributedPower: 20,
+      contributedPower: 20
     };
     const contribution3: Contribution = {
       ...contribution1,
-      contributedPower: 15,
+      contributedPower: 15
     };
 
     expect(selectTopNContributions([contribution1, contribution2, contribution3], 2)).toEqual([
       contribution2,
-      contribution3,
+      contribution3
     ]);
   });
 });
@@ -308,11 +307,11 @@ describe('sortByContributedPowerDesc', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const contribution2: Contribution = {
       ...contribution1,
-      contributedPower: 20,
+      contributedPower: 20
     };
 
     expect([contribution1, contribution2].sort(sortByContributedPowerDesc)).toEqual([contribution2, contribution1]);
@@ -324,11 +323,11 @@ describe('findBestContribution', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const contribution2: Contribution = {
       ...contribution1,
-      contributedPower: 20,
+      contributedPower: 20
     };
 
     expect(findBestContribution([contribution1, contribution2])).toBe(contribution2);
@@ -340,11 +339,11 @@ describe('sumContributedPower', () => {
     const contribution1: Contribution = {
       contributedPower: 10,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const contribution2: Contribution = {
       ...contribution1,
-      contributedPower: 20,
+      contributedPower: 20
     };
 
     expect(sumContributedPower([contribution1, contribution2])).toBe(30);
@@ -356,16 +355,16 @@ describe('excludeContributions', () => {
     const contribution: Contribution = {
       contributedPower: 1,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const contributionToExclude: Contribution = {
       contributedPower: 2,
       meal: curry.FANCY_APPLE_CURRY,
-      percentage: 50,
+      percentage: 50
     };
 
     expect(excludeContributions([contribution, contributionToExclude], [contributionToExclude])).toEqual([
-      contribution,
+      contribution
     ]);
   });
 });
@@ -375,13 +374,13 @@ describe('boostFirstMealWithFactor', () => {
     const cont1: Contribution = {
       contributedPower: 200,
       meal: dessert.EXPLOSION_POPCORN,
-      percentage: 100,
+      percentage: 100
     };
 
     const cont2: Contribution = {
       contributedPower: 100,
       meal: dessert.LOVELY_KISS_SMOOTHIE,
-      percentage: 100,
+      percentage: 100
     };
     const resultWithBoost = boostFirstMealWithFactor(1.5, [cont1, cont2]);
     const prettifiedResult = resultWithBoost.map(
@@ -400,15 +399,15 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 0.30333333333333334,
-          ingredient: ingredient.FIERY_HERB,
-        },
+          ingredient: ingredient.FIERY_HERB
+        }
       ],
       produced: [
         {
           amount: 6.875555555555554,
-          ingredient: ingredient.FIERY_HERB,
-        },
-      ],
+          ingredient: ingredient.FIERY_HERB
+        }
+      ]
     });
 
     const dragonite = generateProducingPokemon({
@@ -417,23 +416,23 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 1.1,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 1.1,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
+          ingredient: ingredient.GREENGRASS_CORN
+        }
       ],
       produced: [
         {
           amount: 27.6,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 27.6,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
-      ],
+          ingredient: ingredient.GREENGRASS_CORN
+        }
+      ]
     });
 
     const tyranitar = generateProducingPokemon({
@@ -442,23 +441,23 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 1.1,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 1.3,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
       ],
       produced: [
         {
           amount: 27.1,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 30.9,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
-      ],
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
+      ]
     });
 
     const defaultProduce: CustomPokemonCombinationWithProduce[] = [raikou, dragonite, tyranitar];
@@ -476,7 +475,7 @@ describe('calculateTeamSizeAndSupportValue', () => {
         currentPokemon,
         memoizedSetCover,
         timeout: 1000,
-        defaultProduceMap,
+        defaultProduceMap
       });
 
     expect(teamSizeRequired).toEqual(3);
@@ -495,15 +494,15 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 0.2,
-          ingredient: ingredient.FIERY_HERB,
-        },
+          ingredient: ingredient.FIERY_HERB
+        }
       ],
       produced: [
         {
           amount: 4.4,
-          ingredient: ingredient.FIERY_HERB,
-        },
-      ],
+          ingredient: ingredient.FIERY_HERB
+        }
+      ]
     });
 
     const dragonite = generateProducingPokemon({
@@ -512,23 +511,23 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 0.5,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 1,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
+          ingredient: ingredient.GREENGRASS_CORN
+        }
       ],
       produced: [
         {
           amount: 12.2,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 24.5,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
-      ],
+          ingredient: ingredient.GREENGRASS_CORN
+        }
+      ]
     });
 
     const charizard = generateProducingPokemon({
@@ -537,27 +536,27 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 1.4,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
       ],
       produced: [
         {
           amount: 0.47,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 0.47,
-          ingredient: ingredient.GREENGRASS_CORN,
+          ingredient: ingredient.GREENGRASS_CORN
         },
         {
           amount: 0.47,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 32.9,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
-      ],
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
+      ]
     });
 
     const houndoom = generateProducingPokemon({
@@ -566,23 +565,23 @@ describe('calculateTeamSizeAndSupportValue', () => {
       average: [
         {
           amount: 0.2,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 0.6,
-          ingredient: ingredient.WARMING_GINGER,
-        },
+          ingredient: ingredient.WARMING_GINGER
+        }
       ],
       produced: [
         {
           amount: 3.1,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 9.3,
-          ingredient: ingredient.WARMING_GINGER,
-        },
-      ],
+          ingredient: ingredient.WARMING_GINGER
+        }
+      ]
     });
 
     const defaultProduce: CustomPokemonCombinationWithProduce[] = [raikou, dragonite, charizard, houndoom];
@@ -600,7 +599,7 @@ describe('calculateTeamSizeAndSupportValue', () => {
         currentPokemon,
         memoizedSetCover,
         timeout: 1000,
-        defaultProduceMap,
+        defaultProduceMap
       });
 
     expect(teamSizeRequired).toEqual(5);
@@ -622,13 +621,13 @@ describe('calculateTeamSizeAndSupportValue', () => {
       produced: [
         {
           amount: 10,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 1,
-          ingredient: ingredient.SOOTHING_CACAO,
-        },
-      ],
+          ingredient: ingredient.SOOTHING_CACAO
+        }
+      ]
     });
 
     const supportJolteon = generateProducingPokemon({
@@ -638,13 +637,13 @@ describe('calculateTeamSizeAndSupportValue', () => {
       produced: [
         {
           amount: 12,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 2,
-          ingredient: ingredient.SOOTHING_CACAO,
-        },
-      ],
+          ingredient: ingredient.SOOTHING_CACAO
+        }
+      ]
     });
 
     const defaultProduce: CustomPokemonCombinationWithProduce[] = [defaultJolteon];
@@ -662,7 +661,7 @@ describe('calculateTeamSizeAndSupportValue', () => {
       value: 0,
       valueMax: 0,
       bonus: 0,
-      ingredients: [{ amount: 12, ingredient: ingredient.MOOMOO_MILK }],
+      ingredients: [{ amount: 12, ingredient: ingredient.MOOMOO_MILK }]
     };
 
     const { teamSizeRequired, supportedUsedIngredients, supportedFillerIngredients } =
@@ -672,7 +671,7 @@ describe('calculateTeamSizeAndSupportValue', () => {
         currentPokemon,
         memoizedSetCover,
         timeout: 1000,
-        defaultProduceMap,
+        defaultProduceMap
       });
 
     expect(teamSizeRequired).toEqual(1);
@@ -689,15 +688,15 @@ describe('summarizeTeamProducedIngredientSources', () => {
       average: [
         {
           amount: 0.3,
-          ingredient: ingredient.FIERY_HERB,
-        },
+          ingredient: ingredient.FIERY_HERB
+        }
       ],
       produced: [
         {
           amount: 6.9,
-          ingredient: ingredient.FIERY_HERB,
-        },
-      ],
+          ingredient: ingredient.FIERY_HERB
+        }
+      ]
     });
 
     const dragonite = generateProducingPokemon({
@@ -706,23 +705,23 @@ describe('summarizeTeamProducedIngredientSources', () => {
       average: [
         {
           amount: 1.4,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 0.7,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
+          ingredient: ingredient.GREENGRASS_CORN
+        }
       ],
       produced: [
         {
           amount: 35.8,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 15.9,
-          ingredient: ingredient.GREENGRASS_CORN,
-        },
-      ],
+          ingredient: ingredient.GREENGRASS_CORN
+        }
+      ]
     });
 
     const tyranitar = generateProducingPokemon({
@@ -731,23 +730,23 @@ describe('summarizeTeamProducedIngredientSources', () => {
       average: [
         {
           amount: 1.1,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 1.3,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
       ],
       produced: [
         {
           amount: 27.1,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 30.9,
-          ingredient: ingredient.BEAN_SAUSAGE,
-        },
-      ],
+          ingredient: ingredient.BEAN_SAUSAGE
+        }
+      ]
     });
 
     const defaultProduce = [raikou, dragonite, tyranitar];
@@ -766,7 +765,7 @@ describe('summarizeTeamProducedIngredientSources', () => {
       currentPokemonDefault: currentPokemon,
       team,
       recipe,
-      defaultProduceMap,
+      defaultProduceMap
     });
 
     const result = teamIngredientInfo.map((ing) => ({
@@ -774,7 +773,7 @@ describe('summarizeTeamProducedIngredientSources', () => {
       defaultAmount: MathUtils.round(ing.defaultAmount, 2),
       fromSupport: MathUtils.round(ing.fromSupport, 2),
       recipeAmount: MathUtils.round(ing.recipeAmount, 2),
-      selfSupportAmount: MathUtils.round(ing.selfSupportAmount, 2),
+      selfSupportAmount: MathUtils.round(ing.selfSupportAmount, 2)
     }));
 
     expect(result).toMatchInlineSnapshot(`
@@ -823,11 +822,11 @@ function generateProducingPokemon(params: {
   return {
     pokemonCombination: {
       pokemon,
-      ingredientList: [], // not used
+      ingredientList: [] // not used
     },
     averageProduce: {
       berries: emptyBerryInventory(),
-      ingredients: average,
+      ingredients: average
     },
     // not used
     customStats: {
@@ -836,12 +835,12 @@ function generateProducingPokemon(params: {
       nature: nature.QUIET,
       skillLevel: pokemon.skill.maxLevel,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-      inventoryLimit: maxCarrySize(pokemon),
+      inventoryLimit: maxCarrySize(pokemon)
     },
     detailedProduce: {
       produce: {
         berries: emptyBerryInventory(),
-        ingredients: produced,
+        ingredients: produced
       },
       averageTotalSkillProcs: skillProcs,
       dayHelps: 0,
@@ -849,7 +848,7 @@ function generateProducingPokemon(params: {
       nightHelpsBeforeSS: 0,
       skillActivations: [],
       sneakySnack: emptyBerryInventory(),
-      spilledIngredients: [],
-    },
+      spilledIngredients: []
+    }
   };
 }

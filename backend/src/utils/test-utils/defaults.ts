@@ -1,10 +1,9 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { ProductionStats } from '@src/domain/computed/production';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { ProductionStats } from '@src/domain/computed/production';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import type { Produce, TimePeriod } from 'sleepapi-common';
 import {
   BALANCED_GENDER,
-  Produce,
-  TimePeriod,
   berry,
   emptyBerryInventory,
   ingredient,
@@ -12,20 +11,20 @@ import {
   maxCarrySize,
   nature,
   pokemon,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
 export const MOCKED_MAIN_SLEEP: TimePeriod = {
   start: {
     hour: 6,
     minute: 0,
-    second: 0,
+    second: 0
   },
   end: {
     hour: 21,
     minute: 30,
-    second: 0,
-  },
+    second: 0
+  }
 };
 
 export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
@@ -46,7 +45,7 @@ export const MOCKED_OPTIMAL_PRODUCTION_STATS: ProductionStats = {
   incense: false,
   skillLevel: 6,
   mainBedtime: MOCKED_MAIN_SLEEP.end,
-  mainWakeup: MOCKED_MAIN_SLEEP.start,
+  mainWakeup: MOCKED_MAIN_SLEEP.start
 };
 
 export const MOCKED_PRODUCE: Produce = {
@@ -54,15 +53,15 @@ export const MOCKED_PRODUCE: Produce = {
     {
       amount: 2,
       berry: berry.GREPA,
-      level: 60,
-    },
+      level: 60
+    }
   ],
   ingredients: [
     {
       amount: 1,
-      ingredient: ingredient.FANCY_APPLE,
-    },
-  ],
+      ingredient: ingredient.FANCY_APPLE
+    }
+  ]
 };
 
 export const MOCKED_POKEMON: pokemon.Pokemon = {
@@ -72,19 +71,19 @@ export const MOCKED_POKEMON: pokemon.Pokemon = {
   frequency: 2500,
   ingredient0: {
     amount: 1,
-    ingredient: ingredient.BEAN_SAUSAGE,
+    ingredient: ingredient.BEAN_SAUSAGE
   },
   ingredient30: [
     {
       amount: 2,
-      ingredient: ingredient.FANCY_APPLE,
-    },
+      ingredient: ingredient.FANCY_APPLE
+    }
   ],
   ingredient60: [
     {
       amount: 3,
-      ingredient: ingredient.FANCY_EGG,
-    },
+      ingredient: ingredient.FANCY_EGG
+    }
   ],
   ingredientPercentage: 20,
   previousEvolutions: 0,
@@ -92,7 +91,7 @@ export const MOCKED_POKEMON: pokemon.Pokemon = {
   name: 'MOCK_POKEMON',
   skill: mainskill.CHARGE_STRENGTH_M,
   skillPercentage: 2,
-  specialty: 'skill',
+  specialty: 'skill'
 };
 
 export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = {
@@ -100,16 +99,16 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     pokemon: pokemon.PINSIR,
     ingredientList: [
       { amount: 2, ingredient: ingredient.HONEY },
-      { amount: 5, ingredient: ingredient.FANCY_APPLE },
-    ],
+      { amount: 5, ingredient: ingredient.FANCY_APPLE }
+    ]
   },
   detailedProduce: {
     produce: {
       berries: emptyBerryInventory(),
       ingredients: [
         { amount: 2, ingredient: ingredient.HONEY },
-        { amount: 5, ingredient: ingredient.FANCY_APPLE },
-      ],
+        { amount: 5, ingredient: ingredient.FANCY_APPLE }
+      ]
     },
     spilledIngredients: [],
     sneakySnack: emptyBerryInventory(),
@@ -117,7 +116,7 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     nightHelps: 0,
     nightHelpsBeforeSS: 0,
     averageTotalSkillProcs: 0,
-    skillActivations: [],
+    skillActivations: []
   },
   averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
@@ -126,6 +125,6 @@ export const MOCKED_POKEMON_WITH_PRODUCE: CustomPokemonCombinationWithProduce = 
     nature: nature.RASH,
     subskills: [],
     skillLevel: 6,
-    inventoryLimit: maxCarrySize(pokemon.PINSIR),
-  },
+    inventoryLimit: maxCarrySize(pokemon.PINSIR)
+  }
 };

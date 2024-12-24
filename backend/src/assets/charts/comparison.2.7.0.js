@@ -28,8 +28,8 @@ function comparisonChart(
             optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: neutralSetup.berries[0].berry.name,
-          },
+            name: neutralSetup.berries[0].berry.name
+          }
         },
         skills: {
           amount: neutralSetup.skills,
@@ -38,7 +38,7 @@ function comparisonChart(
             optimalIngredientSetup.skills,
             optimalBerrySetup.skills,
             optimalSkillSetup.skills
-          ),
+          )
         },
         ingredients: neutralSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
@@ -54,8 +54,8 @@ function comparisonChart(
             optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
-          ),
-        })),
+          )
+        }))
       },
       'neutral',
       specialty
@@ -73,8 +73,8 @@ function comparisonChart(
             optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: userSetup.berries[0].berry.name,
-          },
+            name: userSetup.berries[0].berry.name
+          }
         },
         skills: {
           amount: userSetup.skills,
@@ -83,7 +83,7 @@ function comparisonChart(
             optimalBerrySetup.skills,
             optimalIngredientSetup.skills,
             optimalSkillSetup.skills
-          ),
+          )
         },
         ingredients: userSetup.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
@@ -99,8 +99,8 @@ function comparisonChart(
             optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
-          ),
-        })),
+          )
+        }))
       },
       'user',
       specialty
@@ -125,8 +125,8 @@ function comparisonChart(
             optimalSkillSetup.berries[0].amount
           ),
           berry: {
-            name: optimalForSpecialty.berries[0].berry.name,
-          },
+            name: optimalForSpecialty.berries[0].berry.name
+          }
         },
         skills: {
           amount: optimalForSpecialty.skills,
@@ -135,7 +135,7 @@ function comparisonChart(
             optimalBerrySetup.skills,
             optimalIngredientSetup.skills,
             optimalSkillSetup.skills
-          ),
+          )
         },
         ingredients: optimalForSpecialty.ingredients.map(({ amount, ingredient }, i) => ({
           ingredient,
@@ -151,8 +151,8 @@ function comparisonChart(
             optimalIngredientSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalBerrySetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
             optimalSkillSetup.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
-          ),
-        })),
+          )
+        }))
       },
       'optimal',
       specialty
@@ -162,7 +162,7 @@ function comparisonChart(
   const labels = ['Ingredients', 'Berries', 'Skills'];
   const data = {
     labels,
-    datasets,
+    datasets
   };
 
   const config = {
@@ -172,8 +172,8 @@ function comparisonChart(
       layout: {
         padding: {
           top: window.innerWidth <= '1000' ? 18 : 30,
-          bottom: 0,
-        },
+          bottom: 0
+        }
       },
       plugins: {
         legend: { display: false },
@@ -205,38 +205,38 @@ function comparisonChart(
                 return `${item}: ${roundDown(amount, 1)} (${percentage}% of max)`;
               }
               return 'Missing tooltip, contact developers';
-            },
-          },
-        },
+            }
+          }
+        }
       },
       responsive: true,
       interaction: {
-        intersect: false,
+        intersect: false
       },
       scales: {
         x: {
           stacked: true,
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
+            color: 'rgba(255, 255, 255, 0.1)'
           },
           ticks: {
             color: 'white',
-            padding: -1,
-          },
+            padding: -1
+          }
         },
         y: {
           stacked: true,
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
+            color: 'rgba(255, 255, 255, 0.1)'
           },
           ticks: {
             callback: function (value) {
               return value + '%';
             },
-            color: 'white',
-          },
-        },
-      },
+            color: 'white'
+          }
+        }
+      }
     },
     plugins: [
       {
@@ -290,9 +290,9 @@ function comparisonChart(
               });
             });
           });
-        },
-      },
-    ],
+        }
+      }
+    ]
   };
 
   comparisonChartInstance = new Chart(ctx, config);
@@ -326,7 +326,7 @@ function formatData(rawData, setupType, specialty) {
     backgroundColor: [
       `#fec34f${setupType === 'user' ? 'ff' : '50'}`,
       `#23da6c${setupType === 'user' ? 'ff' : '50'}`,
-      `#49a2ff${setupType === 'user' ? 'ff' : '50'}`,
+      `#49a2ff${setupType === 'user' ? 'ff' : '50'}`
     ],
     borderWidth: 1,
     stack: setupType,
@@ -337,7 +337,7 @@ function formatData(rawData, setupType, specialty) {
         setupType,
         item: rawData.ingredients[0].ingredient.name,
         amount: rawData.ingredients[0].amount,
-        percentage: rawData.ingredients[0].percentageOfSame,
+        percentage: rawData.ingredients[0].percentageOfSame
       },
       {
         specialty,
@@ -345,7 +345,7 @@ function formatData(rawData, setupType, specialty) {
         setupType,
         item: rawData.berries.berry.name,
         amount: rawData.berries.amount,
-        percentage: rawData.berries.percentage,
+        percentage: rawData.berries.percentage
       },
       {
         specialty,
@@ -353,9 +353,9 @@ function formatData(rawData, setupType, specialty) {
         setupType,
         item: 'Skill value', // TODO: should probably also do skill procs, also skill value should probably take in unit like % or strength
         amount: rawData.skills.amount,
-        percentage: rawData.skills.percentage,
-      },
-    ],
+        percentage: rawData.skills.percentage
+      }
+    ]
   });
 
   if (rawData.ingredients.length > 1) {
@@ -372,9 +372,9 @@ function formatData(rawData, setupType, specialty) {
             setupType,
             item: ing.ingredient.name,
             amount: ing.amount,
-            percentage: ing.percentageOfSame,
-          },
-        ],
+            percentage: ing.percentageOfSame
+          }
+        ]
       });
     }
   }

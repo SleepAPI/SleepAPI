@@ -1,28 +1,25 @@
-import {
+import type {
   ingredient,
   IngredientSet,
   Mainskill,
-  mainskill,
-  MAX_RECIPE_LEVEL,
-  pokemon,
   PokemonIngredientSet,
   Recipe,
-  recipeLevelBonus,
   RecipeType,
-  SkillActivation,
+  SkillActivation
 } from 'sleepapi-common';
+import { mainskill, MAX_RECIPE_LEVEL, pokemon, recipeLevelBonus } from 'sleepapi-common';
 
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { Contribution } from '@src/domain/computed/contribution';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { Contribution } from '@src/domain/computed/contribution';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { SetCover } from '@src/services/set-cover/set-cover';
+import type { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
   calculateRemainingIngredients,
-  getAllIngredientCombinationsForLevel,
+  getAllIngredientCombinationsForLevel
 } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
 
@@ -59,7 +56,7 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
     helpingBonus: 0,
     incense: false,
     mainBedtime: { hour: 21, minute: 30, second: 0 },
-    mainWakeup: { hour: 6, minute: 0, second: 0 },
+    mainWakeup: { hour: 6, minute: 0, second: 0 }
   };
 
   const allPokemon = pokemon.OPTIMAL_POKEDEX;
@@ -70,21 +67,21 @@ export function getAllOptimalIngredientFocusedPokemonProduce(params: {
     for (const ingredientList of getAllIngredientCombinationsForLevel(pokemon, level)) {
       const pokemonCombination = {
         pokemon: pokemon,
-        ingredientList,
+        ingredientList
       };
 
       const { detailedProduce, averageProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination,
         input: { ...customStats, ...teamStats },
         monteCarloIterations,
-        preGeneratedSkillActivations,
+        preGeneratedSkillActivations
       });
 
       // if each ing set gives different skill result we dont cache, other skills can cache
       const diffSkillResultForDiffIngSets = [
         mainskill.HELPER_BOOST,
         mainskill.EXTRA_HELPFUL_S,
-        mainskill.METRONOME,
+        mainskill.METRONOME
       ].includes(pokemon.skill);
       preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
       allOptimalIngredientPokemonProduce.push({ pokemonCombination, detailedProduce, averageProduce, customStats });
@@ -115,7 +112,7 @@ export function calculateMealContributionFor(params: {
     timeout,
     defaultCritMultiplier,
     defaultProduceMap,
-    preCalcedSupportMap,
+    preCalcedSupportMap
   } = params;
 
   const percentage = calculatePercentageCoveredByCombination(meal, currentPokemon.detailedProduce.produce.ingredients);
@@ -147,14 +144,14 @@ export function calculateMealContributionFor(params: {
     mainskill.EXTRA_HELPFUL_S,
     mainskill.METRONOME,
     mainskill.HELPER_BOOST,
-    mainskill.MOONLIGHT_CHARGE_ENERGY_S,
+    mainskill.MOONLIGHT_CHARGE_ENERGY_S
   ];
   if (shouldCalculateTeamSolutions && supportSkills.includes(currentPokemon.pokemonCombination.pokemon.skill)) {
     const {
       supportedFillerIngredients,
       supportedUsedIngredients,
       teamSizeRequired,
-      team: teamSolve,
+      team: teamSolve
     } = calculateTeamSizeAndSupportedIngredients({
       recipe: meal,
       currentPokemon,
@@ -162,7 +159,7 @@ export function calculateMealContributionFor(params: {
       memoizedSetCover,
       timeout,
       defaultProduceMap,
-      preCalcedSupportMap,
+      preCalcedSupportMap
     });
     totalSupportedFillerIngredients = supportedFillerIngredients;
     totalSupportedUsedIngredients = supportedUsedIngredients;
@@ -190,7 +187,7 @@ export function calculateMealContributionFor(params: {
     fillerSupportIngredients: totalSupportedFillerIngredients,
     usedSupportIngredients: totalSupportedUsedIngredients,
     critMultiplier,
-    defaultCritMultiplier,
+    defaultCritMultiplier
   });
 }
 
@@ -210,7 +207,7 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
     defaultProduceMap,
     preCalcedSupportMap,
     memoizedSetCover,
-    timeout,
+    timeout
   } = params;
 
   const supportedUsedIngredients: IngredientSet[] = [];
@@ -226,7 +223,7 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
       team: bestSolution.team,
       recipe,
       defaultProduceMap,
-      preCalcedSupportMap,
+      preCalcedSupportMap
     });
 
     for (const ingredientProduction of teamIngredientProduction) {
@@ -249,7 +246,7 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
       supportedUsedIngredients.push({ ingredient, amount: usedSupportAmount });
       supportedFillerIngredients.push({
         ingredient,
-        amount: fillerSupportAmount,
+        amount: fillerSupportAmount
       });
     }
   }
@@ -258,7 +255,7 @@ export function calculateTeamSizeAndSupportedIngredients(params: {
     team: bestSolution,
     teamSizeRequired: bestSolution?.team.length ?? 6,
     supportedUsedIngredients: supportedUsedIngredients.filter(({ amount }) => amount > 0),
-    supportedFillerIngredients: supportedFillerIngredients.filter(({ amount }) => amount > 0),
+    supportedFillerIngredients: supportedFillerIngredients.filter(({ amount }) => amount > 0)
   };
 }
 
@@ -282,7 +279,7 @@ export function calculateContributionForMealWithPunishment(params: {
     fillerSupportIngredients,
     critMultiplier,
     defaultCritMultiplier,
-    team,
+    team
   } = params;
   const { contributedValue, fillerValue } = calculateContributedIngredientsValue(meal, producedIngredients);
 
@@ -311,7 +308,7 @@ export function calculateContributionForMealWithPunishment(params: {
     percentage,
     contributedPower,
     skillValue: tastyChanceContribution + supportedContribution,
-    team,
+    team
   };
 }
 
@@ -319,7 +316,7 @@ export function boostFirstMealWithFactor(factor: number, contribution: Contribut
   const firstMealWithExtraWeight: Contribution = {
     ...contribution[0],
     contributedPower: contribution[0].contributedPower * factor,
-    skillValue: contribution[0].skillValue && contribution[0].skillValue * factor,
+    skillValue: contribution[0].skillValue && contribution[0].skillValue * factor
   };
   return [firstMealWithExtraWeight, ...contribution.slice(1, contribution.length)];
 }
@@ -328,7 +325,7 @@ export function groupContributionsByType(contributions: Contribution[]): Record<
   const contributionsByType: Record<RecipeType, Contribution[]> = {
     curry: [],
     salad: [],
-    dessert: [],
+    dessert: []
   };
 
   contributions.forEach((contribution) => {
@@ -415,7 +412,7 @@ export function summarizeTeamProducedIngredientSources(params: {
           defaultAmount,
           selfSupportAmount,
           fromSupport,
-          recipeAmount,
+          recipeAmount
         });
       }
     }

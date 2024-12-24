@@ -5,4 +5,12 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   root: true,
   ignorePatterns: ['*.js'],
+  rules: {
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports'
+      }
+    ]
+  }
 };

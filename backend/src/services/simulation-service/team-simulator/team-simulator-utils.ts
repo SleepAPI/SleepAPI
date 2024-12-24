@@ -1,11 +1,11 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator';
+import type { berry } from 'sleepapi-common';
 import {
-  berry,
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentage,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
 class TeamSimulatorUtilsImpl {
@@ -17,7 +17,7 @@ class TeamSimulatorUtilsImpl {
     return calculateIngredientPercentage({
       pokemon: member.pokemonSet.pokemon,
       nature: member.nature,
-      subskills: member.subskills,
+      subskills: member.subskills
     });
   }
 
@@ -42,7 +42,7 @@ class TeamSimulatorUtilsImpl {
       subskills: subskillsWithoutHB,
       camp: settings.camp,
       ribbonLevel: member.ribbon,
-      helpingBonus,
+      helpingBonus
     });
   }
 

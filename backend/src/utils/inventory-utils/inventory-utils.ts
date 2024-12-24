@@ -1,12 +1,12 @@
 import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { Produce as Inventory, subskill } from 'sleepapi-common';
+import type { Produce as Inventory, subskill } from 'sleepapi-common';
 
 class InventoryUtilsImpl {
   public addToInventory(currentInventory: Inventory, produce: Inventory): Inventory {
     const newInventory: Inventory = {
       berries: [...currentInventory.berries],
-      ingredients: [...currentInventory.ingredients],
+      ingredients: [...currentInventory.ingredients]
     };
 
     produce.berries.forEach((produceBerrySet) => {
@@ -19,7 +19,7 @@ class InventoryUtilsImpl {
           newInventory.berries[index] = {
             berry: newInventory.berries[index].berry,
             amount: newInventory.berries[index].amount + produceBerrySet.amount,
-            level: newInventory.berries[index].level,
+            level: newInventory.berries[index].level
           };
         } else {
           newInventory.berries.push({ ...produceBerrySet });
@@ -36,7 +36,7 @@ class InventoryUtilsImpl {
         if (index !== -1) {
           newInventory.ingredients[index] = {
             ingredient: newInventory.ingredients[index].ingredient,
-            amount: newInventory.ingredients[index].amount + produceIngredientSet.amount,
+            amount: newInventory.ingredients[index].amount + produceIngredientSet.amount
           };
         } else {
           newInventory.ingredients.push({ ...produceIngredientSet });
@@ -57,7 +57,7 @@ class InventoryUtilsImpl {
   public getEmptyInventory(): Inventory {
     return {
       berries: [],
-      ingredients: [],
+      ingredients: []
     };
   }
 

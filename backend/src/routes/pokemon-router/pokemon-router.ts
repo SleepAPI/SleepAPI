@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { IngredientSet } from 'sleepapi-common';
-import PokemonController from '../../controllers/pokemon/pokemon.controller';
+import type { Request, Response } from 'express';
+import type { IngredientSet } from 'sleepapi-common';
+import type PokemonController from '../../controllers/pokemon/pokemon.controller';
 import { Logger } from '../../services/logger/logger';
 import { BaseRouter } from '../base-router';
 

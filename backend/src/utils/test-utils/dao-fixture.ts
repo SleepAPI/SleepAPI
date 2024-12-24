@@ -1,4 +1,5 @@
-import knex, { Knex } from 'knex';
+import type { Knex } from 'knex';
+import knex from 'knex';
 import { DatabaseService } from '../../database/database-service';
 import DatabaseMigration from '../../database/migration/database-migration';
 import { MockService } from './mock-service';
@@ -54,12 +55,12 @@ export const DaoFixture = {
         client: 'sqlite3',
         useNullAsDefault: true,
         connection: ':memory:',
-        acquireConnectionTimeout: 10000,
+        acquireConnectionTimeout: 10000
       });
 
       Object.defineProperty(DatabaseService, '#knex', {
         configurable: true,
-        value: pokemonsleepDB,
+        value: pokemonsleepDB
       });
 
       if (params?.enforceForeignKeyConstraints) {
@@ -89,5 +90,5 @@ export const DaoFixture = {
         await destroyDatabases();
       }
     });
-  },
+  }
 };

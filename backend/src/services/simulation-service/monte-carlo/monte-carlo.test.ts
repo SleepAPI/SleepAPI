@@ -1,4 +1,4 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce';
 import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
 import { berry, ingredient, maxCarrySize, nature } from 'sleepapi-common';
 import { monteCarlo } from './monte-carlo';
@@ -14,7 +14,7 @@ describe('monteCarlo', () => {
       recoveryEvents: [],
       skillPercentage: MOCKED_POKEMON.skillPercentage / 100,
       skillLevel: 6,
-      monteCarloIterations: 50,
+      monteCarloIterations: 50
     });
 
     expect(dayHelps).toBe(102);
@@ -29,6 +29,6 @@ const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: MOCKED_POKEMON,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
-    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
-  },
+    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }]
+  }
 };

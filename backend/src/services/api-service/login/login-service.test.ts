@@ -10,17 +10,18 @@ import {
   refresh,
   signup,
   upsertPokemon,
-  verify,
+  verify
 } from '@src/services/api-service/login/login-service';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
 import { MockService } from '@src/utils/test-utils/mock-service';
-import { PokemonInstanceWithMeta, uuid } from 'sleepapi-common';
+import type { PokemonInstanceWithMeta } from 'sleepapi-common';
+import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 jest.mock('@src/utils/time-utils/time-utils', () => ({
   ...jest.requireActual('@src/utils/time-utils/time-utils'),
-  getMySQLNow: jest.fn().mockReturnValue('2024-01-01 18:00:00'),
+  getMySQLNow: jest.fn().mockReturnValue('2024-01-01 18:00:00')
 }));
 
 beforeEach(() => {
@@ -38,16 +39,16 @@ describe('signup', () => {
       tokens: {
         refresh_token: 'some-refresh-token',
         access_token: 'some-access-token',
-        expiry_date: 10,
-      },
+        expiry_date: 10
+      }
     });
 
     client.setCredentials = jest.fn();
     client.request = jest.fn().mockResolvedValue({
       data: {
         sub: 'some-sub',
-        email: 'some-email',
-      },
+        email: 'some-email'
+      }
     });
 
     const loginResponse = await signup('some-auth-code');
@@ -82,7 +83,7 @@ describe('signup', () => {
 
   it('should throw an error if google response is missing tokens', async () => {
     client.getToken = jest.fn().mockResolvedValue({
-      tokens: {},
+      tokens: {}
     });
 
     await expect(signup('some-auth-code')).rejects.toThrow(AuthorizationError);
@@ -93,16 +94,16 @@ describe('signup', () => {
       tokens: {
         refresh_token: 'some-refresh-token',
         access_token: 'some-access-token',
-        expiry_date: 10,
-      },
+        expiry_date: 10
+      }
     });
 
     client.setCredentials = jest.fn();
     client.request = jest.fn().mockResolvedValue({
       data: {
         sub: 'some-sub',
-        email: 'some-email',
-      },
+        email: 'some-email'
+      }
     });
 
     await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
@@ -140,10 +141,10 @@ describe('refresh', () => {
   it('should refresh the access token successfully', async () => {
     client.setCredentials = jest.fn();
     client.getAccessToken = jest.fn().mockResolvedValue({
-      token: 'new-access-token',
+      token: 'new-access-token'
     });
     client.credentials = {
-      expiry_date: 10,
+      expiry_date: 10
     };
 
     const refreshResponse = await refresh('some-refresh-token');
@@ -173,19 +174,19 @@ describe('verify', () => {
     const accessToken = 'valid-access-token';
     const userInfo = {
       sub: 'some-sub',
-      aud: config.GOOGLE_CLIENT_ID,
+      aud: config.GOOGLE_CLIENT_ID
     };
 
     client.setCredentials = jest.fn();
     client.request = jest.fn().mockResolvedValue({
-      data: userInfo,
+      data: userInfo
     });
 
     UserDAO.get = jest.fn().mockResolvedValue({
       external_id: uuid.v4(),
       id: 1,
       name: 'Existing user',
-      sub: 'some-sub',
+      sub: 'some-sub'
     });
     const user = await verify(accessToken);
 
@@ -200,7 +201,7 @@ describe('verify', () => {
 
     expect(client.setCredentials).toHaveBeenCalledWith({ access_token: accessToken });
     expect(client.request).toHaveBeenCalledWith({
-      url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${accessToken}`,
+      url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${accessToken}`
     });
     expect(UserDAO.get).toHaveBeenCalledWith({ sub: 'some-sub' });
   });
@@ -209,12 +210,12 @@ describe('verify', () => {
     const accessToken = 'invalid-access-token';
     const userInfo = {
       sub: 'some-sub',
-      aud: 'wrong-client-id',
+      aud: 'wrong-client-id'
     };
 
     client.setCredentials = jest.fn();
     client.request = jest.fn().mockResolvedValue({
-      data: userInfo,
+      data: userInfo
     });
 
     await expect(verify(accessToken)).rejects.toThrow('Token was not issued from this server');
@@ -233,12 +234,12 @@ describe('verify', () => {
     const accessToken = 'valid-access-token';
     const userInfo = {
       sub: 'some-sub',
-      aud: config.GOOGLE_CLIENT_ID,
+      aud: config.GOOGLE_CLIENT_ID
     };
 
     client.setCredentials = jest.fn();
     client.request = jest.fn().mockResolvedValue({
-      data: userInfo,
+      data: userInfo
     });
 
     await expect(verify(accessToken)).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -265,7 +266,7 @@ describe('getSavedPokemon', () => {
       ...basePokemon,
       saved: true,
       external_id: 'saved id',
-      fk_user_id: user.id,
+      fk_user_id: user.id
     });
     await PokemonDAO.insert({ ...basePokemon, saved: false, external_id: 'not saved id', fk_user_id: user.id });
 
@@ -280,7 +281,7 @@ describe('upsertPokemon', () => {
     ingredients: [
       { level: 0, ingredient: 'ing0' },
       { level: 30, ingredient: 'ing30' },
-      { level: 60, ingredient: 'ing60' },
+      { level: 60, ingredient: 'ing60' }
     ],
     level: 0,
     name: 'name',
@@ -292,7 +293,7 @@ describe('upsertPokemon', () => {
     gender: 'female',
     skillLevel: 0,
     subskills: [],
-    version: 0,
+    version: 0
   };
   it('shall insert pokemon if not exists and saved is true', async () => {
     const user = await UserDAO.insert({ sub: 'some-sub', external_id: uuid.v4(), name: 'Existing user' });
@@ -329,7 +330,7 @@ describe('deletePokemon', () => {
       ...basePokemon,
       saved: true,
       external_id: 'saved id',
-      fk_user_id: user.id,
+      fk_user_id: user.id
     });
 
     expect(await PokemonDAO.findMultiple()).toHaveLength(1);
@@ -345,7 +346,7 @@ describe('deletePokemon', () => {
       ...basePokemon,
       saved: true,
       external_id: 'saved id',
-      fk_user_id: user.id,
+      fk_user_id: user.id
     });
 
     expect(await PokemonDAO.findMultiple()).toHaveLength(1);
@@ -372,5 +373,5 @@ const basePokemon = {
   subskill_100: 'Thunder',
   ingredient_0: 'Berry',
   ingredient_30: 'Potion',
-  ingredient_60: 'Elixir',
+  ingredient_60: 'Elixir'
 };

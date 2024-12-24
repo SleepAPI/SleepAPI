@@ -3,7 +3,8 @@ import { config } from './config/config';
 
 import cors from 'cors';
 
-import express, { Application, Request, Response } from 'express';
+import type { Application, Request, Response } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 
 import path from 'path';
@@ -60,7 +61,7 @@ async function main() {
 
   // Router
   const options: cors.CorsOptions = {
-    origin: '*',
+    origin: '*'
   };
 
   const app: Application = express();

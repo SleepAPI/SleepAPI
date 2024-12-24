@@ -1,6 +1,6 @@
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { Time, TimePeriod } from 'sleepapi-common';
+import type { Time, TimePeriod } from 'sleepapi-common';
 
 describe('toMinutes', () => {
   it('shall convert Time to minutes', () => {
@@ -13,24 +13,24 @@ describe('TimeUtils.isAfterOrEqualWithinPeriod', () => {
     const currentTime: Time = {
       hour: 12,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const eventTime: Time = {
       hour: 10,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const period: TimePeriod = {
       start: {
         hour: 8,
         minute: 0,
-        second: 0,
+        second: 0
       },
       end: {
         hour: 22,
         minute: 0,
-        second: 0,
-      },
+        second: 0
+      }
     };
 
     expect(TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime, period })).toBeTruthy();
@@ -40,24 +40,24 @@ describe('TimeUtils.isAfterOrEqualWithinPeriod', () => {
     const currentTime: Time = {
       hour: 10,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const eventTime: Time = {
       hour: 10,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const period: TimePeriod = {
       start: {
         hour: 8,
         minute: 0,
-        second: 0,
+        second: 0
       },
       end: {
         hour: 22,
         minute: 0,
-        second: 0,
-      },
+        second: 0
+      }
     };
 
     expect(TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime, period })).toBeTruthy();
@@ -67,24 +67,24 @@ describe('TimeUtils.isAfterOrEqualWithinPeriod', () => {
     const currentTime: Time = {
       hour: 12,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const eventTime: Time = {
       hour: 1,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const period: TimePeriod = {
       start: {
         hour: 8,
         minute: 0,
-        second: 0,
+        second: 0
       },
       end: {
         hour: 2,
         minute: 0,
-        second: 0,
-      },
+        second: 0
+      }
     };
 
     expect(TimeUtils.isAfterOrEqualWithinPeriod({ currentTime, eventTime, period })).toBeFalsy();
@@ -96,12 +96,12 @@ describe('calculateSleepDuration', () => {
     const bedtime: Time = {
       hour: 21,
       minute: 30,
-      second: 0,
+      second: 0
     };
     const wakeupTime: Time = {
       hour: 6,
       minute: 0,
-      second: 1,
+      second: 1
     };
     const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeupTime });
     expect(duration).toEqual({ hour: 8, minute: 30, second: 1 });
@@ -111,12 +111,12 @@ describe('calculateSleepDuration', () => {
     const bedtime: Time = {
       hour: 0,
       minute: 30,
-      second: 0,
+      second: 0
     };
     const wakeupTime: Time = {
       hour: 6,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeupTime });
     expect(duration).toEqual({ hour: 5, minute: 30, second: 0 });
@@ -126,12 +126,12 @@ describe('calculateSleepDuration', () => {
     const bedtime: Time = {
       hour: 5,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const wakeupTime: Time = {
       hour: 4,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeupTime });
     expect(duration).toEqual({ hour: 23, minute: 0, second: 0 });
@@ -141,12 +141,12 @@ describe('calculateSleepDuration', () => {
     const bedtime: Time = {
       hour: 14,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const wakeupTime: Time = {
       hour: 16,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const duration = TimeUtils.calculateDuration({ start: bedtime, end: wakeupTime });
     expect(duration).toEqual({ hour: 2, minute: 0, second: 0 });
@@ -165,13 +165,13 @@ describe('TimeUtils.divideTimePeriod', () => {
       start: {
         hour: 6,
         minute: 0,
-        second: 0,
+        second: 0
       },
       end: {
         hour: 21,
         minute: 30,
-        second: 0,
-      },
+        second: 0
+      }
     };
     expect(TimeUtils.divideTimePeriod(period, 2)).toMatchInlineSnapshot(`
       [
@@ -208,13 +208,13 @@ describe('TimeUtils.divideTimePeriod', () => {
       start: {
         hour: 12,
         minute: 0,
-        second: 0,
+        second: 0
       },
       end: {
         hour: 2,
         minute: 0,
-        second: 0,
-      },
+        second: 0
+      }
     };
 
     expect(TimeUtils.divideTimePeriod(period, 2)).toMatchInlineSnapshot(`
@@ -253,12 +253,12 @@ describe('timeWithinPeriod', () => {
     const time: Time = {
       hour: 6,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const start: Time = {
       hour: 4,
       minute: 0,
-      second: 0,
+      second: 0
     };
     const ifWithin = TimeUtils.timeWithinPeriod(time, { start, end: time });
     expect(ifWithin).toBeTruthy();
@@ -347,7 +347,7 @@ describe('scheduleEnergyEvents', () => {
   it('sorts events within period in ascending order', () => {
     const recoveries = [
       new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Midmorning Recovery', delta: 20 }),
-      new EnergyEvent({ time: { hour: 10, minute: 45, second: 0 }, description: 'Late Morning Recovery', delta: 25 }),
+      new EnergyEvent({ time: { hour: 10, minute: 45, second: 0 }, description: 'Late Morning Recovery', delta: 25 })
     ];
     const sortedEvents = TimeUtils.sortEventsForPeriod(dayPeriod, recoveries);
     expect(sortedEvents[0].time.hour).toBeLessThan(sortedEvents[1].time.hour); // First event comes before second
@@ -356,7 +356,7 @@ describe('scheduleEnergyEvents', () => {
   it('handles mixed events (within and outside period)', () => {
     const recoveries = [
       new EnergyEvent({ time: { hour: 21, minute: 0, second: 0 }, description: 'Post Period Recovery', delta: 15 }),
-      new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Morning Recovery', delta: 20 }),
+      new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Morning Recovery', delta: 20 })
     ];
     const sortedEvents = TimeUtils.sortEventsForPeriod(dayPeriod, recoveries);
     expect(sortedEvents[0].description).toBe('Morning Recovery'); // Event within period comes first
@@ -464,12 +464,12 @@ describe('TimeUtils.isAfterOrEqual', () => {
     const time1: Time = {
       hour: 6,
       minute: 1,
-      second: 1,
+      second: 1
     };
     const time2: Time = {
       hour: 6,
       minute: 1,
-      second: 0,
+      second: 0
     };
     expect(TimeUtils.isAfterOrEqual(time1, time2)).toBeTruthy();
   });
@@ -492,12 +492,12 @@ describe('TimeUtils.isBefore', () => {
     const time1: Time = {
       hour: 6,
       minute: 1,
-      second: 0,
+      second: 0
     };
     const time2: Time = {
       hour: 6,
       minute: 1,
-      second: 1,
+      second: 1
     };
     expect(TimeUtils.isBefore(time1, time2)).toBeTruthy();
   });

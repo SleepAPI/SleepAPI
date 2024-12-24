@@ -3,7 +3,7 @@ import {
   calculateHelpSpeedSubskills,
   calculateSubskillCarrySize,
   countErbUsers,
-  getOptimalStats,
+  getOptimalStats
 } from './stats-calculator';
 
 describe('calculateHelpSpeedSubskills', () => {
@@ -51,7 +51,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.QUIET,
       subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M],
       skillLevel: 7,
-      inventoryLimit: maxCarrySize(pokemon.BLASTOISE),
+      inventoryLimit: maxCarrySize(pokemon.BLASTOISE)
     });
   });
 
@@ -63,7 +63,7 @@ describe('getOptimalIngredientStats', () => {
       nature: nature.SASSY,
       subskills: [subskill.SKILL_TRIGGER_M, subskill.HELPING_SPEED_M],
       skillLevel: 6,
-      inventoryLimit: maxCarrySize(pokemon.SYLVEON),
+      inventoryLimit: maxCarrySize(pokemon.SYLVEON)
     });
   });
 });

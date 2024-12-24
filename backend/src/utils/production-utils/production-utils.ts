@@ -1,5 +1,5 @@
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { IngredientSet } from 'sleepapi-common';
+import type { IngredientSet } from 'sleepapi-common';
 
 export function getIngredientSet(validSets: IngredientSet[][], ingredientSet: string[]): IngredientSet[] {
   const lowercaseIngredientSet = ingredientSet.map((ing) => ing.toLowerCase());

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { ScheduledEvent } from '@src/domain/event/event';
+import type { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { SkillActivation, Time, TimePeriod, subskill } from 'sleepapi-common';
+import type { SkillActivation, Time, TimePeriod } from 'sleepapi-common';
+import { subskill } from 'sleepapi-common';
 
 /**
  * Calculates a delta left at the end of the day and how that translates into tomorrow's starting energy
@@ -103,7 +104,7 @@ export function maybeDegradeEnergy(params: {
       time: currentTime,
       description: 'Degrade',
       delta: -energyToDegrade,
-      before: currentEnergy,
+      before: currentEnergy
     });
 
     eventLog.push(energyLossEvent);

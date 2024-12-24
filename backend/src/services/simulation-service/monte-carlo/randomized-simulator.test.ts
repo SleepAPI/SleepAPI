@@ -1,4 +1,4 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce';
 import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
 import { berry, ingredient, nature } from 'sleepapi-common';
 import { randomizedSimulation } from './randomized-simulator';
@@ -15,7 +15,7 @@ describe('randomizedSimulation', () => {
       recoveryEvents: [],
       mealTimes: [],
       skillPercentage: 0.2,
-      skillLevel: 6,
+      skillLevel: 6
     });
 
     expect(result.dayHelps).toBe(102);
@@ -34,7 +34,7 @@ describe('randomizedSimulation', () => {
       recoveryEvents: [],
       mealTimes: [],
       skillPercentage: 0.2,
-      skillLevel: 6,
+      skillLevel: 6
     });
 
     expect(result.dayHelps).toBe(102);
@@ -47,6 +47,6 @@ const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: MOCKED_POKEMON,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
-    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
-  },
+    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }]
+  }
 };

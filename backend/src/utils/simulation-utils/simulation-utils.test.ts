@@ -1,8 +1,9 @@
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { SkillActivation, Summary, mainskill, maxCarrySize, nature, pokemon } from 'sleepapi-common';
+import type { ProductionStats } from '@src/domain/computed/production';
+import type { ScheduledEvent } from '@src/domain/event/event';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { SkillActivation, Summary } from 'sleepapi-common';
+import { mainskill, maxCarrySize, nature, pokemon } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_PRODUCE } from '../test-utils/defaults';
 import { finishSimulation, startDayAndEnergy, startNight } from './simulation-utils';
 
@@ -13,7 +14,7 @@ describe('startDayAndEnergy', () => {
       period: MOCKED_MAIN_SLEEP,
       nature: nature.RASH,
       erb: 0,
-      incense: false,
+      incense: false
     };
     const pkmn = pokemon.PINSIR;
     const input: ProductionStats = MOCKED_OPTIMAL_PRODUCTION_STATS;
@@ -62,7 +63,7 @@ describe('finishSimulation', () => {
       totalProduce: MOCKED_PRODUCE,
       totalRecovery: 0,
       collectFrequency: MOCKED_MAIN_SLEEP.end,
-      skillBerriesOtherValue: 0,
+      skillBerriesOtherValue: 0
     };
 
     finishSimulation({
@@ -71,7 +72,7 @@ describe('finishSimulation', () => {
       totalSneakySnack: MOCKED_PRODUCE,
       inventoryLimit: 2,
       summary,
-      eventLog,
+      eventLog
     });
     expect(eventLog).toHaveLength(6);
   });

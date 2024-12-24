@@ -1,11 +1,11 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce';
 import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
 import {
   calculateAverageNumberOfSkillProcsForHelps,
   calculateHelperBoostHelpsFromUnique,
   calculateHelpsToProcSchedule,
   calculateSkillProcs,
-  scheduleSkillEvents,
+  scheduleSkillEvents
 } from './skill-calculator';
 
 describe('calculateSkillProcs', () => {
@@ -26,7 +26,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.5,
         helps: 0,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       expect(odds).toBe(0);
     });
@@ -35,7 +35,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 1,
         helps: 5,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       expect(odds).toBe(1);
     });
@@ -44,7 +44,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.25,
         helps: 4,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       const expectedOdds = 1 - Math.pow(0.75, 4);
       expect(odds).toBeCloseTo(expectedOdds);
@@ -54,7 +54,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0,
         helps: 5,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       expect(odds).toBe(0);
     });
@@ -63,7 +63,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.5,
         helps: 3,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       expect(odds).toBeGreaterThan(0);
       expect(odds).toBeLessThan(1);
@@ -73,7 +73,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.1,
         helps: 50,
-        pokemonSpecialty: 'berry',
+        pokemonSpecialty: 'berry'
       });
       expect(odds).toBeGreaterThan(0);
       expect(odds).toBeLessThan(1);
@@ -85,7 +85,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.5,
         helps: 0,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       expect(odds).toBe(0);
     });
@@ -94,7 +94,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 1,
         helps: 5,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       expect(odds).toBe(2);
     });
@@ -103,7 +103,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.25,
         helps: 4,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       const oddsZero = Math.pow(0.75, 4);
       const oddsOne = Math.pow(0.75, 3) * 0.25 * 4;
@@ -116,7 +116,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.25,
         helps: 10,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       const oddsZero = Math.pow(0.75, 10);
       const oddsOne = Math.pow(0.75, 9) * 0.25 * 10;
@@ -129,7 +129,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0,
         helps: 5,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       expect(odds).toBe(0);
     });
@@ -138,7 +138,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.5,
         helps: 3,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       expect(odds).toBeGreaterThan(0);
       expect(odds).toBeLessThan(2);
@@ -148,7 +148,7 @@ describe('calculateAverageNumberOfSkillProcsForHelps', () => {
       const odds = calculateAverageNumberOfSkillProcsForHelps({
         skillPercentage: 0.1,
         helps: 50,
-        pokemonSpecialty: 'skill',
+        pokemonSpecialty: 'skill'
       });
       expect(odds).toBeGreaterThan(0);
       expect(odds).toBeLessThan(2);
@@ -165,7 +165,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 3.1,
       nrOfDayHelps: 9,
       uniqueHelperBoost: 0,
-      nrOfSkillCrits: 0,
+      nrOfSkillCrits: 0
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -189,7 +189,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 0,
       nrOfDayHelps: 0,
       uniqueHelperBoost: 0,
-      nrOfSkillCrits: 0,
+      nrOfSkillCrits: 0
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -274,7 +274,7 @@ describe('scheduleSkillEvents', () => {
       nrOfDaySkillProcs: 2,
       nrOfDayHelps: 10,
       uniqueHelperBoost: 0,
-      nrOfSkillCrits: 0,
+      nrOfSkillCrits: 0
     };
     const skillActivations = scheduleSkillEvents(params);
 
@@ -284,14 +284,14 @@ describe('scheduleSkillEvents', () => {
       adjustedAmount: 826.4000000000001,
       fractionOfProc: 0.4,
       nrOfHelpsToActivate: 0,
-      skill: mainskill.CHARGE_STRENGTH_S,
+      skill: mainskill.CHARGE_STRENGTH_S
     });
     // Final partial proc
     expect(skillActivations[skillActivations.length - 1]).toEqual({
       adjustedAmount: 0,
       fractionOfProc: 0,
       nrOfHelpsToActivate: 10,
-      skill: mainskill.CHARGE_STRENGTH_S,
+      skill: mainskill.CHARGE_STRENGTH_S
     });
   });
 });
@@ -300,8 +300,8 @@ const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: pokemon.PINSIR,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
-    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }],
-  },
+    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }]
+  }
 };
 
 describe('calculateHelpsToProcSchedule', () => {
@@ -309,7 +309,7 @@ describe('calculateHelpsToProcSchedule', () => {
     const result = calculateHelpsToProcSchedule({
       oddsOfNightSkillProc: 1,
       nrOfDaySkillProcs: 9.5,
-      nrOfDayHelps: 21.85,
+      nrOfDayHelps: 21.85
     });
 
     expect(result).toMatchInlineSnapshot(`

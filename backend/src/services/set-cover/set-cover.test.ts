@@ -1,10 +1,9 @@
-import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination';
+import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
+import type { DetailedProduce, PokemonIngredientSet } from 'sleepapi-common';
 import {
-  DetailedProduce,
-  PokemonIngredientSet,
   berry,
   dessert,
   emptyBerryInventory,
@@ -14,7 +13,7 @@ import {
   nature,
   pokemon,
   prettifyIngredientDrop,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 import { addIngredientSet } from '../calculator/ingredient/ingredient-calculate';
 import { SetCover } from './set-cover';
@@ -25,12 +24,12 @@ describe('processOptimalTeamSolutions', () => {
   it('shall sort teams in each solution and remove duplicates', () => {
     const pc1: PokemonIngredientSet = {
       pokemon: pokemon.PINSIR,
-      ingredientList: [],
+      ingredientList: []
     };
 
     const pc2: PokemonIngredientSet = {
       pokemon: pokemon.BLASTOISE,
-      ingredientList: [],
+      ingredientList: []
     };
 
     const customStats: CustomStats = {
@@ -39,7 +38,7 @@ describe('processOptimalTeamSolutions', () => {
       nature: nature.RASH,
       subskills: [],
       skillLevel: 6,
-      inventoryLimit: maxCarrySize(pokemon.PINSIR),
+      inventoryLimit: maxCarrySize(pokemon.PINSIR)
     };
 
     const detailedProduce: DetailedProduce = {
@@ -50,34 +49,34 @@ describe('processOptimalTeamSolutions', () => {
       nightHelps: 0,
       nightHelpsBeforeSS: 0,
       averageTotalSkillProcs: 0,
-      skillActivations: [],
+      skillActivations: []
     };
 
     const optimalTeamSolutions: OptimalTeamSolution[] = [
       {
         team: [
           { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
-          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
+          { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() }
         ],
         surplus: {
           extra: [],
           relevant: [],
-          total: [],
+          total: []
         },
-        exhaustive: true,
+        exhaustive: true
       },
       {
         team: [
           { pokemonCombination: pc2, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
-          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() },
+          { pokemonCombination: pc1, customStats, detailedProduce, averageProduce: InventoryUtils.getEmptyInventory() }
         ],
         surplus: {
           extra: [],
           relevant: [],
-          total: [],
+          total: []
         },
-        exhaustive: true,
-      },
+        exhaustive: true
+      }
     ];
 
     const processedSolutions = setCover.processOptimalTeamSolutions(optimalTeamSolutions);
@@ -231,9 +230,9 @@ describe('findOptimalCombinationFor', () => {
         ...raichu.pokemonCombination,
         pokemon: {
           ...raichu.pokemonCombination.pokemon,
-          name: 'PIKACHU',
-        },
-      },
+          name: 'PIKACHU'
+        }
+      }
     };
     const produce: CustomPokemonCombinationWithProduce[] = [raikou, raichu, pikachu];
     const reverseIndex = createPokemonByIngredientReverseIndex(produce);
@@ -266,7 +265,7 @@ describe('findOptimalCombinationFor', () => {
     const setCover = new SetCover(reverseIndex, new Map());
     const result = setCover.findOptimalCombinationFor([
       { ingredient: ingredient.MOOMOO_MILK, amount: 9 },
-      { ingredient: ingredient.FANCY_APPLE, amount: 1 },
+      { ingredient: ingredient.FANCY_APPLE, amount: 1 }
     ]);
 
     expect(result).toHaveLength(1);
@@ -286,36 +285,36 @@ const raichu: CustomPokemonCombinationWithProduce = {
     ingredientList: [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 2,
-        ingredient: ingredient.WARMING_GINGER,
+        ingredient: ingredient.WARMING_GINGER
       },
       {
         amount: 3,
-        ingredient: ingredient.WARMING_GINGER,
-      },
-    ],
+        ingredient: ingredient.WARMING_GINGER
+      }
+    ]
   },
   averageProduce: {
     berries: [
       {
         berry: berry.GREPA,
         amount: 0.6,
-        level: 60,
-      },
+        level: 60
+      }
     ],
     ingredients: [
       {
         amount: 0.2,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 0.5,
-        ingredient: ingredient.WARMING_GINGER,
-      },
-    ],
+        ingredient: ingredient.WARMING_GINGER
+      }
+    ]
   },
   customStats: {
     level: 60,
@@ -323,7 +322,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    inventoryLimit: maxCarrySize(pokemon.RAICHU),
+    inventoryLimit: maxCarrySize(pokemon.RAICHU)
   },
   detailedProduce: {
     produce: {
@@ -331,13 +330,13 @@ const raichu: CustomPokemonCombinationWithProduce = {
       ingredients: [
         {
           amount: 3,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 15,
-          ingredient: ingredient.WARMING_GINGER,
-        },
-      ],
+          ingredient: ingredient.WARMING_GINGER
+        }
+      ]
     },
     averageTotalSkillProcs: 0,
     dayHelps: 0,
@@ -345,8 +344,8 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nightHelpsBeforeSS: 0,
     skillActivations: [],
     sneakySnack: emptyBerryInventory(),
-    spilledIngredients: [],
-  },
+    spilledIngredients: []
+  }
 };
 
 const raikou: CustomPokemonCombinationWithProduce = {
@@ -355,40 +354,40 @@ const raikou: CustomPokemonCombinationWithProduce = {
     ingredientList: [
       {
         amount: 2,
-        ingredient: ingredient.SOOTHING_CACAO,
+        ingredient: ingredient.SOOTHING_CACAO
       },
       {
         amount: 8,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 7,
-        ingredient: ingredient.TASTY_MUSHROOM,
-      },
-    ],
+        ingredient: ingredient.TASTY_MUSHROOM
+      }
+    ]
   },
   averageProduce: {
     berries: [
       {
         berry: berry.GREPA,
         amount: 0.6,
-        level: 60,
-      },
+        level: 60
+      }
     ],
     ingredients: [
       {
         amount: 0.2,
-        ingredient: ingredient.SOOTHING_CACAO,
+        ingredient: ingredient.SOOTHING_CACAO
       },
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 1,
-        ingredient: ingredient.TASTY_MUSHROOM,
-      },
-    ],
+        ingredient: ingredient.TASTY_MUSHROOM
+      }
+    ]
   },
   customStats: {
     level: 60,
@@ -396,7 +395,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    inventoryLimit: maxCarrySize(pokemon.RAIKOU),
+    inventoryLimit: maxCarrySize(pokemon.RAIKOU)
   },
   detailedProduce: {
     produce: {
@@ -404,17 +403,17 @@ const raikou: CustomPokemonCombinationWithProduce = {
       ingredients: [
         {
           amount: 3,
-          ingredient: ingredient.SOOTHING_CACAO,
+          ingredient: ingredient.SOOTHING_CACAO
         },
         {
           amount: 14,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 12,
-          ingredient: ingredient.TASTY_MUSHROOM,
-        },
-      ],
+          ingredient: ingredient.TASTY_MUSHROOM
+        }
+      ]
     },
     averageTotalSkillProcs: 3,
     dayHelps: 0,
@@ -422,8 +421,8 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nightHelpsBeforeSS: 0,
     skillActivations: [],
     sneakySnack: emptyBerryInventory(),
-    spilledIngredients: [],
-  },
+    spilledIngredients: []
+  }
 };
 
 const vaporeon: CustomPokemonCombinationWithProduce = {
@@ -432,17 +431,17 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     ingredientList: [
       {
         amount: 1,
-        ingredient: ingredient.MOOMOO_MILK,
+        ingredient: ingredient.MOOMOO_MILK
       },
       {
         amount: 2,
-        ingredient: ingredient.MOOMOO_MILK,
+        ingredient: ingredient.MOOMOO_MILK
       },
       {
         amount: 4,
-        ingredient: ingredient.MOOMOO_MILK,
-      },
-    ],
+        ingredient: ingredient.MOOMOO_MILK
+      }
+    ]
   },
   averageProduce: InventoryUtils.getEmptyInventory(),
   customStats: {
@@ -451,7 +450,7 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    inventoryLimit: maxCarrySize(pokemon.VAPOREON),
+    inventoryLimit: maxCarrySize(pokemon.VAPOREON)
   },
   detailedProduce: {
     produce: {
@@ -459,73 +458,73 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
       ingredients: [
         {
           amount: 9,
-          ingredient: ingredient.MOOMOO_MILK,
+          ingredient: ingredient.MOOMOO_MILK
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.GREENGRASS_SOYBEANS,
+          ingredient: ingredient.GREENGRASS_SOYBEANS
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.HONEY,
+          ingredient: ingredient.HONEY
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.BEAN_SAUSAGE,
+          ingredient: ingredient.BEAN_SAUSAGE
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.WARMING_GINGER,
+          ingredient: ingredient.WARMING_GINGER
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.SNOOZY_TOMATO,
+          ingredient: ingredient.SNOOZY_TOMATO
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.FANCY_EGG,
+          ingredient: ingredient.FANCY_EGG
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.PURE_OIL,
+          ingredient: ingredient.PURE_OIL
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.SOFT_POTATO,
+          ingredient: ingredient.SOFT_POTATO
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.FIERY_HERB,
+          ingredient: ingredient.FIERY_HERB
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.GREENGRASS_CORN,
+          ingredient: ingredient.GREENGRASS_CORN
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.SOOTHING_CACAO,
+          ingredient: ingredient.SOOTHING_CACAO
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.ROUSING_COFFEE,
+          ingredient: ingredient.ROUSING_COFFEE
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.TASTY_MUSHROOM,
+          ingredient: ingredient.TASTY_MUSHROOM
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.LARGE_LEEK,
+          ingredient: ingredient.LARGE_LEEK
         },
         {
           amount: 1.3653423571121408,
-          ingredient: ingredient.SLOWPOKE_TAIL,
-        },
-      ],
+          ingredient: ingredient.SLOWPOKE_TAIL
+        }
+      ]
     },
     averageTotalSkillProcs: 10,
     dayHelps: 0,
@@ -533,6 +532,6 @@ const vaporeon: CustomPokemonCombinationWithProduce = {
     nightHelpsBeforeSS: 0,
     skillActivations: [],
     sneakySnack: emptyBerryInventory(),
-    spilledIngredients: [],
-  },
+    spilledIngredients: []
+  }
 };

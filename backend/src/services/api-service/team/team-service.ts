@@ -1,18 +1,19 @@
 import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { DBTeamWithoutVersion, TeamDAO } from '@src/database/dao/team/team-dao';
+import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
+import { TeamDAO } from '@src/database/dao/team/team-dao';
 import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { DBUser } from '@src/database/dao/user/user-dao';
-import {
+import type { DBUser } from '@src/database/dao/user/user-dao';
+import type {
   GetTeamsResponse,
   UpsertTeamMemberRequest,
   UpsertTeamMemberResponse,
-  UpsertTeamMetaResponse,
+  UpsertTeamMetaResponse
 } from 'sleepapi-common';
 
 export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<UpsertTeamMetaResponse> {
   const upsertedTeam = await TeamDAO.upsert({
     updated: team,
-    filter: { fk_user_id: team.fk_user_id, team_index: team.team_index },
+    filter: { fk_user_id: team.fk_user_id, team_index: team.team_index }
   });
   return {
     index: upsertedTeam.team_index,
@@ -22,7 +23,7 @@ export async function upsertTeamMeta(team: DBTeamWithoutVersion): Promise<Upsert
     wakeup: upsertedTeam.wakeup,
     recipeType: upsertedTeam.recipe_type,
     favoredBerries: upsertedTeam.favored_berries?.split(','),
-    version: upsertedTeam.version,
+    version: upsertedTeam.version
   };
 }
 
@@ -59,9 +60,9 @@ export async function upsertTeamMember(params: {
       wakeup: team?.wakeup ?? '06:00',
       recipe_type: team?.recipe_type ?? 'curry',
       favored_berries: team?.favored_berries,
-      name: team?.name ?? `Helper team ${teamIndex + 1}`,
+      name: team?.name ?? `Helper team ${teamIndex + 1}`
     },
-    filter: { fk_user_id: user.id, team_index: teamIndex },
+    filter: { fk_user_id: user.id, team_index: teamIndex }
   });
 
   const upsertedMember = await PokemonDAO.upsert({
@@ -85,14 +86,14 @@ export async function upsertTeamMember(params: {
       subskill_100: PokemonDAO.subskillForLevel(100, request.subskills),
       ingredient_0: PokemonDAO.ingredientForLevel(0, request.ingredients),
       ingredient_30: PokemonDAO.ingredientForLevel(30, request.ingredients),
-      ingredient_60: PokemonDAO.ingredientForLevel(60, request.ingredients),
+      ingredient_60: PokemonDAO.ingredientForLevel(60, request.ingredients)
     },
-    filter: { external_id: request.externalId },
+    filter: { external_id: request.externalId }
   });
 
   const updatedMemberMeta = await TeamMemberDAO.upsert({
     updated: { fk_pokemon_id: upsertedMember.id, fk_team_id: updatedTeam.id, member_index: memberIndex },
-    filter: { fk_team_id: updatedTeam.id, member_index: memberIndex },
+    filter: { fk_team_id: updatedTeam.id, member_index: memberIndex }
   });
 
   return {
@@ -113,17 +114,17 @@ export async function upsertTeamMember(params: {
     ingredients: [
       {
         level: 0,
-        ingredient: upsertedMember.ingredient_0,
+        ingredient: upsertedMember.ingredient_0
       },
       {
         level: 30,
-        ingredient: upsertedMember.ingredient_30,
+        ingredient: upsertedMember.ingredient_30
       },
       {
         level: 60,
-        ingredient: upsertedMember.ingredient_60,
-      },
-    ],
+        ingredient: upsertedMember.ingredient_60
+      }
+    ]
   };
 }
 

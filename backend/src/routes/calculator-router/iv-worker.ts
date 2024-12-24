@@ -1,11 +1,17 @@
 import ProductionController from '@src/controllers/calculator/production.controller';
-import workerpool from 'workerpool';
+import { parentPort, workerData } from 'worker_threads';
 
-async function calculateIv(body: any) {
+const { body } = workerData.params;
+
+async function calculateIv() {
   const controller = new ProductionController();
   return await controller.calculateIv(body);
 }
 
-workerpool.worker({
-  calculateIv,
-});
+calculateIv()
+  .then((result) => {
+    parentPort?.postMessage(result);
+  })
+  .catch((err) => {
+    parentPort?.postMessage({ error: err.message });
+  });

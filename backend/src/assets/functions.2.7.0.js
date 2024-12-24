@@ -151,7 +151,7 @@ function createCopyButton(contentDiv, index) {
 
 let downloadData = {
   text: '',
-  filename: '',
+  filename: ''
 };
 function downloadTextFile() {
   const blob = new Blob([downloadData.text], { type: 'text/plain' });
@@ -203,7 +203,7 @@ function goToProductionCalculator() {
     recoveryincense: false, // TODO: hard-coded
     mainBedtime: document.getElementById('mainBedtime').value,
     mainWakeup: document.getElementById('mainWakeup').value,
-    ingredientSet: document.getElementById('ingredientDropdown').getAttribute('data-combination').split('/'),
+    ingredientSet: document.getElementById('ingredientDropdown').getAttribute('data-combination').split('/')
   };
 
   var pokemon = document.getElementById('pokemon').value;
@@ -343,7 +343,7 @@ function goToOptimalRanking() {
     helperBoostProcs: +document.getElementById('helperBoostProcs').value,
     helperBoostUnique: +document.getElementById('helperBoostUnique').value,
     helperBoostLevel: +document.getElementById('helperBoostLevel').value,
-    camp: document.getElementById('camp').checked,
+    camp: document.getElementById('camp').checked
   };
 
   var url = 'optimal/meal/' + document.getElementById('optimalMeal').value + '?pretty=true';

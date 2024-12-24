@@ -1,19 +1,16 @@
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { Recipe, SkillActivation, Time, TimePeriod } from 'sleepapi-common';
 import {
   MEALS_IN_DAY,
   MathUtils,
   RECIPES,
   RandomUtils,
-  Recipe,
   SUNDAY_CRIT_CHANCE,
   SUNDAY_CRIT_MULTIPLIER,
-  SkillActivation,
   TASTY_CHANCE_S_CAP,
-  Time,
-  TimePeriod,
   WEEKDAY_CRIT_CHANCE,
   WEEKDAY_CRIT_MULTIPLIER,
-  mainskill,
+  mainskill
 } from 'sleepapi-common';
 import { MealError } from '../../domain/error/meal/meal-error';
 
@@ -49,15 +46,15 @@ export function getMealsForFilter(params: {
 export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
   const breakfastWindow: TimePeriod = {
     start: TimeUtils.parseTime('04:00'),
-    end: TimeUtils.parseTime('11:59'),
+    end: TimeUtils.parseTime('11:59')
   };
   const lunchWindow: TimePeriod = {
     start: TimeUtils.parseTime('12:00'),
-    end: TimeUtils.parseTime('17:59'),
+    end: TimeUtils.parseTime('17:59')
   };
   const dinnerWindow: TimePeriod = {
     start: TimeUtils.parseTime('18:00'),
-    end: TimeUtils.parseTime('03:59'),
+    end: TimeUtils.parseTime('03:59')
   };
 
   const mealTimes: Time[] = [];
@@ -69,7 +66,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: breakfastWindow.end,
-      period: dayPeriod,
+      period: dayPeriod
     })
       ? breakfastWindow.end
       : dayPeriod.end;
@@ -84,7 +81,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: lunchWindow.end,
-      period: dayPeriod,
+      period: dayPeriod
     })
       ? lunchWindow.end
       : dayPeriod.end;
@@ -99,7 +96,7 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): Time[] {
     const beforeWindowEndOrBedtime = TimeUtils.isAfterOrEqualWithinPeriod({
       currentTime: dayPeriod.end,
       eventTime: dinnerWindow.end,
-      period: dayPeriod,
+      period: dayPeriod
     })
       ? dinnerWindow.end
       : dayPeriod.end;
@@ -161,7 +158,7 @@ export function calculateCritMultiplier(skillActivations: SkillActivation[], cac
       sundayMultiplier,
       fullWeekCritChance,
       weekdayCritChance,
-      sundayCritChance,
+      sundayCritChance
     } = monteCarloCrits(bonusChance);
     averageFullWeekMultipliers.push(fullWeekMultiplier);
     averageWeekdayMultipliers.push(weekdayMultiplier);
@@ -191,7 +188,7 @@ export function calculateCritMultiplier(skillActivations: SkillActivation[], cac
     sundayMultiplier,
     fullWeekCritChance,
     weekdayCritChance,
-    sundayCritChance,
+    sundayCritChance
   };
 
   cache.set(key, result);
@@ -246,6 +243,6 @@ export function monteCarloCrits(bonusChance: number) {
     sundayMultiplier,
     fullWeekCritChance,
     weekdayCritChance,
-    sundayCritChance,
+    sundayCritChance
   };
 }

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { PokemonIngredientSet, Produce, multiplyIngredients, multiplyProduce } from 'sleepapi-common';
+import type { PokemonIngredientSet, Produce } from 'sleepapi-common';
+import { multiplyIngredients, multiplyProduce } from 'sleepapi-common';
 
 export function calculateAverageProduce(
   pokemonSet: PokemonIngredientSet,
@@ -24,7 +25,7 @@ export function calculateAverageProduce(
 ): Produce {
   return {
     berries: [{ berry: pokemonSet.pokemon.berry, amount: berriesPerDrop * (1 - ingredientPercentage), level }],
-    ingredients: multiplyIngredients(pokemonSet.ingredientList, ingredientPercentage),
+    ingredients: multiplyIngredients(pokemonSet.ingredientList, ingredientPercentage)
   };
 }
 

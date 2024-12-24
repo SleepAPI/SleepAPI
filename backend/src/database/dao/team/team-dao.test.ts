@@ -21,7 +21,7 @@ describe('TeamDAO insert', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     expect(team).toBeDefined();
 
@@ -53,7 +53,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
-        recipe_type: 'curry',
+        recipe_type: 'curry'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.fk_user_id/);
   });
@@ -67,7 +67,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
-        recipe_type: 'curry',
+        recipe_type: 'curry'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.team_index/);
   });
@@ -81,7 +81,7 @@ describe('TeamDAO insert', () => {
         camp: false,
         bedtime: '21:30',
         wakeup: '06:00',
-        recipe_type: 'curry',
+        recipe_type: 'curry'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: NOT NULL constraint failed: team.name/);
   });
@@ -94,7 +94,7 @@ describe('TeamDAO insert', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     await expect(
       TeamDAO.insert({
@@ -104,7 +104,7 @@ describe('TeamDAO insert', () => {
         camp: true,
         bedtime: '21:30',
         wakeup: '06:00',
-        recipe_type: 'curry',
+        recipe_type: 'curry'
       })
     ).rejects.toThrow(/SQLITE_CONSTRAINT: UNIQUE constraint failed: team.fk_user_id, team.team_index/);
   });
@@ -119,7 +119,7 @@ describe('TeamDAO update', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     expect(team.name).toEqual('Team A');
 
@@ -152,7 +152,7 @@ describe('TeamDAO update', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     const teamB = await TeamDAO.insert({
       fk_user_id: 1,
@@ -161,7 +161,7 @@ describe('TeamDAO update', () => {
       camp: true,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     await expect(TeamDAO.update({ ...teamB, team_index: 0 })).rejects.toThrow(
@@ -179,7 +179,7 @@ describe('TeamDAO delete', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     await TeamDAO.delete({ id: team.id });
@@ -198,7 +198,7 @@ describe('findTeamsWithMembers', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
     // should not be found
     await TeamDAO.insert({
@@ -208,7 +208,7 @@ describe('findTeamsWithMembers', () => {
       camp: false,
       bedtime: '21:30',
       wakeup: '06:00',
-      recipe_type: 'curry',
+      recipe_type: 'curry'
     });
 
     await PokemonDAO.insert({
@@ -230,7 +230,7 @@ describe('findTeamsWithMembers', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     await PokemonDAO.insert({
@@ -252,7 +252,7 @@ describe('findTeamsWithMembers', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     // should not be included, is saved to user, but not included in team
@@ -275,24 +275,24 @@ describe('findTeamsWithMembers', () => {
       subskill_100: 'Thunder',
       ingredient_0: 'Berry',
       ingredient_30: 'Potion',
-      ingredient_60: 'Elixir',
+      ingredient_60: 'Elixir'
     });
 
     // Team: [pika, pika, bulba]
     await TeamMemberDAO.insert({
       member_index: 0,
       fk_team_id: 1,
-      fk_pokemon_id: 1,
+      fk_pokemon_id: 1
     });
     await TeamMemberDAO.insert({
       member_index: 1,
       fk_team_id: 1,
-      fk_pokemon_id: 1,
+      fk_pokemon_id: 1
     });
     await TeamMemberDAO.insert({
       member_index: 2,
       fk_team_id: 1,
-      fk_pokemon_id: 2,
+      fk_pokemon_id: 2
     });
 
     expect(await TeamDAO.findTeamsWithMembers(1)).toMatchSnapshot();

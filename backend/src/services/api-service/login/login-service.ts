@@ -1,10 +1,13 @@
 import { config } from '@src/config/config';
 import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
 import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { DBUser, UserDAO } from '@src/database/dao/user/user-dao';
+import type { DBUser } from '@src/database/dao/user/user-dao';
+import { UserDAO } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
-import { OAuth2Client, TokenInfo } from 'google-auth-library';
-import { LoginResponse, PokemonInstanceWithMeta, RefreshResponse, uuid } from 'sleepapi-common';
+import type { TokenInfo } from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
+import type { LoginResponse, PokemonInstanceWithMeta, RefreshResponse } from 'sleepapi-common';
+import { uuid } from 'sleepapi-common';
 
 interface DecodedUserData {
   sub: string;
@@ -16,13 +19,13 @@ interface DecodedUserData {
 export const client = new OAuth2Client({
   clientId: config.GOOGLE_CLIENT_ID,
   clientSecret: config.GOOGLE_CLIENT_SECRET,
-  redirectUri: 'postmessage',
+  redirectUri: 'postmessage'
 });
 
 export async function signup(authorization_code: string): Promise<LoginResponse> {
   const { tokens } = await client.getToken({
     code: authorization_code,
-    redirect_uri: 'postmessage',
+    redirect_uri: 'postmessage'
   });
 
   if (!tokens.refresh_token || !tokens.access_token || !tokens.expiry_date) {
@@ -32,7 +35,7 @@ export async function signup(authorization_code: string): Promise<LoginResponse>
   client.setCredentials({ access_token: tokens.access_token });
 
   const userinfo = await client.request<DecodedUserData>({
-    url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    url: 'https://www.googleapis.com/oauth2/v3/userinfo'
   });
 
   const existingUser =
@@ -46,7 +49,7 @@ export async function signup(authorization_code: string): Promise<LoginResponse>
     refresh_token: tokens.refresh_token,
     expiry_date: tokens.expiry_date,
     email: userinfo.data.email,
-    externalId: existingUser.external_id,
+    externalId: existingUser.external_id
   };
 }
 
@@ -62,14 +65,14 @@ export async function refresh(refresh_token: string): Promise<RefreshResponse> {
 
   return {
     access_token: token,
-    expiry_date,
+    expiry_date
   };
 }
 
 export async function verify(access_token: string) {
   client.setCredentials({ access_token });
   const response = await client.request<TokenInfo>({
-    url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${access_token}`,
+    url: `https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${access_token}`
   });
   const tokenInfo = response.data;
 
@@ -104,17 +107,17 @@ export async function getSavedPokemon(user: DBUser): Promise<PokemonInstanceWith
     ingredients: [
       {
         level: 0,
-        ingredient: pkmn.ingredient_0,
+        ingredient: pkmn.ingredient_0
       },
       {
         level: 30,
-        ingredient: pkmn.ingredient_30,
+        ingredient: pkmn.ingredient_30
       },
       {
         level: 60,
-        ingredient: pkmn.ingredient_60,
-      },
-    ],
+        ingredient: pkmn.ingredient_60
+      }
+    ]
   }));
 }
 
@@ -142,9 +145,9 @@ export async function upsertPokemon(params: { user: DBUser; pokemonInstance: Pok
       subskill_100: PokemonDAO.subskillForLevel(100, pokemonInstance.subskills),
       ingredient_0: PokemonDAO.ingredientForLevel(0, pokemonInstance.ingredients),
       ingredient_30: PokemonDAO.ingredientForLevel(30, pokemonInstance.ingredients),
-      ingredient_60: PokemonDAO.ingredientForLevel(60, pokemonInstance.ingredients),
+      ingredient_60: PokemonDAO.ingredientForLevel(60, pokemonInstance.ingredients)
     },
-    filter: { external_id: pokemonInstance.externalId },
+    filter: { external_id: pokemonInstance.externalId }
   });
 
   // if not saved, check if any teams use it, if not delete
