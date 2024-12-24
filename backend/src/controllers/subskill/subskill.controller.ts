@@ -1,5 +1,6 @@
+import tsoa from '@tsoa/runtime';
 import { getSubskill, getSubskillNames, Subskill } from 'sleepapi-common';
-import { Controller, Get, Path, Route, Tags } from 'tsoa';
+const { Controller, Path, Get, Route, Tags } = tsoa;
 
 @Route('api/subskill')
 @Tags('subskill')

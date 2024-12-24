@@ -1,5 +1,6 @@
+import tsoa from '@tsoa/runtime';
 import { getIngredientNames } from 'sleepapi-common';
-import { Controller, Get, Route, Tags } from 'tsoa';
+const { Controller, Get, Route, Tags } = tsoa;
 
 @Route('api/ingredient')
 export default class IngredientController extends Controller {

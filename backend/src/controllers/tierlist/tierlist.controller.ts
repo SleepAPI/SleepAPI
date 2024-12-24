@@ -1,4 +1,5 @@
-// import { Controller, Get, Queries, Route, Tags } from 'tsoa';
+// import tsoa from 'tsoa';
+// const { Controller, Path, Get, Queries, Route, Tags } = tsoa;
 // import { GetTierListQueryParams } from '../../routes/tierlist-router/tierlist-router';
 // import { TierlistService } from '../../services/api-service/tierlist/tierlist-service';
 

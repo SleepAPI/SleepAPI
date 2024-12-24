@@ -26,7 +26,8 @@ import {
   limitSubSkillsToLevel,
   mainskill
 } from 'sleepapi-common';
-import { Body, Controller, Path, Post, Query, Route, Tags } from 'tsoa';
+import tsoa from 'tsoa';
+const { Controller, Post, Path, Body, Query, Route, Tags } = tsoa;
 
 @Route('api/calculator')
 @Tags('calculator')

@@ -1,6 +1,7 @@
 import { getMainskill, getMainskillNames } from '@src/utils/mainskill-utils/mainskill-utils.js';
+import tsoa from '@tsoa/runtime';
 import { Mainskill } from 'sleepapi-common';
-import { Controller, Get, Path, Route, Tags } from 'tsoa';
+const { Controller, Path, Get, Route, Tags } = tsoa;
 
 @Route('api/mainskill')
 @Tags('mainskill')

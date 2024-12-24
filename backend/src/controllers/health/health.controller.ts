@@ -1,5 +1,6 @@
 import { DatabaseService } from '@src/database/database-service.js';
-import { Controller, Get, Hidden, Route, Tags } from 'tsoa';
+import tsoa from '@tsoa/runtime';
+const { Controller, Get, Hidden, Route, Tags } = tsoa;
 
 @Route('health')
 @Tags('system')

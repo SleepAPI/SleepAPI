@@ -6,6 +6,10 @@ import workerpool from 'workerpool';
 import { SolveIngredientRequest, SolveRecipeRequest } from 'sleepapi-common';
 import { BaseRouter } from '../base-router.js';
 
+// TODO: maybe refactor in a way where in dev we can skip the worker?
+// TODO: we can still verify workers with npm run start, workers pretty much never change
+// TODO: if we keep maxWorkers at 1, then this is redundant here, remove worker
+// TODO: first we still want to ensure that we can run this code in dev, since production calc will use workerpool
 const pool = workerpool.pool(relativePath('./solve-recipe-worker.js', import.meta.url), {
   maxWorkers: 1 // TODO: perhaps we can raise this now if cache size is smaller, have to check
 });

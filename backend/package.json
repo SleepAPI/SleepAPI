@@ -9,19 +9,13 @@
     "prebuild": "npm run clean",
     "build": "tsc && tsc-alias && tsoa spec",
     "postbuild": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/**/*.json src/**/*.png src/assets/* src/assets/**/* dist/",
-    "prebuild-watch": "npm run build",
-    "build-watch": "concurrently \"tsc -w\" \"tsc-alias -w\"",
     "start": "npm run build && node ./dist/app.js",
-    "predev": "npm run build",
-    "dev": "concurrently -k --raw -c \"yellow.bold,cyan.bold\" \"npm:build-watch\" \"npm:dev-start\"",
-    "dev-start": "nodemon --delay 3 --watch dist dist/app.js -- -P -l debug --debug --debug-port=9230",
+    "dev": "tsx watch --clear-screen --inspect src/app.ts",
     "frontend": "npm run postbuild && node dist/app.js",
     "test": "vitest --run --coverage",
     "test-watch": "vitest --changed"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": "./src/vitest/mocks/index.js"
   },
@@ -41,6 +35,7 @@
     "sqlite3": "^5.1.6",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.8",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vimic": "^1.0.7",
     "vitest": "^1.6.0"
@@ -56,10 +51,8 @@
     "morgan": "~1.9.1",
     "mysql2": "~3.9.7",
     "swagger-ui-express": "^5.0.0",
-    "tsoa": "^6.5.1",
+    "tsoa": "^6.6.0",
     "workerpool": "^9.1.3"
   },
-  "bundleDependencies": [
-    "sleepapi-common"
-  ]
+  "bundleDependencies": ["sleepapi-common"]
 }

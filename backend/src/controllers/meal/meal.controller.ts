@@ -1,8 +1,9 @@
+import tsoa from '@tsoa/runtime';
 import { Recipe } from 'sleepapi-common';
-import { Controller, Get, Path, Queries, Route, Tags } from 'tsoa';
 import { MealNamesQueryParams } from '../../routes/meal-router/meal-router.js';
 import { getMeal, getMealsForFilter } from '../../utils/meal-utils/meal-utils.js';
 import { queryAsBoolean, queryAsNumber } from '../../utils/routing/routing-utils.js';
+const { Controller, Path, Queries, Get, Route, Tags } = tsoa;
 
 @Route('api/meal')
 @Tags('meal')

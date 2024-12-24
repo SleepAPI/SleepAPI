@@ -43,6 +43,7 @@ export class SetCover {
 
     const maybeCachedSolution = this.ifStopSearching({ memoKey, spotsLeftInTeam, ingredientIndices });
     if (maybeCachedSolution) {
+      logger.error('cache what?');
       return maybeCachedSolution;
     }
 
@@ -55,6 +56,11 @@ export class SetCover {
       ingredientIndices,
       producersOfFirstIngredient
     );
+
+    if (producersOfFirstIngredient[0].pokemonSet.pokemon === 'TYRANITAR') {
+      logger.error(subRecipesAfterProducerSubtract[0]);
+      throw new Error('');
+    }
 
     const teams = this.findTeams(subRecipesAfterProducerSubtract);
 

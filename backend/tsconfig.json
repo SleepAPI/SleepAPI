@@ -28,7 +28,7 @@
       "@test/*": ["./test/*"]
     }
   },
-  "include": ["src/**/*.ts", "**/migrations"],
+  "include": ["src/**/*.ts", "**/migrations", "src/routes/solve-router/solve-recipe-worker.js"],
   "exclude": ["node_modules", "dist"],
   "watchOptions": {
     "excludeDirectories": ["dist", "tmp"]

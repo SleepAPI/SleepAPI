@@ -53,8 +53,12 @@ export function calculateProductionAll(params: { settings: SolveSettingsExt; use
     INGREDIENT_SUPPORT_MAINSKILLS.some((skill) => skill.isSkill(pkmn.skill))
   );
 
-  const nonSupportMembers = pokedexToMembers({ pokedex: nonSupportMons, level: settings.level });
-  const supportMembers = pokedexToMembers({ pokedex: supportMons, level: settings.level });
+  const nonSupportMembers = pokedexToMembers({
+    pokedex: nonSupportMons.filter((pkmn) => pkmn.name === 'DRAGONITE' || pkmn.name === 'TYRANITAR'),
+    level: settings.level
+  });
+  // const supportMembers = pokedexToMembers({ pokedex: supportMons, level: settings.level });
+  const supportMembers: any = []; // TODO: revert
 
   const userIncludedProduction = calculateTeam({ settings, members }, 1400, false);
   const nonSupportProductionStats = calculateSimple({
