@@ -1,12 +1,13 @@
-import TeamController from '@src/controllers/team/team.controller';
-import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
+import type TeamController from '@src/controllers/team/team.controller';
+import type { AuthenticatedRequest } from '@src/middleware/authorization-middleware';
+import { validateAuthHeader } from '@src/middleware/authorization-middleware';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
-import {
+import type { Request, Response } from 'express';
+import type {
   UpsertTeamMemberRequest,
   UpsertTeamMemberResponse,
   UpsertTeamMetaRequest,
-  UpsertTeamMetaResponse,
+  UpsertTeamMetaResponse
 } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
@@ -102,7 +103,7 @@ class TeamRouterImpl {
             teamIndex: +teamIndex,
             memberIndex: +memberIndex,
             request: req.body,
-            user,
+            user
           });
 
           res.json(updatedMember);

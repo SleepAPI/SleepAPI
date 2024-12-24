@@ -9,7 +9,7 @@ describe('HelpEvent', () => {
       description: 'pokemon',
       frequency: 1,
       nextHelp: TimeUtils.parseTime('06:10'),
-      produce: MOCKED_PRODUCE,
+      produce: MOCKED_PRODUCE
     });
     expect(event.format()).toMatchInlineSnapshot(
       `"[06:00:00][pokemon] Frequency: 1, produce: 2 GREPA + 1 Apple, next help: 06:10:00"`

@@ -16,7 +16,8 @@
 
 import { energyFactorFromEnergy } from '@src/services/calculator/energy/energy-calculator';
 import { calculateHelpSpeedSubskills } from '@src/services/calculator/stats/stats-calculator';
-import { MathUtils, calculateRibbonFrequency, invertNatureFrequency, nature, pokemon, subskill } from 'sleepapi-common';
+import type { nature, pokemon, subskill } from 'sleepapi-common';
+import { MathUtils, calculateRibbonFrequency, invertNatureFrequency } from 'sleepapi-common';
 
 export function calculateHelpSpeedBeforeEnergy(stats: {
   pokemon: pokemon.Pokemon;

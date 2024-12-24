@@ -1,10 +1,11 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { BALANCED_GENDER, PokemonIngredientSet, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
+import type { PokemonIngredientSet } from 'sleepapi-common';
+import { BALANCED_GENDER, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
 
 const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
@@ -21,13 +22,13 @@ const mockPokemonSet: PokemonIngredientSet = {
     remainingEvolutions: 0,
     skill: mainskill.CHARGE_STRENGTH_S,
     skillPercentage: 2,
-    specialty: 'skill',
+    specialty: 'skill'
   },
   ingredientList: [
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-  ],
+    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
+  ]
 };
 
 const member: TeamMember = {
@@ -38,13 +39,13 @@ const member: TeamMember = {
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],
-  externalId: 'some id',
+  externalId: 'some id'
 };
 
 const settings: TeamSettingsExt = {
   bedtime: TimeUtils.parseTime('21:30'),
   wakeup: TimeUtils.parseTime('06:00'),
-  camp: false,
+  camp: false
 };
 
 const cookingState: CookingState = new CookingState(settings.camp);
@@ -91,7 +92,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -110,13 +111,13 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
 
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: false,
+      camp: false
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -145,7 +146,7 @@ describe('startDay', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [subskill.ENERGY_RECOVERY_BONUS],
-      externalId: 'some id',
+      externalId: 'some id'
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -175,7 +176,7 @@ describe('recoverEnergy', () => {
       nature: nature.MILD,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -361,7 +362,7 @@ describe('attemptDayHelp', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: false,
+      camp: false
     };
 
     const member: TeamMember = {
@@ -372,7 +373,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -471,7 +472,7 @@ describe('attemptDayHelp', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: false,
+      camp: false
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -530,7 +531,7 @@ describe('attemptDayHelp', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('23:30'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: false,
+      camp: false
     };
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
@@ -544,7 +545,7 @@ describe('attemptDayHelp', () => {
     const frequencyBeforeEnergy = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member,
       settings,
-      helpingBonus: 0,
+      helpingBonus: 0
     });
     const frequency = calculateFrequencyWithEnergy(frequencyBeforeEnergy, memberState.energy);
     const nextHelp = frequency / 60;
@@ -567,7 +568,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.wakeUp();
@@ -581,7 +582,7 @@ describe('attemptDayHelp', () => {
     const member: TeamMember = {
       pokemonSet: {
         ...mockPokemonSet,
-        pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: mainskill.METRONOME },
+        pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: mainskill.METRONOME }
       },
       carrySize: 10,
       level: 60,
@@ -589,7 +590,7 @@ describe('attemptDayHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.wakeUp();
@@ -644,7 +645,7 @@ describe('attemptNightHelp', () => {
       nature: nature.BASHFUL,
       skillLevel: 6,
       subskills: [],
-      externalId: 'some id',
+      externalId: 'some id'
     };
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.wakeUp();

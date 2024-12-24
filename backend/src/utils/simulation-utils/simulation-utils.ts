@@ -1,15 +1,15 @@
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
+import type { ProductionStats } from '@src/domain/computed/production';
+import type { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from '@src/domain/event/events/input-event/input-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
 import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
 import { SleepEvent } from '@src/domain/event/events/sleep-event/sleep-event';
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { Produce, SkillActivation, Summary, TimePeriod, pokemon } from 'sleepapi-common';
+import type { Produce, SkillActivation, Summary, TimePeriod, pokemon } from 'sleepapi-common';
 
 export function startDayAndEnergy(
   dayInfo: SleepInfo,
@@ -23,37 +23,37 @@ export function startDayAndEnergy(
   const { startingEnergy, energyLeftInMorning, energyRecovered } = calculateStartingEnergy({
     dayPeriod: dayInfo,
     recoveryEvents,
-    skillActivations,
+    skillActivations
   });
   const startingDayEvent: SleepEvent = new SleepEvent({
     time: dayInfo.period.start,
     description: 'Day start',
     period: { start: dayInfo.period.end, end: dayInfo.period.start },
-    sleepState: 'end',
+    sleepState: 'end'
   });
 
   const inputPokemon: PokemonInputEvent = new PokemonInputEvent({
     time: dayInfo.period.start,
     description: 'Input',
     input,
-    pokemon,
+    pokemon
   });
   const inputTeam: TeamInputEvent = new TeamInputEvent({
     time: dayInfo.period.start,
     description: 'Input',
-    input,
+    input
   });
   const inputPlayer: PlayerInputEvent = new PlayerInputEvent({
     time: dayInfo.period.start,
     description: 'Input',
-    input,
+    input
   });
 
   const energyEvent: EnergyEvent = new EnergyEvent({
     time: dayInfo.period.start,
     description: 'Sleep',
     delta: energyRecovered,
-    before: energyLeftInMorning,
+    before: energyLeftInMorning
   });
 
   const inventoryEvent: InventoryEvent = new InventoryEvent({
@@ -62,7 +62,7 @@ export function startDayAndEnergy(
     before: 0,
     delta: 0,
     max: inventoryLimit,
-    contents: InventoryUtils.getEmptyInventory(),
+    contents: InventoryUtils.getEmptyInventory()
   });
 
   eventLog.push(startingDayEvent);
@@ -89,14 +89,14 @@ export function startNight(params: {
     delta: -InventoryUtils.countInventory(currentInventory),
     before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: InventoryUtils.getEmptyInventory(),
+    contents: InventoryUtils.getEmptyInventory()
   });
 
   const sleepStartEvent: SleepEvent = new SleepEvent({
     time: period.end,
     description: 'Day end',
     period,
-    sleepState: 'start',
+    sleepState: 'start'
   });
 
   eventLog.push(emptyInventoryEvent);
@@ -117,7 +117,7 @@ export function finishSimulation(params: {
     time: period.end,
     description: 'Night ended',
     period,
-    sleepState: 'end',
+    sleepState: 'end'
   });
 
   const addInventoryEvent: InventoryEvent = new InventoryEvent({
@@ -126,7 +126,7 @@ export function finishSimulation(params: {
     delta: 0,
     before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: currentInventory,
+    contents: currentInventory
   });
 
   const sneakySnackClaim: InventoryEvent = new InventoryEvent({
@@ -134,7 +134,7 @@ export function finishSimulation(params: {
     description: 'Sneaky snack claim',
     delta: -InventoryUtils.countInventory(totalSneakySnack),
     before: InventoryUtils.countInventory(totalSneakySnack),
-    contents: InventoryUtils.getEmptyInventory(),
+    contents: InventoryUtils.getEmptyInventory()
   });
 
   const morningEmptyInventoryEvent: InventoryEvent = new InventoryEvent({
@@ -143,7 +143,7 @@ export function finishSimulation(params: {
     delta: -InventoryUtils.countInventory(currentInventory),
     before: InventoryUtils.countInventory(currentInventory),
     max: inventoryLimit,
-    contents: InventoryUtils.getEmptyInventory(),
+    contents: InventoryUtils.getEmptyInventory()
   });
 
   const skillStatusEvent: SkillEvent = new SkillEvent({
@@ -153,14 +153,14 @@ export function finishSimulation(params: {
       adjustedAmount: 0,
       fractionOfProc: 0,
       nrOfHelpsToActivate: summary.nrOfHelps,
-      skill: summary.skill,
-    },
+      skill: summary.skill
+    }
   });
 
   const summaryEvent: SummaryEvent = new SummaryEvent({
     time: period.end,
     description: 'Summary',
-    summary,
+    summary
   });
 
   eventLog.push(endingDay);

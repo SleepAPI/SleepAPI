@@ -2,24 +2,24 @@
   "folders": [
     {
       "name": "common",
-      "path": "common"
+      "path": "common",
     },
     {
       "name": "backend",
-      "path": "backend"
+      "path": "backend",
     },
     {
       "name": "frontend",
-      "path": "frontend"
+      "path": "frontend",
     },
     {
       "name": "bot",
-      "path": "bot"
+      "path": "bot",
     },
     {
       "name": "Project files",
-      "path": "."
-    }
+      "path": ".",
+    },
   ],
   "settings": {
     "editor.insertSpaces": true,
@@ -27,7 +27,7 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit",
       "source.fixAll": "explicit",
-      "source.fixAll.eslint": "explicit"
+      "source.fixAll.eslint": "explicit",
     },
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -39,27 +39,24 @@
       "bot": true,
       ".vscode": true,
       "dev-dist": true,
-      "node_modules": true,
-      "package-lock.json": true,
       "*.tsbuildinfo": true,
       "coverage": true,
-      ".prettierignore": true,
       "*.d.*": true,
-      "*.mjs": true
+      "*.mjs": true,
     },
     "files.eol": "\n",
     "search.exclude": {
       "**/node_modules": true,
-      "**/dist": true
+      "**/dist": true,
     },
     "typescript.preferences.importModuleSpecifier": "non-relative",
-    "javascript.preferences.importModuleSpecifier": "non-relative"
+    "javascript.preferences.importModuleSpecifier": "non-relative",
   },
   "extensions": {
     "recommendations": [
       "EditorConfig.EditorConfig",
       "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode"
-    ]
-  }
+      "esbenp.prettier-vscode",
+    ],
+  },
 }

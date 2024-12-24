@@ -13,8 +13,8 @@ describe('SkillEvent', () => {
         adjustedAmount: 0.5,
         fractionOfProc: 0.5,
         nrOfHelpsToActivate: 10,
-        adjustedProduce: MOCKED_PRODUCE,
-      },
+        adjustedProduce: MOCKED_PRODUCE
+      }
     });
     expect(event.format()).toMatchInlineSnapshot(`"[06:00:00][Skill] (test): 0.5 ingredients (50% strength)"`);
   });

@@ -1,12 +1,12 @@
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import type { Produce } from 'sleepapi-common';
 import {
-  Produce,
   berry,
   emptyBerryInventory,
   emptyProduce,
   ingredient,
   prettifyIngredientDrop,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
 describe('emptyInventory', () => {
@@ -16,10 +16,10 @@ describe('emptyInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.getEmptyInventory();
@@ -35,10 +35,10 @@ describe('countInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(4);
@@ -47,7 +47,7 @@ describe('countInventory', () => {
   it('shall count inventory size and ignore berries if no berries', () => {
     const inventory: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(2);
@@ -59,10 +59,10 @@ describe('countInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [],
+      ingredients: []
     };
 
     expect(InventoryUtils.countInventory(inventory)).toBe(2);
@@ -80,10 +80,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, inventory);
@@ -98,10 +98,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, addedProduce);
@@ -140,10 +140,10 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, InventoryUtils.getEmptyInventory());
@@ -156,15 +156,15 @@ describe('addToInventory', () => {
         {
           amount: 2,
           berry: berry.LEPPA,
-          level: 60,
-        },
+          level: 60
+        }
       ],
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     const added: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
+      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
@@ -175,12 +175,12 @@ describe('addToInventory', () => {
   it('shall add produce without berries to inventory without berries', () => {
     let inventory: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 2, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     const added: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }],
+      ingredients: [{ amount: 2, ingredient: ingredient.TASTY_MUSHROOM }]
     };
 
     inventory = InventoryUtils.addToInventory(inventory, added);
@@ -191,7 +191,7 @@ describe('addToInventory', () => {
   it('shall skip berries and ingredients with 0 amount', () => {
     let inventory: Produce = {
       berries: [{ amount: 0, berry: berry.BELUE, level: 1 }],
-      ingredients: [{ amount: 0, ingredient: ingredient.SNOOZY_TOMATO }],
+      ingredients: [{ amount: 0, ingredient: ingredient.SNOOZY_TOMATO }]
     };
 
     inventory = InventoryUtils.addToInventory(emptyProduce(), inventory);

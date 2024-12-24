@@ -1,5 +1,5 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import {
   berry,
@@ -10,7 +10,7 @@ import {
   nature,
   pokemon,
   prettifyIngredientDrop,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import {
@@ -21,7 +21,7 @@ import {
   createMemoKey,
   createPokemonByIngredientReverseIndex,
   parseMemoKey,
-  sumOfSimplifiedIngredients,
+  sumOfSimplifiedIngredients
 } from './set-cover-utils';
 
 describe('createPokemonByIngredientReverseIndex', () => {
@@ -33,16 +33,16 @@ describe('createPokemonByIngredientReverseIndex', () => {
           pokemon: pokemon.DRATINI,
           ingredientList: [
             { amount: 2, ingredient: ingredient.FIERY_HERB },
-            { amount: 4, ingredient: ingredient.GREENGRASS_CORN },
-          ],
+            { amount: 4, ingredient: ingredient.GREENGRASS_CORN }
+          ]
         },
         detailedProduce: {
           produce: {
             berries: [],
             ingredients: [
               { amount: 2, ingredient: ingredient.FIERY_HERB },
-              { amount: 4, ingredient: ingredient.GREENGRASS_CORN },
-            ],
+              { amount: 4, ingredient: ingredient.GREENGRASS_CORN }
+            ]
           },
           spilledIngredients: [],
           sneakySnack: emptyBerryInventory(),
@@ -50,7 +50,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
           averageTotalSkillProcs: 0,
-          skillActivations: [],
+          skillActivations: []
         },
         averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
@@ -59,9 +59,9 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          inventoryLimit: maxCarrySize(pokemon.DRATINI),
-        },
-      },
+          inventoryLimit: maxCarrySize(pokemon.DRATINI)
+        }
+      }
     ];
 
     const reverseIndex = createPokemonByIngredientReverseIndex(pokemons);
@@ -76,12 +76,12 @@ describe('createPokemonByIngredientReverseIndex', () => {
       {
         pokemonCombination: {
           pokemon: pokemon.PINSIR,
-          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
         },
         detailedProduce: {
           produce: {
             berries: [{ amount: 1, berry: berry.LUM, level: 60 }],
-            ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+            ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
           },
           spilledIngredients: [],
           sneakySnack: [{ amount: 1, berry: berry.LUM, level: 60 }],
@@ -89,7 +89,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
           averageTotalSkillProcs: 0,
-          skillActivations: [],
+          skillActivations: []
         },
         averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
@@ -98,18 +98,18 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          inventoryLimit: maxCarrySize(pokemon.PINSIR),
-        },
+          inventoryLimit: maxCarrySize(pokemon.PINSIR)
+        }
       },
       {
         pokemonCombination: {
           pokemon: pokemon.DELIBIRD,
-          ingredientList: [{ amount: 4, ingredient: ingredient.FANCY_APPLE }],
+          ingredientList: [{ amount: 4, ingredient: ingredient.FANCY_APPLE }]
         },
         detailedProduce: {
           produce: {
             berries: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
-            ingredients: [{ amount: 4, ingredient: ingredient.FANCY_APPLE }],
+            ingredients: [{ amount: 4, ingredient: ingredient.FANCY_APPLE }]
           },
           spilledIngredients: [],
           sneakySnack: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
@@ -117,7 +117,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
           averageTotalSkillProcs: 0,
-          skillActivations: [],
+          skillActivations: []
         },
         averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
@@ -126,9 +126,9 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          inventoryLimit: maxCarrySize(pokemon.DELIBIRD),
-        },
-      },
+          inventoryLimit: maxCarrySize(pokemon.DELIBIRD)
+        }
+      }
     ];
 
     const reverseIndex = createPokemonByIngredientReverseIndex(pokemons);
@@ -148,12 +148,12 @@ describe('createPokemonByIngredientReverseIndex', () => {
       {
         pokemonCombination: {
           pokemon: pokemon.DELIBIRD,
-          ingredientList: [],
+          ingredientList: []
         },
         detailedProduce: {
           produce: {
             berries: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
-            ingredients: [],
+            ingredients: []
           },
           spilledIngredients: [],
           sneakySnack: [{ amount: 2, berry: berry.PAMTRE, level: 60 }],
@@ -161,7 +161,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
           averageTotalSkillProcs: 0,
-          skillActivations: [],
+          skillActivations: []
         },
         averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
@@ -170,9 +170,9 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          inventoryLimit: maxCarrySize(pokemon.DELIBIRD),
-        },
-      },
+          inventoryLimit: maxCarrySize(pokemon.DELIBIRD)
+        }
+      }
     ];
 
     const reverseIndex = createPokemonByIngredientReverseIndex(pokemons);
@@ -184,12 +184,12 @@ describe('createPokemonByIngredientReverseIndex', () => {
       {
         pokemonCombination: {
           pokemon: pokemon.RAIKOU,
-          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
         },
         detailedProduce: {
           produce: {
             berries: [{ amount: 1, berry: berry.LUM, level: 60 }],
-            ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+            ingredients: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
           },
           spilledIngredients: [],
           sneakySnack: [{ amount: 1, berry: berry.LUM, level: 60 }],
@@ -197,7 +197,7 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nightHelps: 0,
           nightHelpsBeforeSS: 0,
           averageTotalSkillProcs: 0,
-          skillActivations: [],
+          skillActivations: []
         },
         averageProduce: InventoryUtils.getEmptyInventory(),
         customStats: {
@@ -206,9 +206,9 @@ describe('createPokemonByIngredientReverseIndex', () => {
           nature: nature.RASH,
           subskills: [],
           skillLevel: 6,
-          inventoryLimit: maxCarrySize(pokemon.RAIKOU),
-        },
-      },
+          inventoryLimit: maxCarrySize(pokemon.RAIKOU)
+        }
+      }
     ];
 
     const reverseIndex = createPokemonByIngredientReverseIndex(pokemons);
@@ -242,7 +242,7 @@ describe('createMemoKey', () => {
   it('correctly formats a key with a single ingredient', () => {
     const params = {
       remainingIngredients: [{ ingredient: 'Apple', amount: 2 }],
-      spotsLeftInTeam: 3,
+      spotsLeftInTeam: 3
     };
     const key = createMemoKey(params);
     expect(key).toBe('Apple:2|3|');
@@ -252,9 +252,9 @@ describe('createMemoKey', () => {
     const params = {
       remainingIngredients: [
         { ingredient: 'Apple', amount: 2 },
-        { ingredient: 'Honey', amount: 1 },
+        { ingredient: 'Honey', amount: 1 }
       ],
-      spotsLeftInTeam: 2,
+      spotsLeftInTeam: 2
     };
     const key = createMemoKey(params);
     expect(key).toBe('Apple:2,Honey:1|2|');
@@ -263,7 +263,7 @@ describe('createMemoKey', () => {
   it('returns only the team spots part when no ingredients are provided', () => {
     const params = {
       remainingIngredients: [],
-      spotsLeftInTeam: 4,
+      spotsLeftInTeam: 4
     };
     const key = createMemoKey(params);
     expect(key).toBe('|4|');
@@ -273,9 +273,9 @@ describe('createMemoKey', () => {
     const params = {
       remainingIngredients: [
         { ingredient: 'Apple', amount: 3 },
-        { ingredient: 'Honey', amount: 2 },
+        { ingredient: 'Honey', amount: 2 }
       ],
-      spotsLeftInTeam: 1,
+      spotsLeftInTeam: 1
     };
     const key = createMemoKey(params);
     expect(key).toBe('Apple:3,Honey:2|1|');
@@ -284,7 +284,7 @@ describe('createMemoKey', () => {
   it('correctly reflects different spots left in team', () => {
     const params = {
       remainingIngredients: [{ ingredient: 'Apple', amount: 1 }],
-      spotsLeftInTeam: 5,
+      spotsLeftInTeam: 5
     };
     const key = createMemoKey(params);
     expect(key).toBe('Apple:1|5|');
@@ -296,8 +296,8 @@ describe('createMemoKey', () => {
       spotsLeftInTeam: 0,
       helperBoost: {
         amount: 3,
-        berry: berry.GREPA.name,
-      },
+        berry: berry.GREPA.name
+      }
     };
 
     const key = createMemoKey(params);
@@ -307,7 +307,7 @@ describe('createMemoKey', () => {
   it('shall support undefined parts', () => {
     const params = {
       remainingIngredients: [],
-      spotsLeftInTeam: 0,
+      spotsLeftInTeam: 0
     };
 
     const key = createMemoKey(params);
@@ -321,7 +321,7 @@ describe('parseMemoKey', () => {
     const parsed = parseMemoKey(key);
     expect(parsed).toEqual({
       remainingIngredients: [{ ingredient: 'Apple', amount: 2 }],
-      spotsLeftInTeam: 3,
+      spotsLeftInTeam: 3
     });
   });
 
@@ -331,9 +331,9 @@ describe('parseMemoKey', () => {
     expect(parsed).toEqual({
       remainingIngredients: [
         { ingredient: 'Apple', amount: 2 },
-        { ingredient: 'Banana', amount: 1 },
+        { ingredient: 'Banana', amount: 1 }
       ],
-      spotsLeftInTeam: 2,
+      spotsLeftInTeam: 2
     });
   });
 
@@ -342,7 +342,7 @@ describe('parseMemoKey', () => {
     const parsed = parseMemoKey(key);
     expect(parsed).toEqual({
       remainingIngredients: [],
-      spotsLeftInTeam: 4,
+      spotsLeftInTeam: 4
     });
   });
 
@@ -352,9 +352,9 @@ describe('parseMemoKey', () => {
     expect(parsed).toEqual({
       remainingIngredients: [
         { ingredient: 'Apple', amount: 2.5 },
-        { ingredient: 'Banana', amount: 1.75 },
+        { ingredient: 'Banana', amount: 1.75 }
       ],
-      spotsLeftInTeam: 1,
+      spotsLeftInTeam: 1
     });
   });
 
@@ -363,7 +363,7 @@ describe('parseMemoKey', () => {
     const parsed = parseMemoKey(key);
     expect(parsed).toEqual({
       remainingIngredients: [{ ingredient: 'Apple', amount: 1 }],
-      spotsLeftInTeam: 5,
+      spotsLeftInTeam: 5
     });
   });
 
@@ -375,8 +375,8 @@ describe('parseMemoKey', () => {
       spotsLeftInTeam: 5,
       helperBoost: {
         amount: 3,
-        berry: 'grepa',
-      },
+        berry: 'grepa'
+      }
     });
   });
 });
@@ -385,42 +385,42 @@ describe('calculateRemainingSimplifiedIngredients', () => {
   it('calculates remaining amounts without rounding', () => {
     const requiredIngredients = [
       { ingredient: 'Apple', amount: 5 },
-      { ingredient: 'Corn', amount: 3 },
+      { ingredient: 'Corn', amount: 3 }
     ];
     const producedIngredients = [
       { ingredient: ingredient.FANCY_APPLE, amount: 2 },
-      { ingredient: ingredient.GREENGRASS_CORN, amount: 2 },
+      { ingredient: ingredient.GREENGRASS_CORN, amount: 2 }
     ];
     const remaining = calculateRemainingSimplifiedIngredients(requiredIngredients, producedIngredients);
     expect(remaining).toEqual([
       { ingredient: 'Apple', amount: 3 },
-      { ingredient: 'Corn', amount: 1 },
+      { ingredient: 'Corn', amount: 1 }
     ]);
   });
 
   it('calculates and rounds up remaining amounts', () => {
     const requiredIngredients = [
       { ingredient: 'Apple', amount: 5 },
-      { ingredient: 'Corn', amount: 4 },
+      { ingredient: 'Corn', amount: 4 }
     ];
     const producedIngredients = [
       { ingredient: ingredient.FANCY_APPLE, amount: 2.5 },
-      { ingredient: ingredient.GREENGRASS_CORN, amount: 1.5 },
+      { ingredient: ingredient.GREENGRASS_CORN, amount: 1.5 }
     ];
     const remaining = calculateRemainingSimplifiedIngredients(requiredIngredients, producedIngredients, true);
     expect(remaining).toEqual([
       { ingredient: 'Apple', amount: 3 },
-      { ingredient: 'Corn', amount: 3 },
+      { ingredient: 'Corn', amount: 3 }
     ]);
   });
 
   it('handles ingredients not produced at all', () => {
     const requiredIngredients = [
       { ingredient: 'Apple', amount: 2 },
-      { ingredient: 'Corn', amount: 4 },
+      { ingredient: 'Corn', amount: 4 }
     ];
     const producedIngredients = [
-      { ingredient: ingredient.HONEY, amount: 5 }, // Honey is not required
+      { ingredient: ingredient.HONEY, amount: 5 } // Honey is not required
     ];
     const remaining = calculateRemainingSimplifiedIngredients(requiredIngredients, producedIngredients);
     expect(remaining).toEqual(requiredIngredients);
@@ -436,11 +436,11 @@ describe('calculateRemainingSimplifiedIngredients', () => {
   it('correctly handles zero remaining ingredients needed', () => {
     const requiredIngredients = [
       { ingredient: 'Apple', amount: 5 },
-      { ingredient: 'Honey', amount: 2 },
+      { ingredient: 'Honey', amount: 2 }
     ];
     const producedIngredients = [
       { ingredient: ingredient.FANCY_APPLE, amount: 5 },
-      { ingredient: ingredient.HONEY, amount: 2 },
+      { ingredient: ingredient.HONEY, amount: 2 }
     ];
     const remaining = calculateRemainingSimplifiedIngredients(requiredIngredients, producedIngredients);
     expect(remaining).toEqual([]);
@@ -452,7 +452,7 @@ describe('sumOfSimplifiedIngredients', () => {
     const ingredients = [
       { ingredient: 'Apple', amount: 5 },
       { ingredient: 'Honey', amount: 3 },
-      { ingredient: 'Corn', amount: 2 },
+      { ingredient: 'Corn', amount: 2 }
     ];
     const total = sumOfSimplifiedIngredients(ingredients);
     expect(total).toEqual(10); // 5 + 3 + 2 = 10
@@ -473,7 +473,7 @@ describe('sumOfSimplifiedIngredients', () => {
   it('handles fractional amounts correctly', () => {
     const ingredients = [
       { ingredient: 'Apple', amount: 1.5 },
-      { ingredient: 'Honey', amount: 2.25 },
+      { ingredient: 'Honey', amount: 2.25 }
     ];
     const total = sumOfSimplifiedIngredients(ingredients);
     expect(total).toBeCloseTo(3.75); // To handle floating point precision issues
@@ -482,7 +482,7 @@ describe('sumOfSimplifiedIngredients', () => {
   it('handles negative amounts, implying a deficit', () => {
     const ingredients = [
       { ingredient: 'Apple', amount: 5 },
-      { ingredient: 'Corn', amount: -2 }, // Assuming negative values can represent a deficit
+      { ingredient: 'Corn', amount: -2 } // Assuming negative values can represent a deficit
     ];
     const total = sumOfSimplifiedIngredients(ingredients);
     expect(total).toEqual(3); // 5 + (-2) = 3
@@ -539,16 +539,16 @@ describe('calculateHelperBoostIngredientsIncrease', () => {
           {
             berry: berry.GREPA,
             amount: 1,
-            level: 60,
-          },
+            level: 60
+          }
         ],
         ingredients: [
           {
             amount: 1,
-            ingredient: ingredient.FANCY_APPLE,
-          },
-        ],
-      },
+            ingredient: ingredient.FANCY_APPLE
+          }
+        ]
+      }
     };
     const member2: CustomPokemonCombinationWithProduce = {
       ...raichu,
@@ -557,16 +557,16 @@ describe('calculateHelperBoostIngredientsIncrease', () => {
           {
             berry: berry.GREPA,
             amount: 1,
-            level: 60,
-          },
+            level: 60
+          }
         ],
         ingredients: [
           {
             amount: 1,
-            ingredient: ingredient.SOOTHING_CACAO,
-          },
-        ],
-      },
+            ingredient: ingredient.SOOTHING_CACAO
+          }
+        ]
+      }
     };
     const result = calculateHelperBoostIngredientsIncrease([member1, member2], 10);
 
@@ -582,36 +582,36 @@ const raichu: CustomPokemonCombinationWithProduce = {
     ingredientList: [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 2,
-        ingredient: ingredient.WARMING_GINGER,
+        ingredient: ingredient.WARMING_GINGER
       },
       {
         amount: 3,
-        ingredient: ingredient.WARMING_GINGER,
-      },
-    ],
+        ingredient: ingredient.WARMING_GINGER
+      }
+    ]
   },
   averageProduce: {
     berries: [
       {
         berry: berry.GREPA,
         amount: 0.6,
-        level: 60,
-      },
+        level: 60
+      }
     ],
     ingredients: [
       {
         amount: 0.2,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 0.5,
-        ingredient: ingredient.WARMING_GINGER,
-      },
-    ],
+        ingredient: ingredient.WARMING_GINGER
+      }
+    ]
   },
   customStats: {
     level: 60,
@@ -619,7 +619,7 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    inventoryLimit: maxCarrySize(pokemon.RAICHU),
+    inventoryLimit: maxCarrySize(pokemon.RAICHU)
   },
   detailedProduce: {
     produce: {
@@ -627,13 +627,13 @@ const raichu: CustomPokemonCombinationWithProduce = {
       ingredients: [
         {
           amount: 3,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 15,
-          ingredient: ingredient.WARMING_GINGER,
-        },
-      ],
+          ingredient: ingredient.WARMING_GINGER
+        }
+      ]
     },
     averageTotalSkillProcs: 0,
     dayHelps: 0,
@@ -641,8 +641,8 @@ const raichu: CustomPokemonCombinationWithProduce = {
     nightHelpsBeforeSS: 0,
     skillActivations: [],
     sneakySnack: emptyBerryInventory(),
-    spilledIngredients: [],
-  },
+    spilledIngredients: []
+  }
 };
 
 const raikou: CustomPokemonCombinationWithProduce = {
@@ -651,40 +651,40 @@ const raikou: CustomPokemonCombinationWithProduce = {
     ingredientList: [
       {
         amount: 2,
-        ingredient: ingredient.SOOTHING_CACAO,
+        ingredient: ingredient.SOOTHING_CACAO
       },
       {
         amount: 8,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 7,
-        ingredient: ingredient.TASTY_MUSHROOM,
-      },
-    ],
+        ingredient: ingredient.TASTY_MUSHROOM
+      }
+    ]
   },
   averageProduce: {
     berries: [
       {
         berry: berry.GREPA,
         amount: 0.6,
-        level: 60,
-      },
+        level: 60
+      }
     ],
     ingredients: [
       {
         amount: 0.2,
-        ingredient: ingredient.SOOTHING_CACAO,
+        ingredient: ingredient.SOOTHING_CACAO
       },
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 1,
-        ingredient: ingredient.TASTY_MUSHROOM,
-      },
-    ],
+        ingredient: ingredient.TASTY_MUSHROOM
+      }
+    ]
   },
   customStats: {
     level: 60,
@@ -692,7 +692,7 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nature: nature.QUIET,
     skillLevel: 6,
     subskills: [subskill.INGREDIENT_FINDER_M, subskill.HELPING_SPEED_M, subskill.INGREDIENT_FINDER_S],
-    inventoryLimit: maxCarrySize(pokemon.RAIKOU),
+    inventoryLimit: maxCarrySize(pokemon.RAIKOU)
   },
   detailedProduce: {
     produce: {
@@ -700,17 +700,17 @@ const raikou: CustomPokemonCombinationWithProduce = {
       ingredients: [
         {
           amount: 3,
-          ingredient: ingredient.SOOTHING_CACAO,
+          ingredient: ingredient.SOOTHING_CACAO
         },
         {
           amount: 14,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 12,
-          ingredient: ingredient.TASTY_MUSHROOM,
-        },
-      ],
+          ingredient: ingredient.TASTY_MUSHROOM
+        }
+      ]
     },
     averageTotalSkillProcs: 3,
     dayHelps: 0,
@@ -718,6 +718,6 @@ const raikou: CustomPokemonCombinationWithProduce = {
     nightHelpsBeforeSS: 0,
     skillActivations: [],
     sneakySnack: emptyBerryInventory(),
-    spilledIngredients: [],
-  },
+    spilledIngredients: []
+  }
 };

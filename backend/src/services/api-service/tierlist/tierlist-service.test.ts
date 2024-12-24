@@ -1,9 +1,9 @@
 import { ingredient, pokemon } from 'sleepapi-common';
-import { TieredPokemonCombinationContribution } from '../../../routes/tierlist-router/tierlist-router';
+import type { TieredPokemonCombinationContribution } from '../../../routes/tierlist-router/tierlist-router';
 import {
   calculateDiffForEntry,
   createPreviousIndexMap,
-  diffTierlistRankings,
+  diffTierlistRankings
 } from '../../../utils/tierlist-utils/tierlist-utils';
 
 describe('diffTierlistRankings', () => {
@@ -16,14 +16,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
     const result = diffTierlistRankings(current);
     expect(result).toEqual(current);
@@ -38,14 +38,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
     const previous: TieredPokemonCombinationContribution[] = [
       {
@@ -55,13 +55,13 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.BLASTOISE,
-          },
-        },
+            pokemon: pokemon.BLASTOISE
+          }
+        }
       },
       {
         diff: 0,
@@ -70,14 +70,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
 
     const result = diffTierlistRankings(current, previous);
@@ -94,13 +94,13 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.BLASTOISE,
-          },
-        },
+            pokemon: pokemon.BLASTOISE
+          }
+        }
       },
       {
         diff: 0,
@@ -109,14 +109,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
     const previous: TieredPokemonCombinationContribution[] = [
       {
@@ -126,14 +126,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
 
     const result = diffTierlistRankings(current, previous);
@@ -154,14 +154,14 @@ describe('diffTierlistRankings', () => {
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
+            score: 100
           },
           pokemonCombination: {
             ingredientList: [],
-            pokemon: pokemon.PINSIR,
-          },
-        },
-      },
+            pokemon: pokemon.PINSIR
+          }
+        }
+      }
     ];
     const previous: TieredPokemonCombinationContribution[] = [];
 
@@ -178,32 +178,32 @@ describe('createPreviousIndexMap', () => {
         pokemonCombinationContribution: {
           pokemonCombination: {
             pokemon: pokemon.BLASTOISE,
-            ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+            ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }]
           },
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
-          },
+            score: 100
+          }
         },
         diff: 0,
-        tier: 'S',
+        tier: 'S'
       },
       {
         pokemonCombinationContribution: {
           pokemonCombination: {
             pokemon: pokemon.PINSIR,
-            ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }],
+            ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }]
           },
           combinedContribution: {
             averagePercentage: 100,
             contributions: [],
-            score: 100,
-          },
+            score: 100
+          }
         },
         diff: 0,
-        tier: 'S',
-      },
+        tier: 'S'
+      }
     ];
 
     expect(createPreviousIndexMap(previous)).toMatchInlineSnapshot(`
@@ -221,16 +221,16 @@ describe('calculateDiffForEntry', () => {
       pokemonCombinationContribution: {
         pokemonCombination: {
           pokemon: pokemon.BLASTOISE,
-          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }]
         },
         combinedContribution: {
           averagePercentage: 100,
           contributions: [],
-          score: 100,
-        },
+          score: 100
+        }
       },
       diff: 0,
-      tier: 'S',
+      tier: 'S'
     };
     const currentIndex = 2;
     const previousIndexMap = new Map<string, number>([['BLASTOISE:Milk', 0]]);
@@ -247,16 +247,16 @@ describe('calculateDiffForEntry', () => {
       pokemonCombinationContribution: {
         pokemonCombination: {
           pokemon: pokemon.BLASTOISE,
-          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }],
+          ingredientList: [{ amount: 2, ingredient: ingredient.MOOMOO_MILK }]
         },
         combinedContribution: {
           averagePercentage: 100,
           contributions: [],
-          score: 100,
-        },
+          score: 100
+        }
       },
       diff: 0,
-      tier: 'S',
+      tier: 'S'
     };
     const currentIndex = 1;
     const previousIndexMap = new Map<string, number>();

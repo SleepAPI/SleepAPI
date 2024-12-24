@@ -16,9 +16,14 @@
 
 import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
 import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
-import { IngredientSet, berry, ingredient, mainskill } from 'sleepapi-common';
-import { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
-import { HelperBoostStatus, MemoizedParameters, SimplifiedIngredientSet } from '../../services/set-cover/set-cover';
+import type { IngredientSet, berry } from 'sleepapi-common';
+import { ingredient, mainskill } from 'sleepapi-common';
+import type { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
+import type {
+  HelperBoostStatus,
+  MemoizedParameters,
+  SimplifiedIngredientSet
+} from '../../services/set-cover/set-cover';
 
 export function createPokemonByIngredientReverseIndex(pokemons: CustomPokemonCombinationWithProduce[]) {
   const reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
@@ -79,14 +84,14 @@ export function parseMemoKey(key: string): MemoizedParameters {
     const [amount, berry] = helperBoostPart.split(':');
     helperBoost = {
       amount: +amount,
-      berry,
+      berry
     };
   }
 
   return {
     remainingIngredients,
     spotsLeftInTeam: parseInt(spotsLeftInTeamStr, 10),
-    helperBoost,
+    helperBoost
   };
 }
 
@@ -166,7 +171,7 @@ export function calculateHelperBoostIngredientsIncrease(
 
     const ingredientsFromBoostedHelps = member.averageProduce.ingredients.map(({ amount, ingredient }) => ({
       amount: amount * addedHelps,
-      ingredient,
+      ingredient
     }));
     increasedIngredients = addIngredientSet(increasedIngredients, ingredientsFromBoostedHelps);
   }

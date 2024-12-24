@@ -1,14 +1,15 @@
 import { MealError } from '@src/domain/error/meal/meal-error';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, RECIPES, SkillActivation, curry, dessert, mainskill, salad } from 'sleepapi-common';
+import type { SkillActivation } from 'sleepapi-common';
+import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
 import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
+import type { CritInfo } from './meal-utils';
 import {
-  CritInfo,
   calculateCritMultiplier,
   getDefaultMealTimes,
   getMeal,
   getMealRecoveryAmount,
-  getMealsForFilter,
+  getMealsForFilter
 } from './meal-utils';
 
 describe('getMeal', () => {
@@ -27,7 +28,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: true,
         salad: false,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(curry.CURRIES);
   });
@@ -37,7 +38,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: true,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(salad.SALADS);
   });
@@ -47,7 +48,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: false,
-        dessert: true,
+        dessert: true
       })
     ).toEqual(dessert.DESSERTS);
   });
@@ -57,7 +58,7 @@ describe('getMealsForFilter', () => {
       getMealsForFilter({
         curry: false,
         salad: false,
-        dessert: false,
+        dessert: false
       })
     ).toEqual(RECIPES);
   });
@@ -68,7 +69,7 @@ describe('getMealsForFilter', () => {
         curry: false,
         salad: false,
         dessert: false,
-        minRecipeBonus: 35,
+        minRecipeBonus: 35
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
@@ -99,7 +100,7 @@ describe('getMealsForFilter', () => {
         curry: false,
         salad: false,
         dessert: false,
-        maxPotSize: 57,
+        maxPotSize: 57
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
       [
@@ -180,7 +181,7 @@ describe('getDefaultMealTimes', () => {
   it('shall skip dinner if we are sleeping', () => {
     const mealTimes = getDefaultMealTimes({
       start: TimeUtils.parseTime('06:00'),
-      end: TimeUtils.parseTime('17:00'),
+      end: TimeUtils.parseTime('17:00')
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
@@ -194,7 +195,7 @@ describe('getDefaultMealTimes', () => {
   it('shall work with night schedule', () => {
     const mealTimes = getDefaultMealTimes({
       start: TimeUtils.parseTime('17:00'),
-      end: TimeUtils.parseTime('05:00'),
+      end: TimeUtils.parseTime('05:00')
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
@@ -246,20 +247,20 @@ describe('calculateCritMultiplier', () => {
         adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
+        skill: mainskill.TASTY_CHANCE_S
       },
       {
         adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
+        skill: mainskill.TASTY_CHANCE_S
       },
       {
         adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
         fractionOfProc: 1,
         nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S,
-      },
+        skill: mainskill.TASTY_CHANCE_S
+      }
     ];
     const {
       critMultiplier,
@@ -267,7 +268,7 @@ describe('calculateCritMultiplier', () => {
       sundayMultiplier,
       fullWeekCritChance,
       weekdayCritChance,
-      sundayCritChance,
+      sundayCritChance
     } = calculateCritMultiplier(skillActivations, new Map());
     expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
     expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
@@ -279,7 +280,7 @@ describe('calculateCritMultiplier', () => {
 
   it('shall calculate default crit multiplier', () => {
     const skillActivations: SkillActivation[] = [
-      { adjustedAmount: 18, fractionOfProc: 1, nrOfHelpsToActivate: 0, skill: mainskill.ENERGY_FOR_EVERYONE },
+      { adjustedAmount: 18, fractionOfProc: 1, nrOfHelpsToActivate: 0, skill: mainskill.ENERGY_FOR_EVERYONE }
     ];
     const {
       critMultiplier,
@@ -287,7 +288,7 @@ describe('calculateCritMultiplier', () => {
       sundayMultiplier,
       fullWeekCritChance,
       weekdayCritChance,
-      sundayCritChance,
+      sundayCritChance
     } = calculateCritMultiplier(skillActivations, new Map());
     expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
     expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
@@ -305,7 +306,7 @@ describe('calculateCritMultiplier', () => {
       sundayCritChance: 0,
       sundayMultiplier: 0,
       weekdayCritChance: 0,
-      weekdayMultiplier: 0,
+      weekdayMultiplier: 0
     };
     cache.set(0, critInfo);
 

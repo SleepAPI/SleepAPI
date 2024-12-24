@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Setup Node.js for Common and Frontend
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -27,15 +27,15 @@ jobs:
       - name: Cache backend dependencies
         uses: actions/cache@v3
         with:
-          path: backend/node_modules
-          key: backend-${{ hashFiles('backend/package-lock.json') }}
+          path: backend/bun.lockb
+          key: backend-${{ hashFiles('backend/bun.lockb') }}
           restore-keys: backend-
 
       - name: Cache frontend dependencies
         uses: actions/cache@v3
         with:
           path: frontend/node_modules
-          key: frontend-${{ hashFiles('frontend/package-lock.json') }}
+          key: frontend2-${{ hashFiles('frontend/package-lock.json') }}
           restore-keys: frontend-
 
       - name: Install and Test Common
@@ -49,10 +49,10 @@ jobs:
       - name: Install and Test Backend
         run: |
           cd backend
-          npm ci
-          npm run build
-          npm run test
-          npm run lint
+          npm install -g bun
+          bun install
+          bun jest
+          bun lint
 
       - name: Install and Test Frontend
         run: |

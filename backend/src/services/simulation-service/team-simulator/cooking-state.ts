@@ -1,14 +1,5 @@
-import {
-  CookedRecipeResult,
-  CookingResult,
-  IngredientSet,
-  MAX_POT_SIZE,
-  RandomUtils,
-  Recipe,
-  curry,
-  dessert,
-  salad,
-} from 'sleepapi-common';
+import type { CookedRecipeResult, CookingResult, IngredientSet, Recipe } from 'sleepapi-common';
+import { MAX_POT_SIZE, RandomUtils, curry, dessert, salad } from 'sleepapi-common';
 
 interface CookedRecipe extends Recipe {
   name: string;
@@ -63,7 +54,7 @@ export class CookingState {
       this.cookRecipeType({
         availableRecipes: potLimitedCurries,
         currentIngredients: this.currentCurryInventory,
-        skippedRecipesGrouped: this.skippedCurries,
+        skippedRecipesGrouped: this.skippedCurries
       }) ?? curry.MIXED_CURRY;
 
     const potLimitedSalads = this.findRecipesWithinPotLimit(allSalads, currentPotSize, this.skippedSalads);
@@ -71,7 +62,7 @@ export class CookingState {
       this.cookRecipeType({
         availableRecipes: potLimitedSalads,
         currentIngredients: this.currentSaladInventory,
-        skippedRecipesGrouped: this.skippedSalads,
+        skippedRecipesGrouped: this.skippedSalads
       }) ?? salad.MIXED_SALAD;
 
     const potLimitedDesserts = this.findRecipesWithinPotLimit(allDesserts, currentPotSize, this.skippedDesserts);
@@ -79,7 +70,7 @@ export class CookingState {
       this.cookRecipeType({
         availableRecipes: potLimitedDesserts,
         currentIngredients: this.currentDessertInventory,
-        skippedRecipesGrouped: this.skippedDesserts,
+        skippedRecipesGrouped: this.skippedDesserts
       }) ?? dessert.MIXED_JUICE;
 
     const extraTasty = RandomUtils.roll(currentCritChance);
@@ -94,7 +85,7 @@ export class CookingState {
       sunday,
       strength: cookedCurry.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedCurry.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedCurry.nrOfIngredients
     });
 
     this.cookedSalads.push({
@@ -102,7 +93,7 @@ export class CookingState {
       sunday,
       strength: cookedSalad.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedSalad.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedSalad.nrOfIngredients
     });
 
     this.cookedDesserts.push({
@@ -110,7 +101,7 @@ export class CookingState {
       sunday,
       strength: cookedDessert.valueMax * extraTastyFactor,
       extraTasty,
-      nrOfFiller: currentPotSize - cookedDessert.nrOfIngredients,
+      nrOfFiller: currentPotSize - cookedDessert.nrOfIngredients
     });
 
     this.bonusPotSize = 0;
@@ -144,7 +135,7 @@ export class CookingState {
             reason: 'pot',
             totalCount: 0,
             potMissing: { count: 0, totalAmountMissing: 0 },
-            ingredientMissing: new Map(),
+            ingredientMissing: new Map()
           };
           skippedRecipesGrouped.set(recipe.name, existingSkippedRecipe);
         }
@@ -178,18 +169,18 @@ export class CookingState {
       curry: {
         weeklyStrength: this.cookedCurries.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedCurries.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedCurries, this.skippedCurries),
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedCurries, this.skippedCurries)
       },
       salad: {
         weeklyStrength: this.cookedSalads.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedSalads.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedSalads, this.skippedSalads),
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedSalads, this.skippedSalads)
       },
       dessert: {
         weeklyStrength: this.cookedDesserts.reduce((sum, cur) => sum + cur.strength, 0) / nrOfWeeks,
         sundayStrength: this.cookedDesserts.reduce((sum, cur) => sum + (cur.sunday ? cur.strength : 0), 0) / nrOfWeeks,
-        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedDesserts, this.skippedDesserts),
-      },
+        cookedRecipes: this.groupAndCountCookedRecipes(this.cookedDesserts, this.skippedDesserts)
+      }
     };
   }
 
@@ -222,7 +213,7 @@ export class CookingState {
           ingredientLimited.push({
             count,
             averageMissing: totalAmountMissing / count,
-            ingredientName,
+            ingredientName
           });
         }
       }
@@ -236,9 +227,9 @@ export class CookingState {
           count: skippedRecipe?.potMissing.count ?? 0,
           averageMissing: skippedRecipe?.potMissing.count
             ? skippedRecipe.potMissing.totalAmountMissing / skippedRecipe.potMissing.count
-            : 0,
+            : 0
         },
-        ingredientLimited,
+        ingredientLimited
       });
     }
 
@@ -289,7 +280,7 @@ export class CookingState {
           reason: 'ingredients',
           totalCount: 0,
           potMissing: { count: 0, totalAmountMissing: 0 },
-          ingredientMissing: new Map(),
+          ingredientMissing: new Map()
         };
         skippedRecipesGrouped.set(recipe.name, existingEntry);
       }
@@ -308,7 +299,7 @@ export class CookingState {
           } else {
             existingEntry.ingredientMissing.set(requiredSet.ingredient.name, {
               count: 1,
-              totalAmountMissing: missingAmount,
+              totalAmountMissing: missingAmount
             });
           }
         }

@@ -1,11 +1,12 @@
-import { PokemonIngredientSet, Produce, emptyBerryInventory, ingredient, pokemon } from 'sleepapi-common';
+import type { PokemonIngredientSet, Produce } from 'sleepapi-common';
+import { emptyBerryInventory, ingredient, pokemon } from 'sleepapi-common';
 import { calculateAverageProduce, clampHelp } from './produce-calculator';
 
 describe('calculateAverageProduce', () => {
   it('shall average a Pokemons produce based on ingredient percentage', () => {
     const averagePokemonCombination: PokemonIngredientSet = {
       pokemon: pokemon.PINSIR,
-      ingredientList: [{ amount: 1, ingredient: ingredient.FANCY_APPLE }],
+      ingredientList: [{ amount: 1, ingredient: ingredient.FANCY_APPLE }]
     };
     const ingredientPercentage = 0.5;
     const berriesPerDrop = 1;
@@ -44,7 +45,7 @@ describe('clampHelp', () => {
   it('shall clamp help if not enough space left in inventory', () => {
     const produce: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 2, ingredient: ingredient.BEAN_SAUSAGE }],
+      ingredients: [{ amount: 2, ingredient: ingredient.BEAN_SAUSAGE }]
     };
     const result = clampHelp({ amount: 2, averageProduce: produce, inventorySpace: 1 });
     expect(result).toMatchInlineSnapshot(`
@@ -68,7 +69,7 @@ describe('clampHelp', () => {
   it('shall not clamp help if space left in inventory', () => {
     const produce: Produce = {
       berries: emptyBerryInventory(),
-      ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
+      ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }]
     };
     const result = clampHelp({ amount: 1, averageProduce: produce, inventorySpace: 2 });
     expect(result).toMatchInlineSnapshot(`

@@ -1,4 +1,4 @@
-import { TimePeriod, nature } from 'sleepapi-common';
+import type { TimePeriod, nature } from 'sleepapi-common';
 
 export interface SleepInfo {
   period: TimePeriod;

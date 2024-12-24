@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-import { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
-import {
-  IngredientSet,
-  MAX_RECIPE_LEVEL,
-  PokemonIngredientSet,
-  Recipe,
-  pokemon,
-  recipeLevelBonus,
-} from 'sleepapi-common';
+import type { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
+import type { IngredientSet, PokemonIngredientSet, Recipe, pokemon } from 'sleepapi-common';
+import { MAX_RECIPE_LEVEL, recipeLevelBonus } from 'sleepapi-common';
 
 /**
  * Calculates percentage covered of given meal by given ingredient list
@@ -85,7 +79,7 @@ export function calculateRemainingIngredients(
 export function addIngredientSet(target: IngredientSet[], toAdd: IngredientSet[]): IngredientSet[] {
   const result: IngredientSet[] = target.map((ingredientSet) => ({
     ingredient: ingredientSet.ingredient,
-    amount: ingredientSet.amount,
+    amount: ingredientSet.amount
   }));
 
   for (const { amount, ingredient: addedIngredient } of toAdd) {
@@ -110,7 +104,7 @@ export function extractRelevantSurplus(recipe: IngredientSet[], surplus: Ingredi
   return {
     total: surplus,
     relevant,
-    extra,
+    extra
   };
 }
 
@@ -171,7 +165,7 @@ export function combineIngredientDrops(array1: IngredientSet[], array2: Ingredie
     if (curr.ingredient.name === other.ingredient.name) {
       acc.push({
         amount: curr.amount + other.amount,
-        ingredient: curr.ingredient,
+        ingredient: curr.ingredient
       });
     } else {
       acc.push(curr, other);
@@ -185,8 +179,8 @@ export function calculateAveragePokemonIngredientSet(pokemonCombination: Pokemon
     pokemon: pokemonCombination.pokemon,
     ingredientList: pokemonCombination.ingredientList.map(({ ingredient, amount }) => ({
       ingredient,
-      amount: amount / pokemonCombination.ingredientList.length,
-    })),
+      amount: amount / pokemonCombination.ingredientList.length
+    }))
   };
 }
 
@@ -226,6 +220,6 @@ export function calculateContributedIngredientsValue(
 
   return {
     contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,
-    fillerValue,
+    fillerValue
   };
 }

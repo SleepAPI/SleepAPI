@@ -1,6 +1,6 @@
-import { PokemonCombinationContributions } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { Contribution } from '@src/domain/computed/contribution';
+import type { PokemonCombinationContributions } from '@src/domain/combination/combination';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { Contribution } from '@src/domain/computed/contribution';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '@src/services/api-service/optimal/optimal-service';
 import {
   excludeContributions,
@@ -8,9 +8,9 @@ import {
   groupContributionsByType,
   selectTopNContributions,
   sortByContributedPowerDesc,
-  sumContributedPower,
+  sumContributedPower
 } from '@src/services/calculator/contribution/contribution-calculator';
-import { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
+import type { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
 
 export interface ScoreResult {
   score: number;
@@ -27,9 +27,9 @@ export function calculateCombinedContributions(pokemonCombinationContributions: 
       scoreResult: {
         score: score.score,
         contributions,
-        countedMeals: score.countedMeals,
+        countedMeals: score.countedMeals
       },
-      stats,
+      stats
     };
   });
 }

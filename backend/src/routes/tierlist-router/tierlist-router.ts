@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import TierlistController from '../../controllers/tierlist/tierlist.controller';
-import { PokemonCombinationCombinedContribution } from '../../domain/combination/combination';
+import type { Request, Response } from 'express';
+import type TierlistController from '../../controllers/tierlist/tierlist.controller';
+import type { PokemonCombinationCombinedContribution } from '../../domain/combination/combination';
 import { Logger } from '../../services/logger/logger';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
 import { queryAsBoolean } from '../../utils/routing/routing-utils';
@@ -45,7 +45,7 @@ class TierlistRouterImpl {
             potLimit: queryAsBoolean(req.query.potLimit),
             onlyBest: queryAsBoolean(req.query.onlyBest),
             pretty: queryAsBoolean(req.query.pretty),
-            previous: queryAsBoolean(req.query.previous),
+            previous: queryAsBoolean(req.query.previous)
           };
 
           const tieredData: TieredPokemonCombinationContribution[] = await controller.getCookingTierlist(params);

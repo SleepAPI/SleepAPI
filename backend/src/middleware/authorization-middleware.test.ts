@@ -1,8 +1,9 @@
-import { DBUser } from '@src/database/dao/user/user-dao';
-import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
+import type { DBUser } from '@src/database/dao/user/user-dao';
+import type { AuthenticatedRequest } from '@src/middleware/authorization-middleware';
+import { validateAuthHeader } from '@src/middleware/authorization-middleware';
 import { verify } from '@src/services/api-service/login/login-service';
 import { Logger } from '@src/services/logger/logger';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 jest.mock('@src/services/api-service/login/login-service.ts');
 jest.mock('@src/services/logger/logger.ts');
@@ -14,11 +15,11 @@ describe('validateAuthHeader middleware', () => {
 
   beforeEach(() => {
     req = {
-      headers: {},
+      headers: {}
     };
     res = {
       sendStatus: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      json: jest.fn()
     };
     next = jest.fn();
   });
@@ -49,7 +50,7 @@ describe('validateAuthHeader middleware', () => {
       sub: 'test-sub',
       external_id: '00000000-0000-0000-0000-000000000000',
       name: 'Test User',
-      avatar: 'test-avatar',
+      avatar: 'test-avatar'
     };
     (verify as jest.Mock).mockResolvedValue(mockUser);
 

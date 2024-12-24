@@ -1,7 +1,8 @@
 import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { Summary, mainskill } from 'sleepapi-common';
+import type { Summary } from 'sleepapi-common';
+import { mainskill } from 'sleepapi-common';
 
 describe('SummaryEvent', () => {
   it('summary event shall format correctly', () => {
@@ -28,12 +29,12 @@ describe('SummaryEvent', () => {
       totalProduce: MOCKED_PRODUCE,
       totalRecovery: 6,
       collectFrequency: TimeUtils.parseTime('00:10'),
-      skillBerriesOtherValue: 10,
+      skillBerriesOtherValue: 10
     };
     const event = new SummaryEvent({
       time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
-      summary,
+      summary
     });
     expect(event.format()).toMatchInlineSnapshot(`
       "-----

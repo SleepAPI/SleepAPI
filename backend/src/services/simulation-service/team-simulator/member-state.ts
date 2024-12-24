@@ -1,35 +1,37 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { NotImplementedError } from '@src/domain/error/programming/not-implemented-error';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { MainskillError } from '@src/domain/error/stat/stat-error';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
 import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
 import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator';
-import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
+import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
-import {
+import type {
   BerrySet,
   IngredientSet,
-  METRONOME_SKILLS,
   Mainskill,
   MainskillUnit,
-  MathUtils,
   MemberProduction,
   MemberProductionBase,
   ModifierType,
   Produce,
+  TimePeriod
+} from 'sleepapi-common';
+import {
+  METRONOME_SKILLS,
+  MathUtils,
   RandomUtils,
-  TimePeriod,
   calculatePityProcThreshold,
   defaultZero,
   emptyProduce,
   ingredient,
   mainskill,
   multiplyProduce,
-  subskill,
+  subskill
 } from 'sleepapi-common';
 
 export interface SkillValue {
@@ -120,7 +122,7 @@ export class MemberState {
 
     const nightPeriod = {
       start: settings.bedtime,
-      end: settings.wakeup,
+      end: settings.wakeup
     };
     this.nightPeriod = nightPeriod;
 
@@ -142,13 +144,13 @@ export class MemberState {
     this.sneakySnackBerries = {
       amount: berriesPerDrop,
       berry: member.pokemonSet.pokemon.berry,
-      level: member.level,
+      level: member.level
     };
 
     const frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member,
       settings,
-      helpingBonus: nrOfHelpingBonus,
+      helpingBonus: nrOfHelpingBonus
     });
     // TODO: not nice to duplicate this between here and energy utils in case brackets change
     this.frequency0 = frequency * 1; // 0 energy
@@ -207,7 +209,7 @@ export class MemberState {
       period: this.nightPeriod,
       incense: false,
       erb: nrOfErb,
-      nature: this.member.nature,
+      nature: this.member.nature
     };
 
     const missingEnergy = Math.max(0, 100 - this.currentEnergy);
@@ -255,7 +257,7 @@ export class MemberState {
   public updateIngredientBag() {
     const ingsSinceLastCook = this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
       amount: this.helpsSinceLastCook * amount,
-      ingredient,
+      ingredient
     }));
     this.cookingState?.addIngredients(ingsSinceLastCook);
     this.helpsSinceLastCook = 0;
@@ -366,16 +368,16 @@ export class MemberState {
         .map(({ amount, berry, level }) => ({
           amount: this.totalAverageHelps * amount,
           berry,
-          level,
+          level
         }))
         .concat({
           ...this.sneakySnackBerries,
-          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount,
+          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount
         }),
       ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: this.totalAverageHelps * amount,
-        ingredient,
-      })),
+        ingredient
+      }))
     });
     const totalSkillProduce: Produce = this.totalProduce; // so far only skill value has been added to totalProduce
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
@@ -384,8 +386,8 @@ export class MemberState {
       berries: [],
       ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: (spilledHelps * amount) / iterations,
-        ingredient,
-      })),
+        ingredient
+      }))
     });
 
     return {
@@ -407,14 +409,14 @@ export class MemberState {
         nightHelpsBeforeSS: this.nightHelpsBeforeSS / iterations,
         sneakySnack: {
           ...this.sneakySnackBerries,
-          amount: (this.sneakySnackBerries.amount * this.totalSneakySnackHelps) / iterations,
+          amount: (this.sneakySnackBerries.amount * this.totalSneakySnackHelps) / iterations
         },
         skillCrits: this.skillCrits / iterations,
         skillCritValue: this.skillValue.crit / iterations,
         wastedEnergy: this.wastedEnergy / iterations,
         totalRecovery: this.totalRecovery / iterations,
-        morningProcs: this.morningProcs / iterations,
-      },
+        morningProcs: this.morningProcs / iterations
+      }
     };
   }
 
@@ -425,16 +427,16 @@ export class MemberState {
         .map(({ amount, berry, level }) => ({
           amount: this.totalAverageHelps * amount,
           berry,
-          level,
+          level
         }))
         .concat({
           ...this.sneakySnackBerries,
-          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount,
+          amount: this.totalSneakySnackHelps * this.sneakySnackBerries.amount
         }),
       ingredients: this.averageProduce.ingredients.map(({ amount, ingredient }) => ({
         amount: this.totalAverageHelps * amount,
-        ingredient,
-      })),
+        ingredient
+      }))
     });
 
     this.totalProduce = InventoryUtils.addToInventory(this.totalProduce, totalHelpProduce);
@@ -442,7 +444,7 @@ export class MemberState {
     return {
       produceTotal: multiplyProduce(this.totalProduce, 1 / iterations),
       skillProcs: this.skillProcs / this.metronomeFactor / iterations,
-      externalId: this.id,
+      externalId: this.id
     };
   }
 
@@ -529,7 +531,7 @@ export class MemberState {
       },
       copy: () => {
         throw new NotImplementedError('Skill copy not yet implemented');
-      },
+      }
     };
 
     return skillActivators[skill.unit](skill);
@@ -547,7 +549,7 @@ export class MemberState {
       },
       Base: () => {
         throw new ProgrammingError('Base skills should not enter the modifier function');
-      },
+      }
     };
 
     return modifierActivators[skill.modifier.type](skill);
@@ -572,11 +574,11 @@ export class MemberState {
             regular: {
               amount: this.skillAmount(skill),
               random: true,
-              chanceTargetLowest: mainskill.ENERGIZING_CHEER_TARGET_LOWEST_CHANCE,
+              chanceTargetLowest: mainskill.ENERGIZING_CHEER_TARGET_LOWEST_CHANCE
             },
-            crit: { amount: 0, random: false, chanceTargetLowest: 0 },
-          },
-        },
+            crit: { amount: 0, random: false, chanceTargetLowest: 0 }
+          }
+        }
       };
     } else if (skill.isSkill(mainskill.ENERGY_FOR_EVERYONE)) {
       return {
@@ -584,9 +586,9 @@ export class MemberState {
         teamValue: {
           energy: {
             regular: { amount: this.skillAmount(skill), random: false, chanceTargetLowest: 0 },
-            crit: { amount: 0, random: false, chanceTargetLowest: 0 },
-          },
-        },
+            crit: { amount: 0, random: false, chanceTargetLowest: 0 }
+          }
+        }
       };
     }
     return { crit: false };
@@ -596,7 +598,7 @@ export class MemberState {
     if (skill.isSkill(mainskill.HELPER_BOOST)) {
       const unique = TeamSimulatorUtils.uniqueMembersWithBerry({
         berry: this.berry,
-        members: this.team,
+        members: this.team
       });
       const uniqueHelps = mainskill.HELPER_BOOST_UNIQUE_BOOST_TABLE[unique - 1][this.skillLevel - 1];
 
@@ -611,7 +613,7 @@ export class MemberState {
     const ingMagnetAmount = this.skillAmount(mainskill.INGREDIENT_MAGNET_S);
     const magnetIngredients: IngredientSet[] = ingredient.INGREDIENTS.map((ing) => ({
       ingredient: ing,
-      amount: ingMagnetAmount / ingredient.INGREDIENTS.length,
+      amount: ingMagnetAmount / ingredient.INGREDIENTS.length
     }));
     const magnetProduce: Produce = { ingredients: magnetIngredients, berries: [] };
 
@@ -671,14 +673,14 @@ export class MemberState {
           teamValue: {
             energy: {
               regular: { amount: 0, random: false, chanceTargetLowest: 0 },
-              crit: { amount: teamAmount, random: true, chanceTargetLowest: 0 },
-            },
-          },
+              crit: { amount: teamAmount, random: true, chanceTargetLowest: 0 }
+            }
+          }
         };
       } else {
         return {
           crit: false,
-          selfValue: { regular: clampedEnergyRecovered, crit: 0 },
+          selfValue: { regular: clampedEnergyRecovered, crit: 0 }
         };
       }
     }
@@ -703,7 +705,7 @@ export class MemberState {
       const berries: BerrySet[] = this.otherMembers.map((member) => ({
         berry: member.pokemonSet.pokemon.berry,
         amount: regularOtherAmount + critOtherAmount,
-        level: member.level,
+        level: member.level
       }));
       berries.push({ berry: this.berry, amount: regularSelfAmount + critSelfAmount, level: this.level });
 
@@ -712,8 +714,8 @@ export class MemberState {
         crit: critSelfAmount > 0,
         selfValue: {
           regular: regularSelfAmount + regularOtherAmount * this.otherMembers.length,
-          crit: critSelfAmount + critOtherAmount * this.otherMembers.length,
-        },
+          crit: critSelfAmount + critOtherAmount * this.otherMembers.length
+        }
       };
     }
     return { crit: false };

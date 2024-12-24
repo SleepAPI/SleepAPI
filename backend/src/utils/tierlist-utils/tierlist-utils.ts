@@ -1,5 +1,5 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
 import { hashPokemonCombination } from '../optimal-utils/optimal-utils';
 
 export function diffTierlistRankings(

@@ -1,7 +1,7 @@
-import { SetCoverProductionStats } from '@src/domain/computed/production';
+import type { SetCoverProductionStats } from '@src/domain/computed/production';
 import {
   calculateOptimalProductionForSetCover,
-  calculateSetCover,
+  calculateSetCover
 } from '@src/services/calculator/set-cover/calculate-set-cover';
 import { getMeal } from '@src/utils/meal-utils/meal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
@@ -39,13 +39,13 @@ export function findOptimalMonsForIngredient(
     cache: new Map(),
     reverseIndex,
     maxTeamSize: 1,
-    timeout: TEAMFINDER_SET_COVER_TIMEOUT,
+    timeout: TEAMFINDER_SET_COVER_TIMEOUT
   });
 
   return {
     ingredient: ingredient.name,
     filter: input,
-    teams: optimalCombinations,
+    teams: optimalCombinations
   };
 }
 
@@ -65,7 +65,7 @@ function customOptimalSet(
     recipe: meal.ingredients,
     reverseIndex,
     cache: new Map(),
-    timeout,
+    timeout
   });
 
   return {
@@ -74,6 +74,6 @@ function customOptimalSet(
     recipe: meal.ingredients,
     value: meal.value,
     filter: input,
-    teams: optimalCombinations,
+    teams: optimalCombinations
   };
 }

@@ -1,6 +1,6 @@
-import LoginController from '@src/controllers/login/login.controller';
+import type LoginController from '@src/controllers/login/login.controller';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { BaseRouter } from '../base-router';
 
 class LoginRouterImpl {

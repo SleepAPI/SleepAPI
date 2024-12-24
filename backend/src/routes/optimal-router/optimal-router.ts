@@ -1,12 +1,11 @@
-import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { ProductionStats } from '@src/domain/computed/production';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination';
+import type { ProductionStats } from '@src/domain/computed/production';
 import { Logger } from '@src/services/logger/logger';
 import { runWorkerFile } from '@src/services/worker/worker';
-import { ScoreResult } from '@src/utils/optimal-utils/optimal-utils';
-import { Request, Response } from 'express';
+import type { ScoreResult } from '@src/utils/optimal-utils/optimal-utils';
+import type { Request, Response } from 'express';
 import path from 'path';
-import { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
-import workerpool from 'workerpool';
+import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
 // TODO: this is pretty much same as input prod request from calc
@@ -55,10 +54,6 @@ export interface IngredientRankerResult {
   teams: OptimalTeamSolution[];
 }
 
-const pool = workerpool.pool(path.resolve(__dirname, './optimal-meal-worker.js'), {
-  maxWorkers: 1,
-});
-
 class OptimalCombinationRouterImpl {
   public async register() {
     BaseRouter.router.post(
@@ -70,12 +65,16 @@ class OptimalCombinationRouterImpl {
         try {
           Logger.log('Entered /optimal/ingredient/:name');
 
+          const { name } = req.params;
+          const { body } = req;
+          const { pretty } = req.query;
+
           const data = await runWorkerFile(path.resolve(__dirname, './optimal-ingredient-worker.js'), {
-            name: req.params.name,
-            body: req.body,
-            pretty: req.query.pretty,
+            name,
+            body,
+            pretty
           });
-          res.header('Content-Type', 'application/json').send(JSON.stringify(data, null, 4));
+          res.json(data);
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');
@@ -96,9 +95,12 @@ class OptimalCombinationRouterImpl {
           const { body } = req;
           const { pretty } = req.query;
 
-          const result = await pool.exec('calculateOptimalMeal', [name, body, pretty]);
-
-          res.header('Content-Type', 'application/json').send(JSON.stringify(result, null, 4));
+          const data = await runWorkerFile(path.resolve(__dirname, './optimal-meal-worker.js'), {
+            name,
+            body,
+            pretty
+          });
+          res.json(data);
         } catch (err) {
           Logger.error(err as Error);
           res.status(500).send('Something went wrong');

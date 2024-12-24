@@ -1,6 +1,6 @@
-import MealController from '@src/controllers/meal/meal.controller';
+import type MealController from '@src/controllers/meal/meal.controller';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { BaseRouter } from '../base-router';
 
 export interface MealNamesQueryParams {

@@ -1,25 +1,15 @@
-import { PokemonCombinationContributions } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { Contribution } from '@src/domain/computed/contribution';
+import type { PokemonCombinationContributions } from '@src/domain/combination/combination';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { Contribution } from '@src/domain/computed/contribution';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import {
-  PokemonIngredientSet,
-  RecipeType,
-  berry,
-  curry,
-  dessert,
-  ingredient,
-  maxCarrySize,
-  nature,
-  pokemon,
-  salad,
-} from 'sleepapi-common';
+import type { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
+import { berry, curry, dessert, ingredient, maxCarrySize, nature, pokemon, salad } from 'sleepapi-common';
 import {
   calculateCombinedContributions,
   calculateOptimalFlexibleScore,
   hashPokemonCombination,
   removeDuplicatePokemonCombinations,
-  selectBestContributionsWithMultiplier,
+  selectBestContributionsWithMultiplier
 } from './optimal-utils';
 
 describe('calculateCombinedContributions', () => {
@@ -27,14 +17,14 @@ describe('calculateCombinedContributions', () => {
     const pokemonCombinationContributions: PokemonCombinationContributions = {
       pokemonCombination: {
         pokemon: pokemon.PINSIR,
-        ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }],
+        ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }]
       },
       contributions: [
         {
           contributedPower: 100,
           meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
-          percentage: 100,
-        },
+          percentage: 100
+        }
       ],
       stats: {
         level: 60,
@@ -42,18 +32,18 @@ describe('calculateCombinedContributions', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
-        inventoryLimit: maxCarrySize(pokemon.PINSIR),
-      },
+        inventoryLimit: maxCarrySize(pokemon.PINSIR)
+      }
     };
 
     const result = calculateCombinedContributions([pokemonCombinationContributions]);
     expect(result).toHaveLength(1);
     expect(result[0].scoreResult.score).toBe(120);
     expect(result[0].scoreResult.countedMeals.map((meal) => meal.meal.name)).toEqual([
-      dessert.JIGGLYPUFFS_FRUITY_FLAN.name,
+      dessert.JIGGLYPUFFS_FRUITY_FLAN.name
     ]);
     expect(result[0].scoreResult.contributions.map((meal) => meal.meal.name)).toEqual([
-      dessert.JIGGLYPUFFS_FRUITY_FLAN.name,
+      dessert.JIGGLYPUFFS_FRUITY_FLAN.name
     ]);
     expect(result[0].stats).toEqual(pokemonCombinationContributions.stats);
   });
@@ -66,17 +56,17 @@ describe('calculateOptimalFlexibleScore', () => {
     const contribution1: Contribution = {
       contributedPower: 100,
       meal: curry.DREAM_EATER_BUTTER_CURRY,
-      percentage: 100,
+      percentage: 100
     };
     const contribution2: Contribution = {
       contributedPower: 10,
       meal: curry.SPORE_MUSHROOM_CURRY,
-      percentage: 100,
+      percentage: 100
     };
     const contribution3: Contribution = {
       contributedPower: 50,
       meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
-      percentage: 100,
+      percentage: 100
     };
 
     const contributions = [contribution1, contribution2, contribution3];
@@ -85,13 +75,13 @@ describe('calculateOptimalFlexibleScore', () => {
     // Best contribution from curry (with multiplier)
     const expectedBestCurry = {
       ...contribution1,
-      contributedPower: contribution1.contributedPower * BEST_RECIPE_PER_TYPE_MULTIPLIER,
+      contributedPower: contribution1.contributedPower * BEST_RECIPE_PER_TYPE_MULTIPLIER
     };
 
     // Best contribution from dessert (with multiplier)
     const expectedBestDessert = {
       ...contribution3,
-      contributedPower: contribution3.contributedPower * BEST_RECIPE_PER_TYPE_MULTIPLIER,
+      contributedPower: contribution3.contributedPower * BEST_RECIPE_PER_TYPE_MULTIPLIER
     };
 
     // Expect these best contributions to be in the result
@@ -125,38 +115,38 @@ describe('selectBestContributionsWithMultiplier', () => {
     const curryContribution: Contribution = {
       contributedPower: 10,
       meal: curry.DREAM_EATER_BUTTER_CURRY,
-      percentage: 100,
+      percentage: 100
     };
 
     const saladContribution: Contribution = {
       contributedPower: 15,
       meal: salad.NINJA_SALAD,
-      percentage: 100,
+      percentage: 100
     };
 
     const dessertContribution: Contribution = {
       contributedPower: 20,
       meal: dessert.JIGGLYPUFFS_FRUITY_FLAN,
-      percentage: 100,
+      percentage: 100
     };
 
     const contributionsByType: Record<RecipeType, Contribution[]> = {
       curry: [curryContribution],
       salad: [saladContribution],
-      dessert: [dessertContribution],
+      dessert: [dessertContribution]
     };
 
     const expectedBestCurry = {
       ...curryContribution,
-      contributedPower: curryContribution.contributedPower * multiplier,
+      contributedPower: curryContribution.contributedPower * multiplier
     };
     const expectedBestSalad = {
       ...saladContribution,
-      contributedPower: saladContribution.contributedPower * multiplier,
+      contributedPower: saladContribution.contributedPower * multiplier
     };
     const expectedBestDessert = {
       ...dessertContribution,
-      contributedPower: dessertContribution.contributedPower * multiplier,
+      contributedPower: dessertContribution.contributedPower * multiplier
     };
 
     const result = selectBestContributionsWithMultiplier(contributionsByType, multiplier);
@@ -173,32 +163,32 @@ describe('selectBestContributionsWithMultiplier', () => {
     const curryContribution1: Contribution = {
       contributedPower: 10,
       meal: curry.SPORE_MUSHROOM_CURRY,
-      percentage: 100,
+      percentage: 100
     };
     const curryContribution2: Contribution = {
       contributedPower: 20,
       meal: curry.DREAM_EATER_BUTTER_CURRY,
-      percentage: 100,
+      percentage: 100
     };
     const saladContribution: Contribution = {
       contributedPower: 15,
       meal: salad.NINJA_SALAD,
-      percentage: 100,
+      percentage: 100
     };
 
     const contributionsByType: Record<RecipeType, Contribution[]> = {
       curry: [curryContribution1, curryContribution2],
       salad: [saladContribution],
-      dessert: [],
+      dessert: []
     };
 
     const expectedBestCurry = {
       ...curryContribution2,
-      contributedPower: curryContribution2.contributedPower * multiplier,
+      contributedPower: curryContribution2.contributedPower * multiplier
     };
     const expectedBestSalad = {
       ...saladContribution,
-      contributedPower: saladContribution.contributedPower * multiplier,
+      contributedPower: saladContribution.contributedPower * multiplier
     };
 
     const result = selectBestContributionsWithMultiplier(contributionsByType, multiplier);
@@ -218,12 +208,12 @@ describe('removeDuplicatePokemonCombinations', () => {
         nature: nature.RASH,
         subskills: [],
         skillLevel: 6,
-        inventoryLimit: maxCarrySize(pokemon.PINSIR),
+        inventoryLimit: maxCarrySize(pokemon.PINSIR)
       },
       detailedProduce: {
         produce: {
           berries: [{ amount: 2, berry: berry.LEPPA, level: 60 }],
-          ingredients: [],
+          ingredients: []
         },
         sneakySnack: [{ amount: 10, berry: berry.LEPPA, level: 60 }],
         spilledIngredients: [],
@@ -231,16 +221,16 @@ describe('removeDuplicatePokemonCombinations', () => {
         nightHelps: 0,
         nightHelpsBeforeSS: 0,
         averageTotalSkillProcs: 0,
-        skillActivations: [],
+        skillActivations: []
       },
       averageProduce: InventoryUtils.getEmptyInventory(),
       pokemonCombination: {
         pokemon: pokemon.PINSIR,
         ingredientList: [
           { amount: 2, ingredient: ingredient.HONEY },
-          { amount: 5, ingredient: ingredient.FANCY_APPLE },
-        ],
-      },
+          { amount: 5, ingredient: ingredient.FANCY_APPLE }
+        ]
+      }
     };
 
     expect(removeDuplicatePokemonCombinations([pokemonCombination, pokemonCombination])).toEqual([pokemonCombination]);
@@ -253,8 +243,8 @@ describe('hashPokemonCombination', () => {
       pokemon: pokemon.PINSIR,
       ingredientList: [
         { amount: 2, ingredient: ingredient.HONEY },
-        { amount: 5, ingredient: ingredient.FANCY_APPLE },
-      ],
+        { amount: 5, ingredient: ingredient.FANCY_APPLE }
+      ]
     };
 
     expect(hashPokemonCombination(pokemonCombination)).toBe('PINSIR:Honey,Apple');

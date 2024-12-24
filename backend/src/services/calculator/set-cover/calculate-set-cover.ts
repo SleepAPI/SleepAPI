@@ -1,8 +1,9 @@
-import { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
-import { SetCoverProductionStats } from '@src/domain/computed/production';
+import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
+import type { SetCoverProductionStats } from '@src/domain/computed/production';
 import { SetCover } from '@src/services/set-cover/set-cover';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { IngredientSet, SkillActivation, mainskill, pokemon } from 'sleepapi-common';
+import type { IngredientSet, SkillActivation } from 'sleepapi-common';
+import { mainskill, pokemon } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
 import { getOptimalStats } from '../stats/stats-calculator';
 
@@ -19,7 +20,7 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
       nature: nature ?? optimalStats.nature,
       subskills: input.subskills ?? optimalStats.subskills,
       skillLevel: input.skillLevel ?? pokemon.skill.maxLevel,
-      inventoryLimit: optimalStats.inventoryLimit,
+      inventoryLimit: optimalStats.inventoryLimit
     };
 
     let preGeneratedSkillActivations: SkillActivation[] | undefined = undefined;
@@ -27,31 +28,31 @@ export function calculateOptimalProductionForSetCover(input: SetCoverProductionS
       const { detailedProduce, averageProduce, skillActivations } = setupAndRunProductionSimulation({
         pokemonCombination: {
           pokemon: pokemon,
-          ingredientList,
+          ingredientList
         },
         input: {
           ...input,
-          ...customStats,
+          ...customStats
         },
         monteCarloIterations,
-        preGeneratedSkillActivations,
+        preGeneratedSkillActivations
       });
 
       // if each ing set gives different skill result we dont cache, other skills can cache
       const diffSkillResultForDiffIngSets = [
         mainskill.HELPER_BOOST,
         mainskill.EXTRA_HELPFUL_S,
-        mainskill.METRONOME,
+        mainskill.METRONOME
       ].includes(pokemon.skill);
       preGeneratedSkillActivations = diffSkillResultForDiffIngSets ? undefined : skillActivations;
       pokemonProduction.push({
         pokemonCombination: {
           pokemon,
-          ingredientList,
+          ingredientList
         },
         detailedProduce,
         averageProduce,
-        customStats,
+        customStats
       });
     }
   }

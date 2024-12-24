@@ -1,18 +1,19 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { ProductionStats } from '@src/domain/computed/production';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { ProductionStats } from '@src/domain/computed/production';
 import { BadRequestError } from '@src/domain/error/api/api-error';
 import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import {
   calculateIv,
   calculatePokemonProduction,
-  calculateTeam,
+  calculateTeam
 } from '@src/services/api-service/production/production-service';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
 import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import {
+import * as tsoa from '@tsoa/runtime';
+import type {
   CalculateIvRequest,
   CalculateTeamRequest,
   IngredientInstance,
@@ -20,13 +21,10 @@ import {
   PokemonInstanceIdentity,
   SingleProductionRequest,
   TeamSettings,
-  getNature,
-  getPokemon,
-  getSubskill,
-  mainskill,
-  pokemon,
+  pokemon
 } from 'sleepapi-common';
-import { Body, Controller, Path, Post, Query, Route, Tags } from 'tsoa';
+import { getNature, getPokemon, getSubskill, mainskill } from 'sleepapi-common';
+const { Controller, Path, Route, Tags, Body, Query, Post } = tsoa;
 
 @Route('api/calculator')
 @Tags('calculator')
@@ -71,7 +69,7 @@ export default class ProductionController extends Controller {
     return {
       settings,
       members: parsedMembers,
-      variants: parsedVariants,
+      variants: parsedVariants
     };
   }
 
@@ -86,7 +84,7 @@ export default class ProductionController extends Controller {
       parsedMembers.push({
         pokemonSet: {
           pokemon,
-          ingredientList: this.#getIngredientSet({ pokemon, level: member.level, ingredients: member.ingredients }),
+          ingredientList: this.#getIngredientSet({ pokemon, level: member.level, ingredients: member.ingredients })
         },
         level: member.level,
         ribbon: member.ribbon,
@@ -95,12 +93,12 @@ export default class ProductionController extends Controller {
           subskills,
           ribbon: member.ribbon,
           level: member.level,
-          camp,
+          camp
         }),
         nature: getNature(member.nature),
         skillLevel: member.skillLevel,
         subskills,
-        externalId: member.externalId,
+        externalId: member.externalId
       });
     }
     return parsedMembers;
@@ -111,7 +109,7 @@ export default class ProductionController extends Controller {
 
     return {
       settings,
-      members: this.#parseTeamMembers(body.members, settings.camp),
+      members: this.#parseTeamMembers(body.members, settings.camp)
     };
   }
 
@@ -128,7 +126,7 @@ export default class ProductionController extends Controller {
     return {
       camp,
       bedtime,
-      wakeup,
+      wakeup
     };
   }
 
@@ -200,7 +198,7 @@ export default class ProductionController extends Controller {
       erb: queryAsNumber(input.erb) ?? 0,
       incense: queryAsBoolean(input.recoveryIncense),
       mainBedtime,
-      mainWakeup,
+      mainWakeup
     };
     return parsedInput;
   }

@@ -1,8 +1,8 @@
-import { DBUser } from '@src/database/dao/user/user-dao';
+import type { DBUser } from '@src/database/dao/user/user-dao';
 import { AuthorizationError } from '@src/domain/error/api/api-error';
 import { verify } from '@src/services/api-service/login/login-service';
 import { Logger } from '@src/services/logger/logger';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export interface AuthenticatedRequest extends Request<unknown, unknown, unknown, unknown> {
   user: DBUser;

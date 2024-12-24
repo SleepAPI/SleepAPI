@@ -1,4 +1,4 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
@@ -53,7 +53,7 @@ describe('calculateTeam', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('21:30'),
       wakeup: TimeUtils.parseTime('06:01'),
-      camp: false,
+      camp: false
     };
 
     const members: TeamMember[] = [
@@ -63,8 +63,8 @@ describe('calculateTeam', () => {
           ingredientList: [
             { amount: 2, ingredient: ingredient.HONEY },
             { amount: 5, ingredient: ingredient.HONEY },
-            { amount: 7, ingredient: ingredient.HONEY },
-          ],
+            { amount: 7, ingredient: ingredient.HONEY }
+          ]
         },
         carrySize: 24,
         level: 60,
@@ -72,8 +72,8 @@ describe('calculateTeam', () => {
         nature: nature.MILD,
         skillLevel: 6,
         subskills: [subskill.INGREDIENT_FINDER_M],
-        externalId: 'some id',
-      },
+        externalId: 'some id'
+      }
     ];
 
     const result = calculateTeam({ members, settings }, 5000);
@@ -113,14 +113,14 @@ describe('calculateIv', () => {
     const settings: TeamSettingsExt = {
       bedtime: TimeUtils.parseTime('22:00'),
       wakeup: TimeUtils.parseTime('06:00'),
-      camp: true,
+      camp: true
     };
 
     const members: TeamMember[] = [
       {
         pokemonSet: {
           pokemon: pokemon.BULBASAUR,
-          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }],
+          ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
         },
         carrySize: 10,
         level: 15,
@@ -128,15 +128,15 @@ describe('calculateIv', () => {
         nature: nature.JOLLY,
         skillLevel: 4,
         subskills: [subskill.HELPING_SPEED_S],
-        externalId: 'bulbasaur-1',
-      },
+        externalId: 'bulbasaur-1'
+      }
     ];
 
     const variants: TeamMember[] = [
       {
         pokemonSet: {
           pokemon: pokemon.CHARMANDER,
-          ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }],
+          ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }]
         },
         carrySize: 8,
         level: 12,
@@ -144,8 +144,8 @@ describe('calculateIv', () => {
         nature: nature.BRAVE,
         skillLevel: 3,
         subskills: [subskill.SKILL_TRIGGER_S],
-        externalId: 'charmander-variant',
-      },
+        externalId: 'charmander-variant'
+      }
     ];
 
     const result = calculateIv({ settings, members, variants });

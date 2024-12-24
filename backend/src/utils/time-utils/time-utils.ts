@@ -1,5 +1,6 @@
-import { ScheduledEvent } from '@src/domain/event/event';
-import { MathUtils, Time, TimePeriod } from 'sleepapi-common';
+import type { ScheduledEvent } from '@src/domain/event/event';
+import type { Time, TimePeriod } from 'sleepapi-common';
+import { MathUtils } from 'sleepapi-common';
 
 class TimeUtilsImpl {
   public toMinutes(time: Time) {
@@ -52,7 +53,7 @@ class TimeUtilsImpl {
     const result: Time = {
       hour: totalHours,
       minute: totalMinutes,
-      second: totalSeconds,
+      second: totalSeconds
     };
 
     return result;
@@ -152,7 +153,7 @@ class TimeUtilsImpl {
     return {
       hour: durationHour,
       minute: durationMinute,
-      second: durationSecond,
+      second: durationSecond
     };
   }
 
@@ -171,7 +172,7 @@ class TimeUtilsImpl {
     const chunkDuration = {
       hour: Math.floor(chunkDurationInSeconds / 3600),
       minute: Math.floor((chunkDurationInSeconds % 3600) / 60),
-      second: chunkDurationInSeconds % 60,
+      second: chunkDurationInSeconds % 60
     };
 
     const periods: TimePeriod[] = [];
@@ -201,7 +202,7 @@ class TimeUtilsImpl {
     return {
       hour: hours,
       minute: minutes,
-      second: seconds,
+      second: seconds
     };
   }
 
@@ -210,7 +211,7 @@ class TimeUtilsImpl {
     return {
       hour,
       minute,
-      second: 0,
+      second: 0
     };
   }
 

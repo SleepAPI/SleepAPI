@@ -1,7 +1,7 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
+import type { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { MOCKED_MAIN_SLEEP, MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { berry, emptyBerryInventory, ingredient, mainskill, maxCarrySize, nature } from 'sleepapi-common';
@@ -27,9 +27,9 @@ describe('simulator', () => {
             adjustedAmount: 1,
             fractionOfProc: 1,
             nrOfHelpsToActivate: 0,
-            adjustedProduce: pokemonWithAverageProduce.produce,
-          },
-        }),
+            adjustedProduce: pokemonWithAverageProduce.produce
+          }
+        })
       ],
       helperBoostEvents: [
         new SkillEvent({
@@ -40,15 +40,15 @@ describe('simulator', () => {
             adjustedAmount: 1,
             fractionOfProc: 1,
             nrOfHelpsToActivate: 0,
-            adjustedProduce: pokemonWithAverageProduce.produce,
-          },
-        }),
+            adjustedProduce: pokemonWithAverageProduce.produce
+          }
+        })
       ],
       skillActivations: [
-        { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 },
+        { skill: mainskill.CHARGE_ENERGY_S, adjustedAmount: 1, fractionOfProc: 1, nrOfHelpsToActivate: 0 }
       ],
       sneakySnackBerries: emptyBerryInventory(),
-      mealTimes: [],
+      mealTimes: []
     });
     expect(log.length).toBeGreaterThan(0);
     const summaryLog = log.at(-1) as SummaryEvent;
@@ -139,6 +139,6 @@ const pokemonWithAverageProduce: PokemonProduce = {
   pokemon: MOCKED_POKEMON,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
-    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }],
-  },
+    ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }]
+  }
 };

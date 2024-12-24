@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { Time } from 'sleepapi-common';
+import type { PokemonProduce } from '@src/domain/combination/produce';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { Time } from 'sleepapi-common';
 import { randomizedSimulation } from './randomized-simulator';
 
 export interface MonteCarloResult {
@@ -49,7 +49,7 @@ export function monteCarlo(params: {
     inventoryLimit,
     recoveryEvents,
     mealTimes,
-    monteCarloIterations,
+    monteCarloIterations
   } = params;
 
   const results: MonteCarloResult[] = [];
@@ -66,7 +66,7 @@ export function monteCarlo(params: {
       recoveryEvents,
       mealTimes,
       energyFromYesterday,
-      nightHelpsBeforeCarryFromYesterday,
+      nightHelpsBeforeCarryFromYesterday
     });
     const { endingEnergy, nightHelpsBeforeSS } = simResult;
 

@@ -1,4 +1,4 @@
-import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
+import type { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS, MOCKED_POKEMON, MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
 import { MEALS_IN_DAY } from 'sleepapi-common';
 import { setupAndRunProductionSimulation } from './simulation-service';
@@ -8,7 +8,7 @@ describe('setupAndRunProductionSimulation', () => {
     const { detailedProduce, log, skillActivations } = setupAndRunProductionSimulation({
       input: MOCKED_OPTIMAL_PRODUCTION_STATS,
       monteCarloIterations: 1,
-      pokemonCombination: { pokemon: MOCKED_POKEMON, ingredientList: MOCKED_PRODUCE.ingredients },
+      pokemonCombination: { pokemon: MOCKED_POKEMON, ingredientList: MOCKED_PRODUCE.ingredients }
     });
 
     expect(skillActivations).toMatchInlineSnapshot(`

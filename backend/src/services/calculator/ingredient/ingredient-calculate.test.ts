@@ -1,15 +1,6 @@
-import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import {
-  IngredientSet,
-  MAX_RECIPE_LEVEL,
-  PokemonIngredientSet,
-  curry,
-  dessert,
-  ingredient,
-  pokemon,
-  recipeLevelBonus,
-  salad,
-} from 'sleepapi-common';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination';
+import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
+import { MAX_RECIPE_LEVEL, curry, dessert, ingredient, pokemon, recipeLevelBonus, salad } from 'sleepapi-common';
 import {
   addIngredientSet,
   calculateAveragePokemonIngredientSet,
@@ -19,14 +10,14 @@ import {
   combineIngredientDrops,
   extractRelevantSurplus,
   getAllIngredientCombinationsForLevel,
-  sortByMinimumFiller,
+  sortByMinimumFiller
 } from './ingredient-calculate';
 
 describe('calculatePercentageCoveredByCombination', () => {
   it('shall successfully calculate expected percentage', () => {
     const combination: IngredientSet[] = [
       { amount: 4, ingredient: ingredient.HONEY },
-      { amount: 10, ingredient: ingredient.FANCY_APPLE },
+      { amount: 10, ingredient: ingredient.FANCY_APPLE }
     ];
     expect(calculatePercentageCoveredByCombination(dessert.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
       `40`
@@ -45,7 +36,7 @@ describe('calculatePercentageCoveredByCombination', () => {
       { amount: 100, ingredient: ingredient.HONEY },
       { amount: 100, ingredient: ingredient.FANCY_APPLE },
       { amount: 100, ingredient: ingredient.SOOTHING_CACAO },
-      { amount: 100, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 100, ingredient: ingredient.MOOMOO_MILK }
     ];
     expect(calculatePercentageCoveredByCombination(dessert.LOVELY_KISS_SMOOTHIE, combination)).toMatchInlineSnapshot(
       `100`
@@ -56,7 +47,7 @@ describe('calculatePercentageCoveredByCombination', () => {
     const raw = [
       { amount: 2.79, ingredient: { name: 'Apple', value: '90.00' } },
       { amount: 5.57, ingredient: { name: 'Apple', value: '90.00' } },
-      { amount: 8.36, ingredient: { name: 'Soybeans', value: '100.00' } },
+      { amount: 8.36, ingredient: { name: 'Soybeans', value: '100.00' } }
     ] as unknown as IngredientSet[];
     expect(calculatePercentageCoveredByCombination(curry.FANCY_APPLE_CURRY, raw)).toBe(100);
   });
@@ -297,18 +288,18 @@ describe('comineIngredientDrops', () => {
     const arr1: IngredientSet[] = [
       {
         amount: 1.1,
-        ingredient: ingredient.HONEY,
+        ingredient: ingredient.HONEY
       },
       { amount: 5, ingredient: ingredient.FANCY_APPLE },
-      { amount: 5, ingredient: ingredient.HONEY },
+      { amount: 5, ingredient: ingredient.HONEY }
     ];
     const arr2: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: ingredient.HONEY,
+        ingredient: ingredient.HONEY
       },
       { amount: 2.27, ingredient: ingredient.FANCY_APPLE },
-      { amount: 4, ingredient: ingredient.HONEY },
+      { amount: 4, ingredient: ingredient.HONEY }
     ];
 
     expect(combineIngredientDrops(arr1, arr2)).toMatchInlineSnapshot(`
@@ -351,12 +342,12 @@ describe('calculateContributedIngredientsValue', () => {
     const producedIngredients: IngredientSet[] = [
       {
         amount: 4.7,
-        ingredient: ingredient.SNOOZY_TOMATO,
+        ingredient: ingredient.SNOOZY_TOMATO
       },
       {
         amount: 16.4,
-        ingredient: ingredient.LARGE_LEEK,
-      },
+        ingredient: ingredient.LARGE_LEEK
+      }
     ];
 
     const expectedContributedValue = Math.round(
@@ -377,16 +368,16 @@ describe('calculateContributedIngredientsValue', () => {
     const producedIngredients: IngredientSet[] = [
       {
         amount: 4.4,
-        ingredient: ingredient.SNOOZY_TOMATO,
+        ingredient: ingredient.SNOOZY_TOMATO
       },
       {
         amount: 6.5,
-        ingredient: ingredient.LARGE_LEEK,
+        ingredient: ingredient.LARGE_LEEK
       },
       {
         amount: 17.4,
-        ingredient: ingredient.GREENGRASS_SOYBEANS,
-      },
+        ingredient: ingredient.GREENGRASS_SOYBEANS
+      }
     ];
 
     const expectedContributedValue = Math.round(
@@ -409,24 +400,24 @@ describe('calculateRemainingIngredients', () => {
     const recipe: IngredientSet[] = [
       {
         amount: 10,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
-      { amount: 6, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 6, ingredient: ingredient.MOOMOO_MILK }
     ];
     const produce: IngredientSet[] = [
       {
         amount: 5,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
-      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 3, ingredient: ingredient.MOOMOO_MILK }
     ];
 
     const expectedRemaining: IngredientSet[] = [
       {
         amount: 5,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
-      { amount: 3, ingredient: ingredient.MOOMOO_MILK },
+      { amount: 3, ingredient: ingredient.MOOMOO_MILK }
     ];
 
     expect(calculateRemainingIngredients(recipe, produce)).toEqual(expectedRemaining);
@@ -437,7 +428,7 @@ describe('sortByMinimumFiller', () => {
   it('shall sort OptimalTeamSolutions based on the minimum surplus of required ingredients', () => {
     const recipe = [
       { amount: 10, ingredient: ingredient.MOOMOO_MILK },
-      { amount: 10, ingredient: ingredient.FANCY_APPLE },
+      { amount: 10, ingredient: ingredient.FANCY_APPLE }
     ];
 
     const teamSolutions: OptimalTeamSolution[] = [
@@ -445,24 +436,24 @@ describe('sortByMinimumFiller', () => {
         team: [],
         surplus: extractRelevantSurplus(recipe, [
           { amount: 2, ingredient: ingredient.MOOMOO_MILK },
-          { amount: 2, ingredient: ingredient.FANCY_APPLE },
+          { amount: 2, ingredient: ingredient.FANCY_APPLE }
         ]),
-        exhaustive: true,
+        exhaustive: true
       },
       {
         team: [],
         surplus: extractRelevantSurplus(recipe, [
           { amount: 2, ingredient: ingredient.MOOMOO_MILK },
           { amount: 2, ingredient: ingredient.BEAN_SAUSAGE },
-          { amount: 4, ingredient: ingredient.FANCY_APPLE },
+          { amount: 4, ingredient: ingredient.FANCY_APPLE }
         ]),
-        exhaustive: true,
+        exhaustive: true
       },
       {
         team: [],
         surplus: extractRelevantSurplus(recipe, [{ amount: 3, ingredient: ingredient.MOOMOO_MILK }]),
-        exhaustive: true,
-      },
+        exhaustive: true
+      }
     ];
     const sortedSolutions = sortByMinimumFiller(teamSolutions, recipe);
 
@@ -480,13 +471,13 @@ describe('extractRelevantSurplus', () => {
   it('shall correctly categorize relevant and extra surplus ingredients', () => {
     const recipe = [
       { amount: 10, ingredient: MOOMOO_MILK },
-      { amount: 5, ingredient: FANCY_APPLE },
+      { amount: 5, ingredient: FANCY_APPLE }
     ];
 
     const surplus = [
       { amount: 2, ingredient: MOOMOO_MILK },
       { amount: 3, ingredient: BEAN_SAUSAGE },
-      { amount: 1, ingredient: FANCY_APPLE },
+      { amount: 1, ingredient: FANCY_APPLE }
     ];
 
     const result = extractRelevantSurplus(recipe, surplus);
@@ -494,7 +485,7 @@ describe('extractRelevantSurplus', () => {
     expect(result.total).toEqual(surplus);
     expect(result.relevant).toEqual([
       { amount: 2, ingredient: MOOMOO_MILK },
-      { amount: 1, ingredient: FANCY_APPLE },
+      { amount: 1, ingredient: FANCY_APPLE }
     ]);
     expect(result.extra).toEqual([{ amount: 3, ingredient: BEAN_SAUSAGE }]);
   });
@@ -527,17 +518,17 @@ describe('calculateAverageIngredientDrop', () => {
       ingredientList: [
         {
           amount: 3,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 3,
-          ingredient: ingredient.FANCY_EGG,
+          ingredient: ingredient.FANCY_EGG
         },
         {
           amount: 3,
-          ingredient: ingredient.MOOMOO_MILK,
-        },
-      ],
+          ingredient: ingredient.MOOMOO_MILK
+        }
+      ]
     };
     const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
     expect(averagedResult.pokemon).toBe(pokemon.PINSIR);
@@ -580,13 +571,13 @@ describe('calculateAverageIngredientDrop', () => {
       ingredientList: [
         {
           amount: 4,
-          ingredient: ingredient.FANCY_APPLE,
+          ingredient: ingredient.FANCY_APPLE
         },
         {
           amount: 4,
-          ingredient: ingredient.FANCY_EGG,
-        },
-      ],
+          ingredient: ingredient.FANCY_EGG
+        }
+      ]
     };
 
     const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
@@ -621,18 +612,18 @@ describe('addIngredientSet', () => {
     const arr1: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
-      },
+        ingredient: ingredient.FANCY_APPLE
+      }
     ];
     const arr2: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
+        ingredient: ingredient.FANCY_APPLE
       },
       {
         amount: 0.5,
-        ingredient: ingredient.FANCY_EGG,
-      },
+        ingredient: ingredient.FANCY_EGG
+      }
     ];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
       [
@@ -662,8 +653,8 @@ describe('addIngredientSet', () => {
     const arr1: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
-      },
+        ingredient: ingredient.FANCY_APPLE
+      }
     ];
     const arr2: IngredientSet[] = [];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
@@ -686,8 +677,8 @@ describe('addIngredientSet', () => {
     const arr2: IngredientSet[] = [
       {
         amount: 1,
-        ingredient: ingredient.FANCY_APPLE,
-      },
+        ingredient: ingredient.FANCY_APPLE
+      }
     ];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
       [

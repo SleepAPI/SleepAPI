@@ -1,4 +1,4 @@
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ingredient } from 'sleepapi-common';
 import { MOCKED_POKEMON, MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
 import { createProduceMap } from './tierlist-utils';
@@ -13,12 +13,12 @@ describe('createProduceMap', () => {
           ingredientList: [
             {
               amount: 1,
-              ingredient: ingredient.GREENGRASS_CORN,
-            },
+              ingredient: ingredient.GREENGRASS_CORN
+            }
           ],
-          pokemon: MOCKED_POKEMON,
-        },
-      },
+          pokemon: MOCKED_POKEMON
+        }
+      }
     ];
     const result = createProduceMap(produce);
     expect(result.size).toBe(2);

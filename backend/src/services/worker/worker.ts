@@ -4,8 +4,8 @@ export async function runWorkerFile(workerFile: string, params: any): Promise<an
   return new Promise((resolve, reject) => {
     const worker = new Worker(workerFile, {
       workerData: {
-        params,
-      },
+        params
+      }
     });
 
     worker.on('message', (message) => {

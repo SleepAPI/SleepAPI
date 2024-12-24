@@ -1,13 +1,13 @@
-import { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
-import { DBUser } from '@src/database/dao/user/user-dao';
+import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
+import type { DBUser } from '@src/database/dao/user/user-dao';
 import {
   deleteMember,
   deleteTeam,
   getTeams,
   upsertTeamMember,
-  upsertTeamMeta,
+  upsertTeamMeta
 } from '@src/services/api-service/team/team-service';
-import { UpsertTeamMemberRequest, UpsertTeamMetaRequest } from 'sleepapi-common';
+import type { UpsertTeamMemberRequest, UpsertTeamMetaRequest } from 'sleepapi-common';
 
 export default class TeamController {
   public async upsertMeta(index: number, request: UpsertTeamMetaRequest, user: DBUser) {
@@ -19,7 +19,7 @@ export default class TeamController {
       bedtime: request.bedtime,
       wakeup: request.wakeup,
       recipe_type: request.recipeType,
-      favored_berries: request.favoredBerries?.join(','),
+      favored_berries: request.favoredBerries?.join(',')
     };
     return upsertTeamMeta(team);
   }

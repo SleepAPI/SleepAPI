@@ -1,6 +1,6 @@
-import IngredientController from '@src/controllers/ingredient/ingredient.controller';
+import type IngredientController from '@src/controllers/ingredient/ingredient.controller';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { BaseRouter } from '../base-router';
 
 class IngredientRouterImpl {

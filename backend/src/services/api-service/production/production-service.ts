@@ -1,18 +1,11 @@
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { ProductionStats } from '@src/domain/computed/production';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { ProductionStats } from '@src/domain/computed/production';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils';
 import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
-import {
-  CalculateIvResponse,
-  DetailedProduce,
-  MemberProductionBase,
-  maxCarrySize,
-  nature,
-  pokemon,
-  subskill,
-} from 'sleepapi-common';
+import type { CalculateIvResponse, DetailedProduce, MemberProductionBase, pokemon } from 'sleepapi-common';
+import { maxCarrySize, nature, subskill } from 'sleepapi-common';
 import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
@@ -30,7 +23,7 @@ export function calculatePokemonProduction(
   const { detailedProduce, log, summary } = setupAndRunProductionSimulation({
     pokemonCombination,
     input,
-    monteCarloIterations,
+    monteCarloIterations
   });
 
   // calculate neutral and optimal setups for performance analysis
@@ -45,9 +38,9 @@ export function calculatePokemonProduction(
         ...input,
         subskills: [],
         nature: nature.BASHFUL,
-        skillLevel: 1,
+        skillLevel: 1
       },
-      monteCarloIterations,
+      monteCarloIterations
     }).detailedProduce;
 
     const optimalIngredientSubskills = limitSubSkillsToLevel(
@@ -56,7 +49,7 @@ export function calculatePokemonProduction(
         subskill.HELPING_SPEED_M,
         subskill.INGREDIENT_FINDER_S,
         subskill.INVENTORY_L,
-        subskill.HELPING_SPEED_S,
+        subskill.HELPING_SPEED_S
       ],
       input.level
     );
@@ -67,9 +60,9 @@ export function calculatePokemonProduction(
         subskills: optimalIngredientSubskills,
         nature: nature.QUIET,
         skillLevel: pokemon.skill.maxLevel,
-        inventoryLimit: maxCarrySize(pokemon),
+        inventoryLimit: maxCarrySize(pokemon)
       },
-      monteCarloIterations,
+      monteCarloIterations
     }).detailedProduce;
 
     optimalBerryProduction = setupAndRunProductionSimulation({
@@ -82,15 +75,15 @@ export function calculatePokemonProduction(
             subskill.HELPING_SPEED_M,
             subskill.HELPING_SPEED_S,
             subskill.HELPING_BONUS,
-            subskill.SKILL_TRIGGER_M,
+            subskill.SKILL_TRIGGER_M
           ],
           input.level
         ),
         nature: nature.ADAMANT,
         skillLevel: pokemon.skill.maxLevel,
-        inventoryLimit: pokemon.carrySize,
+        inventoryLimit: pokemon.carrySize
       },
-      monteCarloIterations,
+      monteCarloIterations
     }).detailedProduce;
 
     optimalSkillProduction = setupAndRunProductionSimulation({
@@ -103,15 +96,15 @@ export function calculatePokemonProduction(
             subskill.HELPING_SPEED_M,
             subskill.SKILL_TRIGGER_S,
             subskill.HELPING_SPEED_S,
-            subskill.HELPING_BONUS,
+            subskill.HELPING_BONUS
           ],
           input.level
         ),
         nature: nature.CAREFUL,
         skillLevel: pokemon.skill.maxLevel,
-        inventoryLimit: maxCarrySize(pokemon),
+        inventoryLimit: maxCarrySize(pokemon)
       },
-      monteCarloIterations,
+      monteCarloIterations
     }).detailedProduce;
   }
 
@@ -120,14 +113,14 @@ export function calculatePokemonProduction(
     filters: input,
     production: {
       pokemonCombination: { pokemon, ingredientList },
-      detailedProduce,
+      detailedProduce
     },
     log,
     summary,
     neutralProduction,
     optimalIngredientProduction,
     optimalBerryProduction,
-    optimalSkillProduction,
+    optimalSkillProduction
   };
 }
 

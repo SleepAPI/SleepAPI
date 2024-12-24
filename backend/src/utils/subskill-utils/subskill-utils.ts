@@ -1,4 +1,5 @@
-import { pokemon, subskill, SubskillSet } from 'sleepapi-common';
+import type { pokemon, SubskillSet } from 'sleepapi-common';
+import { subskill } from 'sleepapi-common';
 
 export function extractSubskillsBasedOnLevel(level: number, subskills: string[]): subskill.SubSkill[] {
   const subskill10 = subskill.SUBSKILLS.find((subskill) => subskill.name.toUpperCase() === subskills[0]?.toUpperCase());
@@ -42,7 +43,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.SKILL_TRIGGER_S,
         subskill.HELPING_SPEED_S,
-        subskill.INVENTORY_L,
+        subskill.INVENTORY_L
       ]
     );
     optimalSubskills.push(
@@ -51,7 +52,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.SKILL_TRIGGER_S,
         subskill.HELPING_SPEED_S,
-        subskill.INVENTORY_L,
+        subskill.INVENTORY_L
       ]
     );
   } else if (subskillSet === 'berry') {
@@ -61,7 +62,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.HELPING_SPEED_S,
         subskill.SKILL_TRIGGER_M,
-        subskill.SKILL_TRIGGER_S,
+        subskill.SKILL_TRIGGER_S
       ]
     );
     optimalSubskills.push(
@@ -70,7 +71,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.HELPING_SPEED_S,
         subskill.SKILL_TRIGGER_M,
-        subskill.SKILL_TRIGGER_S,
+        subskill.SKILL_TRIGGER_S
       ]
     );
   } else {
@@ -80,7 +81,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.INVENTORY_L,
         subskill.INGREDIENT_FINDER_S,
-        subskill.HELPING_SPEED_S,
+        subskill.HELPING_SPEED_S
       ]
     );
     optimalSubskills.push(
@@ -89,7 +90,7 @@ export function subskillsForFilter(
         subskill.HELPING_SPEED_M,
         subskill.INGREDIENT_FINDER_S,
         subskill.INVENTORY_L,
-        subskill.HELPING_SPEED_S,
+        subskill.HELPING_SPEED_S
       ]
     );
   }

@@ -1,6 +1,6 @@
-import { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
-import { CombinedContribution, Contribution } from '../computed/contribution';
-import { CustomPokemonCombinationWithProduce, CustomStats } from './custom';
+import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
+import type { CombinedContribution, Contribution } from '../computed/contribution';
+import type { CustomPokemonCombinationWithProduce, CustomStats } from './custom';
 
 export interface OptimalTeamSolution {
   team: CustomPokemonCombinationWithProduce[];
