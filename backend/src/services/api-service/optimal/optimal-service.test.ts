@@ -1,4 +1,4 @@
-import { SetCoverProductionStats } from '@src/domain/computed/production';
+import type { SetCoverProductionStats } from '@src/domain/computed/production';
 import { berry, dessert, ingredient, mainskill, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
 import { findOptimalMonsForIngredient, findOptimalSetsForMeal } from './optimal-service';
 
@@ -23,14 +23,14 @@ describe('findOptimalSetsForMeal', () => {
       incense: false,
       skillLevel: 6,
       mainBedtime: { hour: 21, minute: 30, second: 0 },
-      mainWakeup: { hour: 6, minute: 0, second: 0 },
+      mainWakeup: { hour: 6, minute: 0, second: 0 }
     };
     const data = findOptimalSetsForMeal(dessert.NEROLIS_RESTORATIVE_TEA.name, input, 1);
     expect(data.teams).toHaveLength(2);
     expect(
       data.teams.map((team) => ({
         team: team.team.map((member) => member.pokemonCombination.pokemon.name),
-        surplus: prettifyIngredientDrop(team.surplus.total),
+        surplus: prettifyIngredientDrop(team.surplus.total)
       }))
     ).toMatchInlineSnapshot(`
       [
@@ -74,7 +74,7 @@ describe('findOptimalMonsForIngredient', () => {
       incense: false,
       skillLevel: 6,
       mainBedtime: { hour: 21, minute: 30, second: 0 },
-      mainWakeup: { hour: 6, minute: 0, second: 0 },
+      mainWakeup: { hour: 6, minute: 0, second: 0 }
     };
     const teams = findOptimalMonsForIngredient(ingredient.SLOWPOKE_TAIL.name, input, 1).teams.filter(
       (team) => team.surplus.relevant[0].amount >= 0.999

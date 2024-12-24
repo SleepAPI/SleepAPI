@@ -15,8 +15,8 @@ const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'node',
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
   transform: {
-    '^.+\\.[tj]s?(x)$': ['ts-jest', { isolatedModules: true }],
-  },
+    '^.+\\.[tj]s?(x)$': ['ts-jest', { isolatedModules: true }]
+  }
 };
 
 export default jestConfig;

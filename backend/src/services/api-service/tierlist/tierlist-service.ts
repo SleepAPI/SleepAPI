@@ -1,27 +1,29 @@
-import {
+import type {
   PokemonCombinationCombinedContribution,
-  PokemonIngredientSetContribution,
+  PokemonIngredientSetContribution
 } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { CombinedContribution, Contribution } from '@src/domain/computed/contribution';
-import {
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { CombinedContribution, Contribution } from '@src/domain/computed/contribution';
+import type {
   CreateTierListRequestBody,
   GetTierListQueryParams,
-  TieredPokemonCombinationContribution,
+  TieredPokemonCombinationContribution
 } from '@src/routes/tierlist-router/tierlist-router';
 import {
   boostFirstMealWithFactor,
   calculateMealContributionFor,
-  getAllOptimalIngredientFocusedPokemonProduce,
+  getAllOptimalIngredientFocusedPokemonProduce
 } from '@src/services/calculator/contribution/contribution-calculator';
 import { Logger } from '@src/services/logger/logger';
 import { SetCover } from '@src/services/set-cover/set-cover';
-import { CritInfo, calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
+import type { CritInfo } from '@src/utils/meal-utils/meal-utils';
+import { calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
 import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import { MAX_POT_SIZE, METRONOME_SKILLS, Mainskill, MathUtils, mainskill } from 'sleepapi-common';
+import type { Mainskill } from 'sleepapi-common';
+import { MAX_POT_SIZE, METRONOME_SKILLS, MathUtils, mainskill } from 'sleepapi-common';
 
 const TIERLIST_SET_COVER_TIMEOUT = 1000;
 const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
@@ -36,7 +38,7 @@ class TierlistImpl {
       minRecipeBonus: 0,
       maxPotSize: undefined,
       nrOfMeals: 3,
-      salad: false,
+      salad: false
     };
 
     const basePathCurrent = 'src/data/tierlist/current';
@@ -50,25 +52,25 @@ class TierlistImpl {
       details: { ...details, limit50: true },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-unlimited/overall.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/overall.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/overall.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, curry: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-unlimited/curry.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/curry.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/curry.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, salad: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-unlimited/salad.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/salad.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/salad.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, dessert: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-unlimited/dessert.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/dessert.json`,
+      previousPath: `${basePathPrevious}/level50/pot-unlimited/dessert.json`
     });
 
     // level 50 - Pot limited
@@ -76,25 +78,25 @@ class TierlistImpl {
       details: { ...details, limit50: true, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-limited/overall.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/overall.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/overall.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-limited/curry.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/curry.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/curry.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-limited/salad.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/salad.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/salad.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, limit50: true, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated50Data,
       writePath: `${basePathCurrent}/level50/pot-limited/dessert.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/dessert.json`,
+      previousPath: `${basePathPrevious}/level50/pot-limited/dessert.json`
     });
 
     // level 60 - Pot unlimited
@@ -102,25 +104,25 @@ class TierlistImpl {
       details,
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-unlimited/overall.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/overall.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/overall.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, curry: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-unlimited/curry.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/curry.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/curry.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, salad: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-unlimited/salad.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/salad.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/salad.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, dessert: true, nrOfMeals: 2 },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-unlimited/dessert.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/dessert.json`,
+      previousPath: `${basePathPrevious}/level60/pot-unlimited/dessert.json`
     });
 
     // level 60 - pot limited
@@ -128,25 +130,25 @@ class TierlistImpl {
       details: { ...details, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-limited/overall.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/overall.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/overall.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-limited/curry.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/curry.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/curry.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-limited/salad.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/salad.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/salad.json`
     });
     await this.#createTierListAndStore({
       details: { ...details, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
       allPokemonWithContributions: generated60Data,
       writePath: `${basePathCurrent}/level60/pot-limited/dessert.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`,
+      previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`
     });
 
     Logger.info('Finished generating cooking tier lists');
@@ -158,7 +160,7 @@ class TierlistImpl {
       e4eProcs: 0,
       cheer: 0,
       extraHelpful: 0,
-      monteCarloIterations: MONTE_CARLO_ITERATIONS,
+      monteCarloIterations: MONTE_CARLO_ITERATIONS
     });
     const defaultProduceMap = createProduceMap(allPokemonDefaultProduce);
     let preCalcedSupportMap: Map<string, CustomPokemonCombinationWithProduce> | undefined = undefined;
@@ -192,7 +194,7 @@ class TierlistImpl {
       mainskill.ENERGIZING_CHEER_S,
       mainskill.EXTRA_HELPFUL_S,
       mainskill.MOONLIGHT_CHARGE_ENERGY_S,
-      mainskill.METRONOME,
+      mainskill.METRONOME
     ];
     Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
       let supportSetCover: SetCover | undefined = undefined;
@@ -226,7 +228,7 @@ class TierlistImpl {
           e4eProcs,
           cheer,
           extraHelpful,
-          monteCarloIterations: MONTE_CARLO_ITERATIONS,
+          monteCarloIterations: MONTE_CARLO_ITERATIONS
         });
         preCalcedSupportMap = createProduceMap(supportedProduce);
         supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(supportedProduce), new Map());
@@ -256,7 +258,7 @@ class TierlistImpl {
             critMultiplier,
             defaultCritMultiplier,
             defaultProduceMap,
-            preCalcedSupportMap,
+            preCalcedSupportMap
           });
           contributions.push(contributionForMeal);
         }
@@ -291,12 +293,12 @@ class TierlistImpl {
       const combinedContribution: CombinedContribution = {
         contributions: bestXMealsWithBoost,
         averagePercentage,
-        score: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0),
+        score: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0)
       };
 
       pokemonCombinationContribution.push({
         pokemonCombination: pokemonIngredientSet,
-        combinedContribution,
+        combinedContribution
       });
     }
 
@@ -355,7 +357,7 @@ class TierlistImpl {
       { tier: 'B', bucket: 0.8 },
       { tier: 'C', bucket: 0.85 },
       { tier: 'D', bucket: 0.85 },
-      { tier: 'E', bucket: 0.9 },
+      { tier: 'E', bucket: 0.9 }
     ];
 
     let threshold = data[0].combinedContribution.score;

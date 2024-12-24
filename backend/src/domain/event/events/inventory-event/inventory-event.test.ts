@@ -12,8 +12,8 @@ describe('InventoryEvent', () => {
       max: 3,
       contents: {
         ingredients: [{ amount: 1, ingredient: ingredient.BEAN_SAUSAGE }],
-        berries: [{ amount: 1, berry: berry.BELUE, level: 60 }],
-      },
+        berries: [{ amount: 1, berry: berry.BELUE, level: 60 }]
+      }
     });
     expect(event.format()).toMatchInlineSnapshot(
       `"[06:00:00][Inventory] (test): 1 -> 2 (+1), filled: 2/3 (66.67%), current contents: 1 BELUE + 1 Sausage"`

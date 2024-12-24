@@ -44,9 +44,9 @@ function energyChart(log) {
           pointRadius: pointRadii,
           pointHoverRadius: pointHoverRadii,
           pointBackgroundColor: '#f04545',
-          fill: true,
-        },
-      ],
+          fill: true
+        }
+      ]
     },
     options: {
       scales: {
@@ -75,22 +75,22 @@ function energyChart(log) {
                 // always add last label
                 return labels[index];
               }
-            },
+            }
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
         },
         y: {
           beginAtZero: true,
           ticks: {
             stepSize: 20,
-            color: 'white',
+            color: 'white'
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
-        },
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
+        }
       },
       plugins: {
         tooltip: {
@@ -100,17 +100,17 @@ function energyChart(log) {
               const energyLog = energyLogs[index];
               const deltaSigned = `${energyLog.delta > 0 ? '+' : ''}${energyLog.delta}%`;
               return `${energyLog.description}: ${energyLog.before} -> ${energyLog.after} (${deltaSigned})`;
-            },
-          },
+            }
+          }
         },
         legend: {
           display: false,
           labels: {
-            color: 'white', // if we want to show legend again we want white
-          },
-        },
-      },
-    },
+            color: 'white' // if we want to show legend again we want white
+          }
+        }
+      }
+    }
   };
 
   energyChartInstance = new Chart(ctx, config);
@@ -139,7 +139,7 @@ function inventoryChart(log) {
     return {
       x: currentTimeMinutes + additionalDays,
       y: entry.after,
-      originalTime: entry.time,
+      originalTime: entry.time
     };
   });
 
@@ -167,9 +167,9 @@ function inventoryChart(log) {
           pointRadius: 3,
           pointHoverRadius: 5,
           pointBackgroundColor: '#f04545',
-          fill: true,
-        },
-      ],
+          fill: true
+        }
+      ]
     },
     options: {
       scales: {
@@ -191,22 +191,22 @@ function inventoryChart(log) {
               const minutes = totalMinutes % 60;
               return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
             },
-            color: 'white',
+            color: 'white'
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
         },
         y: {
           beginAtZero: true,
           max,
           ticks: {
-            color: 'white',
+            color: 'white'
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
-        },
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
+        }
       },
       plugins: {
         tooltip: {
@@ -227,17 +227,17 @@ function inventoryChart(log) {
                   0
                 )}%)`;
               return `${inventoryLog.description}: ${inventoryLog.before} -> ${inventoryLog.after}, filled: ${filled}`;
-            },
-          },
+            }
+          }
         },
         legend: {
           display: false,
           labels: {
-            color: 'white',
-          },
-        },
-      },
-    },
+            color: 'white'
+          }
+        }
+      }
+    }
   };
 
   inventoryChartInstance = new Chart(ctx, config);
@@ -260,7 +260,7 @@ function skillChart(log) {
     return {
       x: currentTimeMinutes + additionalDays,
       y: entry.skillActivation.fractionOfProc * 100,
-      originalTime: entry.time,
+      originalTime: entry.time
     };
   });
 
@@ -297,9 +297,9 @@ function skillChart(log) {
           tension: 0,
           pointRadius: pointRadii,
           pointHoverRadius: pointHoverRadii,
-          pointBackgroundColor: '#f04545',
-        },
-      ],
+          pointBackgroundColor: '#f04545'
+        }
+      ]
     },
     options: {
       scales: {
@@ -323,11 +323,11 @@ function skillChart(log) {
               const minutes = totalMinutes % 60;
               return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
             },
-            color: 'white',
+            color: 'white'
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
-          },
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
         },
         y: {
           categoryPercentage: 0.1,
@@ -345,20 +345,20 @@ function skillChart(log) {
             callback: function (value) {
               return value + '%';
             },
-            color: 'white',
+            color: 'white'
           },
           grid: {
-            color: 'rgba(255, 255, 255, 0.1)',
+            color: 'rgba(255, 255, 255, 0.1)'
           },
           title: {
             display: true,
             text: 'Chance to proc',
             color: 'white',
             font: {
-              size: 12,
-            },
-          },
-        },
+              size: 12
+            }
+          }
+        }
       },
       plugins: {
         tooltip: {
@@ -376,18 +376,18 @@ function skillChart(log) {
                 skillEvent.skillActivation.adjustedAmount,
                 2
               )} (${roundDown(skillEvent.skillActivation.fractionOfProc * 100, 2)}%)`;
-            },
-          },
+            }
+          }
         },
         legend: {
           display: false,
           labels: {
-            color: 'white',
-          },
-        },
+            color: 'white'
+          }
+        }
       },
-      responsive: true,
-    },
+      responsive: true
+    }
   };
 
   skillChartInstance = new Chart(ctx, config);

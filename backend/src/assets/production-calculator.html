@@ -369,7 +369,7 @@
         // Enable tooltips
         $('[data-bs-toggle="tooltip"]').each(function () {
           new bootstrap.Tooltip($(this), {
-            html: true,
+            html: true
           });
 
           $(this).on('shown.bs.tooltip', function () {
@@ -399,11 +399,11 @@
               {
                 name: 'offset',
                 options: {
-                  offset: [65, 60],
-                },
-              },
-            ],
-          },
+                  offset: [65, 60]
+                }
+              }
+            ]
+          }
         };
 
         var exampleEl = document.getElementById('valueCustom');
@@ -501,7 +501,7 @@
               $(this).find('span.levelText').remove();
               var additionalText = $('<span></span>', {
                 text: ` [L${selectedTexts[index]}]`,
-                class: 'levelText',
+                class: 'levelText'
               });
 
               $(this).append(additionalText);

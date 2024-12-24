@@ -1,25 +1,20 @@
-import { SurplusIngredients } from '@src/domain/combination/combination';
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import {
+import type { SurplusIngredients } from '@src/domain/combination/combination';
+import type { ProductionStats } from '@src/domain/computed/production';
+import type { ScheduledEvent } from '@src/domain/event/event';
+import type {
   IngredientRankerResult,
   OptimalFlexibleResult,
-  OptimalSetResult,
+  OptimalSetResult
 } from '@src/routes/optimal-router/optimal-router';
-import { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import type { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+import type { DetailedProduce, IngredientSet, PokemonIngredientSet, Summary, nature, subskill } from 'sleepapi-common';
 import {
-  DetailedProduce,
-  IngredientSet,
   MEALS_IN_DAY,
   MathUtils,
-  PokemonIngredientSet,
-  Summary,
   mainskill,
-  nature,
   prettifyBerries,
   prettifyIngredientDrop,
-  shortPrettifyIngredientDrop,
-  subskill,
+  shortPrettifyIngredientDrop
 } from 'sleepapi-common';
 import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
 import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
@@ -68,12 +63,12 @@ class WebsiteConverterServiceImpl {
         logName: `eventlog-${pokemonProduction.production.pokemonCombination.pokemon.name}${
           pokemonProduction.filters.level
         }-${Date.now()}.txt`,
-        prettyLog: pokemonProduction.log.map((event) => event.format()).join('\n'),
+        prettyLog: pokemonProduction.log.map((event) => event.format()).join('\n')
       },
       neutralProduction: pokemonProduction.neutralProduction && {
         ingredients: pokemonProduction.neutralProduction.produce.ingredients,
         berries: pokemonProduction.neutralProduction.produce.berries,
-        skills: pokemonProduction.neutralProduction.skillActivations.reduce((sum, cur) => sum + cur.adjustedAmount, 0),
+        skills: pokemonProduction.neutralProduction.skillActivations.reduce((sum, cur) => sum + cur.adjustedAmount, 0)
       },
       userProduction: {
         ingredients: pokemonProduction.production.detailedProduce.produce.ingredients,
@@ -81,7 +76,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.production.detailedProduce.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalIngredientProduction: pokemonProduction.optimalIngredientProduction && {
         ingredients: pokemonProduction.optimalIngredientProduction.produce.ingredients,
@@ -89,7 +84,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalIngredientProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalBerryProduction: pokemonProduction.optimalBerryProduction && {
         ingredients: pokemonProduction.optimalBerryProduction.produce.ingredients,
@@ -97,7 +92,7 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalBerryProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
+        )
       },
       optimalSkillProduction: pokemonProduction.optimalSkillProduction && {
         ingredients: pokemonProduction.optimalSkillProduction.produce.ingredients,
@@ -105,8 +100,8 @@ class WebsiteConverterServiceImpl {
         skills: pokemonProduction.optimalSkillProduction.skillActivations.reduce(
           (sum, cur) => sum + cur.adjustedAmount,
           0
-        ),
-      },
+        )
+      }
     };
   }
 
@@ -160,7 +155,7 @@ class WebsiteConverterServiceImpl {
                 )
                 .join('\n')}`
           )
-          .join('\n\n'),
+          .join('\n\n')
       };
 
       if (!mapWithTiering.has(tieredEntry.tier)) {
@@ -211,7 +206,7 @@ class WebsiteConverterServiceImpl {
                 member.detailedProduce.produce.ingredients
               )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
           )
-          .join()}`,
+          .join()}`
     }));
 
     return {
@@ -222,7 +217,7 @@ class WebsiteConverterServiceImpl {
             ? `Showing ${prettifiedCombinations.length} of ${optimalMons.teams.length} Pokemon.\nTimeout of 10 seconds reached, results may not be exhaustive`
             : `${prettifiedCombinations.length} Pokemon found`
           : "No possible Pokemon found, can't be found with current filter",
-      teams: prettifiedCombinations,
+      teams: prettifiedCombinations
     };
   }
 
@@ -257,7 +252,7 @@ class WebsiteConverterServiceImpl {
               member.detailedProduce.produce.ingredients
             )} (${MathUtils.round(member.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY, 1)} skill procs)`
         )
-        .join('\n')}`,
+        .join('\n')}`
     }));
 
     return {
@@ -277,7 +272,7 @@ class WebsiteConverterServiceImpl {
       recipe: prettifiedRecipe,
       bonus: optimalCombinations.bonus,
       value: optimalCombinations.value,
-      teams: prettifiedCombinations,
+      teams: prettifiedCombinations
     };
   }
 
@@ -286,7 +281,7 @@ class WebsiteConverterServiceImpl {
       const mealsMap = new Map(
         pokemonCombinationWithContribution.scoreResult.contributions.map((contribution) => [
           contribution.meal.name,
-          contribution.contributedPower,
+          contribution.contributedPower
         ])
       );
 
@@ -319,7 +314,7 @@ class WebsiteConverterServiceImpl {
         prettyPokemonCombination: `${
           pokemonCombinationWithContribution.pokemonCombination.pokemon.name
         } (${prettifyIngredientDrop(pokemonCombinationWithContribution.pokemonCombination.ingredientList)})`,
-        input: this.#prettifyInput(pokemonCombinationWithContribution.input),
+        input: this.#prettifyInput(pokemonCombinationWithContribution.input)
       };
     });
   }
@@ -401,7 +396,7 @@ class WebsiteConverterServiceImpl {
       skillDreamShardValue,
       skillPotSizeValue,
       skillHelpsValue,
-      skillTastyChanceValue,
+      skillTastyChanceValue
     } = summary;
     const prettifiedSkillProduce: string[] = [];
     if (skillProduceValue.berries.length > 0) {
@@ -412,7 +407,7 @@ class WebsiteConverterServiceImpl {
         `${prettifyIngredientDrop(
           skillProduceValue.ingredients.map(({ amount, ingredient }) => ({
             amount: MathUtils.round(amount, 1),
-            ingredient,
+            ingredient
           }))
         )}`
       );

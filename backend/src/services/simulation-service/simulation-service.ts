@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { ProductionStats } from '@src/domain/computed/production';
-import { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { PokemonProduce } from '@src/domain/combination/produce';
+import type { ProductionStats } from '@src/domain/computed/production';
+import type { ScheduledEvent } from '@src/domain/event/event';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
 import {
   getDefaultRecoveryEvents,
   getExtraHelpfulEvents,
-  getHelperBoostEvents,
+  getHelperBoostEvents
 } from '@src/utils/event-utils/event-utils';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import {
+import type {
   BerrySet,
   DetailedProduce,
-  MEALS_IN_DAY,
   PokemonIngredientSet,
   Produce,
   SkillActivation,
   Summary,
-  Time,
+  Time
+} from 'sleepapi-common';
+import {
+  MEALS_IN_DAY,
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentageWithPityProc,
   combineSameIngredientsInDrop,
   mainskill,
   maxCarrySize,
-  nature,
+  nature
 } from 'sleepapi-common';
 import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
 import { calculateAveragePokemonIngredientSet } from '../calculator/ingredient/ingredient-calculate';
@@ -49,7 +51,7 @@ import { calculateAverageProduce } from '../calculator/production/produce-calcul
 import {
   calculateAverageNumberOfSkillProcsForHelps,
   calculateSkillProcs,
-  scheduleSkillEvents,
+  scheduleSkillEvents
 } from '../calculator/skill/skill-calculator';
 import { countErbUsers } from '../calculator/stats/stats-calculator';
 import { monteCarlo } from './monte-carlo/monte-carlo';
@@ -88,7 +90,7 @@ export function setupAndRunProductionSimulation(params: {
     incense,
     mainBedtime,
     mainWakeup,
-    ribbon,
+    ribbon
   } = input;
 
   const averagedPokemonCombination = calculateAveragePokemonIngredientSet(pokemonCombination);
@@ -96,7 +98,7 @@ export function setupAndRunProductionSimulation(params: {
   const ingredientPercentage = calculateIngredientPercentage({
     pokemon: pokemonCombination.pokemon,
     nature: maybeNature,
-    subskills,
+    subskills
   });
 
   const skillPercentage = calculateSkillPercentageWithPityProc(pokemonCombination.pokemon, subskills, maybeNature);
@@ -105,7 +107,7 @@ export function setupAndRunProductionSimulation(params: {
     period: { end: mainBedtime, start: mainWakeup },
     nature: maybeNature,
     incense,
-    erb: countErbUsers(erb, subskills),
+    erb: countErbUsers(erb, subskills)
   };
 
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
@@ -115,8 +117,8 @@ export function setupAndRunProductionSimulation(params: {
     {
       amount: berriesPerDrop,
       berry: averagedPokemonCombination.pokemon.berry,
-      level,
-    },
+      level
+    }
   ];
 
   const inventoryLimit = InventoryUtils.calculateCarrySize({
@@ -124,12 +126,12 @@ export function setupAndRunProductionSimulation(params: {
     subskills,
     level,
     ribbon,
-    camp,
+    camp
   });
 
   const pokemonWithAverageProduce: PokemonProduce = {
     pokemon: averagedPokemonCombination.pokemon,
-    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop, level),
+    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop, level)
   };
 
   const helpFrequency = calculateHelpSpeedBeforeEnergy({
@@ -139,7 +141,7 @@ export function setupAndRunProductionSimulation(params: {
     subskills,
     camp,
     ribbonLevel: input.ribbon,
-    helpingBonus,
+    helpingBonus
   });
 
   const recoveryEvents = getDefaultRecoveryEvents(daySleepInfo.period, maybeNature, e4eProcs, e4eLevel, cheer);
@@ -165,7 +167,7 @@ export function setupAndRunProductionSimulation(params: {
         sneakySnackBerries,
         recoveryEvents,
         mealTimes,
-        monteCarloIterations,
+        monteCarloIterations
       });
 
   const { detailedProduce, log, summary } = simulation({
@@ -181,7 +183,7 @@ export function setupAndRunProductionSimulation(params: {
     extraHelpfulEvents,
     helperBoostEvents,
     skillActivations,
-    mealTimes,
+    mealTimes
   });
 
   return {
@@ -191,17 +193,17 @@ export function setupAndRunProductionSimulation(params: {
         berries: detailedProduce.produce.berries,
         ingredients: detailedProduce.produce.ingredients.map(({ amount, ingredient }) => ({
           amount: amount / MEALS_IN_DAY,
-          ingredient: ingredient,
-        })),
-      },
+          ingredient: ingredient
+        }))
+      }
     },
     averageProduce: {
       berries: pokemonWithAverageProduce.produce.berries,
-      ingredients: combineSameIngredientsInDrop(pokemonWithAverageProduce.produce.ingredients),
+      ingredients: combineSameIngredientsInDrop(pokemonWithAverageProduce.produce.ingredients)
     },
     skillActivations,
     log,
-    summary,
+    summary
   };
 }
 
@@ -229,7 +231,7 @@ export function generateSkillActivations(params: {
     pokemonWithAverageProduce,
     inventoryLimit,
     sneakySnackBerries,
-    monteCarloIterations,
+    monteCarloIterations
   } = params;
   const skillLevel = input.skillLevel ?? pokemonWithAverageProduce.pokemon.skill.maxLevel;
 
@@ -254,7 +256,7 @@ export function generateSkillActivations(params: {
       inventoryLimit,
       recoveryEvents,
       mealTimes,
-      monteCarloIterations,
+      monteCarloIterations
     });
     nrOfDaySkillProcs = averageDailySkillProcs;
     oddsOfNightSkillProc = averageNightlySkillProcOdds;
@@ -274,14 +276,14 @@ export function generateSkillActivations(params: {
       extraHelpfulEvents: [],
       helperBoostEvents: [],
       skillActivations: [],
-      mealTimes,
+      mealTimes
     });
     const { dayHelps, nightHelpsBeforeSS } = detailedProduce;
     nrOfDaySkillProcs = calculateSkillProcs(dayHelps ?? 0, skillPercentage);
     oddsOfNightSkillProc = calculateAverageNumberOfSkillProcsForHelps({
       skillPercentage,
       helps: nightHelpsBeforeSS,
-      pokemonSpecialty: pokemonWithAverageProduce.pokemon.specialty,
+      pokemonSpecialty: pokemonWithAverageProduce.pokemon.specialty
     });
     nrOfDayHelps = dayHelps;
   }
@@ -293,6 +295,6 @@ export function generateSkillActivations(params: {
     nrOfDaySkillProcs,
     nrOfSkillCrits,
     nrOfDayHelps,
-    uniqueHelperBoost: input.helperBoostUnique,
+    uniqueHelperBoost: input.helperBoostUnique
   });
 }

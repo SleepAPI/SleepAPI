@@ -20,7 +20,7 @@ export function Profile(target: any, propertyKey: string, descriptor: PropertyDe
       profilingResults[profilingKey] = {
         callCount: 0,
         totalTime: 0,
-        avgTime: 0,
+        avgTime: 0
       };
     }
 

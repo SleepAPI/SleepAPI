@@ -1,4 +1,4 @@
-import { PokemonIngredientSet, Time, nature, subskill } from 'sleepapi-common';
+import type { PokemonIngredientSet, Time, nature, subskill } from 'sleepapi-common';
 
 export interface TeamSettingsExt {
   camp: boolean;

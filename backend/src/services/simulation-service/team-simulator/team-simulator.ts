@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
 import { SleepAPIError } from '@src/domain/error/sleepapi-error';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import {
-  MemberState,
+import type {
   TeamSkillActivation,
-  TeamSkillEnergy,
+  TeamSkillEnergy
 } from '@src/services/simulation-service/team-simulator/member-state';
+import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { CalculateTeamResponse, MemberProductionBase, RandomUtils, Time, TimePeriod } from 'sleepapi-common';
+import type { CalculateTeamResponse, MemberProductionBase, Time, TimePeriod } from 'sleepapi-common';
+import { RandomUtils } from 'sleepapi-common';
 
 export class TeamSimulator {
   private run = 0;
@@ -50,12 +51,12 @@ export class TeamSimulator {
 
     const dayPeriod = {
       start: settings.wakeup,
-      end: settings.bedtime,
+      end: settings.bedtime
     };
     this.dayPeriod = dayPeriod;
     const nightPeriod = {
       start: settings.bedtime,
-      end: settings.wakeup,
+      end: settings.wakeup
     };
     this.nightPeriod = nightPeriod;
 

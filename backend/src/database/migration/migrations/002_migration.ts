@@ -1,5 +1,5 @@
 import { Tables } from '@src/database/migration/migrations/001_migration';
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 
 export async function up(knex: Knex) {
   await knex.schema.alterTable(Tables.Team, (table) => {

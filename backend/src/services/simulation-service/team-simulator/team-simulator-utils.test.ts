@@ -1,7 +1,8 @@
-import { TeamMember } from '@src/domain/combination/team';
+import type { TeamMember } from '@src/domain/combination/team';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { BALANCED_GENDER, PokemonIngredientSet, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
+import type { PokemonIngredientSet } from 'sleepapi-common';
+import { BALANCED_GENDER, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
 
 const mockPokemonSet: PokemonIngredientSet = {
   pokemon: {
@@ -18,13 +19,13 @@ const mockPokemonSet: PokemonIngredientSet = {
     remainingEvolutions: 0,
     skill: mainskill.CHARGE_STRENGTH_S,
     skillPercentage: 2,
-    specialty: 'skill',
+    specialty: 'skill'
   },
   ingredientList: [
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-  ],
+    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
+  ]
 };
 const member: TeamMember = {
   pokemonSet: mockPokemonSet,
@@ -34,7 +35,7 @@ const member: TeamMember = {
   nature: nature.BASHFUL,
   skillLevel: 6,
   subskills: [],
-  externalId: 'some id',
+  externalId: 'some id'
 };
 describe('calculateSkillPercentage', () => {
   it('shall calculate skill percentage for member', () => {
@@ -53,7 +54,7 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
     TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
       member: { ...member, nature: nature.LONELY, level: 1 },
       helpingBonus: 0,
-      settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false },
+      settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false }
     })
   ).toBe(3240);
 });

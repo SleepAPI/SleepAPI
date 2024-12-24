@@ -1,6 +1,7 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { SkillActivation, mainskill, pokemon } from 'sleepapi-common';
+import type { SkillActivation, pokemon } from 'sleepapi-common';
+import { mainskill } from 'sleepapi-common';
 import { createSkillEvent } from './activation/skill-activation';
 
 export function calculateSkillProcs(nrOfHelps: number, skillPercentage: number) {
@@ -44,14 +45,14 @@ export function scheduleSkillEvents(params: {
     nrOfDaySkillProcs: avgDaytimeSkillProcs,
     nrOfSkillCrits: avgDailySkillCrits,
     nrOfDayHelps,
-    uniqueHelperBoost,
+    uniqueHelperBoost
   } = params;
   const skill = pokemonWithAverageProduce.pokemon.skill;
 
   const activationsWithAdjustedAmount = calculateHelpsToProcSchedule({
     oddsOfNightSkillProc: avgMorningSkillProcs,
     nrOfDaySkillProcs: avgDaytimeSkillProcs,
-    nrOfDayHelps,
+    nrOfDayHelps
   });
 
   const avgDailySkillProcs = avgMorningSkillProcs + avgDaytimeSkillProcs;
@@ -68,7 +69,7 @@ export function scheduleSkillEvents(params: {
       pokemonSet: pokemonWithAverageProduce,
       skillActivations,
       uniqueHelperBoost,
-      avgCritChancePerProc,
+      avgCritChancePerProc
     })
   );
 
@@ -89,8 +90,8 @@ export function calculateHelpsToProcSchedule(params: {
   const activationsWithAdjustedAmount: { nrOfHelpsToActivate: number; adjustedAmount: number }[] = [
     {
       nrOfHelpsToActivate: 0,
-      adjustedAmount: oddsOfNightSkillProc,
-    },
+      adjustedAmount: oddsOfNightSkillProc
+    }
   ];
 
   let currentHelps = 0;
@@ -109,7 +110,7 @@ export function calculateHelpsToProcSchedule(params: {
   // final partial proc
   activationsWithAdjustedAmount.push({
     adjustedAmount: nrOfDaySkillProcs - nrOfFullSkillProcs,
-    nrOfHelpsToActivate: Math.floor(nrOfDayHelps),
+    nrOfHelpsToActivate: Math.floor(nrOfDayHelps)
   });
   return activationsWithAdjustedAmount;
 }

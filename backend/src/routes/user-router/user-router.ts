@@ -1,8 +1,9 @@
-import UserController from '@src/controllers/user/user.controller';
-import { AuthenticatedRequest, validateAuthHeader } from '@src/middleware/authorization-middleware';
+import type UserController from '@src/controllers/user/user.controller';
+import type { AuthenticatedRequest } from '@src/middleware/authorization-middleware';
+import { validateAuthHeader } from '@src/middleware/authorization-middleware';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
-import { PokemonInstanceWithMeta } from 'sleepapi-common';
+import type { Request, Response } from 'express';
+import type { PokemonInstanceWithMeta } from 'sleepapi-common';
 import { BaseRouter } from '../base-router';
 
 class UserRouterImpl {

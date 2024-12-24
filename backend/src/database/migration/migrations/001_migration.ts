@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 
 export enum Tables {
   User = 'user',
@@ -7,7 +7,7 @@ export enum Tables {
   Pokemon = 'pokemon',
 
   Team = 'team',
-  TeamMember = 'team_member',
+  TeamMember = 'team_member'
 }
 
 export async function up(knex: Knex) {

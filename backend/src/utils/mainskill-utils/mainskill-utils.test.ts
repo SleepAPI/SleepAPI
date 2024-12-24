@@ -1,4 +1,5 @@
-import { MAINSKILLS, Mainskill } from 'sleepapi-common';
+import type { Mainskill } from 'sleepapi-common';
+import { MAINSKILLS } from 'sleepapi-common';
 import { getMainskill, getMainskillNames } from './mainskill-utils';
 
 describe('getMainskillNames', () => {

@@ -1,14 +1,16 @@
-import { Kind, Static, TSchema, Type } from '@sinclair/typebox';
-import { Knex } from 'knex';
+import type { Static, TSchema } from '@sinclair/typebox';
+import { Kind, Type } from '@sinclair/typebox';
+import type { Knex } from 'knex';
 import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error';
 import { Logger } from '../../services/logger/logger';
 import { chunkArray } from '../../utils/database-utils/array-utils';
-import { AbstractFilterOperator, Filter } from '../../utils/database-utils/find-filter';
+import type { Filter } from '../../utils/database-utils/find-filter';
+import { AbstractFilterOperator } from '../../utils/database-utils/find-filter';
 import { DatabaseService } from '../database-service';
 
 export const DBWithVersionedIdSchema = Type.Object({
   id: Type.Number({ minimum: 0 }),
-  version: Type.Number({ minimum: 1 }),
+  version: Type.Number({ minimum: 1 })
 });
 
 export const DBEntitySchema = DBWithVersionedIdSchema;
@@ -73,7 +75,7 @@ export abstract class AbstractDAO<
         this.preProcess({
           ...entity,
           id: undefined,
-          version: 1,
+          version: 1
         })
       )
       .into(this.tableName);
@@ -93,7 +95,7 @@ export abstract class AbstractDAO<
       .update(
         this.preProcess({
           ...entity,
-          version: (entity.version ?? 0) + 1,
+          version: (entity.version ?? 0) + 1
         })
       )
       .into(this.tableName)
@@ -138,7 +140,7 @@ export abstract class AbstractDAO<
           this.preProcess({
             ...entity,
             id: undefined,
-            version: 1,
+            version: 1
           })
         )
       );

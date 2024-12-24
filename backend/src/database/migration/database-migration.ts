@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import { resolve } from 'node:path';
 import { Logger } from '../../services/logger/logger';
 import { DatabaseService } from '../database-service';

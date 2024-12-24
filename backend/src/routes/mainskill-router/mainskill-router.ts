@@ -1,5 +1,5 @@
-import MainskillController from '@src/controllers/mainskill/mainskill.controller';
-import { Request, Response } from 'express';
+import type MainskillController from '@src/controllers/mainskill/mainskill.controller';
+import type { Request, Response } from 'express';
 import { Logger } from '../../services/logger/logger';
 import { BaseRouter } from '../base-router';
 

@@ -1,6 +1,6 @@
-import NatureController from '@src/controllers/nature/nature.controller';
+import type NatureController from '@src/controllers/nature/nature.controller';
 import { Logger } from '@src/services/logger/logger';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { BaseRouter } from '../base-router';
 
 class NatureRouterImpl {

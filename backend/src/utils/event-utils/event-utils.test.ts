@@ -1,10 +1,10 @@
-import { PokemonProduce } from '@src/domain/combination/produce';
-import { ScheduledEvent } from '@src/domain/event/event';
+import type { PokemonProduce } from '@src/domain/combination/produce';
+import type { ScheduledEvent } from '@src/domain/event/event';
 import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
 import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
 import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
 import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { TimeUtils } from '@src/utils/time-utils/time-utils';
 import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
@@ -20,7 +20,7 @@ import {
   recoverFromMeal,
   scheduleNapEvent,
   scheduleTeamEnergyEvents,
-  triggerTeamHelpsEvent,
+  triggerTeamHelpsEvent
 } from './event-utils';
 
 describe('getExtraHelpfulEvents', () => {
@@ -29,7 +29,7 @@ describe('getExtraHelpfulEvents', () => {
     const procs = 1.5;
     const produce: PokemonProduce = {
       produce: MOCKED_PRODUCE,
-      pokemon: pokemon.ABOMASNOW,
+      pokemon: pokemon.ABOMASNOW
     };
     const result = getExtraHelpfulEvents(period, procs, produce);
     expect(result).toMatchInlineSnapshot(`
@@ -179,7 +179,7 @@ describe('getHelperBoostEvents', () => {
     const level = 6;
     const produce: PokemonProduce = {
       produce: MOCKED_PRODUCE,
-      pokemon: pokemon.ABOMASNOW,
+      pokemon: pokemon.ABOMASNOW
     };
     const result = getHelperBoostEvents(period, procs, unique, level, produce);
     expect(result).toMatchInlineSnapshot(`
@@ -323,11 +323,11 @@ describe('scheduleNapEvent', () => {
     const nap: SleepInfo = {
       period: {
         start: { hour: 14, minute: 0, second: 0 },
-        end: { hour: 15, minute: 30, second: 0 },
+        end: { hour: 15, minute: 30, second: 0 }
       },
       nature: nature.BASHFUL,
       incense: false,
-      erb: 0,
+      erb: 0
     };
 
     const updatedRecoveryEvents = scheduleNapEvent(recoveryEvents, nap);
@@ -344,8 +344,8 @@ describe('scheduleNapEvent', () => {
       new EnergyEvent({
         time: { hour: 10, minute: 0, second: 0 },
         description: 'Morning Exercise',
-        delta: 20,
-      }),
+        delta: 20
+      })
     ];
 
     const updatedRecoveryEvents = scheduleNapEvent(recoveryEvents);
@@ -412,7 +412,7 @@ describe('getDefaultRecoveryEvents', () => {
       period: { start: { hour: 13, minute: 0, second: 0 }, end: { hour: 14, minute: 30, second: 0 } },
       nature: nature.BASHFUL,
       incense: false,
-      erb: 0,
+      erb: 0
     };
 
     const recoveryEvents = getDefaultRecoveryEvents(period, nature.BASHFUL, e4eProcs, e4eLevel, 0, nap);
@@ -440,7 +440,7 @@ describe('getDefaultRecoveryEvents', () => {
     expect(recoveryEvents.length).toBe(2);
     expect(recoveryEvents.map((e) => e.delta)).toEqual([
       mainskill.ENERGY_FOR_EVERYONE.amount(6),
-      mainskill.ENERGY_FOR_EVERYONE.amount(6) / 2,
+      mainskill.ENERGY_FOR_EVERYONE.amount(6) / 2
     ]);
   });
 
@@ -450,7 +450,7 @@ describe('getDefaultRecoveryEvents', () => {
       period: { start: { hour: 13, minute: 0, second: 0 }, end: { hour: 14, minute: 30, second: 0 } },
       nature: nature.BASHFUL,
       incense: false,
-      erb: 0,
+      erb: 0
     };
 
     const recoveryEvents = getDefaultRecoveryEvents(period, nap.nature, 0, 6, 0, nap);
@@ -474,7 +474,7 @@ describe('recoverEnergyEvents', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 12, minute: 0, second: 0 } };
     const energyEvents = [
       new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Mid-Morning Boost', delta: 30 }),
-      new EnergyEvent({ time: { hour: 9, minute: 40, second: 0 }, description: 'Morning Recovery', delta: 30 }),
+      new EnergyEvent({ time: { hour: 9, minute: 40, second: 0 }, description: 'Morning Recovery', delta: 30 })
     ];
     const eventLog: EnergyEvent[] = [];
 
@@ -484,7 +484,7 @@ describe('recoverEnergyEvents', () => {
       currentEnergy,
       period,
       eventLog,
-      energyIndex: 0,
+      energyIndex: 0
     });
 
     expect(energyEventsProcessed).toBe(2);
@@ -498,7 +498,7 @@ describe('recoverEnergyEvents', () => {
     const currentEnergy = 100;
     const period = { start: { hour: 11, minute: 0, second: 0 }, end: { hour: 13, minute: 0, second: 0 } };
     const energyEvents = [
-      new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Early Morning Recovery', delta: 30 }),
+      new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Early Morning Recovery', delta: 30 })
     ];
     const eventLog: EnergyEvent[] = [];
 
@@ -508,7 +508,7 @@ describe('recoverEnergyEvents', () => {
       currentEnergy,
       period,
       eventLog,
-      energyIndex: 0,
+      energyIndex: 0
     });
 
     expect(energyEventsProcessed).toBe(0);
@@ -523,7 +523,7 @@ describe('recoverEnergyEvents', () => {
     const period = { start: { hour: 9, minute: 0, second: 0 }, end: { hour: 11, minute: 0, second: 0 } };
     const energyEvents = [
       new EnergyEvent({ time: { hour: 9, minute: 30, second: 0 }, description: 'Morning Recovery', delta: 10 }),
-      new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Mid-Morning Boost', delta: 20 }),
+      new EnergyEvent({ time: { hour: 10, minute: 0, second: 0 }, description: 'Mid-Morning Boost', delta: 20 })
     ];
     const eventLog: EnergyEvent[] = [];
 
@@ -533,7 +533,7 @@ describe('recoverEnergyEvents', () => {
       currentEnergy,
       period,
       eventLog,
-      energyIndex: 0,
+      energyIndex: 0
     });
 
     expect(energyEventsProcessed).toBe(2);
@@ -556,7 +556,7 @@ describe('recoverFromMeal', () => {
       period,
       eventLog,
       mealTimes: mealEvents,
-      mealIndex: 0,
+      mealIndex: 0
     });
 
     expect(mealsProcessed).toBe(1);
@@ -579,7 +579,7 @@ describe('recoverFromMeal', () => {
       period,
       eventLog,
       mealTimes: mealEvents,
-      mealIndex: 0,
+      mealIndex: 0
     });
 
     expect(recoveredAmount).toBe(0);
@@ -602,7 +602,7 @@ describe('inventoryFull', () => {
       averageProduceAmount,
       inventoryLimit,
       currentTime,
-      eventLog,
+      eventLog
     });
 
     expect(isFull).toBe(true);
@@ -625,7 +625,7 @@ describe('inventoryFull', () => {
       averageProduceAmount,
       inventoryLimit,
       currentTime,
-      eventLog,
+      eventLog
     });
 
     expect(isFull).toBe(false);
@@ -652,7 +652,7 @@ describe('helpEvent', () => {
       currentInventory,
       inventoryLimit,
       nextHelp,
-      eventLog,
+      eventLog
     });
 
     expect(eventLog.length).toBe(2);
@@ -691,7 +691,7 @@ describe('addSneakySnackEvent', () => {
       spilledProduce,
       totalSpilledIngredients,
       nextHelp,
-      eventLog,
+      eventLog
     });
 
     expect(eventLog.length).toBe(3);
@@ -728,8 +728,8 @@ describe('triggerTeamHelpsEvent', () => {
           adjustedAmount: 1,
           fractionOfProc: 1,
           nrOfHelpsToActivate: 1,
-          adjustedProduce: InventoryUtils.getEmptyInventory(),
-        },
+          adjustedProduce: InventoryUtils.getEmptyInventory()
+        }
       }),
       new SkillEvent({
         description: '1',
@@ -744,18 +744,18 @@ describe('triggerTeamHelpsEvent', () => {
               {
                 amount: 2,
                 berry: berry.BLUK,
-                level: 60,
-              },
+                level: 60
+              }
             ],
             ingredients: [
               {
                 amount: 2,
-                ingredient: ingredient.BEAN_SAUSAGE,
-              },
-            ],
-          },
-        },
-      }),
+                ingredient: ingredient.BEAN_SAUSAGE
+              }
+            ]
+          }
+        }
+      })
     ];
 
     const result = triggerTeamHelpsEvent({
@@ -764,7 +764,7 @@ describe('triggerTeamHelpsEvent', () => {
       emptyProduce: InventoryUtils.getEmptyInventory(),
       eventLog,
       helpIndex: 1,
-      period: MOCKED_MAIN_SLEEP,
+      period: MOCKED_MAIN_SLEEP
     });
 
     expect(result.helpEventsProcessed).toMatchInlineSnapshot(`2`);

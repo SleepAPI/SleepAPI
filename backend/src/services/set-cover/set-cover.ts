@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { OptimalTeamSolution } from '@src/domain/combination/combination';
-import { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
 import { ProgrammingError } from '@src/domain/error/programming/programming-error';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
 import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
+import type { IngredientSet } from 'sleepapi-common';
 import {
-  IngredientSet,
   MEALS_IN_DAY,
   combineSameIngredientsInDrop,
   mainskill,
   multiplyBerries,
-  multiplyIngredients,
+  multiplyIngredients
 } from 'sleepapi-common';
 import {
   calculateHelperBoostIngredientsIncrease,
@@ -34,12 +34,12 @@ import {
   countUniqueHelperBoostPokemon,
   createMemoKey,
   parseMemoKey,
-  sumOfSimplifiedIngredients,
+  sumOfSimplifiedIngredients
 } from '../../utils/set-cover-utils/set-cover-utils';
 import {
   calculateRemainingIngredients,
   extractRelevantSurplus,
-  sortByMinimumFiller,
+  sortByMinimumFiller
 } from '../calculator/ingredient/ingredient-calculate';
 
 export interface SimplifiedIngredientSet {
@@ -130,7 +130,7 @@ export class SetCover {
         const currentNrOfHelps = countNrOfHelperBoostHelps({
           uniqueBoostedMons,
           skillProcs: maybeHelperBoostPokemon.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY,
-          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel,
+          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel
         });
 
         const deductedExtraHelperBoostIncrease = calculateRemainingSimplifiedIngredients(
@@ -148,7 +148,7 @@ export class SetCover {
         const sum = sumOfSimplifiedIngredients(remainder);
         const helperBoost: HelperBoostStatus = {
           amount: uniqueBoostedMons,
-          berry: boostedBerry.name,
+          berry: boostedBerry.name
         };
         remainders.push([sum, remainder, currentPokemon, currentTeam, helperBoost]);
       } else {
@@ -176,7 +176,7 @@ export class SetCover {
           const updatedParams: MemoizedParameters = {
             remainingIngredients: remainder,
             spotsLeftInTeam: maxTeamSize - 1,
-            helperBoost,
+            helperBoost
           };
           const key = createMemoKey(updatedParams);
 
@@ -267,7 +267,7 @@ export class SetCover {
         addedHelps = countNrOfHelperBoostHelps({
           uniqueBoostedMons,
           skillProcs: maybeHelperBoostPokemon.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY,
-          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel,
+          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel
         });
       }
 
@@ -277,9 +277,9 @@ export class SetCover {
           ...member.detailedProduce,
           produce: InventoryUtils.addToInventory(member.detailedProduce.produce, {
             berries: multiplyBerries(member.averageProduce.berries, addedHelps),
-            ingredients: multiplyIngredients(member.averageProduce.ingredients, addedHelps),
-          }),
-        },
+            ingredients: multiplyIngredients(member.averageProduce.ingredients, addedHelps)
+          })
+        }
       }));
 
       const teamIngredients = updatedTeam.flatMap((t) => t.detailedProduce.produce.ingredients);
@@ -288,7 +288,7 @@ export class SetCover {
       const teamWithDetails: OptimalTeamSolution = {
         team: updatedTeam,
         surplus,
-        exhaustive,
+        exhaustive
       };
 
       teamsWithDetails.push(teamWithDetails);
@@ -335,9 +335,9 @@ export class SetCover {
     const params: MemoizedParameters = {
       remainingIngredients: recipe.map((ing) => ({
         amount: ing.amount,
-        ingredient: ing.ingredient.name,
+        ingredient: ing.ingredient.name
       })),
-      spotsLeftInTeam,
+      spotsLeftInTeam
     };
 
     const key = createMemoKey(params);
@@ -357,9 +357,9 @@ export class SetCover {
     const params: MemoizedParameters = {
       remainingIngredients: recipe.map((ing) => ({
         amount: ing.amount,
-        ingredient: ing.ingredient.name,
+        ingredient: ing.ingredient.name
       })),
-      spotsLeftInTeam: 5,
+      spotsLeftInTeam: 5
     };
 
     const key = createMemoKey(params);
