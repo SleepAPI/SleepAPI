@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/SleepAPI/SleepAPI/compare/v1.5.2...v1.6.0) (2024-12-27)
+
+
+### Features
+
+* add custom logger and bun:test ([9d83d42](https://github.com/SleepAPI/SleepAPI/commit/9d83d42f9ef9b3d418e400ccf905d0943334c128))
+
 ## [1.5.2](https://github.com/SleepAPI/SleepAPI/compare/v1.5.1...v1.5.2) (2024-12-25)
 
 ## [1.5.1](https://github.com/SleepAPI/SleepAPI/compare/v1.5.0...v1.5.1) (2024-12-23)
