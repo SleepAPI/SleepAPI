@@ -1,7 +1,7 @@
-import type { PokemonCombinationContributions } from '@src/domain/combination/combination';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { Contribution } from '@src/domain/computed/contribution';
-import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '@src/services/api-service/optimal/optimal-service';
+import type { PokemonCombinationContributions } from '@src/domain/combination/combination.js';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { Contribution } from '@src/domain/computed/contribution.js';
+import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '@src/services/api-service/optimal/optimal-service.js';
 import {
   excludeContributions,
   findBestContribution,
@@ -9,7 +9,7 @@ import {
   selectTopNContributions,
   sortByContributedPowerDesc,
   sumContributedPower
-} from '@src/services/calculator/contribution/contribution-calculator';
+} from '@src/services/calculator/contribution/contribution-calculator.js';
 import type { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
 
 export interface ScoreResult {

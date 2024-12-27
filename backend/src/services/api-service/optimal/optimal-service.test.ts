@@ -1,6 +1,10 @@
-import type { SetCoverProductionStats } from '@src/domain/computed/production';
+import type { SetCoverProductionStats } from '@src/domain/computed/production.js';
+import {
+  findOptimalMonsForIngredient,
+  findOptimalSetsForMeal
+} from '@src/services/api-service/optimal/optimal-service.js';
+import { describe, expect, it } from 'bun:test';
 import { berry, dessert, ingredient, mainskill, nature, prettifyIngredientDrop, subskill } from 'sleepapi-common';
-import { findOptimalMonsForIngredient, findOptimalSetsForMeal } from './optimal-service';
 
 describe('findOptimalSetsForMeal', () => {
   it('shall find all optimal solutions for a recipe', () => {
@@ -33,23 +37,23 @@ describe('findOptimalSetsForMeal', () => {
         surplus: prettifyIngredientDrop(team.surplus.total)
       }))
     ).toMatchInlineSnapshot(`
-      [
-        {
-          "surplus": "3.7 Cacao, 3.5 Apple, 4.1 Mushroom, 6.6 Ginger",
-          "team": [
-            "ABSOL",
-            "RAICHU",
-          ],
-        },
-        {
-          "surplus": "3.7 Cacao, 2.8 Apple, 4.1 Mushroom, 3.1 Ginger",
-          "team": [
-            "ABSOL",
-            "PIKACHU_HALLOWEEN",
-          ],
-        },
-      ]
-    `);
+[
+  {
+    "surplus": "3.7 Cacao, 3.5 Apple, 4.1 Mushroom, 6.6 Ginger",
+    "team": [
+      "ABSOL",
+      "RAICHU",
+    ],
+  },
+  {
+    "surplus": "3.7 Cacao, 2.8 Apple, 4.1 Mushroom, 3.1 Ginger",
+    "team": [
+      "ABSOL",
+      "PIKACHU_HALLOWEEN",
+    ],
+  },
+]
+`);
   });
 });
 

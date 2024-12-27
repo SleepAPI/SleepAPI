@@ -1,4 +1,4 @@
-import { Tables } from '@src/database/migration/migrations/001_migration';
+import { Tables } from '@src/database/migration/migrations/001_migration.js';
 import type { Knex } from 'knex';
 
 export async function up(knex: Knex) {

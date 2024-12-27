@@ -1,9 +1,10 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator';
-import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
-import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator.js';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
+import { MemberState } from '@src/services/simulation-service/team-simulator/member-state.js';
+import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { PokemonIngredientSet } from 'sleepapi-common';
 import { BALANCED_GENDER, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
 
@@ -202,89 +203,89 @@ describe('addHelps', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
+{
+  "advanced": {
+    "carrySize": 10,
+    "dayHelps": 0,
+    "ingredientPercentage": 0.2,
+    "morningProcs": 0,
+    "nightHelps": 0,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 0,
+    "skillCritValue": 0,
+    "skillCrits": 0,
+    "skillPercentage": 0.02,
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "spilledIngredients": [],
+    "totalHelps": 0,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [
       {
-        "advanced": {
-          "carrySize": 10,
-          "dayHelps": 0,
-          "ingredientPercentage": 0.2,
-          "morningProcs": 0,
-          "nightHelps": 0,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 0,
-          "skillCritValue": 0,
-          "skillCrits": 0,
-          "skillPercentage": 0.02,
-          "sneakySnack": {
-            "amount": 0,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
-            },
-            "level": 60,
-          },
-          "spilledIngredients": [],
-          "totalHelps": 0,
-          "totalRecovery": 0,
-          "wastedEnergy": 0,
+        "amount": 1.6,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "externalId": "some id",
-        "produceFromSkill": {
-          "berries": [],
-          "ingredients": [],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.4,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "produceTotal": {
-          "berries": [
-            {
-              "amount": 1.6,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.4,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+      },
+    ],
+  },
+  "produceWithoutSkill": {
+    "berries": [
+      {
+        "amount": 1.6,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "produceWithoutSkill": {
-          "berries": [
-            {
-              "amount": 1.6,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.4,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.4,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "skillAmount": 0,
-        "skillProcs": 0,
-      }
-    `);
+      },
+    ],
+  },
+  "skillAmount": 0,
+  "skillProcs": 0,
+}
+`);
   });
 
   it('shall not add produce if adding 0 helps', () => {
@@ -293,49 +294,49 @@ describe('addHelps', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
-      {
-        "advanced": {
-          "carrySize": 10,
-          "dayHelps": 0,
-          "ingredientPercentage": 0.2,
-          "morningProcs": 0,
-          "nightHelps": 0,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 0,
-          "skillCritValue": 0,
-          "skillCrits": 0,
-          "skillPercentage": 0.02,
-          "sneakySnack": {
-            "amount": 0,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
-            },
-            "level": 60,
-          },
-          "spilledIngredients": [],
-          "totalHelps": 0,
-          "totalRecovery": 0,
-          "wastedEnergy": 0,
-        },
-        "externalId": "some id",
-        "produceFromSkill": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "produceTotal": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "produceWithoutSkill": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "skillAmount": 0,
-        "skillProcs": 0,
-      }
-    `);
+{
+  "advanced": {
+    "carrySize": 10,
+    "dayHelps": 0,
+    "ingredientPercentage": 0.2,
+    "morningProcs": 0,
+    "nightHelps": 0,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 0,
+    "skillCritValue": 0,
+    "skillCrits": 0,
+    "skillPercentage": 0.02,
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "spilledIngredients": [],
+    "totalHelps": 0,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceWithoutSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "skillAmount": 0,
+  "skillProcs": 0,
+}
+`);
   });
 });
 
@@ -383,89 +384,89 @@ describe('attemptDayHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
+{
+  "advanced": {
+    "carrySize": 10,
+    "dayHelps": 1,
+    "ingredientPercentage": 0.2,
+    "morningProcs": 0,
+    "nightHelps": 0,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 0,
+    "skillCritValue": 0,
+    "skillCrits": 0,
+    "skillPercentage": 0,
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "spilledIngredients": [],
+    "totalHelps": 1,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [
       {
-        "advanced": {
-          "carrySize": 10,
-          "dayHelps": 1,
-          "ingredientPercentage": 0.2,
-          "morningProcs": 0,
-          "nightHelps": 0,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 0,
-          "skillCritValue": 0,
-          "skillCrits": 0,
-          "skillPercentage": 0,
-          "sneakySnack": {
-            "amount": 0,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
-            },
-            "level": 60,
-          },
-          "spilledIngredients": [],
-          "totalHelps": 1,
-          "totalRecovery": 0,
-          "wastedEnergy": 0,
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "externalId": "some id",
-        "produceFromSkill": {
-          "berries": [],
-          "ingredients": [],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.2,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "produceTotal": {
-          "berries": [
-            {
-              "amount": 0.8,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.2,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+      },
+    ],
+  },
+  "produceWithoutSkill": {
+    "berries": [
+      {
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "produceWithoutSkill": {
-          "berries": [
-            {
-              "amount": 0.8,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.2,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.2,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "skillAmount": 0,
-        "skillProcs": 0,
-      }
-    `);
+      },
+    ],
+  },
+  "skillAmount": 0,
+  "skillProcs": 0,
+}
+`);
   });
 
   it('shall not perform a help if time has not passed scheduled help time', () => {
@@ -482,49 +483,49 @@ describe('attemptDayHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
-      {
-        "advanced": {
-          "carrySize": 10,
-          "dayHelps": 0,
-          "ingredientPercentage": 0.2,
-          "morningProcs": 0,
-          "nightHelps": 0,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 0,
-          "skillCritValue": 0,
-          "skillCrits": 0,
-          "skillPercentage": 0.02,
-          "sneakySnack": {
-            "amount": 0,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
-            },
-            "level": 60,
-          },
-          "spilledIngredients": [],
-          "totalHelps": 0,
-          "totalRecovery": 0,
-          "wastedEnergy": 0,
-        },
-        "externalId": "some id",
-        "produceFromSkill": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "produceTotal": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "produceWithoutSkill": {
-          "berries": [],
-          "ingredients": [],
-        },
-        "skillAmount": 0,
-        "skillProcs": 0,
-      }
-    `);
+{
+  "advanced": {
+    "carrySize": 10,
+    "dayHelps": 0,
+    "ingredientPercentage": 0.2,
+    "morningProcs": 0,
+    "nightHelps": 0,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 0,
+    "skillCritValue": 0,
+    "skillCrits": 0,
+    "skillPercentage": 0.02,
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "spilledIngredients": [],
+    "totalHelps": 0,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceWithoutSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "skillAmount": 0,
+  "skillProcs": 0,
+}
+`);
   });
 
   it('shall schedule the next help', () => {
@@ -654,89 +655,89 @@ describe('attemptNightHelp', () => {
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchInlineSnapshot(`
+{
+  "advanced": {
+    "carrySize": 10,
+    "dayHelps": 0,
+    "ingredientPercentage": 0.2,
+    "morningProcs": 1,
+    "nightHelps": 1,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 1,
+    "skillCritValue": 0,
+    "skillCrits": 0,
+    "skillPercentage": 1,
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "spilledIngredients": [],
+    "totalHelps": 1,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [
       {
-        "advanced": {
-          "carrySize": 10,
-          "dayHelps": 0,
-          "ingredientPercentage": 0.2,
-          "morningProcs": 1,
-          "nightHelps": 1,
-          "nightHelpsAfterSS": 0,
-          "nightHelpsBeforeSS": 1,
-          "skillCritValue": 0,
-          "skillCrits": 0,
-          "skillPercentage": 1,
-          "sneakySnack": {
-            "amount": 0,
-            "berry": {
-              "name": "BELUE",
-              "type": "steel",
-              "value": 33,
-            },
-            "level": 60,
-          },
-          "spilledIngredients": [],
-          "totalHelps": 1,
-          "totalRecovery": 0,
-          "wastedEnergy": 0,
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "externalId": "some id",
-        "produceFromSkill": {
-          "berries": [],
-          "ingredients": [],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.2,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "produceTotal": {
-          "berries": [
-            {
-              "amount": 0.8,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.2,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+      },
+    ],
+  },
+  "produceWithoutSkill": {
+    "berries": [
+      {
+        "amount": 0.8,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
         },
-        "produceWithoutSkill": {
-          "berries": [
-            {
-              "amount": 0.8,
-              "berry": {
-                "name": "BELUE",
-                "type": "steel",
-                "value": 33,
-              },
-              "level": 60,
-            },
-          ],
-          "ingredients": [
-            {
-              "amount": 0.2,
-              "ingredient": {
-                "longName": "Slowpoke Tail",
-                "name": "Tail",
-                "taxedValue": 342,
-                "value": 342,
-              },
-            },
-          ],
+        "level": 60,
+      },
+    ],
+    "ingredients": [
+      {
+        "amount": 0.2,
+        "ingredient": {
+          "longName": "Slowpoke Tail",
+          "name": "Tail",
+          "taxedValue": 342,
+          "value": 342,
         },
-        "skillAmount": 2066,
-        "skillProcs": 1,
-      }
-    `);
+      },
+    ],
+  },
+  "skillAmount": 2066,
+  "skillProcs": 1,
+}
+`);
   });
 });
 

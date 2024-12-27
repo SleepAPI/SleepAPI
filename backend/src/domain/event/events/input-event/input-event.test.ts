@@ -1,7 +1,12 @@
-import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import {
+  PlayerInputEvent,
+  PokemonInputEvent,
+  TeamInputEvent
+} from '@src/domain/event/events/input-event/input-event.js';
+import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 import { pokemon } from 'sleepapi-common';
-import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from './input-event';
 
 describe('InputEvent', () => {
   it('pokemon input shall format correctly', () => {

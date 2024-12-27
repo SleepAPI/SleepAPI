@@ -1,7 +1,8 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import { monteCarlo } from '@src/services/simulation-service/monte-carlo/monte-carlo.js';
+import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults.js';
+import { describe, expect, it } from 'bun:test';
 import { berry, ingredient, maxCarrySize, nature } from 'sleepapi-common';
-import { monteCarlo } from './monte-carlo';
 
 describe('monteCarlo', () => {
   it('shall run a basic monte carlo simulation', () => {
@@ -26,7 +27,7 @@ describe('monteCarlo', () => {
 });
 
 const pokemonWithAverageProduce: PokemonProduce = {
-  pokemon: MOCKED_POKEMON,
+  pokemon: { ...MOCKED_POKEMON, specialty: 'berry', skillPercentage: 0.02 },
   produce: {
     berries: [{ berry: berry.BELUE, amount: 2, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 1 }]

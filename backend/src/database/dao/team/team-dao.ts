@@ -1,9 +1,9 @@
 import type { Static } from '@sinclair/typebox';
 import { Type } from '@sinclair/typebox';
-import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao';
-import type { DBPokemon } from '@src/database/dao/pokemon/pokemon-dao';
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
+import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
+import type { DBPokemon } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
 import type { GetTeamResponse, MemberInstance, SubskillInstance } from 'sleepapi-common';
 
 const DBTeamSchema = Type.Composite([

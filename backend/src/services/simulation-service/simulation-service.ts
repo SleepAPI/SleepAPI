@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import type { ProductionStats } from '@src/domain/computed/production';
-import type { ScheduledEvent } from '@src/domain/event/event';
-import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator.js';
+import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator.js';
+import {
+  calculateAverageNumberOfSkillProcsForHelps,
+  calculateSkillProcs,
+  scheduleSkillEvents
+} from '@src/services/calculator/skill/skill-calculator.js';
+import { countErbUsers } from '@src/services/calculator/stats/stats-calculator.js';
+import { monteCarlo } from '@src/services/simulation-service/monte-carlo/monte-carlo.js';
+import { simulation } from '@src/services/simulation-service/simulator/simulator.js';
 import {
   getDefaultRecoveryEvents,
   getExtraHelpfulEvents,
   getHelperBoostEvents
-} from '@src/utils/event-utils/event-utils';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
+} from '@src/utils/event-utils/event-utils.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
 import type {
   BerrySet,
   DetailedProduce,
@@ -45,17 +56,6 @@ import {
   maxCarrySize,
   nature
 } from 'sleepapi-common';
-import { calculateHelpSpeedBeforeEnergy } from '../calculator/help/help-calculator';
-import { calculateAveragePokemonIngredientSet } from '../calculator/ingredient/ingredient-calculate';
-import { calculateAverageProduce } from '../calculator/production/produce-calculator';
-import {
-  calculateAverageNumberOfSkillProcsForHelps,
-  calculateSkillProcs,
-  scheduleSkillEvents
-} from '../calculator/skill/skill-calculator';
-import { countErbUsers } from '../calculator/stats/stats-calculator';
-import { monteCarlo } from './monte-carlo/monte-carlo';
-import { simulation } from './simulator/simulator';
 
 /**
  * Sets up all the simulation input and runs the simulated production window

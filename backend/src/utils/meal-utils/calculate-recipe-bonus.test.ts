@@ -1,3 +1,4 @@
+import { expect, it } from 'bun:test';
 import { MathUtils, dessert } from 'sleepapi-common';
 
 it('shall calc stats for given recipe', () => {

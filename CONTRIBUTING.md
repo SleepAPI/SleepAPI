@@ -16,7 +16,7 @@ The goal is for everyone to get familiar with the code standard and recognize pa
 
 ## Quality Assurance
 
-Please write automated tests for any new functionality added. There are plenty of examples in the code, they are written using [Jest][jest].
+Please write automated tests for any new functionality added. There are plenty of examples in the code, they are written using vitest for common/frontend and bun:test in backend (jest/vitest compatible).
 
 ## Commit standard
 

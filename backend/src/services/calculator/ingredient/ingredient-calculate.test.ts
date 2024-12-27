@@ -1,6 +1,4 @@
-import type { OptimalTeamSolution } from '@src/domain/combination/combination';
-import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
-import { MAX_RECIPE_LEVEL, curry, dessert, ingredient, pokemon, recipeLevelBonus, salad } from 'sleepapi-common';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
 import {
   addIngredientSet,
   calculateAveragePokemonIngredientSet,
@@ -11,7 +9,10 @@ import {
   extractRelevantSurplus,
   getAllIngredientCombinationsForLevel,
   sortByMinimumFiller
-} from './ingredient-calculate';
+} from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { describe, expect, it } from 'bun:test';
+import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
+import { MAX_RECIPE_LEVEL, curry, dessert, ingredient, pokemon, recipeLevelBonus, salad } from 'sleepapi-common';
 
 describe('calculatePercentageCoveredByCombination', () => {
   it('shall successfully calculate expected percentage', () => {
@@ -56,230 +57,230 @@ describe('calculatePercentageCoveredByCombination', () => {
 describe('getAllIngredientCombinationsFor', () => {
   it('shall find all combinations for given pokemon at level 60', () => {
     expect(getAllIngredientCombinationsForLevel(pokemon.PINSIR, 60)).toMatchInlineSnapshot(`
-      [
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 7,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 8,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 7,
-            "ingredient": {
-              "longName": "Bean Sausage",
-              "name": "Sausage",
-              "taxedValue": 31,
-              "value": 103,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-          {
-            "amount": 7,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-          {
-            "amount": 8,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-          {
-            "amount": 7,
-            "ingredient": {
-              "longName": "Bean Sausage",
-              "name": "Sausage",
-              "taxedValue": 31,
-              "value": 103,
-            },
-          },
-        ],
-      ]
-    `);
+[
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 7,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 7,
+      "ingredient": {
+        "longName": "Bean Sausage",
+        "name": "Sausage",
+        "taxedValue": 31,
+        "value": 103,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+    {
+      "amount": 7,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+    {
+      "amount": 7,
+      "ingredient": {
+        "longName": "Bean Sausage",
+        "name": "Sausage",
+        "taxedValue": 31,
+        "value": 103,
+      },
+    },
+  ],
+]
+`);
   });
 
   it('shall find all combinations for given pokemon at level 30', () => {
     expect(getAllIngredientCombinationsForLevel(pokemon.PINSIR, 30)).toMatchInlineSnapshot(`
-      [
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-        ],
-        [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-          {
-            "amount": 5,
-            "ingredient": {
-              "longName": "Fancy Apple",
-              "name": "Apple",
-              "taxedValue": 23.7,
-              "value": 90,
-            },
-          },
-        ],
-      ]
-    `);
+[
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+  ],
+  [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+    {
+      "amount": 5,
+      "ingredient": {
+        "longName": "Fancy Apple",
+        "name": "Apple",
+        "taxedValue": 23.7,
+        "value": 90,
+      },
+    },
+  ],
+]
+`);
   });
 });
 
@@ -303,36 +304,36 @@ describe('comineIngredientDrops', () => {
     ];
 
     expect(combineIngredientDrops(arr1, arr2)).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 2.1,
-          "ingredient": {
-            "longName": "Honey",
-            "name": "Honey",
-            "taxedValue": 29.8,
-            "value": 101,
-          },
-        },
-        {
-          "amount": 7.27,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 9,
-          "ingredient": {
-            "longName": "Honey",
-            "name": "Honey",
-            "taxedValue": 29.8,
-            "value": 101,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 2.1,
+    "ingredient": {
+      "longName": "Honey",
+      "name": "Honey",
+      "taxedValue": 29.8,
+      "value": 101,
+    },
+  },
+  {
+    "amount": 7.27,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+  {
+    "amount": 9,
+    "ingredient": {
+      "longName": "Honey",
+      "name": "Honey",
+      "taxedValue": 29.8,
+      "value": 101,
+    },
+  },
+]
+`);
   });
 });
 
@@ -533,36 +534,36 @@ describe('calculateAverageIngredientDrop', () => {
     const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
     expect(averagedResult.pokemon).toBe(pokemon.PINSIR);
     expect(averagedResult.ingredientList).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 1,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 1,
-          "ingredient": {
-            "longName": "Fancy Egg",
-            "name": "Egg",
-            "taxedValue": 38.7,
-            "value": 115,
-          },
-        },
-        {
-          "amount": 1,
-          "ingredient": {
-            "longName": "Moomoo Milk",
-            "name": "Milk",
-            "taxedValue": 28.1,
-            "value": 98,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 1,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+  {
+    "amount": 1,
+    "ingredient": {
+      "longName": "Fancy Egg",
+      "name": "Egg",
+      "taxedValue": 38.7,
+      "value": 115,
+    },
+  },
+  {
+    "amount": 1,
+    "ingredient": {
+      "longName": "Moomoo Milk",
+      "name": "Milk",
+      "taxedValue": 28.1,
+      "value": 98,
+    },
+  },
+]
+`);
   });
 
   it('shall average an ingredient set for level 30', () => {
@@ -583,27 +584,27 @@ describe('calculateAverageIngredientDrop', () => {
     const averagedResult = calculateAveragePokemonIngredientSet(pokemonSet);
     expect(averagedResult.pokemon).toBe(pokemon.PINSIR);
     expect(averagedResult.ingredientList).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Fancy Egg",
-            "name": "Egg",
-            "taxedValue": 38.7,
-            "value": 115,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 2,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+  {
+    "amount": 2,
+    "ingredient": {
+      "longName": "Fancy Egg",
+      "name": "Egg",
+      "taxedValue": 38.7,
+      "value": 115,
+    },
+  },
+]
+`);
   });
 });
 
@@ -626,27 +627,27 @@ describe('addIngredientSet', () => {
       }
     ];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 2,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-        {
-          "amount": 0.5,
-          "ingredient": {
-            "longName": "Fancy Egg",
-            "name": "Egg",
-            "taxedValue": 38.7,
-            "value": 115,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 2,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+  {
+    "amount": 0.5,
+    "ingredient": {
+      "longName": "Fancy Egg",
+      "name": "Egg",
+      "taxedValue": 38.7,
+      "value": 115,
+    },
+  },
+]
+`);
   });
 
   it('shall keep original array if adding empty array', () => {
@@ -658,18 +659,18 @@ describe('addIngredientSet', () => {
     ];
     const arr2: IngredientSet[] = [];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 1,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 1,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+]
+`);
   });
 
   it('shall add all ingredients as is if original array empty', () => {
@@ -681,17 +682,17 @@ describe('addIngredientSet', () => {
       }
     ];
     expect(addIngredientSet(arr1, arr2)).toMatchInlineSnapshot(`
-      [
-        {
-          "amount": 1,
-          "ingredient": {
-            "longName": "Fancy Apple",
-            "name": "Apple",
-            "taxedValue": 23.7,
-            "value": 90,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "amount": 1,
+    "ingredient": {
+      "longName": "Fancy Apple",
+      "name": "Apple",
+      "taxedValue": 23.7,
+      "value": 90,
+    },
+  },
+]
+`);
   });
 });

@@ -1,8 +1,13 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import {
+  calculateIv,
+  calculatePokemonProduction,
+  calculateTeam
+} from '@src/services/api-service/production/production-service.js';
+import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
-import { calculateIv, calculatePokemonProduction, calculateTeam } from './production-service';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
@@ -80,31 +85,31 @@ describe('calculateTeam', () => {
 
     expect(result.members).toHaveLength(1);
     expect(result.members[0].produceTotal).toMatchInlineSnapshot(`
-      {
-        "berries": [
-          {
-            "amount": 39.98336504575599,
-            "berry": {
-              "name": "LUM",
-              "type": "bug",
-              "value": 24,
-            },
-            "level": 60,
-          },
-        ],
-        "ingredients": [
-          {
-            "amount": 90.93165396225288,
-            "ingredient": {
-              "longName": "Honey",
-              "name": "Honey",
-              "taxedValue": 29.8,
-              "value": 101,
-            },
-          },
-        ],
-      }
-    `);
+{
+  "berries": [
+    {
+      "amount": 39.98336504575599,
+      "berry": {
+        "name": "LUM",
+        "type": "bug",
+        "value": 24,
+      },
+      "level": 60,
+    },
+  ],
+  "ingredients": [
+    {
+      "amount": 90.93165396225288,
+      "ingredient": {
+        "longName": "Honey",
+        "name": "Honey",
+        "taxedValue": 29.8,
+        "value": 101,
+      },
+    },
+  ],
+}
+`);
   });
 });
 

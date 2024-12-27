@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import type { ProductionStats } from '@src/domain/computed/production';
-import type { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import {
   addSneakySnackEvent,
   helpEvent,
@@ -27,11 +27,14 @@ import {
   recoverEnergyEvents,
   recoverFromMeal,
   triggerTeamHelpsEvent
-} from '@src/utils/event-utils/event-utils';
-import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simulation-utils/simulation-utils';
+} from '@src/utils/event-utils/event-utils.js';
+import { finishSimulation, startDayAndEnergy, startNight } from '@src/utils/simulation-utils/simulation-utils.js';
 
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { maybeDegradeEnergy } from '@src/services/calculator/energy/energy-calculator.js';
+import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator.js';
+import { clampHelp } from '@src/services/calculator/production/produce-calculator.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { BerrySet, DetailedProduce, Produce, SkillActivation, Summary, Time } from 'sleepapi-common';
 import {
   METRONOME_SKILLS,
@@ -41,9 +44,6 @@ import {
   emptyProduce,
   mainskill
 } from 'sleepapi-common';
-import { maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
-import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
-import { clampHelp } from '../../calculator/production/produce-calculator';
 
 /**
  * Runs the production simulation

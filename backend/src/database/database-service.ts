@@ -1,7 +1,7 @@
+import { config } from '@src/config/config.js';
+import { DatabaseConnectionError } from '@src/domain/error/database/database-error.js';
 import type { Knex } from 'knex';
 import knex from 'knex';
-import { config } from '../config/config';
-import { DatabaseConnectionError } from '../domain/error/database/database-error';
 
 class DatabaseServiceImpl {
   #knex: Knex | undefined;

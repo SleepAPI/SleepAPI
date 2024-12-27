@@ -1,6 +1,6 @@
+import type { GetTierListQueryParams } from '@src/routes/tierlist-router/tierlist-router.js';
+import { TierlistService } from '@src/services/api-service/tierlist/tierlist-service.js';
 import * as tsoa from '@tsoa/runtime';
-import type { GetTierListQueryParams } from '../../routes/tierlist-router/tierlist-router';
-import { TierlistService } from '../../services/api-service/tierlist/tierlist-service';
 const { Controller, Route, Tags, Get, Queries } = tsoa;
 
 @Route('api/tierlist')

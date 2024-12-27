@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination';
+import type { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination.js';
 import type { IngredientSet, PokemonIngredientSet, Recipe, pokemon } from 'sleepapi-common';
 import { MAX_RECIPE_LEVEL, recipeLevelBonus } from 'sleepapi-common';
 

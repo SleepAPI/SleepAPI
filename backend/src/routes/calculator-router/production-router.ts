@@ -1,16 +1,15 @@
-import { Logger } from '@src/services/logger/logger';
-import { runWorkerFile } from '@src/services/worker/worker';
-import { queryAsBoolean } from '@src/utils/routing/routing-utils';
+import { BaseRouter } from '@src/routes/base-router.js';
+import { runWorkerFile } from '@src/services/worker/worker.js';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
 import type { Request, Response } from 'express';
 import path from 'path';
-import type {
-  CalculateIvRequest,
-  CalculateIvResponse,
-  CalculateTeamRequest,
-  CalculateTeamResponse,
-  SingleProductionRequest
+import {
+  type CalculateIvRequest,
+  type CalculateIvResponse,
+  type CalculateTeamRequest,
+  type CalculateTeamResponse,
+  type SingleProductionRequest
 } from 'sleepapi-common';
-import { BaseRouter } from '../base-router';
 
 class ProductionRouterImpl {
   public async register() {
@@ -26,7 +25,7 @@ class ProductionRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered /calculator/production/:name');
+          logger.log('Entered /calculator/production/:name');
           const { name } = req.params;
 
           const pretty = queryAsBoolean(req.query.pretty);
@@ -40,7 +39,7 @@ class ProductionRouterImpl {
           });
           res.header('Content-Type', 'application/json').send(JSON.stringify(result, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -50,14 +49,14 @@ class ProductionRouterImpl {
       '/calculator/team',
       async (req: Request<unknown, unknown, CalculateTeamRequest, unknown>, res: Response<CalculateTeamResponse>) => {
         try {
-          Logger.log('Entered /calculator/team');
+          logger.log('Entered /calculator/team');
 
           const data = await runWorkerFile(path.resolve(__dirname, './team-worker.js'), {
             body: req.body
           });
           res.json(data);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(500);
         }
       }
@@ -67,14 +66,14 @@ class ProductionRouterImpl {
       '/calculator/iv',
       async (req: Request<unknown, unknown, CalculateIvRequest, unknown>, res: Response<CalculateIvResponse>) => {
         try {
-          Logger.log('Entered /calculator/iv');
+          logger.log('Entered /calculator/iv');
 
           const data = await runWorkerFile(path.resolve(__dirname, './iv-worker.js'), {
             body: req.body
           });
           res.json(data);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(500);
         }
       }

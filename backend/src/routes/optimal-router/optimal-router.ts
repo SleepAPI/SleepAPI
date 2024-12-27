@@ -1,12 +1,11 @@
-import type { OptimalTeamSolution } from '@src/domain/combination/combination';
-import type { ProductionStats } from '@src/domain/computed/production';
-import { Logger } from '@src/services/logger/logger';
-import { runWorkerFile } from '@src/services/worker/worker';
-import type { ScoreResult } from '@src/utils/optimal-utils/optimal-utils';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import { BaseRouter } from '@src/routes/base-router.js';
+import { runWorkerFile } from '@src/services/worker/worker.js';
+import type { ScoreResult } from '@src/utils/optimal-utils/optimal-utils.js';
 import type { Request, Response } from 'express';
 import path from 'path';
 import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
-import { BaseRouter } from '../base-router';
 
 // TODO: this is pretty much same as input prod request from calc
 // TODO: either use same, or just slim this down massively since most of this is assumed optimal for set cover and not used from site
@@ -63,7 +62,7 @@ class OptimalCombinationRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered /optimal/ingredient/:name');
+          logger.log('Entered /optimal/ingredient/:name');
 
           const { name } = req.params;
           const { body } = req;
@@ -76,7 +75,7 @@ class OptimalCombinationRouterImpl {
           });
           res.json(data);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -89,7 +88,7 @@ class OptimalCombinationRouterImpl {
         res: Response
       ) => {
         try {
-          Logger.log('Entered /optimal/meal/:name');
+          logger.log('Entered /optimal/meal/:name');
 
           const { name } = req.params;
           const { body } = req;
@@ -102,7 +101,7 @@ class OptimalCombinationRouterImpl {
           });
           res.json(data);
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }

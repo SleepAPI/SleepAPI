@@ -1,6 +1,7 @@
-import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { HelpEvent } from './help-event';
+import { HelpEvent } from '@src/domain/event/events/help-event/help-event.js';
+import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 
 describe('HelpEvent', () => {
   it('help event shall format correctly', () => {

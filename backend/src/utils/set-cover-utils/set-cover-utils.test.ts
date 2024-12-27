@@ -1,6 +1,18 @@
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { SimplifiedIngredientSet } from '@src/services/set-cover/set-cover.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import {
+  calculateHelperBoostIngredientsIncrease,
+  calculateRemainingSimplifiedIngredients,
+  countNrOfHelperBoostHelps,
+  countUniqueHelperBoostPokemon,
+  createMemoKey,
+  createPokemonByIngredientReverseIndex,
+  parseMemoKey,
+  sumOfSimplifiedIngredients
+} from '@src/utils/set-cover-utils/set-cover-utils.js';
+import { MOCKED_POKEMON_WITH_PRODUCE } from '@src/utils/test-utils/defaults.js';
+import { describe, expect, it } from 'bun:test';
 import {
   berry,
   emptyBerryInventory,
@@ -12,17 +24,6 @@ import {
   prettifyIngredientDrop,
   subskill
 } from 'sleepapi-common';
-import { MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
-import {
-  calculateHelperBoostIngredientsIncrease,
-  calculateRemainingSimplifiedIngredients,
-  countNrOfHelperBoostHelps,
-  countUniqueHelperBoostPokemon,
-  createMemoKey,
-  createPokemonByIngredientReverseIndex,
-  parseMemoKey,
-  sumOfSimplifiedIngredients
-} from './set-cover-utils';
 
 describe('createPokemonByIngredientReverseIndex', () => {
   it('should correctly map ingredients to Pokémon', () => {
@@ -230,11 +231,11 @@ describe('createPokemonByIngredientReverseIndex', () => {
             `${pk.pokemonCombination.pokemon.name} (${prettifyIngredientDrop(pk.pokemonCombination.ingredientList)})`
         )
     ).toMatchInlineSnapshot(`
-      [
-        "RAIKOU (2 Cacao, 8 Apple, 7 Mushroom)",
-        "RAICHU (1 Apple, 2 Ginger, 3 Ginger)",
-      ]
-    `);
+[
+  "RAIKOU (2 Cacao, 8 Apple, 7 Mushroom)",
+  "RAICHU (1 Apple, 2 Ginger, 3 Ginger)",
+]
+`);
   });
 });
 

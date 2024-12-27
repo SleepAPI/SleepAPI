@@ -1,4 +1,4 @@
-import type { ScheduledEvent } from '@src/domain/event/event';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
 import type { Time, TimePeriod } from 'sleepapi-common';
 import { MathUtils } from 'sleepapi-common';
 

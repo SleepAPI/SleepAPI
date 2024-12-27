@@ -1,6 +1,6 @@
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { ProductionStats } from '@src/domain/computed/production';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
 import type { Produce, TimePeriod } from 'sleepapi-common';
 import {
   BALANCED_GENDER,

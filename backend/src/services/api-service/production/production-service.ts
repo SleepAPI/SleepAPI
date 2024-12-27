@@ -1,12 +1,12 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import type { ProductionStats } from '@src/domain/computed/production';
-import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
-import { getIngredientSet } from '@src/utils/production-utils/production-utils';
-import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import { getAllIngredientCombinationsForLevel } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
+import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
+import { getIngredientSet } from '@src/utils/production-utils/production-utils.js';
+import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils.js';
 import type { CalculateIvResponse, DetailedProduce, MemberProductionBase, pokemon } from 'sleepapi-common';
 import { maxCarrySize, nature, subskill } from 'sleepapi-common';
-import { getAllIngredientCombinationsForLevel } from '../../calculator/ingredient/ingredient-calculate';
 
 export function calculatePokemonProduction(
   pokemon: pokemon.Pokemon,

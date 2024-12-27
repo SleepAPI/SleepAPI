@@ -1,25 +1,24 @@
 import type {
   PokemonCombinationCombinedContribution,
   PokemonIngredientSetContribution
-} from '@src/domain/combination/combination';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { CombinedContribution, Contribution } from '@src/domain/computed/contribution';
+} from '@src/domain/combination/combination.js';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { CombinedContribution, Contribution } from '@src/domain/computed/contribution.js';
 import type {
   CreateTierListRequestBody,
   GetTierListQueryParams,
   TieredPokemonCombinationContribution
-} from '@src/routes/tierlist-router/tierlist-router';
+} from '@src/routes/tierlist-router/tierlist-router.js';
 import {
   boostFirstMealWithFactor,
   calculateMealContributionFor,
   getAllOptimalIngredientFocusedPokemonProduce
-} from '@src/services/calculator/contribution/contribution-calculator';
-import { Logger } from '@src/services/logger/logger';
-import { SetCover } from '@src/services/set-cover/set-cover';
-import type { CritInfo } from '@src/utils/meal-utils/meal-utils';
-import { calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
-import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
-import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
+} from '@src/services/calculator/contribution/contribution-calculator.js';
+import { SetCover } from '@src/services/set-cover/set-cover.js';
+import type { CritInfo } from '@src/utils/meal-utils/meal-utils.js';
+import { calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils.js';
+import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils.js';
+import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils.js';
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import type { Mainskill } from 'sleepapi-common';
@@ -30,7 +29,7 @@ const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
 
 class TierlistImpl {
   public async seed() {
-    Logger.info('Generating cooking tier lists');
+    logger.info('Generating cooking tier lists');
     const details: CreateTierListRequestBody = {
       curry: false,
       dessert: false,
@@ -151,7 +150,7 @@ class TierlistImpl {
       previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`
     });
 
-    Logger.info('Finished generating cooking tier lists');
+    logger.info('Finished generating cooking tier lists');
   }
 
   public generateTierListData(details: CreateTierListRequestBody) {
@@ -238,7 +237,7 @@ class TierlistImpl {
         const currentMemoryUsage = process.memoryUsage().heapUsed;
         const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-        Logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
+        logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
         ++counter;
         console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 

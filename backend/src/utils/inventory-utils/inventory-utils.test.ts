@@ -1,4 +1,5 @@
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { Produce } from 'sleepapi-common';
 import {
   berry,
@@ -107,31 +108,31 @@ describe('addToInventory', () => {
     inventory = InventoryUtils.addToInventory(inventory, addedProduce);
     expect(InventoryUtils.countInventory(inventory)).toBe(4);
     expect(inventory).toMatchInlineSnapshot(`
-      {
-        "berries": [
-          {
-            "amount": 2,
-            "berry": {
-              "name": "LEPPA",
-              "type": "fire",
-              "value": 27,
-            },
-            "level": 60,
-          },
-        ],
-        "ingredients": [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Snoozy Tomato",
-              "name": "Tomato",
-              "taxedValue": 35.4,
-              "value": 110,
-            },
-          },
-        ],
-      }
-    `);
+{
+  "berries": [
+    {
+      "amount": 2,
+      "berry": {
+        "name": "LEPPA",
+        "type": "fire",
+        "value": 27,
+      },
+      "level": 60,
+    },
+  ],
+  "ingredients": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Snoozy Tomato",
+        "name": "Tomato",
+        "taxedValue": 35.4,
+        "value": 110,
+      },
+    },
+  ],
+}
+`);
   });
 
   it('shall add empty produce to inventory', () => {

@@ -1,7 +1,25 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
-import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { Contribution } from '@src/domain/computed/contribution.js';
+import {
+  boostFirstMealWithFactor,
+  calculateContributionForMealWithPunishment,
+  calculateMealContributionFor,
+  calculateTeamSizeAndSupportedIngredients,
+  excludeContributions,
+  findBestContribution,
+  getAllOptimalIngredientFocusedPokemonProduce,
+  groupContributionsByType,
+  selectTopNContributions,
+  sortByContributedPowerDesc,
+  sumContributedPower,
+  summarizeTeamProducedIngredientSources
+} from '@src/services/calculator/contribution/contribution-calculator.js';
+import { SetCover } from '@src/services/set-cover/set-cover.js';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils.js';
+import { createPokemonByIngredientReverseIndex, memo } from '@src/utils/set-cover-utils/set-cover-utils.js';
+import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { IngredientSet, Recipe } from 'sleepapi-common';
 import {
   MAX_RECIPE_LEVEL,
@@ -18,23 +36,6 @@ import {
   salad,
   subskill
 } from 'sleepapi-common';
-import type { Contribution } from '../../../domain/computed/contribution';
-import { createPokemonByIngredientReverseIndex, memo } from '../../../utils/set-cover-utils/set-cover-utils';
-import { SetCover } from '../../set-cover/set-cover';
-import {
-  boostFirstMealWithFactor,
-  calculateContributionForMealWithPunishment,
-  calculateMealContributionFor,
-  calculateTeamSizeAndSupportedIngredients,
-  excludeContributions,
-  findBestContribution,
-  getAllOptimalIngredientFocusedPokemonProduce,
-  groupContributionsByType,
-  selectTopNContributions,
-  sortByContributedPowerDesc,
-  sumContributedPower,
-  summarizeTeamProducedIngredientSources
-} from './contribution-calculator';
 
 describe('getAllOptimalIngredientPokemonProduce', () => {
   it('shall calculate optimal produce for all optimal pokemon', () => {
@@ -777,37 +778,37 @@ describe('summarizeTeamProducedIngredientSources', () => {
     }));
 
     expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "defaultAmount": 42.7,
-          "fromSupport": 12.37,
-          "ingredient": "Herb",
-          "recipeAmount": 27,
-          "selfSupportAmount": 2.65,
-        },
-        {
-          "defaultAmount": 15.9,
-          "fromSupport": 6.18,
-          "ingredient": "Corn",
-          "recipeAmount": 14,
-          "selfSupportAmount": 0,
-        },
-        {
-          "defaultAmount": 27.1,
-          "fromSupport": 9.72,
-          "ingredient": "Ginger",
-          "recipeAmount": 12,
-          "selfSupportAmount": 0,
-        },
-        {
-          "defaultAmount": 30.9,
-          "fromSupport": 11.48,
-          "ingredient": "Sausage",
-          "recipeAmount": 24,
-          "selfSupportAmount": 0,
-        },
-      ]
-    `);
+[
+  {
+    "defaultAmount": 42.7,
+    "fromSupport": 12.37,
+    "ingredient": "Herb",
+    "recipeAmount": 27,
+    "selfSupportAmount": 2.65,
+  },
+  {
+    "defaultAmount": 15.9,
+    "fromSupport": 6.18,
+    "ingredient": "Corn",
+    "recipeAmount": 14,
+    "selfSupportAmount": 0,
+  },
+  {
+    "defaultAmount": 27.1,
+    "fromSupport": 9.72,
+    "ingredient": "Ginger",
+    "recipeAmount": 12,
+    "selfSupportAmount": 0,
+  },
+  {
+    "defaultAmount": 30.9,
+    "fromSupport": 11.48,
+    "ingredient": "Sausage",
+    "recipeAmount": 24,
+    "selfSupportAmount": 0,
+  },
+]
+`);
   });
 });
 

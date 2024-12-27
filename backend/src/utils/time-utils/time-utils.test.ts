@@ -1,5 +1,6 @@
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it, test } from 'bun:test';
 import type { Time, TimePeriod } from 'sleepapi-common';
 
 describe('toMinutes', () => {
@@ -174,33 +175,33 @@ describe('TimeUtils.divideTimePeriod', () => {
       }
     };
     expect(TimeUtils.divideTimePeriod(period, 2)).toMatchInlineSnapshot(`
-      [
-        {
-          "end": {
-            "hour": 13,
-            "minute": 45,
-            "second": 0,
-          },
-          "start": {
-            "hour": 6,
-            "minute": 0,
-            "second": 0,
-          },
-        },
-        {
-          "end": {
-            "hour": 21,
-            "minute": 30,
-            "second": 0,
-          },
-          "start": {
-            "hour": 13,
-            "minute": 45,
-            "second": 0,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "end": {
+      "hour": 13,
+      "minute": 45,
+      "second": 0,
+    },
+    "start": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0,
+    },
+  },
+  {
+    "end": {
+      "hour": 21,
+      "minute": 30,
+      "second": 0,
+    },
+    "start": {
+      "hour": 13,
+      "minute": 45,
+      "second": 0,
+    },
+  },
+]
+`);
   });
 
   it('shall split a day ending after midnight into equal periods', () => {
@@ -218,33 +219,33 @@ describe('TimeUtils.divideTimePeriod', () => {
     };
 
     expect(TimeUtils.divideTimePeriod(period, 2)).toMatchInlineSnapshot(`
-      [
-        {
-          "end": {
-            "hour": 19,
-            "minute": 0,
-            "second": 0,
-          },
-          "start": {
-            "hour": 12,
-            "minute": 0,
-            "second": 0,
-          },
-        },
-        {
-          "end": {
-            "hour": 2,
-            "minute": 0,
-            "second": 0,
-          },
-          "start": {
-            "hour": 19,
-            "minute": 0,
-            "second": 0,
-          },
-        },
-      ]
-    `);
+[
+  {
+    "end": {
+      "hour": 19,
+      "minute": 0,
+      "second": 0,
+    },
+    "start": {
+      "hour": 12,
+      "minute": 0,
+      "second": 0,
+    },
+  },
+  {
+    "end": {
+      "hour": 2,
+      "minute": 0,
+      "second": 0,
+    },
+    "start": {
+      "hour": 19,
+      "minute": 0,
+      "second": 0,
+    },
+  },
+]
+`);
   });
 });
 

@@ -1,4 +1,4 @@
-import { DatabaseMigrationError } from '@src/domain/error/database/database-error';
+import { DatabaseMigrationError } from '@src/domain/error/database/database-error.js';
 import dotenv from 'dotenv';
 
 export class BackendConfig {

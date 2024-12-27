@@ -1,10 +1,11 @@
-import { maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 import {
   calculateHelpSpeedSubskills,
   calculateSubskillCarrySize,
   countErbUsers,
   getOptimalStats
-} from './stats-calculator';
+} from '@src/services/calculator/stats/stats-calculator.js';
+import { describe, expect, it } from 'bun:test';
+import { maxCarrySize, nature, pokemon, subskill } from 'sleepapi-common';
 
 describe('calculateHelpSpeedSubskills', () => {
   it('shall calculate default helpSpeed factor from subskills', () => {

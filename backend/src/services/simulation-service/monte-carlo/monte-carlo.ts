@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { randomizedSimulation } from '@src/services/simulation-service/monte-carlo/randomized-simulator.js';
 import type { Time } from 'sleepapi-common';
-import { randomizedSimulation } from './randomized-simulator';
 
 export interface MonteCarloResult {
   skillProcsDay: number;

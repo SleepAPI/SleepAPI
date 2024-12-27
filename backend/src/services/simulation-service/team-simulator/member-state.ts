@@ -1,15 +1,15 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { NotImplementedError } from '@src/domain/error/programming/not-implemented-error';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { MainskillError } from '@src/domain/error/stat/stat-error';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator';
-import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
-import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator';
-import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
-import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import { NotImplementedError } from '@src/domain/error/programming/not-implemented-error.js';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error.js';
+import { MainskillError } from '@src/domain/error/stat/stat-error.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator.js';
+import { calculateAveragePokemonIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { calculateAverageProduce } from '@src/services/calculator/production/produce-calculator.js';
+import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
+import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils.js';
 import type {
   BerrySet,
   IngredientSet,

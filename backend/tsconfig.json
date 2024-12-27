@@ -6,6 +6,7 @@
 
     "allowJs": true,
     "outDir": "dist",
+    "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
@@ -16,6 +17,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
+    "types": ["bun-types"],
     "paths": {
       "@src/*": ["./src/*"],
       "@test/*": ["./test/*"]

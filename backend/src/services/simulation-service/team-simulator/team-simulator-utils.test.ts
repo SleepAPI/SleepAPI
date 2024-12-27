@@ -1,6 +1,7 @@
-import type { TeamMember } from '@src/domain/combination/team';
-import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { TeamMember } from '@src/domain/combination/team.js';
+import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { PokemonIngredientSet } from 'sleepapi-common';
 import { BALANCED_GENDER, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
 

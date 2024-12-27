@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import type { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { SkillActivation, Time, TimePeriod } from 'sleepapi-common';
 import { subskill } from 'sleepapi-common';
 

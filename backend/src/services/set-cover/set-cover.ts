@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-import type { OptimalTeamSolution } from '@src/domain/combination/combination';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
-import type { IngredientSet } from 'sleepapi-common';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error.js';
 import {
-  MEALS_IN_DAY,
-  combineSameIngredientsInDrop,
-  mainskill,
-  multiplyBerries,
-  multiplyIngredients
-} from 'sleepapi-common';
+  calculateRemainingIngredients,
+  extractRelevantSurplus,
+  sortByMinimumFiller
+} from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils.js';
 import {
   calculateHelperBoostIngredientsIncrease,
   calculateRemainingSimplifiedIngredients,
@@ -35,12 +32,15 @@ import {
   createMemoKey,
   parseMemoKey,
   sumOfSimplifiedIngredients
-} from '../../utils/set-cover-utils/set-cover-utils';
+} from '@src/utils/set-cover-utils/set-cover-utils.js';
+import type { IngredientSet } from 'sleepapi-common';
 import {
-  calculateRemainingIngredients,
-  extractRelevantSurplus,
-  sortByMinimumFiller
-} from '../calculator/ingredient/ingredient-calculate';
+  MEALS_IN_DAY,
+  combineSameIngredientsInDrop,
+  mainskill,
+  multiplyBerries,
+  multiplyIngredients
+} from 'sleepapi-common';
 
 export interface SimplifiedIngredientSet {
   amount: number;

@@ -1,10 +1,10 @@
-import type { DBUser } from '@src/database/dao/user/user-dao';
+import type { DBUser } from '@src/database/dao/user/user-dao.js';
 import {
   deletePokemon,
   deleteUser,
   getSavedPokemon,
   upsertPokemon
-} from '@src/services/api-service/login/login-service';
+} from '@src/services/api-service/login/login-service.js';
 import type { PokemonInstanceWithMeta } from 'sleepapi-common';
 
 export default class UserController {

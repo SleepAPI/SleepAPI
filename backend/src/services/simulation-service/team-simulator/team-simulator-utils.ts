@@ -1,5 +1,5 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/help-calculator.js';
 import type { berry } from 'sleepapi-common';
 import {
   calculateIngredientPercentage,

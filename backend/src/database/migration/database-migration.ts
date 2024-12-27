@@ -1,7 +1,6 @@
+import { DatabaseService } from '@src/database/database-service.js';
 import type { Knex } from 'knex';
 import { resolve } from 'node:path';
-import { Logger } from '../../services/logger/logger';
-import { DatabaseService } from '../database-service';
 
 const DatabaseMigration = new (class {
   public async migrate() {
@@ -16,7 +15,7 @@ const DatabaseMigration = new (class {
     const configuration: Knex.MigratorConfig = {};
 
     const knex = await DatabaseService.getKnex();
-    Logger.info('Rolling back all migrations');
+    logger.info('Rolling back all migrations');
     await knex.migrate.rollback({ ...configuration, directory: baseDir });
   }
 
@@ -36,13 +35,13 @@ const DatabaseMigration = new (class {
         return;
       }
 
-      Logger.info(`Migrations ` + available.map((it) => it.file).join(', '));
+      logger.info(`Migrations ` + available.map((it) => it.file).join(', '));
       try {
         await knex.migrate.latest(configuration);
         return;
       } catch (error) {
         retryCount--;
-        Logger.info(`Migration already running. Will retry ${retryCount}`);
+        logger.info(`Migration already running. Will retry ${retryCount}`);
         await new Promise((resolve) => setTimeout(resolve, 2_000));
       }
     }

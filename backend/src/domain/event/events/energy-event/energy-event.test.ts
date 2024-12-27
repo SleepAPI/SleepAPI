@@ -1,4 +1,5 @@
-import { EnergyEvent } from './energy-event';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { describe, expect, it } from 'bun:test';
 
 describe('EnergyEvent', () => {
   it('format shall list before and after if provided', () => {

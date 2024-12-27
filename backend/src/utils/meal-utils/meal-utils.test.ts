@@ -1,16 +1,17 @@
-import { MealError } from '@src/domain/error/meal/meal-error';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import type { SkillActivation } from 'sleepapi-common';
-import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
-import { MOCKED_MAIN_SLEEP } from '../test-utils/defaults';
-import type { CritInfo } from './meal-utils';
+import { MealError } from '@src/domain/error/meal/meal-error.js';
+import type { CritInfo } from '@src/utils/meal-utils/meal-utils.js';
 import {
   calculateCritMultiplier,
   getDefaultMealTimes,
   getMeal,
   getMealRecoveryAmount,
   getMealsForFilter
-} from './meal-utils';
+} from '@src/utils/meal-utils/meal-utils.js';
+import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
+import type { SkillActivation } from 'sleepapi-common';
+import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
 
 describe('getMeal', () => {
   it('shall return Lovely Kiss for lovely_kIsS_smOOthie name', () => {
@@ -72,26 +73,26 @@ describe('getMealsForFilter', () => {
         minRecipeBonus: 35
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
-      [
-        "DIZZY_PUNCH_SPICY_CURRY",
-        "NINJA_CURRY",
-        "DREAM_EATER_BUTTER_CURRY",
-        "INFERNO_CORN_KEEMA_CURRY",
-        "HIDDEN_POWER_PERK_UP_STEW",
-        "CALM_MIND_FRUIT_SALAD",
-        "CROSS_CHOP_SALAD",
-        "GREENGRASS_SALAD",
-        "NINJA_SALAD",
-        "DEFIANT_COFFEE_DRESSED_SALAD",
-        "HUGE_POWER_SOY_DONUTS",
-        "EXPLOSION_POPCORN",
-        "EARLY_BIRD_COFFEE_JELLY",
-        "JIGGLYPUFFS_FRUITY_FLAN",
-        "TEATIME_CORN_SCONES",
-        "FLOWER_GIFT_MACARONS",
-        "ZING_ZAP_SPICED_COLA",
-      ]
-    `);
+[
+  "DIZZY_PUNCH_SPICY_CURRY",
+  "NINJA_CURRY",
+  "DREAM_EATER_BUTTER_CURRY",
+  "INFERNO_CORN_KEEMA_CURRY",
+  "HIDDEN_POWER_PERK_UP_STEW",
+  "CALM_MIND_FRUIT_SALAD",
+  "CROSS_CHOP_SALAD",
+  "GREENGRASS_SALAD",
+  "NINJA_SALAD",
+  "DEFIANT_COFFEE_DRESSED_SALAD",
+  "HUGE_POWER_SOY_DONUTS",
+  "EXPLOSION_POPCORN",
+  "EARLY_BIRD_COFFEE_JELLY",
+  "JIGGLYPUFFS_FRUITY_FLAN",
+  "TEATIME_CORN_SCONES",
+  "FLOWER_GIFT_MACARONS",
+  "ZING_ZAP_SPICED_COLA",
+]
+`);
   });
 
   it('shall return all meals below pot limit 57', () => {
@@ -103,65 +104,65 @@ describe('getMealsForFilter', () => {
         maxPotSize: 57
       }).map((m) => m.name)
     ).toMatchInlineSnapshot(`
-      [
-        "FANCY_APPLE_CURRY",
-        "SIMPLE_CHOWDER",
-        "MILD_HONEY_CURRY",
-        "BEANBURGER_CURRY",
-        "HEARTY_CHEESEBURGER_CURRY",
-        "DROUGHT_KATSU_CURRY",
-        "SOLAR_POWER_TOMATO_CURRY",
-        "MELTY_OMELETTE_CURRY",
-        "SOFT_POTATO_CHOWDER",
-        "BULK_UP_BEAN_CURRY",
-        "SPORE_MUSHROOM_CURRY",
-        "EGG_BOMB_CURRY",
-        "LIMBER_CORN_STEW",
-        "DIZZY_PUNCH_SPICY_CURRY",
-        "SPICY_LEEK_CURRY",
-        "NINJA_CURRY",
-        "GRILLED_TAIL_CURRY",
-        "DREAM_EATER_BUTTER_CURRY",
-        "FANCY_APPLE_SALAD",
-        "BEAN_HAM_SALAD",
-        "SNOOZY_TOMATO_SALAD",
-        "SNOW_CLOAK_CAESAR_SALAD",
-        "WATER_VEIL_TOFU_SALAD",
-        "HEAT_WAVE_TOFU_SALAD",
-        "FURY_ATTACK_CORN_SALAD",
-        "DAZZLING_APPLE_CHEESE_SALAD",
-        "MOOMOO_CAPRESE_SALAD",
-        "IMMUNITY_LEEK_SALAD",
-        "SUPERPOWER_EXTREME_SALAD",
-        "CONTRARY_CHOCOLATE_MEAT_SALAD",
-        "GLUTTONY_POTATO_SALAD",
-        "OVERHEAT_GINGER_SALAD",
-        "SPORE_MUSHROOM_SALAD",
-        "CALM_MIND_FRUIT_SALAD",
-        "SLOWPOKE_TAIL_PEPPER_SALAD",
-        "CROSS_CHOP_SALAD",
-        "NINJA_SALAD",
-        "WARM_MOOMOO_MILK",
-        "FANCY_APPLE_JUICE",
-        "CRAFT_SODA_POP",
-        "LUCKY_CHANT_APPLE_PIE",
-        "FLUFFY_SWEET_POTATOES",
-        "EMBER_GINGER_TEA",
-        "CLOUD_NINE_SOY_CAKE",
-        "STALWART_VEGETABLE_JUICE",
-        "BIG_MALASADA",
-        "HUSTLE_PROTEIN_SMOOTHIE",
-        "HUGE_POWER_SOY_DONUTS",
-        "SWEET_SCENT_CHOCOLATE_CAKE",
-        "PETAL_DANCE_CHOCOLATE_TART",
-        "LOVELY_KISS_SMOOTHIE",
-        "STEADFAST_GINGER_COOKIES",
-        "NEROLIS_RESTORATIVE_TEA",
-        "EXPLOSION_POPCORN",
-        "EARLY_BIRD_COFFEE_JELLY",
-        "JIGGLYPUFFS_FRUITY_FLAN",
-      ]
-    `);
+[
+  "FANCY_APPLE_CURRY",
+  "SIMPLE_CHOWDER",
+  "MILD_HONEY_CURRY",
+  "BEANBURGER_CURRY",
+  "HEARTY_CHEESEBURGER_CURRY",
+  "DROUGHT_KATSU_CURRY",
+  "SOLAR_POWER_TOMATO_CURRY",
+  "MELTY_OMELETTE_CURRY",
+  "SOFT_POTATO_CHOWDER",
+  "BULK_UP_BEAN_CURRY",
+  "SPORE_MUSHROOM_CURRY",
+  "EGG_BOMB_CURRY",
+  "LIMBER_CORN_STEW",
+  "DIZZY_PUNCH_SPICY_CURRY",
+  "SPICY_LEEK_CURRY",
+  "NINJA_CURRY",
+  "GRILLED_TAIL_CURRY",
+  "DREAM_EATER_BUTTER_CURRY",
+  "FANCY_APPLE_SALAD",
+  "BEAN_HAM_SALAD",
+  "SNOOZY_TOMATO_SALAD",
+  "SNOW_CLOAK_CAESAR_SALAD",
+  "WATER_VEIL_TOFU_SALAD",
+  "HEAT_WAVE_TOFU_SALAD",
+  "FURY_ATTACK_CORN_SALAD",
+  "DAZZLING_APPLE_CHEESE_SALAD",
+  "MOOMOO_CAPRESE_SALAD",
+  "IMMUNITY_LEEK_SALAD",
+  "SUPERPOWER_EXTREME_SALAD",
+  "CONTRARY_CHOCOLATE_MEAT_SALAD",
+  "GLUTTONY_POTATO_SALAD",
+  "OVERHEAT_GINGER_SALAD",
+  "SPORE_MUSHROOM_SALAD",
+  "CALM_MIND_FRUIT_SALAD",
+  "SLOWPOKE_TAIL_PEPPER_SALAD",
+  "CROSS_CHOP_SALAD",
+  "NINJA_SALAD",
+  "WARM_MOOMOO_MILK",
+  "FANCY_APPLE_JUICE",
+  "CRAFT_SODA_POP",
+  "LUCKY_CHANT_APPLE_PIE",
+  "FLUFFY_SWEET_POTATOES",
+  "EMBER_GINGER_TEA",
+  "CLOUD_NINE_SOY_CAKE",
+  "STALWART_VEGETABLE_JUICE",
+  "BIG_MALASADA",
+  "HUSTLE_PROTEIN_SMOOTHIE",
+  "HUGE_POWER_SOY_DONUTS",
+  "SWEET_SCENT_CHOCOLATE_CAKE",
+  "PETAL_DANCE_CHOCOLATE_TART",
+  "LOVELY_KISS_SMOOTHIE",
+  "STEADFAST_GINGER_COOKIES",
+  "NEROLIS_RESTORATIVE_TEA",
+  "EXPLOSION_POPCORN",
+  "EARLY_BIRD_COFFEE_JELLY",
+  "JIGGLYPUFFS_FRUITY_FLAN",
+]
+`);
   });
 });
 
@@ -170,12 +171,12 @@ describe('getDefaultMealTimes', () => {
     const mealTimes = getDefaultMealTimes(MOCKED_MAIN_SLEEP);
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
-      [
-        "11:59:00",
-        "17:59:00",
-        "21:30:00",
-      ]
-    `);
+[
+  "11:59:00",
+  "17:59:00",
+  "21:30:00",
+]
+`);
   });
 
   it('shall skip dinner if we are sleeping', () => {
@@ -185,11 +186,11 @@ describe('getDefaultMealTimes', () => {
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
-      [
-        "11:59:00",
-        "17:00:00",
-      ]
-    `);
+[
+  "11:59:00",
+  "17:00:00",
+]
+`);
   });
 
   it('shall work with night schedule', () => {
@@ -199,12 +200,12 @@ describe('getDefaultMealTimes', () => {
     });
     const prettifiedTimes = mealTimes.map((t) => TimeUtils.prettifyTime(t));
     expect(prettifiedTimes).toMatchInlineSnapshot(`
-      [
-        "17:59:00",
-        "03:59:00",
-        "05:00:00",
-      ]
-    `);
+[
+  "17:59:00",
+  "03:59:00",
+  "05:00:00",
+]
+`);
   });
 });
 

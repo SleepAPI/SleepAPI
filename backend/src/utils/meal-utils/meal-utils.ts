@@ -1,4 +1,5 @@
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { MealError } from '@src/domain/error/meal/meal-error.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { Recipe, SkillActivation, Time, TimePeriod } from 'sleepapi-common';
 import {
   MEALS_IN_DAY,
@@ -12,7 +13,6 @@ import {
   WEEKDAY_CRIT_MULTIPLIER,
   mainskill
 } from 'sleepapi-common';
-import { MealError } from '../../domain/error/meal/meal-error';
 
 export function getMeal(name: string) {
   const meal: Recipe | undefined = RECIPES.find((meal) => meal.name === name.toUpperCase());

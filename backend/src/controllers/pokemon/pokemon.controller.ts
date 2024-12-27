@@ -1,6 +1,6 @@
-import type { GetPokemonQueryParams } from '@src/routes/pokemon-router/pokemon-router';
-import { getPokemonNames } from '@src/utils/pokemon-utils/pokemon-utils';
-import { queryAsBoolean } from '@src/utils/routing/routing-utils';
+import type { GetPokemonQueryParams } from '@src/routes/pokemon-router/pokemon-router.js';
+import { getPokemonNames } from '@src/utils/pokemon-utils/pokemon-utils.js';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
 import * as tsoa from '@tsoa/runtime';
 import type { pokemon } from 'sleepapi-common';
 import { getPokemon } from 'sleepapi-common';

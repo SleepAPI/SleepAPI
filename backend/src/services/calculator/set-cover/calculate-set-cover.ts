@@ -1,11 +1,11 @@
-import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
-import type { SetCoverProductionStats } from '@src/domain/computed/production';
-import { SetCover } from '@src/services/set-cover/set-cover';
-import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
+import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom.js';
+import type { SetCoverProductionStats } from '@src/domain/computed/production.js';
+import { getAllIngredientCombinationsForLevel } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { getOptimalStats } from '@src/services/calculator/stats/stats-calculator.js';
+import { SetCover } from '@src/services/set-cover/set-cover.js';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
 import type { IngredientSet, SkillActivation } from 'sleepapi-common';
 import { mainskill, pokemon } from 'sleepapi-common';
-import { getAllIngredientCombinationsForLevel } from '../ingredient/ingredient-calculate';
-import { getOptimalStats } from '../stats/stats-calculator';
 
 export function calculateOptimalProductionForSetCover(input: SetCoverProductionStats, monteCarloIterations: number) {
   const { level, berries, nature } = input;

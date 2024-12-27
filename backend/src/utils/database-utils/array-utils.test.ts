@@ -1,4 +1,5 @@
-import { chunkArray } from './array-utils';
+import { chunkArray } from '@src/utils/database-utils/array-utils.js';
+import { describe, expect, it } from 'bun:test';
 
 describe('chunkArray', () => {
   it('shall chunk an array into specified sizes', () => {

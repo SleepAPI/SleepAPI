@@ -1,5 +1,10 @@
+import {
+  extractSubskillsBasedOnLevel,
+  limitSubSkillsToLevel,
+  subskillsForFilter
+} from '@src/utils/subskill-utils/subskill-utils.js';
+import { describe, expect, it } from 'bun:test';
 import { pokemon, subskill } from 'sleepapi-common';
-import { extractSubskillsBasedOnLevel, limitSubSkillsToLevel, subskillsForFilter } from './subskill-utils';
 
 describe('extractSubskillsBasedOnLevel', () => {
   it('should return the correct subskills for level 10', () => {
