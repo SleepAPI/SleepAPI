@@ -1,5 +1,5 @@
-import ProductionController from '@src/controllers/calculator/production.controller';
-import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
+import ProductionController from '@src/controllers/calculator/production.controller.js';
+import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service.js';
 import { parentPort, workerData } from 'worker_threads';
 
 const { name, body, pretty, includeAnalysis } = workerData.params;

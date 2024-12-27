@@ -1,4 +1,4 @@
-import { MockError } from '../../domain/error/test/mock-error';
+import { MockError } from '@src/domain/error/test/mock-error.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type RecordedCall = {

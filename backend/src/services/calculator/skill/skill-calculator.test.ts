@@ -1,12 +1,13 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
 import {
   calculateAverageNumberOfSkillProcsForHelps,
   calculateHelperBoostHelpsFromUnique,
   calculateHelpsToProcSchedule,
   calculateSkillProcs,
   scheduleSkillEvents
-} from './skill-calculator';
+} from '@src/services/calculator/skill/skill-calculator.js';
+import { describe, expect, it } from 'bun:test';
+import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
 
 describe('calculateSkillProcs', () => {
   it('shall calculate skill percentage for Venusaur', () => {
@@ -195,75 +196,79 @@ describe('scheduleSkillEvents', () => {
 
     expect(skillActivations.length).toBe(2); // Nightly activation and final partial proc
     expect(skillActivations[0]).toMatchInlineSnapshot(`
-      {
-        "adjustedAmount": 619.8,
-        "fractionOfProc": 0.3,
-        "nrOfHelpsToActivate": 0,
-        "skill": {
-          "RP": [
-            400,
-            569,
-            785,
-            1083,
-            1496,
-            2066,
-            2656,
-          ],
-          "amount": [
-            400,
-            569,
-            785,
-            1083,
-            1496,
-            2066,
-            3002,
-          ],
-          "description": "Increases Snorlax's Strength by ?.",
-          "maxLevel": 7,
-          "modifier": {
-            "critChance": 0,
-            "type": "Base",
-          },
-          "name": "Charge Strength S",
-          "unit": "strength",
-        },
-      }
-    `); // Nightly proc
+{
+  "adjustedAmount": 619.8,
+  "fractionOfProc": 0.3,
+  "nrOfHelpsToActivate": 0,
+  "skill": Mainskill {
+    "attributes": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
+      "amount": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        3002,
+      ],
+      "description": "Increases Snorlax's Strength by ?.",
+      "maxLevel": 7,
+      "modifier": {
+        "critChance": 0,
+        "type": "Base",
+      },
+      "name": "Charge Strength S",
+      "unit": "strength",
+    },
+  },
+}
+`); // Nightly proc
     expect(skillActivations[1]).toMatchInlineSnapshot(`
-      {
-        "adjustedAmount": 0,
-        "fractionOfProc": 0,
-        "nrOfHelpsToActivate": 0,
-        "skill": {
-          "RP": [
-            400,
-            569,
-            785,
-            1083,
-            1496,
-            2066,
-            2656,
-          ],
-          "amount": [
-            400,
-            569,
-            785,
-            1083,
-            1496,
-            2066,
-            3002,
-          ],
-          "description": "Increases Snorlax's Strength by ?.",
-          "maxLevel": 7,
-          "modifier": {
-            "critChance": 0,
-            "type": "Base",
-          },
-          "name": "Charge Strength S",
-          "unit": "strength",
-        },
-      }
-    `); // Final partial proc, no helps during the day
+{
+  "adjustedAmount": 0,
+  "fractionOfProc": 0,
+  "nrOfHelpsToActivate": 0,
+  "skill": Mainskill {
+    "attributes": {
+      "RP": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        2656,
+      ],
+      "amount": [
+        400,
+        569,
+        785,
+        1083,
+        1496,
+        2066,
+        3002,
+      ],
+      "description": "Increases Snorlax's Strength by ?.",
+      "maxLevel": 7,
+      "modifier": {
+        "critChance": 0,
+        "type": "Base",
+      },
+      "name": "Charge Strength S",
+      "unit": "strength",
+    },
+  },
+}
+`); // Final partial proc, no helps during the day
   });
 
   it('shall handle more helps than procs', () => {
@@ -313,53 +318,53 @@ describe('calculateHelpsToProcSchedule', () => {
     });
 
     expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 0,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 2,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 4,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 6,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 9,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 11,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 13,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 16,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 18,
-        },
-        {
-          "adjustedAmount": 1,
-          "nrOfHelpsToActivate": 20,
-        },
-        {
-          "adjustedAmount": 0.5,
-          "nrOfHelpsToActivate": 21,
-        },
-      ]
-    `);
+[
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 0,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 2,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 4,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 6,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 9,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 11,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 13,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 16,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 18,
+  },
+  {
+    "adjustedAmount": 1,
+    "nrOfHelpsToActivate": 20,
+  },
+  {
+    "adjustedAmount": 0.5,
+    "nrOfHelpsToActivate": 21,
+  },
+]
+`);
   });
 });
 

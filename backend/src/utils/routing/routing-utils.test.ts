@@ -1,4 +1,5 @@
-import { queryAsBoolean, queryAsNumber, queryParamsToString } from './routing-utils';
+import { queryAsBoolean, queryAsNumber, queryParamsToString } from '@src/utils/routing/routing-utils.js';
+import { describe, expect, it } from 'bun:test';
 
 describe('queryAsBoolean', () => {
   it('shall convert true to true', () => {
@@ -32,7 +33,7 @@ describe('queryAsNumber', () => {
   });
 
   it('shall convert undefined to undefined', () => {
-    expect(queryAsNumber(undefined)).toBe(undefined);
+    expect(queryAsNumber(undefined)).toBeUndefined();
   });
 });
 

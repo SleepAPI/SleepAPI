@@ -9,6 +9,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
+    "types": ["vitest/globals"],
     "paths": {
       "src/*": ["./src/*"],
       "test/*": ["./test/*"]

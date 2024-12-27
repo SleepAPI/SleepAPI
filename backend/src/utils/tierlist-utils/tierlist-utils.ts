@@ -1,6 +1,6 @@
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { TieredPokemonCombinationContribution } from '../../routes/tierlist-router/tierlist-router';
-import { hashPokemonCombination } from '../optimal-utils/optimal-utils';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router.js';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils.js';
 
 export function diffTierlistRankings(
   current: TieredPokemonCombinationContribution[],

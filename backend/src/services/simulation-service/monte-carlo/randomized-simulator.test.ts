@@ -1,7 +1,8 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import { randomizedSimulation } from '@src/services/simulation-service/monte-carlo/randomized-simulator.js';
+import { MOCKED_MAIN_SLEEP, MOCKED_POKEMON } from '@src/utils/test-utils/defaults.js';
+import { describe, expect, it } from 'bun:test';
 import { berry, ingredient, nature } from 'sleepapi-common';
-import { randomizedSimulation } from './randomized-simulator';
 
 describe('randomizedSimulation', () => {
   it('shall run basic randomized simulator', () => {

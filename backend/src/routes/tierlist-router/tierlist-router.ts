@@ -1,10 +1,9 @@
+import type TierlistController from '@src/controllers/tierlist/tierlist.controller.js';
+import type { PokemonCombinationCombinedContribution } from '@src/domain/combination/combination.js';
+import { BaseRouter } from '@src/routes/base-router.js';
+import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service.js';
+import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
 import type { Request, Response } from 'express';
-import type TierlistController from '../../controllers/tierlist/tierlist.controller';
-import type { PokemonCombinationCombinedContribution } from '../../domain/combination/combination';
-import { Logger } from '../../services/logger/logger';
-import { WebsiteConverterService } from '../../services/website-converter/website-converter-service';
-import { queryAsBoolean } from '../../utils/routing/routing-utils';
-import { BaseRouter } from '../base-router';
 
 export type TierlistType = 'overall' | 'curry' | 'salad' | 'dessert';
 export interface GetTierListQueryParams {
@@ -38,7 +37,7 @@ class TierlistRouterImpl {
       '/tierlist',
       async (req: Request<unknown, unknown, unknown, GetTierListQueryParams>, res: Response) => {
         try {
-          Logger.log('Entered /tierlist');
+          logger.log('Entered /tierlist');
           const params: GetTierListQueryParams = {
             tierlistType: req.query.tierlistType,
             limit50: queryAsBoolean(req.query.limit50),
@@ -54,7 +53,7 @@ class TierlistRouterImpl {
             : tieredData;
           res.header('Content-Type', 'application/json').send(JSON.stringify(cookingTierlist, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }

@@ -1,5 +1,5 @@
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
 import type { berry, nature, Recipe, subskill, Time } from 'sleepapi-common';
-import type { CustomPokemonCombinationWithProduce } from '../combination/custom';
 
 export interface ProductionStats {
   level: number;

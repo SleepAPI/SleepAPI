@@ -1,10 +1,10 @@
-import type { SetCoverProductionStats } from '@src/domain/computed/production';
+import type { SetCoverProductionStats } from '@src/domain/computed/production.js';
 import {
   calculateOptimalProductionForSetCover,
   calculateSetCover
-} from '@src/services/calculator/set-cover/calculate-set-cover';
-import { getMeal } from '@src/utils/meal-utils/meal-utils';
-import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
+} from '@src/services/calculator/set-cover/calculate-set-cover.js';
+import { getMeal } from '@src/utils/meal-utils/meal-utils.js';
+import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils.js';
 import { getIngredient } from 'sleepapi-common';
 
 export const FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER = 1.2;

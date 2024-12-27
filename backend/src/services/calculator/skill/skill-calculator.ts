@@ -1,8 +1,8 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error.js';
+import { createSkillEvent } from '@src/services/calculator/skill/activation/skill-activation.js';
 import type { SkillActivation, pokemon } from 'sleepapi-common';
 import { mainskill } from 'sleepapi-common';
-import { createSkillEvent } from './activation/skill-activation';
 
 export function calculateSkillProcs(nrOfHelps: number, skillPercentage: number) {
   return nrOfHelps * skillPercentage;

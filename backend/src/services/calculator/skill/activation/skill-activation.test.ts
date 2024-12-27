@@ -1,4 +1,15 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import {
+  activateDisguiseBerryBurst,
+  activateEnergizingCheer,
+  activateExtraHelpful,
+  activateHelperBoost,
+  activateIngredientMagnet,
+  activateMetronome,
+  activateNonProduceSkills,
+  createSkillEvent
+} from '@src/services/calculator/skill/activation/skill-activation.js';
+import { describe, expect, it } from 'bun:test';
 import type { SkillActivation } from 'sleepapi-common';
 import {
   METRONOME_SKILLS,
@@ -9,16 +20,6 @@ import {
   mainskill,
   pokemon
 } from 'sleepapi-common';
-import {
-  activateDisguiseBerryBurst,
-  activateEnergizingCheer,
-  activateExtraHelpful,
-  activateHelperBoost,
-  activateIngredientMagnet,
-  activateMetronome,
-  activateNonProduceSkills,
-  createSkillEvent
-} from './skill-activation';
 
 describe('createSkillEvent', () => {
   it('shall create an Energizing Cheer skill event', () => {
@@ -611,7 +612,7 @@ describe('activateDisguiseBerryBurst', () => {
     };
     const result = activateDisguiseBerryBurst(params);
 
-    expect(result).toEqual<SkillActivation>({
+    expect(result).toEqual({
       skill: mainskill.DISGUISE_BERRY_BURST,
       adjustedAmount: (mainskill.DISGUISE_BERRY_BURST.amount(6) * 0.7) / 1,
       nrOfHelpsToActivate: 3,
@@ -641,7 +642,7 @@ describe('activateDisguiseBerryBurst', () => {
     };
     const result = activateDisguiseBerryBurst(params);
 
-    expect(result).toEqual<SkillActivation>({
+    expect(result).toEqual({
       skill: mainskill.DISGUISE_BERRY_BURST,
       adjustedAmount: 0,
       nrOfHelpsToActivate: 2,
@@ -672,7 +673,7 @@ describe('activateDisguiseBerryBurst', () => {
     const result = activateDisguiseBerryBurst(params);
     const expectedAdjustedAmount = (mainskill.DISGUISE_BERRY_BURST.amount(6) * 1) / 5;
 
-    expect(result).toEqual<SkillActivation>({
+    expect(result).toEqual({
       skill: mainskill.DISGUISE_BERRY_BURST,
       adjustedAmount: expectedAdjustedAmount,
       nrOfHelpsToActivate: 4,

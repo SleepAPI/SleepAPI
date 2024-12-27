@@ -1,7 +1,8 @@
-import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error.js';
+import { getIngredientSet } from '@src/utils/production-utils/production-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { IngredientSet } from 'sleepapi-common';
 import { ingredient } from 'sleepapi-common';
-import { getIngredientSet } from './production-utils';
 
 describe('getIngredientSets', () => {
   it('shall return the matching set for a valid ingredientSet', () => {

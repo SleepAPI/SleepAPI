@@ -1,5 +1,4 @@
-import { DatabaseService } from '@src/database/database-service';
-import { Logger } from '@src/services/logger/logger';
+import { DatabaseService } from '@src/database/database-service.js';
 import * as tsoa from '@tsoa/runtime';
 const { Controller, Route, Tags, Get, Hidden } = tsoa;
 
@@ -16,7 +15,7 @@ export default class HealthController extends Controller {
         status: 'healthy'
       }))
       .catch((e) => {
-        Logger.error(e);
+        logger.error(e);
         return {
           status: 'unhealthy'
         };

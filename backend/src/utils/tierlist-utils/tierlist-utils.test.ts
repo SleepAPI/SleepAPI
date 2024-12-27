@@ -1,7 +1,8 @@
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import { MOCKED_POKEMON, MOCKED_POKEMON_WITH_PRODUCE } from '@src/utils/test-utils/defaults.js';
+import { createProduceMap } from '@src/utils/tierlist-utils/tierlist-utils.js';
+import { describe, expect, it } from 'bun:test';
 import { ingredient } from 'sleepapi-common';
-import { MOCKED_POKEMON, MOCKED_POKEMON_WITH_PRODUCE } from '../test-utils/defaults';
-import { createProduceMap } from './tierlist-utils';
 
 describe('createProduceMap', () => {
   it('shall create map with hashed pokemonIngredientSet keys', () => {

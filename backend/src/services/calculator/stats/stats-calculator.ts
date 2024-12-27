@@ -1,5 +1,5 @@
-import type { CustomStats } from '@src/domain/combination/custom';
-import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils';
+import type { CustomStats } from '@src/domain/combination/custom.js';
+import { subskillsForFilter } from '@src/utils/subskill-utils/subskill-utils.js';
 import type { Mainskill, pokemon } from 'sleepapi-common';
 import { MathUtils, mainskill, maxCarrySize, nature, subskill } from 'sleepapi-common';
 

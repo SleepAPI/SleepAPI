@@ -1,6 +1,7 @@
-import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
-import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event.js';
+import { MOCKED_PRODUCE } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { Summary } from 'sleepapi-common';
 import { mainskill } from 'sleepapi-common';
 
@@ -37,31 +38,31 @@ describe('SummaryEvent', () => {
       summary
     });
     expect(event.format()).toMatchInlineSnapshot(`
-      "-----
-      [06:00:00][pokemon]
-      Total produce: 2 GREPA + 1 Apple
-      Ingredient percentage: 20%
-      Skill percentage: 2%
-      Carry limit: 23
-      Spilled produce: 1 Apple
-      Charge Strength S activations: 11
-      Energy self skill value: 11 energy
-      Energy team skill value: 11 energy
-      Produce skill value: 2 GREPA + 1 Apple
-      Berries team skill value: 10
-      Strength skill value: 11 strength
-      Dream shards skill value: 11 shards
-      Pot size skill value: 11 pot size
-      Helps team skill value: 11 helps
-      Tasty chance skill value: 11% crit chance
-      Total helps: 5
-      Helps before sneaky snacking: 3
-      Helps spent sneaky snacking: 2
-      Average time before full inventory: 00:10:00 (hh:mm:ss)
-      Average energy: 0%
-      Average frequency: 1
-      Total recovery: 6
-      "
-    `);
+"-----
+[06:00:00][pokemon]
+Total produce: 2 GREPA + 1 Apple
+Ingredient percentage: 20%
+Skill percentage: 2%
+Carry limit: 23
+Spilled produce: 1 Apple
+Charge Strength S activations: 11
+Energy self skill value: 11 energy
+Energy team skill value: 11 energy
+Produce skill value: 2 GREPA + 1 Apple
+Berries team skill value: 10
+Strength skill value: 11 strength
+Dream shards skill value: 11 shards
+Pot size skill value: 11 pot size
+Helps team skill value: 11 helps
+Tasty chance skill value: 11% crit chance
+Total helps: 5
+Helps before sneaky snacking: 3
+Helps spent sneaky snacking: 2
+Average time before full inventory: 00:10:00 (hh:mm:ss)
+Average energy: 0%
+Average frequency: 1
+Total recovery: 6
+"
+`);
   });
 });

@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
+import { beforeEach, describe, expect, it } from 'bun:test';
+import { boozle } from 'bunboozle';
 import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  boozle(uuid, 'v4', () => '0'.repeat(36));
 });
 
 describe('TeamMemberDAO insert', () => {
@@ -20,16 +22,16 @@ describe('TeamMemberDAO insert', () => {
 
     const data = await TeamMemberDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "fk_pokemon_id": 1,
-          "fk_team_id": 1,
-          "id": 1,
-          "member_index": 0,
-          "version": 1,
-        },
-      ]
-    `);
+[
+  {
+    "fk_pokemon_id": 1,
+    "fk_team_id": 1,
+    "id": 1,
+    "member_index": 0,
+    "version": 1,
+  },
+]
+`);
   });
 
   it('shall fail to insert entity without fk_team_id', async () => {
@@ -91,16 +93,16 @@ describe('TeamMemberDAO update', () => {
 
     const data = await TeamMemberDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "fk_pokemon_id": 2,
-          "fk_team_id": 1,
-          "id": 1,
-          "member_index": 0,
-          "version": 2,
-        },
-      ]
-    `);
+[
+  {
+    "fk_pokemon_id": 2,
+    "fk_team_id": 1,
+    "id": 1,
+    "member_index": 0,
+    "version": 2,
+  },
+]
+`);
   });
 
   it('shall fail to update entity with duplicate fk_team_id and member_index', async () => {

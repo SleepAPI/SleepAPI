@@ -1,15 +1,16 @@
-import type { SetCoverProductionStats } from '@src/domain/computed/production';
-import { getBerriesForIsland } from '@src/utils/berry-utils/berry-utils';
-import { findIslandForName } from '@src/utils/island-utils/island-utils';
-import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import * as tsoa from '@tsoa/runtime';
-import { getNature, mainskill } from 'sleepapi-common';
-import type { InputProductionStatsRequest } from '../../routes/optimal-router/optimal-router';
+import type { SetCoverProductionStats } from '@src/domain/computed/production.js';
+import type { InputProductionStatsRequest } from '@src/routes/optimal-router/optimal-router.js';
 import {
   findOptimalMonsForIngredient,
   findOptimalSetsForMeal
-} from '../../services/api-service/optimal/optimal-service';
+} from '@src/services/api-service/optimal/optimal-service.js';
+import { getBerriesForIsland } from '@src/utils/berry-utils/berry-utils.js';
+import { findIslandForName } from '@src/utils/island-utils/island-utils.js';
+import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import * as tsoa from '@tsoa/runtime';
+import { getNature, mainskill } from 'sleepapi-common';
+
 const { Controller, Path, Route, Tags, Body, Post } = tsoa;
 
 @Route('api/optimal')

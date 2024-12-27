@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import type { ScheduledEvent } from '@src/domain/event/event';
-import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import type { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '@src/services/calculator/energy/energy-calculator.js';
+import { calculateFrequencyWithEnergy } from '@src/services/calculator/help/help-calculator.js';
+import type { MonteCarloResult } from '@src/services/simulation-service/monte-carlo/monte-carlo.js';
+import { recoverEnergyEvents, recoverFromMeal } from '@src/utils/event-utils/event-utils.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { Produce, Time } from 'sleepapi-common';
 import { MathUtils, RandomUtils, emptyProduce, mainskill } from 'sleepapi-common';
-import { calculateSleepEnergyRecovery, maybeDegradeEnergy } from '../../calculator/energy/energy-calculator';
-import { calculateFrequencyWithEnergy } from '../../calculator/help/help-calculator';
-import type { MonteCarloResult } from './monte-carlo';
 
 /**
  * Runs the randomized simulation for Monte Carlo

@@ -1,5 +1,9 @@
+import {
+  calculateFrequencyWithEnergy,
+  calculateHelpSpeedBeforeEnergy
+} from '@src/services/calculator/help/help-calculator.js';
+import { describe, expect, it } from 'bun:test';
 import { nature, pokemon, subskill } from 'sleepapi-common';
-import { calculateFrequencyWithEnergy, calculateHelpSpeedBeforeEnergy } from './help-calculator';
 
 describe('calculateHelpSpeedBeforeEnergy', () => {
   it('shall calculate help speed correctly', () => {

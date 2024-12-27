@@ -1,10 +1,10 @@
-// TODO: test mixed meals if team cant make
-
-import { combineIngredientDrops } from '@src/services/calculator/ingredient/ingredient-calculate';
-import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
+import { combineIngredientDrops } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
+import { describe, expect, it } from 'bun:test';
 import { dessert, ingredient } from 'sleepapi-common';
 
 describe('CookingState', () => {
+  it.todo('team should fallback to mixed meal if cant make recipe');
   it('shall cook the best recipe for which it has ingredients', () => {
     const cookingState = new CookingState(true);
 
@@ -18,10 +18,10 @@ describe('CookingState', () => {
 
     const result = cookingState.results(1);
     expect(result.dessert.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "FLOWER_GIFT_MACARONS",
-      ]
-    `);
+[
+  "FLOWER_GIFT_MACARONS",
+]
+`);
   });
 
   it('shall cook mixed meal if team cant cook better', () => {
@@ -33,20 +33,20 @@ describe('CookingState', () => {
 
     const result = cookingState.results(1);
     expect(result.curry.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "MIXED_CURRY",
-      ]
-    `);
+[
+  "MIXED_CURRY",
+]
+`);
     expect(result.salad.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "MIXED_SALAD",
-      ]
-    `);
+[
+  "MIXED_SALAD",
+]
+`);
     expect(result.dessert.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "MIXED_JUICE",
-      ]
-    `);
+[
+  "MIXED_JUICE",
+]
+`);
   });
 
   it('shall crit with max bonus on sunday', () => {
@@ -58,10 +58,10 @@ describe('CookingState', () => {
 
     const result = cookingState.results(1);
     expect(result.dessert.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "FLOWER_GIFT_MACARONS",
-      ]
-    `);
+[
+  "FLOWER_GIFT_MACARONS",
+]
+`);
     expect(result.dessert.weeklyStrength).toEqual(dessert.FLOWER_GIFT_MACARONS.valueMax * 3);
     expect(result.dessert.sundayStrength).toEqual(dessert.FLOWER_GIFT_MACARONS.valueMax * 3);
   });
@@ -75,9 +75,9 @@ describe('CookingState', () => {
 
     const result = cookingState.results(1);
     expect(result.dessert.cookedRecipes.map((r) => r.recipe.name)).toMatchInlineSnapshot(`
-      [
-        "FLOWER_GIFT_MACARONS",
-      ]
-    `);
+[
+  "FLOWER_GIFT_MACARONS",
+]
+`);
   });
 });

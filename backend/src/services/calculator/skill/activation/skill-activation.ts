@@ -1,4 +1,5 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
 import type { IngredientSet, Mainskill, Produce, SkillActivation } from 'sleepapi-common';
 import {
   METRONOME_SKILLS,
@@ -7,7 +8,6 @@ import {
   ingredient,
   mainskill
 } from 'sleepapi-common';
-import { calculateHelperBoostHelpsFromUnique } from '../skill-calculator';
 
 export function createSkillEvent(
   params: {

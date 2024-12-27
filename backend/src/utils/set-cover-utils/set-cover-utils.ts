@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate';
-import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
-import type { IngredientSet, berry } from 'sleepapi-common';
-import { ingredient, mainskill } from 'sleepapi-common';
-import type { CustomPokemonCombinationWithProduce } from '../../domain/combination/custom';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
 import type {
   HelperBoostStatus,
   MemoizedParameters,
   SimplifiedIngredientSet
-} from '../../services/set-cover/set-cover';
+} from '@src/services/set-cover/set-cover.js';
+import type { IngredientSet, berry } from 'sleepapi-common';
+import { ingredient, mainskill } from 'sleepapi-common';
 
 export function createPokemonByIngredientReverseIndex(pokemons: CustomPokemonCombinationWithProduce[]) {
   const reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();

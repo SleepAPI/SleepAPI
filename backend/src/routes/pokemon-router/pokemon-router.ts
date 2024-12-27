@@ -1,8 +1,7 @@
+import type PokemonController from '@src/controllers/pokemon/pokemon.controller.js';
+import { BaseRouter } from '@src/routes/base-router.js';
 import type { Request, Response } from 'express';
-import type { IngredientSet } from 'sleepapi-common';
-import type PokemonController from '../../controllers/pokemon/pokemon.controller';
-import { Logger } from '../../services/logger/logger';
-import { BaseRouter } from '../base-router';
+import { type IngredientSet } from 'sleepapi-common';
 
 export interface GetPokemonQueryParams {
   cyan?: boolean;
@@ -38,12 +37,12 @@ class PokemonRouterImpl {
       '/pokemon/:name',
       async (req: Request<{ name: string }, unknown, unknown, unknown>, res: Response) => {
         try {
-          Logger.log('Entered /pokemon/:name');
+          logger.log('Entered /pokemon/:name');
           const pokemonData = await controller.getPokemonWithName(req.params.name);
 
           res.header('Content-Type', 'application/json').send(JSON.stringify(pokemonData, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -53,12 +52,12 @@ class PokemonRouterImpl {
       '/pokemon',
       async (req: Request<unknown, unknown, unknown, GetPokemonQueryParams>, res: Response) => {
         try {
-          Logger.log('Entered /pokemon');
+          logger.log('Entered /pokemon');
           const pokemonData = await controller.getPokemon(req.query);
 
           res.header('Content-Type', 'application/json').send(JSON.stringify(pokemonData, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }

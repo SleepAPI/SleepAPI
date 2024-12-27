@@ -1,5 +1,5 @@
+import { getBerriesForFilter } from '@src/utils/berry-utils/berry-utils.js';
 import { pokemon } from 'sleepapi-common';
-import { getBerriesForFilter } from '../berry-utils/berry-utils';
 
 export function getPokemonNames(islands: {
   cyan: boolean;

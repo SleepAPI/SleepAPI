@@ -1,14 +1,10 @@
-import type { PokemonProduce } from '@src/domain/combination/produce';
-import type { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { HelpEvent } from '@src/domain/event/events/help-event/help-event';
-import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
-import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
-import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
-import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '../test-utils/defaults';
+import type { PokemonProduce } from '@src/domain/combination/produce.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import { HelpEvent } from '@src/domain/event/events/help-event/help-event.js';
+import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event.js';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import {
   addSneakySnackEvent,
   getDefaultRecoveryEvents,
@@ -21,7 +17,12 @@ import {
   scheduleNapEvent,
   scheduleTeamEnergyEvents,
   triggerTeamHelpsEvent
-} from './event-utils';
+} from '@src/utils/event-utils/event-utils.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '@src/utils/test-utils/defaults.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { describe, expect, it } from 'bun:test';
+import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
 
 describe('getExtraHelpfulEvents', () => {
   it('shall schedule extra helpful events evenly throughout the day', () => {
@@ -33,141 +34,145 @@ describe('getExtraHelpfulEvents', () => {
     };
     const result = getExtraHelpfulEvents(period, procs, produce);
     expect(result).toMatchInlineSnapshot(`
-      [
-        SkillEvent {
-          "description": "Team Extra Helpful",
-          "skillActivation": {
-            "adjustedAmount": 2.2,
-            "adjustedProduce": {
-              "berries": [
-                {
-                  "amount": 4.4,
-                  "berry": {
-                    "name": "GREPA",
-                    "type": "electric",
-                    "value": 25,
-                  },
-                  "level": 60,
-                },
-              ],
-              "ingredients": [
-                {
-                  "amount": 2.2,
-                  "ingredient": {
-                    "longName": "Fancy Apple",
-                    "name": "Apple",
-                    "taxedValue": 23.7,
-                    "value": 90,
-                  },
-                },
-              ],
+[
+  SkillEvent {
+    "description": "Team Extra Helpful",
+    "skillActivation": {
+      "adjustedAmount": 2.2,
+      "adjustedProduce": {
+        "berries": [
+          {
+            "amount": 4.4,
+            "berry": {
+              "name": "GREPA",
+              "type": "electric",
+              "value": 25,
             },
-            "fractionOfProc": 1,
-            "nrOfHelpsToActivate": 0,
-            "skill": {
-              "RP": [
-                880,
-                1251,
-                1726,
-                2383,
-                3290,
-                4546,
-                5843,
-              ],
-              "amount": [
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-              ],
-              "description": "Instantly gets you x? the usual help from a helper Pokémon.",
-              "maxLevel": 7,
-              "modifier": {
-                "critChance": 0,
-                "type": "Base",
-              },
-              "name": "Extra Helpful S",
-              "unit": "helps",
+            "level": 60,
+          },
+        ],
+        "ingredients": [
+          {
+            "amount": 2.2,
+            "ingredient": {
+              "longName": "Fancy Apple",
+              "name": "Apple",
+              "taxedValue": 23.7,
+              "value": 90,
             },
           },
-          "time": {
-            "hour": 6,
-            "minute": 0,
-            "second": 0,
+        ],
+      },
+      "fractionOfProc": 1,
+      "nrOfHelpsToActivate": 0,
+      "skill": Mainskill {
+        "attributes": {
+          "RP": [
+            880,
+            1251,
+            1726,
+            2383,
+            3290,
+            4546,
+            5843,
+          ],
+          "amount": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+          ],
+          "description": "Instantly gets you x? the usual help from a helper Pokémon.",
+          "maxLevel": 7,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
           },
-          "type": "skill",
+          "name": "Extra Helpful S",
+          "unit": "helps",
         },
-        SkillEvent {
-          "description": "Team Extra Helpful",
-          "skillActivation": {
-            "adjustedAmount": 1.1,
-            "adjustedProduce": {
-              "berries": [
-                {
-                  "amount": 2.2,
-                  "berry": {
-                    "name": "GREPA",
-                    "type": "electric",
-                    "value": 25,
-                  },
-                  "level": 60,
-                },
-              ],
-              "ingredients": [
-                {
-                  "amount": 1.1,
-                  "ingredient": {
-                    "longName": "Fancy Apple",
-                    "name": "Apple",
-                    "taxedValue": 23.7,
-                    "value": 90,
-                  },
-                },
-              ],
+      },
+    },
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0,
+    },
+    "type": "skill",
+  },
+  SkillEvent {
+    "description": "Team Extra Helpful",
+    "skillActivation": {
+      "adjustedAmount": 1.1,
+      "adjustedProduce": {
+        "berries": [
+          {
+            "amount": 2.2,
+            "berry": {
+              "name": "GREPA",
+              "type": "electric",
+              "value": 25,
             },
-            "fractionOfProc": 0.5,
-            "nrOfHelpsToActivate": 0,
-            "skill": {
-              "RP": [
-                880,
-                1251,
-                1726,
-                2383,
-                3290,
-                4546,
-                5843,
-              ],
-              "amount": [
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-              ],
-              "description": "Instantly gets you x? the usual help from a helper Pokémon.",
-              "maxLevel": 7,
-              "modifier": {
-                "critChance": 0,
-                "type": "Base",
-              },
-              "name": "Extra Helpful S",
-              "unit": "helps",
+            "level": 60,
+          },
+        ],
+        "ingredients": [
+          {
+            "amount": 1.1,
+            "ingredient": {
+              "longName": "Fancy Apple",
+              "name": "Apple",
+              "taxedValue": 23.7,
+              "value": 90,
             },
           },
-          "time": {
-            "hour": 16,
-            "minute": 20,
-            "second": 0,
+        ],
+      },
+      "fractionOfProc": 0.5,
+      "nrOfHelpsToActivate": 0,
+      "skill": Mainskill {
+        "attributes": {
+          "RP": [
+            880,
+            1251,
+            1726,
+            2383,
+            3290,
+            4546,
+            5843,
+          ],
+          "amount": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+          ],
+          "description": "Instantly gets you x? the usual help from a helper Pokémon.",
+          "maxLevel": 7,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
           },
-          "type": "skill",
+          "name": "Extra Helpful S",
+          "unit": "helps",
         },
-      ]
-    `);
+      },
+    },
+    "time": {
+      "hour": 16,
+      "minute": 20,
+      "second": 0,
+    },
+    "type": "skill",
+  },
+]
+`);
   });
 });
 
@@ -183,137 +188,141 @@ describe('getHelperBoostEvents', () => {
     };
     const result = getHelperBoostEvents(period, procs, unique, level, produce);
     expect(result).toMatchInlineSnapshot(`
-      [
-        SkillEvent {
-          "description": "Team Helper Boost",
-          "skillActivation": {
-            "adjustedAmount": 6,
-            "adjustedProduce": {
-              "berries": [
-                {
-                  "amount": 12,
-                  "berry": {
-                    "name": "GREPA",
-                    "type": "electric",
-                    "value": 25,
-                  },
-                  "level": 60,
-                },
-              ],
-              "ingredients": [
-                {
-                  "amount": 6,
-                  "ingredient": {
-                    "longName": "Fancy Apple",
-                    "name": "Apple",
-                    "taxedValue": 23.7,
-                    "value": 90,
-                  },
-                },
-              ],
+[
+  SkillEvent {
+    "description": "Team Helper Boost",
+    "skillActivation": {
+      "adjustedAmount": 6,
+      "adjustedProduce": {
+        "berries": [
+          {
+            "amount": 12,
+            "berry": {
+              "name": "GREPA",
+              "type": "electric",
+              "value": 25,
             },
-            "fractionOfProc": 1,
-            "nrOfHelpsToActivate": 0,
-            "skill": {
-              "RP": [
-                2800,
-                3902,
-                5273,
-                6975,
-                9317,
-                12438,
-              ],
-              "amount": [
-                2,
-                3,
-                3,
-                4,
-                4,
-                5,
-              ],
-              "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
-              "maxLevel": 6,
-              "modifier": {
-                "critChance": 0,
-                "type": "Base",
-              },
-              "name": "Helper Boost",
-              "unit": "helps",
+            "level": 60,
+          },
+        ],
+        "ingredients": [
+          {
+            "amount": 6,
+            "ingredient": {
+              "longName": "Fancy Apple",
+              "name": "Apple",
+              "taxedValue": 23.7,
+              "value": 90,
             },
           },
-          "time": {
-            "hour": 6,
-            "minute": 0,
-            "second": 0,
+        ],
+      },
+      "fractionOfProc": 1,
+      "nrOfHelpsToActivate": 0,
+      "skill": Mainskill {
+        "attributes": {
+          "RP": [
+            2800,
+            3902,
+            5273,
+            6975,
+            9317,
+            12438,
+          ],
+          "amount": [
+            2,
+            3,
+            3,
+            4,
+            4,
+            5,
+          ],
+          "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
+          "maxLevel": 6,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
           },
-          "type": "skill",
+          "name": "Helper Boost",
+          "unit": "helps",
         },
-        SkillEvent {
-          "description": "Team Helper Boost",
-          "skillActivation": {
-            "adjustedAmount": 3,
-            "adjustedProduce": {
-              "berries": [
-                {
-                  "amount": 6,
-                  "berry": {
-                    "name": "GREPA",
-                    "type": "electric",
-                    "value": 25,
-                  },
-                  "level": 60,
-                },
-              ],
-              "ingredients": [
-                {
-                  "amount": 3,
-                  "ingredient": {
-                    "longName": "Fancy Apple",
-                    "name": "Apple",
-                    "taxedValue": 23.7,
-                    "value": 90,
-                  },
-                },
-              ],
+      },
+    },
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0,
+    },
+    "type": "skill",
+  },
+  SkillEvent {
+    "description": "Team Helper Boost",
+    "skillActivation": {
+      "adjustedAmount": 3,
+      "adjustedProduce": {
+        "berries": [
+          {
+            "amount": 6,
+            "berry": {
+              "name": "GREPA",
+              "type": "electric",
+              "value": 25,
             },
-            "fractionOfProc": 0.5,
-            "nrOfHelpsToActivate": 0,
-            "skill": {
-              "RP": [
-                2800,
-                3902,
-                5273,
-                6975,
-                9317,
-                12438,
-              ],
-              "amount": [
-                2,
-                3,
-                3,
-                4,
-                4,
-                5,
-              ],
-              "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
-              "maxLevel": 6,
-              "modifier": {
-                "critChance": 0,
-                "type": "Base",
-              },
-              "name": "Helper Boost",
-              "unit": "helps",
+            "level": 60,
+          },
+        ],
+        "ingredients": [
+          {
+            "amount": 3,
+            "ingredient": {
+              "longName": "Fancy Apple",
+              "name": "Apple",
+              "taxedValue": 23.7,
+              "value": 90,
             },
           },
-          "time": {
-            "hour": 16,
-            "minute": 20,
-            "second": 0,
+        ],
+      },
+      "fractionOfProc": 0.5,
+      "nrOfHelpsToActivate": 0,
+      "skill": Mainskill {
+        "attributes": {
+          "RP": [
+            2800,
+            3902,
+            5273,
+            6975,
+            9317,
+            12438,
+          ],
+          "amount": [
+            2,
+            3,
+            3,
+            4,
+            4,
+            5,
+          ],
+          "description": "Instantly gets your x? the usual help from all Pokémon on your team. Meet certain conditions to boost effect.",
+          "maxLevel": 6,
+          "modifier": {
+            "critChance": 0,
+            "type": "Base",
           },
-          "type": "skill",
+          "name": "Helper Boost",
+          "unit": "helps",
         },
-      ]
-    `);
+      },
+    },
+    "time": {
+      "hour": 16,
+      "minute": 20,
+      "second": 0,
+    },
+    "type": "skill",
+  },
+]
+`);
   });
 });
 
@@ -769,31 +778,31 @@ describe('triggerTeamHelpsEvent', () => {
 
     expect(result.helpEventsProcessed).toMatchInlineSnapshot(`2`);
     expect(result.helpsProduce).toMatchInlineSnapshot(`
-      {
-        "berries": [
-          {
-            "amount": 2,
-            "berry": {
-              "name": "BLUK",
-              "type": "ghost",
-              "value": 26,
-            },
-            "level": 60,
-          },
-        ],
-        "ingredients": [
-          {
-            "amount": 2,
-            "ingredient": {
-              "longName": "Bean Sausage",
-              "name": "Sausage",
-              "taxedValue": 31,
-              "value": 103,
-            },
-          },
-        ],
-      }
-    `);
+{
+  "berries": [
+    {
+      "amount": 2,
+      "berry": {
+        "name": "BLUK",
+        "type": "ghost",
+        "value": 26,
+      },
+      "level": 60,
+    },
+  ],
+  "ingredients": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "longName": "Bean Sausage",
+        "name": "Sausage",
+        "taxedValue": 31,
+        "value": 103,
+      },
+    },
+  ],
+}
+`);
     expect(eventLog).toHaveLength(1);
   });
 });

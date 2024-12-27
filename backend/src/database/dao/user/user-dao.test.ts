@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { UserDAO } from '@src/database/dao/user/user-dao';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
-import { MockService } from '@src/utils/test-utils/mock-service';
+import { UserDAO } from '@src/database/dao/user/user-dao.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
+import { MockService } from '@src/utils/test-utils/mock-service.js';
+import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
+import { boozle } from 'bunboozle';
 import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  boozle(uuid, 'v4', () => '0'.repeat(36));
 });
 
 afterEach(() => {
@@ -25,17 +27,17 @@ describe('UserDAO insert', () => {
 
     const data = await UserDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "avatar": undefined,
-          "external_id": "000000000000000000000000000000000000",
-          "id": 1,
-          "name": "some-name",
-          "sub": "some-sub",
-          "version": 1,
-        },
-      ]
-    `);
+[
+  {
+    "avatar": undefined,
+    "external_id": "000000000000000000000000000000000000",
+    "id": 1,
+    "name": "some-name",
+    "sub": "some-sub",
+    "version": 1,
+  },
+]
+`);
   });
 
   it('shall fail to insert entity without sub', async () => {
@@ -87,16 +89,16 @@ describe('UserDAO update', () => {
 
     const data = await UserDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "avatar": undefined,
-          "external_id": "000000000000000000000000000000000000",
-          "id": 1,
-          "name": "updated-name",
-          "sub": "some-sub",
-          "version": 2,
-        },
-      ]
-    `);
+[
+  {
+    "avatar": undefined,
+    "external_id": "000000000000000000000000000000000000",
+    "id": 1,
+    "name": "updated-name",
+    "sub": "some-sub",
+    "version": 2,
+  },
+]
+`);
   });
 });

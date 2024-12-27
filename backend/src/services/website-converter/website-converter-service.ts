@@ -1,12 +1,14 @@
-import type { SurplusIngredients } from '@src/domain/combination/combination';
-import type { ProductionStats } from '@src/domain/computed/production';
-import type { ScheduledEvent } from '@src/domain/event/event';
+import type { SurplusIngredients } from '@src/domain/combination/combination.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
 import type {
   IngredientRankerResult,
   OptimalFlexibleResult,
   OptimalSetResult
-} from '@src/routes/optimal-router/optimal-router';
-import type { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router';
+} from '@src/routes/optimal-router/optimal-router.js';
+import type { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router.js';
+import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '@src/services/api-service/optimal/optimal-service.js';
+import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
 import type { DetailedProduce, IngredientSet, PokemonIngredientSet, Summary, nature, subskill } from 'sleepapi-common';
 import {
   MEALS_IN_DAY,
@@ -16,8 +18,6 @@ import {
   prettifyIngredientDrop,
   shortPrettifyIngredientDrop
 } from 'sleepapi-common';
-import { FLEXIBLE_BEST_RECIPE_PER_TYPE_MULTIPLIER } from '../api-service/optimal/optimal-service';
-import { calculateHelperBoostHelpsFromUnique } from '../calculator/skill/skill-calculator';
 
 // --- production calculator
 interface ProductionFilters {

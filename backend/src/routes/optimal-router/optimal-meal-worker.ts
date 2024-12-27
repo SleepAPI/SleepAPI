@@ -1,6 +1,6 @@
-import OptimalController from '@src/controllers/optimal/optimal.controller';
-import type { OptimalSetResult } from '@src/routes/optimal-router/optimal-router';
-import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service';
+import OptimalController from '@src/controllers/optimal/optimal.controller.js';
+import type { OptimalSetResult } from '@src/routes/optimal-router/optimal-router.js';
+import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service.js';
 import { parentPort, workerData } from 'worker_threads';
 
 const { name, body, pretty } = workerData.params;

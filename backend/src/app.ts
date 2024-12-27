@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { config } from './config/config';
 
 import cors from 'cors';
 
@@ -9,37 +8,39 @@ import morgan from 'morgan';
 
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './public/swagger.json';
+import swaggerDocument from './public/swagger.json' assert { type: 'json' };
 
-import HealthController from './controllers/health/health.controller';
-import IngredientController from './controllers/ingredient/ingredient.controller';
-import MainskillController from './controllers/mainskill/mainskill.controller';
-import MealController from './controllers/meal/meal.controller';
-import NatureController from './controllers/nature/nature.controller';
-import PokemonController from './controllers/pokemon/pokemon.controller';
-import SubskillController from './controllers/subskill/subskill.controller';
-import TierlistController from './controllers/tierlist/tierlist.controller';
-import DatabaseMigration from './database/migration/database-migration';
+import { config } from '@src/config/config.js';
+import HealthController from '@src/controllers/health/health.controller.js';
+import IngredientController from '@src/controllers/ingredient/ingredient.controller.js';
+import LoginController from '@src/controllers/login/login.controller.js';
+import MainskillController from '@src/controllers/mainskill/mainskill.controller.js';
+import MealController from '@src/controllers/meal/meal.controller.js';
+import NatureController from '@src/controllers/nature/nature.controller.js';
+import PokemonController from '@src/controllers/pokemon/pokemon.controller.js';
+import SubskillController from '@src/controllers/subskill/subskill.controller.js';
+import TeamController from '@src/controllers/team/team.controller.js';
+import TierlistController from '@src/controllers/tierlist/tierlist.controller.js';
+import UserController from '@src/controllers/user/user.controller.js';
 
-import LoginController from '@src/controllers/login/login.controller';
-import TeamController from '@src/controllers/team/team.controller';
-import UserController from '@src/controllers/user/user.controller';
-import { LoginRouter } from '@src/routes/login-router/login-router';
-import { TeamRouter } from '@src/routes/team-router/team-router';
-import { UserRouter } from '@src/routes/user-router/user-router';
-import { BaseRouter } from './routes/base-router';
-import { ProductionRouter } from './routes/calculator-router/production-router';
-import { HealthRouter } from './routes/health-router/health-router';
-import { IngredientRouter } from './routes/ingredient-router/ingredient-router';
-import { MainskillRouter } from './routes/mainskill-router/mainskill-router';
-import { MealRouter } from './routes/meal-router/meal-router';
-import { NatureRouter } from './routes/nature-router/nature-router';
-import { OptimalCombinationRouter } from './routes/optimal-router/optimal-router';
-import { PokemonRouter } from './routes/pokemon-router/pokemon-router';
-import { SubskillRouter } from './routes/subskill-router/subskill-router';
-import { TierlistRouter } from './routes/tierlist-router/tierlist-router';
-import { TierlistService } from './services/api-service/tierlist/tierlist-service';
-import { Logger } from './services/logger/logger';
+import DatabaseMigration from '@src/database/migration/database-migration.js';
+
+import { BaseRouter } from '@src/routes/base-router.js';
+import { ProductionRouter } from '@src/routes/calculator-router/production-router.js';
+import { HealthRouter } from '@src/routes/health-router/health-router.js';
+import { IngredientRouter } from '@src/routes/ingredient-router/ingredient-router.js';
+import { LoginRouter } from '@src/routes/login-router/login-router.js';
+import { MainskillRouter } from '@src/routes/mainskill-router/mainskill-router.js';
+import { MealRouter } from '@src/routes/meal-router/meal-router.js';
+import { NatureRouter } from '@src/routes/nature-router/nature-router.js';
+import { OptimalCombinationRouter } from '@src/routes/optimal-router/optimal-router.js';
+import { PokemonRouter } from '@src/routes/pokemon-router/pokemon-router.js';
+import { SubskillRouter } from '@src/routes/subskill-router/subskill-router.js';
+import { TeamRouter } from '@src/routes/team-router/team-router.js';
+import { TierlistRouter } from '@src/routes/tierlist-router/tierlist-router.js';
+import { UserRouter } from '@src/routes/user-router/user-router.js';
+
+import { TierlistService } from '@src/services/api-service/tierlist/tierlist-service.js';
 
 async function main() {
   dotenv.config();
@@ -51,7 +52,7 @@ async function main() {
   } else if (migration === 'DOWN') {
     await DatabaseMigration.downgrade();
   } else {
-    Logger.info('Skipping database migration, set DATABASE_MIGRATION env to UP/DOWN');
+    logger.info('Skipping database migration, set DATABASE_MIGRATION env to UP/DOWN');
   }
 
   // Tierlist
@@ -68,7 +69,7 @@ async function main() {
 
   // Middleware
   app.use(express.json());
-  app.use(morgan('tiny'));
+  app.use(morgan('tiny')); // TODO: replace morgan with custom HTTP log
   app.use(cors(options));
   app.use('/api', BaseRouter.router);
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customSiteTitle: 'Sleep API' }));
@@ -77,7 +78,7 @@ async function main() {
     try {
       res.sendFile('./assets/index.html', { root: __dirname });
     } catch (err) {
-      Logger.error(err as Error);
+      logger.error(err as Error);
       res.status(500).send('Something went wrong');
     }
   });
@@ -98,7 +99,7 @@ async function main() {
   UserRouter.register(new UserController());
 
   app.listen(config.PORT, async () => {
-    Logger.log(`Server is running at ${config.PORT}`);
+    logger.log(`Server is running at ${config.PORT}`);
   });
 }
 

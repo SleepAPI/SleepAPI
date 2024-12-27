@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import { SleepAPIError } from '@src/domain/error/sleepapi-error';
-import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error.js';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
 import type {
   TeamSkillActivation,
   TeamSkillEnergy
-} from '@src/services/simulation-service/team-simulator/member-state';
-import { MemberState } from '@src/services/simulation-service/team-simulator/member-state';
-import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+} from '@src/services/simulation-service/team-simulator/member-state.js';
+import { MemberState } from '@src/services/simulation-service/team-simulator/member-state.js';
+import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { CalculateTeamResponse, MemberProductionBase, Time, TimePeriod } from 'sleepapi-common';
 import { RandomUtils } from 'sleepapi-common';
 

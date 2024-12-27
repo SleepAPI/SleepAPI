@@ -1,7 +1,6 @@
-import type LoginController from '@src/controllers/login/login.controller';
-import { Logger } from '@src/services/logger/logger';
+import type LoginController from '@src/controllers/login/login.controller.js';
+import { BaseRouter } from '@src/routes/base-router.js';
 import type { Request, Response } from 'express';
-import { BaseRouter } from '../base-router';
 
 class LoginRouterImpl {
   public async register(controller: LoginController) {
@@ -9,12 +8,12 @@ class LoginRouterImpl {
       '/login/signup',
       async (req: Request<unknown, unknown, { authorization_code: string }>, res: Response) => {
         try {
-          Logger.info('Entered /login/signup');
+          logger.info('Entered /login/signup');
           const userData = await controller.signup(req.body);
 
           res.header('Content-Type', 'application/json').send(userData);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(401);
         }
       }
@@ -24,12 +23,12 @@ class LoginRouterImpl {
       '/login/refresh',
       async (req: Request<unknown, unknown, { refresh_token: string }>, res: Response) => {
         try {
-          Logger.info('Entered /login/refresh');
+          logger.info('Entered /login/refresh');
 
           const refreshedData = await controller.refresh(req.body);
           res.json(refreshedData);
         } catch (err) {
-          Logger.error((err as Error).stack);
+          logger.error(err as Error);
           res.sendStatus(401);
         }
       }

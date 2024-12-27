@@ -1,12 +1,12 @@
-import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
-import type { DBUser } from '@src/database/dao/user/user-dao';
+import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao.js';
+import type { DBUser } from '@src/database/dao/user/user-dao.js';
 import {
   deleteMember,
   deleteTeam,
   getTeams,
   upsertTeamMember,
   upsertTeamMeta
-} from '@src/services/api-service/team/team-service';
+} from '@src/services/api-service/team/team-service.js';
 import type { UpsertTeamMemberRequest, UpsertTeamMetaRequest } from 'sleepapi-common';
 
 export default class TeamController {

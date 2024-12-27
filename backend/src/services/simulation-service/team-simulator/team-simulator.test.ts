@@ -1,17 +1,19 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import type { TeamSkillEnergy } from '@src/services/simulation-service/team-simulator/member-state';
-import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import type { TeamSkillEnergy } from '@src/services/simulation-service/team-simulator/member-state.js';
+import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
+import { afterEach, describe, expect, it } from 'bun:test';
+import { boozle, unboozle } from 'bunboozle';
 import type { PokemonIngredientSet } from 'sleepapi-common';
 import {
   BALANCED_GENDER,
-  RandomUtils,
   berry,
   calculatePityProcThreshold,
   ingredient,
   mainskill,
   nature,
   pokemon,
+  RandomUtils,
   subskill
 } from 'sleepapi-common';
 
@@ -57,12 +59,8 @@ const mockMembers: TeamMember[] = [
 ];
 
 describe('TeamSimulator', () => {
-  beforeEach(() => {
-    jest.resetModules();
-  });
-
   afterEach(() => {
-    jest.restoreAllMocks();
+    unboozle();
   });
 
   it('shall return expected production from mocked pokemon', () => {
@@ -270,7 +268,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall only allow 1 disguise crit until sleep reset', () => {
-    jest.spyOn(RandomUtils, 'roll').mockReturnValue(true);
+    boozle(RandomUtils, 'roll', () => true);
 
     const members: TeamMember[] = [
       {
@@ -315,6 +313,7 @@ describe('recoverMemberEnergy', () => {
       settings: mockSettings,
       members: mockMembers.concat(mockMembers),
       includeCooking: true
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
 
     const energy: TeamSkillEnergy = {
@@ -324,6 +323,7 @@ describe('recoverMemberEnergy', () => {
     };
 
     simulator.recoverMemberEnergy(energy);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     simulator.memberStates.forEach((member: any) => {
       expect(member.energy).toBe(50);
     });
@@ -334,6 +334,7 @@ describe('recoverMemberEnergy', () => {
       settings: mockSettings,
       members: mockMembers.concat(mockMembers),
       includeCooking: true
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as any;
     simulator.memberStates[0].recoverEnergy(100);
 

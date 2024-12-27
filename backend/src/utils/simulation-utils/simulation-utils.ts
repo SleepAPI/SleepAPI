@@ -1,14 +1,18 @@
-import type { ProductionStats } from '@src/domain/computed/production';
-import type { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import { PlayerInputEvent, PokemonInputEvent, TeamInputEvent } from '@src/domain/event/events/input-event/input-event';
-import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event';
-import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event';
-import { SleepEvent } from '@src/domain/event/events/sleep-event/sleep-event';
-import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import {
+  PlayerInputEvent,
+  PokemonInputEvent,
+  TeamInputEvent
+} from '@src/domain/event/events/input-event/input-event.js';
+import { InventoryEvent } from '@src/domain/event/events/inventory-event/inventory-event.js';
+import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js';
+import { SleepEvent } from '@src/domain/event/events/sleep-event/sleep-event.js';
+import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
 import type { Produce, SkillActivation, Summary, TimePeriod, pokemon } from 'sleepapi-common';
 
 export function startDayAndEnergy(

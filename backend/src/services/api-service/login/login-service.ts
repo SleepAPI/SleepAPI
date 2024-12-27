@@ -1,9 +1,9 @@
-import { config } from '@src/config/config';
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import type { DBUser } from '@src/database/dao/user/user-dao';
-import { UserDAO } from '@src/database/dao/user/user-dao';
-import { AuthorizationError } from '@src/domain/error/api/api-error';
+import { config } from '@src/config/config.js';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import type { DBUser } from '@src/database/dao/user/user-dao.js';
+import { UserDAO } from '@src/database/dao/user/user-dao.js';
+import { AuthorizationError } from '@src/domain/error/api/api-error.js';
 import type { TokenInfo } from 'google-auth-library';
 import { OAuth2Client } from 'google-auth-library';
 import type { LoginResponse, PokemonInstanceWithMeta, RefreshResponse } from 'sleepapi-common';

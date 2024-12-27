@@ -1,10 +1,15 @@
-import type { ScheduledEvent } from '@src/domain/event/event';
-import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event';
-import type { SleepInfo } from '@src/domain/sleep/sleep-info';
-import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults';
+import type { ScheduledEvent } from '@src/domain/event/event.js';
+import { EnergyEvent } from '@src/domain/event/events/energy-event/energy-event.js';
+import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
+import {
+  calculateSleepEnergyRecovery,
+  calculateStartingEnergy,
+  maybeDegradeEnergy
+} from '@src/services/calculator/energy/energy-calculator.js';
+import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults.js';
+import { describe, expect, it } from 'bun:test';
 import type { SkillActivation, Time } from 'sleepapi-common';
 import { mainskill, nature } from 'sleepapi-common';
-import { calculateSleepEnergyRecovery, calculateStartingEnergy, maybeDegradeEnergy } from './energy-calculator';
 
 describe('calculateStartingEnergy', () => {
   it('shall calculate a realistic night correctly', () => {
@@ -415,21 +420,21 @@ describe('maybeDegradeEnergy', () => {
     });
     expect(energyToDegrade).toBe(1);
     expect(eventLog).toMatchInlineSnapshot(`
-      [
-        EnergyEvent {
-          "after": 99,
-          "before": 100,
-          "delta": -1,
-          "description": "Degrade",
-          "time": {
-            "hour": 6,
-            "minute": 0,
-            "second": 0,
-          },
-          "type": "energy",
-        },
-      ]
-    `);
+[
+  EnergyEvent {
+    "after": 99,
+    "before": 100,
+    "delta": -1,
+    "description": "Degrade",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0,
+    },
+    "type": "energy",
+  },
+]
+`);
   });
 
   it('shall not degrade below 0%', () => {
@@ -453,20 +458,20 @@ describe('maybeDegradeEnergy', () => {
     });
     expect(energyToDegrade).toBe(0.5);
     expect(eventLog).toMatchInlineSnapshot(`
-    [
-      EnergyEvent {
-        "after": 0,
-        "before": 0.5,
-        "delta": -0.5,
-        "description": "Degrade",
-        "time": {
-          "hour": 6,
-          "minute": 0,
-          "second": 0,
-        },
-        "type": "energy",
-      },
-    ]
-  `);
+[
+  EnergyEvent {
+    "after": 0,
+    "before": 0.5,
+    "delta": -0.5,
+    "description": "Degrade",
+    "time": {
+      "hour": 6,
+      "minute": 0,
+      "second": 0,
+    },
+    "type": "energy",
+  },
+]
+`);
   });
 });

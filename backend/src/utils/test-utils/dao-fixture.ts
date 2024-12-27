@@ -1,8 +1,9 @@
+import { DatabaseService } from '@src/database/database-service.js';
+import DatabaseMigration from '@src/database/migration/database-migration.js';
+import { MockService } from '@src/utils/test-utils/mock-service.js';
+import { afterAll, afterEach, beforeAll, beforeEach } from 'bun:test';
 import type { Knex } from 'knex';
 import knex from 'knex';
-import { DatabaseService } from '../../database/database-service';
-import DatabaseMigration from '../../database/migration/database-migration';
-import { MockService } from './mock-service';
 
 type InitParams = {
   enforceForeignKeyConstraints?: boolean;

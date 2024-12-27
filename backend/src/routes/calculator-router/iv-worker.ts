@@ -1,4 +1,4 @@
-import ProductionController from '@src/controllers/calculator/production.controller';
+import ProductionController from '@src/controllers/calculator/production.controller.js';
 import { parentPort, workerData } from 'worker_threads';
 
 const { body } = workerData.params;

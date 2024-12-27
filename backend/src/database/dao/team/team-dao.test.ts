@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamDAO } from '@src/database/dao/team/team-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamDAO } from '@src/database/dao/team/team-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
+import { beforeEach, describe, expect, it } from 'bun:test';
+import { boozle } from 'bunboozle';
 import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true });
 
 beforeEach(() => {
   let innerCounter = 0;
-  uuid.v4 = jest.fn(() => `${++innerCounter}`.padEnd(36, `${innerCounter}`));
+  boozle(uuid, 'v4', () => `${++innerCounter}`.padEnd(36, `${innerCounter}`));
 });
 
 describe('TeamDAO insert', () => {
@@ -27,21 +29,21 @@ describe('TeamDAO insert', () => {
 
     const data = await TeamDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "bedtime": "21:30",
-          "camp": false,
-          "favored_berries": undefined,
-          "fk_user_id": 1,
-          "id": 1,
-          "name": "Team A",
-          "recipe_type": "curry",
-          "team_index": 0,
-          "version": 1,
-          "wakeup": "06:00",
-        },
-      ]
-    `);
+[
+  {
+    "bedtime": "21:30",
+    "camp": false,
+    "favored_berries": undefined,
+    "fk_user_id": 1,
+    "id": 1,
+    "name": "Team A",
+    "recipe_type": "curry",
+    "team_index": 0,
+    "version": 1,
+    "wakeup": "06:00",
+  },
+]
+`);
   });
 
   it('shall fail to insert entity without fk_user_id', async () => {
@@ -127,21 +129,21 @@ describe('TeamDAO update', () => {
 
     const data = await TeamDAO.findMultiple();
     expect(data).toMatchInlineSnapshot(`
-      [
-        {
-          "bedtime": "21:30",
-          "camp": false,
-          "favored_berries": undefined,
-          "fk_user_id": 1,
-          "id": 1,
-          "name": "Updated Team A",
-          "recipe_type": "curry",
-          "team_index": 0,
-          "version": 2,
-          "wakeup": "06:00",
-        },
-      ]
-    `);
+[
+  {
+    "bedtime": "21:30",
+    "camp": false,
+    "favored_berries": undefined,
+    "fk_user_id": 1,
+    "id": 1,
+    "name": "Updated Team A",
+    "recipe_type": "curry",
+    "team_index": 0,
+    "version": 2,
+    "wakeup": "06:00",
+  },
+]
+`);
   });
 
   it('shall fail to update entity with duplicate fk_user_id and team_index', async () => {

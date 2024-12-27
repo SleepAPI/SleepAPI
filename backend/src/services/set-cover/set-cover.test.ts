@@ -1,7 +1,10 @@
-import type { OptimalTeamSolution } from '@src/domain/combination/combination';
-import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
+import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
+import type { CustomPokemonCombinationWithProduce, CustomStats } from '@src/domain/combination/custom.js';
+import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { SetCover } from '@src/services/set-cover/set-cover.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils.js';
+import { describe, expect, it } from 'bun:test';
 import type { DetailedProduce, PokemonIngredientSet } from 'sleepapi-common';
 import {
   berry,
@@ -15,8 +18,6 @@ import {
   prettifyIngredientDrop,
   subskill
 } from 'sleepapi-common';
-import { addIngredientSet } from '../calculator/ingredient/ingredient-calculate';
-import { SetCover } from './set-cover';
 
 describe('processOptimalTeamSolutions', () => {
   const setCover = new SetCover(new Map(), new Map());
@@ -171,11 +172,11 @@ describe('findOptimalCombinationFor', () => {
             `${pk.pokemonCombination.pokemon.name} (${prettifyIngredientDrop(pk.pokemonCombination.ingredientList)})`
         )
     ).toMatchInlineSnapshot(`
-      [
-        "RAIKOU (2 Cacao, 8 Apple, 7 Mushroom)",
-        "RAICHU (1 Apple, 2 Ginger, 3 Ginger)",
-      ]
-    `);
+[
+  "RAIKOU (2 Cacao, 8 Apple, 7 Mushroom)",
+  "RAICHU (1 Apple, 2 Ginger, 3 Ginger)",
+]
+`);
     const setCover = new SetCover(reverseIndex, new Map());
     const result = setCover.findOptimalCombinationFor(dessert.NEROLIS_RESTORATIVE_TEA.ingredients);
 

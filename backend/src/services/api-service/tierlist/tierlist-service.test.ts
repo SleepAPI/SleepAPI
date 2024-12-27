@@ -1,10 +1,11 @@
-import { ingredient, pokemon } from 'sleepapi-common';
-import type { TieredPokemonCombinationContribution } from '../../../routes/tierlist-router/tierlist-router';
+import type { TieredPokemonCombinationContribution } from '@src/routes/tierlist-router/tierlist-router.js';
 import {
   calculateDiffForEntry,
   createPreviousIndexMap,
   diffTierlistRankings
-} from '../../../utils/tierlist-utils/tierlist-utils';
+} from '@src/utils/tierlist-utils/tierlist-utils.js';
+import { describe, expect, it } from 'bun:test';
+import { ingredient, pokemon } from 'sleepapi-common';
 
 describe('diffTierlistRankings', () => {
   it('shall return current unchanged if previous is undefined', () => {
@@ -207,11 +208,11 @@ describe('createPreviousIndexMap', () => {
     ];
 
     expect(createPreviousIndexMap(previous)).toMatchInlineSnapshot(`
-      Map {
-        "BLASTOISE:Milk" => 0,
-        "PINSIR:Honey" => 1,
-      }
-    `);
+Map {
+  "BLASTOISE:Milk" => 0,
+  "PINSIR:Honey" => 1,
+}
+`);
   });
 });
 

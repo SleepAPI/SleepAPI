@@ -1,8 +1,8 @@
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao';
-import { TeamDAO } from '@src/database/dao/team/team-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import type { DBUser } from '@src/database/dao/user/user-dao';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import type { DBTeamWithoutVersion } from '@src/database/dao/team/team-dao.js';
+import { TeamDAO } from '@src/database/dao/team/team-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import type { DBUser } from '@src/database/dao/user/user-dao.js';
 import type {
   GetTeamsResponse,
   UpsertTeamMemberRequest,

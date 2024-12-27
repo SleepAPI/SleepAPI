@@ -1,17 +1,17 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team';
-import type { ProductionStats } from '@src/domain/computed/production';
-import { BadRequestError } from '@src/domain/error/api/api-error';
-import { PokemonError } from '@src/domain/error/pokemon/pokemon-error';
-import { SleepAPIError } from '@src/domain/error/sleepapi-error';
+import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import { BadRequestError } from '@src/domain/error/api/api-error.js';
+import { PokemonError } from '@src/domain/error/pokemon/pokemon-error.js';
+import { SleepAPIError } from '@src/domain/error/sleepapi-error.js';
 import {
   calculateIv,
   calculatePokemonProduction,
   calculateTeam
-} from '@src/services/api-service/production/production-service';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils';
-import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+} from '@src/services/api-service/production/production-service.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
+import { queryAsBoolean, queryAsNumber } from '@src/utils/routing/routing-utils.js';
+import { extractSubskillsBasedOnLevel } from '@src/utils/subskill-utils/subskill-utils.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import * as tsoa from '@tsoa/runtime';
 import type {
   CalculateIvRequest,

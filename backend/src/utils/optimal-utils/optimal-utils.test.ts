@@ -1,16 +1,17 @@
-import type { PokemonCombinationContributions } from '@src/domain/combination/combination';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { Contribution } from '@src/domain/computed/contribution';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils';
-import type { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
-import { berry, curry, dessert, ingredient, maxCarrySize, nature, pokemon, salad } from 'sleepapi-common';
+import type { PokemonCombinationContributions } from '@src/domain/combination/combination.js';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { Contribution } from '@src/domain/computed/contribution.js';
+import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
 import {
   calculateCombinedContributions,
   calculateOptimalFlexibleScore,
   hashPokemonCombination,
   removeDuplicatePokemonCombinations,
   selectBestContributionsWithMultiplier
-} from './optimal-utils';
+} from '@src/utils/optimal-utils/optimal-utils.js';
+import { describe, expect, it } from 'bun:test';
+import type { PokemonIngredientSet, RecipeType } from 'sleepapi-common';
+import { berry, curry, dessert, ingredient, maxCarrySize, nature, pokemon, salad } from 'sleepapi-common';
 
 describe('calculateCombinedContributions', () => {
   it('correctly processes and maps contributions', () => {

@@ -9,19 +9,19 @@ import type {
 } from 'sleepapi-common';
 import { mainskill, MAX_RECIPE_LEVEL, pokemon, recipeLevelBonus } from 'sleepapi-common';
 
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom';
-import type { Contribution } from '@src/domain/computed/contribution';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error';
-import type { SetCover } from '@src/services/set-cover/set-cover';
-import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service';
-import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
+import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
+import type { Contribution } from '@src/domain/computed/contribution.js';
+import { ProgrammingError } from '@src/domain/error/programming/programming-error.js';
 import {
   calculateContributedIngredientsValue,
   calculatePercentageCoveredByCombination,
   calculateRemainingIngredients,
   getAllIngredientCombinationsForLevel
-} from '../ingredient/ingredient-calculate';
-import { getOptimalStats } from '../stats/stats-calculator';
+} from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { getOptimalStats } from '@src/services/calculator/stats/stats-calculator.js';
+import type { SetCover } from '@src/services/set-cover/set-cover.js';
+import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
+import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils.js';
 
 export interface TeamIngredientInfo {
   ingredient: ingredient.Ingredient;

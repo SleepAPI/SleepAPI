@@ -1,8 +1,8 @@
-import type { ProductionStats } from '@src/domain/computed/production';
-import { TimeUtils } from '@src/utils/time-utils/time-utils';
+import type { ProductionStats } from '@src/domain/computed/production.js';
+import type { EventType } from '@src/domain/event/event.js';
+import { ScheduledEvent } from '@src/domain/event/event.js';
+import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { Time, pokemon } from 'sleepapi-common';
-import type { EventType } from '../../event';
-import { ScheduledEvent } from '../../event';
 
 export abstract class InputEvent extends ScheduledEvent {
   type: EventType = 'info';

@@ -1,7 +1,6 @@
+import type SubskillController from '@src/controllers/subskill/subskill.controller.js';
+import { BaseRouter } from '@src/routes/base-router.js';
 import type { Request, Response } from 'express';
-import type SubskillController from '../../controllers/subskill/subskill.controller';
-import { Logger } from '../../services/logger/logger';
-import { BaseRouter } from '../base-router';
 
 class SubskillRouterImpl {
   public async register(controller: SubskillController) {
@@ -9,12 +8,12 @@ class SubskillRouterImpl {
       '/subskill/:name',
       async (req: Request<{ name: string }, unknown, unknown, unknown>, res: Response) => {
         try {
-          Logger.log('Entered /subskill/:name');
+          logger.log('Entered /subskill/:name');
           const subskillData = await controller.getSubskill(req.params.name);
 
           res.header('Content-Type', 'application/json').send(JSON.stringify(subskillData, null, 4));
         } catch (err) {
-          Logger.error(err as Error);
+          logger.error(err as Error);
           res.status(500).send('Something went wrong');
         }
       }
@@ -22,12 +21,12 @@ class SubskillRouterImpl {
 
     BaseRouter.router.get('/subskill', async (req: Request, res: Response) => {
       try {
-        Logger.log('Entered /subskill');
+        logger.log('Entered /subskill');
         const subskillData = await controller.getSubskills();
 
         res.header('Content-Type', 'application/json').send(JSON.stringify(subskillData, null, 4));
       } catch (err) {
-        Logger.error(err as Error);
+        logger.error(err as Error);
         res.status(500).send('Something went wrong');
       }
     });

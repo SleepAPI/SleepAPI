@@ -1,25 +1,27 @@
-import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao';
-import { TeamDAO } from '@src/database/dao/team/team-dao';
-import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao';
-import { UserDAO } from '@src/database/dao/user/user-dao';
-import { IngredientError } from '@src/domain/error/ingredient/ingredient-error';
-import { client } from '@src/services/api-service/login/login-service';
+import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
+import { TeamDAO } from '@src/database/dao/team/team-dao.js';
+import { TeamMemberDAO } from '@src/database/dao/team/team-member-dao.js';
+import { UserDAO } from '@src/database/dao/user/user-dao.js';
+import { IngredientError } from '@src/domain/error/ingredient/ingredient-error.js';
+import { client } from '@src/services/api-service/login/login-service.js';
 import {
   deleteMember,
   deleteTeam,
   getTeams,
   upsertTeamMember,
   upsertTeamMeta
-} from '@src/services/api-service/team/team-service';
-import { DaoFixture } from '@src/utils/test-utils/dao-fixture';
-import { MockService } from '@src/utils/test-utils/mock-service';
+} from '@src/services/api-service/team/team-service.js';
+import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
+import { MockService } from '@src/utils/test-utils/mock-service.js';
+import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
+import { boozle } from 'bunboozle';
 import type { UpsertTeamMemberRequest } from 'sleepapi-common';
 import { uuid } from 'sleepapi-common';
 
 DaoFixture.init({ recreateDatabasesBeforeEachTest: true, enforceForeignKeyConstraints: true });
 
 beforeEach(() => {
-  uuid.v4 = jest.fn().mockReturnValue('0'.repeat(36));
+  boozle(uuid, 'v4', () => '0'.repeat(36));
   MockService.init({ TeamDAO, PokemonDAO, TeamMemberDAO, UserDAO, client });
 });
 
@@ -373,7 +375,7 @@ describe('upsertTeamMember', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         recipe_type: 'curry',
-        favoredBerries: undefined
+        favored_berries: undefined
       }
     ]);
   });
@@ -513,7 +515,7 @@ describe('upsertTeamMember', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         recipe_type: 'curry',
-        favoredBerries: undefined
+        favored_berries: undefined
       }
     ]);
   });

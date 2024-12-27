@@ -1,5 +1,8 @@
-import { calculateRibbonCarrySize, calculateSubskillCarrySize } from '@src/services/calculator/stats/stats-calculator';
-import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils';
+import {
+  calculateRibbonCarrySize,
+  calculateSubskillCarrySize
+} from '@src/services/calculator/stats/stats-calculator.js';
+import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils.js';
 import type { Produce as Inventory, subskill } from 'sleepapi-common';
 
 class InventoryUtilsImpl {

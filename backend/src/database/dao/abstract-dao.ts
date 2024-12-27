@@ -1,12 +1,11 @@
 import type { Static, TSchema } from '@sinclair/typebox';
 import { Kind, Type } from '@sinclair/typebox';
 import type { Knex } from 'knex';
-import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error';
-import { Logger } from '../../services/logger/logger';
-import { chunkArray } from '../../utils/database-utils/array-utils';
-import type { Filter } from '../../utils/database-utils/find-filter';
-import { AbstractFilterOperator } from '../../utils/database-utils/find-filter';
-import { DatabaseService } from '../database-service';
+import { DatabaseInsertError, DatabaseNotFoundError } from '../../domain/error/database/database-error.js';
+import { chunkArray } from '../../utils/database-utils/array-utils.js';
+import type { Filter } from '../../utils/database-utils/find-filter.js';
+import { AbstractFilterOperator } from '../../utils/database-utils/find-filter.js';
+import { DatabaseService } from '../database-service.js';
 
 export const DBWithVersionedIdSchema = Type.Object({
   id: Type.Number({ minimum: 0 }),
@@ -145,7 +144,7 @@ export abstract class AbstractDAO<
         )
       );
       amountInserted += chunk.length;
-      if (enableLogging && amountInserted > 1) Logger.debug(`Inserted ${amountInserted} into ${this.tableName}`);
+      if (enableLogging && amountInserted > 1) logger.debug(`Inserted ${amountInserted} into ${this.tableName}`);
     }
   }
 

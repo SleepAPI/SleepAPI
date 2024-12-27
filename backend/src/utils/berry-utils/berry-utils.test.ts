@@ -1,5 +1,6 @@
+import { getBerriesForFilter, getBerriesForIsland } from '@src/utils/berry-utils/berry-utils.js';
+import { describe, expect, it } from 'bun:test';
 import { berry, island } from 'sleepapi-common';
-import { getBerriesForFilter, getBerriesForIsland } from './berry-utils';
 
 describe('getBerriesForFilter', () => {
   it('shall default to all berries', () => {
