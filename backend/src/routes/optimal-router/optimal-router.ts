@@ -1,10 +1,9 @@
 import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
 import type { ProductionStats } from '@src/domain/computed/production.js';
 import { BaseRouter } from '@src/routes/base-router.js';
-import { runWorkerFile } from '@src/services/worker/worker.js';
+import { solvePool } from '@src/services/worker/worker-pool.js';
 import type { ScoreResult } from '@src/utils/optimal-utils/optimal-utils.js';
 import type { Request, Response } from 'express';
-import path from 'path';
 import type { IngredientSet, PokemonIngredientSet } from 'sleepapi-common';
 
 // TODO: this is pretty much same as input prod request from calc
@@ -68,11 +67,8 @@ class OptimalCombinationRouterImpl {
           const { body } = req;
           const { pretty } = req.query;
 
-          const data = await runWorkerFile(path.resolve(__dirname, './optimal-ingredient-worker.js'), {
-            name,
-            body,
-            pretty
-          });
+          const data = await solvePool.exec('calculateIngredient', [name, body, pretty]);
+
           res.json(data);
         } catch (err) {
           logger.error(err as Error);
@@ -94,11 +90,8 @@ class OptimalCombinationRouterImpl {
           const { body } = req;
           const { pretty } = req.query;
 
-          const data = await runWorkerFile(path.resolve(__dirname, './optimal-meal-worker.js'), {
-            name,
-            body,
-            pretty
-          });
+          const data = await solvePool.exec('calculateMeal', [name, body, pretty]);
+
           res.json(data);
         } catch (err) {
           logger.error(err as Error);

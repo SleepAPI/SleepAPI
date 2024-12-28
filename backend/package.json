@@ -46,7 +46,8 @@
     "morgan": "~1.9.1",
     "mysql2": "~3.9.7",
     "swagger-ui-express": "^5.0.0",
-    "tsoa": "^6.0.1"
+    "tsoa": "^6.0.1",
+    "workerpool": "^9.2.0"
   },
   "bundleDependencies": [
     "sleepapi-common"
