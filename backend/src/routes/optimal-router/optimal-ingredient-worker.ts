@@ -1,21 +1,15 @@
-import OptimalController from '@src/controllers/optimal/optimal.controller.js';
-import type { IngredientRankerResult } from '@src/routes/optimal-router/optimal-router.js';
-import { WebsiteConverterService } from '@src/services/website-converter/website-converter-service.js';
-import { parentPort, workerData } from 'worker_threads';
+import workerpool from 'workerpool';
+import OptimalController from '../../controllers/optimal/optimal.controller.js';
+import type { IngredientRankerResult } from '../../routes/optimal-router/optimal-router.js';
+import { WebsiteConverterService } from '../../services/website-converter/website-converter-service.js';
 
-const { name, body, pretty } = workerData.params;
-
-async function calculateOptimalIngredient() {
+async function calculate(name: string, body: any, pretty: boolean) {
   const controller = new OptimalController();
   const data: IngredientRankerResult = controller.getOptimalPokemonForIngredientRaw(name, body);
 
   return pretty ? WebsiteConverterService.toIngredientRanker(data) : data;
 }
 
-calculateOptimalIngredient()
-  .then((result) => {
-    parentPort?.postMessage(result);
-  })
-  .catch((err) => {
-    parentPort?.postMessage({ error: err.message });
-  });
+workerpool.worker({
+  calculate
+});
