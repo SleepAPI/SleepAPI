@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/SleepAPI/SleepAPI/compare/v1.6.0...v1.6.1) (2024-12-28)
+
+
+### Bug Fixes
+
+* limit threads with worker pools ([8d9b071](https://github.com/SleepAPI/SleepAPI/commit/8d9b071a5bcdfb1cb691e753c0f2b0c35f00bcfd))
+
 # [1.6.0](https://github.com/SleepAPI/SleepAPI/compare/v1.5.2...v1.6.0) (2024-12-27)
 
 
