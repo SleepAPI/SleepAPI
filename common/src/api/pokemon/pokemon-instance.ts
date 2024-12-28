@@ -1,4 +1,4 @@
-import { PokemonGender } from '../../domain/gender/gender';
+import type { PokemonGender } from '../../domain/gender/gender';
 
 export interface SubskillInstance {
   level: number;

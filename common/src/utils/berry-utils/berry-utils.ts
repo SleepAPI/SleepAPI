@@ -1,5 +1,5 @@
-import { Berry } from '../../domain/berry';
-import { BerrySet } from '../../domain/types/berry-set';
+import type { Berry } from '../../domain/berry';
+import type { BerrySet } from '../../domain/types/berry-set';
 import { MathUtils } from '../math-utils/math-utils';
 
 export function berryPowerForLevel(berry: Berry, level: number): number {

@@ -2,12 +2,7 @@
   <v-dialog v-model="menu" max-width="500px" class="flex-center">
     <template #activator="{ props }">
       <v-btn icon color="transparent" elevation="0" v-bind="props">
-        <v-img
-          height="48"
-          width="48"
-          :src="islandImage({ favoredBerries, background: false })"
-          alt="island icon"
-        />
+        <v-img height="48" width="48" :src="islandImage({ favoredBerries, background: false })" alt="island icon" />
       </v-btn>
     </template>
 
@@ -22,13 +17,7 @@
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="taupe island"
-              @click="selectTaupe"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="taupe island" @click="selectTaupe">
               <v-avatar size="64">
                 <v-img src="/images/island/taupe.png" alt="taupe icon" />
               </v-avatar>
@@ -38,39 +27,21 @@
 
         <v-row>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="snowdrop island"
-              @click="selectSnowdrop"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="snowdrop island" @click="selectSnowdrop">
               <v-avatar size="64">
                 <v-img src="/images/island/snowdrop.png" alt="snowdrop icon" />
               </v-avatar>
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="lapis island"
-              @click="selectLapis"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="lapis island" @click="selectLapis">
               <v-avatar size="64">
                 <v-img src="/images/island/lapis.png" alt="lapis icon" />
               </v-avatar>
             </v-btn>
           </v-col>
           <v-col class="flex-center">
-            <v-btn
-              icon
-              color="transparent"
-              size="64"
-              aria-label="power plant island"
-              @click="selectPowerPlant"
-            >
+            <v-btn icon color="transparent" size="64" aria-label="power plant island" @click="selectPowerPlant">
               <v-avatar size="64">
                 <v-img src="/images/island/powerplant.png" alt="power plant icon" />
               </v-avatar>

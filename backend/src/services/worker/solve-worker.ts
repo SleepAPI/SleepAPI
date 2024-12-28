@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import workerpool from 'workerpool';
 import OptimalController from '../../controllers/optimal/optimal.controller.js';
 import type { IngredientRankerResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router.js';

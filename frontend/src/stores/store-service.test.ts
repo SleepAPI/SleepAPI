@@ -29,6 +29,7 @@ describe('Store Service', () => {
     pokemonStore.upsertLocalPokemon(createMockPokemon())
     pokedexStore.groupedPokedex = []
     notificationStore.showTeamNameNotification = false
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     comparisonStore.members = [{ name: 'Charizard' }] as any
 
     clearCacheAndLogout()
@@ -55,6 +56,7 @@ describe('Store Service', () => {
     pokemonStore.upsertLocalPokemon(createMockPokemon())
     pokedexStore.groupedPokedex = []
     notificationStore.showTeamNameNotification = false
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     comparisonStore.members = [{ name: 'Charizard' }] as any
 
     clearCacheKeepLogin()

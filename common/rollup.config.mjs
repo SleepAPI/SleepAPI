@@ -1,7 +1,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'rollup';
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 
 const OUTPUT_DIR = 'dist';
 const ENTRY_NAME = 'index';
@@ -12,14 +12,14 @@ const esmConfig = defineConfig({
     {
       format: 'es',
       sourcemap: true,
-      file: `${OUTPUT_DIR}/${ENTRY_NAME}.mjs`,
-    },
+      file: `${OUTPUT_DIR}/${ENTRY_NAME}.mjs`
+    }
   ],
   plugins: [
     typescript({ tsconfig: './tsconfig.json' }), //
-    nodeResolve(), //
+    nodeResolve() //
   ],
-  external: Object.keys(pkg.peerDependencies ?? {}),
+  external: Object.keys(pkg.peerDependencies ?? {})
 });
 const cjsConfig = defineConfig({
   input: `src/${ENTRY_NAME}.ts`,
@@ -27,17 +27,17 @@ const cjsConfig = defineConfig({
     {
       format: 'cjs',
       sourcemap: true,
-      file: `${OUTPUT_DIR}/${ENTRY_NAME}.js`,
-    },
+      file: `${OUTPUT_DIR}/${ENTRY_NAME}.js`
+    }
   ],
   plugins: [
     typescript({ tsconfig: './tsconfig.json' }), //
     nodeResolve({
-      exportConditions: ['node'],
-      preferBuiltins: true,
-    }),
+      exportConditions: ['default', 'node', 'browser'],
+      preferBuiltins: true
+    })
   ],
-  external: Object.keys(pkg.peerDependencies ?? {}),
+  external: Object.keys(pkg.peerDependencies ?? {})
 });
 
 export default [esmConfig, cjsConfig];

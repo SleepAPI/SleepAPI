@@ -1,6 +1,7 @@
 import AccountMenu from '@/components/account/account-menu.vue'
 import { useUserStore } from '@/stores/user-store'
-import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'

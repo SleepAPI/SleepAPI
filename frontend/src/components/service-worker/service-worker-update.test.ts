@@ -1,4 +1,5 @@
-import { VueWrapper, flushPromises, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 
 import { useVersionStore } from '@/stores/version-store/version-store'
@@ -61,8 +62,6 @@ describe('Service worker update', () => {
     mount(ServiceWorkerUpdate)
     await flushPromises()
 
-    expect(consoleDebugSpy).toHaveBeenCalledWith(
-      `Client cache up to date with version ${versionStore.version}`
-    )
+    expect(consoleDebugSpy).toHaveBeenCalledWith(`Client cache up to date with version ${versionStore.version}`)
   })
 })

@@ -1,5 +1,6 @@
 import CarrySizeButton from '@/components/pokemon-input/carry-size-button.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { maxCarrySize, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'

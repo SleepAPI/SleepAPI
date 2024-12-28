@@ -1,5 +1,6 @@
 import StackedBar, { type Section } from '@/components/custom-components/stacked-bar.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('StackedBar', () => {

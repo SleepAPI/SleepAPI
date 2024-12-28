@@ -6,18 +6,13 @@
 
     <v-row no-gutters :class="['flex-center', 'fill-height', isMobile ? 'flex-column' : '']">
       <v-col cols="auto" class="mx-2">
-        <v-img
-          :src="berryImage(memberWithProduction.member.pokemon.berry)"
-          height="36"
-          width="36"
-        ></v-img>
+        <v-img :src="berryImage(memberWithProduction.member.pokemon.berry)" height="36" width="36"></v-img>
       </v-col>
       <v-col cols="auto" class="flex-center flex-column">
         <span class="font-weight-medium"
           >x{{
             MathUtils.round(
-              (memberWithProduction.production.produceWithoutSkill.berries.at(0)?.amount ?? 0) *
-                timeWindowFactor,
+              (memberWithProduction.production.produceWithoutSkill.berries.at(0)?.amount ?? 0) * timeWindowFactor,
               1
             )
           }}</span

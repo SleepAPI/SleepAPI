@@ -13,9 +13,7 @@
     "test": "jest"
   },
   "nodemonConfig": {
-    "watch": [
-      "src"
-    ],
+    "watch": ["src"],
     "ext": "ts",
     "exec": "ts-node src/app.ts"
   },

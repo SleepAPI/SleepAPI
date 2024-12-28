@@ -1,5 +1,6 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
-import { MAINSKILLS, METRONOME_SKILLS, Mainskill, createBaseSkill } from '../mainskill';
+import type { Mainskill } from '../mainskill';
+import { MAINSKILLS, METRONOME_SKILLS, createBaseSkill } from '../mainskill';
 
 export const TASTY_CHANCE_S: Mainskill = createBaseSkill({
   name: 'Tasty Chance S',
@@ -8,7 +9,7 @@ export const TASTY_CHANCE_S: Mainskill = createBaseSkill({
   maxLevel: MAX_SKILL_LEVEL - 1,
   description:
     'Raises your Extra Tasty rate by ?%. The effect lasts until you cook an Extra Tasty dish or change sites.',
-  RP: [880, 1251, 1726, 2383, 3290, 4546],
+  RP: [880, 1251, 1726, 2383, 3290, 4546]
 });
 
 MAINSKILLS.push(TASTY_CHANCE_S);

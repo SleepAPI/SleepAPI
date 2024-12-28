@@ -1,7 +1,8 @@
 import TeamSettings from '@/components/calculator/team-settings.vue'
 import { TeamService } from '@/services/team/team-service'
 import { useTeamStore } from '@/stores/team/team-store'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { island } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -154,9 +155,7 @@ describe('TeamSettings', () => {
     await nextTick()
     expect(wrapper.vm.isDeleteOpen).toBe(true)
 
-    const deleteModalButton = document.querySelector(
-      'button[aria-label="delete button"]'
-    ) as HTMLElement
+    const deleteModalButton = document.querySelector('button[aria-label="delete button"]') as HTMLElement
     deleteModalButton.click()
 
     await nextTick()

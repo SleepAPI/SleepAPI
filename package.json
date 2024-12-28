@@ -2,16 +2,37 @@
   "name": "sleepapi",
   "version": "1.6.1",
   "private": true,
+  "type": "module",
   "scripts": {
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "lint": "npm run eslint-check && npm run prettier-check",
+    "lint-fix": "npm run eslint-fix && npm run prettier-fix",
+    "eslint-check": "eslint .",
+    "eslint-fix": "npm run eslint-check -- --fix",
+    "prettier-check": "prettier --check .",
+    "prettier-fix": "prettier --write ."
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "@eslint/json": "^0.8.0",
+    "@eslint/markdown": "^6.2.1",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^10.0.0",
+    "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^12.0.1",
-    "@semantic-release/release-notes-generator": "^10.0.0",
+    "@semantic-release/release-notes-generator": "^14.0.1",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
-    "semantic-release": "^24.1.3"
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^15.13.0",
+    "prettier": "^3.4.2",
+    "semantic-release": "^24.2.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.17.0"
   }
 }

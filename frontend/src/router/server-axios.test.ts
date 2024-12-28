@@ -34,7 +34,7 @@ describe('serverAxios', () => {
   })
 
   test('should call logout on 401 response', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const loggerErrorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {})
 
     mock.onGet('/test').reply(401)
     const userStore = useUserStore()
@@ -45,28 +45,26 @@ describe('serverAxios', () => {
     )
 
     expect(userStore.logout).toHaveBeenCalled()
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Unauthorized')
+    expect(loggerErrorSpy).toHaveBeenCalledWith('Unauthorized')
   })
 
   test('should log error on timeout', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const loggerErrorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {})
 
     mock.onGet('/test').timeout()
 
     await expect(serverAxios.get('/test')).rejects.toThrowErrorMatchingInlineSnapshot(
       `[Error: timeout of 20000ms exceeded]`
     )
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Connection to server timed out')
+    expect(loggerErrorSpy).toHaveBeenCalledWith('Connection to server timed out')
   })
 
   test('should log generic error on other errors', async () => {
-    console.error = vi.fn()
+    logger.error = vi.fn()
 
     mock.onGet('/test').networkError()
 
-    await expect(serverAxios.get('/test')).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[Error: Network Error]`
-    )
-    expect(console.error).toHaveBeenCalledWith('Something went wrong')
+    await expect(serverAxios.get('/test')).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: Network Error]`)
+    expect(logger.error).toHaveBeenCalledWith('Something went wrong')
   })
 })

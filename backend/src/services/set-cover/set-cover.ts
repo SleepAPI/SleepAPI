@@ -108,7 +108,7 @@ export class SetCover {
     // TODO: currrently for requiredPokemon legnth > 2+ we would iterate over them instead of adding them all to the same team
     // TODO: instead for [RAIKOU, RAICHU, EKANS] we should calc RAIKOU and send requiredPokemon=[RAICHU, EKANS] to next recursive
     const pokemonWithIngredient =
-      requiredPokemon.length > 0 ? requiredPokemon : this.#reverseIndex.get(firstIngredient.ingredient) ?? [];
+      requiredPokemon.length > 0 ? requiredPokemon : (this.#reverseIndex.get(firstIngredient.ingredient) ?? []);
     for (const currentPokemon of pokemonWithIngredient) {
       const helperBoostAlreadyInTeam = pokemonInTeam.find(
         (pkmn) => pkmn.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST

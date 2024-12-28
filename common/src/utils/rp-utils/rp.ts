@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { IngredientSet } from '../../domain';
-import { Nature } from '../../domain/nature/nature';
-import { Pokemon } from '../../domain/pokemon';
+import type { IngredientSet } from '../../domain';
+import type { Nature } from '../../domain/nature/nature';
+import type { Pokemon } from '../../domain/pokemon';
+import type { SubSkill } from '../../domain/subskill/subskill';
 import {
   DREAM_SHARD_BONUS,
   ENERGY_RECOVERY_BONUS,
@@ -27,17 +28,16 @@ import {
   INVENTORY_M,
   INVENTORY_S,
   RESEARCH_EXP_BONUS,
-  SLEEP_EXP_BONUS,
-  SubSkill,
+  SLEEP_EXP_BONUS
 } from '../../domain/subskill/subskill';
-import { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
+import type { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
 import { MathUtils } from '../../utils/math-utils';
 import { invertNatureFrequency } from '../../utils/nature-utils';
 import {
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateRibbonFrequency,
-  calculateSkillPercentage,
+  calculateSkillPercentage
 } from '../../utils/stat-utils';
 
 export class RP {
@@ -80,7 +80,7 @@ export class RP {
       MathUtils.floor(
         3600 /
           (this.pokemon.frequency * MathUtils.floor(levelFactor * natureFreq * helpSpeedSubskills * ribbonFactor, 4)),
-        2,
+        2
       )
     );
   }
@@ -88,7 +88,7 @@ export class RP {
   get ingredientChance() {
     return MathUtils.floor(
       calculateIngredientPercentage({ pokemon: this.pokemon, nature: this.nature, subskills: this.subskills }),
-      4,
+      4
     );
   }
 
@@ -104,8 +104,7 @@ export class RP {
       0.000000398 * Math.pow(this.level, 3) + 0.000159 * Math.pow(this.level, 2) + 0.00367 * this.level - 0.00609 + 1;
 
     const ingredientsValue = Math.floor(
-      this.ingredientSet.reduce((sum, cur) => (sum += cur.amount * cur.ingredient.value), 0) /
-        this.ingredientSet.length,
+      this.ingredientSet.reduce((sum, cur) => (sum += cur.amount * cur.ingredient.value), 0) / this.ingredientSet.length
     );
 
     return MathUtils.floor(this.helpFactor * this.ingredientChance * ingredientsValue * ingredientGrowth, 2);
@@ -117,7 +116,7 @@ export class RP {
       berriesPerDrop *
       Math.max(
         this.pokemon.berry.value + this.level - 1,
-        Math.round(Math.pow(1.025, this.level - 1) * this.pokemon.berry.value),
+        Math.round(Math.pow(1.025, this.level - 1) * this.pokemon.berry.value)
       );
 
     return MathUtils.floor(this.helpFactor * (1 - this.ingredientChance) * berryValue, 2);
@@ -154,7 +153,7 @@ export class RP {
     [SLEEP_EXP_BONUS.name]: 0.221,
     [INVENTORY_S.name]: 0.071,
     [INVENTORY_M.name]: 0.139,
-    [INVENTORY_L.name]: 0.181,
+    [INVENTORY_L.name]: 0.181
   };
 
   private ingGrowth: { [level: number]: number } = {
@@ -217,7 +216,7 @@ export class RP {
     57: 1.798,
     58: 1.824,
     59: 1.852,
-    60: 1.88,
+    60: 1.88
   };
 
   private filteredSubskills(pokemonInstance: PokemonInstanceExt) {
@@ -232,7 +231,7 @@ export class RP {
     const ingredient30 = pokemon.ingredient30.find(
       (ingList) =>
         ingList.ingredient.name.toLowerCase() ===
-        ingredients.find((ing) => ing.level === 30)?.ingredient.name.toLowerCase(),
+        ingredients.find((ing) => ing.level === 30)?.ingredient.name.toLowerCase()
     );
     if (ingredient30 && level >= 30) {
       ingredientSet.push(ingredient30);
@@ -241,7 +240,7 @@ export class RP {
     const ingredient60 = pokemon.ingredient60.find(
       (ingList) =>
         ingList.ingredient.name.toLowerCase() ===
-        ingredients.find((ing) => ing.level === 60)?.ingredient.name.toLowerCase(),
+        ingredients.find((ing) => ing.level === 60)?.ingredient.name.toLowerCase()
     );
     if (ingredient60 && level >= 60) {
       ingredientSet.push(ingredient60);

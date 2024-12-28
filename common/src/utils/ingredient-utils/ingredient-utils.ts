@@ -1,5 +1,6 @@
-import { INGREDIENTS, Ingredient } from '../../domain/ingredient';
-import { IngredientSet } from '../../domain/types/ingredient-set';
+import type { Ingredient } from '../../domain/ingredient';
+import { INGREDIENTS } from '../../domain/ingredient';
+import type { IngredientSet } from '../../domain/types/ingredient-set';
 import { MathUtils } from '../math-utils/math-utils';
 
 export function getIngredient(name: string): Ingredient {
@@ -50,7 +51,7 @@ export function prettifyIngredientDrop(ingredientDrop: IngredientSet[], separato
   if (ingredientDrop.length >= INGREDIENTS.length) {
     const ingMagnetAmount = ingredientDrop.reduce(
       (min, cur) => (cur.amount < min ? cur.amount : min),
-      ingredientDrop[0].amount,
+      ingredientDrop[0].amount
     );
 
     const nonIngMagnetIngs = ingredientDrop.filter((ing) => ing.amount !== ingMagnetAmount);

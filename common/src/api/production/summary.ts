@@ -1,7 +1,7 @@
-import { Produce } from '../../api/production/produce';
-import { Mainskill } from '../../domain/mainskill/mainskill';
-import { IngredientSet } from '../../domain/types/ingredient-set';
-import { Time } from '../../domain/types/time';
+import type { Produce } from '../../api/production/produce';
+import type { Mainskill } from '../../domain/mainskill/mainskill';
+import type { IngredientSet } from '../../domain/types/ingredient-set';
+import type { Time } from '../../domain/types/time';
 
 export interface Summary {
   ingredientPercentage: number;

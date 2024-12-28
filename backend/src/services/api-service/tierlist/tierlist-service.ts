@@ -239,7 +239,7 @@ class TierlistImpl {
 
         logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
         ++counter;
-        console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+        logger.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
         const contributions: Contribution[] = [];
 
@@ -261,7 +261,7 @@ class TierlistImpl {
           });
           contributions.push(contributionForMeal);
         }
-        console.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+        logger.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
         results.push({ pokemonIngredientSet: pokemonWithProduce.pokemonCombination, contributions });
       }

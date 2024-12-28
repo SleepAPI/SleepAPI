@@ -1,4 +1,5 @@
-import { Mainskill, MainskillAttributes } from './mainskill';
+import type { MainskillAttributes } from './mainskill';
+import { Mainskill } from './mainskill';
 
 // TODO: this is rapidly increasing, they might be moving into each skill's own file, they seem to be mon-specific
 export type ModifierType = 'Base' | 'Stockpile' | 'Moonlight' | 'Disguise' | 'Mimic' | 'Transform';
@@ -10,13 +11,13 @@ export interface Modifier {
 export const createModifier = (
   modifier: Modifier,
   skill: Mainskill,
-  overrides?: Partial<MainskillAttributes>,
+  overrides?: Partial<MainskillAttributes>
 ): Mainskill => {
   return new Mainskill({
     ...skill.attributes,
     ...overrides,
     name: `${modifier.type} (${skill.name})`,
-    modifier,
+    modifier
   });
 };
 

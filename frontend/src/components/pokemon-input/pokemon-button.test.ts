@@ -1,6 +1,7 @@
 import PokemonButton from '@/components/pokemon-input/pokemon-button.vue'
 import { createMockPokemon } from '@/vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'

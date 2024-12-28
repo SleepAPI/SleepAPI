@@ -1,9 +1,11 @@
 import MainskillButton from '@/components/pokemon-input/mainskill-button.vue'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createMockPokemon } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { Mainskill, createBaseSkill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import type { Mainskill } from 'sleepapi-common'
+import { createBaseSkill, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('MainskillButton', () => {

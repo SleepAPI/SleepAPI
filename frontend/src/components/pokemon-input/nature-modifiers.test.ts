@@ -1,5 +1,6 @@
 import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { nature } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 

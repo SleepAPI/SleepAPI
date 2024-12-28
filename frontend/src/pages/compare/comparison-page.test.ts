@@ -1,5 +1,6 @@
 import ComparisonPage from '@/pages/compare/comparison-page.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { type MemberProduction } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

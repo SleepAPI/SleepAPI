@@ -6,7 +6,7 @@ import {
   HONEY,
   MOOMOO_MILK,
   SOOTHING_CACAO,
-  WARMING_GINGER,
+  WARMING_GINGER
 } from '../../domain/ingredient';
 import { JOLLY, LONELY, MILD, NAUGHTY, QUIET, SASSY } from '../../domain/nature';
 import { EEVEE, ESPEON, GOLDUCK, PINSIR, PUPITAR, RAICHU } from '../../domain/pokemon';
@@ -23,9 +23,9 @@ import {
   SKILL_LEVEL_UP_S,
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S,
-  SLEEP_EXP_BONUS,
+  SLEEP_EXP_BONUS
 } from '../../domain/subskill';
-import { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
+import type { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
 import { RP } from '../../utils/rp-utils/rp';
 import { uuid } from '../../utils/uuid-utils';
 
@@ -44,18 +44,18 @@ describe('RP', () => {
         { level: 25, subskill: INGREDIENT_FINDER_S },
         { level: 50, subskill: DREAM_SHARD_BONUS },
         { level: 75, subskill: SKILL_LEVEL_UP_S },
-        { level: 100, subskill: SKILL_LEVEL_UP_M },
+        { level: 100, subskill: SKILL_LEVEL_UP_M }
       ],
       ingredients: [
         { level: 0, ingredient: HONEY },
         { level: 30, ingredient: FANCY_APPLE },
-        { level: 60, ingredient: HONEY },
+        { level: 60, ingredient: HONEY }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.helpFactor).toBe(8.299999999999999);
@@ -78,18 +78,18 @@ describe('RP', () => {
       subskills: [
         { level: 10, subskill: BERRY_FINDING_S },
         { level: 25, subskill: SKILL_TRIGGER_M },
-        { level: 50, subskill: SKILL_TRIGGER_S },
+        { level: 50, subskill: SKILL_TRIGGER_S }
       ],
       ingredients: [
         { level: 0, ingredient: MOOMOO_MILK },
         { level: 30, ingredient: SOOTHING_CACAO },
-        { level: 60, ingredient: MOOMOO_MILK },
+        { level: 60, ingredient: MOOMOO_MILK }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(5463);
@@ -106,18 +106,18 @@ describe('RP', () => {
       skillLevel: 2,
       subskills: [
         { level: 10, subskill: HELPING_BONUS },
-        { level: 25, subskill: SKILL_TRIGGER_S },
+        { level: 25, subskill: SKILL_TRIGGER_S }
       ],
       ingredients: [
         { level: 0, ingredient: WARMING_GINGER },
         { level: 30, ingredient: GREENGRASS_SOYBEANS },
-        { level: 60, ingredient: BEAN_SAUSAGE },
+        { level: 60, ingredient: BEAN_SAUSAGE }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(1350);
@@ -135,18 +135,18 @@ describe('RP', () => {
       subskills: [
         { level: 10, subskill: HELPING_BONUS },
         { level: 25, subskill: SKILL_TRIGGER_M },
-        { level: 50, subskill: HELPING_SPEED_M },
+        { level: 50, subskill: HELPING_SPEED_M }
       ],
       ingredients: [
         { level: 0, ingredient: MOOMOO_MILK },
         { level: 30, ingredient: SOOTHING_CACAO },
-        { level: 60, ingredient: SOOTHING_CACAO },
+        { level: 60, ingredient: SOOTHING_CACAO }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(4699);
@@ -166,18 +166,18 @@ describe('RP', () => {
         { level: 25, subskill: INGREDIENT_FINDER_S },
         { level: 50, subskill: DREAM_SHARD_BONUS },
         { level: 75, subskill: SKILL_LEVEL_UP_S },
-        { level: 100, subskill: SKILL_LEVEL_UP_M },
+        { level: 100, subskill: SKILL_LEVEL_UP_M }
       ],
       ingredients: [
         { level: 0, ingredient: HONEY },
         { level: 30, ingredient: FANCY_APPLE },
-        { level: 60, ingredient: HONEY },
+        { level: 60, ingredient: HONEY }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(4295);
@@ -197,18 +197,18 @@ describe('RP', () => {
         { level: 25, subskill: SKILL_TRIGGER_M },
         { level: 50, subskill: INVENTORY_L },
         { level: 75, subskill: INGREDIENT_FINDER_S },
-        { level: 100, subskill: HELPING_SPEED_S },
+        { level: 100, subskill: HELPING_SPEED_S }
       ],
       ingredients: [
         { level: 0, ingredient: SOOTHING_CACAO },
         { level: 30, ingredient: FANCY_APPLE },
-        { level: 60, ingredient: SOOTHING_CACAO },
+        { level: 60, ingredient: SOOTHING_CACAO }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3726);
@@ -228,18 +228,18 @@ describe('RP', () => {
         { level: 25, subskill: SLEEP_EXP_BONUS },
         { level: 50, subskill: SKILL_LEVEL_UP_S },
         { level: 75, subskill: HELPING_BONUS },
-        { level: 100, subskill: SKILL_TRIGGER_M },
+        { level: 100, subskill: SKILL_TRIGGER_M }
       ],
       ingredients: [
         { level: 0, ingredient: FANCY_APPLE },
         { level: 30, ingredient: FANCY_APPLE },
-        { level: 60, ingredient: FANCY_APPLE },
+        { level: 60, ingredient: FANCY_APPLE }
       ],
       externalId: uuid.v4(),
       version: 0,
       saved: true,
       shiny: false,
-      gender: 'female',
+      gender: 'female'
     };
     const rpUtils = new RP(pokemonInstance);
     expect(rpUtils.calc()).toBe(3555);

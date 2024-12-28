@@ -53,7 +53,10 @@ class FilterInOperator<T extends number | string> extends AbstractFilterOperator
 
 type ComparisonOperator = '>' | '<' | '<=' | '>=' | '!=' | '=';
 class FilterComparisonOperator<T extends number | string | Date> extends AbstractFilterOperator<T> {
-  constructor(private value: T, private operator: ComparisonOperator) {
+  constructor(
+    private value: T,
+    private operator: ComparisonOperator
+  ) {
     super();
   }
   apply(key: string, query: Knex.QueryBuilder): Knex.QueryBuilder {
@@ -77,9 +80,10 @@ export function compare<T extends string | number | Date>(operator: ComparisonOp
   return new FilterComparisonOperator(value, operator);
 }
 
-type FilterType<ITYPE> = NonNullable<ITYPE> extends (infer ISUBTYPE)[]
-  ? AbstractFilterOperator<ISUBTYPE> | ISUBTYPE
-  : AbstractFilterOperator<ITYPE> | ITYPE;
+type FilterType<ITYPE> =
+  NonNullable<ITYPE> extends (infer ISUBTYPE)[]
+    ? AbstractFilterOperator<ISUBTYPE> | ISUBTYPE
+    : AbstractFilterOperator<ITYPE> | ITYPE;
 
 type OrFilter<ITYPE extends object> = {
   [P in keyof ITYPE]?: FilterType<ITYPE[P]> | Array<FilterType<ITYPE[P]>>;

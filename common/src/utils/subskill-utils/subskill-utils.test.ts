@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { SUBSKILLS, SubSkill } from '../../domain/subskill';
+import type { SubSkill } from '../../domain/subskill';
+import { SUBSKILLS } from '../../domain/subskill';
 import { getSubskill, getSubskillNames } from './subskill-utils';
 
 describe('getSubskillNames', () => {
@@ -36,7 +37,7 @@ describe('getSubskill', () => {
 
   it('shall throw if looking up missing subskill', () => {
     expect(() => getSubskill('missing')).toThrowErrorMatchingInlineSnapshot(
-      `[Error: Can't find Subskill with name missing]`,
+      `[Error: Can't find Subskill with name missing]`
     );
   });
 });

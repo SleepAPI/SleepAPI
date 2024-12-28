@@ -1,3 +1,4 @@
+/* eslint-disable SleepAPILogger/no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type LogLevel = 'debug' | 'log' | 'info' | 'warn' | 'error';
 type Loggable = string | number | boolean | object | any[] | null | Error;
@@ -36,7 +37,7 @@ export class Logger {
         log: 'color: gray;',
         info: 'color: blue;',
         warn: 'color: orange;',
-        error: 'color: red; font-weight: bold;',
+        error: 'color: red; font-weight: bold;'
       };
 
       console[level](`%c${formattedMessage}`, styles[level]);
@@ -71,7 +72,7 @@ export class Logger {
       log: '\x1b[90m', // Gray
       info: '\x1b[34m', // Blue
       warn: '\x1b[33m', // Yellow
-      error: '\x1b[31m', // Red
+      error: '\x1b[31m' // Red
     };
 
     const reset = '\x1b[0m';
@@ -87,6 +88,6 @@ declare global {
 const loggerInstance = new Logger();
 if (typeof window !== 'undefined') {
   window.logger = loggerInstance; // Browser
-} else if (typeof global !== 'undefined') {
-  global.logger = loggerInstance; // Node.js
+} else if (typeof globalThis !== 'undefined') {
+  globalThis.logger = loggerInstance; // Node.js
 }

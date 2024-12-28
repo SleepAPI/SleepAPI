@@ -1,25 +1,14 @@
 <template>
   <div class="w-100 fill-height transparent">
     <!-- TODO: set loading while production is calculating -->
-    <v-card
-      :loading="false"
-      class="w-100 fill-height frosted-glass rounded-b-0"
-      @click="openDialog"
-    >
-      <div
-        class="text-center vertical-text"
-        style="position: absolute; top: 0%; width: 100%; height: 100%"
-      >
+    <v-card :loading="false" class="w-100 fill-height frosted-glass rounded-b-0" @click="openDialog">
+      <div class="text-center vertical-text" style="position: absolute; top: 0%; width: 100%; height: 100%">
         {{ pokemonInstance.name }}
       </div>
       <v-img :src="imageUrl" class="pokemon-image" />
 
       <div style="position: absolute; bottom: 0%; width: 100%">
-        <v-card
-          class="text-center xsmall-responsive-text rounded-t-0"
-          color="subskillWhite"
-          location="bottom center"
-        >
+        <v-card class="text-center xsmall-responsive-text rounded-t-0" color="subskillWhite" location="bottom center">
           {{ rpBadge }}
         </v-card>
       </div>

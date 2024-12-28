@@ -41,19 +41,9 @@
         </v-col>
 
         <v-col cols="auto" class="flex-right">
-          <v-btn-toggle
-            v-model="tab"
-            mandatory
-            rounded="pill"
-            variant="outlined"
-            style="height: 32px"
-          >
-            <v-btn value="visual" class="w-50" :prepend-icon="tab === 'visual' ? 'mdi-check' : ''">
-              Visual
-            </v-btn>
-            <v-btn value="data" class="w-50" :prepend-icon="tab === 'data' ? 'mdi-check' : ''">
-              Data
-            </v-btn>
+          <v-btn-toggle v-model="tab" mandatory rounded="pill" variant="outlined" style="height: 32px">
+            <v-btn value="visual" class="w-50" :prepend-icon="tab === 'visual' ? 'mdi-check' : ''"> Visual </v-btn>
+            <v-btn value="data" class="w-50" :prepend-icon="tab === 'data' ? 'mdi-check' : ''"> Data </v-btn>
           </v-btn-toggle>
         </v-col>
       </v-row>
@@ -196,10 +186,7 @@ import { defineComponent } from 'vue'
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
 import { StrengthService } from '@/services/strength/strength-service'
 import { mainskillImage, pokemonImage } from '@/services/utils/image-utils'
-import {
-  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
-  useComparisonStore
-} from '@/stores/comparison-store/comparison-store'
+import { AVERAGE_WEEKLY_CRIT_MULTIPLIER, useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import {
@@ -281,9 +268,7 @@ export default defineComponent({
         const berryPower = this.showBerries
           ? StrengthService.berryStrength({
               favored: this.comparisonStore.team?.favoredBerries ?? [],
-              berries: memberProduction.produceTotal.berries.filter(
-                (b) => b.level === member.level
-              ),
+              berries: memberProduction.produceTotal.berries.filter((b) => b.level === member.level),
               timeWindow: this.comparisonStore.timeWindow
             })
           : 0
@@ -355,10 +340,7 @@ export default defineComponent({
     energyPerMember(member: PokemonInstanceExt): number | undefined {
       const skill = member.pokemon.skill
 
-      if (
-        skill.name === mainskill.ENERGIZING_CHEER_S.name ||
-        skill.name === mainskill.ENERGY_FOR_EVERYONE.name
-      ) {
+      if (skill.name === mainskill.ENERGIZING_CHEER_S.name || skill.name === mainskill.ENERGY_FOR_EVERYONE.name) {
         const amount = member.pokemon.skill.amount(member.skillLevel)
         const energy = StrengthService.skillValue({
           skill,
@@ -372,11 +354,7 @@ export default defineComponent({
     lowestIngredientPower(memberProduction: MemberProduction) {
       const amount = memberProduction.produceTotal.ingredients.reduce(
         (sum, cur) =>
-          sum +
-          cur.amount *
-            cur.ingredient.value *
-            AVERAGE_WEEKLY_CRIT_MULTIPLIER *
-            this.userStore.islandBonus,
+          sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER * this.userStore.islandBonus,
         0
       )
       return Math.floor(amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow))

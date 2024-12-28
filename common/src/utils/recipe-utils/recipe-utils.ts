@@ -1,6 +1,6 @@
 import { MAX_RECIPE_LEVEL } from '../../domain/constants';
-import { Recipe, RecipeType } from '../../domain/recipe';
-import { IngredientSet } from '../../domain/types';
+import type { Recipe, RecipeType } from '../../domain/recipe';
+import type { IngredientSet } from '../../domain/types';
 
 export function createCurry(params: { name: string; ingredients: IngredientSet[]; bonus: number }): Recipe {
   return createRecipe({ ...params, type: 'curry' });
@@ -24,7 +24,7 @@ function createRecipe(params: { name: string; ingredients: IngredientSet[]; bonu
     type,
     ingredients,
     bonus,
-    nrOfIngredients,
+    nrOfIngredients
   };
 }
 
@@ -88,7 +88,7 @@ export const recipeLevelBonus: { [level: number]: number } = {
   57: 2.83,
   58: 2.9,
   59: 2.97,
-  60: 3.03,
+  60: 3.03
 };
 
 export function calculateRecipeValue(params: { level: number; ingredients: IngredientSet[]; bonus: number }) {

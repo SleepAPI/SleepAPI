@@ -1,5 +1,6 @@
 import { clearCacheKeepLogin } from '@/stores/store-service'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import SettingsPage from './settings-page.vue'

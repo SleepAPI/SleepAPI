@@ -1,6 +1,7 @@
 import { GoogleService } from '@/services/login/google-service'
 import { useUserStore } from '@/stores/user-store'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
@@ -40,9 +41,7 @@ describe('SettingsPage', () => {
   })
 
   it('shows and closes delete account confirmation dialog', async () => {
-    const deleteButton = wrapper
-      .findAll('button')
-      .find((button) => button.text() === 'Delete account')
+    const deleteButton = wrapper.findAll('button').find((button) => button.text() === 'Delete account')
     await deleteButton?.trigger('click')
     expect(wrapper.vm.deleteDialog).toBe(true)
 
@@ -59,9 +58,7 @@ describe('SettingsPage', () => {
     userStore.logout = vi.fn()
     GoogleService.delete = vi.fn()
 
-    const deleteButton = wrapper
-      .findAll('button')
-      .find((button) => button.text() === 'Delete account')
+    const deleteButton = wrapper.findAll('button').find((button) => button.text() === 'Delete account')
     await deleteButton?.trigger('click')
     expect(wrapper.vm.deleteDialog).toBe(true)
 
@@ -81,8 +78,6 @@ describe('SettingsPage', () => {
   it('displays email information disclaimer', () => {
     const disclaimerElement = wrapper.find('.font-italic')
     expect(disclaimerElement.exists()).toBe(true)
-    expect(disclaimerElement.text()).toBe(
-      'This is only stored on your device, we do not store personal information'
-    )
+    expect(disclaimerElement.text()).toBe('This is only stored on your device, we do not store personal information')
   })
 })

@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { Produce } from '../../api/production/produce';
+import type { Produce } from '../../api/production/produce';
 import { berry, ingredient } from '../../domain';
 import { multiplyProduce } from './produce-utils';
 
 const testProduce: Produce = {
   berries: [
     { berry: berry.ORAN, amount: 10, level: 2 },
-    { berry: berry.PECHA, amount: 5, level: 3 },
+    { berry: berry.PECHA, amount: 5, level: 3 }
   ],
   ingredients: [
     { ingredient: ingredient.HONEY, amount: 3 },
-    { ingredient: ingredient.FANCY_APPLE, amount: 7 },
-  ],
+    { ingredient: ingredient.FANCY_APPLE, amount: 7 }
+  ]
 };
 
 describe('multiplyProduce', () => {
@@ -20,12 +20,12 @@ describe('multiplyProduce', () => {
     expect(result).toEqual({
       berries: [
         { berry: berry.ORAN, amount: 20, level: 2 },
-        { berry: berry.PECHA, amount: 10, level: 3 },
+        { berry: berry.PECHA, amount: 10, level: 3 }
       ],
       ingredients: [
         { ingredient: ingredient.HONEY, amount: 6 },
-        { ingredient: ingredient.FANCY_APPLE, amount: 14 },
-      ],
+        { ingredient: ingredient.FANCY_APPLE, amount: 14 }
+      ]
     });
   });
 
@@ -39,12 +39,12 @@ describe('multiplyProduce', () => {
     expect(result).toEqual({
       berries: [
         { berry: berry.ORAN, amount: 0, level: 2 },
-        { berry: berry.PECHA, amount: 0, level: 3 },
+        { berry: berry.PECHA, amount: 0, level: 3 }
       ],
       ingredients: [
         { ingredient: ingredient.HONEY, amount: 0 },
-        { ingredient: ingredient.FANCY_APPLE, amount: 0 },
-      ],
+        { ingredient: ingredient.FANCY_APPLE, amount: 0 }
+      ]
     });
   });
 });

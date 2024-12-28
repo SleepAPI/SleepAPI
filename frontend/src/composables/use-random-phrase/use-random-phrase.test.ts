@@ -1,5 +1,6 @@
 import { useRandomPhrase } from '@/composables/use-random-phrase/use-random-phrase'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import type { nature } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'

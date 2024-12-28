@@ -2,24 +2,24 @@
   "folders": [
     {
       "name": "common",
-      "path": "common",
+      "path": "common"
     },
     {
       "name": "backend",
-      "path": "backend",
+      "path": "backend"
     },
     {
       "name": "frontend",
-      "path": "frontend",
+      "path": "frontend"
     },
     {
       "name": "bot",
-      "path": "bot",
+      "path": "bot"
     },
     {
       "name": "Project files",
-      "path": ".",
-    },
+      "path": "."
+    }
   ],
   "settings": {
     "editor.insertSpaces": true,
@@ -27,11 +27,11 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit",
       "source.fixAll": "explicit",
-      "source.fixAll.eslint": "explicit",
+      "source.fixAll.eslint": "explicit"
     },
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "eslint.validate": ["javascript", "typescript"],
+    "eslint.validate": ["javascript", "typescript", "json", "markdown"],
     "files.exclude": {
       "common": true,
       "backend": true,
@@ -40,23 +40,23 @@
       ".vscode": true,
       "dev-dist": true,
       "*.tsbuildinfo": true,
-      "coverage": true,
-      "*.d.*": true,
-      "*.mjs": true,
+      "coverage": true
     },
     "files.eol": "\n",
     "search.exclude": {
       "**/node_modules": true,
       "**/dist": true,
+      "bot": true
     },
     "typescript.preferences.importModuleSpecifier": "non-relative",
-    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative"
   },
   "extensions": {
     "recommendations": [
       "EditorConfig.EditorConfig",
       "dbaeumer.vscode-eslint",
       "esbenp.prettier-vscode",
-    ],
-  },
+      "gruntfuggly.todo-tree"
+    ]
+  }
 }

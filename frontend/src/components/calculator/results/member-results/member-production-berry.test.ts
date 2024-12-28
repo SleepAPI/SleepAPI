@@ -3,7 +3,8 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { berryImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { MathUtils, berry, pokemon } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -43,9 +44,7 @@ describe('MemberProductionBerry', () => {
 
   it('displays the correct berry image', () => {
     const berryImg = wrapper.find('img')
-    expect(berryImg.attributes('src')).toBe(
-      berryImage(mockMember.production.produceWithoutSkill.berries[0].berry)
-    )
+    expect(berryImg.attributes('src')).toBe(berryImage(mockMember.production.produceWithoutSkill.berries[0].berry))
   })
 
   it('displays the correct berry amount', () => {

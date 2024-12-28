@@ -1,6 +1,7 @@
 import TeamName from '@/components/calculator/team-name.vue' // Adjust the import path as needed
 import { useTeamStore } from '@/stores/team/team-store'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 

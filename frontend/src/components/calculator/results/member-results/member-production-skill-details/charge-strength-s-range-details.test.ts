@@ -46,10 +46,7 @@ describe('MemberProductionSkill', () => {
   it('displays the correct number of skill procs', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
-      MathUtils.round(
-        mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'),
-        1
-      ).toString()
+      MathUtils.round(mockMember.production.skillProcs * StrengthService.timeWindowFactor('24H'), 1).toString()
     )
   })
 

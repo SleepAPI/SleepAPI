@@ -44,11 +44,7 @@ export default {
           return
         } else {
           const unknownGender = newPokemon.genders.female + newPokemon.genders.male === 0
-          const newGender = unknownGender
-            ? undefined
-            : RandomUtils.roll(newPokemon.genders.male)
-              ? 'male'
-              : 'female'
+          const newGender = unknownGender ? undefined : RandomUtils.roll(newPokemon.genders.male) ? 'male' : 'female'
 
           this.$emit('update-gender', newGender)
         }

@@ -1,24 +1,12 @@
 <template>
-  <v-badge
-    color="secondary"
-    class="flex-center"
-    location="top left"
-    offset-x="auto"
-    :model-value="locked"
-  >
+  <v-badge color="secondary" class="flex-center" location="top left" offset-x="auto" :model-value="locked">
     <template #badge>
       <v-icon left class="mr-1">mdi-lock</v-icon>
       Lv.{{ ingredientLevel }}
     </template>
     <v-speed-dial v-model="fab" location="top center" transition="fade-transition">
       <template #activator="{ props }">
-        <v-badge
-          :content="ingredientSet?.amount"
-          color="accent"
-          text-color="background"
-          offset-x="5"
-          offset-y="5"
-        >
+        <v-badge :content="ingredientSet?.amount" color="accent" text-color="background" offset-x="5" offset-y="5">
           <v-btn icon :class="{ 'disabled-image-btn': locked }" :disabled="disabled" v-bind="props">
             <v-avatar>
               <v-img id="ingredientImage" :src="ingredientImage"></v-img>
@@ -88,13 +76,11 @@ export default {
         return []
       } else if (this.ingredientLevel < 60) {
         return this.pokemonInstance.pokemon.ingredient30.filter(
-          (ing) =>
-            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+          (ing) => ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
       } else
         return this.pokemonInstance.pokemon.ingredient60.filter(
-          (ing) =>
-            ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
+          (ing) => ing.ingredient.name.toLowerCase() !== this.ingredientSet?.ingredient.name.toLowerCase()
         )
     }
   },

@@ -274,9 +274,7 @@ describe('createOrUpdateMember', () => {
     const member = createMockPokemon()
     serverAxios.put = vi.fn().mockRejectedValueOnce(new Error('Server error'))
 
-    await expect(
-      TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })
-    ).rejects.toThrow('Server error')
+    await expect(TeamService.createOrUpdateMember({ teamIndex, memberIndex, member })).rejects.toThrow('Server error')
 
     expect(serverAxios.put).toHaveBeenCalledWith(`team/${teamIndex}/member/${memberIndex}`, {
       version: member.version,
@@ -332,9 +330,7 @@ describe('calculateProduction', () => {
         members: [
           {
             produceTotal: {
-              berries: [
-                { amount: 10, berry: { name: 'Oran', type: 'normal', value: 5 }, level: 5 }
-              ],
+              berries: [{ amount: 10, berry: { name: 'Oran', type: 'normal', value: 5 }, level: 5 }],
               ingredients: [
                 {
                   amount: 3,
@@ -482,6 +478,7 @@ describe('calculateIv', () => {
       }
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [[, requestData]]: any = mockedAxios.post.mock.calls
     expect(requestData.variants).toHaveLength(3)
 

@@ -1,6 +1,7 @@
 import GenderButton from '@/components/pokemon-input/gender-button.vue'
 import { createMockPokemon } from '@/vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { pokemon, RandomUtils } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

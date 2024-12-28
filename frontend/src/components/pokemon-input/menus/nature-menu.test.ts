@@ -35,18 +35,14 @@ describe('NatureMenu', () => {
 
   it('sets positive modifier correctly when button is clicked', async () => {
     const wrapper = mount(NatureMenu)
-    const positiveButton = wrapper
-      .findAll('.bg-secondary')
-      .find((btn) => btn.text().includes('Speed of help'))
+    const positiveButton = wrapper.findAll('.bg-secondary').find((btn) => btn.text().includes('Speed of help'))
     await positiveButton!.trigger('click')
     expect(wrapper.vm.positiveModifier).toBe('speed')
   })
 
   it('sets negative modifier correctly when button is clicked', async () => {
     const wrapper = mount(NatureMenu)
-    const negativeButton = wrapper
-      .findAll('.bg-secondary')
-      .filter((btn) => btn.text().includes('Speed of help'))[1]
+    const negativeButton = wrapper.findAll('.bg-secondary').filter((btn) => btn.text().includes('Speed of help'))[1]
 
     await negativeButton.trigger('click')
     expect(wrapper.vm.negativeModifier).toBe('speed')
@@ -68,9 +64,7 @@ describe('NatureMenu', () => {
 
   it('toggles chip selection correctly', async () => {
     const wrapper = mount(NatureMenu)
-    const natureChip = wrapper
-      .findAllComponents({ name: 'v-chip' })
-      .find((chip) => chip.text().includes('Adamant'))
+    const natureChip = wrapper.findAllComponents({ name: 'v-chip' }).find((chip) => chip.text().includes('Adamant'))
     await natureChip!.trigger('click')
     expect(wrapper.vm.selectedNature).toBeDefined()
     expect(wrapper.vm.positiveModifier).toBe(wrapper.vm.selectedNature?.positiveModifier)

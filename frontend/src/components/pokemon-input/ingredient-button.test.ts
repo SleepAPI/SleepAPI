@@ -1,12 +1,8 @@
 import IngredientButton from '@/components/pokemon-input/ingredient-button.vue'
-import { VueWrapper, mount } from '@vue/test-utils'
-import {
-  ingredient,
-  pokemon,
-  type IngredientInstanceExt,
-  type IngredientSet,
-  type PokemonInstanceExt
-} from 'sleepapi-common'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import type { ingredient } from 'sleepapi-common'
+import { pokemon, type IngredientInstanceExt, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
@@ -78,9 +74,7 @@ describe('IngredientButton', () => {
     await wrapper.setData({ fab: true })
 
     expect(wrapper.vm.otherIngredientOptions).toHaveLength(2)
-    const speedDialBtns = wrapper
-      .findAllComponents({ name: 'v-btn' })
-      .filter((btn) => btn.vm.$props.icon)
+    const speedDialBtns = wrapper.findAllComponents({ name: 'v-btn' }).filter((btn) => btn.vm.$props.icon)
     expect(speedDialBtns.length).toBe(3) // including the activator button
 
     const ingredientBtns = speedDialBtns.slice(1)

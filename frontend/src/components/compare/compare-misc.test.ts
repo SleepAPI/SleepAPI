@@ -2,7 +2,8 @@ import CompareMisc from '@/components/compare/compare-misc.vue'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { createMockMemberProduction, createMockPokemon } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { MathUtils, ingredient, type MemberProduction } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -79,15 +80,11 @@ describe('CompareMisc', () => {
     const sneakySnack = firstRowCells[5].text()
     expect(sneakySnack).toContain('5')
 
-    expect(firstRowCells[6].text()).toContain(
-      mockMemberProduction.advanced.totalRecovery.toString()
-    )
+    expect(firstRowCells[6].text()).toContain(mockMemberProduction.advanced.totalRecovery.toString())
     expect(firstRowCells[7].text()).toContain(mockMemberProduction.advanced.totalHelps.toString())
     expect(firstRowCells[8].text()).toContain(mockMemberProduction.advanced.dayHelps.toString())
     expect(firstRowCells[9].text()).toContain(mockMemberProduction.advanced.nightHelps.toString())
-    expect(firstRowCells[10].text()).toContain(
-      mockMemberProduction.advanced.nightHelpsAfterSS.toString()
-    )
+    expect(firstRowCells[10].text()).toContain(mockMemberProduction.advanced.nightHelpsAfterSS.toString())
   })
 
   it('displays spilled ingredient images correctly', async () => {

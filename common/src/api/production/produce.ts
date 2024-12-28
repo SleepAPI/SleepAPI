@@ -1,6 +1,6 @@
-import { SkillActivation } from '../../api/production/skill-activation';
-import { BerrySet } from '../../domain/types/berry-set';
-import { IngredientSet } from '../../domain/types/ingredient-set';
+import type { SkillActivation } from '../../api/production/skill-activation';
+import type { BerrySet } from '../../domain/types/berry-set';
+import type { IngredientSet } from '../../domain/types/ingredient-set';
 
 export interface Produce {
   berries: BerrySet[];

@@ -1,11 +1,11 @@
-import { berry, island, mainskill, pokemon } from 'sleepapi-common'
+import type { berry, pokemon } from 'sleepapi-common'
+import { island, mainskill } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: pokemon.Pokemon) {
   if (pokemon.skill.isSameOrModifiedVersionOf(mainskill.HELPER_BOOST)) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
-    const maybeModifier =
-      pokemon.skill.modifier.type === 'Base' ? '' : `${pokemon.skill.modifier.type.toLowerCase()}_`
+    const maybeModifier = pokemon.skill.modifier.type === 'Base' ? '' : `${pokemon.skill.modifier.type.toLowerCase()}_`
     return `/images/mainskill/${maybeModifier}${pokemon.skill.unit}.png`
   }
 }

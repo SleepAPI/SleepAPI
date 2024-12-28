@@ -1,4 +1,5 @@
-import { NATURES, Nature } from '../../domain/nature';
+import type { Nature } from '../../domain/nature';
+import { NATURES } from '../../domain/nature';
 
 export function getNature(name: string) {
   const nat: Nature | undefined = NATURES.find((nature) => nature.name.toUpperCase() === name.toUpperCase());

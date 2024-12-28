@@ -6,6 +6,7 @@ interface ProfilingData {
 
 const profilingResults: Record<string, ProfilingData> = {};
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Profile(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
 
@@ -13,6 +14,7 @@ export function Profile(target: any, propertyKey: string, descriptor: PropertyDe
 
   const profilingKey = `${className}.${propertyKey}`;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   descriptor.value = function (...args: any[]) {
     const start = performance.now();
 
@@ -41,14 +43,14 @@ export function Profile(target: any, propertyKey: string, descriptor: PropertyDe
 }
 
 export function printProfilingResults() {
-  console.log('Profiling Results:');
+  logger.log('Profiling Results:');
   for (const key in profilingResults) {
     const { callCount, totalTime, avgTime } = profilingResults[key];
-    console.log(`Function: ${key}`);
-    console.log(`  Calls: ${callCount}`);
-    console.log(`  Total Time: ${totalTime.toFixed(6)}ms`);
-    console.log(`  Average Time per Call: ${avgTime.toFixed(6)}ms`);
-    console.log('');
+    logger.log(`Function: ${key}`);
+    logger.log(`  Calls: ${callCount}`);
+    logger.log(`  Total Time: ${totalTime.toFixed(6)}ms`);
+    logger.log(`  Average Time per Call: ${avgTime.toFixed(6)}ms`);
+    logger.log('');
   }
 
   Object.keys(profilingResults).forEach((key) => delete profilingResults[key]);

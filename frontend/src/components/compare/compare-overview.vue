@@ -3,13 +3,7 @@
   <v-row dense>
     <v-col cols="12">
       <v-card class="d-flex flex-column rounded-t-0 frosted-glass">
-        <v-data-table
-          key="key"
-          :items="members"
-          :headers="headers"
-          hide-default-footer
-          class="bg-transparent"
-        >
+        <v-data-table key="key" :items="members" :headers="headers" hide-default-footer class="bg-transparent">
           <template #item.member="{ item }">
             <div class="flex-center">
               <div style="overflow: hidden; width: 100px; height: 60px">
@@ -33,11 +27,7 @@
 
           <template #item.berries="{ item }">
             <div class="flex-center" style="padding-right: 11px">
-              <v-img
-                :src="`/images/berries/${item.berryName?.toLowerCase()}.png`"
-                height="24"
-                width="24"
-              ></v-img>
+              <v-img :src="`/images/berries/${item.berryName?.toLowerCase()}.png`" height="24" width="24"></v-img>
             </div>
             <div class="text-center" style="padding-right: 11px">
               {{ item.berries }}
@@ -46,12 +36,7 @@
 
           <template #item.ingredients="{ item }">
             <v-row dense style="flex-wrap: nowrap; overflow-x: auto">
-              <v-col
-                v-for="(ingredient, index) in item.ingredientList"
-                :key="index"
-                class="flex-start"
-                cols="4"
-              >
+              <v-col v-for="(ingredient, index) in item.ingredientList" :key="index" class="flex-start" cols="4">
                 <div class="flex-center flex-column">
                   <v-img :src="ingredientImage(ingredient.name)" height="24" width="24"></v-img>
                   <div class="text-center">
@@ -125,20 +110,16 @@ export default defineComponent({
           pokemonName: memberPokemon.name,
           shiny: member.shiny,
           berries: MathUtils.round(
-            (memberBerry?.amount ?? 0) *
-              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
+            (memberBerry?.amount ?? 0) * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
           berryName: memberBerry?.berry.name ?? member.pokemon.berry.name,
           ingredients:
             memberProduction.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0) *
             StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
-          ingredientList: this.splitIngredientMagnetIngredients(
-            memberProduction.produceTotal.ingredients
-          ),
+          ingredientList: this.splitIngredientMagnetIngredients(memberProduction.produceTotal.ingredients),
           skillProcs: MathUtils.round(
-            memberProduction.skillProcs *
-              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
+            memberProduction.skillProcs * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
           skillUnit: memberPokemon.skill.unit
@@ -160,26 +141,20 @@ export default defineComponent({
 
         return nonIngMagnetIngs.map(({ amount, ingredient }) => ({
           amount: MathUtils.round(
-            (amount - ingMagnetAmount) *
-              StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
+            (amount - ingMagnetAmount) * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
             1
           ),
           name: ingredient.name.toLowerCase()
         }))
       } else {
         return ingredients.map(({ amount, ingredient }) => ({
-          amount: MathUtils.round(
-            amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow),
-            1
-          ),
+          amount: MathUtils.round(amount * StrengthService.timeWindowFactor(this.comparisonStore.timeWindow), 1),
           name: ingredient.name.toLowerCase()
         }))
       }
     },
     ingredientImage(name: string) {
-      return name === 'magnet'
-        ? '/images/ingredient/ingredients.png'
-        : `/images/ingredient/${name}.png`
+      return name === 'magnet' ? '/images/ingredient/ingredients.png' : `/images/ingredient/${name}.png`
     }
   }
 })

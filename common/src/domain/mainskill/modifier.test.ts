@@ -9,13 +9,13 @@ const baseSkill: Mainskill = new Mainskill({
   maxLevel: 6,
   description: 'Restores ? Energy to the user.',
   RP: [400, 569, 785, 1083, 1496, 2066],
-  modifier: { type: 'Base', critChance: 0 },
+  modifier: { type: 'Base', critChance: 0 }
 });
 
 describe('Create modifier', () => {
   it('should create a modifier with createModifier', () => {
     const modifiedSkill = createModifier({ type: 'Stockpile', critChance: 0 }, baseSkill, {
-      description: 'Modified description',
+      description: 'Modified description'
     });
 
     expect(modifiedSkill.name).toBe('Stockpile (Charge Energy S)');
@@ -86,7 +86,7 @@ describe('Create modifier', () => {
     const overrides = {
       amount: [15, 20, 25],
       maxLevel: 3,
-      description: 'Overridden description',
+      description: 'Overridden description'
     };
     const modifiedSkill = createModifier({ type: 'Moonlight', critChance: 0 }, baseSkill, overrides);
 

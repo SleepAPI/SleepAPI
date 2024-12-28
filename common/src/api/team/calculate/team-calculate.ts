@@ -1,8 +1,8 @@
-import { Recipe } from '../../../domain/recipe/recipe';
-import { BerrySet } from '../../../domain/types/berry-set';
-import { IngredientSet } from '../../../domain/types/ingredient-set';
-import { PokemonInstance } from '../../pokemon/pokemon-instance';
-import { Produce } from '../../production';
+import type { Recipe } from '../../../domain/recipe/recipe';
+import type { BerrySet } from '../../../domain/types/berry-set';
+import type { IngredientSet } from '../../../domain/types/ingredient-set';
+import type { PokemonInstance } from '../../pokemon/pokemon-instance';
+import type { Produce } from '../../production';
 
 export interface TeamSettings {
   camp: boolean;

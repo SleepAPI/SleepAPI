@@ -1,5 +1,6 @@
 import PokemonSearch from '@/components/pokemon-input/pokemon-search.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { pokemon } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

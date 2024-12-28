@@ -258,6 +258,7 @@ describe('Team Store', () => {
         wakeup: '06:00',
         recipeType: 'curry',
         favoredBerries: [],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         members: [undefined, member, null as any, member, '' as any],
         version: 1,
         memberIvs: {},
@@ -423,12 +424,12 @@ describe('duplicateMember', () => {
       }
     ]
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const loggerErrorSpy = vi.spyOn(logger, 'error').mockImplementation(() => {})
 
     await teamStore.duplicateMember(1)
 
-    expect(consoleSpy).toHaveBeenCalledWith("No open slot or member can't be found")
-    consoleSpy.mockRestore()
+    expect(loggerErrorSpy).toHaveBeenCalledWith("No open slot or member can't be found")
+    loggerErrorSpy.mockRestore()
   })
 
   it('should not duplicate if member does not exist', async () => {
@@ -450,12 +451,12 @@ describe('duplicateMember', () => {
       }
     ]
 
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const loggerSpy = vi.spyOn(logger, 'error').mockImplementation(() => {})
 
     await teamStore.duplicateMember(1)
 
-    expect(consoleSpy).toHaveBeenCalledWith("No open slot or member can't be found")
-    consoleSpy.mockRestore()
+    expect(loggerSpy).toHaveBeenCalledWith("No open slot or member can't be found")
+    loggerSpy.mockRestore()
   })
 })
 
@@ -493,13 +494,7 @@ describe('removeMember', () => {
 
     await teamStore.removeMember(1)
 
-    expect(teamStore.teams[0].members).toEqual([
-      undefined,
-      undefined,
-      undefined,
-      member4,
-      undefined
-    ])
+    expect(teamStore.teams[0].members).toEqual([undefined, undefined, undefined, member4, undefined])
     expect(TeamService.removeMember).toHaveBeenCalledWith({
       teamIndex: 0,
       memberIndex: 1
@@ -592,6 +587,7 @@ describe('migrate', () => {
   it('shall migrate old teams to new state', () => {
     const teamStore = useTeamStore()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const team1: any = {
       index: 0,
       name: 'Team 1',
@@ -604,6 +600,7 @@ describe('migrate', () => {
       version: 1,
       production: undefined
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const team2: any = {
       ...team1,
       name: 'Team 2',
@@ -611,7 +608,9 @@ describe('migrate', () => {
       members: [undefined, 'member3', undefined, 'member4', undefined]
     }
     teamStore.teams = [team1, team2]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     teamStore.timeWindow = undefined as any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     teamStore.tab = null as any
 
     teamStore.migrate()
@@ -771,7 +770,9 @@ describe('migrate', () => {
     const teamStore = useTeamStore()
 
     teamStore.teams = createMockTeams(2, { memberIndex: undefined })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     teamStore.timeWindow = undefined as any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     teamStore.tab = null as any
 
     teamStore.migrate()

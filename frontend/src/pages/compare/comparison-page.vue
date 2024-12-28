@@ -18,16 +18,10 @@
       </v-col>
 
       <!-- Click to add new pokemon -->
-      <v-col
-        class="compare-slot flex-grow-1"
-        style="min-width: 20%; max-width: 20%"
-        :hidden="comparisonStore.fullTeam"
-      >
+      <v-col class="compare-slot flex-grow-1" style="min-width: 20%; max-width: 20%" :hidden="comparisonStore.fullTeam">
         <div class="d-flex w-100 fill-height transparent">
           <v-card class="d-flex w-100 fill-height frosted-glass" @click="openDialog">
-            <v-icon size="48" color="secondary" class="fill-height w-100 frosted-text"
-              >mdi-plus</v-icon
-            >
+            <v-icon size="48" color="secondary" class="fill-height w-100 frosted-text">mdi-plus</v-icon>
           </v-card>
         </div>
       </v-col>
@@ -181,9 +175,7 @@ export default defineComponent({
       }
 
       const result = await TeamService.calculateProduction({ members, settings })
-      const production = result?.members.find(
-        (member) => member.externalId === pokemonInstance.externalId
-      )
+      const production = result?.members.find((member) => member.externalId === pokemonInstance.externalId)
       if (!production) {
         throw new UnexpectedError(
           `Team sim did not return expected compare member with id: ${pokemonInstance.externalId}`

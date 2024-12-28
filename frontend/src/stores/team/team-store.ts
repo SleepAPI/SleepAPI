@@ -96,17 +96,14 @@ export const useTeamStore = defineStore('team', {
       const result: (MemberProductionExt | undefined)[] = []
       for (const memberId of currentTeam.members) {
         const memberInstance = memberId && pokemonStore.getPokemon(memberId)
-        const production = currentTeam.production?.members.find(
-          (member) => member.externalId === memberId
-        )
+        const production = currentTeam.production?.members.find((member) => member.externalId === memberId)
 
         if (!memberId || !memberInstance || !production) {
           result.push(undefined)
           continue
         }
 
-        const iv: PerformanceDetails | undefined =
-          state.teams[state.currentIndex].memberIvs[memberId]
+        const iv: PerformanceDetails | undefined = state.teams[state.currentIndex].memberIvs[memberId]
 
         result.push({
           member: memberInstance,
@@ -162,9 +159,7 @@ export const useTeamStore = defineStore('team', {
         // grab previous teams so we may compare it to updated teams from server
         const previousTeams = this.teams.map((team) => ({
           ...team,
-          members: team.members.map((member) =>
-            member ? pokemonStore.getPokemon(member) : undefined
-          )
+          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined))
         }))
 
         // get updated teams from server
@@ -185,9 +180,7 @@ export const useTeamStore = defineStore('team', {
             let memberUpdated = false
             for (let i = 0; i < serverTeam.members.length; i++) {
               const updatedMember = serverTeam.members[i]
-              const populatedUpdateMember = updatedMember
-                ? pokemonStore.getPokemon(updatedMember)
-                : undefined
+              const populatedUpdateMember = updatedMember ? pokemonStore.getPokemon(updatedMember) : undefined
 
               const previousMember = previousTeam.members.find(
                 (member, previousIndex) =>
@@ -220,14 +213,7 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          const {
-            favoredBerries: teamBerries,
-            name,
-            camp,
-            bedtime,
-            wakeup,
-            recipeType
-          } = this.getCurrentTeam
+          const { favoredBerries: teamBerries, name, camp, bedtime, wakeup, recipeType } = this.getCurrentTeam
 
           const anyFavoredBerries = teamBerries?.length > 0
           const favoredBerries = anyFavoredBerries
@@ -247,16 +233,14 @@ export const useTeamStore = defineStore('team', {
 
           this.getCurrentTeam.version = version
         } catch {
-          console.error('Error updating teams')
+          logger.error('Error updating teams')
         }
       }
     },
     async deleteTeam() {
       const userStore = useUserStore()
 
-      const newName = userStore.loggedIn
-        ? `Helper team ${this.currentIndex + 1}`
-        : 'Log in to save your teams'
+      const newName = userStore.loggedIn ? `Helper team ${this.currentIndex + 1}` : 'Log in to save your teams'
 
       this.teams[this.currentIndex] = {
         index: this.currentIndex,
@@ -277,7 +261,7 @@ export const useTeamStore = defineStore('team', {
         try {
           await TeamService.deleteTeam(this.currentIndex)
         } catch {
-          console.error('Error updating teams')
+          logger.error('Error updating teams')
         }
       }
     },
@@ -296,8 +280,8 @@ export const useTeamStore = defineStore('team', {
             memberIndex,
             member: updatedMember
           })
-        } catch (error) {
-          console.error('Error updating teams')
+        } catch {
+          logger.error('Error updating teams')
         }
       }
 
@@ -346,7 +330,7 @@ export const useTeamStore = defineStore('team', {
 
       const openSlotIndex = currentTeam.members.findIndex((member) => member == null) // checks for both null and undefined
       if (openSlotIndex === -1 || existingMember == null) {
-        console.error("No open slot or member can't be found")
+        logger.error("No open slot or member can't be found")
         return
       }
       this.loadingMembers[openSlotIndex] = true
@@ -376,8 +360,8 @@ export const useTeamStore = defineStore('team', {
             teamIndex: this.currentIndex,
             memberIndex
           })
-        } catch (error) {
-          console.error('Error updating teams')
+        } catch {
+          logger.error('Error updating teams')
         }
       }
 
