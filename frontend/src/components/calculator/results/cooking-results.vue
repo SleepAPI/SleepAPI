@@ -18,12 +18,7 @@
               <span class="text-body-1">Mon&ndash;Sat</span>
               <span
                 id="weekdayStrength"
-                :class="[
-                  'text-body-1',
-                  'ml-2',
-                  `text-${teamStore.getCurrentTeam.recipeType}`,
-                  'font-weight-medium'
-                ]"
+                :class="['text-body-1', 'ml-2', `text-${teamStore.getCurrentTeam.recipeType}`, 'font-weight-medium']"
               >
                 {{ weekdayStrength }}</span
               >
@@ -59,12 +54,7 @@
           </v-row>
 
           <v-row class="flex-center" dense>
-            <v-col
-              v-for="(ingredient, i) in teamIngredients"
-              :key="i"
-              class="flex-column flex-center"
-              cols="2"
-            >
+            <v-col v-for="(ingredient, i) in teamIngredients" :key="i" class="flex-column flex-center" cols="2">
               <v-img :src="`${ingredient.image}`" width="30" height="30" contain />
               {{ ingredient.amount }}
             </v-col>
@@ -151,13 +141,7 @@
                   <span> Better recipe was cooked: </span>
                   <span class="text-success text-h6">
                     {{ totalCooks - (cookedRecipe.count + cookedRecipe.totalSkipped) }}
-                    ({{
-                      round(
-                        ((totalCooks - (cookedRecipe.count + cookedRecipe.totalSkipped)) /
-                          totalCooks) *
-                          100
-                      )
-                    }}%)
+                    ({{ round(((totalCooks - (cookedRecipe.count + cookedRecipe.totalSkipped)) / totalCooks) * 100) }}%)
                   </span>
                 </v-col>
               </template>
@@ -170,9 +154,7 @@
                 <span class="text-h6">
                   Attempts:
                   {{ cookedRecipe.count + cookedRecipe.totalSkipped }}
-                  ({{
-                    round(((cookedRecipe.count + cookedRecipe.totalSkipped) / totalCooks) * 100)
-                  }}%)
+                  ({{ round(((cookedRecipe.count + cookedRecipe.totalSkipped) / totalCooks) * 100) }}%)
                 </span>
                 <span>
                   Succeeded:
@@ -198,25 +180,17 @@
                 </v-col>
 
                 <v-row class="flex-center pb-4 px-2">
-                  <v-col
-                    v-if="cookedRecipe.potLimited.count > 0"
-                    cols="auto"
-                    class="flex-center flex-column"
-                  >
+                  <v-col v-if="cookedRecipe.potLimited.count > 0" cols="auto" class="flex-center flex-column">
                     <v-img :src="`/images/misc/pot.png`" contain width="24" height="24" />
                     <span>
                       Times:
                       {{ cookedRecipe.potLimited.count }}
-                      ({{
-                        round((cookedRecipe.potLimited.count / cookedRecipe.totalSkipped) * 100)
-                      }})%
+                      ({{ round((cookedRecipe.potLimited.count / cookedRecipe.totalSkipped) * 100) }})%
                     </span>
                     <span>Amount: {{ round(cookedRecipe.potLimited.averageMissing) }}</span>
                   </v-col>
                   <v-col
-                    v-for="(ingredientSet, innerIndex) in cookedRecipe.ingredientLimited.filter(
-                      (ing) => ing.count > 0
-                    )"
+                    v-for="(ingredientSet, innerIndex) in cookedRecipe.ingredientLimited.filter((ing) => ing.count > 0)"
                     :key="innerIndex"
                     class="flex-column flex-center"
                     cols="auto"
@@ -286,18 +260,14 @@ export default defineComponent({
       }
     },
     cookingStrength() {
-      const strength = Math.floor(
-        (this.currentRecipeTypeResult?.weeklyStrength ?? 0) * this.userStore.islandBonus
-      )
+      const strength = Math.floor((this.currentRecipeTypeResult?.weeklyStrength ?? 0) * this.userStore.islandBonus)
       const userLocale = navigator.language || 'en-US'
       return new Intl.NumberFormat(userLocale, {
         maximumFractionDigits: 0
       }).format(strength)
     },
     sundayStrength() {
-      const strength = Math.floor(
-        (this.currentRecipeTypeResult?.sundayStrength ?? 0) * this.userStore.islandBonus
-      )
+      const strength = Math.floor((this.currentRecipeTypeResult?.sundayStrength ?? 0) * this.userStore.islandBonus)
       const userLocale = navigator.language || 'en-US'
       return new Intl.NumberFormat(userLocale, {
         maximumFractionDigits: 0
@@ -324,10 +294,7 @@ export default defineComponent({
       return recipes
         .sort((a, b) => b.count - a.count)
         .map((cookedRecipe, index) => {
-          const weekdayPercentage = MathUtils.round(
-            ((cookedRecipe.count - cookedRecipe.sunday) / total) * 100,
-            2
-          )
+          const weekdayPercentage = MathUtils.round(((cookedRecipe.count - cookedRecipe.sunday) / total) * 100, 2)
           const fullWeekPercentage = MathUtils.round((cookedRecipe.count / total) * 100, 2)
 
           if (this.showDetailsState[index] === undefined) {

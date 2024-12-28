@@ -5,18 +5,11 @@
         <v-row no-gutters>
           <v-col cols="3">
             <v-card class="flex-center rounded-te-0 rounded-be-0 fill-height" color="secondary">
-              <v-img
-                class="ma-2"
-                :src="mainskillImage(pokemonInstance.pokemon)"
-                max-height="50px"
-              ></v-img>
+              <v-img class="ma-2" :src="mainskillImage(pokemonInstance.pokemon)" max-height="50px"></v-img>
             </v-card>
           </v-col>
           <v-col cols="9">
-            <v-card
-              class="fill-height rounded-ts-0 rounded-bs-0 flex-column px-2"
-              style="align-content: center"
-            >
+            <v-card class="fill-height rounded-ts-0 rounded-bs-0 flex-column px-2" style="align-content: center">
               <div class="nowrap responsive-text">
                 <span class="my-1">{{ skillName }}</span>
                 <v-spacer></v-spacer>
@@ -96,10 +89,7 @@ export default {
         }
         this.$emit('update-skill-level', this.mainskillLevel)
 
-        this.defaultValues = Array.from(
-          { length: newPokemon.skill.maxLevel },
-          (_, i) => i + 1
-        ).reduce(
+        this.defaultValues = Array.from({ length: newPokemon.skill.maxLevel }, (_, i) => i + 1).reduce(
           (acc, val) => {
             acc[val] = val.toString()
             return acc

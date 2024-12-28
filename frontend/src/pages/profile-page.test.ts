@@ -1,6 +1,7 @@
 import ProfilePage from '@/pages/profile-page.vue'
 import { useUserStore } from '@/stores/user-store'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
@@ -38,9 +39,7 @@ describe('ProfilePage', () => {
   })
 
   it('displays user externalId correctly', () => {
-    const externalId = wrapper
-      .findAll('.text-center')
-      .find((el) => el.text() === mockUserStoreData.externalId)
+    const externalId = wrapper.findAll('.text-center').find((el) => el.text() === mockUserStoreData.externalId)
     expect(externalId).toBeDefined()
   })
 

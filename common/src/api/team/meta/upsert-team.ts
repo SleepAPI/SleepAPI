@@ -1,4 +1,4 @@
-import { RecipeType } from '../../../domain/recipe/recipe';
+import type { RecipeType } from '../../../domain/recipe/recipe';
 
 export interface UpsertTeamMetaRequest {
   name: string;

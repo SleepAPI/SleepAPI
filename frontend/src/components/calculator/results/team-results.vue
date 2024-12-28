@@ -43,16 +43,8 @@
             </v-col>
 
             <v-col cols="auto" class="flex-center">
-              <v-img
-                :color="teamStore.getCurrentTeam.recipeType"
-                style="border-radius: 45px"
-                width="24"
-                height="24"
-              >
-                <img
-                  :src="recipeTypeImage"
-                  style="width: 100%; height: 100%; transform: scale(1.2)"
-                />
+              <v-img :color="teamStore.getCurrentTeam.recipeType" style="border-radius: 45px" width="24" height="24">
+                <img :src="recipeTypeImage" style="width: 100%; height: 100%; transform: scale(1.2)" />
               </v-img>
 
               <span

@@ -1,4 +1,5 @@
-import { Chart, RadialLinearScale, type ChartData, type Plugin } from 'chart.js'
+import type { Chart, RadialLinearScale } from 'chart.js'
+import { type ChartData, type Plugin } from 'chart.js'
 import type { Ref } from 'vue'
 import { onMounted, ref } from 'vue'
 
@@ -35,23 +36,17 @@ export const ivTextPlugin: Plugin<'radar'> = {
 
       ctx.font = 'bold 18px Chakra Petch'
       if (index === 0) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-skill'
-        )
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-skill')
         ctx.fillText(value, position.x, position.y + 33)
         ctx.font = '10px Chakra Petch'
         ctx.fillText(label.toLowerCase(), position.x, position.y + 40)
       } else if (index === 1) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-ingredient'
-        )
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-ingredient')
         ctx.fillText(value, position.x - 35, position.y - 7)
         ctx.font = '10px Chakra Petch'
         ctx.fillText(label.toLowerCase(), position.x - 35, position.y)
       } else if (index === 2) {
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(
-          '--v-theme-berry'
-        )
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-berry')
         ctx.fillText(value, position.x + 30, position.y - 7)
         ctx.font = '10px Chakra Petch'
         ctx.fillText(label.toLowerCase(), position.x + 30, position.y)
@@ -117,15 +112,9 @@ export const ivOptions = {
 export default {
   setup() {
     onMounted(() => {
-      const skillColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--v-theme-skill'
-      )
-      const ingredientColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--v-theme-ingredient'
-      )
-      const berryColor = getComputedStyle(document.documentElement).getPropertyValue(
-        '--v-theme-berry'
-      )
+      const skillColor = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-skill')
+      const ingredientColor = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-ingredient')
+      const berryColor = getComputedStyle(document.documentElement).getPropertyValue('--v-theme-berry')
 
       ivData.value.datasets[0].pointBorderColor = [skillColor, ingredientColor, berryColor]
       ivData.value.datasets[0].pointBackgroundColor = [skillColor, ingredientColor, berryColor]

@@ -29,14 +29,7 @@
     </v-list>
     <v-row>
       <v-col cols="12">
-        <v-btn
-          class="w-100 responsive-text"
-          size="large"
-          rounded="lg"
-          color="secondary"
-          @click="cancel"
-          >Cancel</v-btn
-        >
+        <v-btn class="w-100 responsive-text" size="large" rounded="lg" color="secondary" @click="cancel">Cancel</v-btn>
       </v-col>
     </v-row>
   </v-container>

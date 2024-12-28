@@ -81,11 +81,11 @@ describe('Logger in Node.js mode', () => {
 
 describe('Logger in browser mode', () => {
   beforeAll(() => {
-    global.window = { document: {} } as unknown as Window & typeof globalThis;
+    globalThis.window = { document: {} } as unknown as Window & typeof globalThis;
   });
 
   afterAll(() => {
-    delete global.window;
+    delete globalThis.window;
   });
 
   it('applies browser-specific styles for log messages', () => {
@@ -93,7 +93,7 @@ describe('Logger in browser mode', () => {
     logger.log('Hello from the browser!');
     expect(consoleLogMock).toHaveBeenCalledWith(
       expect.stringMatching(/\[LOG\] \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z: Hello from the browser!/),
-      'color: gray;',
+      'color: gray;'
     );
   });
 
@@ -103,7 +103,7 @@ describe('Logger in browser mode', () => {
     logger.info(obj);
     expect(consoleInfoMock).toHaveBeenCalledWith(
       expect.stringMatching(/\[INFO\] \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z: /),
-      'color: blue;',
+      'color: blue;'
     );
     expect(consoleInfoMock).toHaveBeenCalledWith(expect.stringMatching(/"user": "Ash"/), 'color: blue;');
   });
@@ -113,7 +113,7 @@ describe('Logger in browser mode', () => {
     logger.log(['Bulbasaur', 'Charmander', 'Squirtle']);
     expect(consoleLogMock).toHaveBeenCalledWith(
       expect.stringMatching(/\[LOG\] \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z: /),
-      'color: gray;',
+      'color: gray;'
     );
   });
 
@@ -122,7 +122,7 @@ describe('Logger in browser mode', () => {
     logger.log(42);
     expect(consoleLogMock).toHaveBeenCalledWith(
       expect.stringMatching(/\[LOG\] \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z: /),
-      'color: gray;',
+      'color: gray;'
     );
   });
 });

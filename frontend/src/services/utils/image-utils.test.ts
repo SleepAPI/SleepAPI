@@ -1,10 +1,4 @@
-import {
-  avatarImage,
-  berryImage,
-  islandImage,
-  mainskillImage,
-  pokemonImage
-} from '@/services/utils/image-utils'
+import { avatarImage, berryImage, islandImage, mainskillImage, pokemonImage } from '@/services/utils/image-utils'
 import { berry, island, mainskill, pokemon } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
@@ -43,15 +37,11 @@ describe('mainskillImage', () => {
 
 describe('pokemonImage', () => {
   it('shall return correct pokemon image', () => {
-    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: false })).toEqual(
-      '/images/pokemon/some-pokemon.png'
-    )
+    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: false })).toEqual('/images/pokemon/some-pokemon.png')
   })
 
   it('shall return correct shiny pokemon image', () => {
-    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: true })).toEqual(
-      '/images/pokemon/some-pokemon_shiny.png'
-    )
+    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: true })).toEqual('/images/pokemon/some-pokemon_shiny.png')
   })
 })
 

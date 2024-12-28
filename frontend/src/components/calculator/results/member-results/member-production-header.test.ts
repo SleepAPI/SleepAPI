@@ -3,7 +3,8 @@ import MemberProductionHeader from '@/components/calculator/results/member-resul
 import MemberProductionIngredient from '@/components/calculator/results/member-results/member-production-ingredient.vue'
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-skill.vue'
 import { createMockMemberProductionExt } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 

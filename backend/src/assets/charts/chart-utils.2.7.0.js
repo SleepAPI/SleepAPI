@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-undef */
 
 function prettifyTime(time) {
   const hourString = String(time.hour).padStart(2, '0');

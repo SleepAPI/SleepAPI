@@ -16,14 +16,14 @@ import {
   RAICHU,
   RAIKOU,
   SYLVEON,
-  TOGEKISS,
+  TOGEKISS
 } from '../../domain/pokemon';
 import {
   BERRY_FINDING_S,
   INGREDIENT_FINDER_M,
   INGREDIENT_FINDER_S,
   SKILL_TRIGGER_M,
-  SKILL_TRIGGER_S,
+  SKILL_TRIGGER_S
 } from '../../domain/subskill';
 import {
   calculateIngredientPercentage,
@@ -32,7 +32,7 @@ import {
   calculateSkillPercentage,
   calculateSkillPercentageWithPityProc,
   extractIngredientSubskills,
-  extractTriggerSubskills,
+  extractTriggerSubskills
 } from '../../utils/stat-utils/stat-utils';
 
 describe('calculateIngredientPercentage', () => {
@@ -40,7 +40,7 @@ describe('calculateIngredientPercentage', () => {
     const result = calculateIngredientPercentage({
       pokemon: { ...MOCK_POKEMON, ingredientPercentage: 20 },
       nature: MILD,
-      subskills: [INGREDIENT_FINDER_M, INGREDIENT_FINDER_S],
+      subskills: [INGREDIENT_FINDER_M, INGREDIENT_FINDER_S]
     });
 
     expect(result).toBe(0.3696);

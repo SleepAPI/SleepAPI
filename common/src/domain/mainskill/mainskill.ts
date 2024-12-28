@@ -1,6 +1,6 @@
-import { MainskillUnit } from './mainskill-unit';
+import type { MainskillUnit } from './mainskill-unit';
 
-import { Modifier, ModifierType } from './modifier';
+import type { Modifier, ModifierType } from './modifier';
 
 // TODO: maxLevel could be calced auto from amount.length
 export type MainskillAttributes = {
@@ -113,7 +113,7 @@ export class Mainskill {
 export const createBaseSkill = (baseSkill: Omit<MainskillAttributes, 'modifier'>): Mainskill => {
   return new Mainskill({
     ...baseSkill,
-    modifier: { type: 'Base', critChance: 0 },
+    modifier: { type: 'Base', critChance: 0 }
   });
 };
 

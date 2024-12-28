@@ -12,8 +12,8 @@
           <v-row>
             <v-col cols="12" class="flex-center">
               <span class="text-center"
-                >Sleep API does not store personal information. We only store an identifier
-                connected to your Google account so we may recognize you between sessions.</span
+                >Sleep API does not store personal information. We only store an identifier connected to your Google
+                account so we may recognize you between sessions.</span
               >
             </v-col>
           </v-row>
@@ -30,9 +30,7 @@
 
           <v-row dense>
             <v-col cols="12" class="flex-center flex-column">
-              <span class="text-center"
-                >E-mail: {{ userStore.email ?? 'missing, log out and back in' }}</span
-              >
+              <span class="text-center">E-mail: {{ userStore.email ?? 'missing, log out and back in' }}</span>
               <span class="text-center font-weight-thin font-italic text-body-2 text-grey"
                 >This is only stored on your device, we do not store personal information</span
               >
@@ -47,9 +45,7 @@
             </v-col>
 
             <v-col cols="5" class="flex-center" stacked>
-              <v-btn color="warning" class="w-100" @click="showDeleteConfirmationDialog"
-                >Delete account</v-btn
-              >
+              <v-btn color="warning" class="w-100" @click="showDeleteConfirmationDialog">Delete account</v-btn>
             </v-col>
 
             <v-spacer />
@@ -62,9 +58,7 @@
     <v-dialog v-model="deleteDialog" max-width="500">
       <v-card>
         <v-card-title class="headline">Confirm Account Deletion</v-card-title>
-        <v-card-text
-          >Are you sure you want to delete your account? This action cannot be undone.</v-card-text
-        >
+        <v-card-text>Are you sure you want to delete your account? This action cannot be undone.</v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn @click="closeDialog">Cancel</v-btn>

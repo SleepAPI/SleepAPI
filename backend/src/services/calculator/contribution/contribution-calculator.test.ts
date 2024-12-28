@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
 import type { Contribution } from '@src/domain/computed/contribution.js';
 import {

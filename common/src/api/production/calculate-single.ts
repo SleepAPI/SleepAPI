@@ -1,6 +1,6 @@
-import { DetailedProduce } from '../../api/production/produce';
-import { Summary } from '../../api/production/summary';
-import { PokemonIngredientSet } from '../../domain/types/pokemon-ingredient-set';
+import type { DetailedProduce } from '../../api/production/produce';
+import type { Summary } from '../../api/production/summary';
+import type { PokemonIngredientSet } from '../../domain/types/pokemon-ingredient-set';
 
 export interface SingleProductionRequest {
   level: number;

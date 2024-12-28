@@ -32,11 +32,7 @@
         @click="props.onClick"
       ></v-btn>
     </template>
-    <v-window-item
-      v-for="(memberWithProduction, index) in membersWithProduction"
-      :key="index"
-      style="height: 600px"
-    >
+    <v-window-item v-for="(memberWithProduction, index) in membersWithProduction" :key="index" style="height: 600px">
       <v-row
         no-gutters
         class="flex-nowrap bg-surface"
@@ -68,17 +64,9 @@
             position: 'relative'
           }"
         >
-          <RadarChart
-            v-if="memberWithProduction.iv"
-            :chart-data="ivData"
-            :chart-options="ivOptions"
-          />
+          <RadarChart v-if="memberWithProduction.iv" :chart-data="ivData" :chart-options="ivOptions" />
           <v-col v-else class="flex-center pa-0">
-            <v-skeleton-loader
-              height="130px"
-              width="130px"
-              class="triangle-skeleton"
-            ></v-skeleton-loader>
+            <v-skeleton-loader height="130px" width="130px" class="triangle-skeleton"></v-skeleton-loader>
           </v-col>
         </v-col>
 
@@ -87,14 +75,10 @@
             <template #header-text>
               <v-row no-gutters class="flex-start flex-nowrap">
                 <v-col cols="auto" class="mx-1">
-                  <span class="text-surface text-left"
-                    >Lv.{{ memberWithProduction.member.level }}</span
-                  >
+                  <span class="text-surface text-left">Lv.{{ memberWithProduction.member.level }}</span>
                 </v-col>
                 <v-col>
-                  <span class="text-primary text-left font-weight-medium">{{
-                    memberWithProduction.member.name
-                  }}</span>
+                  <span class="text-primary text-left font-weight-medium">{{ memberWithProduction.member.name }}</span>
                 </v-col>
               </v-row>
             </template>
@@ -110,12 +94,7 @@
 
         <v-col class="flex-left" style="max-height: 140px; display: inline-block">
           <v-img
-            :src="
-              getMemberImage(
-                memberWithProduction.member.pokemon.name,
-                memberWithProduction.member.shiny
-              )
-            "
+            :src="getMemberImage(memberWithProduction.member.pokemon.name, memberWithProduction.member.shiny)"
             height="140"
             width="140"
             style="
@@ -154,11 +133,7 @@
           </v-btn-toggle>
         </v-col>
         <v-col
-          :class="[
-            memberWithProduction.member.nature.positiveModifier === 'neutral'
-              ? 'flex-center'
-              : 'flex-right'
-          ]"
+          :class="[memberWithProduction.member.nature.positiveModifier === 'neutral' ? 'flex-center' : 'flex-right']"
         >
           <v-card
             class="w-100 text-center flex-center"
@@ -169,10 +144,7 @@
             >{{ memberWithProduction.member.nature.name }}</v-card
           >
         </v-col>
-        <v-col
-          v-if="!memberWithProduction.member.nature.prettyName.includes('neutral')"
-          class="flex-left"
-        >
+        <v-col v-if="!memberWithProduction.member.nature.prettyName.includes('neutral')" class="flex-left">
           <NatureModifiers :nature="memberWithProduction.member.nature" :short="true" />
         </v-col>
       </v-row>
@@ -184,15 +156,9 @@
           <v-col cols="12" class="flex-left pt-0">
             <v-divider />
           </v-col>
+          <span>Crit chance: {{ currentMemberWithProduction.member.pokemon.skill.critChance * 100 }}%</span>
           <span
-            >Crit chance:
-            {{ currentMemberWithProduction.member.pokemon.skill.critChance * 100 }}%</span
-          >
-          <span
-            >Crits per day:
-            {{
-              MathUtils.round(currentMemberWithProduction.production.advanced.skillCrits, 2)
-            }}</span
+            >Crits per day: {{ MathUtils.round(currentMemberWithProduction.production.advanced.skillCrits, 2) }}</span
           >
           <span
             >Crit {{ currentMemberWithProduction.member.pokemon.skill.unit }}:
@@ -200,9 +166,7 @@
           </span>
           <span v-if="currentMemberWithProduction.production.advanced.wastedEnergy > 0">
             Wasted energy:
-            {{
-              MathUtils.round(currentMemberWithProduction.production.advanced.wastedEnergy, 1)
-            }}</span
+            {{ MathUtils.round(currentMemberWithProduction.production.advanced.wastedEnergy, 1) }}</span
           >
         </v-col>
         <v-col cols="6" class="flex-center flex-column">
@@ -221,11 +185,7 @@
 </template>
 
 <script lang="ts">
-import {
-  ivData,
-  ivOptions,
-  ivTextPlugin
-} from '@/components/calculator/results/chart-data/iv-chart'
+import { ivData, ivOptions, ivTextPlugin } from '@/components/calculator/results/chart-data/iv-chart'
 import MemberProductionHeader from '@/components/calculator/results/member-results/member-production-header.vue'
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
 import NatureModifiers from '@/components/pokemon-input/nature-modifiers.vue'
@@ -242,15 +202,7 @@ import { UnexpectedError } from '@/types/errors/unexpected-error'
 import type { PerformanceDetails } from '@/types/member/instanced'
 import { Chart } from 'chart.js'
 import { MathUtils, type MemberProductionBase } from 'sleepapi-common'
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watchEffect
-} from 'vue'
+import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 
 Chart.register(ivTextPlugin)
 
@@ -269,9 +221,7 @@ export default defineComponent({
     const chartClipPath = ref('polygon(0% -10%, 50% -10%, 150% 100%, 0% 100%)')
     const { isMobile } = useViewport()
     const currentMember = computed(() => {
-      return (
-        teamStore.getCurrentTeam.production?.members[teamStore.getCurrentTeam.memberIndex] ?? null
-      )
+      return teamStore.getCurrentTeam.production?.members[teamStore.getCurrentTeam.memberIndex] ?? null
     })
 
     const { randomPhrase, getRandomPhrase } = useRandomPhrase()
@@ -375,10 +325,7 @@ export default defineComponent({
       immediate: true,
       async handler(newIv?: PerformanceDetails) {
         if (!newIv) {
-          if (
-            this.teamStore.getCurrentMember &&
-            !this.teamStore.getMemberIvLoading(this.currentExternalId)
-          ) {
+          if (this.teamStore.getCurrentMember && !this.teamStore.getMemberIvLoading(this.currentExternalId)) {
             await this.populateIv()
           }
         } else {
@@ -456,18 +403,9 @@ export default defineComponent({
         ingredientsOfTotal: current.produceTotal.ingredients.map(({ amount }) =>
           this.calculatePercentageOfOptimal({
             current: amount,
-            optimalBerry: optimalBerry.produceTotal.ingredients.reduce(
-              (sum, cur) => sum + cur.amount,
-              0
-            ),
-            optimalIng: optimalIngredient.produceTotal.ingredients.reduce(
-              (sum, cur) => sum + cur.amount,
-              0
-            ),
-            optimalSkill: optimalSkill.produceTotal.ingredients.reduce(
-              (sum, cur) => sum + cur.amount,
-              0
-            )
+            optimalBerry: optimalBerry.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalIng: optimalIngredient.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+            optimalSkill: optimalSkill.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0)
           })
         ),
         skill: this.calculatePercentageOfOptimal({

@@ -54,12 +54,9 @@ export default {
     pokemon: {
       handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
         // new mon is from search or new mon is actually new and not just mocked mon changing
-        const loadFromExisting =
-          this.pokemonInstance.carrySize > 0 && oldPokemon.name === pokemon.MOCK_POKEMON.name
+        const loadFromExisting = this.pokemonInstance.carrySize > 0 && oldPokemon.name === pokemon.MOCK_POKEMON.name
 
-        const newCarrySize = loadFromExisting
-          ? this.pokemonInstance.carrySize
-          : maxCarrySize(newPokemon)
+        const newCarrySize = loadFromExisting ? this.pokemonInstance.carrySize : maxCarrySize(newPokemon)
         this.$emit('update-carry', newCarrySize)
       }
     }

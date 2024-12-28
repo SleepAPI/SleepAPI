@@ -1,8 +1,8 @@
-import { PokemonGender } from '../../domain/gender/gender';
-import { Ingredient } from '../../domain/ingredient';
-import { Nature } from '../../domain/nature';
-import { Pokemon } from '../../domain/pokemon';
-import { SubSkill } from '../../domain/subskill';
+import type { PokemonGender } from '../../domain/gender/gender';
+import type { Ingredient } from '../../domain/ingredient';
+import type { Nature } from '../../domain/nature';
+import type { Pokemon } from '../../domain/pokemon';
+import type { SubSkill } from '../../domain/subskill';
 
 export interface IngredientInstanceExt {
   level: number;

@@ -1,4 +1,4 @@
-import { IngredientSet } from '../types';
+import type { IngredientSet } from '../types';
 
 export interface Recipe {
   name: string;

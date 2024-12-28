@@ -59,7 +59,7 @@ describe('natures', () => {
       { value: nat.ingredient, trait: 'ing' },
       { value: nat.skill, trait: 'skill' },
       { value: nat.energy, trait: 'energy' },
-      { value: nat.frequency, trait: 'speed' },
+      { value: nat.frequency, trait: 'speed' }
     ];
 
     const positiveModifiers = allModifiers

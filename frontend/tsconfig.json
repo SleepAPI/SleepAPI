@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "composite": true,
     "resolveJsonModule": true,
+    "noEmit": true,
 
     "baseUrl": ".",
     "paths": {

@@ -22,7 +22,7 @@ export const LONELY: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 0.88,
-  exp: 1,
+  exp: 1
 };
 
 export const ADAMANT: Nature = {
@@ -34,7 +34,7 @@ export const ADAMANT: Nature = {
   ingredient: 0.8,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 
 export const NAUGHTY: Nature = {
@@ -46,7 +46,7 @@ export const NAUGHTY: Nature = {
   ingredient: 1,
   skill: 0.8,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 
 export const BRAVE: Nature = {
@@ -58,7 +58,7 @@ export const BRAVE: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 0.82,
+  exp: 0.82
 };
 
 // --- ENERGY + --- //
@@ -71,7 +71,7 @@ export const BOLD: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1.2,
-  exp: 1,
+  exp: 1
 };
 
 export const IMPISH: Nature = {
@@ -83,7 +83,7 @@ export const IMPISH: Nature = {
   ingredient: 0.8,
   skill: 1,
   energy: 1.2,
-  exp: 1,
+  exp: 1
 };
 
 export const LAX: Nature = {
@@ -95,7 +95,7 @@ export const LAX: Nature = {
   ingredient: 1,
   skill: 0.8,
   energy: 1.2,
-  exp: 1,
+  exp: 1
 };
 
 export const RELAXED: Nature = {
@@ -107,7 +107,7 @@ export const RELAXED: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1.2,
-  exp: 0.82,
+  exp: 0.82
 };
 
 // --- ING + --- //
@@ -120,7 +120,7 @@ export const MODEST: Nature = {
   ingredient: 1.2,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const MILD: Nature = {
   name: 'Mild',
@@ -131,7 +131,7 @@ export const MILD: Nature = {
   ingredient: 1.2,
   skill: 1,
   energy: 0.88,
-  exp: 1,
+  exp: 1
 };
 
 export const RASH: Nature = {
@@ -143,7 +143,7 @@ export const RASH: Nature = {
   ingredient: 1.2,
   skill: 0.8,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const QUIET: Nature = {
   name: 'Quiet',
@@ -154,7 +154,7 @@ export const QUIET: Nature = {
   ingredient: 1.2,
   skill: 1,
   energy: 1,
-  exp: 0.82,
+  exp: 0.82
 };
 
 // --- SKILL + --- //
@@ -167,7 +167,7 @@ export const CALM: Nature = {
   ingredient: 1,
   skill: 1.2,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 
 export const GENTLE: Nature = {
@@ -179,7 +179,7 @@ export const GENTLE: Nature = {
   ingredient: 1,
   skill: 1.2,
   energy: 0.88,
-  exp: 1,
+  exp: 1
 };
 
 export const CAREFUL: Nature = {
@@ -191,7 +191,7 @@ export const CAREFUL: Nature = {
   ingredient: 0.8,
   skill: 1.2,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 
 export const SASSY: Nature = {
@@ -203,7 +203,7 @@ export const SASSY: Nature = {
   ingredient: 1,
   skill: 1.2,
   energy: 1,
-  exp: 0.82,
+  exp: 0.82
 };
 
 // --- EXP + --- //
@@ -216,7 +216,7 @@ export const TIMID: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1.18,
+  exp: 1.18
 };
 
 export const HASTY: Nature = {
@@ -228,7 +228,7 @@ export const HASTY: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 0.88,
-  exp: 1.18,
+  exp: 1.18
 };
 
 export const JOLLY: Nature = {
@@ -240,7 +240,7 @@ export const JOLLY: Nature = {
   ingredient: 0.8,
   skill: 1,
   energy: 1,
-  exp: 1.18,
+  exp: 1.18
 };
 export const NAIVE: Nature = {
   name: 'Naive',
@@ -251,7 +251,7 @@ export const NAIVE: Nature = {
   ingredient: 1,
   skill: 0.8,
   energy: 1,
-  exp: 1.18,
+  exp: 1.18
 };
 
 // --- NEUTRAL --- //
@@ -264,7 +264,7 @@ export const BASHFUL: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const HARDY: Nature = {
   name: 'Hardy',
@@ -275,7 +275,7 @@ export const HARDY: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const DOCILE: Nature = {
   name: 'Docile',
@@ -286,7 +286,7 @@ export const DOCILE: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const QUIRKY: Nature = {
   name: 'Quirky',
@@ -297,7 +297,7 @@ export const QUIRKY: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 export const SERIOUS: Nature = {
   name: 'Serious',
@@ -308,7 +308,7 @@ export const SERIOUS: Nature = {
   ingredient: 1,
   skill: 1,
   energy: 1,
-  exp: 1,
+  exp: 1
 };
 
 export const NATURES: Nature[] = [
@@ -336,5 +336,5 @@ export const NATURES: Nature[] = [
   HARDY,
   DOCILE,
   QUIRKY,
-  SERIOUS,
+  SERIOUS
 ];

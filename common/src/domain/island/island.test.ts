@@ -14,7 +14,7 @@ import {
   PERSIM,
   RAWST,
   SITRUS,
-  WIKI,
+  WIKI
 } from '../berry/berry';
 import { CYAN, ISLANDS, LAPIS, POWER_PLANT, SNOWDROP, TAUPE } from './island';
 

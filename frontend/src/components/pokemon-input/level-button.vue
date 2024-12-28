@@ -18,24 +18,12 @@
     </template>
 
     <v-btn-toggle v-model="customValue" class="rounded-b-0">
-      <v-btn
-        v-for="value in firstRowValues"
-        :key="value"
-        :value="value"
-        color="primary"
-        @click="selectValue(value)"
-      >
+      <v-btn v-for="value in firstRowValues" :key="value" :value="value" color="primary" @click="selectValue(value)">
         {{ value }}
       </v-btn>
     </v-btn-toggle>
     <v-btn-toggle v-model="customValue" class="rounded-t-0">
-      <v-btn
-        v-for="value in secondRowValues"
-        :key="value"
-        :value="value"
-        color="primary"
-        @click="selectValue(value)"
-      >
+      <v-btn v-for="value in secondRowValues" :key="value" :value="value" color="primary" @click="selectValue(value)">
         {{ value }}
       </v-btn>
     </v-btn-toggle>

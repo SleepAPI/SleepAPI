@@ -41,7 +41,7 @@ const DatabaseMigration = new (class {
         return;
       } catch (error) {
         retryCount--;
-        logger.info(`Migration already running. Will retry ${retryCount}`);
+        logger.error(`Migration failed, will retry ${retryCount}, error: ${error}`);
         await new Promise((resolve) => setTimeout(resolve, 2_000));
       }
     }

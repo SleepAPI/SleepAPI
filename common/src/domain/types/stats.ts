@@ -1,4 +1,4 @@
-import { PokemonIngredientSet, nature, subskill } from '..';
+import type { PokemonIngredientSet, nature, subskill } from '..';
 
 export interface PokemonStats {
   level: number;

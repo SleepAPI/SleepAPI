@@ -1,6 +1,7 @@
 import CompareSlot from '@/components/compare/compare-slot.vue'
 import { createMockPokemon } from '@/vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -34,9 +35,7 @@ describe('CompareSlot', () => {
   })
 
   it('computed properties return correct values', () => {
-    expect(wrapper.vm.imageUrl).toBe(
-      `/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`
-    )
+    expect(wrapper.vm.imageUrl).toBe(`/images/pokemon/${pokemonInstance.pokemon.name.toLowerCase()}.png`)
     expect(wrapper.vm.level).toBe('Level 10')
     expect(wrapper.vm.rpBadge).toBe('RP 674')
   })

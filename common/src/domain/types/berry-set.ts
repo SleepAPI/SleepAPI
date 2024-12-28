@@ -1,4 +1,4 @@
-import { Berry } from '../berry';
+import type { Berry } from '../berry';
 
 export interface BerrySet {
   amount: number;

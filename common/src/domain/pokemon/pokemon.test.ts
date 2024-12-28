@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { COMPLETE_POKEDEX, Pokemon } from './pokemon';
+import type { Pokemon } from './pokemon';
+import { COMPLETE_POKEDEX } from './pokemon';
 
 describe('remainingEvolutions', () => {
   it('shall never be negative', () => {

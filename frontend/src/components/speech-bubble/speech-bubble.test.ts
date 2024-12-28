@@ -1,6 +1,7 @@
 import SpeechBubble from '@/components//speech-bubble/speech-bubble.vue'
 import { createMockPokemon } from '@/vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('SpeechBubble', () => {

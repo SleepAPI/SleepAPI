@@ -1,11 +1,6 @@
 import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { createMockPokemon } from '@/vitest'
-import {
-  ingredient,
-  subskill,
-  type PokemonInstanceExt,
-  type PokemonInstanceWithMeta
-} from 'sleepapi-common'
+import { ingredient, subskill, type PokemonInstanceExt, type PokemonInstanceWithMeta } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
 const mockPokemonInstanceExt: PokemonInstanceExt = createMockPokemon({
@@ -50,9 +45,7 @@ describe('toPokemonInstanceExt', () => {
       ingredients: [{ level: 0, ingredient: 'incorrect' }]
     }
 
-    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow(
-      'Received corrupt ingredient data'
-    )
+    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow('Received corrupt ingredient data')
   })
 
   it('should throw an error if subskill data is corrupt (more than 5)', () => {
@@ -68,9 +61,7 @@ describe('toPokemonInstanceExt', () => {
       ]
     }
 
-    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow(
-      'Received corrupt subskill data'
-    )
+    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow('Received corrupt subskill data')
   })
 })
 

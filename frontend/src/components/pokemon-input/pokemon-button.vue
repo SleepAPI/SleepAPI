@@ -1,15 +1,7 @@
 <template>
   <v-dialog v-model="pokemonMenu" max-width="550px" class="flex-center">
     <template #activator="{ props }">
-      <v-btn
-        icon
-        size="120"
-        color="transparent"
-        v-bind="props"
-        elevation="0"
-        class="flex-center"
-        @click="openMenu"
-      >
+      <v-btn icon size="120" color="transparent" v-bind="props" elevation="0" class="flex-center" @click="openMenu">
         <v-badge icon="mdi-pencil" color="primary" offset-x="30" offset-y="40">
           <v-img
             :src="

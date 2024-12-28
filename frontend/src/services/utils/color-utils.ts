@@ -1,4 +1,5 @@
-import { capitalize, subskill } from 'sleepapi-common'
+import type { subskill } from 'sleepapi-common'
+import { capitalize } from 'sleepapi-common'
 
 export function hexToRgba(hex: string, opacity: number) {
   hex = hex.replace('#', '')

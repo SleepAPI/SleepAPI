@@ -4,40 +4,25 @@
       <v-list>
         <!-- Empty  slot -->
         <div v-if="emptySlot" id="emptyMenu">
-          <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick"
-            >Add</v-list-item
-          >
-          <v-list-item
-            prepend-icon="mdi-import"
-            :disabled="!userStore.loggedIn"
-            @click="handleSavedClick"
+          <v-list-item id="addButton" prepend-icon="mdi-plus-circle-outline" @click="handleAddClick">Add</v-list-item>
+          <v-list-item prepend-icon="mdi-import" :disabled="!userStore.loggedIn" @click="handleSavedClick"
             >Pokebox</v-list-item
           >
         </div>
         <div v-else id="filledMenu">
           <!-- Filled slot  -->
-          <v-list-item id="editButton" prepend-icon="mdi-pencil" @click="handleEditClick"
-            >Edit</v-list-item
-          >
+          <v-list-item id="editButton" prepend-icon="mdi-pencil" @click="handleEditClick">Edit</v-list-item>
           <v-list-item
             id="saveButton"
             :disabled="!userStore.loggedIn"
-            :prepend-icon="
-              savedState.state ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'
-            "
+            :prepend-icon="savedState.state ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
             @click="save"
             >{{ savedState.state ? 'Remove from Pokebox' : 'Save to Pokebox' }}</v-list-item
           >
-          <v-list-item
-            id="duplicateButton"
-            :disabled="fullTeam"
-            prepend-icon="mdi-content-copy"
-            @click="duplicate"
+          <v-list-item id="duplicateButton" :disabled="fullTeam" prepend-icon="mdi-content-copy" @click="duplicate"
             >Duplicate</v-list-item
           >
-          <v-list-item id="removeButton" prepend-icon="mdi-delete" @click="remove"
-            >Remove</v-list-item
-          >
+          <v-list-item id="removeButton" prepend-icon="mdi-delete" @click="remove">Remove</v-list-item>
         </div>
       </v-list>
     </v-card>
@@ -83,13 +68,7 @@ export default defineComponent({
       required: true
     }
   },
-  emits: [
-    'update:show',
-    'update-pokemon',
-    'duplicate-pokemon',
-    'toggle-saved-pokemon',
-    'remove-pokemon'
-  ],
+  emits: ['update:show', 'update-pokemon', 'duplicate-pokemon', 'toggle-saved-pokemon', 'remove-pokemon'],
   setup() {
     const userStore = useUserStore()
     return { userStore }

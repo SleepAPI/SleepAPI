@@ -1,12 +1,12 @@
-import { Nature } from '../../domain/nature';
-import { Pokemon } from '../../domain/pokemon';
+import type { Nature } from '../../domain/nature';
+import type { Pokemon } from '../../domain/pokemon';
+import type { SubSkill } from '../../domain/subskill';
 import {
   BERRY_FINDING_S,
   INGREDIENT_FINDER_M,
   INGREDIENT_FINDER_S,
   SKILL_TRIGGER_M,
-  SKILL_TRIGGER_S,
-  SubSkill,
+  SKILL_TRIGGER_S
 } from '../../domain/subskill';
 import { MathUtils } from '../../utils/math-utils';
 

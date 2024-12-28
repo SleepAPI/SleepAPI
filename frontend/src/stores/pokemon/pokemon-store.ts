@@ -19,7 +19,7 @@ export const usePokemonStore = defineStore('pokemon', {
       if (pokemonInstance) {
         return { ...pokemonInstance, pokemon: getPokemon(pokemonInstance.pokemon.name) }
       } else {
-        console.debug(`Pokemon ${externalId} did not exist in Pokémon store`)
+        logger.debug(`Pokemon ${externalId} did not exist in Pokémon store`)
       }
     }
   },
@@ -35,7 +35,7 @@ export const usePokemonStore = defineStore('pokemon', {
       const comparisonStore = useComparisonStore()
       const member = this.getPokemon(externalId)
       if (!member) {
-        console.error(`Pokemon ${externalId} was not found in Pokémon store`)
+        logger.error(`Pokemon ${externalId} was not found in Pokémon store`)
         return
       }
 
@@ -43,16 +43,12 @@ export const usePokemonStore = defineStore('pokemon', {
       const nrOfOccurencesTeam = teamStore.teams.flatMap((team) =>
         team.members.filter((m) => m != null && m === externalId)
       ).length
-      const nrOfOccurencesCompare = comparisonStore.members.filter(
-        (member) => member.externalId === externalId
-      ).length
+      const nrOfOccurencesCompare = comparisonStore.members.filter((member) => member.externalId === externalId).length
 
       const safeRemoveFromTeam =
-        (source === 'team' && nrOfOccurencesTeam < 2) ||
-        (source !== 'team' && nrOfOccurencesTeam === 0)
+        (source === 'team' && nrOfOccurencesTeam < 2) || (source !== 'team' && nrOfOccurencesTeam === 0)
       const safeRemoveFromCompare =
-        (source === 'compare' && nrOfOccurencesCompare < 2) ||
-        (source !== 'compare' && nrOfOccurencesCompare === 0)
+        (source === 'compare' && nrOfOccurencesCompare < 2) || (source !== 'compare' && nrOfOccurencesCompare === 0)
       const safeRemoval = safeRemoveFromTeam && safeRemoveFromCompare
 
       if (!member.saved && safeRemoval) {
@@ -65,8 +61,8 @@ export const usePokemonStore = defineStore('pokemon', {
       if (userStore.loggedIn) {
         try {
           UserService.upsertPokemon(pokemon)
-        } catch (error) {
-          console.error('Error upserting pokemon in server')
+        } catch {
+          logger.error('Error upserting pokemon in server')
         }
       }
 
@@ -78,8 +74,8 @@ export const usePokemonStore = defineStore('pokemon', {
       if (userStore.loggedIn) {
         try {
           UserService.deletePokemon(externalId)
-        } catch (error) {
-          console.error('Error deleting pokemon in server')
+        } catch {
+          logger.error('Error deleting pokemon in server')
         }
       }
 

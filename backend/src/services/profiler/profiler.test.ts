@@ -19,6 +19,6 @@ describe('profiler', () => {
 
     printProfilingResults();
 
-    expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/Calls: 10/));
+    expect(logger.log).toHaveBeenCalledWith(expect.stringMatching(/Calls: 10/));
   });
 });

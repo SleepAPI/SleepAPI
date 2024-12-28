@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { NATURES, NatureModifier } from '../../domain/nature/nature';
+import type { NatureModifier } from '../../domain/nature/nature';
+import { NATURES } from '../../domain/nature/nature';
 
 describe('Nature Modifiers', () => {
   it('should verify that the positiveModifier matches the stat > 1 and negativeModifier matches stat < 1', () => {
@@ -10,7 +11,7 @@ describe('Nature Modifiers', () => {
         skill: nature.skill,
         energy: nature.energy,
         exp: nature.exp,
-        neutral: 1, // Neutral is always 1 for all stats
+        neutral: 1 // Neutral is always 1 for all stats
       };
 
       const positiveStat = statValues[nature.positiveModifier];

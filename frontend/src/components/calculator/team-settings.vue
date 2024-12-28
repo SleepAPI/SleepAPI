@@ -1,13 +1,7 @@
 <template>
   <v-row dense>
     <v-col cols="12/5" class="flex-center">
-      <v-btn
-        icon
-        color="transparent"
-        elevation="0"
-        aria-label="select recipe"
-        @click="openRecipeMenu"
-      >
+      <v-btn icon color="transparent" elevation="0" aria-label="select recipe" @click="openRecipeMenu">
         <v-img height="48" width="48" :src="recipeTypeImage" alt="pot icon" class="recipe-color" />
       </v-btn>
     </v-col>
@@ -19,13 +13,7 @@
     </v-col>
 
     <v-col cols="12/5" class="flex-center">
-      <v-btn
-        :disabled="isCampButtonDisabled"
-        icon
-        color="transparent"
-        elevation="0"
-        @click="toggleCamp"
-      >
+      <v-btn :disabled="isCampButtonDisabled" icon color="transparent" elevation="0" @click="toggleCamp">
         <v-avatar size="48">
           <v-img src="/images/misc/camp.png" :class="{ 'camp-disabled': !camp }" alt="camp icon" />
         </v-avatar>
@@ -41,14 +29,9 @@
         @click="openSleepMenu"
       >
         <v-avatar size="48">
-          <v-progress-circular
-            :model-value="sleepScore"
-            :size="48"
-            bg-color="#f0f0f0"
-            color="#479EFF"
-            :width="8"
-            >{{ sleepScore }}</v-progress-circular
-          >
+          <v-progress-circular :model-value="sleepScore" :size="48" bg-color="#f0f0f0" color="#479EFF" :width="8">{{
+            sleepScore
+          }}</v-progress-circular>
         </v-avatar>
       </v-btn>
     </v-col>
@@ -62,22 +45,14 @@
         @click="toggleDeleteMenu"
       >
         <v-avatar size="48">
-          <v-icon
-            size="36"
-            :color="teamStore.getTeamSize === 0 ? 'secondary' : 'primary'"
-            alt="delete team icon"
+          <v-icon size="36" :color="teamStore.getTeamSize === 0 ? 'secondary' : 'primary'" alt="delete team icon"
             >mdi-delete</v-icon
           >
         </v-avatar>
       </v-btn>
     </v-col>
 
-    <v-dialog
-      v-model="recipeMenu"
-      max-width="400px"
-      aria-label="recipe menu"
-      close-on-content-click
-    >
+    <v-dialog v-model="recipeMenu" max-width="400px" aria-label="recipe menu" close-on-content-click>
       <v-card title="Choose recipe week" subtitle="Curry, salad or dessert">
         <template #append>
           <v-img width="48" height="48" src="/images/misc/pot1.png"></v-img>
@@ -137,14 +112,9 @@
       <v-card title="Update sleep" :subtitle="calculateSleepDuration">
         <template #append>
           <v-avatar size="48" color="white">
-            <v-progress-circular
-              :model-value="sleepScore"
-              :size="48"
-              bg-color="#f0f0f0"
-              color="#479EFF"
-              :width="8"
-              >{{ sleepScore }}</v-progress-circular
-            >
+            <v-progress-circular :model-value="sleepScore" :size="48" bg-color="#f0f0f0" color="#479EFF" :width="8">{{
+              sleepScore
+            }}</v-progress-circular>
           </v-avatar>
         </template>
 
@@ -161,9 +131,7 @@
             >
           </v-col>
           <v-col class="flex-center">
-            <v-btn color="primary" aria-label="wakeup button" @click="isWakeupOpen = true"
-              >Wakeup: {{ wakeup }}</v-btn
-            >
+            <v-btn color="primary" aria-label="wakeup button" @click="isWakeupOpen = true">Wakeup: {{ wakeup }}</v-btn>
           </v-col>
         </v-row>
 
@@ -231,13 +199,9 @@
               <v-spacer />
               <v-btn @click="toggleDeleteMenu">Close</v-btn>
               <v-row>
-                <v-btn color="surface" aria-label="close button" @click="toggleDeleteMenu"
-                  >Close</v-btn
-                >
+                <v-btn color="surface" aria-label="close button" @click="toggleDeleteMenu">Close</v-btn>
 
-                <v-btn color="primary" aria-label="delete button" @click="deleteTeam"
-                  >Delete team</v-btn
-                >
+                <v-btn color="primary" aria-label="delete button" @click="deleteTeam">Delete team</v-btn>
               </v-row>
             </v-card-actions>
           </v-card>
@@ -331,8 +295,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    ;(this.bedtime = this.teamStore.getCurrentTeam.bedtime),
-      (this.wakeup = this.teamStore.getCurrentTeam.wakeup)
+    ;(this.bedtime = this.teamStore.getCurrentTeam.bedtime), (this.wakeup = this.teamStore.getCurrentTeam.wakeup)
   },
   methods: {
     async toggleCamp() {

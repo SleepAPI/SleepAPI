@@ -148,11 +148,7 @@
       <v-col cols="12" class="flex-center">
         <v-btn
           class="w-50 text-body-2"
-          :class="
-            negativeModifier === 'neutral' && positiveModifier === 'neutral'
-              ? 'bg-primary'
-              : 'bg-secondary'
-          "
+          :class="negativeModifier === 'neutral' && positiveModifier === 'neutral' ? 'bg-primary' : 'bg-secondary'"
           @click="setNeutralNature"
           >Neutral</v-btn
         >
@@ -172,12 +168,7 @@
     <v-row dense>
       <v-col cols="12">
         <v-sheet color="secondary" rounded height="100px" style="overflow-y: auto">
-          <v-chip-group
-            v-if="filteredNatures.length > 0"
-            v-model="selectedNature"
-            column
-            selected-class="bg-primary"
-          >
+          <v-chip-group v-if="filteredNatures.length > 0" v-model="selectedNature" column selected-class="bg-primary">
             <v-chip
               v-for="nature in filteredNatures"
               :key="nature.name"

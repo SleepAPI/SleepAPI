@@ -1,5 +1,6 @@
 import RadarChart from '@/components/custom-components/charts/radar-chart.vue'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import type { ChartData } from 'chart.js'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 

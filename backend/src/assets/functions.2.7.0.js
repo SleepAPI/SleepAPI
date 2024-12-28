@@ -130,7 +130,7 @@ function createCopyButton(contentDiv, index) {
         copyBtn.style.color = 'green';
       },
       function (err) {
-        console.error('Async Clipboard API error:', err);
+        logger.error('Async Clipboard API error:', err);
         var range = document.createRange();
         range.selectNode(contentDiv);
         window.getSelection().removeAllRanges();

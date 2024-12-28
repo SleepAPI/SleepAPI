@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import workerpool from 'workerpool';
 import ProductionController from '../../controllers/calculator/production.controller.js';
 import { WebsiteConverterService } from '../../services/website-converter/website-converter-service.js';

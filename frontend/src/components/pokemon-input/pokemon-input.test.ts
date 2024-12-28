@@ -1,16 +1,11 @@
 import PokemonInput from '@/components/pokemon-input/pokemon-input.vue'
 import { useUserStore } from '@/stores/user-store'
 import { createMockPokemon } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import {
-  ingredient,
-  maxCarrySize,
-  nature,
-  pokemon,
-  subskill,
-  type PokemonInstanceExt
-} from 'sleepapi-common'
+import type { ingredient } from 'sleepapi-common'
+import { maxCarrySize, nature, pokemon, subskill, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('PokemonInput', () => {
@@ -37,9 +32,7 @@ describe('PokemonInput', () => {
   })
 
   it('renders correctly with initial data', () => {
-    expect(console.error).toHaveBeenCalledWith(
-      'Missing both cached and search input mon, contact developer'
-    )
+    expect(console.error).toHaveBeenCalledWith('Missing both cached and search input mon, contact developer')
     expect(wrapper.exists()).toBe(true)
   })
 

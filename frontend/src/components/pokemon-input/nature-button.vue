@@ -3,25 +3,12 @@
     <v-col cols="6">
       <v-dialog id="natureDialog" v-model="natureMenu" max-width="550px">
         <template #activator="{ props }">
-          <v-badge
-            id="natureBadge"
-            color="primary"
-            content="Nature"
-            location="top left"
-            :offset-x="35"
-            class="w-100"
-          >
-            <v-btn class="responsive-text w-100" v-bind="props" size="large" rounded="pill">{{
-              natureName
-            }}</v-btn>
+          <v-badge id="natureBadge" color="primary" content="Nature" location="top left" :offset-x="35" class="w-100">
+            <v-btn class="responsive-text w-100" v-bind="props" size="large" rounded="pill">{{ natureName }}</v-btn>
           </v-badge>
         </template>
 
-        <NatureMenu
-          :current-nature="nature"
-          @update-nature="selectNature"
-          @cancel="natureMenu = false"
-        />
+        <NatureMenu :current-nature="nature" @update-nature="selectNature" @cancel="natureMenu = false" />
       </v-dialog>
     </v-col>
 

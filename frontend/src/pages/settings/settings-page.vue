@@ -12,8 +12,8 @@
           <v-row>
             <v-col cols="12" class="flex-center">
               <span class="text-center"
-                >In case of issues please try clearing the cache. If that doesn't work, contact the
-                developers and attach the site version found below.</span
+                >In case of issues please try clearing the cache. If that doesn't work, contact the developers and
+                attach the site version found below.</span
               >
             </v-col>
           </v-row>

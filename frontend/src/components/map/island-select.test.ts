@@ -1,5 +1,6 @@
 import IslandSelect from '@/components/map/island-select.vue'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { berry, island } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -122,9 +123,7 @@ describe('IslandSelect', () => {
     wrapper.vm.favoredBerries = island.CYAN.berries
     await wrapper.vm.$nextTick()
 
-    const allButton = document.querySelector(
-      'button[aria-label="select all button"]'
-    ) as HTMLElement
+    const allButton = document.querySelector('button[aria-label="select all button"]') as HTMLElement
     expect(allButton).not.toBeNull()
 
     allButton.click()

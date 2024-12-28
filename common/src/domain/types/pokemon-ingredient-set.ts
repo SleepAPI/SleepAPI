@@ -1,5 +1,5 @@
-import { Pokemon } from '../pokemon';
-import { IngredientSet } from './ingredient-set';
+import type { Pokemon } from '../pokemon';
+import type { IngredientSet } from './ingredient-set';
 
 export type PokemonIngredientSet = {
   pokemon: Pokemon;

@@ -1,7 +1,8 @@
 import PokeboxList from '@/components/pokemon-input/menus/pokebox-list.vue'
 import { UserService } from '@/services/user/user-service'
 import { createMockPokemon } from '@/vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 

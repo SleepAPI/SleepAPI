@@ -25,15 +25,15 @@ serverAxios.interceptors.response.use(
     if (error.response) {
       // Server responded with a status other than 2xx
       if (error.response.status === 401) {
-        console.error('Unauthorized')
+        logger.error('Unauthorized')
         userStore.logout()
       }
     } else if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
       // Server timed out
-      console.error('Connection to server timed out')
+      logger.error('Connection to server timed out')
     } else {
       // Other error
-      console.error('Something went wrong')
+      logger.error('Something went wrong')
     }
     return Promise.reject(error)
   }

@@ -1,6 +1,7 @@
 import DonateMenu from '@/components/donate/donate-menu.vue'
 import PatreonIcon from '@/components/icons/icon-patreon.vue'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 

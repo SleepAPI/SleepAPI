@@ -7,109 +7,109 @@ export interface Berry {
 export const BELUE: Berry = {
   name: 'BELUE',
   value: 33,
-  type: 'steel',
+  type: 'steel'
 };
 
 export const BLUK: Berry = {
   name: 'BLUK',
   value: 26,
-  type: 'ghost',
+  type: 'ghost'
 };
 
 export const CHERI: Berry = {
   name: 'CHERI',
   value: 27,
-  type: 'fighting',
+  type: 'fighting'
 };
 
 export const CHESTO: Berry = {
   name: 'CHESTO',
   value: 32,
-  type: 'poison',
+  type: 'poison'
 };
 
 export const DURIN: Berry = {
   name: 'DURIN',
   value: 30,
-  type: 'grass',
+  type: 'grass'
 };
 
 export const FIGY: Berry = {
   name: 'FIGY',
   value: 29,
-  type: 'ground',
+  type: 'ground'
 };
 
 export const GREPA: Berry = {
   name: 'GREPA',
   value: 25,
-  type: 'electric',
+  type: 'electric'
 };
 
 export const LEPPA: Berry = {
   name: 'LEPPA',
   value: 27,
-  type: 'fire',
+  type: 'fire'
 };
 
 export const LUM: Berry = {
   name: 'LUM',
   value: 24,
-  type: 'bug',
+  type: 'bug'
 };
 
 export const MAGO: Berry = {
   name: 'MAGO',
   value: 26,
-  type: 'psychic',
+  type: 'psychic'
 };
 
 export const ORAN: Berry = {
   name: 'ORAN',
   value: 31,
-  type: 'water',
+  type: 'water'
 };
 
 export const PAMTRE: Berry = {
   name: 'PAMTRE',
   value: 24,
-  type: 'flying',
+  type: 'flying'
 };
 
 export const PECHA: Berry = {
   name: 'PECHA',
   value: 26,
-  type: 'fairy',
+  type: 'fairy'
 };
 
 export const PERSIM: Berry = {
   name: 'PERSIM',
   value: 28,
-  type: 'normal',
+  type: 'normal'
 };
 
 export const RAWST: Berry = {
   name: 'RAWST',
   value: 32,
-  type: 'ice',
+  type: 'ice'
 };
 
 export const SITRUS: Berry = {
   name: 'SITRUS',
   value: 30,
-  type: 'rock',
+  type: 'rock'
 };
 
 export const WIKI: Berry = {
   name: 'WIKI',
   value: 31,
-  type: 'dark',
+  type: 'dark'
 };
 
 export const YACHE: Berry = {
   name: 'YACHE',
   value: 35,
-  type: 'dragon',
+  type: 'dragon'
 };
 
 export const BERRIES: Berry[] = [
@@ -130,5 +130,5 @@ export const BERRIES: Berry[] = [
   CHESTO,
   RAWST,
   BELUE,
-  YACHE,
+  YACHE
 ];

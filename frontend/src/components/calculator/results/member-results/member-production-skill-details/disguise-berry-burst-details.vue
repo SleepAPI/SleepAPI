@@ -8,11 +8,7 @@
         color="subskillWhite"
         rounded="pill"
       >
-        <v-img
-          :src="mainskillImage(memberWithProduction.member.pokemon)"
-          height="40px"
-          width="40px"
-        ></v-img>
+        <v-img :src="mainskillImage(memberWithProduction.member.pokemon)" height="40px" width="40px"></v-img>
       </v-badge>
       <div class="ml-2">
         <div class="flex-center">
@@ -32,20 +28,12 @@
 
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
-        <v-img
-          :src="berryImage(memberWithProduction.member.pokemon.berry)"
-          height="20"
-          width="20"
-        ></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-2">
-          {{ skillValueSelf }} {{ berryName }}</span
-        >
+        <v-img :src="berryImage(memberWithProduction.member.pokemon.berry)" height="20" width="20"></v-img>
+        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ skillValueSelf }} {{ berryName }}</span>
       </div>
       <div class="flex-center">
         <v-img src="/images/berries/berries.png" height="20" width="20"></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-2">
-          {{ skillValueTeam }} team
-        </span>
+        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ skillValueTeam }} team </span>
       </div>
     </v-col>
   </v-row>
@@ -76,9 +64,7 @@ export default defineComponent({
       return this.memberWithProduction.member.pokemon.berry.name.toLowerCase()
     },
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(
-        this.memberWithProduction.member.skillLevel
-      )
+      return this.memberWithProduction.member.pokemon.skill.amount(this.memberWithProduction.member.skillLevel)
     },
     skillValueSelf() {
       const amount =
@@ -95,9 +81,7 @@ export default defineComponent({
     },
     skillValueTeam() {
       const amount = this.memberWithProduction.production.produceFromSkill.berries.reduce(
-        (sum, cur) =>
-          sum +
-          (cur.berry.name !== this.memberWithProduction.member.pokemon.berry.name ? cur.amount : 0),
+        (sum, cur) => sum + (cur.berry.name !== this.memberWithProduction.member.pokemon.berry.name ? cur.amount : 0),
         0
       )
       return compactNumber(

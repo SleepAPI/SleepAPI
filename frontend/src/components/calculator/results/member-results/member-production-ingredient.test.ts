@@ -2,7 +2,8 @@ import MemberProductionIngredient from '@/components/calculator/results/member-r
 import { StrengthService } from '@/services/strength/strength-service'
 import { useTeamStore } from '@/stores/team/team-store'
 import { createMockMemberProductionExt } from '@/vitest'
-import { VueWrapper, mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
@@ -41,20 +42,14 @@ describe('MemberProductionIngredient', () => {
       const img = ingredientRow?.find('img')
       const amountSpan = ingredientRow?.find('span.font-weight-medium')
 
-      expect(img?.attributes('src')).toBe(
-        `/images/ingredient/${ingredient.ingredient.name.toLowerCase()}.png`
-      )
+      expect(img?.attributes('src')).toBe(`/images/ingredient/${ingredient.ingredient.name.toLowerCase()}.png`)
       const timeWindowFactor = StrengthService.timeWindowFactor(useTeamStore().timeWindow)
-      expect(amountSpan?.text()).toBe(
-        `x${Math.round(ingredient.amount * timeWindowFactor * 10) / 10}`
-      )
+      expect(amountSpan?.text()).toBe(`x${Math.round(ingredient.amount * timeWindowFactor * 10) / 10}`)
     })
   })
 
   it('should prepare member ingredients correctly', () => {
-    const preparedIngredients = wrapper.vm.prepareMemberIngredients(
-      mockMember.production.produceTotal.ingredients
-    )
+    const preparedIngredients = wrapper.vm.prepareMemberIngredients(mockMember.production.produceTotal.ingredients)
 
     expect(preparedIngredients).toMatchInlineSnapshot(`
       [

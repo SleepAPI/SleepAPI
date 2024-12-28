@@ -1,4 +1,4 @@
-import { Ingredient } from '../ingredient';
+import type { Ingredient } from '../ingredient';
 
 export interface IngredientSet {
   amount: number;

@@ -3,7 +3,7 @@ import { delay } from './async-utils';
 
 describe('delay', () => {
   it('shall delay for the specified amount of time', async () => {
-    const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
+    const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
 
     const delayTime = 500;
 
