@@ -1,6 +1,6 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
 import type { Mainskill } from '../mainskill';
-import { MAINSKILLS, createBaseSkill } from '../mainskill';
+import { INGREDIENT_SUPPORT_MAINSKILLS, MAINSKILLS, createBaseSkill } from '../mainskill';
 
 export const METRONOME: Mainskill = createBaseSkill({
   name: 'Metronome',
@@ -11,3 +11,4 @@ export const METRONOME: Mainskill = createBaseSkill({
   RP: [880, 1251, 1726, 2383, 3290, 4546]
 });
 MAINSKILLS.push(METRONOME);
+INGREDIENT_SUPPORT_MAINSKILLS.push(METRONOME);

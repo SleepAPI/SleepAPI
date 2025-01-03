@@ -4,8 +4,16 @@ import { createMockPokemon } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import type { ingredient } from 'sleepapi-common'
-import { maxCarrySize, nature, pokemon, subskill, type PokemonInstanceExt } from 'sleepapi-common'
+import {
+  GALLADE,
+  maxCarrySize,
+  mockPokemon,
+  nature,
+  PIKACHU,
+  subskill,
+  type Ingredient,
+  type PokemonInstanceExt
+} from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('PokemonInput', () => {
@@ -33,6 +41,7 @@ describe('PokemonInput', () => {
 
   it('renders correctly with initial data', () => {
     expect(console.error).toHaveBeenCalledWith('Missing both cached and search input mon, contact developer')
+    expect(console.error).toHaveBeenCalledWith('Missing both cached and search input mon, contact developer')
     expect(wrapper.exists()).toBe(true)
   })
 
@@ -51,15 +60,15 @@ describe('PokemonInput', () => {
     wrapper = mount(PokemonInput, {
       props: {
         pokemonFromPreExist: undefined,
-        pokemonFromSearch: pokemon.GALLADE
+        pokemonFromSearch: GALLADE
       }
     })
     const updatedPokemonInstance = wrapper.vm.$data.pokemonInstance
     expect(updatedPokemonInstance).not.toEqual(preExistingMon)
-    expect(updatedPokemonInstance.pokemon).not.toEqual(pokemon.MOCK_POKEMON)
+    expect(updatedPokemonInstance.pokemon).not.toEqual(mockPokemon)
 
-    expect(updatedPokemonInstance.pokemon).toEqual(pokemon.GALLADE)
-    expect(updatedPokemonInstance.carrySize).toBe(maxCarrySize(pokemon.GALLADE))
+    expect(updatedPokemonInstance.pokemon).toEqual(GALLADE)
+    expect(updatedPokemonInstance.carrySize).toBe(maxCarrySize(GALLADE))
   })
 
   it('renders child components correctly', () => {
@@ -105,8 +114,8 @@ describe('PokemonInput', () => {
   })
 
   it('updates pokemon correctly', async () => {
-    wrapper.vm.updatePokemon(pokemon.PIKACHU)
-    expect(wrapper.vm.pokemonInstance.pokemon).toBe(pokemon.PIKACHU)
+    wrapper.vm.updatePokemon(PIKACHU)
+    expect(wrapper.vm.pokemonInstance.pokemon).toBe(PIKACHU)
   })
 
   it('updates name correctly', async () => {
@@ -130,7 +139,7 @@ describe('PokemonInput', () => {
   })
 
   it('updates ingredient correctly', async () => {
-    const testIngredient = { name: 'Berry' } as ingredient.Ingredient
+    const testIngredient = { name: 'Berry' } as Ingredient
     wrapper.vm.updateIngredient({ ingredient: testIngredient, ingredientLevel: 0 })
     expect(wrapper.vm.pokemonInstance.ingredients[0].ingredient).toBe(testIngredient)
   })

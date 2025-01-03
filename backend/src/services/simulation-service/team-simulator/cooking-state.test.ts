@@ -1,17 +1,18 @@
-import { combineIngredientDrops } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+// TODO: test mixed meals if team cant make
+
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
 import { describe, expect, it } from 'bun:test';
-import { dessert, ingredient } from 'sleepapi-common';
+import { dessert, ingredient, ingredientSetToFloatFlat } from 'sleepapi-common';
 
 describe('CookingState', () => {
   it.todo('team should fallback to mixed meal if cant make recipe');
   it('shall cook the best recipe for which it has ingredients', () => {
     const cookingState = new CookingState(true);
 
-    const ingsForMacaronsAndFlan = combineIngredientDrops(
-      dessert.JIGGLYPUFFS_FRUITY_FLAN.ingredients,
-      dessert.FLOWER_GIFT_MACARONS.ingredients
-    );
+    const ingsForMacaronsAndFlan = ingredientSetToFloatFlat([
+      ...dessert.JIGGLYPUFFS_FRUITY_FLAN.ingredients,
+      ...dessert.FLOWER_GIFT_MACARONS.ingredients
+    ]);
     cookingState.addIngredients(ingsForMacaronsAndFlan);
 
     cookingState.cook(false);
@@ -27,7 +28,7 @@ describe('CookingState', () => {
   it('shall cook mixed meal if team cant cook better', () => {
     const cookingState = new CookingState(true);
 
-    cookingState.addIngredients([{ amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }]);
+    cookingState.addIngredients(ingredientSetToFloatFlat([{ amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }]));
 
     cookingState.cook(false);
 
@@ -52,7 +53,7 @@ describe('CookingState', () => {
   it('shall crit with max bonus on sunday', () => {
     const cookingState = new CookingState(true);
 
-    cookingState.addIngredients(dessert.FLOWER_GIFT_MACARONS.ingredients);
+    cookingState.addIngredients(ingredientSetToFloatFlat(dessert.FLOWER_GIFT_MACARONS.ingredients));
     cookingState.addCritBonus(0.7);
     cookingState.cook(true);
 
@@ -69,7 +70,7 @@ describe('CookingState', () => {
   it('shall be able to cook macarons with pot skill proc', () => {
     const cookingState = new CookingState(true);
 
-    cookingState.addIngredients(dessert.FLOWER_GIFT_MACARONS.ingredients);
+    cookingState.addIngredients(ingredientSetToFloatFlat(dessert.FLOWER_GIFT_MACARONS.ingredients));
     cookingState.addPotSize(30);
     cookingState.cook(false);
 

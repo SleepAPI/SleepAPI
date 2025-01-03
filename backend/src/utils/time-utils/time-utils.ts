@@ -1,8 +1,16 @@
 import type { ScheduledEvent } from '@src/domain/event/event.js';
-import type { Time, TimePeriod } from 'sleepapi-common';
-import { MathUtils } from 'sleepapi-common';
+import { MathUtils, type Time, type TimePeriod } from 'sleepapi-common';
+// TODO: can probably remove a lot in Sleep API 2.0import { MathUtils } from 'sleepapi-common';
 
 class TimeUtilsImpl {
+  public checkTimeout(params: { startTime: number; timeout: number }): boolean {
+    const { startTime, timeout } = params;
+    if (Date.now() - startTime >= timeout) {
+      return true;
+    }
+    return false;
+  }
+
   public toMinutes(time: Time) {
     return time.hour * 60 + time.minute;
   }

@@ -2,7 +2,7 @@ import GenderButton from '@/components/pokemon-input/gender-button.vue'
 import { createMockPokemon } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import { pokemon, RandomUtils } from 'sleepapi-common'
+import { GALLADE, RandomUtils } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('GenderButton', () => {
@@ -61,7 +61,7 @@ describe('GenderButton', () => {
     RandomUtils.roll = vi.fn().mockReturnValue(true)
 
     await wrapper.setProps({
-      pokemonInstance: createMockPokemon({ pokemon: pokemon.GALLADE })
+      pokemonInstance: createMockPokemon({ pokemon: GALLADE })
     })
 
     expect(wrapper.emitted('update-gender')?.[0]).toEqual(['male'])

@@ -2,7 +2,7 @@ import type { ProductionStats } from '@src/domain/computed/production.js';
 import type { EventType } from '@src/domain/event/event.js';
 import { ScheduledEvent } from '@src/domain/event/event.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
-import type { Time, pokemon } from 'sleepapi-common';
+import type { Pokemon, Time } from 'sleepapi-common';
 
 export abstract class InputEvent extends ScheduledEvent {
   type: EventType = 'info';
@@ -14,9 +14,9 @@ export class PokemonInputEvent extends InputEvent {
   description: string;
 
   input: ProductionStats;
-  pokemon: pokemon.Pokemon;
+  pokemon: Pokemon;
 
-  constructor(params: { time: Time; description: string; input: ProductionStats; pokemon: pokemon.Pokemon }) {
+  constructor(params: { time: Time; description: string; input: ProductionStats; pokemon: Pokemon }) {
     const { time, description, pokemon, input } = params;
     super();
 
@@ -33,7 +33,7 @@ export class PokemonInputEvent extends InputEvent {
     const input =
       `[${TimeUtils.prettifyTime(this.time)}][Input] (${this.pokemon.name}): ` +
       `Level: ${level}, Nature: ${nature?.prettyName ?? 'neutral'}, Main skill level: ${skillLevel}, ` +
-      `Sub-skills: [${subskills?.map((subskill) => subskill.name).join(', ') ?? 'none'}]`;
+      `Sub-skills: [${[...(subskills ?? [])].join(', ') ?? 'none'}]`;
 
     return input;
   }

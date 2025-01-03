@@ -7,7 +7,7 @@ import {
   scheduleSkillEvents
 } from '@src/services/calculator/skill/skill-calculator.js';
 import { describe, expect, it } from 'bun:test';
-import { MathUtils, berry, ingredient, mainskill, pokemon } from 'sleepapi-common';
+import { MathUtils, PINSIR, berry, ingredient, mainskill } from 'sleepapi-common';
 
 describe('calculateSkillProcs', () => {
   it('shall calculate skill percentage for Venusaur', () => {
@@ -302,7 +302,7 @@ describe('scheduleSkillEvents', () => {
 });
 
 const pokemonWithAverageProduce: PokemonProduce = {
-  pokemon: pokemon.PINSIR,
+  pokemon: PINSIR,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }]
@@ -389,19 +389,15 @@ describe('calculateHelperBoostHelpsFromUnique', () => {
 
   it('shall throw if level is not between 1 and 6', () => {
     expect(() => calculateHelperBoostHelpsFromUnique(0, 0)).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
-    );
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`);
     expect(() => calculateHelperBoostHelpsFromUnique(0, 7)).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
-    );
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`);
   });
 
   it('shall throw if unique mons is not between 1 and 5', () => {
     expect(() => calculateHelperBoostHelpsFromUnique(0, 0)).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
-    );
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`);
     expect(() => calculateHelperBoostHelpsFromUnique(0, 6)).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`
-    );
+      `"Invalid input: unique should be between 1 and 5, level should be between 1 and 6"`);
   });
 });

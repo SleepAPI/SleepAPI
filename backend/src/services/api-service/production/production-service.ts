@@ -1,27 +1,32 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
 import type { ProductionStats } from '@src/domain/computed/production.js';
-import { getAllIngredientCombinationsForLevel } from '@src/services/calculator/ingredient/ingredient-calculate.js';
+import { getAllIngredientLists } from '@src/services/calculator/ingredient/ingredient-calculate.js';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils.js';
-import { limitSubSkillsToLevel } from '@src/utils/subskill-utils/subskill-utils.js';
-import type { CalculateIvResponse, DetailedProduce, MemberProductionBase, pokemon } from 'sleepapi-common';
-import { maxCarrySize, nature, subskill } from 'sleepapi-common';
+import type {
+  CalculateIvResponse,
+  DetailedProduce,
+  MemberProductionBase,
+  Pokemon,
+  TeamMemberExt,
+  TeamSettingsExt
+} from 'sleepapi-common';
+import { limitSubSkillsToLevel, maxCarrySize, nature, subskill } from 'sleepapi-common';
 
 export function calculatePokemonProduction(
-  pokemon: pokemon.Pokemon,
+  pokemon: Pokemon,
   input: ProductionStats,
   ingredientSet: string[],
   includeAnalysis: boolean,
   monteCarloIterations: number
 ) {
-  const allIngredientSets = getAllIngredientCombinationsForLevel(pokemon, input.level);
+  const allIngredientSets = getAllIngredientLists(pokemon, input.level);
   const ingredientList = getIngredientSet(allIngredientSets, ingredientSet);
   const pokemonCombination = { pokemon, ingredientList };
 
   // calculate user's input
   const { detailedProduce, log, summary } = setupAndRunProductionSimulation({
-    pokemonCombination,
+    pokemonSet: pokemonCombination,
     input,
     monteCarloIterations
   });
@@ -33,10 +38,10 @@ export function calculatePokemonProduction(
   let optimalSkillProduction: DetailedProduce | undefined = undefined;
   if (includeAnalysis) {
     neutralProduction = setupAndRunProductionSimulation({
-      pokemonCombination,
+      pokemonSet: pokemonCombination,
       input: {
         ...input,
-        subskills: [],
+        subskills: new Set(),
         nature: nature.BASHFUL,
         skillLevel: 1
       },
@@ -44,17 +49,17 @@ export function calculatePokemonProduction(
     }).detailedProduce;
 
     const optimalIngredientSubskills = limitSubSkillsToLevel(
-      [
-        subskill.INGREDIENT_FINDER_M,
-        subskill.HELPING_SPEED_M,
-        subskill.INGREDIENT_FINDER_S,
-        subskill.INVENTORY_L,
-        subskill.HELPING_SPEED_S
-      ],
+      new Set([
+        subskill.INGREDIENT_FINDER_M.name,
+        subskill.HELPING_SPEED_M.name,
+        subskill.INGREDIENT_FINDER_S.name,
+        subskill.INVENTORY_L.name,
+        subskill.HELPING_SPEED_S.name
+      ]),
       input.level
     );
     optimalIngredientProduction = setupAndRunProductionSimulation({
-      pokemonCombination,
+      pokemonSet: pokemonCombination,
       input: {
         ...input,
         subskills: optimalIngredientSubskills,
@@ -66,17 +71,17 @@ export function calculatePokemonProduction(
     }).detailedProduce;
 
     optimalBerryProduction = setupAndRunProductionSimulation({
-      pokemonCombination,
+      pokemonSet: pokemonCombination,
       input: {
         ...input,
         subskills: limitSubSkillsToLevel(
-          [
-            subskill.BERRY_FINDING_S,
-            subskill.HELPING_SPEED_M,
-            subskill.HELPING_SPEED_S,
-            subskill.HELPING_BONUS,
-            subskill.SKILL_TRIGGER_M
-          ],
+          new Set([
+            subskill.BERRY_FINDING_S.name,
+            subskill.HELPING_SPEED_M.name,
+            subskill.HELPING_SPEED_S.name,
+            subskill.HELPING_BONUS.name,
+            subskill.SKILL_TRIGGER_M.name
+          ]),
           input.level
         ),
         nature: nature.ADAMANT,
@@ -87,17 +92,17 @@ export function calculatePokemonProduction(
     }).detailedProduce;
 
     optimalSkillProduction = setupAndRunProductionSimulation({
-      pokemonCombination,
+      pokemonSet: pokemonCombination,
       input: {
         ...input,
         subskills: limitSubSkillsToLevel(
-          [
-            subskill.SKILL_TRIGGER_M,
-            subskill.HELPING_SPEED_M,
-            subskill.SKILL_TRIGGER_S,
-            subskill.HELPING_SPEED_S,
-            subskill.HELPING_BONUS
-          ],
+          new Set([
+            subskill.SKILL_TRIGGER_M.name,
+            subskill.HELPING_SPEED_M.name,
+            subskill.SKILL_TRIGGER_S.name,
+            subskill.HELPING_SPEED_S.name,
+            subskill.HELPING_BONUS.name
+          ]),
           input.level
         ),
         nature: nature.CAREFUL,
@@ -125,9 +130,14 @@ export function calculatePokemonProduction(
 }
 
 // 5110 days is 14 years or 730 weeks
-export function calculateTeam(params: { settings: TeamSettingsExt; members: TeamMember[] }, iterations = 5110) {
+export function calculateTeam(
+  params: { settings: TeamSettingsExt; members: TeamMemberExt[] },
+  iterations = 5110,
+  includeCooking = true
+) {
   const { settings, members } = params;
-  const teamSimulator = new TeamSimulator({ settings, members, includeCooking: true });
+
+  const teamSimulator = new TeamSimulator({ settings, members, includeCooking });
 
   for (let i = 0; i < iterations; i++) {
     teamSimulator.simulate();
@@ -136,8 +146,27 @@ export function calculateTeam(params: { settings: TeamSettingsExt; members: Team
   return teamSimulator.results();
 }
 
+// TODO: could tweak iterations
+export function calculateSimple(
+  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; includeCooking: boolean },
+  iterations = 700
+) {
+  const { settings, members, includeCooking } = params;
+  const teamSimulator = new TeamSimulator({
+    settings,
+    members,
+    includeCooking: includeCooking === true
+  });
+
+  for (let i = 0; i < iterations; i++) {
+    teamSimulator.simulate();
+  }
+
+  return teamSimulator.simpleResults();
+}
+
 export function calculateIv(
-  params: { settings: TeamSettingsExt; members: TeamMember[]; variants: TeamMember[] },
+  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; variants: TeamMemberExt[] },
   iterations = 1400
 ): CalculateIvResponse {
   const { settings, members, variants } = params;
@@ -151,7 +180,7 @@ export function calculateIv(
       teamSimulator.simulate();
     }
 
-    variantResults.push(teamSimulator.ivResults(variant.externalId));
+    variantResults.push(teamSimulator.ivResults(variant.settings.externalId));
   }
 
   return { variants: variantResults };

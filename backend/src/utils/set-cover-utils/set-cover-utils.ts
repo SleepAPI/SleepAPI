@@ -1,179 +1,191 @@
-/**
- * Copyright 2023 Sleep API Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// /**
+//  * Copyright 2023 Sleep API Authors
+//  *
+//  * Licensed under the Apache License, Version 2.0 (the "License");
+//  * you may not use this file except in compliance with the License.
+//  * You may obtain a copy of the License at
+//  *
+//  *      http://www.apache.org/licenses/LICENSE-2.0
+//  *
+//  * Unless required by applicable law or agreed to in writing, software
+//  * distributed under the License is distributed on an "AS IS" BASIS,
+//  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  * See the License for the specific language governing permissions and
+//  * limitations under the License.
+//  */
 
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
-import { addIngredientSet } from '@src/services/calculator/ingredient/ingredient-calculate.js';
-import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
-import type {
-  HelperBoostStatus,
-  MemoizedParameters,
-  SimplifiedIngredientSet
-} from '@src/services/set-cover/set-cover.js';
-import type { IngredientSet, berry } from 'sleepapi-common';
-import { ingredient, mainskill } from 'sleepapi-common';
+// import { SurplusIngredients } from '@src/domain/combination/combination';
+// import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator';
+// import { addIngredientSet, mainskill } from 'sleepapi-common';
+// import { HelperBoostStatus, MemoizedParameters, SetCoverPokemonSetup } from '../../services/set-cover/set-cover';
 
-export function createPokemonByIngredientReverseIndex(pokemons: CustomPokemonCombinationWithProduce[]) {
-  const reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
+// export interface ScoreResult {
+//   score: number;
+//   contributions: Contribution[];
+//   countedMeals: Contribution[];
+// }
 
-  const helperBoostPokemon = pokemons.filter(
-    ({ pokemonCombination }) => pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
-  );
-  if (helperBoostPokemon.length > 0) {
-    for (const ing of ingredient.INGREDIENTS) {
-      reverseIndex.set(ing.name, [...helperBoostPokemon]);
-    }
-  }
+// export function hashPokemonCombination(pc: PokemonIngredientSetSimple): string {
+//   return pc.pokemon + ':' + pc.ingredients.map((ing) => ing.ingredient).join(',');
+// }
 
-  const remainingPokemon = pokemons.filter(
-    ({ pokemonCombination }) => pokemonCombination.pokemon.skill !== mainskill.HELPER_BOOST
-  );
+// export function createPokemonByIngredientReverseIndex(pokemons: SetCoverPokemonSetup[]) {
+//   const reverseIndex: Map<string, SetCoverPokemonSetup[]> = new Map();
 
-  // Populate the reverse index map by iterating over the pokemons array
-  for (const pokemon of remainingPokemon) {
-    for (const { ingredient } of pokemon.detailedProduce.produce.ingredients) {
-      if (!reverseIndex.has(ingredient.name)) {
-        reverseIndex.set(ingredient.name, [pokemon]);
-      } else {
-        const array = reverseIndex.get(ingredient.name);
-        if (array !== undefined) {
-          array.push(pokemon);
-        }
-      }
-    }
-  }
+//   // Populate the reverse index map by iterating over the pokemons array
+//   for (const pokemonSetup of pokemons) {
+// TODO: why did this iterate ingredient list rather than the production ings? vaporeon would only show up as milk
+//     for (const { ingredient } of pokemonSetup.pokemonSet.ingredients) {
+//       if (!reverseIndex.has(ingredient)) {
+//         reverseIndex.set(ingredient, [pokemonSetup]);
+//       } else {
+//         const array = reverseIndex.get(ingredient);
+//         if (array !== undefined) {
+//           array.push(pokemonSetup);
+//         }
+//       }
+//     }
+//   }
 
-  return reverseIndex;
-}
+//   return reverseIndex;
+// }
 
-export function createMemoKey(params: MemoizedParameters): string {
-  const { remainingIngredients, spotsLeftInTeam, helperBoost } = params;
+// export function createMemoKey(params: MemoizedParameters): string {
+//   const { remainingIngredients, spotsLeftInTeam, helperBoost } = params;
 
-  const ingredientsPart = remainingIngredients.map((ing) => `${ing.ingredient}:${ing.amount}`).join(',');
-  const helperBoostPart = `${helperBoost ? `${helperBoost.amount}:${helperBoost.berry}` : ''}`;
-  return `${ingredientsPart}|${spotsLeftInTeam}|${helperBoostPart}`;
-}
+//   const ingredientsPart = remainingIngredients.map((ing) => `${ing.ingredient}:${ing.amount}`).join(',');
+//   const helperBoostPart = `${helperBoost ? `${helperBoost.amount}:${helperBoost.berry}` : ''}`;
+//   return `${ingredientsPart}|${spotsLeftInTeam}|${helperBoostPart}`;
+// }
 
-export function parseMemoKey(key: string): MemoizedParameters {
-  const [ingredientsPart, spotsLeftInTeamStr, helperBoostPart] = key.split('|');
-  let remainingIngredients: SimplifiedIngredientSet[] = [];
+// export function parseMemoKey(key: string): MemoizedParameters {
+//   const [ingredientsPart, spotsLeftInTeamStr, helperBoostPart] = key.split('|');
+//   let remainingIngredients: SimplifiedIngredientSet[] = [];
 
-  // Only proceed to parse ingredientsPart if it is not empty
-  if (ingredientsPart) {
-    remainingIngredients = ingredientsPart.split(',').map((part) => {
-      const [ingredient, amountStr] = part.split(':');
-      return { ingredient, amount: parseFloat(amountStr) };
-    });
-  }
+//   // Only proceed to parse ingredientsPart if it is not empty
+//   if (ingredientsPart) {
+//     remainingIngredients = ingredientsPart.split(',').map((part) => {
+//       const [ingredient, amountStr] = part.split(':');
+//       return { ingredient, amount: parseFloat(amountStr) };
+//     });
+//   }
 
-  // Only proceed to parse helperBoostPart if it is not empty
-  let helperBoost: HelperBoostStatus | undefined = undefined;
-  if (helperBoostPart) {
-    const [amount, berry] = helperBoostPart.split(':');
-    helperBoost = {
-      amount: +amount,
-      berry
-    };
-  }
+//   // Only proceed to parse helperBoostPart if it is not empty
+//   let helperBoost: HelperBoostStatus | undefined = undefined;
+//   if (helperBoostPart) {
+//     const [amount, berry] = helperBoostPart.split(':');
+//     helperBoost = {
+//       amount: +amount,
+//       berry,
+//     };
+//   }
 
-  return {
-    remainingIngredients,
-    spotsLeftInTeam: parseInt(spotsLeftInTeamStr, 10),
-    helperBoost
-  };
-}
+//   return {
+//     remainingIngredients,
+//     spotsLeftInTeam: parseInt(spotsLeftInTeamStr, 10),
+//     helperBoost,
+//   };
+// }
 
-export function calculateRemainingSimplifiedIngredients(
-  requiredIngredients: SimplifiedIngredientSet[],
-  producedIngredients: IngredientSet[],
-  round = false
-): SimplifiedIngredientSet[] {
-  const result: SimplifiedIngredientSet[] = [];
-  for (const req of requiredIngredients) {
-    let amountNeeded = req.amount;
-    for (const prod of producedIngredients) {
-      if (prod.ingredient.name === req.ingredient) {
-        amountNeeded -= prod.amount;
-        if (round) {
-          amountNeeded = Math.ceil(amountNeeded);
-        }
-        break;
-      }
-    }
+// export function calculateRemainingSimplifiedIngredients(
+//   requiredIngredients: SimplifiedIngredientSet[],
+//   producedIngredients: SimplifiedIngredientSet[],
+//   round = false
+// ): SimplifiedIngredientSet[] {
+//   const result: SimplifiedIngredientSet[] = [];
+//   for (const req of requiredIngredients) {
+//     let amountNeeded = req.amount;
+//     for (const prod of producedIngredients) {
+//       if (prod.ingredient === req.ingredient) {
+//         amountNeeded -= prod.amount;
+//         if (round) {
+//           amountNeeded = Math.ceil(amountNeeded);
+//         }
+//         break;
+//       }
+//     }
 
-    if (amountNeeded > 0) {
-      result.push({ ingredient: req.ingredient, amount: amountNeeded });
-    }
-  }
+//     if (amountNeeded > 0) {
+//       result.push({ ingredient: req.ingredient, amount: amountNeeded });
+//     }
+//   }
 
-  return result;
-}
+//   return result;
+// }
 
-export function sumOfSimplifiedIngredients(ingredients: SimplifiedIngredientSet[]) {
-  return ingredients.map((ing) => ing.amount).reduce((sum, amount) => sum + amount, 0);
-}
+// export function extractRelevantSurplus(
+//   recipe: SimplifiedIngredientSet[],
+//   surplus: SimplifiedIngredientSet[]
+// ): SurplusIngredients {
+//   const recipeIngredientNames = new Set(recipe.map((ingredientDrop) => ingredientDrop.ingredient));
 
-export const memo: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
+//   const relevant = surplus.filter((ingredientDrop) => recipeIngredientNames.has(ingredientDrop.ingredient));
+//   const extra = surplus.filter((ingredientDrop) => !recipeIngredientNames.has(ingredientDrop.ingredient));
 
-export function countUniqueHelperBoostPokemon(team: CustomPokemonCombinationWithProduce[], boostedBerry: berry.Berry) {
-  const { count } = team.reduce(
-    (accumulator, cur) => {
-      if (
-        cur.pokemonCombination.pokemon.berry === boostedBerry &&
-        !accumulator.names.has(cur.pokemonCombination.pokemon.name)
-      ) {
-        accumulator.names.add(cur.pokemonCombination.pokemon.name);
-        accumulator.count += 1;
-      }
-      return accumulator;
-    },
-    { count: 0, names: new Set<string>() }
-  );
-  return count;
-}
+//   return {
+//     total: surplus,
+//     relevant,
+//     extra,
+//   };
+// }
 
-export function countNrOfHelperBoostHelps(params: {
-  uniqueBoostedMons: number;
-  skillProcs: number;
-  skillLevel: number;
-}) {
-  const { uniqueBoostedMons, skillProcs, skillLevel } = params;
+// export function getSurplusList(
+//   surplus: SimplifiedIngredientSet[],
+//   requiredIngredients: SimplifiedIngredientSet[]
+// ): number[] {
+//   return requiredIngredients
+//     .map((reqIngredient) => {
+//       const foundSurplus = surplus.find((surplusItem) => surplusItem.ingredient === reqIngredient.ingredient);
+//       return foundSurplus ? foundSurplus.amount : 0;
+//     })
+//     .sort((a, b) => a - b);
+// }
 
-  return (
-    skillProcs *
-    (mainskill.HELPER_BOOST.amount(skillLevel) + calculateHelperBoostHelpsFromUnique(uniqueBoostedMons, skillLevel))
-  );
-}
+// export function sumOfSimplifiedIngredients(ingredients: SimplifiedIngredientSet[]) {
+//   return ingredients.reduce((sum, cur) => sum + cur.amount, 0);
+// }
 
-/**
- * Will add one help of average produce to every team member and @param currentNrOfHelps to the newest team member (last index)
- */
-export function calculateHelperBoostIngredientsIncrease(
-  currentTeam: CustomPokemonCombinationWithProduce[],
-  currentNrOfHelps: number
-) {
-  let increasedIngredients: IngredientSet[] = [];
-  for (let i = 0; i < currentTeam.length; i++) {
-    const member = currentTeam[i];
-    const addedHelps = member === currentTeam[currentTeam.length - 1] ? currentNrOfHelps : 1;
+// export function countUniqueHelperBoostPokemon(team: SetCoverPokemonSetup[], boostedBerry: string) {
+//   const { count } = team.reduce(
+//     (accumulator, cur) => {
+//       if (cur.berry === boostedBerry && !accumulator.names.has(cur.pokemonSet.pokemon)) {
+//         accumulator.names.add(cur.pokemonSet.pokemon);
+//         accumulator.count += 1;
+//       }
+//       return accumulator;
+//     },
+//     { count: 0, names: new Set<string>() }
+//   );
+//   return count;
+// }
 
-    const ingredientsFromBoostedHelps = member.averageProduce.ingredients.map(({ amount, ingredient }) => ({
-      amount: amount * addedHelps,
-      ingredient
-    }));
-    increasedIngredients = addIngredientSet(increasedIngredients, ingredientsFromBoostedHelps);
-  }
-  return increasedIngredients;
-}
+// export function countNrOfHelperBoostHelps(params: {
+//   uniqueBoostedMons: number;
+//   skillProcs: number;
+//   skillLevel: number;
+// }) {
+//   const { uniqueBoostedMons, skillProcs, skillLevel } = params;
+
+//   return (
+//     skillProcs *
+//     (mainskill.HELPER_BOOST.amount(skillLevel) + calculateHelperBoostHelpsFromUnique(uniqueBoostedMons, skillLevel))
+//   );
+// }
+
+// /**
+//  * Will add one help of average produce to every team member and @param currentNrOfHelps to the newest team member (last index)
+//  */
+// export function calculateHelperBoostIngredientsIncrease(currentTeam: SetCoverPokemonSetup[], currentNrOfHelps: number) {
+//   let increasedIngredients: SimplifiedIngredientSet[] = [];
+//   for (let i = 0; i < currentTeam.length; i++) {
+//     const member = currentTeam[i];
+//     const addedHelps = member === currentTeam[currentTeam.length - 1] ? currentNrOfHelps : 1;
+
+//     const ingredientsFromBoostedHelps = member.averageIngredients.map(({ amount, ingredient }) => ({
+//       amount: amount * addedHelps,
+//       ingredient,
+//     }));
+//     increasedIngredients = addIngredientSet(increasedIngredients, ingredientsFromBoostedHelps);
+//   }
+//   return increasedIngredients;
+// }

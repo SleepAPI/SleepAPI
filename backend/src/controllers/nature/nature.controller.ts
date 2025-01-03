@@ -1,6 +1,6 @@
-import * as tsoa from '@tsoa/runtime';
+import tsoa from '@tsoa/runtime';
 import { getNatureNames } from 'sleepapi-common';
-const { Controller, Route, Tags, Get } = tsoa;
+const { Controller, Get, Route, Tags } = tsoa;
 
 @Route('api/nature')
 export default class NatureController extends Controller {

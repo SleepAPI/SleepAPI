@@ -22,7 +22,7 @@ import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
 import { MOCKED_MAIN_SLEEP, MOCKED_PRODUCE } from '@src/utils/test-utils/defaults.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { describe, expect, it } from 'bun:test';
-import { MathUtils, berry, ingredient, mainskill, nature, pokemon } from 'sleepapi-common';
+import { ABOMASNOW, MathUtils, berry, ingredient, mainskill, nature } from 'sleepapi-common';
 
 describe('getExtraHelpfulEvents', () => {
   it('shall schedule extra helpful events evenly throughout the day', () => {
@@ -30,7 +30,7 @@ describe('getExtraHelpfulEvents', () => {
     const procs = 1.5;
     const produce: PokemonProduce = {
       produce: MOCKED_PRODUCE,
-      pokemon: pokemon.ABOMASNOW
+      pokemon: ABOMASNOW
     };
     const result = getExtraHelpfulEvents(period, procs, produce);
     expect(result).toMatchInlineSnapshot(`
@@ -184,7 +184,7 @@ describe('getHelperBoostEvents', () => {
     const level = 6;
     const produce: PokemonProduce = {
       produce: MOCKED_PRODUCE,
-      pokemon: pokemon.ABOMASNOW
+      pokemon: ABOMASNOW
     };
     const result = getHelperBoostEvents(period, procs, unique, level, produce);
     expect(result).toMatchInlineSnapshot(`

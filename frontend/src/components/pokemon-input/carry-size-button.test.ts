@@ -2,14 +2,14 @@ import CarrySizeButton from '@/components/pokemon-input/carry-size-button.vue'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { maxCarrySize, pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { maxCarrySize, PIKACHU, type PokemonInstanceExt } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('CarrySizeButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof CarrySizeButton>>
 
   const mockPokemon = {
-    pokemon: pokemon.PIKACHU,
+    pokemon: PIKACHU,
     carrySize: 0
   } as PokemonInstanceExt
 
@@ -43,7 +43,7 @@ describe('CarrySizeButton', () => {
   it('displays carry size options correctly in the list', async () => {
     await wrapper.setData({ menu: true })
     const listItems = wrapper.findAllComponents({ name: 'v-list-item' })
-    const expectedValues = [pokemon.PIKACHU.carrySize, maxCarrySize(pokemon.PIKACHU)]
+    const expectedValues = [PIKACHU.carrySize, maxCarrySize(PIKACHU)]
     listItems.forEach((item, index) => {
       expect(item.text()).toBe(expectedValues[index].toString())
     })
@@ -56,7 +56,7 @@ describe('CarrySizeButton', () => {
     await listItems[0].trigger('click')
 
     expect(wrapper.emitted('update-carry')).toBeTruthy()
-    expect(wrapper.emitted('update-carry')![0]).toEqual([pokemon.PIKACHU.carrySize])
+    expect(wrapper.emitted('update-carry')![0]).toEqual([PIKACHU.carrySize])
   })
 
   it('closes the menu when a value is selected', async () => {

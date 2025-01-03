@@ -49,6 +49,7 @@ Thumbs.db
 *.wmv
 
 secrets
+personal*
 .env
 .txt
 coverage

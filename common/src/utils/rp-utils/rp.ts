@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import type { IngredientSet } from '../../domain';
+import type { IngredientSet } from '../../domain/ingredient';
 import type { Nature } from '../../domain/nature/nature';
 import type { Pokemon } from '../../domain/pokemon';
-import type { SubSkill } from '../../domain/subskill/subskill';
 import {
   DREAM_SHARD_BONUS,
   ENERGY_RECOVERY_BONUS,
@@ -29,7 +28,7 @@ import {
   INVENTORY_S,
   RESEARCH_EXP_BONUS,
   SLEEP_EXP_BONUS
-} from '../../domain/subskill/subskill';
+} from '../../domain/subskill/subskills';
 import type { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
 import { MathUtils } from '../../utils/math-utils';
 import { invertNatureFrequency } from '../../utils/nature-utils';
@@ -46,7 +45,7 @@ export class RP {
   private level: number;
   private skillLevel: number;
   private nature: Nature;
-  private subskills: SubSkill[];
+  private subskills: Set<string>;
   private ribbon: number;
 
   constructor(pokemonInstance: PokemonInstanceExt) {
@@ -111,7 +110,7 @@ export class RP {
   }
 
   get berryFactor() {
-    const berriesPerDrop = calculateNrOfBerriesPerDrop(this.pokemon, this.subskills);
+    const berriesPerDrop = calculateNrOfBerriesPerDrop(this.pokemon.specialty, this.subskills);
     const berryValue =
       berriesPerDrop *
       Math.max(
@@ -132,15 +131,15 @@ export class RP {
 
     let subskillFactor = 1;
     for (const sub of this.subskills) {
-      subskillFactor += this.subskillValue[sub.name] ?? 0;
+      subskillFactor += this.subskillValue[sub] ?? 0;
     }
 
     return MathUtils.floor(convertedNatureEnergy * subskillFactor, 2);
   }
 
   get frequencySubskills() {
-    const helpM = this.subskills.some(({ name }) => name === HELPING_SPEED_M.name) ? HELPING_SPEED_M.amount : 0;
-    const helpS = this.subskills.some(({ name }) => name === HELPING_SPEED_S.name) ? HELPING_SPEED_S.amount : 0;
+    const helpM = this.subskills.has(HELPING_SPEED_M.name) ? HELPING_SPEED_M.amount : 0;
+    const helpS = this.subskills.has(HELPING_SPEED_S.name) ? HELPING_SPEED_S.amount : 0;
 
     return Math.max(0.65, 1 - helpM - helpS);
   }
@@ -219,8 +218,14 @@ export class RP {
     60: 1.88
   };
 
-  private filteredSubskills(pokemonInstance: PokemonInstanceExt) {
-    return pokemonInstance.subskills.filter((sub) => sub.level <= pokemonInstance.level).map((sub) => sub.subskill);
+  private filteredSubskills(pokemonInstance: PokemonInstanceExt): Set<string> {
+    const result = new Set<string>();
+    for (const sub of pokemonInstance.subskills) {
+      if (sub.level <= pokemonInstance.level) {
+        result.add(sub.subskill.name);
+      }
+    }
+    return result;
   }
 
   private filteredIngredientSet(pokemonInstance: PokemonInstanceExt): IngredientSet[] {
@@ -229,18 +234,14 @@ export class RP {
     const ingredientSet: IngredientSet[] = [pokemon.ingredient0];
 
     const ingredient30 = pokemon.ingredient30.find(
-      (ingList) =>
-        ingList.ingredient.name.toLowerCase() ===
-        ingredients.find((ing) => ing.level === 30)?.ingredient.name.toLowerCase()
+      (ingList) => ingList.ingredient.name === ingredients.find((ing) => ing.level === 30)?.ingredient?.name
     );
     if (ingredient30 && level >= 30) {
       ingredientSet.push(ingredient30);
     }
 
     const ingredient60 = pokemon.ingredient60.find(
-      (ingList) =>
-        ingList.ingredient.name.toLowerCase() ===
-        ingredients.find((ing) => ing.level === 60)?.ingredient.name.toLowerCase()
+      (ingList) => ingList.ingredient.name === ingredients.find((ing) => ing.level === 60)?.ingredient?.name
     );
     if (ingredient60 && level >= 60) {
       ingredientSet.push(ingredient60);

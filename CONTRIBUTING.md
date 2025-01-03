@@ -38,7 +38,6 @@ Finally, you are always welcome to contribute to the Sleep API community directl
 
 Thank you!
 
-[jest]: https://jestjs.io/
 [conventional]: https://www.conventionalcommits.org/
 [good first issues]: https://github.com/SleepAPI/SleepAPI/contribute
 [Discord]: https://discord.gg/w97qFff8n4

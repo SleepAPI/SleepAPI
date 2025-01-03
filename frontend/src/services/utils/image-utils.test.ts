@@ -1,11 +1,12 @@
 import { avatarImage, berryImage, islandImage, mainskillImage, pokemonImage } from '@/services/utils/image-utils'
-import { berry, island, mainskill, pokemon } from 'sleepapi-common'
+import { berry, island, mainskill, mockPokemon, type Pokemon } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
+const MOCK_POKEMON = mockPokemon()
 describe('mainskillImage', () => {
   it('returns correct image path for HELPER_BOOST skill', () => {
-    const mockPokemon: pokemon.Pokemon = {
-      ...pokemon.MOCK_POKEMON,
+    const mockPokemon: Pokemon = {
+      ...MOCK_POKEMON,
       berry: berry.LEPPA,
       skill: mainskill.HELPER_BOOST
     }
@@ -15,8 +16,8 @@ describe('mainskillImage', () => {
   })
 
   it('returns correct image path for stockpile skill', () => {
-    const mockPokemon: pokemon.Pokemon = {
-      ...pokemon.MOCK_POKEMON,
+    const mockPokemon: Pokemon = {
+      ...MOCK_POKEMON,
       skill: mainskill.STOCKPILE_CHARGE_STRENGTH_S
     }
 
@@ -25,8 +26,8 @@ describe('mainskillImage', () => {
   })
 
   it('returns correct image path for other skills', () => {
-    const mockPokemon: pokemon.Pokemon = {
-      ...pokemon.MOCK_POKEMON,
+    const mockPokemon: Pokemon = {
+      ...MOCK_POKEMON,
       skill: mainskill.CHARGE_ENERGY_S
     }
 
@@ -38,9 +39,11 @@ describe('mainskillImage', () => {
 describe('pokemonImage', () => {
   it('shall return correct pokemon image', () => {
     expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: false })).toEqual('/images/pokemon/some-pokemon.png')
+    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: false })).toEqual('/images/pokemon/some-pokemon.png')
   })
 
   it('shall return correct shiny pokemon image', () => {
+    expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: true })).toEqual('/images/pokemon/some-pokemon_shiny.png')
     expect(pokemonImage({ pokemonName: 'some-pokemon', shiny: true })).toEqual('/images/pokemon/some-pokemon_shiny.png')
   })
 })

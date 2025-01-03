@@ -1,16 +1,16 @@
 import type { GetPokemonQueryParams } from '@src/routes/pokemon-router/pokemon-router.js';
 import { getPokemonNames } from '@src/utils/pokemon-utils/pokemon-utils.js';
 import { queryAsBoolean } from '@src/utils/routing/routing-utils.js';
-import * as tsoa from '@tsoa/runtime';
-import type { pokemon } from 'sleepapi-common';
+import tsoa from '@tsoa/runtime';
+import type { Pokemon } from 'sleepapi-common';
 import { getPokemon } from 'sleepapi-common';
-const { Controller, Path, Route, Tags, Get, Queries } = tsoa;
+const { Controller, Path, Get, Queries, Route, Tags } = tsoa;
 
 @Route('api/pokemon')
 @Tags('pokemon')
 export default class PokemonController extends Controller {
   @Get('/{name}')
-  public async getPokemonWithName(@Path() name: string): Promise<pokemon.Pokemon> {
+  public async getPokemonWithName(@Path() name: string): Promise<Pokemon> {
     return getPokemon(name);
   }
 

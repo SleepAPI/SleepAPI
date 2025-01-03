@@ -31,7 +31,7 @@ const cjsConfig = defineConfig({
     }
   ],
   plugins: [
-    typescript({ tsconfig: './tsconfig.json' }), //
+    typescript({ tsconfig: './tsconfig.json' }),
     nodeResolve({
       exportConditions: ['default', 'node', 'browser'],
       preferBuiltins: true

@@ -1,8 +1,14 @@
 import IngredientButton from '@/components/pokemon-input/ingredient-button.vue'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import type { ingredient } from 'sleepapi-common'
-import { pokemon, type IngredientInstanceExt, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
+import {
+  PIKACHU,
+  PINSIR,
+  type Ingredient,
+  type IngredientInstanceExt,
+  type IngredientSet,
+  type PokemonInstanceExt
+} from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
@@ -10,7 +16,7 @@ describe('IngredientButton', () => {
 
   const mockPokemon: PokemonInstanceExt = {
     level: 60,
-    pokemon: pokemon.PIKACHU,
+    pokemon: PIKACHU,
     ingredients: [] as IngredientInstanceExt[]
   } as PokemonInstanceExt
 
@@ -50,7 +56,7 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
 
@@ -68,7 +74,7 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
     await wrapper.setData({ fab: true })
@@ -89,7 +95,7 @@ describe('IngredientButton', () => {
       ingredientLevel: 60,
       pokemonInstance: {
         ...mockPokemon,
-        pokemon: pokemon.PINSIR
+        pokemon: PINSIR
       }
     })
     // Use fake timers
@@ -111,7 +117,7 @@ describe('IngredientButton', () => {
     expect(wrapper.vm.ingredientSet!.ingredient.name).toBe('Apple')
 
     const emitted = wrapper.emitted('update-ingredient') as Array<
-      Array<{ ingredient: ingredient.Ingredient; ingredientLevel: number }>
+      Array<{ ingredient: Ingredient; ingredientLevel: number }>
     >
 
     expect(emitted).toHaveLength(2)

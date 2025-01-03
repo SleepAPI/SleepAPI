@@ -17,6 +17,7 @@ import {
   mainskill,
   subskill,
   uuid,
+  type Berry,
   type PokemonInstanceExt,
   type RecipeType,
   type TeamSettings
@@ -399,7 +400,7 @@ export const useTeamStore = defineStore('team', {
 
       this.updateTeam()
     },
-    async updateFavoredBerries(berries: berry.Berry[]) {
+    async updateFavoredBerries(berries: Berry[]) {
       this.getCurrentTeam.favoredBerries = berries
 
       this.updateTeam()

@@ -1,6 +1,8 @@
 import { MAX_RECIPE_LEVEL } from '../../domain/constants';
-import type { Recipe, RecipeType } from '../../domain/recipe';
-import type { IngredientSet } from '../../domain/types';
+import type { IngredientIndexToIntAmount, IngredientSet } from '../../domain/ingredient';
+import type { Recipe, RecipeFlat, RecipeType } from '../../domain/recipe';
+import { emptyIngredientInventoryFloat } from '../../utils/flat-utils';
+import { ING_ID_LOOKUP } from '../ingredient-utils/ingredient-utils';
 
 export function createCurry(params: { name: string; ingredients: IngredientSet[]; bonus: number }): Recipe {
   return createRecipe({ ...params, type: 'curry' });
@@ -12,6 +14,65 @@ export function createSalad(params: { name: string; ingredients: IngredientSet[]
 
 export function createDessert(params: { name: string; ingredients: IngredientSet[]; bonus: number }): Recipe {
   return createRecipe({ ...params, type: 'dessert' });
+}
+
+export function recipesToFlat<T extends Recipe | Recipe[]>(recipes: T): T extends Recipe[] ? RecipeFlat[] : RecipeFlat {
+  const recipeArray: Recipe[] = Array.isArray(recipes) ? recipes : [recipes];
+
+  const result = recipeArray.map((recipe) => {
+    const ingredientsFlat = emptyIngredientInventoryFloat();
+
+    recipe.ingredients.forEach((ingredientSet) => {
+      const index = ING_ID_LOOKUP[ingredientSet.ingredient.name];
+      ingredientsFlat[index] = ingredientSet.amount;
+    });
+
+    return {
+      name: recipe.name,
+      ingredients: ingredientsFlat,
+      value: recipe.value,
+      valueMax: recipe.valueMax,
+      type: recipe.type,
+      bonus: recipe.bonus,
+      nrOfIngredients: recipe.nrOfIngredients
+    };
+  });
+
+  return (Array.isArray(recipes) ? result : result[0]) as T extends Recipe[] ? RecipeFlat[] : RecipeFlat;
+}
+
+/**
+ * Calculates the percentage of the recipe covered by produced ingredients
+ */
+export function recipeCoverage(recipe: Int16Array, ingredients: IngredientIndexToIntAmount) {
+  let totalRecipeAmount = 0;
+  let totalCovered = 0;
+
+  const remainingRecipe = new Int16Array(recipe.length);
+  let sumRemainingIngredients = 0;
+
+  for (let i = 0; i < recipe.length; i++) {
+    const recipeAmount = recipe[i];
+
+    if (recipeAmount > 0) {
+      totalRecipeAmount += recipeAmount;
+
+      const covered = Math.min(recipeAmount, ingredients[i]);
+      totalCovered += covered;
+
+      const left = Math.max(recipeAmount - covered, 0);
+      remainingRecipe[i] = left;
+      sumRemainingIngredients += left;
+    }
+  }
+
+  const coverage = totalRecipeAmount > 0 ? (totalCovered / totalRecipeAmount) * 100 : 0;
+
+  return {
+    coverage,
+    remainingRecipe,
+    sumRemainingIngredients
+  };
 }
 
 function createRecipe(params: { name: string; ingredients: IngredientSet[]; bonus: number; type: RecipeType }): Recipe {

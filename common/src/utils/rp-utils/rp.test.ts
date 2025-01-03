@@ -7,7 +7,7 @@ import {
   MOOMOO_MILK,
   SOOTHING_CACAO,
   WARMING_GINGER
-} from '../../domain/ingredient';
+} from '../../domain/ingredient/ingredients';
 import { JOLLY, LONELY, MILD, NAUGHTY, QUIET, SASSY } from '../../domain/nature';
 import { EEVEE, ESPEON, GOLDUCK, PINSIR, PUPITAR, RAICHU } from '../../domain/pokemon';
 import {
@@ -24,7 +24,7 @@ import {
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S,
   SLEEP_EXP_BONUS
-} from '../../domain/subskill';
+} from '../../domain/subskill/subskills';
 import type { PokemonInstanceExt } from '../../domain/types/pokemon-instance';
 import { RP } from '../../utils/rp-utils/rp';
 import { uuid } from '../../utils/uuid-utils';

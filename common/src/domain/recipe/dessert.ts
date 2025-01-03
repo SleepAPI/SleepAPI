@@ -1,4 +1,4 @@
-import { createDessert } from '../../utils/recipe-utils/recipe-utils';
+import { createDessert, recipesToFlat } from '../../utils/recipe-utils/recipe-utils';
 import {
   FANCY_APPLE,
   FANCY_EGG,
@@ -14,8 +14,8 @@ import {
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
   WARMING_GINGER
-} from '../ingredient/ingredient';
-import type { Recipe } from './recipe';
+} from '../ingredient/ingredients';
+import type { Recipe, RecipeFlat } from './recipe';
 
 export const MIXED_JUICE = createDessert({
   name: 'MIXED_JUICE',
@@ -254,3 +254,6 @@ export const DESSERTS: Recipe[] = [
   FLOWER_GIFT_MACARONS,
   ZING_ZAP_SPICED_COLA
 ];
+
+export const MIXED_JUICE_FLAT: RecipeFlat = recipesToFlat(MIXED_JUICE);
+export const DESSERTS_FLAT: RecipeFlat[] = recipesToFlat(DESSERTS);

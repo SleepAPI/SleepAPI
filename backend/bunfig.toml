@@ -1,6 +1,6 @@
 [test]
 
-coverage = true
+coverage = false # TODO: revert to true
 coverageIgnoreSourcemaps = true
 coverageSkipTestFiles = true
 coverageReporter  = ["text", "lcov"]

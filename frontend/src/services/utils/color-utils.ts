@@ -1,5 +1,4 @@
-import type { subskill } from 'sleepapi-common'
-import { capitalize } from 'sleepapi-common'
+import { capitalize, type Subskill } from 'sleepapi-common'
 
 export function hexToRgba(hex: string, opacity: number) {
   hex = hex.replace('#', '')
@@ -18,6 +17,6 @@ export function hexToRgba(hex: string, opacity: number) {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`
 }
 
-export function rarityColor(subskill: subskill.SubSkill) {
+export function rarityColor(subskill: Subskill) {
   return `subskill${capitalize(subskill.rarity)}`
 }

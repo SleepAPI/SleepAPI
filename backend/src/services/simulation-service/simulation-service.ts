@@ -40,18 +40,23 @@ import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
 import type {
   BerrySet,
   DetailedProduce,
-  PokemonIngredientSet,
+  PokemonWithIngredients,
   Produce,
+  ProduceFlat,
   SkillActivation,
   Summary,
   Time
 } from 'sleepapi-common';
 import {
   MEALS_IN_DAY,
+  berrySetToFlat,
   calculateIngredientPercentage,
   calculateNrOfBerriesPerDrop,
   calculateSkillPercentageWithPityProc,
-  combineSameIngredientsInDrop,
+  flatToBerrySet,
+  flatToIngredientSet,
+  ingredientSetToIntFlat,
+  limitSubSkillsToLevel,
   mainskill,
   maxCarrySize,
   nature
@@ -61,7 +66,7 @@ import {
  * Sets up all the simulation input and runs the simulated production window
  */
 export function setupAndRunProductionSimulation(params: {
-  pokemonCombination: PokemonIngredientSet;
+  pokemonSet: PokemonWithIngredients;
   input: ProductionStats;
   monteCarloIterations: number;
   preGeneratedSkillActivations?: SkillActivation[];
@@ -72,11 +77,11 @@ export function setupAndRunProductionSimulation(params: {
   log: ScheduledEvent[];
   summary: Summary;
 } {
-  const { pokemonCombination, input, monteCarloIterations, preGeneratedSkillActivations } = params;
+  const { pokemonSet, input, monteCarloIterations, preGeneratedSkillActivations } = params;
   const {
     level,
     nature: maybeNature = nature.BASHFUL,
-    subskills = [],
+    subskills = new Set(),
     e4eProcs,
     e4eLevel,
     cheer,
@@ -93,15 +98,19 @@ export function setupAndRunProductionSimulation(params: {
     ribbon
   } = input;
 
-  const averagedPokemonCombination = calculateAveragePokemonIngredientSet(pokemonCombination);
+  const averageIngredientList = calculateAveragePokemonIngredientSet(
+    ingredientSetToIntFlat(pokemonSet.ingredientList),
+    level
+  );
+  const averageBerryList = berrySetToFlat([{ amount: 1, berry: pokemonSet.pokemon.berry, level }]);
 
   const ingredientPercentage = calculateIngredientPercentage({
-    pokemon: pokemonCombination.pokemon,
+    pokemon: pokemonSet.pokemon,
     nature: maybeNature,
     subskills
   });
 
-  const skillPercentage = calculateSkillPercentageWithPityProc(pokemonCombination.pokemon, subskills, maybeNature);
+  const skillPercentage = calculateSkillPercentageWithPityProc(pokemonSet.pokemon, subskills, maybeNature);
 
   const daySleepInfo: SleepInfo = {
     period: { end: mainBedtime, start: mainWakeup },
@@ -112,30 +121,39 @@ export function setupAndRunProductionSimulation(params: {
 
   const mealTimes = getDefaultMealTimes(daySleepInfo.period);
 
-  const berriesPerDrop = calculateNrOfBerriesPerDrop(averagedPokemonCombination.pokemon, subskills);
+  const berriesPerDrop = calculateNrOfBerriesPerDrop(pokemonSet.pokemon.specialty, subskills);
   const sneakySnackBerries: BerrySet[] = [
     {
       amount: berriesPerDrop,
-      berry: averagedPokemonCombination.pokemon.berry,
+      berry: pokemonSet.pokemon.berry,
       level
     }
   ];
 
   const inventoryLimit = InventoryUtils.calculateCarrySize({
-    baseWithEvolutions: input.inventoryLimit ?? maxCarrySize(averagedPokemonCombination.pokemon),
-    subskills,
+    baseWithEvolutions: input.inventoryLimit ?? maxCarrySize(pokemonSet.pokemon),
+    subskillsLevelLimited: limitSubSkillsToLevel(subskills, level),
     level,
     ribbon,
     camp
   });
 
+  const averageProduceFlat: ProduceFlat = calculateAverageProduce({
+    ingredients: averageIngredientList,
+    berries: averageBerryList,
+    ingredientPercentage,
+    berriesPerDrop
+  });
   const pokemonWithAverageProduce: PokemonProduce = {
-    pokemon: averagedPokemonCombination.pokemon,
-    produce: calculateAverageProduce(averagedPokemonCombination, ingredientPercentage, berriesPerDrop, level)
+    pokemon: pokemonSet.pokemon,
+    produce: {
+      berries: flatToBerrySet(averageProduceFlat.berries, level),
+      ingredients: flatToIngredientSet(averageProduceFlat.ingredients)
+    }
   };
 
   const helpFrequency = calculateHelpSpeedBeforeEnergy({
-    pokemon: averagedPokemonCombination.pokemon,
+    pokemon: pokemonSet.pokemon,
     level,
     nature: maybeNature,
     subskills,
@@ -199,7 +217,7 @@ export function setupAndRunProductionSimulation(params: {
     },
     averageProduce: {
       berries: pokemonWithAverageProduce.produce.berries,
-      ingredients: combineSameIngredientsInDrop(pokemonWithAverageProduce.produce.ingredients)
+      ingredients: pokemonWithAverageProduce.produce.ingredients
     },
     skillActivations,
     log,

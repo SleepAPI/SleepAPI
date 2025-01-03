@@ -1,4 +1,4 @@
-import { createSalad } from '../../utils/recipe-utils/recipe-utils';
+import { createSalad, recipesToFlat } from '../../utils/recipe-utils/recipe-utils';
 import {
   BEAN_SAUSAGE,
   FANCY_APPLE,
@@ -17,8 +17,8 @@ import {
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
   WARMING_GINGER
-} from '../ingredient/ingredient';
-import type { Recipe } from './recipe';
+} from '../ingredient/ingredients';
+import type { Recipe, RecipeFlat } from './recipe';
 
 export const MIXED_SALAD = createSalad({
   name: 'MIXED_SALAD',
@@ -247,3 +247,6 @@ export const SALADS: Recipe[] = [
   NINJA_SALAD,
   DEFIANT_COFFEE_DRESSED_SALAD
 ];
+
+export const MIXED_SALAD_FLAT: RecipeFlat = recipesToFlat(MIXED_SALAD);
+export const SALADS_FLAT: RecipeFlat[] = recipesToFlat(SALADS);

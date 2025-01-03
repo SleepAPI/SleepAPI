@@ -69,6 +69,7 @@ export async function refresh(refresh_token: string): Promise<RefreshResponse> {
   };
 }
 
+// TODO: too generic name, not obvious when called outside since this is pure function
 export async function verify(access_token: string) {
   client.setCredentials({ access_token });
   const response = await client.request<TokenInfo>({

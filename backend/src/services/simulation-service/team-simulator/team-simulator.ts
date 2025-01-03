@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
-import { SleepAPIError } from '@src/domain/error/sleepapi-error.js';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state.js';
 import type {
   TeamSkillActivation,
@@ -24,13 +22,23 @@ import type {
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state.js';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
-import type { CalculateTeamResponse, MemberProductionBase, Time, TimePeriod } from 'sleepapi-common';
-import { RandomUtils } from 'sleepapi-common';
+import type {
+  CalculateTeamResponse,
+  MemberProductionBase,
+  SimpleTeamResult,
+  TeamMemberExt,
+  TeamSettingsExt,
+  Time,
+  TimePeriod
+} from 'sleepapi-common';
+import { mockMainskill, RandomUtils } from 'sleepapi-common';
 
+// TODO: can we use simplifiedingredientset for pokemon
 export class TeamSimulator {
   private run = 0;
 
   private memberStates: MemberState[] = [];
+  private memberStatesWithoutFillers: MemberState[] = [];
   private cookingState?: CookingState = undefined;
 
   private timeIntervals: Time[] = [];
@@ -42,7 +50,7 @@ export class TeamSimulator {
   private fullDayDuration = 1440;
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
-  constructor(params: { settings: TeamSettingsExt; members: TeamMember[]; includeCooking: boolean }) {
+  constructor(params: { settings: TeamSettingsExt; members: TeamMemberExt[]; includeCooking: boolean }) {
     const { settings, members, includeCooking } = params;
 
     if (includeCooking) {
@@ -79,6 +87,9 @@ export class TeamSimulator {
     for (const member of members) {
       const memberState = new MemberState({ member, team: members, settings, cookingState: this.cookingState });
       this.memberStates.push(memberState);
+      if (!member.pokemonWithIngredients.pokemon.skill.isSkill(mockMainskill)) {
+        this.memberStatesWithoutFillers.push(memberState);
+      }
     }
   }
 
@@ -90,12 +101,12 @@ export class TeamSimulator {
     while (minutesSinceWakeup <= this.nightStartMinutes) {
       this.attemptCooking(minutesSinceWakeup);
 
-      for (const member of this.memberStates) {
+      for (const member of this.memberStatesWithoutFillers) {
         for (const teamSkillActivated of member.attemptDayHelp(minutesSinceWakeup)) {
           this.activateTeamSkill(teamSkillActivated, member);
         }
       }
-      for (const member of this.memberStates) {
+      for (const member of this.memberStatesWithoutFillers) {
         member.scheduleHelp(minutesSinceWakeup);
       }
 
@@ -107,7 +118,7 @@ export class TeamSimulator {
 
     // Night loop
     while (minutesSinceWakeup <= this.fullDayDuration) {
-      for (const member of this.memberStates) {
+      for (const member of this.memberStatesWithoutFillers) {
         member.attemptNightHelp(minutesSinceWakeup);
       }
 
@@ -116,14 +127,15 @@ export class TeamSimulator {
     }
   }
 
+  // @Profile
   public results(): CalculateTeamResponse {
     this.collectInventory();
 
-    const members = this.memberStates.map((m) => m.results(this.run));
-    if (!this.cookingState) {
-      throw new SleepAPIError('Cooking simulator was not instantiated');
+    const members = this.memberStatesWithoutFillers.map((m) => m.results(this.run));
+    let cooking = undefined;
+    if (this.cookingState) {
+      cooking = this.cookingState.results(this.run);
     }
-    const cooking = this.cookingState.results(this.run);
 
     return { members, cooking };
   }
@@ -131,7 +143,7 @@ export class TeamSimulator {
   public ivResults(variantId: string): MemberProductionBase {
     this.collectInventory();
 
-    const variant = this.memberStates.filter((member) => variantId === member.id);
+    const variant = this.memberStatesWithoutFillers.filter((member) => variantId === member.id);
     if (variant.length !== 1) {
       throw new Error('Team must contain exactly 1 variant');
     }
@@ -139,12 +151,18 @@ export class TeamSimulator {
     return variant[0].ivResults(this.run);
   }
 
+  public simpleResults(): SimpleTeamResult[] {
+    this.collectInventory();
+
+    return this.memberStatesWithoutFillers.map((member) => member.simpleResults(this.run));
+  }
+
   private init() {
     for (const member of this.memberStates) {
       member.wakeUp();
     }
 
-    for (const member of this.memberStates) {
+    for (const member of this.memberStatesWithoutFillers) {
       for (const proc of member.collectInventory()) {
         this.activateTeamSkill(proc, member);
       }
@@ -179,7 +197,7 @@ export class TeamSimulator {
 
   private activateTeamSkill(result: TeamSkillActivation, invoker: MemberState) {
     if (result.helps) {
-      for (const mem of this.memberStates) {
+      for (const mem of this.memberStatesWithoutFillers) {
         mem.addHelps(result.helps);
         // TODO: we currently don't track produce generated from helps
         invoker.addSkillValue(result.helps);
@@ -225,7 +243,7 @@ export class TeamSimulator {
   }
 
   private collectInventory() {
-    for (const member of this.memberStates) {
+    for (const member of this.memberStatesWithoutFillers) {
       for (const activation of member.collectInventory()) {
         this.activateTeamSkill(activation, member);
       }

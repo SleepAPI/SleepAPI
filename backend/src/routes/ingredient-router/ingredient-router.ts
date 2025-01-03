@@ -8,8 +8,7 @@ class IngredientRouterImpl {
       try {
         logger.log('Entered /ingredient');
         const ingredientData = await controller.getIngredients();
-
-        res.header('Content-Type', 'application/json').send(JSON.stringify(ingredientData, null, 4));
+        res.json(ingredientData);
       } catch (err) {
         logger.error(err as Error);
         res.status(500).send('Something went wrong');

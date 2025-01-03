@@ -214,7 +214,7 @@
 <script lang="ts">
 import IslandSelect from '@/components/map/island-select.vue'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { berry } from 'sleepapi-common'
+import type { Berry } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -357,7 +357,7 @@ export default defineComponent({
       this.toggleDeleteMenu()
       this.teamStore.deleteTeam()
     },
-    updateFavoredBerries(berries: berry.Berry[]) {
+    updateFavoredBerries(berries: Berry[]) {
       this.teamStore.updateFavoredBerries(berries)
     }
   }

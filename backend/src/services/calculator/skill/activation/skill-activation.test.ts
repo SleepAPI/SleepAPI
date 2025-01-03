@@ -13,12 +13,12 @@ import { describe, expect, it } from 'bun:test';
 import type { SkillActivation } from 'sleepapi-common';
 import {
   METRONOME_SKILLS,
+  PINSIR,
   berry,
   emptyBerryInventory,
   emptyIngredientInventory,
   ingredient,
-  mainskill,
-  pokemon
+  mainskill
 } from 'sleepapi-common';
 
 describe('createSkillEvent', () => {
@@ -245,7 +245,10 @@ describe('activateExtraHelpful', () => {
 
     const expectedBerriesAmount = (10 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5;
     const expectedIngredientsAmount = [
-      { ingredient: ingredient.BEAN_SAUSAGE, amount: (20 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5 }
+      {
+        ingredient: ingredient.BEAN_SAUSAGE,
+        amount: (20 * mainskill.EXTRA_HELPFUL_S.amount(6)) / 5
+      }
     ];
 
     expect(result).toEqual({
@@ -494,7 +497,12 @@ describe('activateIngredientMagnet', () => {
 
 describe('activateEnergizingCheer', () => {
   it('shall correctly calculate adjusted amount with given parameters', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 3, adjustedAmount: 0.6, metronomeFactor: 2 };
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 3,
+      adjustedAmount: 0.6,
+      metronomeFactor: 2
+    };
     const result = activateEnergizingCheer(params);
     const metronomeFactor = 2;
     const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount(6) * 0.6) / (5 * metronomeFactor);
@@ -508,7 +516,12 @@ describe('activateEnergizingCheer', () => {
   });
 
   it('shall handle zero adjusted amount', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 5, adjustedAmount: 0, metronomeFactor: 1 };
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 5,
+      adjustedAmount: 0,
+      metronomeFactor: 1
+    };
     const result = activateEnergizingCheer(params);
 
     expect(result).toEqual({
@@ -520,7 +533,12 @@ describe('activateEnergizingCheer', () => {
   });
 
   it('shall calculate adjusted amount with high metronome factor', () => {
-    const params = { skillLevel: 6, nrOfHelpsToActivate: 2, adjustedAmount: 1, metronomeFactor: 8 };
+    const params = {
+      skillLevel: 6,
+      nrOfHelpsToActivate: 2,
+      adjustedAmount: 1,
+      metronomeFactor: 8
+    };
     const result = activateEnergizingCheer(params);
     const metronomeFactor = 8;
     const expectedAdjustedAmount = (mainskill.ENERGIZING_CHEER_S.amount(6) * 1) / (5 * metronomeFactor);
@@ -593,7 +611,7 @@ describe('activateMetronome', () => {
 });
 
 const pokemonSet: PokemonProduce = {
-  pokemon: pokemon.PINSIR,
+  pokemon: PINSIR,
   produce: {
     berries: [{ berry: berry.BELUE, amount: 10, level: 60 }],
     ingredients: [{ ingredient: ingredient.BEAN_SAUSAGE, amount: 20 }]

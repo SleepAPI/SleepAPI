@@ -152,11 +152,11 @@ export default defineComponent({
   computed: {
     currentRecipeTypeResult(): RecipeTypeResult | undefined {
       if (this.teamStore.getCurrentTeam.recipeType === 'curry') {
-        return this.teamStore.getCurrentTeam.production?.team.cooking.curry
+        return this.teamStore.getCurrentTeam.production?.team.cooking?.curry
       } else if (this.teamStore.getCurrentTeam.recipeType === 'salad') {
-        return this.teamStore.getCurrentTeam.production?.team.cooking.salad
+        return this.teamStore.getCurrentTeam.production?.team.cooking?.salad
       } else {
-        return this.teamStore.getCurrentTeam.production?.team.cooking.dessert
+        return this.teamStore.getCurrentTeam.production?.team.cooking?.dessert
       }
     },
     cookingStrength() {

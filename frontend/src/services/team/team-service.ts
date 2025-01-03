@@ -14,6 +14,7 @@ import {
   Optimal,
   berry,
   uuid,
+  type Berry,
   type BerrySet,
   type CalculateIvResponse,
   type CalculateTeamResponse,
@@ -82,7 +83,7 @@ class TeamServiceImpl {
           }
         }
 
-        const favoredBerries: berry.Berry[] = []
+        const favoredBerries: Berry[] = []
         if (serverTeam.favoredBerries?.length === 1 && serverTeam.favoredBerries[0] === 'all') {
           favoredBerries.push(...berry.BERRIES)
         } else {
@@ -145,7 +146,7 @@ class TeamServiceImpl {
 
     const teamBerries: BerrySet[] = response.data.members.flatMap((member) => member.produceTotal.berries)
     const teamIngredients: IngredientSet[] = response.data.members.flatMap((member) => member.produceTotal.ingredients)
-    // TODO: is team production used?
+    // TODO: is team production used? cooking is used of course, but rest?
     const teamProduction: TeamCombinedProduction = {
       berries: teamBerries,
       ingredients: teamIngredients,

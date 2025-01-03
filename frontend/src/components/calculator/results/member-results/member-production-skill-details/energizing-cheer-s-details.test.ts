@@ -3,11 +3,11 @@ import { StrengthService } from '@/services/strength/strength-service'
 import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
+import { MathUtils, SLOWKING, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.SLOWKING })
+  member: createMockPokemon({ pokemon: SLOWKING })
 })
 
 describe('MemberProductionSkill', () => {

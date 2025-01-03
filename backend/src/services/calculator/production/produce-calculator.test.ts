@@ -1,41 +1,71 @@
-import { calculateAverageProduce, clampHelp } from '@src/services/calculator/production/produce-calculator.js';
 import { describe, expect, it } from 'bun:test';
-import type { PokemonIngredientSet, Produce } from 'sleepapi-common';
-import { emptyBerryInventory, ingredient, pokemon } from 'sleepapi-common';
+import type { PokemonWithIngredients, Produce } from 'sleepapi-common';
+import {
+  berry,
+  berrySetToFlat,
+  emptyBerryInventory,
+  ingredient,
+  ingredientSetToFloatFlat,
+  PINSIR
+} from 'sleepapi-common';
+import { calculateAverageProduce, clampHelp } from './produce-calculator.js';
 
 describe('calculateAverageProduce', () => {
   it('shall average a Pokemons produce based on ingredient percentage', () => {
-    const averagePokemonCombination: PokemonIngredientSet = {
-      pokemon: pokemon.PINSIR,
+    const averagePokemonCombination: PokemonWithIngredients = {
+      pokemon: PINSIR,
       ingredientList: [{ amount: 1, ingredient: ingredient.FANCY_APPLE }]
     };
     const ingredientPercentage = 0.5;
     const berriesPerDrop = 1;
 
-    expect(calculateAverageProduce(averagePokemonCombination, ingredientPercentage, berriesPerDrop, 60))
-      .toMatchInlineSnapshot(`
+    expect(
+      calculateAverageProduce({
+        ingredients: ingredientSetToFloatFlat(averagePokemonCombination.ingredientList),
+        berries: berrySetToFlat([{ amount: 1, berry: berry.LUM, level: 60 }]),
+        ingredientPercentage,
+        berriesPerDrop
+      })
+    ).toMatchInlineSnapshot(`
 {
-  "berries": [
-    {
-      "amount": 0.5,
-      "berry": {
-        "name": "LUM",
-        "type": "bug",
-        "value": 24,
-      },
-      "level": 60,
-    },
+  "berries": Float32Array [
+    0,
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ],
-  "ingredients": [
-    {
-      "amount": 0.5,
-      "ingredient": {
-        "longName": "Fancy Apple",
-        "name": "Apple",
-        "taxedValue": 23.7,
-        "value": 90,
-      },
-    },
+  "ingredients": Float32Array [
+    0.5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ],
 }
 `);

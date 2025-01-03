@@ -18,7 +18,7 @@ import {
   SITRUS,
   WIKI,
   YACHE
-} from '../berry/berry';
+} from '../berry/berries';
 import { BALANCED_GENDER, SEVEN_EIGHTHS_MALE, THREE_FOURTHS_FEMALE } from '../gender';
 import {
   BEAN_SAUSAGE,
@@ -36,7 +36,7 @@ import {
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
   WARMING_GINGER
-} from '../ingredient/ingredient';
+} from '../ingredient/ingredients';
 import {
   CHARGE_ENERGY_S,
   CHARGE_STRENGTH_M,

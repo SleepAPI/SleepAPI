@@ -16,7 +16,7 @@ import {
   RAWST,
   SITRUS,
   WIKI
-} from '../berry/berry';
+} from '../berry/berries';
 import {
   BALANCED_GENDER,
   GENDER_UNKNOWN,
@@ -43,7 +43,7 @@ import {
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
   WARMING_GINGER
-} from '../ingredient/ingredient';
+} from '../ingredient/ingredients';
 import {
   CHARGE_STRENGTH_M,
   CHARGE_STRENGTH_S_RANGE,

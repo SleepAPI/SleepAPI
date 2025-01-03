@@ -6,11 +6,11 @@ import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, berry, pokemon } from 'sleepapi-common'
+import { GENGAR, MathUtils, berry } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.GENGAR }),
+  member: createMockPokemon({ pokemon: GENGAR }),
   production: {
     ...createMockMemberProductionExt().production,
     produceWithoutSkill: {

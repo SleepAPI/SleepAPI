@@ -11,7 +11,8 @@ import {
   INVENTORY_L,
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S
-} from '../subskill/subskill';
+} from '../subskill/subskills';
+import type { TeamMemberSettingsExt } from '../team';
 import type { SubskillInstanceExt } from '../types/pokemon-instance';
 
 export interface Optimal {
@@ -23,7 +24,7 @@ export interface Optimal {
 }
 
 class OptimalImpl {
-  public berry(pokemon: Pokemon): Optimal {
+  public berry(pokemon: Pokemon, ribbon?: number): Optimal {
     return {
       subskills: [
         { level: 10, subskill: BERRY_FINDING_S },
@@ -34,11 +35,12 @@ class OptimalImpl {
       ],
       nature: ADAMANT,
       skillLevel: pokemon.skill.maxLevel,
-      carrySize: pokemon.carrySize
+      carrySize: pokemon.carrySize,
+      ribbon
     };
   }
 
-  public ingredient(pokemon: Pokemon): Optimal {
+  public ingredient(pokemon: Pokemon, ribbon?: number): Optimal {
     return {
       subskills: [
         { level: 10, subskill: INGREDIENT_FINDER_M },
@@ -49,10 +51,11 @@ class OptimalImpl {
       ],
       nature: QUIET,
       skillLevel: pokemon.skill.maxLevel,
-      carrySize: pokemon.carrySize + pokemon.previousEvolutions * 5
+      carrySize: pokemon.carrySize + pokemon.previousEvolutions * 5,
+      ribbon
     };
   }
-  public skill(pokemon: Pokemon): Optimal {
+  public skill(pokemon: Pokemon, ribbon?: number): Optimal {
     return {
       subskills: [
         { level: 10, subskill: SKILL_TRIGGER_M },
@@ -63,7 +66,33 @@ class OptimalImpl {
       ],
       nature: CAREFUL,
       skillLevel: pokemon.skill.maxLevel,
-      carrySize: pokemon.carrySize + pokemon.previousEvolutions * 5
+      carrySize: pokemon.carrySize + pokemon.previousEvolutions * 5,
+      ribbon
+    };
+  }
+
+  /**
+   * Filters subskills on level
+   * @returns {TeamMemberSettingsExt}
+   */
+  public toMemberSettings(params: { stats: Optimal; level: number; externalId: string }): TeamMemberSettingsExt {
+    const { stats, level, externalId } = params;
+
+    const subskills = new Set<string>();
+    for (const subskill of stats.subskills) {
+      if (subskill.level <= level) {
+        subskills.add(subskill.subskill.name);
+      }
+    }
+
+    return {
+      carrySize: stats.carrySize,
+      nature: stats.nature,
+      ribbon: stats.ribbon ?? 0,
+      skillLevel: stats.skillLevel,
+      subskills,
+      level,
+      externalId
     };
   }
 }

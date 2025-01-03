@@ -205,19 +205,23 @@ describe('addToInventory', () => {
 describe('calculateCarrySize', () => {
   it('shall give same for default', () => {
     const baseWithEvolutions = 10;
-    const subskills: subskill.SubSkill[] = [];
+    const subskillsLevelLimited = new Set<string>();
     const level = 10;
     const ribbon = 0;
     const camp = false;
-    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(10);
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskillsLevelLimited, level, ribbon, camp })).toBe(
+      10
+    );
   });
 
   it('shall give correct for subskills, ribbon and camp', () => {
     const baseWithEvolutions = 31;
-    const subskills: subskill.SubSkill[] = [subskill.INVENTORY_S];
+    const subskillsLevelLimited = new Set([subskill.INVENTORY_S.name]);
     const level = 54;
     const ribbon = 2;
     const camp = true;
-    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskills, level, ribbon, camp })).toBe(48);
+    expect(InventoryUtils.calculateCarrySize({ baseWithEvolutions, subskillsLevelLimited, level, ribbon, camp })).toBe(
+      48
+    );
   });
 });

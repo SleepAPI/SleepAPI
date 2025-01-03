@@ -6,7 +6,7 @@ import type { PerformanceDetails, TeamInstance } from '@/types/member/instanced'
 import { createMockPokemon } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createPinia, setActivePinia } from 'pinia'
-import { berry, pokemon, subskill, uuid, type PokemonInstanceExt } from 'sleepapi-common'
+import { berry, LEAFEON, subskill, uuid, WIGGLYTUFF, type PokemonInstanceExt } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -258,8 +258,7 @@ describe('Team Store', () => {
         wakeup: '06:00',
         recipeType: 'curry',
         favoredBerries: [],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        members: [undefined, member, null as any, member, '' as any],
+        members: [undefined, member.name, null!, member.name, ''],
         version: 1,
         memberIvs: {},
         production: undefined
@@ -495,6 +494,7 @@ describe('removeMember', () => {
     await teamStore.removeMember(1)
 
     expect(teamStore.teams[0].members).toEqual([undefined, undefined, undefined, member4, undefined])
+    expect(teamStore.teams[0].members).toEqual([undefined, undefined, undefined, member4, undefined])
     expect(TeamService.removeMember).toHaveBeenCalledWith({
       teamIndex: 0,
       memberIndex: 1
@@ -507,7 +507,7 @@ describe('removeMember', () => {
     teamStore.resetCurrentTeamIvs = vi.fn()
 
     const mockPokemon1 = createMockPokemon()
-    const mockPokemon2 = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF, externalId: 'support' })
+    const mockPokemon2 = createMockPokemon({ pokemon: WIGGLYTUFF, externalId: 'support' })
     pokemonStore.upsertLocalPokemon(mockPokemon1)
     pokemonStore.upsertLocalPokemon(mockPokemon2)
 
@@ -562,7 +562,7 @@ describe('updateTeamMember', () => {
 
     teamStore.resetCurrentTeamIvs = vi.fn()
     teamStore.calculateProduction = vi.fn()
-    await teamStore.updateTeamMember(createMockPokemon({ pokemon: pokemon.WIGGLYTUFF }), 2)
+    await teamStore.updateTeamMember(createMockPokemon({ pokemon: WIGGLYTUFF }), 2)
 
     expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
@@ -580,44 +580,6 @@ describe('updateTeamMember', () => {
 
     expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
     expect(teamStore.calculateProduction).toHaveBeenCalled()
-  })
-})
-
-describe('migrate', () => {
-  it('shall migrate old teams to new state', () => {
-    const teamStore = useTeamStore()
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const team1: any = {
-      index: 0,
-      name: 'Team 1',
-      camp: false,
-      bedtime: '21:10',
-      wakeup: '06:00',
-      recipeType: 'curry',
-      favoredBerries: [],
-      members: [undefined, 'member1', undefined, 'member2', undefined],
-      version: 1,
-      production: undefined
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const team2: any = {
-      ...team1,
-      name: 'Team 2',
-      bedtime: '21:20',
-      members: [undefined, 'member3', undefined, 'member4', undefined]
-    }
-    teamStore.teams = [team1, team2]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    teamStore.timeWindow = undefined as any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    teamStore.tab = null as any
-
-    teamStore.migrate()
-
-    expect(teamStore.tab).toEqual('overview')
-    expect(teamStore.timeWindow).toEqual('24H')
-    expect(teamStore.teams).toMatchSnapshot()
   })
 })
 
@@ -745,20 +707,20 @@ describe('isSupportMember', () => {
 
   it('shall return true if member has energy for everyone', () => {
     const teamStore = useTeamStore()
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.WIGGLYTUFF })
+    const mockPokemon = createMockPokemon({ pokemon: WIGGLYTUFF })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
   })
 
   it('shall return true if member has energizing cheer', () => {
     const teamStore = useTeamStore()
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.LEAFEON })
+    const mockPokemon = createMockPokemon({ pokemon: LEAFEON })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
   })
 
   it('shall return true if member has energizing cheer and helping bonus', () => {
     const teamStore = useTeamStore()
     const mockPokemon = createMockPokemon({
-      pokemon: pokemon.LEAFEON,
+      pokemon: LEAFEON,
       subskills: [{ level: 10, subskill: subskill.HELPING_BONUS }]
     })
     expect(teamStore.isSupportMember(mockPokemon)).toBe(true)
@@ -770,10 +732,8 @@ describe('migrate', () => {
     const teamStore = useTeamStore()
 
     teamStore.teams = createMockTeams(2, { memberIndex: undefined })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    teamStore.timeWindow = undefined as any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    teamStore.tab = null as any
+    teamStore.timeWindow = undefined!
+    teamStore.tab = null!
 
     teamStore.migrate()
 

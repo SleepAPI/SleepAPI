@@ -1,10 +1,10 @@
 import { useUserStore } from '@/stores/user-store'
 import type { TimeWindowWeek } from '@/types/time/time-window'
 import type { Mainskill } from 'sleepapi-common'
-import { MathUtils, berryPowerForLevel, type BerrySet, type berry } from 'sleepapi-common'
+import { MathUtils, berryPowerForLevel, type Berry, type BerrySet } from 'sleepapi-common'
 
 class StrengthServiceImpl {
-  public berryStrength(params: { berries: BerrySet[]; favored: berry.Berry[]; timeWindow: TimeWindowWeek }) {
+  public berryStrength(params: { berries: BerrySet[]; favored: Berry[]; timeWindow: TimeWindowWeek }) {
     const { berries, favored, timeWindow } = params
     const userStore = useUserStore()
 
@@ -28,7 +28,7 @@ class StrengthServiceImpl {
     skill: Mainskill
     amount: number
     berries: BerrySet[]
-    favored: berry.Berry[]
+    favored: Berry[]
     timeWindow: TimeWindowWeek
   }) {
     const { skill, berries, favored, timeWindow } = params

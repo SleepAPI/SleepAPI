@@ -35,7 +35,8 @@ describe('TeamResults', () => {
             cookedRecipes: []
           },
           salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
-          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          critInfo: createMockTeamProduction().team.cooking!.critInfo
         },
         berries: [],
         ingredients: []
@@ -64,7 +65,8 @@ describe('TeamResults', () => {
             cookedRecipes: []
           },
           salad: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
-          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] }
+          dessert: { weeklyStrength: 0, sundayStrength: 0, cookedRecipes: [] },
+          critInfo: createMockTeamProduction().team.cooking!.critInfo
         },
         berries: [],
         ingredients: []

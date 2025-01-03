@@ -13,11 +13,7 @@
     // paths
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
     "declaration": true,
-    "paths": {
-      "src/*": ["./src/*"]
-    },
 
     // types
     "types": ["vitest/globals"]

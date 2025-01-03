@@ -79,7 +79,8 @@ describe('CookingResults', () => {
             cookedRecipes: [],
             sundayStrength: 0,
             weeklyStrength: 0
-          }
+          },
+          critInfo: createMockTeamProduction().team.cooking!.critInfo
         }
       }
     })

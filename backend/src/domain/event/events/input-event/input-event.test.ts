@@ -6,14 +6,14 @@ import {
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { describe, expect, it } from 'bun:test';
-import { pokemon } from 'sleepapi-common';
+import { PINSIR } from 'sleepapi-common';
 
 describe('InputEvent', () => {
   it('pokemon input shall format correctly', () => {
     const event = new PokemonInputEvent({
       time: TimeUtils.parseTime('06:00'),
       description: 'pokemon',
-      pokemon: pokemon.PINSIR,
+      pokemon: PINSIR,
       input: MOCKED_OPTIMAL_PRODUCTION_STATS
     });
     expect(event.format()).toMatchInlineSnapshot(

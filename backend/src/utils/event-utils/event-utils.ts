@@ -7,12 +7,12 @@ import { SkillEvent } from '@src/domain/event/events/skill-event/skill-event.js'
 import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator.js';
 import { calculateHelperBoostHelpsFromUnique } from '@src/services/calculator/skill/skill-calculator.js';
-import { splitNumber } from '@src/utils/calculator-utils/calculator-utils.js';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
-import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import type { Produce, Time, TimePeriod, nature } from 'sleepapi-common';
 import { mainskill, multiplyBerries } from 'sleepapi-common';
+import { splitNumber } from '../calculator-utils/calculator-utils.js';
+import { getMealRecoveryAmount } from '../meal-utils/meal-utils.js';
 
 export function getExtraHelpfulEvents(
   period: TimePeriod,

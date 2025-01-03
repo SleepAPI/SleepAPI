@@ -1,4 +1,4 @@
-import { createCurry } from '../../utils/recipe-utils/recipe-utils';
+import { createCurry, recipesToFlat } from '../../utils/recipe-utils/recipe-utils';
 import {
   BEAN_SAUSAGE,
   FANCY_APPLE,
@@ -17,8 +17,8 @@ import {
   SOOTHING_CACAO,
   TASTY_MUSHROOM,
   WARMING_GINGER
-} from '../ingredient/ingredient';
-import type { Recipe } from './recipe';
+} from '../ingredient/ingredients';
+import type { Recipe, RecipeFlat } from './recipe';
 
 export const MIXED_CURRY = createCurry({
   name: 'MIXED_CURRY',
@@ -232,3 +232,6 @@ export const CURRIES: Recipe[] = [
   INFERNO_CORN_KEEMA_CURRY,
   HIDDEN_POWER_PERK_UP_STEW
 ];
+
+export const MIXED_CURRY_FLAT: RecipeFlat = recipesToFlat(MIXED_CURRY);
+export const CURRIES_FLAT: RecipeFlat[] = recipesToFlat(CURRIES);

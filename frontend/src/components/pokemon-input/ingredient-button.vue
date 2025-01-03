@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { pokemon, type IngredientSet, type PokemonInstanceExt } from 'sleepapi-common'
+import { mockPokemon, type IngredientSet, type Pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -87,7 +87,7 @@ export default {
   watch: {
     pokemon: {
       deep: false,
-      handler(newPokemon: pokemon.Pokemon, oldPokemon: pokemon.Pokemon) {
+      handler(newPokemon: Pokemon, oldPokemon: Pokemon) {
         // only grab from cache on initial setup, if pre-existing value exists
         if (this.ingredientLevel < 30) {
           this.ingredientSet = newPokemon.ingredient0
@@ -147,11 +147,11 @@ export default {
         ingredientLevel: this.ingredientLevel
       })
     },
-    loadFromExisting(oldPokemon: pokemon.Pokemon) {
+    loadFromExisting(oldPokemon: Pokemon) {
       const existingIngredients =
         this.pokemonInstance.ingredients.filter((ing) => ing.ingredient !== undefined).length === 3
 
-      return oldPokemon.name === pokemon.MOCK_POKEMON.name && existingIngredients
+      return oldPokemon.name === mockPokemon.name && existingIngredients
     }
   }
 }

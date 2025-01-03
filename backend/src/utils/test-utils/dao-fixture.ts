@@ -1,7 +1,9 @@
 import { DatabaseService } from '@src/database/database-service.js';
 import DatabaseMigration from '@src/database/migration/database-migration.js';
+import { DatabaseConnectionError } from '@src/domain/error/database/database-error.js';
 import { MockService } from '@src/utils/test-utils/mock-service.js';
 import { afterAll, afterEach, beforeAll, beforeEach } from 'bun:test';
+import { boozle, unboozle } from 'bunboozle';
 import type { Knex } from 'knex';
 import knex from 'knex';
 
@@ -37,7 +39,7 @@ async function truncateAllTables(params?: InitParams, knex?: Knex): Promise<void
 
 export const DaoFixture = {
   init(params?: InitParams) {
-    let pokemonsleepDB: Knex;
+    let pokemonsleepDB: Knex | undefined = undefined;
 
     if (params?.recreateDatabasesBeforeEachTest) {
       beforeEach(async () => {
@@ -65,22 +67,35 @@ export const DaoFixture = {
       });
 
       if (params?.enforceForeignKeyConstraints) {
-        await pokemonsleepDB?.raw('PRAGMA foreign_keys = ON');
+        await pokemonsleepDB.raw('PRAGMA foreign_keys = ON');
       }
 
-      DatabaseService.getKnex = () => Promise.resolve(pokemonsleepDB);
+      DatabaseService.getKnex = () => {
+        if (!pokemonsleepDB) {
+          throw new DatabaseConnectionError('Fixture DB is not initialized.');
+        }
+        return Promise.resolve(pokemonsleepDB);
+      };
       await DatabaseMigration.migrate();
     }
 
     async function destroyDatabases() {
-      await pokemonsleepDB.destroy();
+      if (pokemonsleepDB) {
+        await pokemonsleepDB.destroy();
+      }
     }
+
+    beforeAll(() => {
+      boozle(logger, 'info');
+    });
 
     afterEach(async () => {
       if (params?.recreateDatabasesBeforeEachTest) {
         await destroyDatabases();
       } else {
-        await truncateAllTables(params, pokemonsleepDB);
+        if (pokemonsleepDB) {
+          await truncateAllTables(params, pokemonsleepDB);
+        }
       }
 
       MockService.restore();
@@ -90,6 +105,7 @@ export const DaoFixture = {
       if (!params?.recreateDatabasesBeforeEachTest) {
         await destroyDatabases();
       }
+      unboozle();
     });
   }
 };

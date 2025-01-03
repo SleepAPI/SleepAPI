@@ -1,4 +1,4 @@
-import { MAINSKILLS } from '../mainskill';
+import { INGREDIENT_SUPPORT_MAINSKILLS, MAINSKILLS } from '../mainskill';
 import { Mimic } from '../modifier';
 import { SKILL_COPY } from './skill-copy';
 
@@ -9,3 +9,4 @@ export const SKILL_COPY_MIMIC = Mimic(SKILL_COPY, 0, {
 });
 
 MAINSKILLS.push(SKILL_COPY_MIMIC);
+INGREDIENT_SUPPORT_MAINSKILLS.push(SKILL_COPY_MIMIC);

@@ -1,382 +1,390 @@
-import type {
-  PokemonCombinationCombinedContribution,
-  PokemonIngredientSetContribution
-} from '@src/domain/combination/combination.js';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
-import type { CombinedContribution, Contribution } from '@src/domain/computed/contribution.js';
-import type {
-  CreateTierListRequestBody,
-  GetTierListQueryParams,
-  TieredPokemonCombinationContribution
-} from '@src/routes/tierlist-router/tierlist-router.js';
-import {
-  boostFirstMealWithFactor,
-  calculateMealContributionFor,
-  getAllOptimalIngredientFocusedPokemonProduce
-} from '@src/services/calculator/contribution/contribution-calculator.js';
-import { SetCover } from '@src/services/set-cover/set-cover.js';
-import { joinPath } from '@src/utils/file-utils/file-utils.js';
-import type { CritInfo } from '@src/utils/meal-utils/meal-utils.js';
-import { calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils.js';
-import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils.js';
-import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils.js';
-import { readFile, writeFile } from 'fs/promises';
-import type { Mainskill } from 'sleepapi-common';
-import { MAX_POT_SIZE, METRONOME_SKILLS, MathUtils, mainskill } from 'sleepapi-common';
+// import { CustomStats } from '@src/domain/combination/custom';
+// import { TeamMember } from '@src/domain/combination/team';
+// import {
+//   CombinedContribution,
+//   Contribution,
+//   PokemonCombinationCombinedContribution,
+//   PokemonIngredientSetContribution,
+// } from '@src/domain/computed/contribution';
+// import {
+//   CreateTierListRequestBody,
+//   GetTierListQueryParams,
+//   TieredPokemonCombinationContribution,
+// } from '@src/routes/tierlist-router/tierlist-router';
+// import {
+//   boostFirstMealWithFactor,
+//   calculateMealContributionFor,
+// } from '@src/services/calculator/contribution/contribution-calculator';
+// import { calculateOptimalProductionForSetCover } from '@src/services/calculator/set-cover/calculate-set-cover';
+// import { Logger } from '@src/services/logger/logger';
+// import { SetCover, SetCoverPokemonSetup } from '@src/services/set-cover/set-cover';
+// import { getMealsForFilter } from '@src/utils/meal-utils/meal-utils';
+// import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils';
+// import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils';
+// import { access, readFile, writeFile } from 'fs/promises';
+// import path from 'path';
+// import {
+//   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+//   MAX_POT_SIZE,
+//   MathUtils,
+//   PokemonIngredientSet,
+//   berry,
+//   getIngredient,
+//   getPokemon,
+//   mainskill,
+// } from 'sleepapi-common';
 
-const TIERLIST_SET_COVER_TIMEOUT = 1000;
-const MONTE_CARLO_ITERATIONS = 1000; // slows down computing a lot
+// const TIERLIST_SET_COVER_TIMEOUT = 1000;
 
-class TierlistImpl {
-  public async seed() {
-    logger.info('Generating cooking tier lists');
-    const details: CreateTierListRequestBody = {
-      curry: false,
-      dessert: false,
-      limit50: false,
-      minRecipeBonus: 0,
-      maxPotSize: undefined,
-      nrOfMeals: 3,
-      salad: false
-    };
+// class TierlistImpl {
+//   public async seed() {
+//     Logger.info('Generating cooking tier lists');
+//     const details: CreateTierListRequestBody = {
+//       curry: false,
+//       dessert: false,
+//       limit50: false,
+//       minRecipeBonus: 0,
+//       maxPotSize: undefined,
+//       nrOfMeals: 3,
+//       salad: false,
+//     };
 
-    const basePathCurrent = 'src/data/tierlist/current';
-    const basePathPrevious = 'src/data/tierlist/previous';
+//     const basePathCurrent = 'src/data/tierlist/current';
+//     const basePathPrevious = 'src/data/tierlist/previous';
 
-    const generated50Data = this.generateTierListData({ ...details, limit50: true });
-    const generated60Data = this.generateTierListData(details);
+//     const generated50Data = this.generateTierListData({ ...details, limit50: true });
+//     // const generated60Data = this.generateTierListData(details);
 
-    // level 50 - Pot unlimited
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-unlimited/overall.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/overall.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, curry: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-unlimited/curry.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/curry.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, salad: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-unlimited/salad.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/salad.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, dessert: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-unlimited/dessert.json`,
-      previousPath: `${basePathPrevious}/level50/pot-unlimited/dessert.json`
-    });
+//     // level 50 - Pot unlimited
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-unlimited/overall.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-unlimited/overall.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, curry: true, nrOfMeals: 2 },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-unlimited/curry.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-unlimited/curry.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, salad: true, nrOfMeals: 2 },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-unlimited/salad.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-unlimited/salad.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, dessert: true, nrOfMeals: 2 },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-unlimited/dessert.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-unlimited/dessert.json`,
+//     });
 
-    // level 50 - Pot limited
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-limited/overall.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/overall.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-limited/curry.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/curry.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-limited/salad.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/salad.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, limit50: true, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated50Data,
-      writePath: `${basePathCurrent}/level50/pot-limited/dessert.json`,
-      previousPath: `${basePathPrevious}/level50/pot-limited/dessert.json`
-    });
+//     // level 50 - Pot limited
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, maxPotSize: MAX_POT_SIZE },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-limited/overall.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-limited/overall.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-limited/curry.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-limited/curry.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-limited/salad.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-limited/salad.json`,
+//     });
+//     await this.#createTierListAndStore({
+//       details: { ...details, limit50: true, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//       allPokemonWithContributions: generated50Data,
+//       writePath: `${basePathCurrent}/level50/pot-limited/dessert.json`,
+//       previousPath: `${basePathPrevious}/level50/pot-limited/dessert.json`,
+//     });
 
-    // level 60 - Pot unlimited
-    await this.#createTierListAndStore({
-      details,
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-unlimited/overall.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/overall.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, curry: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-unlimited/curry.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/curry.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, salad: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-unlimited/salad.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/salad.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, dessert: true, nrOfMeals: 2 },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-unlimited/dessert.json`,
-      previousPath: `${basePathPrevious}/level60/pot-unlimited/dessert.json`
-    });
+//     // // level 60 - Pot unlimited
+//     // await this.#createTierListAndStore({
+//     //   details,
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-unlimited/overall.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-unlimited/overall.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, curry: true, nrOfMeals: 2 },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-unlimited/curry.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-unlimited/curry.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, salad: true, nrOfMeals: 2 },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-unlimited/salad.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-unlimited/salad.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, dessert: true, nrOfMeals: 2 },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-unlimited/dessert.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-unlimited/dessert.json`,
+//     // });
 
-    // level 60 - pot limited
-    await this.#createTierListAndStore({
-      details: { ...details, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-limited/overall.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/overall.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-limited/curry.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/curry.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-limited/salad.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/salad.json`
-    });
-    await this.#createTierListAndStore({
-      details: { ...details, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
-      allPokemonWithContributions: generated60Data,
-      writePath: `${basePathCurrent}/level60/pot-limited/dessert.json`,
-      previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`
-    });
+//     // // level 60 - pot limited
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, maxPotSize: MAX_POT_SIZE },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-limited/overall.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-limited/overall.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, curry: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-limited/curry.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-limited/curry.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, salad: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-limited/salad.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-limited/salad.json`,
+//     // });
+//     // await this.#createTierListAndStore({
+//     //   details: { ...details, dessert: true, nrOfMeals: 2, maxPotSize: MAX_POT_SIZE },
+//     //   allPokemonWithContributions: generated60Data,
+//     //   writePath: `${basePathCurrent}/level60/pot-limited/dessert.json`,
+//     //   previousPath: `${basePathPrevious}/level60/pot-limited/dessert.json`,
+//     // });
 
-    logger.info('Finished generating cooking tier lists');
-  }
+//     Logger.info('Finished generating cooking tier lists');
+//   }
 
-  public generateTierListData(details: CreateTierListRequestBody) {
-    const allPokemonDefaultProduce = getAllOptimalIngredientFocusedPokemonProduce({
-      limit50: details.limit50,
-      e4eProcs: 0,
-      cheer: 0,
-      extraHelpful: 0,
-      monteCarloIterations: MONTE_CARLO_ITERATIONS
-    });
-    const defaultProduceMap = createProduceMap(allPokemonDefaultProduce);
-    let preCalcedSupportMap: Map<string, CustomPokemonCombinationWithProduce> | undefined = undefined;
-    const groupedByPokemonName: Record<string, CustomPokemonCombinationWithProduce[]> = allPokemonDefaultProduce.reduce(
-      (accumulator, currentValue) => {
-        const pokemonName = currentValue.pokemonCombination.pokemon.name;
-        if (!accumulator[pokemonName]) {
-          accumulator[pokemonName] = [];
-        }
-        accumulator[pokemonName].push(currentValue);
-        return accumulator;
-      },
-      {} as Record<string, CustomPokemonCombinationWithProduce[]>
-    );
+//   public generateTierListData(details: CreateTierListRequestBody) {
+//     const level = details.limit50 ? 50 : 60;
+//     const camp = false;
+//     const allPokemonDefaultProduce = calculateOptimalProductionForSetCover({
+//       level,
+//       islandBerries: berry.BERRIES,
+//       camp,
+//       mainBedtime: { hour: 21, minute: 30, second: 0 },
+//       mainWakeup: { hour: 6, minute: 0, second: 0 },
+//       ribbon: 4,
+//     });
+//     const defaultProduceMap = createProduceMap(allPokemonDefaultProduce);
+//     let preCalcedSupportMap: Map<string, SetCoverPokemonSetup> | undefined = undefined;
 
-    const mealsForFilter = getMealsForFilter(details);
-    const results: PokemonIngredientSetContribution[] = [];
+//     const groupedByPokemonName: Record<string, SetCoverPokemonSetupExt[]> = allPokemonDefaultProduce.reduce(
+//       (accumulator, currentValue) => {
+//         const pokemonName = currentValue.pokemonSet.pokemon;
+//         if (!accumulator[pokemonName]) {
+//           accumulator[pokemonName] = [];
+//         }
+//         accumulator[pokemonName].push(currentValue);
+//         return accumulator;
+//       },
+//       {} as Record<string, SetCoverPokemonSetupExt[]>
+//     );
 
-    const setCoverCache: Map<string, CustomPokemonCombinationWithProduce[][]> = new Map();
-    const memoizedSetCover = new SetCover(
-      createPokemonByIngredientReverseIndex(allPokemonDefaultProduce),
-      setCoverCache
-    );
+//     const mealsForFilter = getMealsForFilter(details);
+//     const results: PokemonIngredientSetContribution[] = [];
 
-    const critCache: Map<number, CritInfo> = new Map();
-    const { critMultiplier: defaultCritMultiplier } = calculateCritMultiplier([], critCache);
-    let counter = 0;
+//     const memoizedSetCover = new SetCover(createPokemonByIngredientReverseIndex(allPokemonDefaultProduce), new Map());
 
-    const supportSkills: Mainskill[] = [
-      mainskill.ENERGY_FOR_EVERYONE,
-      mainskill.ENERGIZING_CHEER_S,
-      mainskill.EXTRA_HELPFUL_S,
-      mainskill.MOONLIGHT_CHARGE_ENERGY_S,
-      mainskill.METRONOME
-    ];
-    Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
-      let supportSetCover: SetCover | undefined = undefined;
-      preCalcedSupportMap = undefined;
+//     let counter = 0;
 
-      let e4eProcs = 0;
-      let cheer = 0;
-      let extraHelpful = 0;
-      const currentPokemonSkill = group[0].pokemonCombination.pokemon.skill;
+//     const supportSkills: string[] = [
+//       mainskill.ENERGY_FOR_EVERYONE.name,
+//       mainskill.ENERGIZING_CHEER_S.name,
+//       mainskill.EXTRA_HELPFUL_S.name,
+//       mainskill.MOONLIGHT_CHARGE_ENERGY_S.name,
+//       mainskill.METRONOME.name,
+//     ];
+//     Object.entries(groupedByPokemonName).forEach(([pokemonName, group]) => {
+//       let supportSetCover: SetCover | undefined = undefined;
+//       preCalcedSupportMap = undefined;
 
-      if (supportSkills.includes(currentPokemonSkill)) {
-        if (currentPokemonSkill === mainskill.ENERGY_FOR_EVERYONE) {
-          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs;
-        } else if (currentPokemonSkill === mainskill.ENERGIZING_CHEER_S) {
-          cheer = group[0].detailedProduce.averageTotalSkillProcs;
-        } else if (currentPokemonSkill === mainskill.EXTRA_HELPFUL_S) {
-          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs;
-        } else if (currentPokemonSkill === mainskill.METRONOME) {
-          e4eProcs = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
-          cheer = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
-          extraHelpful = group[0].detailedProduce.averageTotalSkillProcs / METRONOME_SKILLS.length;
-        } else if (currentPokemonSkill.isSkill(mainskill.MOONLIGHT_CHARGE_ENERGY_S)) {
-          // since moonlight works like cheer we implement it through cheer
-          // we calculate moonlight's energy value and divide it into how many cheer procs that would equate
-          const crits = group[0].detailedProduce.averageTotalSkillProcs * currentPokemonSkill.critChance;
-          const totalEnergy = crits * mainskill.moonlightCritAmount(currentPokemonSkill.maxLevel);
-          cheer = totalEnergy / mainskill.ENERGIZING_CHEER_S.maxAmount;
-        }
-        const supportedProduce = getAllOptimalIngredientFocusedPokemonProduce({
-          limit50: details.limit50,
-          e4eProcs,
-          cheer,
-          extraHelpful,
-          monteCarloIterations: MONTE_CARLO_ITERATIONS
-        });
-        preCalcedSupportMap = createProduceMap(supportedProduce);
-        supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(supportedProduce), new Map());
-      }
+//       const currentPokemonSkill = group[0].skill;
 
-      for (const pokemonWithProduce of group) {
-        const currentMemoryUsage = process.memoryUsage().heapUsed;
-        const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
+//       if (supportSkills.includes(currentPokemonSkill)) {
+//         const supportPokemon: PokemonIngredientSet = {
+//           pokemon: getPokemon(group[0].pokemonSet.pokemon),
+//           ingredientList: group[0].pokemonSet.ingredients.map(({ ingredient, amount }) => ({
+//             amount,
+//             ingredient: getIngredient(ingredient),
+//           })),
+//         };
+//         const optimalStats: CustomStats = getOptimalStats(level, supportPokemon.pokemon, camp);
+//         const supportMember: TeamMember = {
+//           ...optimalStats,
+//           pokemonSet: supportPokemon,
+//           carrySize: optimalStats.inventoryLimit,
+//           externalId: 'optimal',
+//           level,
+//         };
+//         const supportedProduce = calculateOptimalProductionForSetCover(
+//           {
+//             level: details.limit50 ? 50 : 60,
+//             islandBerries: berry.BERRIES,
+//             camp: false,
+//             mainBedtime: { hour: 21, minute: 30, second: 0 },
+//             mainWakeup: { hour: 6, minute: 0, second: 0 },
+//             ribbon: 4,
+//             maxPotSize: details.maxPotSize,
+//           },
+//           [supportMember]
+//         );
+//         preCalcedSupportMap = createProduceMap(supportedProduce);
+//         supportSetCover = new SetCover(createPokemonByIngredientReverseIndex(supportedProduce), new Map());
+//       }
 
-        logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
-        ++counter;
-        // eslint-disable-next-line SleepAPILogger/no-console
-        console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+//       for (const pokemonWithProduce of group) {
+//         const currentMemoryUsage = process.memoryUsage().heapUsed;
+//         const currentMemoryUsageGigabytes = currentMemoryUsage / 1024 ** 3;
 
-        const contributions: Contribution[] = [];
+//         Logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
+//         ++counter;
+//         console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
-        const { critMultiplier } = calculateCritMultiplier(
-          pokemonWithProduce.detailedProduce.skillActivations,
-          critCache
-        );
-        for (const meal of mealsForFilter) {
-          const contributionForMeal = calculateMealContributionFor({
-            meal,
-            currentPokemon: pokemonWithProduce,
-            memoizedSetCover:
-              supportSkills.includes(currentPokemonSkill) && supportSetCover ? supportSetCover : memoizedSetCover,
-            timeout: TIERLIST_SET_COVER_TIMEOUT,
-            critMultiplier,
-            defaultCritMultiplier,
-            defaultProduceMap,
-            preCalcedSupportMap
-          });
-          contributions.push(contributionForMeal);
-        }
-        // eslint-disable-next-line SleepAPILogger/no-console
-        console.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+//         const contributions: Contribution[] = [];
 
-        results.push({ pokemonIngredientSet: pokemonWithProduce.pokemonCombination, contributions });
-      }
-    });
+//         for (const meal of mealsForFilter) {
+//           // TODO: why does the new SetCoverPokemonSetup take more memory? It should be much smaller than the old cache or not?
+//           // TODO: also why does Umbreon take 35 seconds for one ing list?
+//           // TODO: togekiss takes 60 sec, is this the same issue? Cache got too complex? Big cache somehow?
 
-    return results;
-  }
+//           // TODO: seems broken, especially tasty chance and extra helpful
+//           const contributionForMeal = calculateMealContributionFor({
+//             meal,
+//             currentPokemon: pokemonWithProduce,
+//             memoizedSetCover:
+//               supportSkills.includes(currentPokemonSkill) && supportSetCover ? supportSetCover : memoizedSetCover,
+//             timeout: TIERLIST_SET_COVER_TIMEOUT,
+//             critMultiplier: pokemonWithProduce.critMultiplier,
+//             defaultCritMultiplier: AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+//             defaultProduceMap,
+//             preCalcedSupportMap,
+//           });
+//           contributions.push(contributionForMeal);
+//         }
+//         console.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
-  public calculateScoreAndRank(
-    allPokemonWithContributions: PokemonIngredientSetContribution[],
-    details: CreateTierListRequestBody,
-    previous?: TieredPokemonCombinationContribution[]
-  ): TieredPokemonCombinationContribution[] {
-    const pokemonCombinationContribution: PokemonCombinationCombinedContribution[] = [];
-    const mealsForFilter = getMealsForFilter(details);
+//         results.push({ pokemonIngredientSet: pokemonWithProduce.pokemonSet, contributions });
+//       }
+//     });
 
-    for (const pokemonWithContributions of allPokemonWithContributions) {
-      const { pokemonIngredientSet, contributions: allContributions } = pokemonWithContributions;
-      const contributions = allContributions.filter((cont) => mealsForFilter.includes(cont.meal));
+//     return results;
+//   }
 
-      const averagePercentage = contributions.reduce((a, b) => a + b.percentage, 0) / contributions.length;
-      const bestXMeals = contributions
-        .sort((a, b) => b.contributedPower - a.contributedPower)
-        .slice(0, details.nrOfMeals);
+//   public calculateScoreAndRank(
+//     allPokemonWithContributions: PokemonIngredientSetContribution[],
+//     details: CreateTierListRequestBody,
+//     previous?: TieredPokemonCombinationContribution[]
+//   ): TieredPokemonCombinationContribution[] {
+//     const pokemonCombinationContribution: PokemonCombinationCombinedContribution[] = [];
+//     const mealsForFilter = getMealsForFilter(details);
 
-      const bestXMealsWithBoost = boostFirstMealWithFactor(1.5, bestXMeals);
+//     for (const pokemonWithContributions of allPokemonWithContributions) {
+//       const { pokemonIngredientSet, contributions: allContributions } = pokemonWithContributions;
+//       const contributions = allContributions.filter((cont) => mealsForFilter.includes(cont.meal));
 
-      const combinedContribution: CombinedContribution = {
-        contributions: bestXMealsWithBoost,
-        averagePercentage,
-        score: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0)
-      };
+//       const averagePercentage = contributions.reduce((a, b) => a + b.percentage, 0) / contributions.length;
+//       const bestXMeals = contributions
+//         .sort((a, b) => b.contributedPower - a.contributedPower)
+//         .slice(0, details.nrOfMeals);
 
-      pokemonCombinationContribution.push({
-        pokemonCombination: pokemonIngredientSet,
-        combinedContribution
-      });
-    }
+//       const bestXMealsWithBoost = boostFirstMealWithFactor(1.5, bestXMeals);
 
-    return this.#assignTiers(
-      pokemonCombinationContribution.sort((a, b) => b.combinedContribution.score - a.combinedContribution.score),
-      previous
-    );
-  }
+//       const combinedContribution: CombinedContribution = {
+//         contributions: bestXMealsWithBoost,
+//         averagePercentage,
+//         score: bestXMealsWithBoost.reduce((sum, amount) => sum + amount.contributedPower, 0),
+//       };
 
-  public async getTierlist(
-    getTierListQueries: GetTierListQueryParams
-  ): Promise<TieredPokemonCombinationContribution[]> {
-    const levelVersion = getTierListQueries.limit50 ? '50' : '60';
-    const potLimitVersion = getTierListQueries.potLimit ? 'pot-limited' : 'pot-unlimited';
-    const previousFileName = joinPath(
-      `../../../data/tierlist/previous/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`,
-      import.meta.url
-    );
-    const currentFileName = joinPath(
-      `../../../data/tierlist/current/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`,
-      import.meta.url
-    );
+//       pokemonCombinationContribution.push({
+//         pokemonCombination: pokemonIngredientSet,
+//         combinedContribution,
+//       });
+//     }
 
-    const previousFile = await readFile(previousFileName, 'utf8');
-    const previous: TieredPokemonCombinationContribution[] = JSON.parse(previousFile);
+//     return this.#assignTiers(
+//       pokemonCombinationContribution.sort((a, b) => b.combinedContribution.score - a.combinedContribution.score),
+//       previous
+//     );
+//   }
 
-    const currentFile = await readFile(currentFileName, 'utf8');
-    const current: TieredPokemonCombinationContribution[] = JSON.parse(currentFile);
+//   public async getTierlist(
+//     getTierListQueries: GetTierListQueryParams
+//   ): Promise<TieredPokemonCombinationContribution[]> {
+//     const levelVersion = getTierListQueries.limit50 ? '50' : '60';
+//     const potLimitVersion = getTierListQueries.potLimit ? 'pot-limited' : 'pot-unlimited';
+//     const previousFileName = joinPath(
+//       `../../../data/tierlist/previous/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
+//     );
+//     const currentFileName = joinPath(
+//       `../../../data/tierlist/current/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
+//     );
 
-    return getTierListQueries.previous ? previous : current;
-  }
+//     return getTierListQueries.previous
+//       ? JSON.parse(await readFile(previousFileName, 'utf8'))
+//       : JSON.parse(await readFile(currentFileName, 'utf8'));
+//   }
 
-  async #createTierListAndStore(params: {
-    details: CreateTierListRequestBody;
-    allPokemonWithContributions: PokemonIngredientSetContribution[];
-    writePath: string;
-    previousPath: string;
-  }) {
-    const { details, allPokemonWithContributions, writePath, previousPath } = params;
+//   async #createTierListAndStore(params: {
+//     details: CreateTierListRequestBody;
+//     allPokemonWithContributions: PokemonIngredientSetContribution[];
+//     writePath: string;
+//     previousPath: string;
+//   }) {
+//     const { details, allPokemonWithContributions, writePath, previousPath } = params;
 
-    const previousFile = await readFile(previousPath, 'utf8');
-    const previous: TieredPokemonCombinationContribution[] = JSON.parse(previousFile);
+//     const fileExists = await access(previousPath)
+//       .then(() => true)
+//       .catch(() => false);
 
-    const current = this.calculateScoreAndRank(allPokemonWithContributions, details, previous);
+//     if (!fileExists) {
+//       return undefined;
+//     }
+//     const previous = fileExists
+//       ? (JSON.parse(await readFile(previousPath, 'utf8')) as TieredPokemonCombinationContribution[])
+//       : undefined;
 
-    await writeFile(writePath, JSON.stringify(current));
-  }
+//     const current = this.calculateScoreAndRank(allPokemonWithContributions, details, previous);
 
-  #assignTiers(
-    data: PokemonCombinationCombinedContribution[],
-    previous?: TieredPokemonCombinationContribution[]
-  ): TieredPokemonCombinationContribution[] {
-    const tiers: { tier: string; bucket: number }[] = [
-      { tier: 'S', bucket: 0.9 },
-      { tier: 'A', bucket: 0.8 },
-      { tier: 'B', bucket: 0.8 },
-      { tier: 'C', bucket: 0.85 },
-      { tier: 'D', bucket: 0.85 },
-      { tier: 'E', bucket: 0.9 }
-    ];
+//     await writeFile(writePath, JSON.stringify(current));
+//   }
 
-    let threshold = data[0].combinedContribution.score;
+//   #assignTiers(
+//     data: PokemonCombinationCombinedContribution[],
+//     previous?: TieredPokemonCombinationContribution[]
+//   ): TieredPokemonCombinationContribution[] {
+//     const tiers: { tier: string; bucket: number }[] = [
+//       { tier: 'S', bucket: 0.9 },
+//       { tier: 'A', bucket: 0.8 },
+//       { tier: 'B', bucket: 0.8 },
+//       { tier: 'C', bucket: 0.85 },
+//       { tier: 'D', bucket: 0.85 },
+//       { tier: 'E', bucket: 0.9 },
+//     ];
 
-    const tieredEntries: TieredPokemonCombinationContribution[] = [];
-    for (const entry of data) {
-      let currentTier = tiers.at(0);
-      if (currentTier && entry.combinedContribution.score < currentTier.bucket * threshold) {
-        threshold = entry.combinedContribution.score;
-        tiers.shift();
-        currentTier = tiers.at(0);
-      }
+//     let threshold = data[0].combinedContribution.score;
 
-      tieredEntries.push({ tier: currentTier?.tier ?? 'F', pokemonCombinationContribution: entry });
-    }
+//     const tieredEntries: TieredPokemonCombinationContribution[] = [];
+//     for (const entry of data) {
+//       let currentTier = tiers.at(0);
+//       if (currentTier && entry.combinedContribution.score < currentTier.bucket * threshold) {
+//         threshold = entry.combinedContribution.score;
+//         tiers.shift();
+//         currentTier = tiers.at(0);
+//       }
 
-    return diffTierlistRankings(tieredEntries, previous);
-  }
-}
+//       tieredEntries.push({ tier: currentTier?.tier ?? 'F', pokemonCombinationContribution: entry });
+//     }
 
-export const TierlistService = new TierlistImpl();
+//     return diffTierlistRankings(tieredEntries, previous);
+//   }
+// }
+
+// export const TierlistService = new TierlistImpl();

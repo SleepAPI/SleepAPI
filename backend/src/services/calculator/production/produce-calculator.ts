@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Sleep API Authors
+ * Copyright 2024 Sleep API Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-import type { PokemonIngredientSet, Produce } from 'sleepapi-common';
-import { multiplyIngredients, multiplyProduce } from 'sleepapi-common';
+import type { Produce, ProduceFlat } from 'sleepapi-common';
+import { multiplyProduce } from 'sleepapi-common';
 
-export function calculateAverageProduce(
-  pokemonSet: PokemonIngredientSet,
-  ingredientPercentage: number,
-  berriesPerDrop: number,
-  level: number
-): Produce {
+// FIXME: remove
+export function calculateAverageProduce(params: {
+  ingredients: Float32Array;
+  berries: Float32Array;
+  ingredientPercentage: number;
+  berriesPerDrop: number;
+}): ProduceFlat {
+  const { ingredients, berries, ingredientPercentage, berriesPerDrop } = params;
   return {
-    berries: [{ berry: pokemonSet.pokemon.berry, amount: berriesPerDrop * (1 - ingredientPercentage), level }],
-    ingredients: multiplyIngredients(pokemonSet.ingredientList, ingredientPercentage)
+    berries: Float32Array.from(berries, (value) => value * (berriesPerDrop * (1 - ingredientPercentage))),
+    ingredients: Float32Array.from(ingredients, (value) => value * ingredientPercentage)
   };
 }
 

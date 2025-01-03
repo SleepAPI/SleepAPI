@@ -71,7 +71,6 @@ class PokemonInstanceUtilsImpl {
     }
   }
 
-  // TODO: test
   public toPokemonInstanceIdentity(pokemonInstance: PokemonInstanceExt): PokemonInstanceIdentity {
     return {
       pokemon: pokemonInstance.pokemon.name,

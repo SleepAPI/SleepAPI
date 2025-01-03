@@ -1,7 +1,6 @@
-import type { berry, pokemon } from 'sleepapi-common'
-import { island, mainskill } from 'sleepapi-common'
+import { island, mainskill, type Berry, type Pokemon } from 'sleepapi-common'
 
-export function mainskillImage(pokemon: pokemon.Pokemon) {
+export function mainskillImage(pokemon: Pokemon) {
   if (pokemon.skill.isSameOrModifiedVersionOf(mainskill.HELPER_BOOST)) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
@@ -20,11 +19,11 @@ export function avatarImage(params: { pokemonName: string; shiny: boolean; happy
   return `/images/avatar/${happy ? 'happy' : 'portrait'}/${pokemonName.toLowerCase()}${happy ? '_happy' : ''}${shiny ? '_shiny' : ''}.png`
 }
 
-export function berryImage(berry: berry.Berry) {
+export function berryImage(berry: Berry) {
   return `/images/berries/${berry.name.toLowerCase()}.png`
 }
 
-export function islandImage(params: { favoredBerries: berry.Berry[]; background: boolean }) {
+export function islandImage(params: { favoredBerries: Berry[]; background: boolean }) {
   const { favoredBerries, background } = params
 
   const berryNames = favoredBerries.map((b) => b.name)

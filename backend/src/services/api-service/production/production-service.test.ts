@@ -1,4 +1,3 @@
-import type { TeamMember, TeamSettingsExt } from '@src/domain/combination/team.js';
 import {
   calculateIv,
   calculatePokemonProduction,
@@ -7,12 +6,13 @@ import {
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { describe, expect, it } from 'bun:test';
-import { ingredient, nature, pokemon, subskill } from 'sleepapi-common';
+import type { TeamMemberExt, TeamSettingsExt } from 'sleepapi-common';
+import { BULBASAUR, CHARMANDER, ingredient, nature, PINSIR, subskill } from 'sleepapi-common';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
     const result = calculatePokemonProduction(
-      pokemon.PINSIR,
+      PINSIR,
       MOCKED_OPTIMAL_PRODUCTION_STATS,
       [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
       false,
@@ -33,7 +33,7 @@ describe('calculatePokemonProduction', () => {
 
   it('should calculate production for PINSIR with production analysis', () => {
     const result = calculatePokemonProduction(
-      pokemon.PINSIR,
+      PINSIR,
       MOCKED_OPTIMAL_PRODUCTION_STATS,
       [ingredient.HONEY.name, ingredient.FANCY_APPLE.name, ingredient.BEAN_SAUSAGE.name],
       true,
@@ -61,23 +61,25 @@ describe('calculateTeam', () => {
       camp: false
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.PINSIR,
+        pokemonWithIngredients: {
+          pokemon: PINSIR,
           ingredientList: [
             { amount: 2, ingredient: ingredient.HONEY },
             { amount: 5, ingredient: ingredient.HONEY },
             { amount: 7, ingredient: ingredient.HONEY }
           ]
         },
-        carrySize: 24,
-        level: 60,
-        ribbon: 0,
-        nature: nature.MILD,
-        skillLevel: 6,
-        subskills: [subskill.INGREDIENT_FINDER_M],
-        externalId: 'some id'
+        settings: {
+          carrySize: 24,
+          level: 60,
+          ribbon: 0,
+          nature: nature.MILD,
+          skillLevel: 6,
+          subskills: new Set([subskill.INGREDIENT_FINDER_M.name]),
+          externalId: 'some id'
+        }
       }
     ];
 
@@ -88,7 +90,7 @@ describe('calculateTeam', () => {
 {
   "berries": [
     {
-      "amount": 39.98336504575599,
+      "amount": 39.98336410522461,
       "berry": {
         "name": "LUM",
         "type": "bug",
@@ -99,7 +101,7 @@ describe('calculateTeam', () => {
   ],
   "ingredients": [
     {
-      "amount": 90.93165396225288,
+      "amount": 90.93164825439453,
       "ingredient": {
         "longName": "Honey",
         "name": "Honey",
@@ -121,35 +123,39 @@ describe('calculateIv', () => {
       camp: true
     };
 
-    const members: TeamMember[] = [
+    const members: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.BULBASAUR,
+        pokemonWithIngredients: {
+          pokemon: BULBASAUR,
           ingredientList: [{ amount: 3, ingredient: ingredient.FANCY_APPLE }]
         },
-        carrySize: 10,
-        level: 15,
-        ribbon: 0,
-        nature: nature.JOLLY,
-        skillLevel: 4,
-        subskills: [subskill.HELPING_SPEED_S],
-        externalId: 'bulbasaur-1'
+        settings: {
+          carrySize: 10,
+          level: 15,
+          ribbon: 0,
+          nature: nature.JOLLY,
+          skillLevel: 4,
+          subskills: new Set([subskill.HELPING_SPEED_S.name]),
+          externalId: 'bulbasaur-1'
+        }
       }
     ];
 
-    const variants: TeamMember[] = [
+    const variants: TeamMemberExt[] = [
       {
-        pokemonSet: {
-          pokemon: pokemon.CHARMANDER,
+        pokemonWithIngredients: {
+          pokemon: CHARMANDER,
           ingredientList: [{ amount: 2, ingredient: ingredient.HONEY }]
         },
-        carrySize: 8,
-        level: 12,
-        ribbon: 0,
-        nature: nature.BRAVE,
-        skillLevel: 3,
-        subskills: [subskill.SKILL_TRIGGER_S],
-        externalId: 'charmander-variant'
+        settings: {
+          carrySize: 8,
+          level: 12,
+          ribbon: 0,
+          nature: nature.BRAVE,
+          skillLevel: 3,
+          subskills: new Set([subskill.SKILL_TRIGGER_S.name]),
+          externalId: 'charmander-variant'
+        }
       }
     ];
 

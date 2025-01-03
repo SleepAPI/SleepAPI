@@ -14,129 +14,31 @@
  * limitations under the License.
  */
 
-import type { OptimalTeamSolution, SurplusIngredients } from '@src/domain/combination/combination.js';
-import type { IngredientSet, PokemonIngredientSet, Recipe, pokemon } from 'sleepapi-common';
-import { MAX_RECIPE_LEVEL, recipeLevelBonus } from 'sleepapi-common';
+// import { OptimalTeamSolution } from '@src/domain/combination/combination';
+// import { getSurplusList } from '@src/utils/set-cover-utils/set-cover-utils';
+import type { IngredientIndexToFloatAmount, IngredientIndexToIntAmount, IngredientSet, Pokemon } from 'sleepapi-common';
 
-/**
- * Calculates percentage covered of given meal by given ingredient list
- * @param meal
- * @param combination
- * @returns
- */
-export function calculatePercentageCoveredByCombination(
-  meal: Recipe,
-  combination: { amount: number; ingredient: { name: string; value?: number } }[]
-): number {
-  let totalCovered = 0;
+// TODO: move to set-cover utils?
+// export function sortByMinimumFiller(
+//   optimalTeamSolutions: OptimalTeamSolution[],
+//   recipe: IngredientSetSimple[]
+// ): OptimalTeamSolution[] {
+//   return [...optimalTeamSolutions].sort((a, b) => {
+//     const aSurplusList = getSurplusList(a.surplus.relevant, recipe);
+//     const bSurplusList = getSurplusList(b.surplus.relevant, recipe);
 
-  const remainingQuantity: Map<string, number> = new Map<string, number>();
-  for (const { amount, ingredient } of meal.ingredients) {
-    remainingQuantity.set(ingredient.name, amount);
-  }
+//     for (let i = 0; i < aSurplusList.length; i++) {
+//       if (bSurplusList[i] !== aSurplusList[i]) {
+//         return bSurplusList[i] - aSurplusList[i];
+//       }
+//     }
 
-  for (const { amount, ingredient } of combination) {
-    if (remainingQuantity.has(ingredient.name)) {
-      const remaining = remainingQuantity.get(ingredient.name) ?? 0;
-      if (amount <= remaining) {
-        totalCovered += amount;
-        remainingQuantity.set(ingredient.name, remaining - amount);
-      } else {
-        totalCovered += remaining;
-        remainingQuantity.set(ingredient.name, 0);
-      }
-    }
-  }
+//     return 0;
+//   });
+// }
 
-  return (totalCovered / meal.ingredients.reduce((sum, { amount }) => sum + amount, 0)) * 100;
-}
-
-/**
- * subtracts producedIngredients amounts from requiredIngredients
- */
-export function calculateRemainingIngredients(
-  requiredIngredients: IngredientSet[],
-  producedIngredients: IngredientSet[]
-): IngredientSet[] {
-  const result: IngredientSet[] = [];
-  for (const req of requiredIngredients) {
-    let amountNeeded = req.amount;
-    for (const prod of producedIngredients) {
-      if (prod.ingredient.name === req.ingredient.name) {
-        amountNeeded -= prod.amount;
-        break;
-      }
-    }
-
-    if (amountNeeded > 0) {
-      result.push({ ingredient: req.ingredient, amount: amountNeeded });
-    }
-  }
-
-  return result;
-}
-
-export function addIngredientSet(target: IngredientSet[], toAdd: IngredientSet[]): IngredientSet[] {
-  const result: IngredientSet[] = target.map((ingredientSet) => ({
-    ingredient: ingredientSet.ingredient,
-    amount: ingredientSet.amount
-  }));
-
-  for (const { amount, ingredient: addedIngredient } of toAdd) {
-    const existingIngredient = result.find(({ ingredient }) => ingredient.name === addedIngredient.name);
-
-    if (existingIngredient) {
-      existingIngredient.amount += amount;
-    } else {
-      result.push({ ingredient: addedIngredient, amount });
-    }
-  }
-
-  return result;
-}
-
-export function extractRelevantSurplus(recipe: IngredientSet[], surplus: IngredientSet[]): SurplusIngredients {
-  const recipeIngredientNames = new Set(recipe.map((ingredientDrop) => ingredientDrop.ingredient.name));
-
-  const relevant = surplus.filter((ingredientDrop) => recipeIngredientNames.has(ingredientDrop.ingredient.name));
-  const extra = surplus.filter((ingredientDrop) => !recipeIngredientNames.has(ingredientDrop.ingredient.name));
-
-  return {
-    total: surplus,
-    relevant,
-    extra
-  };
-}
-
-export function sortByMinimumFiller(
-  optimalTeamSolutions: OptimalTeamSolution[],
-  recipe: IngredientSet[]
-): OptimalTeamSolution[] {
-  return [...optimalTeamSolutions].sort((a, b) => {
-    const aSurplusList = getSurplusList(a.surplus.relevant, recipe);
-    const bSurplusList = getSurplusList(b.surplus.relevant, recipe);
-
-    for (let i = 0; i < aSurplusList.length; i++) {
-      if (bSurplusList[i] !== aSurplusList[i]) {
-        return bSurplusList[i] - aSurplusList[i];
-      }
-    }
-
-    return 0;
-  });
-}
-
-export function getSurplusList(surplus: IngredientSet[], requiredIngredients: IngredientSet[]): number[] {
-  return requiredIngredients
-    .map((reqIngredient) => {
-      const foundSurplus = surplus.find((surplusItem) => surplusItem.ingredient.name === reqIngredient.ingredient.name);
-      return foundSurplus ? foundSurplus.amount : 0;
-    })
-    .sort((a, b) => a - b);
-}
-
-export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, level: number): IngredientSet[][] {
-  const result: Array<Array<IngredientSet>> = [];
+export function getAllIngredientLists(pokemon: Pokemon, level: number): IngredientSet[][] {
+  const result: IngredientSet[][] = [];
 
   const ing0 = pokemon.ingredient0;
   if (level < 30) {
@@ -156,70 +58,50 @@ export function getAllIngredientCombinationsForLevel(pokemon: pokemon.Pokemon, l
   return result;
 }
 
-/**
- * Very specific. Combines two similar ingredient sets, with same ingredients at same indices
- */
-export function combineIngredientDrops(array1: IngredientSet[], array2: IngredientSet[]): IngredientSet[] {
-  return array1.reduce((acc: IngredientSet[], curr: IngredientSet, index: number) => {
-    const other: IngredientSet = array2[index];
-    if (curr.ingredient.name === other.ingredient.name) {
-      acc.push({
-        amount: curr.amount + other.amount,
-        ingredient: curr.ingredient
-      });
-    } else {
-      acc.push(curr, other);
-    }
-    return acc;
-  }, []);
+export function calculateAveragePokemonIngredientSet(
+  ingredients: IngredientIndexToIntAmount,
+  level: number
+): IngredientIndexToFloatAmount {
+  const ingredientsUnlocked = Math.min(Math.floor(level / 30) + 1, 3);
+  const multiplier = 1 / ingredientsUnlocked;
+  const dividedIngredients = Float32Array.from(ingredients, (value) => value * multiplier);
+  return dividedIngredients;
 }
 
-export function calculateAveragePokemonIngredientSet(pokemonCombination: PokemonIngredientSet): PokemonIngredientSet {
-  return {
-    pokemon: pokemonCombination.pokemon,
-    ingredientList: pokemonCombination.ingredientList.map(({ ingredient, amount }) => ({
-      ingredient,
-      amount: amount / pokemonCombination.ingredientList.length
-    }))
-  };
-}
+// export function calculateContributedIngredientsValue(
+//   meal: Recipe,
+//   producedIngredients: IngredientSetSimple[]
+// ): { contributedValue: number; fillerValue: number } {
+//   const recipeIngredients: Map<string, number> = new Map<string, number>();
+//   for (const { amount, ingredient } of meal.ingredients) {
+//     recipeIngredients.set(ingredient.name, amount);
+//   }
 
-export function sumOfIngredients(ingredients: IngredientSet[]) {
-  return ingredients.map((ing) => ing.amount).reduce((sum, amount) => sum + amount, 0);
-}
+//   let contributedValue = 0;
+//   let fillerValue = 0;
+//   for (const { amount, ingredient } of producedIngredients) {
+//     const ingredientData = getIngredient(ingredient);
 
-export function calculateContributedIngredientsValue(
-  meal: Recipe,
-  producedIngredients: IngredientSet[]
-): { contributedValue: number; fillerValue: number } {
-  const recipeIngredients: Map<string, number> = new Map<string, number>();
-  for (const { amount, ingredient } of meal.ingredients) {
-    recipeIngredients.set(ingredient.name, amount);
-  }
+//     if (recipeIngredients.has(ingredient)) {
+//       const recipeAmount = recipeIngredients.get(ingredient) ?? 0;
 
-  let contributedValue = 0;
-  let fillerValue = 0;
-  for (const { amount, ingredient } of producedIngredients) {
-    if (recipeIngredients.has(ingredient.name)) {
-      const recipeAmount = recipeIngredients.get(ingredient.name) ?? 0;
+//       if (amount <= recipeAmount) {
+//         contributedValue += amount * ingredientData.value;
+//       } else {
+//         contributedValue += recipeAmount * ingredientData.value;
+//         fillerValue += (amount - recipeAmount) * ingredientData.taxedValue;
+//       }
+//     } else {
+//       // produced ingredient is not in recipe
+//       fillerValue += amount * ingredientData.taxedValue;
+//     }
+//   }
 
-      if (amount <= recipeAmount) {
-        contributedValue += amount * ingredient.value;
-      } else {
-        contributedValue += recipeAmount * ingredient.value;
-        fillerValue += (amount - recipeAmount) * ingredient.taxedValue;
-      }
-    } else {
-      // produced ingredient is not in recipe
-      fillerValue += amount * ingredient.taxedValue;
-    }
-  }
+//   const recipeBonus = 1 + meal.bonus / 100;
+//   const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL];
 
-  const recipeBonus = 1 + meal.bonus / 100;
-  const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL];
-
-  return {
-    contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,
-    fillerValue
-  };
-}
+//   return {
+//     contributedValue: contributedValue * recipeBonus * maxLevelRecipeMultiplier,
+//     fillerValue,
+//   };
+// }

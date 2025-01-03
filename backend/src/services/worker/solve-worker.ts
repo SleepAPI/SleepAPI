@@ -1,24 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import workerpool from 'workerpool';
-import OptimalController from '../../controllers/optimal/optimal.controller.js';
-import type { IngredientRankerResult, OptimalSetResult } from '../../routes/optimal-router/optimal-router.js';
-import { WebsiteConverterService } from '../../services/website-converter/website-converter-service.js';
+import SolveController from '../../controllers/solve/solve.controller.js';
+import { WebsiteConverterService } from '../website-converter/website-converter-service.js';
 
-async function calculateMeal(name: string, body: any, pretty: boolean) {
-  const controller = new OptimalController();
-  const data: OptimalSetResult = controller.getOptimalPokemonForMealRaw(name, body);
+async function solveRecipe(name: string, body: any, pretty: boolean) {
+  const controller = new SolveController();
+  const data = controller.solveRecipe(name, body);
 
-  return pretty ? WebsiteConverterService.toOptimalSet(data) : data;
+  return pretty ? WebsiteConverterService.toOptimalSet(data, name) : data;
 }
 
-async function calculateIngredient(name: string, body: any, pretty: boolean) {
-  const controller = new OptimalController();
-  const data: IngredientRankerResult = controller.getOptimalPokemonForIngredientRaw(name, body);
-
-  return pretty ? WebsiteConverterService.toIngredientRanker(data) : data;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function solveIngredient(name: string, body: any, pretty: boolean) {
+  const controller = new SolveController();
+  return controller.solveIngredient(name, body);
 }
 
 workerpool.worker({
-  calculateMeal,
-  calculateIngredient
+  solveRecipe,
+  solveIngredient
 });

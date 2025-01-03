@@ -1,6 +1,6 @@
 import type { Produce } from '../../api/production/produce';
+import type { IngredientSet } from '../../domain/ingredient/ingredient';
 import type { Mainskill } from '../../domain/mainskill/mainskill';
-import type { IngredientSet } from '../../domain/types/ingredient-set';
 import type { Time } from '../../domain/types/time';
 
 export interface Summary {

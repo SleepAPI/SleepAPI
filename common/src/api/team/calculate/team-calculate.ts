@@ -1,14 +1,14 @@
+import type {
+  BerrySet,
+  IngredientIndexToFloatAmount,
+  IngredientSet,
+  PokemonWithIngredientsIndexed,
+  TeamMemberExt,
+  TeamSettings
+} from '../../../domain';
 import type { Recipe } from '../../../domain/recipe/recipe';
-import type { BerrySet } from '../../../domain/types/berry-set';
-import type { IngredientSet } from '../../../domain/types/ingredient-set';
 import type { PokemonInstance } from '../../pokemon/pokemon-instance';
 import type { Produce } from '../../production';
-
-export interface TeamSettings {
-  camp: boolean;
-  bedtime: string;
-  wakeup: string;
-}
 
 export interface PokemonInstanceIdentity extends PokemonInstance {
   externalId: string;
@@ -31,6 +31,7 @@ export interface MemberProductionAdvanced {
   carrySize: number;
   spilledIngredients: IngredientSet[];
   totalHelps: number;
+  averageHelps: number;
   dayHelps: number;
   nightHelps: number;
   nightHelpsBeforeSS: number;
@@ -47,6 +48,7 @@ export interface MemberProductionBase {
   produceTotal: Produce;
   skillProcs: number;
   externalId: string;
+  pokemonWithIngredients: PokemonWithIngredientsIndexed;
 }
 
 export interface MemberProduction extends MemberProductionBase {
@@ -75,13 +77,29 @@ export interface CookingResult {
   curry: RecipeTypeResult;
   salad: RecipeTypeResult;
   dessert: RecipeTypeResult;
+  // TODO: rename critInfo
+  critInfo: {
+    averageCritMultiplierPerCook: number;
+    averageCritChancePerCook: number;
+    averageWeekdayPotSize: number;
+  };
 }
 
 export interface CalculateTeamResponse {
   members: MemberProduction[];
-  cooking: CookingResult;
+  cooking?: CookingResult;
 }
 
 export interface CalculateIvResponse {
   variants: MemberProductionBase[];
+}
+
+export interface SimpleTeamResult {
+  skillProcs: number;
+  totalHelps: number;
+  skillIngredients: IngredientIndexToFloatAmount;
+  critMultiplier: number;
+  averageWeekdayPotSize: number;
+  ingredientPercentage: number;
+  member: TeamMemberExt;
 }

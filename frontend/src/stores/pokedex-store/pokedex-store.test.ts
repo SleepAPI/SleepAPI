@@ -1,6 +1,6 @@
 import { usePokedexStore } from '@/stores/pokedex-store/pokedex-store'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
+import { COMPLETE_POKEDEX } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { capitalize } from 'vue'
 
@@ -13,7 +13,7 @@ describe('Pokedex Store', () => {
     const pokedexStore = usePokedexStore()
 
     const categories = ['ingredient', 'berry', 'skill']
-    const completePokedex = [...pokemon.COMPLETE_POKEDEX].sort((a, b) => a.name.localeCompare(b.name))
+    const completePokedex = [...COMPLETE_POKEDEX].sort((a, b) => a.name.localeCompare(b.name))
 
     const categorizedPokedex: { [key: string]: string[] } = {
       ingredient: [],

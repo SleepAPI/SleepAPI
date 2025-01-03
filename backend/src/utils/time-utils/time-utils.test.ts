@@ -529,3 +529,29 @@ describe('timeToMinutesSinceStart', () => {
     expect(TimeUtils.timeToMinutesSinceStart(TimeUtils.parseTime('00:30'), TimeUtils.parseTime('06:00'))).toBe(1110);
   });
 });
+
+describe('checkTimeout', () => {
+  it('shall return true if timeout has passed', () => {
+    const startTime = Date.now() - 5000; // 5 seconds ago
+    const timeout = 3000; // 3 seconds timeout
+    expect(TimeUtils.checkTimeout({ startTime, timeout })).toBeTruthy();
+  });
+
+  it('shall return false if timeout has not passed', () => {
+    const startTime = Date.now() - 2000; // 2 seconds ago
+    const timeout = 3000; // 3 seconds timeout
+    expect(TimeUtils.checkTimeout({ startTime, timeout })).toBeFalsy();
+  });
+
+  it('shall return true if timeout is exactly the elapsed time', () => {
+    const startTime = Date.now() - 3000; // 3 seconds ago
+    const timeout = 3000; // 3 seconds timeout
+    expect(TimeUtils.checkTimeout({ startTime, timeout })).toBeTruthy();
+  });
+
+  it('shall return false if startTime is in the future', () => {
+    const startTime = Date.now() + 1000; // 1 second in the future
+    const timeout = 3000; // 3 seconds timeout
+    expect(TimeUtils.checkTimeout({ startTime, timeout })).toBeFalsy();
+  });
+});

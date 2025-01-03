@@ -1,11 +1,11 @@
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
-import type { berry, nature, Recipe, subskill, Time } from 'sleepapi-common';
+import type { nature, Time } from 'sleepapi-common';
 
+// TODO: remove in Sleep API 2.0
 export interface ProductionStats {
   level: number;
   ribbon: number;
   nature?: nature.Nature;
-  subskills?: subskill.SubSkill[];
+  subskills?: Set<string>;
   skillLevel?: number;
   inventoryLimit?: number;
   e4eProcs: number;
@@ -22,15 +22,4 @@ export interface ProductionStats {
   mainBedtime: Time;
   mainWakeup: Time;
   maxPotSize?: number;
-}
-
-export interface SetCoverProductionStats extends ProductionStats {
-  berries: berry.Berry[];
-}
-
-export type TeamWithProduce = CustomPokemonCombinationWithProduce[];
-
-export interface TeamsForMeal {
-  teams: TeamWithProduce[];
-  meal: Recipe;
 }

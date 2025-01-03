@@ -1,4 +1,4 @@
-import { MAINSKILLS } from '../mainskill';
+import { INGREDIENT_SUPPORT_MAINSKILLS, MAINSKILLS } from '../mainskill';
 import { Transform } from '../modifier';
 import { SKILL_COPY } from './skill-copy';
 
@@ -9,3 +9,4 @@ export const SKILL_COPY_TRANSFORM = Transform(SKILL_COPY, 0, {
 });
 
 MAINSKILLS.push(SKILL_COPY_TRANSFORM);
+INGREDIENT_SUPPORT_MAINSKILLS.push(SKILL_COPY_TRANSFORM);

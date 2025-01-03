@@ -252,11 +252,11 @@ export default defineComponent({
     currentRecipeTypeResult(): RecipeTypeResult | undefined {
       const team = this.teamStore.getCurrentTeam
       if (team.recipeType === 'curry') {
-        return team.production?.team.cooking.curry
+        return team.production?.team.cooking?.curry
       } else if (team.recipeType === 'salad') {
-        return team.production?.team.cooking.salad
+        return team.production?.team.cooking?.salad
       } else {
-        return team.production?.team.cooking.dessert
+        return team.production?.team.cooking?.dessert
       }
     },
     cookingStrength() {

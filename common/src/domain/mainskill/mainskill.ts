@@ -119,3 +119,4 @@ export const createBaseSkill = (baseSkill: Omit<MainskillAttributes, 'modifier'>
 
 export const MAINSKILLS: Mainskill[] = [];
 export const METRONOME_SKILLS: Mainskill[] = [];
+export const INGREDIENT_SUPPORT_MAINSKILLS: Mainskill[] = [];

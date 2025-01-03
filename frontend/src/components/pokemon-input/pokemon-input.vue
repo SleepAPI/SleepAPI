@@ -64,6 +64,7 @@
     <v-row no-gutters class="mt-2">
       <v-col cols="4" class="mr-2 flex-center">
         <v-card rounded="pill" class="w-100 h-50 text-center responsive-text flex-center">Ingredients</v-card>
+        <v-card rounded="pill" class="w-100 h-50 text-center responsive-text flex-center">Ingredients</v-card>
       </v-col>
       <v-col class="flex-center">
         <IngredientButton
@@ -140,13 +141,14 @@ import RibbonButton from '@/components/pokemon-input/ribbon-button.vue'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
-  RP,
   getPokemon,
-  ingredient,
   maxCarrySize,
+  mockPokemon,
   nature,
-  pokemon,
+  RP,
   uuid,
+  type Ingredient,
+  type Pokemon,
   type PokemonGender,
   type PokemonInstanceExt,
   type SubskillInstanceExt
@@ -174,7 +176,7 @@ export default defineComponent({
       default: undefined
     },
     pokemonFromSearch: {
-      type: undefined as PropType<pokemon.Pokemon> | undefined,
+      type: undefined as PropType<Pokemon> | undefined,
       required: false,
       default: undefined
     }
@@ -192,7 +194,7 @@ export default defineComponent({
       saved: false,
       shiny: false,
       gender: undefined,
-      pokemon: pokemon.MOCK_POKEMON,
+      pokemon: mockPokemon(),
       name: '',
       level: 60,
       ribbon: 0,
@@ -244,7 +246,7 @@ export default defineComponent({
       this.pokemonInstance.subskills = updatedSubskills
       this.pokemonInstance.subskills.sort((a, b) => a.level - b.level)
     },
-    updatePokemon(pokemon: pokemon.Pokemon) {
+    updatePokemon(pokemon: Pokemon) {
       this.pokemonInstance.pokemon = pokemon
     },
     updateName(newName: string) {
@@ -256,7 +258,7 @@ export default defineComponent({
     updateCarry(newLimit: number) {
       this.pokemonInstance.carrySize = newLimit
     },
-    updateIngredient(params: { ingredient: ingredient.Ingredient; ingredientLevel: number }) {
+    updateIngredient(params: { ingredient: Ingredient; ingredientLevel: number }) {
       const ingredientToUpdate = this.pokemonInstance.ingredients.find((sub) => sub.level === params.ingredientLevel)
       if (ingredientToUpdate) {
         ingredientToUpdate.ingredient = params.ingredient

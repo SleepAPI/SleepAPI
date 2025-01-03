@@ -1,370 +1,344 @@
-/**
- * Copyright 2023 Sleep API Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// /**
+//  * Copyright 2023 Sleep API Authors
+//  *
+//  * Licensed under the Apache License, Version 2.0 (the "License");
+//  * you may not use this file except in compliance with the License.
+//  * You may obtain a copy of the License at
+//  *
+//  *      http://www.apache.org/licenses/LICENSE-2.0
+//  *
+//  * Unless required by applicable law or agreed to in writing, software
+//  * distributed under the License is distributed on an "AS IS" BASIS,
+//  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  * See the License for the specific language governing permissions and
+//  * limitations under the License.
+//  */
 
-import type { OptimalTeamSolution } from '@src/domain/combination/combination.js';
-import type { CustomPokemonCombinationWithProduce } from '@src/domain/combination/custom.js';
-import { ProgrammingError } from '@src/domain/error/programming/programming-error.js';
-import {
-  calculateRemainingIngredients,
-  extractRelevantSurplus,
-  sortByMinimumFiller
-} from '@src/services/calculator/ingredient/ingredient-calculate.js';
-import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
-import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils.js';
-import {
-  calculateHelperBoostIngredientsIncrease,
-  calculateRemainingSimplifiedIngredients,
-  countNrOfHelperBoostHelps,
-  countUniqueHelperBoostPokemon,
-  createMemoKey,
-  parseMemoKey,
-  sumOfSimplifiedIngredients
-} from '@src/utils/set-cover-utils/set-cover-utils.js';
-import type { IngredientSet } from 'sleepapi-common';
-import {
-  MEALS_IN_DAY,
-  combineSameIngredientsInDrop,
-  mainskill,
-  multiplyBerries,
-  multiplyIngredients
-} from 'sleepapi-common';
+// import { OptimalTeamSolution } from '@src/domain/combination/combination';
+// import { ProgrammingError } from '@src/domain/error/programming/programming-error';
+// import { sortByMinimumFiller } from '@src/services/calculator/ingredient/ingredient-calculate';
+// import { hashPokemonCombination } from '@src/utils/optimal-utils/optimal-utils';
+// import {
+//   calculateHelperBoostIngredientsIncrease,
+//   calculateRemainingSimplifiedIngredients,
+//   countNrOfHelperBoostHelps,
+//   countUniqueHelperBoostPokemon,
+//   createMemoKey,
+//   extractRelevantSurplus,
+//   parseMemoKey,
+//   sumOfSimplifiedIngredients,
+// } from '@src/utils/set-cover-utils/set-cover-utils';
 
-export interface SimplifiedIngredientSet {
-  amount: number;
-  ingredient: string;
-}
-export interface HelperBoostStatus {
-  amount: number;
-  berry: string;
-}
+// TODO: avoid garbage collection whenever possible, pre-allocate arrays etc and reuse memory
 
-export interface MemoizedParameters {
-  remainingIngredients: SimplifiedIngredientSet[];
-  spotsLeftInTeam: number;
-  helperBoost?: HelperBoostStatus;
-}
+// TODO: look into node inspect
 
-export class SetCover {
-  #reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]> = new Map();
-  #memo: Map<string, CustomPokemonCombinationWithProduce[][]>;
+// // TODO: move interfaces
+// // TODO: most of this is only for helper boost. Also unfair that helper boost is in here, but no other support skills
+// export interface SetCoverPokemonSetup {
+//   pokemonSet: PokemonWithIngredientsIndexed;
+//   totalIngredients: IngredientIndexToAmount;
+// }
+// export interface HelperBoostStatus {
+//   amount: number;
+//   berry: string;
+// }
 
-  #startTime: number = Date.now();
-  #timeout = 10000;
+// export interface MemoizedParameters {
+//   remainingIngredients: IngredientSetFlat;
+//   spotsLeftInTeam: number;
+//   helperBoost?: HelperBoostStatus; // TODO: this should be able to be flat too then? it's just berry to amount
+// }
 
-  constructor(
-    reverseIndex: Map<string, CustomPokemonCombinationWithProduce[]>,
-    memo: Map<string, CustomPokemonCombinationWithProduce[][]>
-  ) {
-    this.#reverseIndex = reverseIndex;
-    this.#memo = memo;
-  }
+// export class SetCover {
+//   #reverseIndex: Map<string, SetCoverPokemonSetup[]> = new Map();
+//   #memo: Map<string, SetCoverPokemonSetup[][]>;
 
-  // TODO: should rewrite helper boost to alway assume the base is already calculated for raikou, so if raikou is added to team we only add unique, like if team had raichu already we add unique helper boost help to raikou, not the base, but raichu would get base + unique
-  public solveRecipe(
-    params: string,
-    pokemonInTeam: CustomPokemonCombinationWithProduce[] = [],
-    requiredPokemon: CustomPokemonCombinationWithProduce[] = []
-  ): CustomPokemonCombinationWithProduce[][] {
-    const cachedSolution = this.#memo.get(params);
-    if (cachedSolution) {
-      return cachedSolution;
-    }
+//   #startTime: number = Date.now();
+//   #timeout = 10000;
 
-    const memoizedParams: MemoizedParameters = parseMemoKey(params);
-    const { spotsLeftInTeam, remainingIngredients: mealIngredients } = memoizedParams;
-    if (spotsLeftInTeam === 0 || mealIngredients.length === 0 || this.checkTimeout()) {
-      return [];
-    }
+//   constructor(reverseIndex: Map<string, SetCoverPokemonSetup[]>, memo: Map<string, SetCoverPokemonSetup[][]>) {
+//     this.#reverseIndex = reverseIndex;
+//     this.#memo = memo;
+//   }
 
-    let maxTeamSize = spotsLeftInTeam;
+//   // TODO: should rewrite helper boost to alway assume the base is already calculated for raikou, so if raikou is added to team we only add unique, like if team had raichu already we add unique helper boost help to raikou, not the base, but raichu would get base + unique
+//   public solveRecipe(
+//     params: string,
+//     pokemonInTeam: SetCoverPokemonSetup[] = [],
+//     requiredPokemon: SetCoverPokemonSetup[] = []
+//   ): SetCoverPokemonSetup[][] {
+//     const cachedSolution = this.#memo.get(params);
+//     if (cachedSolution) {
+//       return cachedSolution;
+//     }
 
-    // Take the first un-fulfilled ingredient requirement
-    const firstIngredient = mealIngredients[0];
+//     const memoizedParams: MemoizedParameters = parseMemoKey(params);
+//     const { spotsLeftInTeam, remainingIngredients: mealIngredients } = memoizedParams;
+//     if (spotsLeftInTeam === 0 || mealIngredients.length === 0 || this.checkTimeout()) {
+//       return [];
+//     }
 
-    // For each pokemon that produces the ingredient, go through and
-    // determine how many ingredients remain in the recipe if we add
-    // that pokemon to our team
-    const remainders: [
-      number,
-      SimplifiedIngredientSet[],
-      CustomPokemonCombinationWithProduce,
-      CustomPokemonCombinationWithProduce[],
-      HelperBoostStatus | undefined
-    ][] = [];
+//     let maxTeamSize = spotsLeftInTeam;
 
-    // TODO: currrently for requiredPokemon legnth > 2+ we would iterate over them instead of adding them all to the same team
-    // TODO: instead for [RAIKOU, RAICHU, EKANS] we should calc RAIKOU and send requiredPokemon=[RAICHU, EKANS] to next recursive
-    const pokemonWithIngredient =
-      requiredPokemon.length > 0 ? requiredPokemon : (this.#reverseIndex.get(firstIngredient.ingredient) ?? []);
-    for (const currentPokemon of pokemonWithIngredient) {
-      const helperBoostAlreadyInTeam = pokemonInTeam.find(
-        (pkmn) => pkmn.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
-      );
+//     // Take the first un-fulfilled ingredient requirement
+//     const firstIngredient = mealIngredients[0];
 
-      if (helperBoostAlreadyInTeam && currentPokemon.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST) {
-        // team already has special pokemon, can't add another
-        continue;
-      }
+//     // For each pokemon that produces the ingredient, go through and
+//     // determine how many ingredients remain in the recipe if we add
+//     // that pokemon to our team
+//     const remainders: [
+//       number,
+//       IngredientSetSimple[],
+//       SetCoverPokemonSetup,
+//       SetCoverPokemonSetup[],
+//       HelperBoostStatus | undefined
+//     ][] = [];
 
-      const currentTeam = pokemonInTeam.concat(currentPokemon);
-      const maybeHelperBoostPokemon = currentTeam.find(
-        (pkmn) => pkmn.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
-      );
+//     // TODO: currrently for requiredPokemon legnth > 2+ we would iterate over them instead of adding them all to the same team
+//     // TODO: instead for [RAIKOU, RAICHU, EKANS] we should calc RAIKOU and send requiredPokemon=[RAICHU, EKANS] to next recursive
 
-      if (maybeHelperBoostPokemon) {
-        const boostedBerry = maybeHelperBoostPokemon.pokemonCombination.pokemon.berry;
-        const uniqueBoostedMons = countUniqueHelperBoostPokemon(currentTeam, boostedBerry);
-        const currentNrOfHelps = countNrOfHelperBoostHelps({
-          uniqueBoostedMons,
-          skillProcs: maybeHelperBoostPokemon.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY,
-          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel
-        });
+//     // TODO:if reverseIndex is sorted by quantity and pokemon index N solves quantity, but N+1 does not we can break right?
 
-        const deductedExtraHelperBoostIncrease = calculateRemainingSimplifiedIngredients(
-          mealIngredients,
-          calculateHelperBoostIngredientsIncrease(currentTeam, currentNrOfHelps),
-          true
-        );
+//     // TODO: each ingredient would be tied to an index, then when doing stuff like calculateRemainingIngredients we just do recipe[2] - produced[2] where 2 is the index for that ingredient and the value of produced[2] would be the produced amount
+//     const pokemonWithIngredient =
+//       requiredPokemon.length > 0 ? requiredPokemon : this.#reverseIndex.get(firstIngredient.ingredient) ?? [];
+//     for (const currentPokemon of pokemonWithIngredient) {
+//       const helperBoostAlreadyInTeam = pokemonInTeam.find((pkmn) => pkmn.skill === mainskill.HELPER_BOOST.name);
 
-        const remainder: SimplifiedIngredientSet[] = calculateRemainingSimplifiedIngredients(
-          deductedExtraHelperBoostIncrease,
-          currentPokemon.detailedProduce.produce.ingredients,
-          true
-        );
+//       if (helperBoostAlreadyInTeam && currentPokemon.skill === mainskill.HELPER_BOOST.name) {
+//         // team already has special pokemon, can't add another
+//         continue;
+//       }
 
-        const sum = sumOfSimplifiedIngredients(remainder);
-        const helperBoost: HelperBoostStatus = {
-          amount: uniqueBoostedMons,
-          berry: boostedBerry.name
-        };
-        remainders.push([sum, remainder, currentPokemon, currentTeam, helperBoost]);
-      } else {
-        const remainder: SimplifiedIngredientSet[] = calculateRemainingSimplifiedIngredients(
-          mealIngredients,
-          currentPokemon.detailedProduce.produce.ingredients,
-          true
-        );
-        const sum = sumOfSimplifiedIngredients(remainder);
-        remainders.push([sum, remainder, currentPokemon, currentTeam, undefined]);
-      }
-    }
-    // Sort the possible teams by quantity of remaining ingredients
-    remainders.sort((a, b) => a[0] - b[0]);
+//       const currentTeam = pokemonInTeam.concat(currentPokemon);
+//       const maybeHelperBoostPokemon = currentTeam.find((pkmn) => pkmn.skill === mainskill.HELPER_BOOST.name);
 
-    let teams: CustomPokemonCombinationWithProduce[][] = [];
-    for (let i = 0, len = remainders.length; i < len; i++) {
-      const [sumr, remainder, poke, currentTeam, helperBoost] = remainders[i];
+//       if (maybeHelperBoostPokemon) {
+//         const boostedBerry = maybeHelperBoostPokemon.berry;
+//         const uniqueBoostedMons = countUniqueHelperBoostPokemon(currentTeam, boostedBerry);
+//         const currentNrOfHelps = countNrOfHelperBoostHelps({
+//           uniqueBoostedMons,
+//           skillProcs: maybeHelperBoostPokemon.skillProcs,
+//           skillLevel: mainskill.HELPER_BOOST.maxLevel,
+//         });
 
-      if (sumr > 0) {
-        // If there are remaining ingredients after adding this pokemon,
-        // and we haven't hit the team size limit, recurse and solve for
-        // the remaining ingredients
-        if (maxTeamSize > 1) {
-          const updatedParams: MemoizedParameters = {
-            remainingIngredients: remainder,
-            spotsLeftInTeam: maxTeamSize - 1,
-            helperBoost
-          };
-          const key = createMemoKey(updatedParams);
+//         const deductedExtraHelperBoostIncrease = calculateRemainingSimplifiedIngredients(
+//           mealIngredients,
+//           calculateHelperBoostIngredientsIncrease(currentTeam, currentNrOfHelps),
+//           true
+//         );
 
-          const subTeams: CustomPokemonCombinationWithProduce[][] = this.solveRecipe(key, currentTeam);
-          if (requiredPokemon.length === 0) {
-            this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
-          }
+//         const remainder: SimplifiedIngredientSet[] = calculateRemainingSimplifiedIngredients(
+//           deductedExtraHelperBoostIncrease,
+//           currentPokemon.totalIngredients,
+//           true
+//         );
 
-          if (!subTeams) {
-            throw new ProgrammingError(
-              'Should not happen since we check maxTeamSize > 1, and we return only undefined for 0'
-            );
-          }
-          if (subTeams.length == 0) {
-            // If there are no teams that can solve the remaining ingredients
-            // within our team size limit, just move on
-            continue;
-          }
-          const subTeamSize = subTeams[0].length;
+//         const sum = sumOfSimplifiedIngredients(remainder);
+//         const helperBoost: HelperBoostStatus = {
+//           amount: uniqueBoostedMons,
+//           berry: boostedBerry,
+//         };
+//         remainders.push([sum, remainder, currentPokemon, currentTeam, helperBoost]);
+//       } else {
+//         const remainder: SimplifiedIngredientSet[] = calculateRemainingSimplifiedIngredients(
+//           mealIngredients,
+//           currentPokemon.totalIngredients,
+//           true
+//         );
+//         const sum = sumOfSimplifiedIngredients(remainder);
+//         remainders.push([sum, remainder, currentPokemon, currentTeam, undefined]);
+//       }
+//     }
+//     // Sort the possible teams by quantity of remaining ingredients
+//     remainders.sort((a, b) => a[0] - b[0]);
 
-          if (subTeamSize + 1 < maxTeamSize) {
-            // If our new team solves the recipe and is smaller than our current
-            // best team, clear out our list of top teams, add the current
-            // pokemon to each subteam, then add all subteams to the list of
-            // best teams
-            teams = subTeams.map((s) => s.concat(poke)).sort();
-            maxTeamSize = subTeamSize + 1;
-          } else if (subTeamSize + 1 === maxTeamSize) {
-            // If the subteams plus our pokemon are the same size as the current
-            // best team, add all subteams
-            teams = teams.concat(subTeams.map((s) => s.concat(poke)).sort());
-          }
-        } else {
-          // hit the team limit
-          continue;
-        }
-      } else {
-        // Our pokemon solves the remaining ingredients all by itself
-        if (maxTeamSize > 1) {
-          // If the best current team is bigger than one,
-          // remove them all and replace with just our pokemon
-          teams = [[poke]];
-          maxTeamSize = 1;
-        } else if (maxTeamSize === 1) {
-          // If the best current team is also size one,
-          // add our pokemon as another team
-          teams = teams.concat([[poke]]);
-        }
-      }
-    }
+//     let teams: SetCoverPokemonSetup[][] = [];
+//     for (let i = 0, len = remainders.length; i < len; i++) {
+//       const [sumr, remainder, poke, currentTeam, helperBoost] = remainders[i];
 
-    if (requiredPokemon.length === 0) {
-      this.#memo.set(params, teams);
-    }
-    return teams;
-  }
+//       if (sumr > 0) {
+//         // If there are remaining ingredients after adding this pokemon,
+//         // and we haven't hit the team size limit, recurse and solve for
+//         // the remaining ingredients
+//         if (maxTeamSize > 1) {
+//           const updatedParams: MemoizedParameters = {
+//             remainingIngredients: remainder,
+//             spotsLeftInTeam: maxTeamSize - 1,
+//             helperBoost,
+//           };
+//           const key = createMemoKey(updatedParams);
 
-  private checkTimeout() {
-    if (Date.now() - this.#startTime >= this.#timeout) {
-      return true;
-    }
-    return false;
-  }
+//           const subTeams: SetCoverPokemonSetup[][] = this.solveRecipe(key, currentTeam);
+//           if (requiredPokemon.length === 0) {
+//             this.#memo.set(key, subTeams); // expand memo since we didnt have this solve yet
+//           }
 
-  public calculateDetailsAndSortBySumSurplus(
-    solutions: CustomPokemonCombinationWithProduce[][],
-    recipe: IngredientSet[]
-  ): OptimalTeamSolution[] {
-    if (!solutions) {
-      return [];
-    }
+//           if (!subTeams) {
+//             throw new ProgrammingError(
+//               'Should not happen since we check maxTeamSize > 1, and we return only undefined for 0'
+//             );
+//           }
+//           if (subTeams.length == 0) {
+//             // If there are no teams that can solve the remaining ingredients
+//             // within our team size limit, just move on
+//             continue;
+//           }
+//           const subTeamSize = subTeams[0].length;
 
-    const exhaustive = !this.checkTimeout();
+//           if (subTeamSize + 1 < maxTeamSize) {
+//             // If our new team solves the recipe and is smaller than our current
+//             // best team, clear out our list of top teams, add the current
+//             // pokemon to each subteam, then add all subteams to the list of
+//             // best teams
+//             teams = subTeams.map((s) => s.concat(poke)).sort();
+//             maxTeamSize = subTeamSize + 1;
+//           } else if (subTeamSize + 1 === maxTeamSize) {
+//             // If the subteams plus our pokemon are the same size as the current
+//             // best team, add all subteams
+//             teams = teams.concat(subTeams.map((s) => s.concat(poke)).sort());
+//           }
+//         } else {
+//           // hit the team limit
+//           continue;
+//         }
+//       } else {
+//         // Our pokemon solves the remaining ingredients all by itself
+//         if (maxTeamSize > 1) {
+//           // If the best current team is bigger than one,
+//           // remove them all and replace with just our pokemon
+//           teams = [[poke]];
+//           maxTeamSize = 1;
+//         } else if (maxTeamSize === 1) {
+//           // If the best current team is also size one,
+//           // add our pokemon as another team
+//           teams = teams.concat([[poke]]);
+//         }
+//       }
+//     }
 
-    const teamsWithDetails: OptimalTeamSolution[] = [];
-    for (const team of solutions) {
-      let addedHelps = 0;
-      const maybeHelperBoostPokemon = team.find(
-        (pkmn) => pkmn.pokemonCombination.pokemon.skill === mainskill.HELPER_BOOST
-      );
+//     if (requiredPokemon.length === 0) {
+//       this.#memo.set(params, teams);
+//     }
+//     return teams;
+//   }
 
-      if (maybeHelperBoostPokemon) {
-        const uniqueBoostedMons = countUniqueHelperBoostPokemon(
-          team,
-          maybeHelperBoostPokemon.pokemonCombination.pokemon.berry
-        );
+//   private checkTimeout() {
+//     if (Date.now() - this.#startTime >= this.#timeout) {
+//       return true;
+//     }
+//     return false;
+//   }
 
-        addedHelps = countNrOfHelperBoostHelps({
-          uniqueBoostedMons,
-          skillProcs: maybeHelperBoostPokemon.detailedProduce.averageTotalSkillProcs / MEALS_IN_DAY,
-          skillLevel: maybeHelperBoostPokemon.customStats.skillLevel
-        });
-      }
+//   public calculateDetailsAndSortBySumSurplus(
+//     solutions: SetCoverPokemonSetup[][],
+//     recipe: SimplifiedIngredientSet[]
+//   ): OptimalTeamSolution[] {
+//     if (!solutions) {
+//       return [];
+//     }
 
-      const updatedTeam: CustomPokemonCombinationWithProduce[] = team.map((member) => ({
-        ...member,
-        detailedProduce: {
-          ...member.detailedProduce,
-          produce: InventoryUtils.addToInventory(member.detailedProduce.produce, {
-            berries: multiplyBerries(member.averageProduce.berries, addedHelps),
-            ingredients: multiplyIngredients(member.averageProduce.ingredients, addedHelps)
-          })
-        }
-      }));
+//     const exhaustive = !this.checkTimeout();
 
-      const teamIngredients = updatedTeam.flatMap((t) => t.detailedProduce.produce.ingredients);
-      const totalSurplus = calculateRemainingIngredients(combineSameIngredientsInDrop(teamIngredients), recipe);
-      const surplus = extractRelevantSurplus(recipe, totalSurplus);
-      const teamWithDetails: OptimalTeamSolution = {
-        team: updatedTeam,
-        surplus,
-        exhaustive
-      };
+//     const teamsWithDetails: OptimalTeamSolution[] = [];
+//     for (const team of solutions) {
+//       let addedHelps = 0;
+//       const maybeHelperBoostPokemon = team.find((pkmn) => pkmn.skill === mainskill.HELPER_BOOST.name);
 
-      teamsWithDetails.push(teamWithDetails);
-    }
+//       if (maybeHelperBoostPokemon) {
+//         const uniqueBoostedMons = countUniqueHelperBoostPokemon(team, maybeHelperBoostPokemon.berry);
 
-    const sortedByFiller = sortByMinimumFiller(teamsWithDetails, recipe);
-    return this.processOptimalTeamSolutions(sortedByFiller);
-  }
+//         addedHelps = countNrOfHelperBoostHelps({
+//           uniqueBoostedMons,
+//           skillProcs: maybeHelperBoostPokemon.skillProcs,
+//           skillLevel: mainskill.HELPER_BOOST.maxLevel,
+//         });
+//       }
 
-  public processOptimalTeamSolutions(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
-    optimalTeamSolutions.forEach((solution) => {
-      solution.team.sort((a, b) =>
-        hashPokemonCombination(a.pokemonCombination).localeCompare(hashPokemonCombination(b.pokemonCombination))
-      );
-    });
+//       const updatedTeam: SetCoverPokemonSetup[] = team.map((member) => ({
+//         ...member,
+//         totalIngredients: combineSameIngredientsInDrop(
+//           member.totalIngredients.concat(multiplyIngredients(member.averageIngredients, addedHelps))
+//         ),
+//       }));
 
-    return this.removeDuplicateTeams(optimalTeamSolutions);
-  }
+//       const teamIngredients = updatedTeam.flatMap((t) => t.totalIngredients);
+//       const totalSurplus = calculateRemainingIngredients(combineSameIngredientsInDrop(teamIngredients), recipe);
+//       const surplus = extractRelevantSurplus(recipe, totalSurplus);
+//       const teamWithDetails: OptimalTeamSolution = {
+//         team: updatedTeam,
+//         surplus,
+//         exhaustive,
+//       };
 
-  public removeDuplicateTeams(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
-    const uniqueTeamHashes = new Set<string>();
-    return optimalTeamSolutions.filter((solution) => {
-      const teamHash = solution.team.map((pc) => hashPokemonCombination(pc.pokemonCombination)).join('|');
-      if (uniqueTeamHashes.has(teamHash)) {
-        return false;
-      } else {
-        uniqueTeamHashes.add(teamHash);
-        return true;
-      }
-    });
-  }
+//       teamsWithDetails.push(teamWithDetails);
+//     }
 
-  public findOptimalCombinationFor(
-    recipe: IngredientSet[],
-    startingPokemon?: CustomPokemonCombinationWithProduce[],
-    maxTeamSize?: number,
-    timeout?: number
-  ): OptimalTeamSolution[] {
-    this.#startTime = Date.now();
-    this.#timeout = timeout ?? this.#timeout;
+//     const sortedByFiller = sortByMinimumFiller(teamsWithDetails, recipe);
+//     return this.processOptimalTeamSolutions(sortedByFiller);
+//   }
 
-    const spotsLeftInTeam = maxTeamSize ?? 5;
+//   public processOptimalTeamSolutions(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
+//     optimalTeamSolutions.forEach((solution) => {
+//       solution.team.sort((a, b) =>
+//         hashPokemonCombination(a.pokemonSet).localeCompare(hashPokemonCombination(b.pokemonSet))
+//       );
+//     });
 
-    const params: MemoizedParameters = {
-      remainingIngredients: recipe.map((ing) => ({
-        amount: ing.amount,
-        ingredient: ing.ingredient.name
-      })),
-      spotsLeftInTeam
-    };
+//     return this.removeDuplicateTeams(optimalTeamSolutions);
+//   }
 
-    const key = createMemoKey(params);
-    const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
+//   public removeDuplicateTeams(optimalTeamSolutions: OptimalTeamSolution[]): OptimalTeamSolution[] {
+//     const uniqueTeamHashes = new Set<string>();
+//     return optimalTeamSolutions.filter((solution) => {
+//       const teamHash = solution.team.map((pc) => hashPokemonCombination(pc.pokemonSet)).join('|');
+//       if (uniqueTeamHashes.has(teamHash)) {
+//         return false;
+//       } else {
+//         uniqueTeamHashes.add(teamHash);
+//         return true;
+//       }
+//     });
+//   }
 
-    return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
-  }
+//   public findOptimalCombinationFor(
+//     recipe: SimplifiedIngredientSet[],
+//     startingPokemon?: SetCoverPokemonSetup[],
+//     maxTeamSize?: number,
+//     timeout?: number
+//   ): OptimalTeamSolution[] {
+//     this.#startTime = Date.now();
+//     this.#timeout = timeout ?? this.#timeout;
 
-  public calculateMinTeamSizeFor(
-    recipe: IngredientSet[],
-    startingPokemon: CustomPokemonCombinationWithProduce[],
-    timeout?: number
-  ) {
-    this.#startTime = Date.now();
-    this.#timeout = timeout ?? this.#timeout;
+//     const spotsLeftInTeam = maxTeamSize ?? 5;
 
-    const params: MemoizedParameters = {
-      remainingIngredients: recipe.map((ing) => ({
-        amount: ing.amount,
-        ingredient: ing.ingredient.name
-      })),
-      spotsLeftInTeam: 5
-    };
+//     const params: MemoizedParameters = {
+//       remainingIngredients: recipe,
+//       spotsLeftInTeam,
+//     };
 
-    const key = createMemoKey(params);
-    const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
+//     const key = createMemoKey(params);
+//     const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
 
-    return solutions.at(0);
-  }
-}
+//     return this.calculateDetailsAndSortBySumSurplus(solutions, recipe) ?? [];
+//   }
+
+//   public calculateMinTeamSizeFor(recipe: IngredientSet[], startingPokemon: SetCoverPokemonSetup[], timeout?: number) {
+//     this.#startTime = Date.now();
+//     this.#timeout = timeout ?? this.#timeout;
+
+//     const params: MemoizedParameters = {
+//       remainingIngredients: recipe.map((ing) => ({
+//         amount: ing.amount,
+//         ingredient: ing.ingredient.name,
+//       })),
+//       spotsLeftInTeam: 5,
+//     };
+
+//     const key = createMemoKey(params);
+//     const solutions = this.#memo.get(key) ?? this.solveRecipe(key, [], startingPokemon);
+
+//     return solutions.at(0);
+//   }
+// }

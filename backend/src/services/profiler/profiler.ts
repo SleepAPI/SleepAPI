@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface ProfilingData {
   callCount: number;
   totalTime: number;

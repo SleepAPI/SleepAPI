@@ -2,7 +2,7 @@ import PokemonSearch from '@/components/pokemon-input/pokemon-search.vue'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { pokemon } from 'sleepapi-common'
+import { PIKACHU } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -43,7 +43,7 @@ describe('PokemonSearch', () => {
   })
 
   it('renders PokemonInput when a Pokémon is selected', async () => {
-    const pkmn = pokemon.PIKACHU
+    const pkmn = PIKACHU
     wrapper.vm.selectPokemon(pkmn.name)
 
     await nextTick()
@@ -61,7 +61,7 @@ describe('PokemonSearch', () => {
   })
 
   it('selects Pokémon correctly', async () => {
-    const pkmn = pokemon.PIKACHU
+    const pkmn = PIKACHU
     wrapper.vm.selectPokemon(pkmn.name)
 
     await nextTick()

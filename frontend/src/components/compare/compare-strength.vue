@@ -186,10 +186,11 @@ import { defineComponent } from 'vue'
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
 import { StrengthService } from '@/services/strength/strength-service'
 import { mainskillImage, pokemonImage } from '@/services/utils/image-utils'
-import { AVERAGE_WEEKLY_CRIT_MULTIPLIER, useComparisonStore } from '@/stores/comparison-store/comparison-store'
+import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import {
+  AVERAGE_WEEKLY_CRIT_MULTIPLIER,
   MAX_RECIPE_BONUS,
   MAX_RECIPE_LEVEL,
   MathUtils,

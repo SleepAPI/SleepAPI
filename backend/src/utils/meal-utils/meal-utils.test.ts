@@ -1,7 +1,5 @@
 import { MealError } from '@src/domain/error/meal/meal-error.js';
-import type { CritInfo } from '@src/utils/meal-utils/meal-utils.js';
 import {
-  calculateCritMultiplier,
   getDefaultMealTimes,
   getMeal,
   getMealRecoveryAmount,
@@ -10,8 +8,7 @@ import {
 import { MOCKED_MAIN_SLEEP } from '@src/utils/test-utils/defaults.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { describe, expect, it } from 'bun:test';
-import type { SkillActivation } from 'sleepapi-common';
-import { MathUtils, RECIPES, curry, dessert, mainskill, salad } from 'sleepapi-common';
+import { RECIPES, curry, dessert, salad } from 'sleepapi-common';
 
 describe('getMeal', () => {
   it('shall return Lovely Kiss for lovely_kIsS_smOOthie name', () => {
@@ -238,80 +235,5 @@ describe('getMealRecoveryAmount', () => {
   it('shall return 5 for currentEnergy < 20', () => {
     expect(getMealRecoveryAmount(19)).toBe(5);
     expect(getMealRecoveryAmount(0)).toBe(5);
-  });
-});
-
-describe('calculateCritMultiplier', () => {
-  it('shall calculate crit multplier for TASTY_CHANCE_S', () => {
-    const skillActivations: SkillActivation[] = [
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S
-      },
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S
-      },
-      {
-        adjustedAmount: mainskill.TASTY_CHANCE_S.maxAmount,
-        fractionOfProc: 1,
-        nrOfHelpsToActivate: 0,
-        skill: mainskill.TASTY_CHANCE_S
-      }
-    ];
-    const {
-      critMultiplier,
-      weekdayMultiplier,
-      sundayMultiplier,
-      fullWeekCritChance,
-      weekdayCritChance,
-      sundayCritChance
-    } = calculateCritMultiplier(skillActivations, new Map());
-    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.4`);
-    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.3`);
-    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`2`);
-    expect(Math.abs(fullWeekCritChance - 35)).toBeLessThanOrEqual(2);
-    expect(Math.abs(weekdayCritChance - 33)).toBeLessThanOrEqual(2);
-    expect(Math.abs(sundayCritChance - 50)).toBeLessThanOrEqual(2);
-  });
-
-  it('shall calculate default crit multiplier', () => {
-    const skillActivations: SkillActivation[] = [
-      { adjustedAmount: 18, fractionOfProc: 1, nrOfHelpsToActivate: 0, skill: mainskill.ENERGY_FOR_EVERYONE }
-    ];
-    const {
-      critMultiplier,
-      weekdayMultiplier,
-      sundayMultiplier,
-      fullWeekCritChance,
-      weekdayCritChance,
-      sundayCritChance
-    } = calculateCritMultiplier(skillActivations, new Map());
-    expect(MathUtils.round(critMultiplier, 1)).toMatchInlineSnapshot(`1.2`);
-    expect(MathUtils.round(weekdayMultiplier, 1)).toMatchInlineSnapshot(`1.1`);
-    expect(MathUtils.round(sundayMultiplier, 1)).toMatchInlineSnapshot(`1.6`);
-    expect(Math.abs(fullWeekCritChance - 13)).toBeLessThanOrEqual(2);
-    expect(Math.abs(weekdayCritChance - 10)).toBeLessThanOrEqual(2);
-    expect(Math.abs(sundayCritChance - 30)).toBeLessThanOrEqual(2);
-  });
-
-  it('shall use cached results', () => {
-    const cache = new Map();
-    const critInfo: CritInfo = {
-      critMultiplier: 0,
-      fullWeekCritChance: 0,
-      sundayCritChance: 0,
-      sundayMultiplier: 0,
-      weekdayCritChance: 0,
-      weekdayMultiplier: 0
-    };
-    cache.set(0, critInfo);
-
-    const result = calculateCritMultiplier([], cache);
-    expect(result).toEqual(critInfo);
   });
 });

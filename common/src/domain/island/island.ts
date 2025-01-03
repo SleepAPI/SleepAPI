@@ -1,4 +1,3 @@
-import type { Berry } from '../berry/berry';
 import {
   BELUE,
   BLUK,
@@ -15,7 +14,8 @@ import {
   RAWST,
   SITRUS,
   WIKI
-} from '../berry/berry';
+} from '../berry/berries';
+import type { Berry } from '../berry/berry';
 
 export interface Island {
   name: string;

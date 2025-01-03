@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { mainskillImage } from '@/services/utils/image-utils'
-import { pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { type Pokemon, type PokemonInstanceExt } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -80,7 +80,7 @@ export default {
   },
   watch: {
     pokemon: {
-      handler(newPokemon: pokemon.Pokemon) {
+      handler(newPokemon: Pokemon) {
         if (this.pokemonInstance.skillLevel > 0) {
           this.mainskillLevel = Math.min(this.pokemonInstance.skillLevel, newPokemon.skill.maxLevel)
         } else {

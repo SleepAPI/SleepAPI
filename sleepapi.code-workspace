@@ -46,7 +46,8 @@
     "search.exclude": {
       "**/node_modules": true,
       "**/dist": true,
-      "bot": true
+      "bot": true,
+      "**/data/**": true
     },
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "javascript.preferences.importModuleSpecifier": "non-relative"

@@ -8,13 +8,14 @@ import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import axios from 'axios'
 import { createPinia, setActivePinia } from 'pinia'
 import {
+  BULBASAUR,
   ingredient,
   nature,
-  pokemon,
   subskill,
   uuid,
   type CalculateIvResponse,
   type GetTeamResponse,
+  type MemberProductionBase,
   type PokemonInstanceExt,
   type UpsertTeamMetaRequest
 } from 'sleepapi-common'
@@ -157,17 +158,17 @@ describe('getTeams', () => {
         memberIndex,
         saved: false,
         externalId: uuid.v4(),
-        pokemon: 'bulbasaur',
+        pokemon: BULBASAUR.name,
         name: `Bubble`,
         level: 5,
         carrySize: 3,
         skillLevel: 2,
         nature: 'brave',
-        subskills: [{ level: 10, subskill: 'Helping Bonus' }],
+        subskills: [{ level: 10, subskill: subskill.HELPING_BONUS.name }],
         ingredients: [
-          { level: 0, ingredient: 'apple' },
-          { level: 30, ingredient: 'apple' },
-          { level: 60, ingredient: 'apple' }
+          { level: 0, ingredient: ingredient.FANCY_APPLE.name },
+          { level: 30, ingredient: ingredient.FANCY_APPLE.name },
+          { level: 60, ingredient: ingredient.FANCY_APPLE.name }
         ]
       }))
     }))
@@ -201,7 +202,7 @@ describe('getTeams', () => {
       externalId: '000000000000000000000000000000000000',
       rp: 463,
       saved: false,
-      pokemon: pokemon.BULBASAUR,
+      pokemon: BULBASAUR,
       name: `Bubble`,
       level: 5,
       carrySize: 3,
@@ -228,7 +229,7 @@ describe('createOrUpdateMember', () => {
         version: 1,
         saved: true,
         externalId: uuid.v4(),
-        pokemon: pokemon.BULBASAUR.name,
+        pokemon: BULBASAUR.name,
         name: 'Bulbasaur',
         level: 5,
         carrySize: 3,
@@ -428,7 +429,7 @@ describe('calculateIv', () => {
     pokemonStore.upsertLocalPokemon(currentMember)
     pokemonStore.upsertLocalPokemon(otherMember)
 
-    const responseVariant =
+    const responseVariant: MemberProductionBase =
       // uuid.v4() is mocked to 0 repeat x36
       {
         externalId: uuid.v4(),
@@ -436,7 +437,11 @@ describe('calculateIv', () => {
           berries: [{ amount: 10, berry: currentMember.pokemon.berry, level: 1 }],
           ingredients: []
         },
-        skillProcs: 0
+        skillProcs: 0,
+        pokemonWithIngredients: {
+          pokemon: currentMember.pokemon.name,
+          ingredients: new Int16Array()
+        }
       }
     const response: CalculateIvResponse = {
       variants: [responseVariant]
@@ -478,6 +483,7 @@ describe('calculateIv', () => {
       }
     })
 
+    // TODO: clean up
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [[, requestData]]: any = mockedAxios.post.mock.calls
     expect(requestData.variants).toHaveLength(3)

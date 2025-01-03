@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import type { Berry } from '../../domain/berry';
-import { BELUE, ORAN } from '../../domain/berry';
-import type { BerrySet } from '../../domain/types/berry-set';
+import type { Berry, BerrySet } from '../../domain/berry';
+import { BELUE, ORAN } from '../../domain/berry/berries';
 import { berryPowerForLevel, emptyBerryInventory, multiplyBerries, prettifyBerries, roundBerries } from './berry-utils';
 
 const testBerry: Berry = { name: 'Oran', value: 10, type: 'water' };

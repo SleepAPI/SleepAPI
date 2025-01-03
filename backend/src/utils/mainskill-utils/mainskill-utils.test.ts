@@ -34,14 +34,13 @@ describe('getMainskillNames', () => {
 });
 
 describe('getMainskill', () => {
-  it.each(MAINSKILLS)('finds mainskill "%s"', (ms: Mainskill) => {
-    const result = getMainskill(ms.name);
+  it.each(MAINSKILLS.map((ms) => [ms.name, ms]))('finds mainskill %s', (name: string, ms: Mainskill) => {
+    const result = getMainskill(name);
     expect(result).toEqual(ms);
   });
 
   it('shall throw if looking up missing mainskill', () => {
     expect(() => getMainskill('missing')).toThrowErrorMatchingInlineSnapshot(
-      `"Can't find Main skill with name missing"`
-    );
+      `"Can't find Main skill with name missing"`);
   });
 });

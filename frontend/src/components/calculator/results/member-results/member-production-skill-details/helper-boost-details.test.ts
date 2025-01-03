@@ -7,11 +7,11 @@ import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, compactNumber, pokemon } from 'sleepapi-common'
+import { ENTEI, MathUtils, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.ENTEI, skillLevel: 6 })
+  member: createMockPokemon({ pokemon: ENTEI, skillLevel: 6 })
 })
 
 describe('MemberProductionSkill', () => {
@@ -21,7 +21,7 @@ describe('MemberProductionSkill', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    const mockPokemon = createMockPokemon({ pokemon: pokemon.ENTEI })
+    const mockPokemon = createMockPokemon({ pokemon: ENTEI })
     teamStore = useTeamStore()
     teamStore.teams = createMockTeams(1, { members: [mockPokemon.externalId] })
     pokemonStore = usePokemonStore()

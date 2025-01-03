@@ -13,11 +13,11 @@ import { SummaryEvent } from '@src/domain/event/events/summary-event/summary-eve
 import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import { calculateStartingEnergy } from '@src/services/calculator/energy/energy-calculator.js';
 import { InventoryUtils } from '@src/utils/inventory-utils/inventory-utils.js';
-import type { Produce, SkillActivation, Summary, TimePeriod, pokemon } from 'sleepapi-common';
+import type { Pokemon, Produce, SkillActivation, Summary, TimePeriod } from 'sleepapi-common';
 
 export function startDayAndEnergy(
   dayInfo: SleepInfo,
-  pokemon: pokemon.Pokemon,
+  pokemon: Pokemon,
   input: ProductionStats,
   inventoryLimit: number,
   recoveryEvents: EnergyEvent[],

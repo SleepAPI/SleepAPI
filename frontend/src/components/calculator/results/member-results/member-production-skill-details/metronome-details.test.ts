@@ -4,11 +4,11 @@ import { createMockMemberProductionExt, createMockPokemon } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { MathUtils, pokemon } from 'sleepapi-common'
+import { MathUtils, TOGEKISS } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = createMockMemberProductionExt({
-  member: createMockPokemon({ pokemon: pokemon.TOGEKISS })
+  member: createMockPokemon({ pokemon: TOGEKISS })
 })
 
 describe('MemberProductionSkill', () => {

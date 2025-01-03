@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { BELUE } from '../../domain/berry';
+import { BELUE } from '../../domain/berry/berries';
 import { BALANCED_GENDER } from '../../domain/gender/gender';
-import { SLOWPOKE_TAIL } from '../../domain/ingredient';
+import { SLOWPOKE_TAIL } from '../../domain/ingredient/ingredients';
 import { HELPER_BOOST } from '../../domain/mainskill/mainskills/helper-boost';
 import type { Pokemon } from '../../domain/pokemon';
 import { PINSIR } from '../../domain/pokemon';

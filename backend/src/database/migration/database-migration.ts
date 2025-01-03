@@ -5,18 +5,17 @@ import type { Knex } from 'knex';
 const DatabaseMigration = new (class {
   public async migrate() {
     const baseDir = relativePath('migrations', import.meta.url);
-    const configuration: Knex.MigratorConfig = {};
-
-    await this.#performMigration({ ...configuration, directory: baseDir });
+    const configuration: Knex.MigratorConfig = { directory: baseDir };
+    await this.#performMigration(configuration);
   }
 
   public async downgrade() {
     const baseDir = relativePath('migrations', import.meta.url);
-    const configuration: Knex.MigratorConfig = {};
+    const configuration: Knex.MigratorConfig = { directory: baseDir };
 
     const knex = await DatabaseService.getKnex();
     logger.info('Rolling back all migrations');
-    await knex.migrate.rollback({ ...configuration, directory: baseDir });
+    await knex.migrate.rollback(configuration);
   }
 
   async #performMigration(configuration: Knex.MigratorConfig) {

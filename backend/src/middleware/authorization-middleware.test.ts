@@ -44,7 +44,8 @@ describe('validateAuthHeader middleware', () => {
     req.headers!.authorization = 'Basic token';
     await validateAuthHeader(req as Request, res as Response, next);
     expect(res.sendStatus).toHaveBeenCalledWith(401);
-    expect(logger.error).toHaveBeenCalledWith('Unauthorized: Error: Invalid access token');
+
+    expect(logger.error).toHaveBeenCalledWith('Unauthorized: AuthorizationError: Invalid access token');
     expect(next).not.toHaveBeenCalled();
   });
 

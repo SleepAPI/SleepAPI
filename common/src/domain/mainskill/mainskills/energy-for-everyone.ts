@@ -1,6 +1,6 @@
 import { MAX_SKILL_LEVEL } from '../../constants';
 import type { Mainskill } from '../mainskill';
-import { MAINSKILLS, METRONOME_SKILLS, createBaseSkill } from '../mainskill';
+import { INGREDIENT_SUPPORT_MAINSKILLS, MAINSKILLS, METRONOME_SKILLS, createBaseSkill } from '../mainskill';
 
 export const ENERGY_FOR_EVERYONE: Mainskill = createBaseSkill({
   name: 'Energy For Everyone',
@@ -13,3 +13,4 @@ export const ENERGY_FOR_EVERYONE: Mainskill = createBaseSkill({
 
 MAINSKILLS.push(ENERGY_FOR_EVERYONE);
 METRONOME_SKILLS.push(ENERGY_FOR_EVERYONE);
+INGREDIENT_SUPPORT_MAINSKILLS.push(ENERGY_FOR_EVERYONE);

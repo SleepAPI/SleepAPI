@@ -87,14 +87,14 @@
 
 <script lang="ts">
 import { islandImage } from '@/services/utils/image-utils'
-import { berry, island } from 'sleepapi-common'
+import { berry, island, type Berry } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'IslandSelect',
   props: {
     previousBerries: {
-      type: Array<berry.Berry>,
+      type: Array<Berry>,
       default: []
     }
   },
@@ -104,7 +104,7 @@ export default defineComponent({
   },
   data: () => ({
     menu: false,
-    favoredBerries: [] as berry.Berry[]
+    favoredBerries: [] as Berry[]
   }),
   computed: {
     berries() {
@@ -113,7 +113,7 @@ export default defineComponent({
   },
   watch: {
     previousBerries: {
-      handler(newBerries: berry.Berry[]) {
+      handler(newBerries: Berry[]) {
         this.favoredBerries = newBerries
       },
       immediate: true
@@ -124,7 +124,7 @@ export default defineComponent({
       this.menu = false
       this.updateBerries()
     },
-    toggleBerry(berry: berry.Berry) {
+    toggleBerry(berry: Berry) {
       const index = this.favoredBerries.findIndex((item) => item.name === berry.name)
 
       if (index === -1) {

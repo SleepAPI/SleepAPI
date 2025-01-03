@@ -1,77 +1,188 @@
-import type { TeamMember } from '@src/domain/combination/team.js';
+import { mocks } from '@src/bun/index.js';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
 import { describe, expect, it } from 'bun:test';
-import type { PokemonIngredientSet } from 'sleepapi-common';
-import { BALANCED_GENDER, berry, ingredient, mainskill, nature, subskill } from 'sleepapi-common';
+import type { PokemonWithIngredients, TeamMemberExt, TeamMemberSettingsExt } from 'sleepapi-common';
+import { berry, ingredient, mockPokemon, nature, Optimal } from 'sleepapi-common';
 
-const mockPokemonSet: PokemonIngredientSet = {
-  pokemon: {
-    name: 'Mockemon',
-    berry: berry.BELUE,
-    genders: BALANCED_GENDER,
-    carrySize: 10,
-    frequency: 3600,
-    ingredient0: { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    ingredient30: [{ amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }],
-    ingredient60: [{ amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }],
-    ingredientPercentage: 20,
-    previousEvolutions: 0,
-    remainingEvolutions: 0,
-    skill: mainskill.CHARGE_STRENGTH_S,
-    skillPercentage: 2,
-    specialty: 'skill'
-  },
-  ingredientList: [
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL },
-    { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
-  ]
-};
-const member: TeamMember = {
-  pokemonSet: mockPokemonSet,
-  carrySize: 10,
-  level: 60,
-  ribbon: 0,
-  nature: nature.BASHFUL,
-  skillLevel: 6,
-  subskills: [],
-  externalId: 'some id'
-};
 describe('calculateSkillPercentage', () => {
+  const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
+    pokemon: mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
+  });
+  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+
   it('shall calculate skill percentage for member', () => {
-    expect(TeamSimulatorUtils.calculateSkillPercentage({ ...member, nature: nature.SASSY })).toBe(0.024);
+    expect(
+      TeamSimulatorUtils.calculateSkillPercentage({ ...member, settings: { ...member.settings, nature: nature.SASSY } })
+    ).toBe(0.024);
   });
 });
 
 describe('calculateIngredientPercentage', () => {
+  const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
+    pokemon: mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
+  });
+  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+
   it('shall calculate ingredient percentage for member', () => {
-    expect(TeamSimulatorUtils.calculateIngredientPercentage({ ...member, nature: nature.QUIET })).toBe(0.24);
+    expect(
+      TeamSimulatorUtils.calculateIngredientPercentage({
+        ...member,
+        settings: { ...member.settings, nature: nature.QUIET }
+      })
+    ).toBe(0.24);
   });
 });
 
 describe('calculateHelpSpeedBeforeEnergy', () => {
-  expect(
-    TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
-      member: { ...member, nature: nature.LONELY, level: 1 },
-      helpingBonus: 0,
-      settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false }
-    })
-  ).toBe(3240);
-});
+  const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
+    pokemon: mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
+  });
+  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
 
-describe('calculateNrOfBerriesPerDrop', () => {
-  it('shall calculate the correct number of berries per drop', () => {
-    expect(TeamSimulatorUtils.calculateNrOfBerriesPerDrop({ ...member, subskills: [subskill.BERRY_FINDING_S] })).toBe(
-      2
-    );
+  it('should calculate help speed without energy applied', () => {
+    expect(
+      TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
+        member: { ...member, settings: { ...member.settings, nature: nature.LONELY, level: 1 } },
+        helpingBonus: 0,
+        settings: { bedtime: TimeUtils.parseTime('06:00'), wakeup: TimeUtils.parseTime('21:30'), camp: false }
+      })
+    ).toBe(3240);
   });
 });
 
 describe('uniqueMembersWithBerry', () => {
+  const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
+    pokemon: mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
+  });
+  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+
   it('shall calculate the unique members in team for given berry', () => {
     expect(TeamSimulatorUtils.uniqueMembersWithBerry({ berry: berry.BELUE, members: [member, member, member] })).toBe(
       1
     );
+  });
+});
+
+describe('calculateAverageProduce', () => {
+  describe.todo('skill pokemon');
+  describe.todo('berry pokemon');
+
+  describe('ingredient Pokémon', () => {
+    const mockTyranitar: PokemonWithIngredients = mocks.pokemonWithIngredients({
+      pokemon: mockPokemon({
+        frequency: 2700,
+        ingredientPercentage: 26.6,
+        skillPercentage: 5.2,
+        specialty: 'ingredient',
+        berry: berry.WIKI,
+        previousEvolutions: 2,
+        name: 'Mockitar',
+        carrySize: 19
+      }),
+      ingredientList: [
+        mocks.mockIngredientSet({ amount: 2, ingredient: ingredient.WARMING_GINGER }),
+        mocks.mockIngredientSet({ amount: 5, ingredient: ingredient.WARMING_GINGER }),
+        mocks.mockIngredientSet({ amount: 7, ingredient: ingredient.WARMING_GINGER })
+      ]
+    });
+    const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockTyranitar });
+
+    it('should calculate average level 29 produce', () => {
+      const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
+      const settings: TeamMemberSettingsExt = {
+        carrySize: 0,
+        ribbon: 0,
+        skillLevel: 0,
+        nature: optimalSettings.nature,
+        subskills: new Set(optimalSettings.subskills.map((s) => s.subskill.name).slice(0, 2)),
+        level: 29,
+        externalId: 'optimal'
+      };
+
+      const averageProduce60 = TeamSimulatorUtils.calculateAverageProduce({
+        pokemonWithIngredients: { ...mockTyranitar, ingredientList: [mockTyranitar.ingredientList[0]] },
+        settings
+      });
+      expect(averageProduce60.ingredients[5]).toEqual(0.868224024772644);
+      expect(averageProduce60.berries[13]).toEqual(0.565887987613678);
+    });
+
+    it('should calculate average level 30 produce', () => {
+      const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
+      const settings: TeamMemberSettingsExt = {
+        carrySize: 0,
+        ribbon: 0,
+        skillLevel: 0,
+        nature: optimalSettings.nature,
+        subskills: new Set(optimalSettings.subskills.map((s) => s.subskill.name).slice(0, 2)),
+        level: 30,
+        externalId: 'optimal'
+      };
+
+      const averageProduce60 = TeamSimulatorUtils.calculateAverageProduce({
+        pokemonWithIngredients: { ...mockTyranitar, ingredientList: mockTyranitar.ingredientList.slice(0, 2) },
+        settings
+      });
+      expect(averageProduce60.ingredients[5]).toEqual(1.5193920135498047);
+      expect(averageProduce60.berries[13]).toEqual(0.565887987613678);
+    });
+
+    it('should calculate average level 60 produce', () => {
+      const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
+      const settings: TeamMemberSettingsExt = {
+        carrySize: 0,
+        ribbon: 0,
+        skillLevel: 0,
+        nature: optimalSettings.nature,
+        subskills: new Set(optimalSettings.subskills.map((s) => s.subskill.name).slice(0, 3)),
+        level: 60,
+        externalId: 'optimal'
+      };
+      // ing% = 1.54 * 1.2 * 0.266 = 0.49 = 49%
+      // (2+5+7 / 3) = 4.7 ings per ing drop
+      // average ings of 2.3 / help
+      // average berries of 1 x (1-0.49) = 0.51
+      const averageProduce60 = TeamSimulatorUtils.calculateAverageProduce({ ...member, settings });
+      expect(averageProduce60.ingredients[5]).toEqual(2.2939839363098145);
+      expect(averageProduce60.berries[13]).toEqual(0.5084319710731506);
+    });
+
+    it('should calculate average level 75 produce', () => {
+      const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
+      const settings: TeamMemberSettingsExt = {
+        carrySize: 0,
+        ribbon: 0,
+        skillLevel: 0,
+        nature: optimalSettings.nature,
+        subskills: new Set(optimalSettings.subskills.map((s) => s.subskill.name).slice(0, 4)),
+        level: 75,
+        externalId: 'optimal'
+      };
+
+      const averageProduce60 = TeamSimulatorUtils.calculateAverageProduce({ ...member, settings });
+      expect(averageProduce60.ingredients[5]).toEqual(2.2939839363098145);
+      expect(averageProduce60.berries[13]).toEqual(0.5084319710731506);
+    });
+
+    it('should calculate average level 100 produce', () => {
+      const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
+      const settings: TeamMemberSettingsExt = {
+        carrySize: 0,
+        ribbon: 0,
+        skillLevel: 0,
+        nature: optimalSettings.nature,
+        subskills: new Set(optimalSettings.subskills.map((s) => s.subskill.name)),
+        level: 100,
+        externalId: 'optimal'
+      };
+      // ing% = 1.54 * 1.2 * 0.266 = 0.49 = 49%
+      // (2+5+7 / 3) = 4.7 ings per ing drop
+      // average ings of 2.3 / help
+      // average berries of 1 x (1-0.49) = 0.51
+      const averageProduce60 = TeamSimulatorUtils.calculateAverageProduce({ ...member, settings });
+      expect(averageProduce60.ingredients[5]).toEqual(2.2939839363098145);
+      expect(averageProduce60.berries[13]).toEqual(0.5084319710731506);
+    });
   });
 });

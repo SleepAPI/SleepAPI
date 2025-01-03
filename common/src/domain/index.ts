@@ -1,13 +1,14 @@
-export * as berry from './berry';
+export * from './berry';
 export * from './constants';
 export * from './gender';
-export * as ingredient from './ingredient';
+export * from './ingredient';
 export * as island from './island';
 export * from './mainskill';
 export * as nature from './nature';
 export * from './optimal';
-export * as pokemon from './pokemon';
+export * from './pokemon';
 export * from './recipe';
-export * as subskill from './subskill';
+export * from './subskill';
+export * from './team';
 export * from './types';
 export * from './version';

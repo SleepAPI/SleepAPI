@@ -1,4 +1,4 @@
-import { MAINSKILLS, METRONOME_SKILLS } from '../mainskill';
+import { INGREDIENT_SUPPORT_MAINSKILLS, MAINSKILLS, METRONOME_SKILLS } from '../mainskill';
 import { Moonlight } from '../modifier';
 import { CHARGE_ENERGY_S } from './charge-energy';
 
@@ -16,3 +16,4 @@ export function moonlightCritAmount(skillLevel: number) {
 
 MAINSKILLS.push(MOONLIGHT_CHARGE_ENERGY_S);
 METRONOME_SKILLS.push(MOONLIGHT_CHARGE_ENERGY_S);
+INGREDIENT_SUPPORT_MAINSKILLS.push(MOONLIGHT_CHARGE_ENERGY_S);

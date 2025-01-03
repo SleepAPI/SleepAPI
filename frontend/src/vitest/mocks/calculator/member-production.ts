@@ -1,13 +1,17 @@
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { createMockMemberIv } from '@/vitest/mocks/member-iv'
 import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
-import { berry, ingredient, type MemberProduction } from 'sleepapi-common'
+import { berry, ingredient, ingredientSetToIntFlat, type MemberProduction } from 'sleepapi-common'
 
 export function createMockMemberProduction(attrs?: Partial<MemberProduction>): MemberProduction {
   const mockPokemon = createMockPokemon()
 
   return {
     externalId: mockPokemon.externalId,
+    pokemonWithIngredients: {
+      pokemon: mockPokemon.name,
+      ingredients: ingredientSetToIntFlat(mockPokemon.ingredients.map(({ ingredient }) => ({ ingredient, amount: 0 })))
+    },
     produceTotal: {
       berries: [
         {
