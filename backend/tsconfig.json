@@ -28,7 +28,7 @@
     "types": ["bun-types"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"],
   "watchOptions": {
     "excludeDirectories": ["dist", "tmp"]
   }

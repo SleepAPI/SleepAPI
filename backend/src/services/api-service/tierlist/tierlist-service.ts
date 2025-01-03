@@ -15,12 +15,12 @@ import {
   getAllOptimalIngredientFocusedPokemonProduce
 } from '@src/services/calculator/contribution/contribution-calculator.js';
 import { SetCover } from '@src/services/set-cover/set-cover.js';
+import { joinPath } from '@src/utils/file-utils/file-utils.js';
 import type { CritInfo } from '@src/utils/meal-utils/meal-utils.js';
 import { calculateCritMultiplier, getMealsForFilter } from '@src/utils/meal-utils/meal-utils.js';
 import { createPokemonByIngredientReverseIndex } from '@src/utils/set-cover-utils/set-cover-utils.js';
 import { createProduceMap, diffTierlistRankings } from '@src/utils/tierlist-utils/tierlist-utils.js';
 import { readFile, writeFile } from 'fs/promises';
-import path from 'path';
 import type { Mainskill } from 'sleepapi-common';
 import { MAX_POT_SIZE, METRONOME_SKILLS, MathUtils, mainskill } from 'sleepapi-common';
 
@@ -239,7 +239,8 @@ class TierlistImpl {
 
         logger.info('Current memory usage: ' + MathUtils.round(currentMemoryUsageGigabytes, 3) + ' GB');
         ++counter;
-        logger.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+        // eslint-disable-next-line SleepAPILogger/no-console
+        console.time(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
         const contributions: Contribution[] = [];
 
@@ -261,7 +262,8 @@ class TierlistImpl {
           });
           contributions.push(contributionForMeal);
         }
-        logger.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
+        // eslint-disable-next-line SleepAPILogger/no-console
+        console.timeEnd(`[${counter}/${allPokemonDefaultProduce.length}] ${pokemonName}`);
 
         results.push({ pokemonIngredientSet: pokemonWithProduce.pokemonCombination, contributions });
       }
@@ -312,13 +314,13 @@ class TierlistImpl {
   ): Promise<TieredPokemonCombinationContribution[]> {
     const levelVersion = getTierListQueries.limit50 ? '50' : '60';
     const potLimitVersion = getTierListQueries.potLimit ? 'pot-limited' : 'pot-unlimited';
-    const previousFileName = path.join(
-      __dirname,
-      `../../../data/tierlist/previous/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
+    const previousFileName = joinPath(
+      `../../../data/tierlist/previous/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`,
+      import.meta.url
     );
-    const currentFileName = path.join(
-      __dirname,
-      `../../../data/tierlist/current/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`
+    const currentFileName = joinPath(
+      `../../../data/tierlist/current/level${levelVersion}/${potLimitVersion}/${getTierListQueries.tierlistType}.json`,
+      import.meta.url
     );
 
     const previousFile = await readFile(previousFileName, 'utf8');

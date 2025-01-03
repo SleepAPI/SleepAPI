@@ -51,7 +51,8 @@ interface ProductionCombination {
 }
 
 class WebsiteConverterServiceImpl {
-  public toProductionCalculator(pokemonProduction: ProductionCombination) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toProductionCalculator(pokemonProduction: ProductionCombination): any {
     return {
       details: pokemonProduction.filters,
       production: {

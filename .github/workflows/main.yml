@@ -48,8 +48,11 @@ jobs:
       - name: Install and Test Backend
         run: |
           cd backend
+          npm ci
+          npm run build
           npm install -g bun
           bun install
+          bun compile
           bun test --coverage
 
       - name: Install and Test Frontend

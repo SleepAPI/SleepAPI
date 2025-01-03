@@ -1,947 +1,1077 @@
 {
-  "openapi": "3.0.0",
-  "components": {
-    "examples": {},
-    "headers": {},
-    "parameters": {},
-    "requestBodies": {},
-    "responses": {},
-    "schemas": {
-      "Energy": {
-        "type": "string",
-        "enum": ["energy"],
-        "nullable": false
-      },
-      "Ingredients": {
-        "type": "string",
-        "enum": ["ingredients"],
-        "nullable": false
-      },
-      "Berries": {
-        "type": "string",
-        "enum": ["berries"],
-        "nullable": false
-      },
-      "Helps": {
-        "type": "string",
-        "enum": ["helps"],
-        "nullable": false
-      },
-      "DreamShards": {
-        "type": "string",
-        "enum": ["dream shards"],
-        "nullable": false
-      },
-      "Strength": {
-        "type": "string",
-        "enum": ["strength"],
-        "nullable": false
-      },
-      "PotSize": {
-        "type": "string",
-        "enum": ["pot size"],
-        "nullable": false
-      },
-      "TastyChance": {
-        "type": "string",
-        "enum": ["chance"],
-        "nullable": false
-      },
-      "Metronome": {
-        "type": "string",
-        "enum": ["metronome"],
-        "nullable": false
-      },
-      "Copy": {
-        "type": "string",
-        "enum": ["copy"],
-        "nullable": false
-      },
-      "MainskillUnit": {
-        "anyOf": [
-          {
-            "$ref": "#/components/schemas/Energy"
-          },
-          {
-            "$ref": "#/components/schemas/Ingredients"
-          },
-          {
-            "$ref": "#/components/schemas/Berries"
-          },
-          {
-            "$ref": "#/components/schemas/Helps"
-          },
-          {
-            "$ref": "#/components/schemas/DreamShards"
-          },
-          {
-            "$ref": "#/components/schemas/Strength"
-          },
-          {
-            "$ref": "#/components/schemas/PotSize"
-          },
-          {
-            "$ref": "#/components/schemas/TastyChance"
-          },
-          {
-            "$ref": "#/components/schemas/Metronome"
-          },
-          {
-            "$ref": "#/components/schemas/Copy"
-          }
-        ]
-      },
-      "ModifierType": {
-        "type": "string",
-        "enum": ["Base", "Stockpile", "Moonlight", "Disguise", "Mimic", "Transform"]
-      },
-      "Modifier": {
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/ModifierType"
-          },
-          "critChance": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "required": ["type", "critChance"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Mainskill": {
-        "properties": {
-          "modifier": {
-            "$ref": "#/components/schemas/Modifier"
-          },
-          "RP": {
-            "items": {
-              "type": "number",
-              "format": "double"
-            },
-            "type": "array"
-          },
-          "description": {
-            "type": "string"
-          },
-          "maxLevel": {
-            "type": "number",
-            "format": "double"
-          },
-          "unit": {
-            "$ref": "#/components/schemas/MainskillUnit"
-          },
-          "amount": {
-            "items": {
-              "type": "number",
-              "format": "double"
-            },
-            "type": "array"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": ["modifier", "RP", "description", "maxLevel", "unit", "amount", "name"],
-        "type": "object"
-      },
-      "RecipeType": {
-        "type": "string",
-        "enum": ["curry", "salad", "dessert"]
-      },
-      "Ingredient": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "number",
-            "format": "double"
-          },
-          "taxedValue": {
-            "type": "number",
-            "format": "double"
-          },
-          "longName": {
-            "type": "string"
-          }
-        },
-        "required": ["name", "value", "taxedValue", "longName"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "IngredientSet": {
-        "properties": {
-          "amount": {
-            "type": "number",
-            "format": "double"
-          },
-          "ingredient": {
-            "$ref": "#/components/schemas/Ingredient"
-          }
-        },
-        "required": ["amount", "ingredient"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Recipe": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "number",
-            "format": "double"
-          },
-          "valueMax": {
-            "type": "number",
-            "format": "double"
-          },
-          "type": {
-            "$ref": "#/components/schemas/RecipeType"
-          },
-          "ingredients": {
-            "items": {
-              "$ref": "#/components/schemas/IngredientSet"
-            },
-            "type": "array"
-          },
-          "bonus": {
-            "type": "number",
-            "format": "double"
-          },
-          "nrOfIngredients": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "required": ["name", "value", "valueMax", "type", "ingredients", "bonus", "nrOfIngredients"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "MealNamesQueryParams": {
-        "properties": {
-          "curry": {
-            "type": "boolean"
-          },
-          "salad": {
-            "type": "boolean"
-          },
-          "dessert": {
-            "type": "boolean"
-          },
-          "minRecipeBonus": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxPotSize": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PokemonSpecialty": {
-        "type": "string",
-        "enum": ["berry", "ingredient", "skill"]
-      },
-      "Berry": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "value": {
-            "type": "number",
-            "format": "double"
-          },
-          "type": {
-            "type": "string"
-          }
-        },
-        "required": ["name", "value", "type"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "GenderRatio": {
-        "properties": {
-          "male": {
-            "type": "number",
-            "format": "double"
-          },
-          "female": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "required": ["male", "female"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "Pokemon": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "specialty": {
-            "$ref": "#/components/schemas/PokemonSpecialty"
-          },
-          "frequency": {
-            "type": "number",
-            "format": "double"
-          },
-          "ingredientPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "skillPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "berry": {
-            "$ref": "#/components/schemas/Berry"
-          },
-          "genders": {
-            "$ref": "#/components/schemas/GenderRatio"
-          },
-          "carrySize": {
-            "type": "number",
-            "format": "double"
-          },
-          "previousEvolutions": {
-            "type": "number",
-            "format": "double"
-          },
-          "remainingEvolutions": {
-            "type": "number",
-            "format": "double"
-          },
-          "ingredient0": {
-            "$ref": "#/components/schemas/IngredientSet"
-          },
-          "ingredient30": {
-            "items": {
-              "$ref": "#/components/schemas/IngredientSet"
-            },
-            "type": "array"
-          },
-          "ingredient60": {
-            "items": {
-              "$ref": "#/components/schemas/IngredientSet"
-            },
-            "type": "array"
-          },
-          "skill": {
-            "$ref": "#/components/schemas/Mainskill"
-          }
-        },
-        "required": [
-          "name",
-          "specialty",
-          "frequency",
-          "ingredientPercentage",
-          "skillPercentage",
-          "berry",
-          "genders",
-          "carrySize",
-          "previousEvolutions",
-          "remainingEvolutions",
-          "ingredient0",
-          "ingredient30",
-          "ingredient60",
-          "skill"
-        ],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "GetPokemonQueryParams": {
-        "properties": {
-          "cyan": {
-            "type": "boolean"
-          },
-          "taupe": {
-            "type": "boolean"
-          },
-          "snowdrop": {
-            "type": "boolean"
-          },
-          "lapis": {
-            "type": "boolean"
-          },
-          "powerplant": {
-            "type": "boolean"
-          }
-        },
-        "type": "object",
-        "additionalProperties": false
-      },
-      "SubSkill": {
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "shortName": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "number",
-            "format": "double"
-          },
-          "rarity": {
-            "type": "string",
-            "enum": ["gold", "silver", "white"]
-          }
-        },
-        "required": ["name", "shortName", "amount", "rarity"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PokemonIngredientSet": {
-        "properties": {
-          "ingredientList": {
-            "items": {
-              "$ref": "#/components/schemas/IngredientSet"
-            },
-            "type": "array"
-          },
-          "pokemon": {
-            "$ref": "#/components/schemas/Pokemon"
-          }
-        },
-        "required": ["ingredientList", "pokemon"],
-        "type": "object"
-      },
-      "Contribution": {
-        "properties": {
-          "meal": {
-            "$ref": "#/components/schemas/Recipe"
-          },
-          "percentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "contributedPower": {
-            "type": "number",
-            "format": "double"
-          },
-          "skillValue": {
-            "type": "number",
-            "format": "double"
-          },
-          "team": {
-            "items": {
-              "$ref": "#/components/schemas/PokemonIngredientSet"
-            },
-            "type": "array"
-          }
-        },
-        "required": ["meal", "percentage", "contributedPower"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "CombinedContribution": {
-        "properties": {
-          "contributions": {
-            "items": {
-              "$ref": "#/components/schemas/Contribution"
-            },
-            "type": "array"
-          },
-          "averagePercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "score": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "required": ["contributions", "averagePercentage", "score"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "PokemonCombinationCombinedContribution": {
-        "properties": {
-          "pokemonCombination": {
-            "$ref": "#/components/schemas/PokemonIngredientSet"
-          },
-          "combinedContribution": {
-            "$ref": "#/components/schemas/CombinedContribution"
-          }
-        },
-        "required": ["pokemonCombination", "combinedContribution"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "TieredPokemonCombinationContribution": {
-        "properties": {
-          "tier": {
-            "type": "string"
-          },
-          "diff": {
-            "type": "number",
-            "format": "double"
-          },
-          "pokemonCombinationContribution": {
-            "$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
-          }
-        },
-        "required": ["tier", "pokemonCombinationContribution"],
-        "type": "object",
-        "additionalProperties": false
-      },
-      "TierlistType": {
-        "type": "string",
-        "enum": ["overall", "curry", "salad", "dessert"]
-      },
-      "GetTierListQueryParams": {
-        "properties": {
-          "tierlistType": {
-            "$ref": "#/components/schemas/TierlistType"
-          },
-          "limit50": {
-            "type": "boolean"
-          },
-          "potLimit": {
-            "type": "boolean"
-          },
-          "pretty": {
-            "type": "boolean"
-          },
-          "onlyBest": {
-            "type": "boolean"
-          },
-          "previous": {
-            "type": "boolean"
-          }
-        },
-        "required": ["tierlistType", "limit50", "potLimit", "pretty", "onlyBest", "previous"],
-        "type": "object",
-        "additionalProperties": false
-      }
-    },
-    "securitySchemes": {}
-  },
-  "info": {
-    "title": "sleep-api",
-    "version": "2.7.1",
-    "contact": {}
-  },
-  "paths": {
-    "/api/ingredient": {
-      "get": {
-        "operationId": "GetIngredients",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["ingredient"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/api/mainskill/{name}": {
-      "get": {
-        "operationId": "GetMainskill",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Mainskill"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["mainskill"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/mainskill": {
-      "get": {
-        "operationId": "GetMainskills",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["mainskill"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/api/meal/{name}": {
-      "get": {
-        "operationId": "GetMealWithName",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Recipe"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["meal"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/meal": {
-      "get": {
-        "operationId": "GetMeals",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["meal", "meal"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "curry",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "salad",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "dessert",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "minRecipeBonus",
-            "required": false,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          },
-          {
-            "in": "query",
-            "name": "maxPotSize",
-            "required": false,
-            "schema": {
-              "format": "double",
-              "type": "number"
-            }
-          }
-        ]
-      }
-    },
-    "/api/nature": {
-      "get": {
-        "operationId": "GetNatures",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["nature"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/api/pokemon/{name}": {
-      "get": {
-        "operationId": "GetPokemonWithName",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Pokemon"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["pokemon"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/pokemon": {
-      "get": {
-        "operationId": "GetPokemon",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["pokemon"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "cyan",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "taupe",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "snowdrop",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "lapis",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "powerplant",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ]
-      }
-    },
-    "/api/subskill/{name}": {
-      "get": {
-        "operationId": "GetSubskill",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubSkill"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["subskill"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/subskill": {
-      "get": {
-        "operationId": "GetSubskills",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["subskill"],
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/api/tierlist/cooking": {
-      "get": {
-        "operationId": "GetCookingTierlist",
-        "responses": {
-          "200": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/TieredPokemonCombinationContribution"
-                  },
-                  "type": "array"
-                }
-              }
-            }
-          }
-        },
-        "tags": ["tierlist"],
-        "security": [],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "tierlistType",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/TierlistType"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit50",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "potLimit",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "pretty",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "onlyBest",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "in": "query",
-            "name": "previous",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ]
-      }
-    }
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ]
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Energy": {
+				"type": "string",
+				"enum": [
+					"energy"
+				],
+				"nullable": false
+			},
+			"Ingredients": {
+				"type": "string",
+				"enum": [
+					"ingredients"
+				],
+				"nullable": false
+			},
+			"Berries": {
+				"type": "string",
+				"enum": [
+					"berries"
+				],
+				"nullable": false
+			},
+			"Helps": {
+				"type": "string",
+				"enum": [
+					"helps"
+				],
+				"nullable": false
+			},
+			"DreamShards": {
+				"type": "string",
+				"enum": [
+					"dream shards"
+				],
+				"nullable": false
+			},
+			"Strength": {
+				"type": "string",
+				"enum": [
+					"strength"
+				],
+				"nullable": false
+			},
+			"PotSize": {
+				"type": "string",
+				"enum": [
+					"pot size"
+				],
+				"nullable": false
+			},
+			"TastyChance": {
+				"type": "string",
+				"enum": [
+					"chance"
+				],
+				"nullable": false
+			},
+			"Metronome": {
+				"type": "string",
+				"enum": [
+					"metronome"
+				],
+				"nullable": false
+			},
+			"Copy": {
+				"type": "string",
+				"enum": [
+					"copy"
+				],
+				"nullable": false
+			},
+			"MainskillUnit": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/Energy"
+					},
+					{
+						"$ref": "#/components/schemas/Ingredients"
+					},
+					{
+						"$ref": "#/components/schemas/Berries"
+					},
+					{
+						"$ref": "#/components/schemas/Helps"
+					},
+					{
+						"$ref": "#/components/schemas/DreamShards"
+					},
+					{
+						"$ref": "#/components/schemas/Strength"
+					},
+					{
+						"$ref": "#/components/schemas/PotSize"
+					},
+					{
+						"$ref": "#/components/schemas/TastyChance"
+					},
+					{
+						"$ref": "#/components/schemas/Metronome"
+					},
+					{
+						"$ref": "#/components/schemas/Copy"
+					}
+				]
+			},
+			"ModifierType": {
+				"type": "string",
+				"enum": [
+					"Base",
+					"Stockpile",
+					"Moonlight",
+					"Disguise",
+					"Mimic",
+					"Transform"
+				]
+			},
+			"Modifier": {
+				"properties": {
+					"type": {
+						"$ref": "#/components/schemas/ModifierType"
+					},
+					"critChance": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"type",
+					"critChance"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Mainskill": {
+				"properties": {
+					"modifier": {
+						"$ref": "#/components/schemas/Modifier"
+					},
+					"RP": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"description": {
+						"type": "string"
+					},
+					"maxLevel": {
+						"type": "number",
+						"format": "double"
+					},
+					"unit": {
+						"$ref": "#/components/schemas/MainskillUnit"
+					},
+					"amount": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"modifier",
+					"RP",
+					"description",
+					"maxLevel",
+					"unit",
+					"amount",
+					"name"
+				],
+				"type": "object"
+			},
+			"RecipeType": {
+				"type": "string",
+				"enum": [
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"Ingredient": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"taxedValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"longName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"taxedValue",
+					"longName"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IngredientSet": {
+				"properties": {
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient": {
+						"$ref": "#/components/schemas/Ingredient"
+					}
+				},
+				"required": [
+					"amount",
+					"ingredient"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Recipe": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"valueMax": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"$ref": "#/components/schemas/RecipeType"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"bonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"nrOfIngredients": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"valueMax",
+					"type",
+					"ingredients",
+					"bonus",
+					"nrOfIngredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MealNamesQueryParams": {
+				"properties": {
+					"curry": {
+						"type": "boolean"
+					},
+					"salad": {
+						"type": "boolean"
+					},
+					"dessert": {
+						"type": "boolean"
+					},
+					"minRecipeBonus": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxPotSize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonSpecialty": {
+				"type": "string",
+				"enum": [
+					"berry",
+					"ingredient",
+					"skill"
+				]
+			},
+			"Berry": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GenderRatio": {
+				"properties": {
+					"male": {
+						"type": "number",
+						"format": "double"
+					},
+					"female": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"male",
+					"female"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pokemon": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"specialty": {
+						"$ref": "#/components/schemas/PokemonSpecialty"
+					},
+					"frequency": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredientPercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillPercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"berry": {
+						"$ref": "#/components/schemas/Berry"
+					},
+					"genders": {
+						"$ref": "#/components/schemas/GenderRatio"
+					},
+					"carrySize": {
+						"type": "number",
+						"format": "double"
+					},
+					"previousEvolutions": {
+						"type": "number",
+						"format": "double"
+					},
+					"remainingEvolutions": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredient0": {
+						"$ref": "#/components/schemas/IngredientSet"
+					},
+					"ingredient30": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"ingredient60": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"skill": {
+						"$ref": "#/components/schemas/Mainskill"
+					}
+				},
+				"required": [
+					"name",
+					"specialty",
+					"frequency",
+					"ingredientPercentage",
+					"skillPercentage",
+					"berry",
+					"genders",
+					"carrySize",
+					"previousEvolutions",
+					"remainingEvolutions",
+					"ingredient0",
+					"ingredient30",
+					"ingredient60",
+					"skill"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetPokemonQueryParams": {
+				"properties": {
+					"cyan": {
+						"type": "boolean"
+					},
+					"taupe": {
+						"type": "boolean"
+					},
+					"snowdrop": {
+						"type": "boolean"
+					},
+					"lapis": {
+						"type": "boolean"
+					},
+					"powerplant": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SubSkill": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"shortName": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"rarity": {
+						"type": "string",
+						"enum": [
+							"gold",
+							"silver",
+							"white"
+						]
+					}
+				},
+				"required": [
+					"name",
+					"shortName",
+					"amount",
+					"rarity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonIngredientSet": {
+				"properties": {
+					"ingredientList": {
+						"items": {
+							"$ref": "#/components/schemas/IngredientSet"
+						},
+						"type": "array"
+					},
+					"pokemon": {
+						"$ref": "#/components/schemas/Pokemon"
+					}
+				},
+				"required": [
+					"ingredientList",
+					"pokemon"
+				],
+				"type": "object"
+			},
+			"Contribution": {
+				"properties": {
+					"meal": {
+						"$ref": "#/components/schemas/Recipe"
+					},
+					"percentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"contributedPower": {
+						"type": "number",
+						"format": "double"
+					},
+					"skillValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"team": {
+						"items": {
+							"$ref": "#/components/schemas/PokemonIngredientSet"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"meal",
+					"percentage",
+					"contributedPower"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CombinedContribution": {
+				"properties": {
+					"contributions": {
+						"items": {
+							"$ref": "#/components/schemas/Contribution"
+						},
+						"type": "array"
+					},
+					"averagePercentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"score": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"contributions",
+					"averagePercentage",
+					"score"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PokemonCombinationCombinedContribution": {
+				"properties": {
+					"pokemonCombination": {
+						"$ref": "#/components/schemas/PokemonIngredientSet"
+					},
+					"combinedContribution": {
+						"$ref": "#/components/schemas/CombinedContribution"
+					}
+				},
+				"required": [
+					"pokemonCombination",
+					"combinedContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TieredPokemonCombinationContribution": {
+				"properties": {
+					"tier": {
+						"type": "string"
+					},
+					"diff": {
+						"type": "number",
+						"format": "double"
+					},
+					"pokemonCombinationContribution": {
+						"$ref": "#/components/schemas/PokemonCombinationCombinedContribution"
+					}
+				},
+				"required": [
+					"tier",
+					"pokemonCombinationContribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TierlistType": {
+				"type": "string",
+				"enum": [
+					"overall",
+					"curry",
+					"salad",
+					"dessert"
+				]
+			},
+			"GetTierListQueryParams": {
+				"properties": {
+					"tierlistType": {
+						"$ref": "#/components/schemas/TierlistType"
+					},
+					"limit50": {
+						"type": "boolean"
+					},
+					"potLimit": {
+						"type": "boolean"
+					},
+					"pretty": {
+						"type": "boolean"
+					},
+					"onlyBest": {
+						"type": "boolean"
+					},
+					"previous": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"tierlistType",
+					"limit50",
+					"potLimit",
+					"pretty",
+					"onlyBest",
+					"previous"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "sleep-api",
+		"version": "2.7.1",
+		"contact": {}
+	},
+	"paths": {
+		"/api/ingredient": {
+			"get": {
+				"operationId": "GetIngredients",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"ingredient"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/mainskill/{name}": {
+			"get": {
+				"operationId": "GetMainskill",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Mainskill"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"mainskill"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/mainskill": {
+			"get": {
+				"operationId": "GetMainskills",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"mainskill"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/meal/{name}": {
+			"get": {
+				"operationId": "GetMealWithName",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Recipe"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"meal"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/meal": {
+			"get": {
+				"operationId": "GetMeals",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"meal",
+					"meal"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "curry",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "salad",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dessert",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minRecipeBonus",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxPotSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/nature": {
+			"get": {
+				"operationId": "GetNatures",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"nature"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/pokemon/{name}": {
+			"get": {
+				"operationId": "GetPokemonWithName",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Pokemon"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"pokemon"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/pokemon": {
+			"get": {
+				"operationId": "GetPokemon",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"pokemon"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "cyan",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "taupe",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "snowdrop",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "lapis",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "powerplant",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/api/subskill/{name}": {
+			"get": {
+				"operationId": "GetSubskill",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SubSkill"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"subskill"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/subskill": {
+			"get": {
+				"operationId": "GetSubskills",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"subskill"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/tierlist/cooking": {
+			"get": {
+				"operationId": "GetCookingTierlist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/TieredPokemonCombinationContribution"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"tierlist"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "tierlistType",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/TierlistType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit50",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "potLimit",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pretty",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "onlyBest",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "previous",
+						"required": true,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
 }

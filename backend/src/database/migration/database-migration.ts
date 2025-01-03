@@ -1,17 +1,17 @@
 import { DatabaseService } from '@src/database/database-service.js';
+import { relativePath } from '@src/utils/file-utils/file-utils.js';
 import type { Knex } from 'knex';
-import { resolve } from 'node:path';
 
 const DatabaseMigration = new (class {
   public async migrate() {
-    const baseDir = resolve(__dirname, './', 'migrations');
+    const baseDir = relativePath('migrations', import.meta.url);
     const configuration: Knex.MigratorConfig = {};
 
     await this.#performMigration({ ...configuration, directory: baseDir });
   }
 
   public async downgrade() {
-    const baseDir = resolve(__dirname, './', 'migrations');
+    const baseDir = relativePath('migrations', import.meta.url);
     const configuration: Knex.MigratorConfig = {};
 
     const knex = await DatabaseService.getKnex();
