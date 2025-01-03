@@ -10,6 +10,7 @@
 .nvmrc
 .releaserc
 package-lock.json
+swagger.json
 
 # directories
 dist

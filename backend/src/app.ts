@@ -6,9 +6,8 @@ import type { Application, Request, Response } from 'express';
 import express from 'express';
 import morgan from 'morgan';
 
-import path from 'path';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './public/swagger.json' assert { type: 'json' };
+import swaggerDocument from './public/swagger.json' with { type: 'json' };
 
 import { config } from '@src/config/config.js';
 import HealthController from '@src/controllers/health/health.controller.js';
@@ -41,6 +40,7 @@ import { TierlistRouter } from '@src/routes/tierlist-router/tierlist-router.js';
 import { UserRouter } from '@src/routes/user-router/user-router.js';
 
 import { TierlistService } from '@src/services/api-service/tierlist/tierlist-service.js';
+import { getDirname, joinPath } from '@src/utils/file-utils/file-utils.js';
 
 async function main() {
   dotenv.config();
@@ -73,9 +73,10 @@ async function main() {
   app.use(cors(options));
   app.use('/api', BaseRouter.router);
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customSiteTitle: 'Sleep API' }));
-  app.use(express.static(path.join(__dirname, 'assets')));
+  app.use(express.static(joinPath('assets', import.meta.url)));
   app.get('/', (req: Request, res: Response) => {
     try {
+      const { __dirname } = getDirname(import.meta.url);
       res.sendFile('./assets/index.html', { root: __dirname });
     } catch (err) {
       logger.error(err as Error);
