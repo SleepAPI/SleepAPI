@@ -6,6 +6,7 @@ import GuideDemoComponent from './components/GuideDemoComponent.vue';
 import GuideEmoji from './components/GuideEmoji.vue';
 import GuideEmojiCatalog from './components/GuideEmojiCatalog.vue';
 import SubjectiveInfoBanner from './components/SubjectiveInfoBanner.vue';
+import BerryStrengthComponent from './components/TierLists/BerryStrengthComponent.vue';
 import Layout from './Layout.vue';
 import './style.scss';
 import vuetify from './vuetify';
@@ -20,5 +21,6 @@ export default {
     app.component('GuideDemoComponent', GuideDemoComponent);
     app.component('SubjectiveInfoBanner', SubjectiveInfoBanner);
     app.component('AboutAuthor', AboutAuthor);
+    app.component('BerryStrengthComponent', BerryStrengthComponent);
   }
 };

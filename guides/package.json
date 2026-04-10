@@ -15,6 +15,7 @@
     "sync-pokemon-emojis": "node ./scripts/sync-pokemon-emojis-from-frontend.mjs"
   },
   "dependencies": {
+    "axios": "^1.15.2",
     "sleepapi-common": "file:../common"
   },
   "devDependencies": {
