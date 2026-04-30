@@ -5,9 +5,51 @@
       <v-row class="d-flex align-center justify-space-between">
         <v-col class="d-flex align-center flex-wrap">
           <v-chip-group v-model="chips" column multiple>
-            <v-chip text="Berry strength" color="berry" variant="outlined" filter></v-chip>
-            <v-chip text="Skill strength" color="skill" variant="outlined" filter></v-chip>
+            <v-chip
+              text="Sneaky Snacking"
+              color="berry"
+              variant="outlined"
+              filter
+              @vue:updated="runSimulations"
+            ></v-chip>
+            <v-chip
+              text="Infinite Energy"
+              color="skill"
+              variant="outlined"
+              filter
+              @vue:updated="runSimulations"
+            ></v-chip>
           </v-chip-group>
+
+          <v-menu v-model="skillMenu" location="bottom start">
+            <template #activator="{ props }">
+              <v-chip
+                v-bind="props"
+                variant="outlined"
+                :color="selectedSkillOption !== 'ignore' ? 'skill' : ''"
+                :text="skillChipText()"
+                :class="{ 'selected-chip': selectedSkillOption !== 'ignore' }"
+                append-icon="mdi-menu-down"
+              >
+                <template v-if="selectedSkillOption !== 'ignore'" #prepend>
+                  <v-icon>mdi-check</v-icon>
+                </template>
+              </v-chip>
+            </template>
+
+            <v-card color="surface">
+              <v-radio-group v-model="selectedSkillOption" column hide-details>
+                <v-list-item
+                  v-for="option in skillOptions"
+                  :key="option.value"
+                  class="px-2"
+                  @click="setSkillOptions(option.value)"
+                >
+                  <v-radio :label="option.label" :value="option.value" hide-details></v-radio>
+                </v-list-item>
+              </v-radio-group>
+            </v-card>
+          </v-menu>
 
           <v-menu v-model="ingredientMenu" location="bottom start">
             <template #activator="{ props }">
@@ -28,7 +70,7 @@
             <v-card color="surface">
               <v-radio-group v-model="selectedIngredientOption" column hide-details>
                 <v-list-item
-                  v-for="option in options"
+                  v-for="option in ingredientOptions"
                   :key="option.value"
                   class="px-2"
                   @click="setIngredientOptions(option.value)"
@@ -135,7 +177,7 @@
 
           <template #item.berries="{ item }">
             <div class="flex-center">
-              <v-img src="/images/misc/strength.png" height="24" width="24"></v-img>
+              <v-img :src="miscImage('strength')" height="24" width="24"></v-img>
             </div>
             <div class="flex-center text-center">
               {{ item.berries }}
@@ -144,7 +186,7 @@
 
           <template #item.ingredients="{ item }">
             <div class="flex-center">
-              <v-img src="/images/misc/strength.png" height="24" width="24"></v-img>
+              <v-img :src="miscImage('strength')" height="24" width="24"></v-img>
             </div>
             <div class="flex-center text-center">
               {{ item.ingredientPower }}
@@ -169,7 +211,7 @@
 
           <template #item.total="{ item }">
             <div class="flex-center">
-              <v-img src="/images/misc/strength.png" height="24" width="24"></v-img>
+              <v-img :src="miscImage('strength')" height="24" width="24"></v-img>
             </div>
             <div class="flex-center text-center">
               {{ item.total }}
@@ -187,17 +229,19 @@ import { defineComponent } from 'vue';
 import {
   ALL_BERRY_SPECIALISTS,
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
-  BerrySet,
+  berryPowerForLevel,
   CalculateTeamResponse,
   CarrySizeUtils,
   compactNumber,
   defaultZero,
   DOMAIN_VERSION,
   EnergyForEveryoneS,
+  GARDEVOIR,
   getMaxIngredientBonus,
   getPokemon,
   getRandomGender,
   GREENGRASS,
+  ingredient,
   IngredientSet,
   Mainskill,
   MathUtils,
@@ -214,14 +258,14 @@ import {
   subskill,
   TeamSettings
 } from 'sleepapi-common';
-import { mainskillImage, pokemonImage } from './image-utils';
-import { DEFAULT_SLEEP, TeamCombinedProduction, TeamProductionExt } from './instanced';
+import { mainskillImage, miscImage, pokemonImage } from './image-utils';
+import { DEFAULT_SLEEP } from './instanced';
 import { PokemonInstanceUtils } from './pokemon-instance-utils';
 import serverAxios from './server-axios';
 import StackedBar from './stacked-bar.vue';
 import type { DataTableHeader } from './table-header';
 
-export interface ProductionResult {
+export interface SimulationResult {
   member: string;
   pokemon: Pokemon;
   shiny: boolean;
@@ -231,14 +275,14 @@ export interface ProductionResult {
   ingredientPower: number;
   ingredientCompact: string;
   skill: Mainskill;
-  skillStrength: number;
-  skillValue: number;
+  skillPower: number;
+  skillValue: string | number;
   skillCompact: string;
   energyPerMember: string | number | undefined;
   total: number;
   totalCompact: string;
 }
-export interface DataTableEntry extends ProductionResult {
+export interface DataTableEntry extends SimulationResult {
   berryPercentage: number;
   skillPercentage: number;
   ingredientPercentage: number;
@@ -252,6 +296,7 @@ export default defineComponent({
     return {
       mainskillImage,
       pokemonImage,
+      miscImage,
       Metronome,
       SkillCopy
     };
@@ -272,24 +317,27 @@ export default defineComponent({
     ],
     selectedIngredientOption: 'min',
     ingredientMenu: false,
-    options: [
+    ingredientOptions: [
       { label: 'Ignore ingredients', value: 'ignore' },
       { label: 'Min ingredient strength', value: 'min' },
       { label: 'Max ingredient strength', value: 'max' }
     ],
+    selectedSkillOption: 'all',
+    skillMenu: false,
+    skillOptions: [
+      { label: 'Strength skills', value: 'strength' },
+      { label: 'All skills', value: 'all' }
+    ],
     listOfMons: [] as MemberProduction[]
   }),
   async mounted() {
-    await this.berryMons();
+    await this.runSimulations();
   },
   computed: {
-    timeWindowFactor() {
-      return 1;
-    },
-    showBerries() {
+    sneakySnack() {
       return this.chips.includes(0);
     },
-    showSkills() {
+    useInfiniteEnergy() {
       return this.chips.includes(1);
     },
     showIngredientMin() {
@@ -298,150 +346,14 @@ export default defineComponent({
     showIngredientMax() {
       return this.selectedIngredientOption === 'max';
     },
-    members(): DataTableEntry[] {
-      const memberProductions = this.listOfMons;
-      const productions = [] as ProductionResult[];
-      for (const production of memberProductions) {
-        const mon = getPokemon(production.pokemonWithIngredients.pokemon);
-        const berryPower = this.showBerries ? Math.floor(production.strength.berries.total * this.timeWindowFactor) : 0;
-        const ingredientPower = this.showIngredientMax
-          ? this.highestIngredientPower(production)
-          : this.showIngredientMin
-            ? this.lowestIngredientPower(production)
-            : 0;
-        const skillStrength = this.showSkills ? Math.floor(production.strength.skill.total * this.timeWindowFactor) : 0;
-
-        let skillValue = 0;
-        for (const activation of mon.skill.getUnits()) {
-          skillValue += this.showSkills
-            ? MathUtils.round(
-                defaultZero(production.skillValue[activation]?.amountToSelf) +
-                  defaultZero(production.skillValue[activation]?.amountToTeam),
-                1
-              ) * this.timeWindowFactor
-            : 0;
-        }
-
-        const total = Math.floor(berryPower + ingredientPower + skillStrength);
-
-        productions.push({
-          member: production.pokemonWithIngredients.pokemon,
-          pokemon: mon,
-          shiny: false,
-          berries: berryPower,
-          berryCompact: compactNumber(berryPower),
-          ingredients:
-            production.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0) * this.timeWindowFactor,
-          ingredientPower,
-          ingredientCompact: compactNumber(ingredientPower),
-          skill: mon.skill,
-          skillStrength,
-          skillValue,
-          skillCompact: skillStrength > 0 ? compactNumber(skillStrength) : '',
-          energyPerMember: mon.skill.hasUnit('energy') ? this.energyPerMember(production) : 0,
-          total,
-          totalCompact: compactNumber(total)
-        });
-      }
-
-      const sortedProductions = productions.sort((a, b) => b.total - a.total);
-      const highestTotal = sortedProductions.at(0)?.total ?? 0;
-
-      const result = [] as DataTableEntry[];
-      for (const member of sortedProductions) {
-        const berryPercentage = defaultZero((member.berries / highestTotal) * 100);
-        const skillPercentage = defaultZero((member.skillStrength / highestTotal) * 100);
-        const ingredientPercentage = defaultZero((member.ingredientPower / highestTotal) * 100);
-        const comparedToBest = defaultZero((1 - member.total / highestTotal) * 100);
-
-        result.push({
-          ...member,
-          berryPercentage,
-          skillPercentage,
-          ingredientPercentage,
-          comparedToBest
-        });
-      }
-      return result;
-    }
-  },
-  methods: {
-    energyPerMember(member: MemberProduction): string | undefined {
-      const pokemon = getPokemon(member.pokemonWithIngredients.pokemon);
-      const skill = pokemon.skill;
-      const critAmount = member.advanced.skillCritValue;
-      const amountWithoutCrit = member.skillAmount - critAmount;
-
-      const e4eSuffix = skill.isOrModifies(EnergyForEveryoneS) ? 'x5' : '';
-      return `${MathUtils.round(amountWithoutCrit, 1)} ${e4eSuffix}${critAmount > 0 ? `+${MathUtils.round(critAmount, 1)}` : ''}`;
+    showStrengthSkills() {
+      return this.selectedSkillOption === 'strength';
     },
-    lowestIngredientPower(memberProduction: MemberProduction) {
-      const amount = memberProduction.produceTotal.ingredients.reduce(
-        (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
-        0
-      );
-      return Math.floor(amount * this.timeWindowFactor);
+    showAllSkills() {
+      return this.selectedSkillOption === 'all';
     },
-    highestIngredientPower(memberProduction: MemberProduction) {
-      const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL];
-      const amount =
-        maxLevelRecipeMultiplier *
-        memberProduction.produceTotal.ingredients.reduce((sum, cur) => {
-          const ingredientBonus = 1 + getMaxIngredientBonus(cur.ingredient.name) / 100;
-          return sum + cur.amount * ingredientBonus * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER;
-        }, 0);
-      return Math.floor(amount * this.timeWindowFactor);
-    },
-    setIngredientOptions(option: string) {
-      this.selectedIngredientOption = option;
-    },
-    ingredientChipText() {
-      switch (this.selectedIngredientOption) {
-        case 'min':
-          return 'Min ingredient strength';
-        case 'max':
-          return 'Max ingredient strength';
-        default:
-          return 'Ingredient strength';
-      }
-    },
-    round(num: number) {
-      return MathUtils.round(num, 1);
-    },
-    async calculateProduction(params: {
-      member: PokemonInstanceExt;
-      settings: TeamSettings;
-    }): Promise<TeamProductionExt | undefined> {
-      const { member, settings } = params;
-
-      const parsedMember: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity(member);
-
-      const response = await serverAxios.post<CalculateTeamResponse>('/calculator/team', {
-        members: [parsedMember],
-        settings
-      });
-
-      if (response.data.members.length != 1) {
-        throw new Error('Something went wrong!');
-      }
-
-      const teamBerries: BerrySet[] = response.data.members[0].produceTotal.berries;
-      const teamIngredients: IngredientSet[] = response.data.members[0].produceTotal.ingredients;
-      // TODO: is team production used? cooking is used of course, but rest?
-      const teamProduction: TeamCombinedProduction = {
-        berries: teamBerries,
-        ingredients: teamIngredients,
-        cooking: response.data.cooking
-      };
-
-      return {
-        members: response.data.members,
-        team: teamProduction
-      };
-    },
-    async berryMons() {
-      const mons: Pokemon[] = ALL_BERRY_SPECIALISTS.filter((mon) => mon.remainingEvolutions === 0);
-      const instances: PokemonInstanceExt[] = mons.map((mon) => {
+    allBerryMons(): PokemonInstanceExt[] {
+      return ALL_BERRY_SPECIALISTS.filter((mon) => mon.remainingEvolutions === 0).map((mon) => {
         return {
           pokemon: mon,
           level: MAX_POKEMON_LEVEL,
@@ -469,7 +381,7 @@ export default defineComponent({
               level: 60
             }
           ],
-          sneakySnacking: true,
+          sneakySnacking: this.sneakySnack,
           version: DOMAIN_VERSION,
           externalId: '',
           saved: false,
@@ -479,23 +391,253 @@ export default defineComponent({
           rp: 0
         };
       });
+    },
+    fourGardevoirs(): PokemonInstanceExt[] {
+      const gardevoir = {
+        pokemon: GARDEVOIR,
+        level: 100,
+        ribbon: 0,
+        carrySize: CarrySizeUtils.baseCarrySize(GARDEVOIR),
+        skillLevel: GARDEVOIR.skill.maxLevel,
+        nature: nature.CAREFUL,
+        subskills: [
+          {
+            level: 10,
+            subskill: subskill.SKILL_TRIGGER_M
+          },
+          {
+            level: 25,
+            subskill: subskill.SKILL_TRIGGER_S
+          },
+          {
+            level: 50,
+            subskill: subskill.HELPING_SPEED_M
+          },
+          {
+            level: 75,
+            subskill: subskill.HELPING_SPEED_S
+          },
+          {
+            level: 100,
+            subskill: subskill.INVENTORY_L
+          }
+        ],
+        ingredients: [
+          {
+            ingredient: ingredient.FANCY_APPLE,
+            amount: 0,
+            level: 0
+          },
+          {
+            ingredient: ingredient.FANCY_APPLE,
+            amount: 0,
+            level: 30
+          },
+          {
+            ingredient: ingredient.FANCY_APPLE,
+            amount: 0,
+            level: 60
+          }
+        ],
+        sneakySnacking: false,
+        version: DOMAIN_VERSION,
+        externalId: '',
+        saved: false,
+        shiny: false,
+        gender: getRandomGender(GARDEVOIR),
+        name: GARDEVOIR.displayName,
+        rp: 0
+      };
+      return [gardevoir, gardevoir, gardevoir, gardevoir];
+    },
+    energyTeamMembers(): PokemonInstanceExt[] {
+      return this.useInfiniteEnergy ? this.fourGardevoirs : [];
+    },
+    members(): DataTableEntry[] {
+      const memberProductions = this.listOfMons;
+      const productions = [] as SimulationResult[];
+      for (const production of memberProductions) {
+        const mon = getPokemon(production.pokemonWithIngredients.pokemon);
+        const berryPower = this.helpBerryPower(production);
+        const ingredientPower = this.helpIngredientPower(production);
+        const skillPower = this.strengthSkillPower(production);
+        const skillValue = this.showAllSkills
+          ? this.allSkillValue(production, mon.skill)
+          : this.showStrengthSkills
+            ? this.strengthSkillPower(production)
+            : 'Undefined';
+
+        const total = Math.floor(berryPower + ingredientPower + skillPower);
+
+        productions.push({
+          member: production.pokemonWithIngredients.pokemon,
+          pokemon: mon,
+          shiny: false,
+          berries: berryPower,
+          berryCompact: compactNumber(berryPower),
+          ingredients: production.produceTotal.ingredients.reduce((sum, cur) => sum + cur.amount, 0),
+          ingredientPower,
+          ingredientCompact: compactNumber(ingredientPower),
+          skill: mon.skill,
+          skillPower,
+          skillValue,
+          skillCompact: skillPower > 0 ? compactNumber(skillPower) : '',
+          energyPerMember: mon.skill.hasUnit('energy') ? this.energyPerMember(production) : 0,
+          total,
+          totalCompact: compactNumber(total)
+        });
+      }
+
+      const sortedProductions = productions.sort((a, b) => b.total - a.total);
+      const highestTotal = sortedProductions.at(0)?.total ?? 0;
+
+      const result = [] as DataTableEntry[];
+      for (const member of sortedProductions) {
+        const berryPercentage = defaultZero((member.berries / highestTotal) * 100);
+        const skillPercentage = defaultZero((member.skillPower / highestTotal) * 100);
+        const ingredientPercentage = defaultZero((member.ingredientPower / highestTotal) * 100);
+        const comparedToBest = defaultZero((1 - member.total / highestTotal) * 100);
+
+        result.push({
+          ...member,
+          berryPercentage,
+          skillPercentage,
+          ingredientPercentage,
+          comparedToBest
+        });
+      }
+      return result;
+    }
+  },
+  methods: {
+    energyPerMember(member: MemberProduction): string | undefined {
+      const pokemon = getPokemon(member.pokemonWithIngredients.pokemon);
+      const skill = pokemon.skill;
+      const critAmount = member.advanced.skillCritValue;
+      const amountWithoutCrit = member.skillAmount - critAmount;
+
+      const e4eSuffix = skill.isOrModifies(EnergyForEveryoneS) ? 'x5' : '';
+      return `${MathUtils.round(amountWithoutCrit, 1)} ${e4eSuffix}${critAmount > 0 ? `+${MathUtils.round(critAmount, 1)}` : ''}`;
+    },
+    helpBerryPower(memberProduction: MemberProduction) {
+      const berries = memberProduction.produceWithoutSkill.berries;
+      const strength = berries.reduce((sum, cur) => sum + cur.amount * berryPowerForLevel(cur.berry, cur.level), 0);
+      return Math.floor(strength);
+    },
+    helpIngredientPower(memberProduction: MemberProduction) {
+      return this.showIngredientMax
+        ? this.highestIngredientPower(memberProduction.produceWithoutSkill.ingredients)
+        : this.showIngredientMin
+          ? this.lowestIngredientPower(memberProduction.produceWithoutSkill.ingredients)
+          : 0;
+    },
+    lowestIngredientPower(ingredients: IngredientSet[]) {
+      const amount = ingredients.reduce(
+        (sum, cur) => sum + cur.amount * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+        0
+      );
+      return Math.floor(amount);
+    },
+    highestIngredientPower(ingredients: IngredientSet[]) {
+      const maxLevelRecipeMultiplier = recipeLevelBonus[MAX_RECIPE_LEVEL];
+      const amount =
+        maxLevelRecipeMultiplier *
+        ingredients.reduce((sum, cur) => {
+          const ingredientBonus = 1 + getMaxIngredientBonus(cur.ingredient.name) / 100;
+          return sum + cur.amount * ingredientBonus * cur.ingredient.value * AVERAGE_WEEKLY_CRIT_MULTIPLIER;
+        }, 0);
+      return Math.floor(amount);
+    },
+    setIngredientOptions(option: string) {
+      this.selectedIngredientOption = option;
+    },
+    ingredientChipText() {
+      const selectedOption = this.ingredientOptions.find((option) => option.value == this.selectedIngredientOption);
+      if (!selectedOption || selectedOption.value === 'ignore') return 'Ingredient strength';
+      return selectedOption.label;
+    },
+    strengthSkillPower(memberProduction: MemberProduction) {
+      const berries = memberProduction.produceFromSkill.berries;
+      const berryStrength = berries.reduce(
+        (sum, cur) => sum + cur.amount * berryPowerForLevel(cur.berry, cur.level),
+        0
+      );
+      const ingredients = memberProduction.produceFromSkill.ingredients;
+      const ingredientStrength = this.showIngredientMax
+        ? this.highestIngredientPower(ingredients)
+        : this.showIngredientMin
+          ? this.lowestIngredientPower(ingredients)
+          : 0;
+      const skillStrength =
+        defaultZero(memberProduction.skillValue['strength']?.amountToSelf) +
+        defaultZero(memberProduction.skillValue['strength']?.amountToTeam);
+      return Math.floor(berryStrength + ingredientStrength + skillStrength);
+    },
+    allSkillValue(memberProduction: MemberProduction, skill: Mainskill) {
+      let skillValue = 0;
+      for (const skillUnit of skill.getUnits()) {
+        skillValue += MathUtils.round(
+          defaultZero(memberProduction.skillValue[skillUnit]?.amountToSelf) +
+            defaultZero(memberProduction.skillValue[skillUnit]?.amountToTeam),
+          1
+        );
+      }
+      return Math.floor(skillValue);
+    },
+    setSkillOptions(option: string) {
+      this.selectedSkillOption = option;
+    },
+    skillChipText() {
+      const selectedOption = this.skillOptions.find((option) => option.value == this.selectedSkillOption);
+      if (!selectedOption) return 'Skill setting';
+      return selectedOption.label;
+    },
+    round(num: number) {
+      return MathUtils.round(num, 1);
+    },
+    async calculateProduction(params: {
+      members: PokemonInstanceExt[];
+      settings: TeamSettings;
+    }): Promise<MemberProduction | undefined> {
+      const { members, settings } = params;
+
+      const parsedMembers: PokemonInstanceIdentity[] = members.map((member) =>
+        PokemonInstanceUtils.toPokemonInstanceIdentity(member)
+      );
+
+      const response = await serverAxios.post<CalculateTeamResponse>('/calculator/team', {
+        members: parsedMembers,
+        settings
+      });
+
+      if (response.data.members.length == 0) {
+        throw new Error('Something went wrong!');
+      }
+
+      return response.data.members[0];
+    },
+    async runSimulations() {
       const teamSettings: TeamSettings = {
         camp: false,
-        bedtime: DEFAULT_SLEEP.bedtime,
-        wakeup: DEFAULT_SLEEP.wakeup,
+        bedtime: this.useInfiniteEnergy ? '0:00' : DEFAULT_SLEEP.bedtime,
+        wakeup: this.useInfiniteEnergy ? '1:00' : DEFAULT_SLEEP.wakeup,
         island: {
           ...GREENGRASS,
           areaBonus: 0
         }
       };
+      this.listOfMons = [];
       const results: MemberProduction[] = await Promise.all(
-        instances.map(async (member) => {
-          const result = await this.calculateProduction({ member: member, settings: teamSettings });
-          const production = result?.members[0];
-          if (production === undefined) {
+        this.allBerryMons.map(async (member) => {
+          const result = await this.calculateProduction({
+            members: [member].concat(this.energyTeamMembers),
+            settings: teamSettings
+          });
+          if (!result) {
             throw new Error('Something went wrong!');
           }
-          return production;
+          this.listOfMons.push(result);
+          return result;
         })
       );
       this.listOfMons = results;
