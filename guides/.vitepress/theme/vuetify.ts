@@ -13,7 +13,11 @@ const guidesDarkTheme: ThemeDefinition = {
     'on-background': '#ffffff',
     'on-surface': '#ffffff',
     'on-primary': '#ffffff',
-    'on-secondary': '#ffffff'
+    'on-secondary': '#ffffff',
+
+    'color-semantic-skill-500': '#efd269',
+    'color-semantic-berry-500': '#b9a0e9',
+    'color-semantic-dessert-500': '#fdb4ca'
   }
 };
 

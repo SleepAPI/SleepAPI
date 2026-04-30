@@ -119,19 +119,19 @@
               style="height: 25px"
               :sections="[
                 {
-                  color: 'berry',
+                  color: 'color-semantic-berry-500',
                   percentage: member.berryPercentage,
                   sectionText: member.berryCompact,
                   tooltipText: `${member.berryCompact} (${round(member.berryPercentage)}%)`
                 },
                 {
-                  color: 'skill',
+                  color: 'color-semantic-skill-500',
                   percentage: member.skillPercentage,
                   sectionText: member.skillCompact,
                   tooltipText: `${member.skillCompact} (${round(member.skillPercentage)}%)`
                 },
                 {
-                  color: 'ingredient',
+                  color: 'color-semantic-dessert-500',
                   percentage: member.ingredientPercentage,
                   sectionText: member.ingredientCompact,
                   tooltipText: `${member.ingredientCompact} (${round(member.ingredientPercentage)}%)`
@@ -265,7 +265,7 @@ import serverAxios from './server-axios';
 import StackedBar from './stacked-bar.vue';
 import type { DataTableHeader } from './table-header';
 
-export interface SimulationResult {
+export interface PartialDataTableEntry {
   member: string;
   pokemon: Pokemon;
   shiny: boolean;
@@ -282,11 +282,15 @@ export interface SimulationResult {
   total: number;
   totalCompact: string;
 }
-export interface DataTableEntry extends SimulationResult {
+export interface DataTableEntry extends PartialDataTableEntry {
   berryPercentage: number;
   skillPercentage: number;
   ingredientPercentage: number;
   comparedToBest: number;
+}
+export interface SimulationSettings {
+  sneakySnacking: boolean;
+  infiniteEnergy: boolean;
 }
 
 export default defineComponent({
@@ -328,7 +332,7 @@ export default defineComponent({
       { label: 'Strength skills', value: 'strength' },
       { label: 'All skills', value: 'all' }
     ],
-    listOfMons: [] as MemberProduction[]
+    listOfMons: new Map<SimulationSettings, MemberProduction[]>()
   }),
   async mounted() {
     await this.runSimulations();
@@ -339,6 +343,12 @@ export default defineComponent({
     },
     useInfiniteEnergy() {
       return this.chips.includes(1);
+    },
+    currentSettings(): SimulationSettings {
+      return {
+        sneakySnacking: this.sneakySnack,
+        infiniteEnergy: this.useInfiniteEnergy
+      };
     },
     showIngredientMin() {
       return this.selectedIngredientOption === 'min';
@@ -454,8 +464,9 @@ export default defineComponent({
       return this.useInfiniteEnergy ? this.fourGardevoirs : [];
     },
     members(): DataTableEntry[] {
-      const memberProductions = this.listOfMons;
-      const productions = [] as SimulationResult[];
+      const memberProductions = this.listOfMons.get(this.currentSettings);
+      if (!memberProductions) return [];
+      const productions = [] as PartialDataTableEntry[];
       for (const production of memberProductions) {
         const mon = getPokemon(production.pokemonWithIngredients.pokemon);
         const berryPower = this.helpBerryPower(production);
@@ -617,6 +628,10 @@ export default defineComponent({
       return response.data.members[0];
     },
     async runSimulations() {
+      const settings = this.currentSettings;
+      if (this.listOfMons.has(settings)) return;
+      this.listOfMons.set(settings, []);
+
       const teamSettings: TeamSettings = {
         camp: false,
         bedtime: this.useInfiniteEnergy ? '0:00' : DEFAULT_SLEEP.bedtime,
@@ -626,7 +641,6 @@ export default defineComponent({
           areaBonus: 0
         }
       };
-      this.listOfMons = [];
       const results: MemberProduction[] = await Promise.all(
         this.allBerryMons.map(async (member) => {
           const result = await this.calculateProduction({
@@ -636,11 +650,11 @@ export default defineComponent({
           if (!result) {
             throw new Error('Something went wrong!');
           }
-          this.listOfMons.push(result);
+          this.listOfMons.get(settings)!.push(result);
           return result;
         })
       );
-      this.listOfMons = results;
+      this.listOfMons.set(settings, results);
     }
   }
 });
