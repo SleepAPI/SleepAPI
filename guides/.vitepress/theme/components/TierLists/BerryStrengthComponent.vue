@@ -6,20 +6,52 @@
         <v-col class="d-flex align-center flex-wrap">
           <v-chip-group v-model="chips" column multiple>
             <v-chip
-              text="Sneaky Snacking"
+              text="Sneaky snacking"
               color="berry"
               variant="outlined"
               filter
               @vue:updated="runSimulations"
             ></v-chip>
+            <v-chip text="Favored berry" color="skill" variant="outlined" filter @vue:updated="runSimulations"></v-chip>
             <v-chip
-              text="Infinite Energy"
+              text="Max skill level"
               color="skill"
               variant="outlined"
               filter
               @vue:updated="runSimulations"
             ></v-chip>
           </v-chip-group>
+
+          <v-menu v-model="energyMenu" location="bottom start">
+            <template #activator="{ props }">
+              <v-chip
+                v-bind="props"
+                variant="outlined"
+                :color="selectedEnergyOption !== 'none' ? 'energy' : ''"
+                :text="energyChipText()"
+                :class="{ 'selected-chip': selectedEnergyOption !== 'none' }"
+                append-icon="mdi-menu-down"
+                @vue:updated="runSimulations"
+              >
+                <template v-if="selectedEnergyOption !== 'none'" #prepend>
+                  <v-icon>mdi-check</v-icon>
+                </template>
+              </v-chip>
+            </template>
+
+            <v-card color="surface">
+              <v-radio-group v-model="selectedEnergyOption" column hide-details>
+                <v-list-item
+                  v-for="option in energyOptions"
+                  :key="option.value"
+                  class="px-2"
+                  @click="setEnergyOptions(option.value)"
+                >
+                  <v-radio :label="option.label" :value="option.value" hide-details></v-radio>
+                </v-list-item>
+              </v-radio-group>
+            </v-card>
+          </v-menu>
 
           <v-menu v-model="skillMenu" location="bottom start">
             <template #activator="{ props }">
@@ -229,9 +261,11 @@ import { defineComponent } from 'vue';
 import {
   ALL_BERRY_SPECIALISTS,
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+  berry,
   berryPowerForLevel,
   CalculateTeamResponse,
   CarrySizeUtils,
+  commonMocks,
   compactNumber,
   defaultZero,
   DOMAIN_VERSION,
@@ -241,7 +275,6 @@ import {
   getPokemon,
   getRandomGender,
   GREENGRASS,
-  ingredient,
   IngredientSet,
   Mainskill,
   MathUtils,
@@ -290,7 +323,9 @@ export interface DataTableEntry extends PartialDataTableEntry {
 }
 export interface SimulationSettings {
   sneakySnacking: boolean;
-  infiniteEnergy: boolean;
+  energy: string;
+  favoredBerry: boolean;
+  maxSkillLevel: boolean;
 }
 
 export default defineComponent({
@@ -313,11 +348,18 @@ export default defineComponent({
       { title: 'Skill', key: 'skillProcs', sortable: true, align: 'center' },
       { title: 'Total', key: 'total', sortable: true, align: 'center' }
     ] as DataTableHeader[],
-    chips: [0, 1],
+    chips: [0, 1, 2],
     tab: 'visual',
     tabs: [
       { value: 'visual', label: 'Visual' },
       { value: 'data', label: 'Data' }
+    ],
+    selectedEnergyOption: 'gardevoir',
+    energyMenu: false,
+    energyOptions: [
+      { label: 'No extra energy', value: 'none' },
+      { label: 'HSM STM Gardevoir', value: 'gardevoir' },
+      { label: 'Infinite energy', value: 'infinite' }
     ],
     selectedIngredientOption: 'min',
     ingredientMenu: false,
@@ -332,7 +374,7 @@ export default defineComponent({
       { label: 'Strength skills', value: 'strength' },
       { label: 'All skills', value: 'all' }
     ],
-    listOfMons: new Map<SimulationSettings, MemberProduction[]>()
+    listOfMons: new Map<number, MemberProduction[]>()
   }),
   async mounted() {
     await this.runSimulations();
@@ -341,14 +383,29 @@ export default defineComponent({
     sneakySnack() {
       return this.chips.includes(0);
     },
-    useInfiniteEnergy() {
+    favoredBerry() {
       return this.chips.includes(1);
+    },
+    maxSkillLevel() {
+      return this.chips.includes(2);
+    },
+    useInfiniteEnergy() {
+      return this.selectedEnergyOption === 'infinite';
     },
     currentSettings(): SimulationSettings {
       return {
         sneakySnacking: this.sneakySnack,
-        infiniteEnergy: this.useInfiniteEnergy
+        energy: this.selectedEnergyOption,
+        favoredBerry: this.favoredBerry,
+        maxSkillLevel: this.maxSkillLevel
       };
+    },
+    serializedSettings(): number {
+      const sneakySnacking = this.sneakySnack ? 1 : 0;
+      const energy = this.selectedEnergyOption.length;
+      const favoredBerry = this.favoredBerry ? 1 : 0;
+      const maxSkillLevel = this.maxSkillLevel ? 1 : 0;
+      return maxSkillLevel + 2 * favoredBerry + 4 * energy + 8 * sneakySnacking;
     },
     showIngredientMin() {
       return this.selectedIngredientOption === 'min';
@@ -369,7 +426,7 @@ export default defineComponent({
           level: MAX_POKEMON_LEVEL,
           ribbon: 0,
           carrySize: CarrySizeUtils.baseCarrySize(mon),
-          skillLevel: 1 + mon.previousEvolutions,
+          skillLevel: this.maxSkillLevel ? mon.skill.maxLevel : 1 + mon.previousEvolutions,
           nature: nature.SERIOUS,
           subskills: [
             {
@@ -402,14 +459,14 @@ export default defineComponent({
         };
       });
     },
-    fourGardevoirs(): PokemonInstanceExt[] {
+    gardevoir(): PokemonInstanceExt[] {
       const gardevoir = {
         pokemon: GARDEVOIR,
-        level: 100,
+        level: MAX_POKEMON_LEVEL,
         ribbon: 0,
         carrySize: CarrySizeUtils.baseCarrySize(GARDEVOIR),
         skillLevel: GARDEVOIR.skill.maxLevel,
-        nature: nature.CAREFUL,
+        nature: nature.SERIOUS,
         subskills: [
           {
             level: 10,
@@ -417,35 +474,20 @@ export default defineComponent({
           },
           {
             level: 25,
-            subskill: subskill.SKILL_TRIGGER_S
-          },
-          {
-            level: 50,
             subskill: subskill.HELPING_SPEED_M
-          },
-          {
-            level: 75,
-            subskill: subskill.HELPING_SPEED_S
-          },
-          {
-            level: 100,
-            subskill: subskill.INVENTORY_L
           }
         ],
         ingredients: [
           {
-            ingredient: ingredient.FANCY_APPLE,
-            amount: 0,
+            ...GARDEVOIR.ingredient0[0],
             level: 0
           },
           {
-            ingredient: ingredient.FANCY_APPLE,
-            amount: 0,
+            ...GARDEVOIR.ingredient30[0],
             level: 30
           },
           {
-            ingredient: ingredient.FANCY_APPLE,
-            amount: 0,
+            ...GARDEVOIR.ingredient60[0],
             level: 60
           }
         ],
@@ -458,13 +500,60 @@ export default defineComponent({
         name: GARDEVOIR.displayName,
         rp: 0
       };
-      return [gardevoir, gardevoir, gardevoir, gardevoir];
+      return [gardevoir];
+    },
+    infiniteEnergyMon(): PokemonInstanceExt[] {
+      const fakeMon = {
+        pokemon: commonMocks.mockPokemon({
+          ...GARDEVOIR,
+          frequency: 3600,
+          skillPercentage: 100,
+          ingredientPercentage: 0,
+          skill: EnergyForEveryoneS
+        }),
+        level: MAX_POKEMON_LEVEL,
+        ribbon: 0,
+        carrySize: CarrySizeUtils.baseCarrySize(GARDEVOIR),
+        skillLevel: EnergyForEveryoneS.maxLevel,
+        nature: nature.SERIOUS,
+        subskills: [],
+        ingredients: [
+          {
+            ...GARDEVOIR.ingredient0[0],
+            level: 0
+          },
+          {
+            ...GARDEVOIR.ingredient30[0],
+            level: 30
+          },
+          {
+            ...GARDEVOIR.ingredient60[0],
+            level: 60
+          }
+        ],
+        sneakySnacking: false,
+        version: DOMAIN_VERSION,
+        externalId: '',
+        saved: false,
+        shiny: false,
+        gender: getRandomGender(GARDEVOIR),
+        name: GARDEVOIR.displayName,
+        rp: 0
+      };
+      return [fakeMon];
     },
     energyTeamMembers(): PokemonInstanceExt[] {
-      return this.useInfiniteEnergy ? this.fourGardevoirs : [];
+      switch (this.selectedEnergyOption) {
+        case 'gardevoir':
+          return this.gardevoir;
+        case 'infinite':
+          return this.infiniteEnergyMon;
+        default:
+          return [];
+      }
     },
     members(): DataTableEntry[] {
-      const memberProductions = this.listOfMons.get(this.currentSettings);
+      const memberProductions = this.listOfMons.get(this.serializedSettings);
       if (!memberProductions) return [];
       const productions = [] as PartialDataTableEntry[];
       for (const production of memberProductions) {
@@ -532,7 +621,8 @@ export default defineComponent({
     },
     helpBerryPower(memberProduction: MemberProduction) {
       const berries = memberProduction.produceWithoutSkill.berries;
-      const strength = berries.reduce((sum, cur) => sum + cur.amount * berryPowerForLevel(cur.berry, cur.level), 0);
+      let strength = berries.reduce((sum, cur) => sum + cur.amount * berryPowerForLevel(cur.berry, cur.level), 0);
+      if (this.favoredBerry) strength *= 2;
       return Math.floor(strength);
     },
     helpIngredientPower(memberProduction: MemberProduction) {
@@ -603,6 +693,14 @@ export default defineComponent({
       if (!selectedOption) return 'Skill setting';
       return selectedOption.label;
     },
+    setEnergyOptions(option: string) {
+      this.selectedEnergyOption = option;
+    },
+    energyChipText() {
+      const selectedOption = this.energyOptions.find((option) => option.value == this.selectedEnergyOption);
+      if (!selectedOption) return 'Energy setting';
+      return selectedOption.label;
+    },
     round(num: number) {
       return MathUtils.round(num, 1);
     },
@@ -628,7 +726,7 @@ export default defineComponent({
       return response.data.members[0];
     },
     async runSimulations() {
-      const settings = this.currentSettings;
+      const settings = this.serializedSettings;
       if (this.listOfMons.has(settings)) return;
       this.listOfMons.set(settings, []);
 
@@ -638,7 +736,8 @@ export default defineComponent({
         wakeup: this.useInfiniteEnergy ? '1:00' : DEFAULT_SLEEP.wakeup,
         island: {
           ...GREENGRASS,
-          areaBonus: 0
+          areaBonus: 0,
+          berries: this.favoredBerry ? berry.BERRIES : []
         }
       };
       const results: MemberProduction[] = await Promise.all(
