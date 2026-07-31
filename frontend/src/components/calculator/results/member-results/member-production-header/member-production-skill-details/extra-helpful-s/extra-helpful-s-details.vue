@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Extra Helpful S level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Extra Helpful S level ${effectiveSkillLevel}`"
           title="Extra Helpful S"
         ></v-img>
       </v-badge>
@@ -68,8 +66,14 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.memberWithProduction.production.skillLevel)
+      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
     },
     totalSkillValue() {
       return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)

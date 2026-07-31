@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap pb-1">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Metronome level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Metronome level ${effectiveSkillLevel}`"
           title="Metronome"
         ></v-img>
       </v-badge>
@@ -62,6 +60,12 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor
     }

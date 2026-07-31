@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Ingredient Draw S level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Ingredient Draw S level ${effectiveSkillLevel}`"
           title="Ingredient Draw S"
         ></v-img>
       </v-badge>
@@ -85,14 +83,18 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     skill() {
       // All base versions of Ingredient Draw use this component.
       return this.memberWithProduction.member.pokemon.skill
     },
     skillValuePerNormalProc() {
-      return this.skill.activations.ingredients.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel
-      })
+      return this.skill.activations.ingredients.amount({ skillLevel: this.effectiveSkillLevel })
     },
     preparedIngredients() {
       return this.memberWithProduction.production.produceFromSkill.ingredients.map((ing) => ({

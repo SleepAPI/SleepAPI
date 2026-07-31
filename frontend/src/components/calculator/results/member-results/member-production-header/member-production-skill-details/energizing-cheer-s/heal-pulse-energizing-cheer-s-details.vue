@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Heal Pulse (Energizing Cheer S) level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Heal Pulse (Energizing Cheer S) level ${effectiveSkillLevel}`"
           title="Heal Pulse (Energizing Cheer S)"
         ></v-img>
       </v-badge>
@@ -69,8 +67,8 @@
 
 <script lang="ts">
 import { mainskillImage } from '@/services/utils/image-utils'
-import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { EnergizingCheerSHealPulse, MathUtils, compactNumber, defaultZero } from 'sleepapi-common'
@@ -89,6 +87,12 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, pokemonStore, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     isPaired() {
       const latiosIfOnTeam = this.teamStore.getCurrentTeam.members
         .filter(Boolean)
@@ -96,24 +100,21 @@ export default defineComponent({
         .find((member) => member?.name === 'LATIOS')
       return latiosIfOnTeam !== undefined
     },
-    skillLevel() {
-      return this.memberWithProduction.production.skillLevel
-    },
     numMonsHelped() {
       return Math.min(this.teamStore.getTeamSize, 2)
     },
     energyPerProc() {
       return EnergizingCheerSHealPulse.activations.energy.amount({
-        skillLevel: this.skillLevel
+        skillLevel: this.effectiveSkillLevel
       })
     },
     helpsPerProc() {
       const baseHelpsAmount = EnergizingCheerSHealPulse.activations.soloHelps.amount({
-        skillLevel: this.skillLevel
+        skillLevel: this.effectiveSkillLevel
       })
       const bonusHelpsAmount = this.isPaired
         ? EnergizingCheerSHealPulse.activations.pairedHelps.amount({
-            skillLevel: this.skillLevel
+            skillLevel: this.effectiveSkillLevel
           })
         : 0
       return baseHelpsAmount + bonusHelpsAmount

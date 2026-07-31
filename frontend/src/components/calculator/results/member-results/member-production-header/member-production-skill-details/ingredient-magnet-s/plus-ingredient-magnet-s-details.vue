@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Plus (Ingredient Magnet S) level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Plus (Ingredient Magnet S) level ${effectiveSkillLevel}`"
           title="Plus (Ingredient Magnet S)"
         ></v-img>
       </v-badge>
@@ -78,8 +76,8 @@
 
 <script lang="ts">
 import { ingredientImage, mainskillImage } from '@/services/utils/image-utils'
-import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { MathUtils, compactNumber, ingredient, isPlusOrMinus } from 'sleepapi-common'
@@ -99,6 +97,12 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, pokemonStore, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     skill() {
       // Both versions of Plus use this component.
       return this.memberWithProduction.member.pokemon.skill
@@ -111,11 +115,9 @@ export default defineComponent({
       }
     },
     combinedIngCountPerProc() {
-      const magnetIngs = this.skill.activations.solo.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel
-      })
+      const magnetIngs = this.skill.activations.solo.amount({ skillLevel: this.effectiveSkillLevel })
       const aSlotIngs = this.skill.activations.paired.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel,
+        skillLevel: this.effectiveSkillLevel,
         ingredient: this.memberWithProduction.member.pokemon.ingredient0.at(0)?.ingredient
       })
       const teamMembers = this.teamStore.getCurrentTeam.members

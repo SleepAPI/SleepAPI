@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Helper Boost level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Helper Boost level ${effectiveSkillLevel}`"
           title="Helper Boost"
         ></v-img>
       </v-badge>
@@ -54,8 +52,8 @@
 
 <script lang="ts">
 import { mainskillImage } from '@/services/utils/image-utils'
-import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
 import { compactNumber, HelperBoost, MathUtils, uniqueMembersWithBerry } from 'sleepapi-common'
@@ -74,6 +72,12 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, pokemonStore, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     skillValuePerProc() {
       const count = uniqueMembersWithBerry({
         berry: this.memberWithProduction.member.pokemon.berry,
@@ -81,7 +85,7 @@ export default defineComponent({
           .filter(Boolean)
           .map((member) => this.pokemonStore.getPokemon(member!)!.pokemon)
       })
-      return HelperBoost.getHelps(this.memberWithProduction.production.skillLevel, count)
+      return HelperBoost.getHelps(this.effectiveSkillLevel, count)
     },
     totalSkillValue() {
       return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)

@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Disguise (Berry Burst) level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Disguise (Berry Burst) level ${effectiveSkillLevel}`"
           title="Disguise (Berry Burst)"
         ></v-img>
       </v-badge>
@@ -86,11 +84,17 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage, critModifier, berryImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     berryName() {
       return this.memberWithProduction.member.pokemon.berry.name.toLowerCase()
     },
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.memberWithProduction.production.skillLevel)
+      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
     },
     skillValueBluk() {
       const amount =

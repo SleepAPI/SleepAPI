@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Nuzzle (Energizing Cheer S) level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Nuzzle (Energizing Cheer S) level ${effectiveSkillLevel}`"
           title="Nuzzle (Energizing Cheer S)"
         ></v-img>
       </v-badge>
@@ -69,14 +67,20 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     energyValuePerProc() {
       return EnergizingCheerSNuzzle.activations.energy.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel
+        skillLevel: this.effectiveSkillLevel
       })
     },
     skillHelpsValuePerProc() {
       return EnergizingCheerSNuzzle.activations.skillHelps.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel
+        skillLevel: this.effectiveSkillLevel
       })
     },
     totalSkillValue() {

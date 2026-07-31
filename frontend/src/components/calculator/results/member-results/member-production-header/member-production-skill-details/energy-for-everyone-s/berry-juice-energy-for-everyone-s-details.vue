@@ -3,9 +3,7 @@
     <v-col cols="auto" class="flex-center flex-nowrap mx-4">
       <v-badge
         id="skillLevelBadge"
-        :content="
-          skillLevelBadgeText(memberWithProduction.production.skillLevel, memberWithProduction.member.skillLevel)
-        "
+        :content="skillLevelBadgeText(effectiveSkillLevel, baseSkillLevel)"
         location="bottom center"
         color="subskillWhite"
         rounded="pill"
@@ -14,7 +12,7 @@
           :src="mainskillImage(memberWithProduction.member.pokemon)"
           height="40px"
           width="40px"
-          :alt="`Berry Juice (Energy for Everyone) level ${memberWithProduction.production.skillLevel}`"
+          :alt="`Berry Juice (Energy for Everyone) level ${effectiveSkillLevel}`"
           title="Berry Juice (Energy for Everyone)"
         ></v-img>
       </v-badge>
@@ -85,15 +83,21 @@ export default defineComponent({
     return { teamStore, skillLevelBadgeText, MathUtils, mainskillImage, berryImage }
   },
   computed: {
+    effectiveSkillLevel() {
+      return this.memberWithProduction.production.skillLevel
+    },
+    baseSkillLevel() {
+      return this.memberWithProduction.member.skillLevel
+    },
     energyValuePerProc() {
       return EnergyForEveryoneSBerryJuice.activations.energy.amount({
-        skillLevel: this.memberWithProduction.production.skillLevel
+        skillLevel: this.effectiveSkillLevel
       })
     },
     juicePerProc() {
       const juiceAmount =
         EnergyForEveryoneSBerryJuice.activations.juice.amount({
-          skillLevel: this.memberWithProduction.production.skillLevel
+          skillLevel: this.effectiveSkillLevel
         }) * EnergyForEveryoneSBerryJuice.juicePercent
       return compactNumber(MathUtils.round(juiceAmount, 2))
     },
