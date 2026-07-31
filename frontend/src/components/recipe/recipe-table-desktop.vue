@@ -41,7 +41,7 @@
       <template #[`item.userStrength`]="{ item }">
         <v-row class="d-flex justify-space-between" dense>
           <v-col cols="auto">
-            <img src="/images/misc/strength.png" height="24" alt="strength" title="strength" />
+            <img :src="'/images/misc/strength.png'" height="24" alt="strength" title="strength" />
           </v-col>
           <v-col class="flex-right">
             <span class="text-body-1">{{ localizeNumber(item.userStrength) }}</span>

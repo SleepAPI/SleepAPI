@@ -7,7 +7,7 @@
           <div class="ml-2 font-weight-semibold">{{ recipe.displayName }}</div>
           <div class="right-column">
             <v-chip class="flex-center text-body-1" variant="outlined" color="strength">
-              <img src="/images/misc/strength.png" height="16" class="mr-1" />
+              <img :src="'/images/misc/strength.png'" height="16" class="mr-1" />
               {{ localizeNumber(recipe.userStrength) }}
             </v-chip>
           </div>
