@@ -34,7 +34,7 @@
             >x{{ skillValuePerProc }}
           </span>
           <v-img src="/images/unit/help.png" height="20" width="20" alt="Pokemon helps" title="Pokemon helps"></v-img>
-          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
+          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center ml-1 mr-1"
             >x{{ teamStore.getTeamSize }}
           </span>
           <v-img src="/images/misc/human.png" height="20" width="20" alt="teammates" title="teammates"></v-img>
@@ -78,14 +78,19 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
-      const count = uniqueMembersWithBerry({
+    uniqueSameTypeMembers() {
+      return uniqueMembersWithBerry({
         berry: this.memberWithProduction.member.pokemon.berry,
         members: this.teamStore.getCurrentTeam.members
           .filter(Boolean)
           .map((member) => this.pokemonStore.getPokemon(member!)!.pokemon)
       })
-      return HelperBoost.getHelps(this.effectiveSkillLevel, count)
+    },
+    skillValuePerProc() {
+      return HelperBoost.activations.helps.amount({
+        skillLevel: this.effectiveSkillLevel,
+        extra: this.uniqueSameTypeMembers
+      })
     },
     totalSkillValue() {
       return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
