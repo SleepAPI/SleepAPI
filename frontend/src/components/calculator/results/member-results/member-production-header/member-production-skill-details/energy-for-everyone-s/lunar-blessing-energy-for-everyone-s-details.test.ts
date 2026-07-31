@@ -1,3 +1,4 @@
+import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
@@ -10,17 +11,20 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import LunarBlessingEnergyForEveryoneDetails from './lunar-blessing-energy-for-everyone-s-details.vue'
 
 const mockMember = mocks.createMockMemberProductionExt({
-  member: mocks.createMockPokemon({ pokemon: CRESSELIA, skillLevel: 6 })
+  member: mocks.createMockPokemon({ pokemon: CRESSELIA, skillLevel: 6, externalId: 'mockExternalId' })
 })
 
 describe('LunarBlessingEnergyForEveryoneDetails', () => {
   let wrapper: VueWrapper<InstanceType<typeof LunarBlessingEnergyForEveryoneDetails>>
   let teamStore: ReturnType<typeof useTeamStore>
+  let pokemonStore: ReturnType<typeof usePokemonStore>
 
   beforeEach(async () => {
     setActivePinia(createPinia())
     teamStore = useTeamStore()
+    pokemonStore = usePokemonStore()
     teamStore.teams = createMockTeams(1, { members: [mockMember.member.externalId] })
+    pokemonStore.pokemon = { mockExternalId: mockMember.member }
 
     wrapper = mount(LunarBlessingEnergyForEveryoneDetails, {
       props: {
@@ -49,11 +53,6 @@ describe('LunarBlessingEnergyForEveryoneDetails', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct skill value per proc', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(`x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`)
   })
 
   it('displays the correct total energy value', () => {

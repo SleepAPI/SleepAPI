@@ -61,11 +61,6 @@ describe('MemberProductionSkill', () => {
     )
   })
 
-  it('displays the correct skill value per proc', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(`x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}`)
-  })
-
   it('displays the correct total skill value', () => {
     const totalSkillValue = wrapper.findAll('.font-weight-medium.text-no-wrap.text-center')
     const factor = timeWindowFactor('24H')

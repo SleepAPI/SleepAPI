@@ -30,10 +30,26 @@
           ></v-img>
         </div>
         <div class="flex-left">
-          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
-            >x{{ skillValuePerProc }}-{{ skillValuePerProc * critModifier }}</span
+          <span class="per-proc-amount font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
+            >x{{ selfBerriesPerProc }}-{{ selfBerriesPerProc * critModifier }}</span
+          >
+          <v-img
+            :src="berryImage(memberWithProduction.member.pokemon.berry)"
+            height="20"
+            width="20"
+            alt="berries"
+            title="berries"
+          ></v-img>
+        </div>
+        <div class="flex-left">
+          <span class="per-proc-amount font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
+            >x{{ teamBerriesPerProc }}-{{ teamBerriesPerProc * critModifier }}</span
           >
           <v-img src="/images/berries/berries.png" height="20" width="20" alt="berries" title="berries"></v-img>
+          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center ml-1 mr-1"
+            >x{{ teamStore.getTeamSize - 1 }}
+          </span>
+          <v-img src="/images/misc/human.png" height="20" width="20" alt="teammates" title="teammates"></v-img>
         </div>
       </div>
     </v-col>
@@ -47,7 +63,7 @@
           :alt="`${berryName} berries`"
           :title="`${berryName} berries`"
         ></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ skillValueBluk }} {{ berryName }}</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ skillValueSelf }} {{ berryName }}</span>
       </div>
       <div class="flex-center">
         <v-img
@@ -93,10 +109,13 @@ export default defineComponent({
     berryName() {
       return this.memberWithProduction.member.pokemon.berry.name.toLowerCase()
     },
-    skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
+    selfBerriesPerProc() {
+      return BerryBurstDisguise.activations.berries.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    skillValueBluk() {
+    teamBerriesPerProc() {
+      return BerryBurstDisguise.activations.berries.teamAmount!({ skillLevel: this.effectiveSkillLevel })
+    },
+    skillValueSelf() {
       const amount =
         this.memberWithProduction.production.produceFromSkill.berries.find(
           (b) =>

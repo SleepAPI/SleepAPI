@@ -46,6 +46,10 @@
             >x{{ teamBerriesPerProc }}</span
           >
           <v-img src="/images/berries/berries.png" height="20" width="20" alt="berries" title="berries"></v-img>
+          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center ml-1 mr-1"
+            >x{{ teamStore.getTeamSize - 1 }}
+          </span>
+          <v-img src="/images/misc/human.png" height="20" width="20" alt="teammates" title="teammates"></v-img>
         </div>
       </div>
     </v-col>

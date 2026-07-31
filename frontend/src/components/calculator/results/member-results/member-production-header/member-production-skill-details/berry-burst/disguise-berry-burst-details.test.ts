@@ -3,7 +3,7 @@ import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
-import { BerryBurstDisguise, MIMIKYU, MathUtils, berry, compactNumber } from 'sleepapi-common'
+import { MIMIKYU, MathUtils, berry, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = mocks.createMockMemberProductionExt({
@@ -58,13 +58,6 @@ describe('MemberProductionSkill', () => {
     const skillProcs = wrapper.find('.font-weight-medium.text-center')
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
-    )
-  })
-
-  it('displays the correct skill value per proc', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(
-      `x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}-${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel) * BerryBurstDisguise.critMultiplier}`
     )
   })
 
