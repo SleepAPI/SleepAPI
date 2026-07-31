@@ -32,14 +32,9 @@ export default defineComponent({
   computed: {
     skillComponent() {
       const skill = this.memberWithProduction.member.pokemon.skill
-      const skillName = this.normalize(skill.name)
+      const skillName = this.normalize(skill.frontendComponentName ?? skill.name)
 
-      // Remove `-range` from variable Dream Shard Magnet and Charge Strength skills.
-      // Perhaps a future refactor will make `baseSkill` a field for all Mainskills,
-      // and then the variable skills won't need this hack.
-      const baseSkillName = (
-        skill.isModified ? this.normalize((skill as ModifiedMainskill).baseSkill.name) : skillName
-      ).replace('-range', '')
+      const baseSkillName = this.normalize(skill.isModified ? (skill as ModifiedMainskill).baseSkill.name : skill.name)
 
       // Dynamically import the component based on the skill name
       return defineAsyncComponent(

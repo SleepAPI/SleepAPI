@@ -88,6 +88,7 @@ describe('getExtraHelpfulEvents', () => {
                 },
               },
               "description": [Function],
+              "frontendComponentName": undefined,
               "helpAmounts": [
                 6,
                 7,
@@ -159,6 +160,7 @@ describe('getExtraHelpfulEvents', () => {
                 },
               },
               "description": [Function],
+              "frontendComponentName": undefined,
               "helpAmounts": [
                 6,
                 7,
@@ -255,6 +257,7 @@ describe('getHelperBoostEvents', () => {
                 5,
               ],
               "description": [Function],
+              "frontendComponentName": undefined,
               "image": "helps",
               "name": "Helper Boost",
               "uniqueBoostTable": {
@@ -362,6 +365,7 @@ describe('getHelperBoostEvents', () => {
                 5,
               ],
               "description": [Function],
+              "frontendComponentName": undefined,
               "image": "helps",
               "name": "Helper Boost",
               "uniqueBoostTable": {

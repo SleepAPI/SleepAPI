@@ -389,6 +389,9 @@
 										"image": {
 											"type": "string"
 										},
+										"frontendComponentName": {
+											"type": "string"
+										},
 										"name": {
 											"type": "string"
 										},
@@ -711,6 +714,9 @@
 													"type": "array"
 												},
 												"image": {
+													"type": "string"
+												},
+												"frontendComponentName": {
 													"type": "string"
 												},
 												"name": {

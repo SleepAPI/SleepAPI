@@ -123,6 +123,7 @@ describe('simulator', () => {
                 33.6,
                 43.4,
               ],
+              "frontendComponentName": undefined,
               "image": "energy",
               "name": "Charge Energy S",
             },

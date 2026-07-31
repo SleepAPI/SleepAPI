@@ -19,6 +19,7 @@ export const ChargeStrengthS = new (class extends Mainskill {
 
 export const ChargeStrengthSRange = new (class extends Mainskill {
   name = 'Charge Strength S';
+  frontendComponentName = 'Charge Strength S Range';
   RP = [400, 569, 785, 1083, 1496, 2066, 2842];
   strengthAmountsLow = [200, 285, 393, 542, 748, 1033, 1606];
   strengthAmountsHigh = [800, 1138, 1570, 2166, 2992, 4132, 6424];

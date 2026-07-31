@@ -38,6 +38,7 @@ describe('setupAndRunProductionSimulation', () => {
               },
             },
             "description": [Function],
+            "frontendComponentName": undefined,
             "image": "strength",
             "name": "Charge Strength M",
             "strengthAmounts": [
@@ -72,6 +73,7 @@ describe('setupAndRunProductionSimulation', () => {
               },
             },
             "description": [Function],
+            "frontendComponentName": undefined,
             "image": "strength",
             "name": "Charge Strength M",
             "strengthAmounts": [
@@ -106,6 +108,7 @@ describe('setupAndRunProductionSimulation', () => {
               },
             },
             "description": [Function],
+            "frontendComponentName": undefined,
             "image": "strength",
             "name": "Charge Strength M",
             "strengthAmounts": [
@@ -200,6 +203,7 @@ describe('setupAndRunProductionSimulation', () => {
                 },
               },
               "description": [Function],
+              "frontendComponentName": undefined,
               "image": "strength",
               "name": "Charge Strength M",
               "strengthAmounts": [
@@ -234,6 +238,7 @@ describe('setupAndRunProductionSimulation', () => {
                 },
               },
               "description": [Function],
+              "frontendComponentName": undefined,
               "image": "strength",
               "name": "Charge Strength M",
               "strengthAmounts": [
@@ -268,6 +273,7 @@ describe('setupAndRunProductionSimulation', () => {
                 },
               },
               "description": [Function],
+              "frontendComponentName": undefined,
               "image": "strength",
               "name": "Charge Strength M",
               "strengthAmounts": [

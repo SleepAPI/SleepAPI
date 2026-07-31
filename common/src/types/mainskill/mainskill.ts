@@ -33,6 +33,7 @@ export interface ModifiedSkillConfig {
 
 export abstract class Mainskill {
   public abstract readonly name: string;
+  public readonly frontendComponentName?: string;
   public abstract readonly description: DescriptionFunction;
   public abstract readonly image: string;
   public abstract readonly RP: number[];
