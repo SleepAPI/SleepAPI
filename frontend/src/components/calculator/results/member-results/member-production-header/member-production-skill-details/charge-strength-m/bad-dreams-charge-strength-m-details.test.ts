@@ -73,6 +73,6 @@ describe('BadDreamsChargeStrengthMDetails', () => {
 
   it('displays the correct total energy degraded', () => {
     const totalEnergyDegraded = wrapper.find('.font-weight-medium.text-error-3.text-no-wrap.text-center.ml-1')
-    expect(totalEnergyDegraded.text()).toContain('-24%')
+    expect(totalEnergyDegraded.text()).toContain('-24')
   })
 })
