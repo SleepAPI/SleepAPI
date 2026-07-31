@@ -220,6 +220,7 @@ describe('scheduleSkillEvents', () => {
             },
           },
           "description": [Function],
+          "frontendComponentName": undefined,
           "image": "strength",
           "name": "Charge Strength M",
           "strengthAmounts": [
@@ -256,6 +257,7 @@ describe('scheduleSkillEvents', () => {
             },
           },
           "description": [Function],
+          "frontendComponentName": undefined,
           "image": "strength",
           "name": "Charge Strength M",
           "strengthAmounts": [

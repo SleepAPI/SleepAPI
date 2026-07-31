@@ -17,7 +17,8 @@ export const DreamShardMagnetS = new (class extends Mainskill {
 })();
 
 export const DreamShardMagnetSRange = new (class extends Mainskill {
-  name = 'Dream Shard Magnet S Range';
+  name = 'Dream Shard Magnet S';
+  frontendComponentName = 'Dream Shard Magnet S Range';
   RP = [880, 1251, 1726, 2383, 3290, 4546, 5843, 7303];
   shardAmountsLow = [120, 170, 240, 335, 460, 630, 900, 1150];
   shardAmountsHigh = [480, 680, 960, 1340, 1840, 2520, 3600, 4600];
