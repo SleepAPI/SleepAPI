@@ -2,7 +2,7 @@
   <v-dialog v-model="showDialog" max-width="560" scrollable>
     <v-card>
       <div class="header">
-        <img class="doctor" src="/images/home-page/doctor-home.png" alt="" />
+        <img class="doctor" :src="'/images/home-page/doctor-home.png'" alt="" />
         <div class="titles">
           <v-card-title class="title">Welcome to Neroli's Lab</v-card-title>
           <v-card-subtitle class="subtitle">Thanks for coming over from Sleep API!</v-card-subtitle>
