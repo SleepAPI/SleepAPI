@@ -52,7 +52,7 @@ import { mainskillImage } from '@/services/utils/image-utils'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
-import { MathUtils, compactNumber } from 'sleepapi-common'
+import { DreamShardMagnetS, MathUtils, compactNumber } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -74,7 +74,7 @@ export default defineComponent({
       return this.memberWithProduction.member.skillLevel
     },
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
+      return DreamShardMagnetS.activations.dreamShards.amount({ skillLevel: this.effectiveSkillLevel })
     },
     totalSkillValue() {
       return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)

@@ -25,7 +25,9 @@ export const ChargeStrengthSStockpile = new (class extends ModifiedMainskill {
   activations: ActivationsType = {
     strength: {
       unit: 'strength',
-      amount: this.leveledAmount(this.averageStrengthAmounts) // TODO: I think we can remove this in sleepapi 2.0
+      amount: this.leveledAmount(this.averageStrengthAmounts)
+      // TODO: I think we can remove this in sleepapi 2.0
+      // Pi says: we use this in the frontend details component to show the per-proc amount, so maybe not yet
     }
   };
 

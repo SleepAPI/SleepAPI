@@ -75,7 +75,7 @@ import { ingredientImage, mainskillImage } from '@/services/utils/image-utils'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
-import { MathUtils, compactNumber } from 'sleepapi-common'
+import { IngredientDrawSSuperLuck, MathUtils, compactNumber } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -97,8 +97,11 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
+    /**
+     * @todo Show average ingredient count and also average shard count per proc, rather than only the ingredient count for ingredient drops.
+     */
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
+      return IngredientDrawSSuperLuck.activations.ingredients.amount({ skillLevel: this.effectiveSkillLevel })
     },
     preparedIngredients() {
       return this.memberWithProduction.production.produceFromSkill.ingredients.map((ing) => ({

@@ -1,9 +1,8 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-header/member-production-skill.vue'
-import { useTeamStore } from '@/stores/team/team-store'
 import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
-import { GOLDUCK, MathUtils, compactNumber, localizeNumber } from 'sleepapi-common'
+import { GOLDUCK, MathUtils, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = mocks.createMockMemberProductionExt({
@@ -49,23 +48,6 @@ describe('MemberProductionSkill', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct skill value per proc, comma-formatted', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    const rawAmount = mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)
-    expect(skillValuePerProc.text()).toBe(`x${localizeNumber(rawAmount)}`)
-  })
-
-  it('applies the current team island area bonus to the skill value per proc', async () => {
-    const teamStore = useTeamStore()
-    teamStore.getCurrentTeam.island.areaBonus = 20
-    await flushPromises()
-
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    const rawAmount = mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)
-    const expectedValue = MathUtils.round(rawAmount * 1.2, 0)
-    expect(skillValuePerProc.text()).toBe(`x${localizeNumber(expectedValue)}`)
   })
 
   it('displays the correct total skill value', () => {

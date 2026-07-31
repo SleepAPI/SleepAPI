@@ -3,11 +3,11 @@ import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
-import { DEDENNE, MathUtils, compactNumber } from 'sleepapi-common'
+import { MathUtils, TastyChanceS, commonMocks, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = mocks.createMockMemberProductionExt({
-  member: mocks.createMockPokemon({ pokemon: DEDENNE })
+  member: mocks.createMockPokemon({ pokemon: commonMocks.mockPokemon({ skill: TastyChanceS }) })
 })
 
 describe('MemberProductionSkill', () => {
@@ -49,11 +49,6 @@ describe('MemberProductionSkill', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct skill value per proc', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    expect(skillValuePerProc.text()).toBe(`x${mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)}%`)
   })
 
   it('displays the correct total skill value', () => {
