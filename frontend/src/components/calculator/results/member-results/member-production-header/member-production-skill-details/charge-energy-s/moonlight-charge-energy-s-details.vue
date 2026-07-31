@@ -34,6 +34,7 @@
             >x{{ skillValuePerProc }}</span
           >
           <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
+          <!-- TODO: convey that the crit doesn't apply to every trigger -->
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
             >x{{ critValuePerProc }}</span
           >
@@ -88,11 +89,10 @@ export default defineComponent({
       return this.memberWithProduction.member.skillLevel
     },
     skillValuePerProc() {
-      return this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
+      return ChargeEnergySMoonlight.activations.energy.amount({ skillLevel: this.effectiveSkillLevel })
     },
     critValuePerProc() {
-      const critAmounts = ChargeEnergySMoonlight.critAmounts
-      return critAmounts[this.effectiveSkillLevel - 1]
+      return ChargeEnergySMoonlight.activations.energy.critAmount!({ skillLevel: this.effectiveSkillLevel })
     },
     selfSkillValue() {
       return compactNumber(

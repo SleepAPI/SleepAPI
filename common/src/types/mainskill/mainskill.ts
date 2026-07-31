@@ -82,19 +82,6 @@ export abstract class Mainskill {
     return Object.keys(this.activations);
   }
 
-  /**
-   * Get the primary amount for this skill at the given level
-   * Returns the amount from the first activation
-   * @deprecated use activations instead
-   */
-  amount(skillLevel: number, extra?: number, ingredient?: Ingredient): number {
-    const firstActivationKey = Object.keys(this.activations)[0];
-    if (!firstActivationKey) {
-      return 0;
-    }
-    return this.activations[firstActivationKey].amount({ skillLevel, extra, ingredient });
-  }
-
   get isModified(): boolean {
     return this instanceof ModifiedMainskill;
   }

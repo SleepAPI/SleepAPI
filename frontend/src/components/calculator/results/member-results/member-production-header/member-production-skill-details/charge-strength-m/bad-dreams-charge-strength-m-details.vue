@@ -60,7 +60,7 @@ import { mainskillImage } from '@/services/utils/image-utils'
 import { applyAreaBonus, skillLevelBadgeText } from '@/services/utils/skill-display-utils'
 import { useTeamStore } from '@/stores/team/team-store'
 import type { MemberProductionExt } from '@/types/member/instanced'
-import { compactNumber, localizeNumber } from 'sleepapi-common'
+import { ChargeStrengthMBadDreams, compactNumber, localizeNumber } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
@@ -82,7 +82,7 @@ export default defineComponent({
       return this.memberWithProduction.member.skillLevel
     },
     skillValuePerProc() {
-      const rawAmount = this.memberWithProduction.member.pokemon.skill.amount(this.effectiveSkillLevel)
+      const rawAmount = ChargeStrengthMBadDreams.activations.strength.amount({ skillLevel: this.effectiveSkillLevel })
       return applyAreaBonus(rawAmount, this.teamStore.getCurrentTeam.island.areaBonus)
     },
     totalSkillValue() {

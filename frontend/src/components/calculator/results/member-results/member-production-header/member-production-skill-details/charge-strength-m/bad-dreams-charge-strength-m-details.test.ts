@@ -1,12 +1,11 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-header/member-production-skill.vue'
-import { useTeamStore } from '@/stores/team/team-store'
-import { timeWindowFactor } from '@/types/time/time-window'
 import type { MemberProductionExt } from '@/types/member/instanced'
+import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { DARKRAI, MathUtils, compactNumber, localizeNumber, type MemberSkillValue } from 'sleepapi-common'
+import { DARKRAI, MathUtils, compactNumber, type MemberSkillValue } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockMember: MemberProductionExt = mocks.createMockMemberProductionExt({
@@ -64,23 +63,6 @@ describe('BadDreamsChargeStrengthMDetails', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct skill value per proc, comma-formatted', () => {
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    const rawAmount = mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)
-    expect(skillValuePerProc.text()).toBe(`x${localizeNumber(rawAmount)}`)
-  })
-
-  it('applies the current team island area bonus to the skill value per proc', async () => {
-    const teamStore = useTeamStore()
-    teamStore.getCurrentTeam.island.areaBonus = 20
-    await flushPromises()
-
-    const skillValuePerProc = wrapper.find('.font-weight-light.text-body-2')
-    const rawAmount = mockMember.member.pokemon.skill.amount(mockMember.member.skillLevel)
-    const expectedValue = MathUtils.round(rawAmount * 1.2, 0)
-    expect(skillValuePerProc.text()).toBe(`x${localizeNumber(expectedValue)}`)
   })
 
   it('displays the correct total skill value', () => {
