@@ -19,7 +19,7 @@ import {
 } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: LATIOS, skillLevel: 6, level: 1 }),
   production: mocks.createMockMemberProduction({
     skillLevel: 6,

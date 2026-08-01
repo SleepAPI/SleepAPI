@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { commonMocks, type IngredientSet, type Pokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { commonMocks, type IngredientSet, type Pokemon, type PokemonInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -48,7 +48,7 @@ export default {
       required: true
     },
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },

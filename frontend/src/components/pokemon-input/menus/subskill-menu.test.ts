@@ -1,10 +1,10 @@
 import SubskillMenu from '@/components/pokemon-input/menus/subskill-menu.vue'
 import { mount } from '@vue/test-utils'
-import { subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { subskill, type SubskillInstance } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
-const mockCurrentSubskills: SubskillInstanceExt[] = [
+const mockCurrentSubskills: SubskillInstance[] = [
   {
     subskill: subskill.BERRY_FINDING_S,
     level: 10

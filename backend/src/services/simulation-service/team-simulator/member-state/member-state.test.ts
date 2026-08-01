@@ -6,7 +6,7 @@ import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simula
 import type { PreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import { mocks } from '@src/vitest/index.js';
-import type { IngredientSet, PokemonWithIngredients, TeamMemberExt, TeamSettingsExt } from 'sleepapi-common';
+import type { IngredientSet, PokemonWithIngredients, TeamMember, TeamSettings } from 'sleepapi-common';
 import {
   berry,
   ChargeStrengthM,
@@ -42,7 +42,7 @@ const mockPokemonSet: PokemonWithIngredients = {
   ]
 };
 
-const guaranteedSkillProcMember: TeamMemberExt = {
+const guaranteedSkillProcMember: TeamMember = {
   pokemonWithIngredients: { ...mockPokemonSet, pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100 } },
   settings: {
     carrySize: 10,
@@ -56,7 +56,7 @@ const guaranteedSkillProcMember: TeamMemberExt = {
   }
 };
 
-const member: TeamMemberExt = {
+const member: TeamMember = {
   pokemonWithIngredients: mockPokemonSet,
   settings: {
     carrySize: 10,
@@ -70,7 +70,7 @@ const member: TeamMemberExt = {
   }
 };
 
-const sneakySnackingMember: TeamMemberExt = {
+const sneakySnackingMember: TeamMember = {
   pokemonWithIngredients: guaranteedSkillProcMember.pokemonWithIngredients,
   settings: {
     ...guaranteedSkillProcMember.settings,
@@ -78,7 +78,7 @@ const sneakySnackingMember: TeamMemberExt = {
   }
 };
 
-const settings: TeamSettingsExt = {
+const settings: TeamSettings = {
   bedtime: parseTime('21:30'),
   wakeup: parseTime('06:00'),
   camp: false,
@@ -247,7 +247,7 @@ describe('startDay', () => {
   });
 
   it('shall recover less than full sleep if energy- nature', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: mockPokemonSet,
       settings: {
         carrySize: 10,
@@ -269,7 +269,7 @@ describe('startDay', () => {
   });
 
   it('shall recover less than full sleep if sleeping short', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: mockPokemonSet,
       settings: {
         carrySize: 10,
@@ -283,7 +283,7 @@ describe('startDay', () => {
       }
     };
 
-    const settings: TeamSettingsExt = mocks.teamSettingsExt({ bedtime: parseTime('23:30') });
+    const settings: TeamSettings = mocks.teamSettings({ bedtime: parseTime('23:30') });
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     expect(memberState.energy).toBe(0);
@@ -303,7 +303,7 @@ describe('startDay', () => {
   });
 
   it('shall recover to 100 despite energy- nature if teammate has erb', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: mockPokemonSet,
       settings: {
         carrySize: 10,
@@ -316,7 +316,7 @@ describe('startDay', () => {
         sneakySnacking: false
       }
     };
-    const teammate: TeamMemberExt = {
+    const teammate: TeamMember = {
       ...member,
       settings: {
         ...member.settings,
@@ -332,7 +332,7 @@ describe('startDay', () => {
   });
 
   it('shall recover to 105 if member has erb', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: mockPokemonSet,
       settings: {
         carrySize: 10,
@@ -365,7 +365,7 @@ describe('recoverEnergy', () => {
   });
 
   it('shall recover less energy with energy- nature', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: mockPokemonSet,
       settings: {
         carrySize: 10,
@@ -447,9 +447,9 @@ describe('recoverMeal', () => {
 
 describe('attemptDayHelp', () => {
   it('shall perform a help if time surpasses scheduled help time', () => {
-    const settings: TeamSettingsExt = mocks.teamSettingsExt({ bedtime: parseTime('23:30') });
+    const settings: TeamSettings = mocks.teamSettings({ bedtime: parseTime('23:30') });
 
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: { ...mockPokemonSet, pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 0 } },
       settings: {
         carrySize: 10,
@@ -473,7 +473,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall not perform a help if time has not passed scheduled help time', () => {
-    const settings: TeamSettingsExt = mocks.teamSettingsExt({ bedtime: parseTime('23:30') });
+    const settings: TeamSettings = mocks.teamSettings({ bedtime: parseTime('23:30') });
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.wakeUp();
@@ -485,7 +485,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall schedule the next help', () => {
-    const settings: TeamSettingsExt = mocks.teamSettingsExt();
+    const settings: TeamSettings = mocks.teamSettings();
 
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.wakeUp();
@@ -541,7 +541,7 @@ describe('attemptDayHelp', () => {
   });
 
   it('shall still count metronome proc as 1 proc', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: {
         ...mockPokemonSet,
         pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100, skill: Metronome }
@@ -588,7 +588,7 @@ describe('attemptNightHelp', () => {
   });
 
   it('shall add any excess helps to sneaky snacking, and shall not roll skill proc on those', () => {
-    const noCarryMember: TeamMemberExt = { ...member, settings: { ...member.settings, carrySize: 0 } };
+    const noCarryMember: TeamMember = { ...member, settings: { ...member.settings, carrySize: 0 } };
     const memberState = new MemberState({ member: noCarryMember, settings, team: [noCarryMember], cookingState });
     memberState.wakeUp();
     memberState.collectInventory();
@@ -602,7 +602,7 @@ describe('attemptNightHelp', () => {
   });
 
   it('shall roll skill proc on helps before inventory full at night, upon collecting in the morning', () => {
-    const member: TeamMemberExt = {
+    const member: TeamMember = {
       pokemonWithIngredients: { ...mockPokemonSet, pokemon: { ...mockPokemonSet.pokemon, skillPercentage: 100 } },
       settings: {
         carrySize: 10,
@@ -677,7 +677,7 @@ describe('expert mode ingredient bonus', () => {
   }
 
   // Forces every roll to produce an ingredient by maxing ingredientPercentage.
-  const ingredientFavoredMember = (overrides?: Partial<PokemonWithIngredients['pokemon']>): TeamMemberExt => ({
+  const ingredientFavoredMember = (overrides?: Partial<PokemonWithIngredients['pokemon']>): TeamMember => ({
     pokemonWithIngredients: {
       ...mockPokemonSet,
       pokemon: commonMocks.mockPokemon({
@@ -710,7 +710,7 @@ describe('expert mode ingredient bonus', () => {
     randomBonus: 'ingredient' | 'berry' | 'skill',
     main = berry.BELUE,
     subs: (typeof berry.BELUE)[] = []
-  ): TeamSettingsExt => ({
+  ): TeamSettings => ({
     ...settings,
     island: commonMocks.islandInstance({
       expert: true,

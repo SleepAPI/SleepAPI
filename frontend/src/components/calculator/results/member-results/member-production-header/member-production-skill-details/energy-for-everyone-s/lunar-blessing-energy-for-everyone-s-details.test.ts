@@ -10,7 +10,7 @@ import { CRESSELIA, MathUtils, compactNumber } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 import LunarBlessingEnergyForEveryoneDetails from './lunar-blessing-energy-for-everyone-s-details.vue'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: CRESSELIA, skillLevel: 6, externalId: 'mockExternalId' })
 })
 

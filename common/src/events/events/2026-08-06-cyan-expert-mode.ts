@@ -1,11 +1,11 @@
-import type { ExpertModeSettings, TeamMemberExt } from '../../types';
+import type { ExpertModeSettings, TeamMember } from '../../types';
 import { EventBuilder } from '../builders/event-builder';
 
-function isMainBerry(input: ExpertModeSettings, member: TeamMemberExt) {
+function isMainBerry(input: ExpertModeSettings, member: TeamMember) {
   return input.mainFavoriteBerry.name === member.pokemonWithIngredients.pokemon.berry.name;
 }
 
-function isFavoredBerry(input: ExpertModeSettings, member: TeamMemberExt) {
+function isFavoredBerry(input: ExpertModeSettings, member: TeamMember) {
   const berryName = member.pokemonWithIngredients.pokemon.berry.name;
   return input.mainFavoriteBerry.name === berryName || input.subFavoriteBerries.some((b) => b.name === berryName);
 }

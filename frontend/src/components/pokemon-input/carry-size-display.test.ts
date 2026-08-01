@@ -1,7 +1,7 @@
 import CarrySizeDisplay from '@/components/pokemon-input/carry-size-display.vue'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import { commonMocks, subskill, type Pokemon, type PokemonInstanceExt, type SubskillInstanceExt } from 'sleepapi-common'
+import { commonMocks, subskill, type Pokemon, type PokemonInstance, type SubskillInstance } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 describe('CarrySizeDisplay', () => {
@@ -11,8 +11,8 @@ describe('CarrySizeDisplay', () => {
     pokemon: commonMocks.mockPokemon(), //base carry size 0
     carrySize: 0,
     level: 50,
-    subskills: [] as SubskillInstanceExt[]
-  } as PokemonInstanceExt
+    subskills: [] as SubskillInstance[]
+  } as PokemonInstance
 
   const venusaur = {
     name: 'Venusaur',

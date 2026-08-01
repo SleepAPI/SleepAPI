@@ -1,12 +1,12 @@
 import type { Ingredient } from '../ingredient/ingredient';
 
-export interface IngredientInstance {
+export interface IngredientInstanceDto {
   level: number;
   amount: number;
   name: string;
 }
 
-export interface IngredientInstanceExt {
+export interface IngredientInstance {
   level: number;
   amount: number;
   ingredient: Ingredient;

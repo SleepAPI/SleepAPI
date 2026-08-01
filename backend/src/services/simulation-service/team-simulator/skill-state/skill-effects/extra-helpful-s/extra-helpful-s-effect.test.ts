@@ -20,7 +20,7 @@ describe('ExtraHelpfulSEffect', () => {
   it('should calculate regular amount correctly', () => {
     const regularAmount = 20;
     memberState = mocks.memberState({
-      team: [mocks.teamMemberExt(), mocks.teamMemberExt(), mocks.teamMemberExt(), mocks.teamMemberExt()]
+      team: [mocks.teamMember(), mocks.teamMember(), mocks.teamMember(), mocks.teamMember()]
     });
     skillState = mocks.skillState(memberState);
     vimic(skillState, 'skillAmount', () => regularAmount);
@@ -46,7 +46,7 @@ describe('ExtraHelpfulSEffect', () => {
     const regularAmount = 20;
     vimic(skillState, 'skillAmount', () => regularAmount);
     memberState = mocks.memberState({
-      team: [mocks.teamMemberExt()]
+      team: [mocks.teamMember()]
     });
 
     const result = extraHelpfulSEffect.activate(skillState);
@@ -70,7 +70,7 @@ describe('ExtraHelpfulSEffect', () => {
     const regularAmount = 0;
     vimic(skillState, 'skillAmount', () => regularAmount);
     memberState = mocks.memberState({
-      team: [mocks.teamMemberExt(), mocks.teamMemberExt(), mocks.teamMemberExt(), mocks.teamMemberExt()]
+      team: [mocks.teamMember(), mocks.teamMember(), mocks.teamMember(), mocks.teamMember()]
     });
 
     const result = extraHelpfulSEffect.activate(skillState);

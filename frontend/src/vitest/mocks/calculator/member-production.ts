@@ -1,4 +1,4 @@
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { createMockMemberIv } from '@/vitest/mocks/member-iv'
 import { createMockPokemon } from '@/vitest/mocks/pokemon-instance'
 import {
@@ -116,7 +116,7 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
   }
 }
 
-export function createMockMemberProductionExt(attrs?: Partial<MemberProductionExt>): MemberProductionExt {
+export function createMockMemberWithProduction(attrs?: Partial<MemberWithProduction>): MemberWithProduction {
   const mockPokemon = createMockPokemon()
   const member = attrs?.member ?? mockPokemon
 

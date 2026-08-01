@@ -11,14 +11,14 @@ import {
   RP,
   uuid,
   type Pokemon,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type PokemonInstanceIdentity,
   type PokemonInstanceWithMeta,
   type PokemonInstanceWithoutRP
 } from 'sleepapi-common'
 
 class PokemonInstanceUtilsImpl {
-  public createDefaultPokemonInstance(pokemon: Pokemon, attrs?: Partial<PokemonInstanceExt>): PokemonInstanceExt {
+  public createDefaultPokemonInstance(pokemon: Pokemon, attrs?: Partial<PokemonInstance>): PokemonInstance {
     const gender = attrs?.gender ?? getRandomGender(pokemon)
     const instance = {
       carrySize: CarrySizeUtils.baseCarrySize(pokemon),
@@ -53,8 +53,8 @@ class PokemonInstanceUtilsImpl {
 
   public createPokemonInstanceWithPreservedAttributes(
     newPokemon: Pokemon,
-    existingInstance: PokemonInstanceExt
-  ): PokemonInstanceExt {
+    existingInstance: PokemonInstance
+  ): PokemonInstance {
     const instance = {
       ...existingInstance,
       pokemon: newPokemon,
@@ -76,7 +76,7 @@ class PokemonInstanceUtilsImpl {
     }
   }
 
-  public toPokemonInstanceExt(pokemonInstance: PokemonInstanceWithMeta): PokemonInstanceExt {
+  public toPokemonInstance(pokemonInstance: PokemonInstanceWithMeta): PokemonInstance {
     if (pokemonInstance.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (pokemonInstance.subskills.length > 5) {
@@ -114,7 +114,7 @@ class PokemonInstanceUtilsImpl {
     }
   }
 
-  public toUpsertTeamMemberRequest(instancedPokemon: PokemonInstanceExt): PokemonInstanceWithMeta {
+  public toUpsertTeamMemberRequest(instancedPokemon: PokemonInstance): PokemonInstanceWithMeta {
     if (instancedPokemon.ingredients.length !== 3) {
       throw new Error('Received corrupt ingredient data')
     } else if (instancedPokemon.subskills.length > 5) {
@@ -147,7 +147,7 @@ class PokemonInstanceUtilsImpl {
     }
   }
 
-  public toPokemonInstanceIdentity(pokemonInstance: PokemonInstanceExt): PokemonInstanceIdentity {
+  public toPokemonInstanceIdentity(pokemonInstance: PokemonInstance): PokemonInstanceIdentity {
     return {
       pokemon: pokemonInstance.pokemon.name,
       nature: pokemonInstance.nature.name,

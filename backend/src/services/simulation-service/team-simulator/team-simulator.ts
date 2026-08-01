@@ -31,8 +31,8 @@ import {
   type FunctionalEvent,
   type MemberProductionBase,
   type SimpleTeamResult,
-  type TeamMemberExt,
-  type TeamSettingsExt
+  type TeamMember,
+  type TeamSettings
 } from 'sleepapi-common';
 
 export class TeamSimulator {
@@ -51,8 +51,8 @@ export class TeamSimulator {
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
 
   constructor(params: {
-    settings: TeamSettingsExt;
-    members: TeamMemberExt[];
+    settings: TeamSettings;
+    members: TeamMember[];
     cookingState?: CookingState;
     iterations: number;
     rng?: PreGeneratedRandom;

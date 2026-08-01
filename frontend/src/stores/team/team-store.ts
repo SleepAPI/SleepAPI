@@ -4,7 +4,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
 import {
   MAX_TEAMS,
-  type MemberProductionExt,
+  type MemberWithProduction,
   type PerformanceDetails,
   type TeamInstance
 } from '@/types/member/instanced'
@@ -26,10 +26,10 @@ import {
   type BerrySetSimple,
   type IngredientSetSimple,
   type IslandInstance,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type RecipeType,
   type TeamAreaDTO,
-  type TeamSettings
+  type TeamSettingsDto
 } from 'sleepapi-common'
 
 export interface TeamState {
@@ -105,7 +105,7 @@ export const useTeamStore = defineStore('team', {
       const pokemonStore = usePokemonStore()
 
       const currentTeam = state.teams[state.currentIndex]
-      const result: (MemberProductionExt | undefined)[] = []
+      const result: (MemberWithProduction | undefined)[] = []
       for (const memberId of currentTeam.members) {
         const memberInstance = memberId && pokemonStore.getPokemon(memberId)
         const production = currentTeam.production?.members.find((member) => member.externalId === memberId)
@@ -316,7 +316,7 @@ export const useTeamStore = defineStore('team', {
         }
       }
     },
-    async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number, calculateProduction = true) {
+    async updateTeamMember(updatedMember: PokemonInstance, memberIndex: number, calculateProduction = true) {
       this.loadingMembers[memberIndex] = true
 
       const userStore = useUserStore()
@@ -363,14 +363,14 @@ export const useTeamStore = defineStore('team', {
       const pokemonStore = usePokemonStore()
       this.loadingTeams = true
 
-      const members: PokemonInstanceExt[] = []
+      const members: PokemonInstance[] = []
       for (const member of this.teams[teamIndex].members) {
         if (member) {
           const pokemon = pokemonStore.getPokemon(member)
           pokemon && members.push(pokemon)
         }
       }
-      const settings: TeamSettings = {
+      const settings: TeamSettingsDto = {
         camp: this.teams[teamIndex].camp,
         bedtime: this.teams[teamIndex].bedtime,
         wakeup: this.teams[teamIndex].wakeup,
@@ -395,7 +395,7 @@ export const useTeamStore = defineStore('team', {
       }
       this.loadingMembers[openSlotIndex] = true
 
-      const duplicatedMember: PokemonInstanceExt = {
+      const duplicatedMember: PokemonInstance = {
         ...existingMember,
         version: 0,
         saved: false,
@@ -483,7 +483,7 @@ export const useTeamStore = defineStore('team', {
     resetCurrentTeamIvs() {
       this.getCurrentTeam.memberIvs = {}
     },
-    isSupportMember(member: PokemonInstanceExt) {
+    isSupportMember(member: PokemonInstance) {
       const hbOrErb = member.subskills.some(
         (s) =>
           (s.subskill.name.toLowerCase() === subskill.ENERGY_RECOVERY_BONUS.name.toLowerCase() ||

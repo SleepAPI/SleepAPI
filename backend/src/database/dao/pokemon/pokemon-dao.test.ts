@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PokemonDAO } from '@src/database/dao/pokemon/pokemon-dao.js';
 import { DaoFixture } from '@src/utils/test-utils/dao-fixture.js';
-import type { IngredientInstance, SubskillInstance } from 'sleepapi-common';
+import type { IngredientInstanceDto, SubskillInstanceDto } from 'sleepapi-common';
 import { uuid } from 'sleepapi-common';
 import { vimic } from 'vimic';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -324,7 +324,7 @@ describe('filterFilledSubskills', () => {
 
 describe('subskillForLevel', () => {
   it('shall return the subskill matching the level', () => {
-    const subskills: SubskillInstance[] = [
+    const subskills: SubskillInstanceDto[] = [
       { level: 1, subskill: 'subskill1' },
       {
         level: 2,
@@ -339,7 +339,7 @@ describe('subskillForLevel', () => {
 
 describe('ingredientForLevel', () => {
   it('shall return the ingredient matching the level', () => {
-    const ingredients: IngredientInstance[] = [
+    const ingredients: IngredientInstanceDto[] = [
       { level: 1, name: 'ingredient1', amount: 2 },
       { level: 2, name: 'ingredient2', amount: 5 }
     ];

@@ -7,7 +7,7 @@ describe('StrengthCalculator', () => {
   const calculator = new StrengthCalculator();
 
   it('shall calculate berry strength with favored and island bonuses', () => {
-    const settings = mocks.teamSettingsExt({
+    const settings = mocks.teamSettings({
       island: mocks.islandInstance({
         berries: [berry.BELUE],
         areaBonus: 15
@@ -47,7 +47,7 @@ describe('StrengthCalculator', () => {
   });
 
   it('shall calculate skill strength including skill berries and strength value', () => {
-    const settings = mocks.teamSettingsExt({
+    const settings = mocks.teamSettings({
       island: mocks.islandInstance({
         berries: [berry.BELUE],
         areaBonus: 20
@@ -93,7 +93,7 @@ describe('StrengthCalculator', () => {
   });
 
   it('shall apply the expert mode berry bonus to helper and skill berries and compound with area bonus', () => {
-    const settings = mocks.teamSettingsExt({
+    const settings = mocks.teamSettings({
       island: mocks.islandInstance({
         expert: true,
         berries: [berry.BELUE],
@@ -145,7 +145,7 @@ describe('StrengthCalculator', () => {
   });
 
   it('shall fall back to settings area bonus when not provided', () => {
-    const settings = mocks.teamSettingsExt({
+    const settings = mocks.teamSettings({
       island: mocks.islandInstance({
         berries: [berry.BELUE],
         areaBonus: 10

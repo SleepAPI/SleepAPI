@@ -8,7 +8,7 @@ import {
   calculateSubskillCarrySize,
   CarrySizeUtils,
   limitSubSkillsToLevel,
-  type PokemonInstanceExt
+  type PokemonInstance
 } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
@@ -16,7 +16,7 @@ export default {
   name: 'CarrySizeDisplay',
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },

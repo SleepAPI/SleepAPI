@@ -3,7 +3,7 @@ import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import { subskill, type PokemonInstanceExt } from 'sleepapi-common'
+import { subskill, type PokemonInstance } from 'sleepapi-common'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('CompareSlot', () => {
@@ -47,18 +47,18 @@ describe('CompareSlot', () => {
   })
 
   it('emits edit-pokemon event when onUpdate callback is triggered', async () => {
-    const mockPokemonInstanceExt: PokemonInstanceExt = {
+    const mockPokemonInstance: PokemonInstance = {
       ...pokemonInstance,
       name: 'New Name'
     }
     await wrapper.find('.v-card').trigger('click')
 
     if (dialogStore.filledSlotProps.onUpdate) {
-      dialogStore.filledSlotProps.onUpdate(mockPokemonInstanceExt)
+      dialogStore.filledSlotProps.onUpdate(mockPokemonInstance)
     }
 
     expect(wrapper.emitted('edit-pokemon')).toBeTruthy()
-    expect(wrapper.emitted('edit-pokemon')![0][0]).toEqual(mockPokemonInstanceExt)
+    expect(wrapper.emitted('edit-pokemon')![0][0]).toEqual(mockPokemonInstance)
   })
 
   it('emits duplicate-pokemon event when onDuplicate callback is triggered', async () => {

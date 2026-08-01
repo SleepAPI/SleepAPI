@@ -58,7 +58,7 @@ describe('EventBuilder', () => {
       // For void input with modifiers, we get a function that we need to call
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const mockPokemon = commonMocks.pokemonInstanceExt({
+      const mockPokemon = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000 })
       });
 
@@ -82,11 +82,11 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const berrySpecialist = commonMocks.pokemonInstanceExt({
+      const berrySpecialist = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000, specialty: 'berry' })
       });
 
-      const nonBerrySpecialist = commonMocks.pokemonInstanceExt({
+      const nonBerrySpecialist = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000, specialty: 'ingredient' })
       });
 
@@ -108,7 +108,7 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const mockPokemon = commonMocks.pokemonInstanceExt({ skillLevel: 5 });
+      const mockPokemon = commonMocks.pokemonInstance({ skillLevel: 5 });
 
       const result = event.applyToPokemon(mockPokemon);
       expect(result.skillLevel).toBe(10);
@@ -141,8 +141,8 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const mockMember = commonMocks.teamMemberExt({
-        settings: commonMocks.teamMemberSettingsExt({ skillLevel: 5 })
+      const mockMember = commonMocks.teamMember({
+        settings: commonMocks.teamMemberSettings({ skillLevel: 5 })
       });
 
       const result = event.applyToTeam(mockMember);
@@ -160,7 +160,7 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const mockMember = commonMocks.teamMemberExt({
+      const mockMember = commonMocks.teamMember({
         pokemonWithIngredients: commonMocks.pokemonWithIngredients({
           pokemon: commonMocks.mockPokemon({ frequency: 1000 })
         })
@@ -203,7 +203,7 @@ describe('EventBuilder', () => {
       expect(event1.name).toBe('Dynamic Event');
       expect(event2.name).toBe('Dynamic Event');
 
-      const mockPokemon = commonMocks.pokemonInstanceExt({
+      const mockPokemon = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000 })
       });
 
@@ -274,7 +274,7 @@ describe('EventBuilder', () => {
       })(false, true);
 
       // Test with MAGO berry (main favorite)
-      const magoPokemon = commonMocks.pokemonInstanceExt({
+      const magoPokemon = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({
           berry: MAGO,
           frequency: 1000,
@@ -290,7 +290,7 @@ describe('EventBuilder', () => {
       expect(result.pokemon.skillPercentage).toBe(125); // 25% boost
 
       // Test with non-favored berry (ORAN is in subFavoriteBerries, so use BELUE which is not favored)
-      const otherPokemon = commonMocks.pokemonInstanceExt({
+      const otherPokemon = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({
           berry: commonMocks.mockPokemon().berry, // Use BELUE (default mock berry) which is not in favored list
           frequency: 1000,
@@ -340,7 +340,7 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const mockPokemon = commonMocks.pokemonInstanceExt({
+      const mockPokemon = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000 }),
         skillLevel: 5
       });
@@ -363,7 +363,7 @@ describe('EventBuilder', () => {
 
       const event = (eventFactory as unknown as () => FunctionalEvent)();
 
-      const original = commonMocks.pokemonInstanceExt({
+      const original = commonMocks.pokemonInstance({
         pokemon: commonMocks.mockPokemon({ frequency: 1000 })
       });
 

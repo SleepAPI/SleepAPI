@@ -2,7 +2,7 @@ import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/he
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { getDefaultMealTimes } from '@src/utils/meal-utils/meal-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
-import type { FunctionalEvent, ProduceFlat, TeamMemberExt, TeamSettingsExt, TimePeriod } from 'sleepapi-common';
+import type { FunctionalEvent, ProduceFlat, TeamMember, TeamSettings, TimePeriod } from 'sleepapi-common';
 import {
   berrySetToFlat,
   calculateAveragePokemonIngredientSet,
@@ -12,7 +12,7 @@ import {
 } from 'sleepapi-common';
 
 class TeamSimulatorUtilsImpl {
-  public setupSimulationTimes(params: { settings: TeamSettingsExt; cookingState?: CookingState }): {
+  public setupSimulationTimes(params: { settings: TeamSettings; cookingState?: CookingState }): {
     nightStartMinutes: number;
     mealTimeMinutesSinceStart: number[];
   } {
@@ -37,7 +37,7 @@ class TeamSimulatorUtilsImpl {
     };
   }
 
-  public prepareMembers(params: { members: TeamMemberExt[]; event?: FunctionalEvent }): TeamMemberExt[] {
+  public prepareMembers(params: { members: TeamMember[]; event?: FunctionalEvent }): TeamMember[] {
     const { members, event } = params;
 
     if (!event) {
@@ -47,7 +47,7 @@ class TeamSimulatorUtilsImpl {
     return members.map((member) => event.applyToTeam(member));
   }
 
-  public calculateSkillPercentage(member: TeamMemberExt) {
+  public calculateSkillPercentage(member: TeamMember) {
     return calculateSkillPercentage(
       member.pokemonWithIngredients.pokemon.skillPercentage,
       member.settings.subskills,
@@ -55,7 +55,7 @@ class TeamSimulatorUtilsImpl {
     );
   }
 
-  public calculateIngredientPercentage(member: TeamMemberExt) {
+  public calculateIngredientPercentage(member: TeamMember) {
     return calculateIngredientPercentage({
       pokemon: member.pokemonWithIngredients.pokemon,
       nature: member.settings.nature,
@@ -63,7 +63,7 @@ class TeamSimulatorUtilsImpl {
     });
   }
 
-  public calculateAverageProduce(member: TeamMemberExt): ProduceFlat {
+  public calculateAverageProduce(member: TeamMember): ProduceFlat {
     const ingredientPercentage = TeamSimulatorUtils.calculateIngredientPercentage(member);
 
     const avgIngredientList = calculateAveragePokemonIngredientSet(
@@ -86,8 +86,8 @@ class TeamSimulatorUtilsImpl {
   }
 
   public calculateHelpSpeedBeforeEnergy(params: {
-    member: TeamMemberExt;
-    settings: TeamSettingsExt;
+    member: TeamMember;
+    settings: TeamSettings;
     teamHelpingBonus: number;
   }) {
     const { member, settings, teamHelpingBonus } = params;
@@ -103,7 +103,7 @@ class TeamSimulatorUtilsImpl {
     });
   }
 
-  public countMembersWithSubskill(team: TeamMemberExt[], subskill: string): number {
+  public countMembersWithSubskill(team: TeamMember[], subskill: string): number {
     let count = 0;
     for (const member of team) {
       if (member.settings.subskills.has(subskill)) {

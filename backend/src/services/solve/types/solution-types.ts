@@ -1,9 +1,9 @@
 import type { IngredientProducersWithSettings } from '@src/services/solve/types/set-cover-pokemon-setup-types.js';
-import type { IngredientIndexToIntAmount, SolveSettingsExt, TeamMemberExt } from 'sleepapi-common';
+import type { IngredientIndexToIntAmount, SolveSettings, TeamMember } from 'sleepapi-common';
 
 export interface SolveRecipeInput {
-  includedMembers: TeamMemberExt[];
-  solveSettings: SolveSettingsExt;
+  includedMembers: TeamMember[];
+  solveSettings: SolveSettings;
   maxTeamSize: number;
 }
 

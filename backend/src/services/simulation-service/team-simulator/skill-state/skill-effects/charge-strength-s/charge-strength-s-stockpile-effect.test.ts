@@ -12,7 +12,7 @@ describe('ChargeStrengthSStockpileSEffect', () => {
     effect = new ChargeStrengthSStockpileEffect();
     mockSkillState = mocks.skillState(
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: commonMocks.mockPokemon({ skill: ChargeStrengthSStockpile })
           })

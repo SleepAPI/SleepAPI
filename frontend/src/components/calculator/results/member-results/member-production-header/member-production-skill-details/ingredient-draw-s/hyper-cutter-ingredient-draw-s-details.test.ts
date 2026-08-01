@@ -6,7 +6,7 @@ import { MathUtils, VAPOREON } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import HyperCutterIngredientDrawSDetails from './hyper-cutter-ingredient-draw-s-details.vue'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: VAPOREON })
 })
 
@@ -91,7 +91,7 @@ describe('HyperCutterIngredientDrawSDetails', () => {
   })
 
   it('displays ingredient images when ingredient data is present', () => {
-    const mockWithIngredients = mocks.createMockMemberProductionExt({
+    const mockWithIngredients = mocks.createMockMemberWithProduction({
       member: mocks.createMockPokemon({ pokemon: VAPOREON }),
       production: {
         ...mocks.createMockMemberProduction(),

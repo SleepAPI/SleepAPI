@@ -24,8 +24,8 @@ import type {
   PokemonWithIngredientsIndexed,
   Produce,
   SimpleTeamResult,
-  TeamMemberExt,
-  TeamSettingsExt,
+  TeamMember,
+  TeamSettings,
   TimePeriod
 } from 'sleepapi-common';
 import {
@@ -54,12 +54,12 @@ import { StrengthCalculator } from '../strength-calculator/strength-calculator.j
 export type HelpPeriod = 'day' | 'night';
 
 export class MemberState {
-  member: TeamMemberExt;
-  team: TeamMemberExt[];
+  member: TeamMember;
+  team: TeamMember[];
   otherMembers: MemberState[] = [];
   cookingState?: CookingState;
   private skillState: SkillState;
-  private settings: TeamSettingsExt;
+  private settings: TeamSettings;
   private camp: boolean;
   private rng: PreGeneratedRandom;
 
@@ -151,9 +151,9 @@ export class MemberState {
   private expertIngredientSpecialistBonus = false;
 
   constructor(params: {
-    member: TeamMemberExt;
-    team: TeamMemberExt[];
-    settings: TeamSettingsExt;
+    member: TeamMember;
+    team: TeamMember[];
+    settings: TeamSettings;
     cookingState: CookingState | undefined;
     iterations?: number;
     rng?: PreGeneratedRandom;

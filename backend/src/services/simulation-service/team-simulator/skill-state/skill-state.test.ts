@@ -89,7 +89,7 @@ describe('SkillState', () => {
   it('should add bonus activations correctly', () => {
     const mockPokemon = mocks.mockPokemon({ skill: BerryBurst });
     const mockPokemonWithIngredients = mocks.pokemonWithIngredients({ pokemon: mockPokemon });
-    const mockTeamMember = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonWithIngredients });
+    const mockTeamMember = mocks.teamMember({ pokemonWithIngredients: mockPokemonWithIngredients });
     mockMemberState = mocks.memberState({ member: mockTeamMember });
     skillState = mocks.skillState(mockMemberState);
 

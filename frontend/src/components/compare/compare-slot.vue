@@ -31,14 +31,14 @@ import { pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import { RP, type PokemonInstanceExt } from 'sleepapi-common'
+import { RP, type PokemonInstance } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'CompareSlot',
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },
@@ -72,7 +72,7 @@ export default defineComponent({
   methods: {
     openDialog() {
       this.dialogStore.openFilledSlot(this.pokemonInstance, this.comparisonStore.fullTeam, {
-        onUpdate: (pokemon: PokemonInstanceExt) => {
+        onUpdate: (pokemon: PokemonInstance) => {
           this.$emit('edit-pokemon', pokemon)
         },
         onDuplicate: () => {

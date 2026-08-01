@@ -5,9 +5,9 @@ import type {
   CalculateTeamResponse,
   Pokemon,
   PokemonWithIngredients,
-  TeamMemberExt,
-  TeamMemberSettingsExt,
-  TeamSettingsExt
+  TeamMember,
+  TeamMemberSettings,
+  TeamSettings
 } from 'sleepapi-common';
 import {
   ALL_BERRY_SPECIALISTS,
@@ -50,7 +50,7 @@ function randomPokemonWithIngredients(options: Pokemon[]): PokemonWithIngredient
   };
 }
 
-function randomTeamMemberSettings(pokemon: Pokemon): TeamMemberSettingsExt {
+function randomTeamMemberSettings(pokemon: Pokemon): TeamMemberSettings {
   return {
     level: (rng.getUint8() % 100) + 1,
     nature: rng.randomElement(nature.NATURES),
@@ -69,7 +69,7 @@ function randomTeamMemberSettings(pokemon: Pokemon): TeamMemberSettingsExt {
   };
 }
 
-function randomTeamMember(options: Pokemon[]): TeamMemberExt {
+function randomTeamMember(options: Pokemon[]): TeamMember {
   const pokemonWithIngredients = randomPokemonWithIngredients(options);
   const settings = randomTeamMemberSettings(pokemonWithIngredients.pokemon);
   return {
@@ -78,7 +78,7 @@ function randomTeamMember(options: Pokemon[]): TeamMemberExt {
   };
 }
 
-function randomTeam(): TeamMemberExt[] {
+function randomTeam(): TeamMember[] {
   return [
     randomTeamMember(primaryPokemon),
     randomTeamMember(primaryPokemon),
@@ -91,7 +91,7 @@ function randomTeam(): TeamMemberExt[] {
 // 5110 days is 14 years or 730 weeks
 const simulationDays = 5110;
 
-const mockSettings: TeamSettingsExt = mocks.teamSettingsExt({ includeCooking: true });
+const mockSettings: TeamSettings = mocks.teamSettings({ includeCooking: true });
 
 describe.runIf(isBenchmarking)('TeamSimulatorBenchmark', () => {
   it(

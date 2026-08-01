@@ -32,7 +32,7 @@ import {
   getSkillProcChartOptions
 } from '@/components/calculator/results/member-results/skill-breakdown/skill-proc-distribution-data'
 import BarChart from '@/components/custom-components/charts/bar-chart/bar-chart.vue'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { MathUtils } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 import { useTheme } from 'vuetify'
@@ -44,7 +44,7 @@ export default defineComponent({
   },
   props: {
     pokemonProduction: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<MemberWithProduction>,
       required: true
     }
   },

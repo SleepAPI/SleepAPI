@@ -1,8 +1,8 @@
-import type { PokemonInstance, PokemonInstanceExt } from '../../../types/instance';
+import type { PokemonInstance, PokemonInstanceDto } from '../../../types/instance';
 import { BASHFUL } from '../../../types/nature';
 import { mockPokemon } from './mock-pokemon';
 
-export function pokemonInstance(attrs?: Partial<PokemonInstance>): PokemonInstance {
+export function pokemonInstanceDto(attrs?: Partial<PokemonInstanceDto>): PokemonInstanceDto {
   return {
     pokemon: mockPokemon().name,
     level: 1,
@@ -17,9 +17,9 @@ export function pokemonInstance(attrs?: Partial<PokemonInstance>): PokemonInstan
   };
 }
 
-export function pokemonInstanceExt(attrs?: Partial<PokemonInstanceExt>): PokemonInstanceExt {
+export function pokemonInstance(attrs?: Partial<PokemonInstance>): PokemonInstance {
   return {
-    ...pokemonInstance(),
+    ...pokemonInstanceDto(),
     rp: 0,
     pokemon: mockPokemon(),
     nature: BASHFUL,

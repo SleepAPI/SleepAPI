@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { PokemonInstanceExt } from '../instance';
+import type { PokemonInstance } from '../instance';
 import type { ConditionOperation, Modifier, ModifierOperation } from './modifier';
 
 describe('Modifier', () => {
@@ -29,8 +29,8 @@ describe('Modifier', () => {
 
   describe('Modifier', () => {
     it('should create a valid modifier', () => {
-      const modifier: Modifier<PokemonInstanceExt> = {
-        type: 'PokemonInstance',
+      const modifier: Modifier<PokemonInstance> = {
+        type: 'PokemonInstanceDto',
         leftValue: 'pokemon.frequency',
         operation: '*',
         rightValue: 0.9,
@@ -43,7 +43,7 @@ describe('Modifier', () => {
         ]
       };
 
-      expect(modifier.type).toBe('PokemonInstance');
+      expect(modifier.type).toBe('PokemonInstanceDto');
       expect(modifier.leftValue).toBe('pokemon.frequency');
       expect(modifier.operation).toBe('*');
       expect(modifier.rightValue).toBe(0.9);
@@ -64,22 +64,22 @@ describe('Modifier', () => {
 
     it('should infer the correct type for value from the path', () => {
       // valid case
-      const modifier: Modifier<PokemonInstanceExt> = {
-        type: 'PokemonInstance',
+      const modifier: Modifier<PokemonInstance> = {
+        type: 'PokemonInstanceDto',
         leftValue: 'pokemon.frequency',
         operation: '*',
         rightValue: 0.9
       };
 
-      expect(modifier.type).toBe('PokemonInstance');
+      expect(modifier.type).toBe('PokemonInstanceDto');
       expect(modifier.leftValue).toBe('pokemon.frequency');
       expect(modifier.operation).toBe('*');
       expect(modifier.rightValue).toBe(0.9);
 
       // invalid case - wrong value type
       // @ts-expect-error - invalid type, should be number
-      const invalidModifier: Modifier<PokemonInstanceExt> = {
-        type: 'PokemonInstance',
+      const invalidModifier: Modifier<PokemonInstance> = {
+        type: 'PokemonInstanceDto',
         leftValue: 'pokemon.frequency',
         operation: '*',
         rightValue: '0.9'
@@ -90,21 +90,21 @@ describe('Modifier', () => {
 
     it('should infer the correct paths', () => {
       // valid case
-      const modifier: Modifier<PokemonInstanceExt> = {
-        type: 'PokemonInstance',
+      const modifier: Modifier<PokemonInstance> = {
+        type: 'PokemonInstanceDto',
         leftValue: 'pokemon.frequency',
         operation: '*',
         rightValue: 0.9
       };
 
-      expect(modifier.type).toBe('PokemonInstance');
+      expect(modifier.type).toBe('PokemonInstanceDto');
       expect(modifier.leftValue).toBe('pokemon.frequency');
       expect(modifier.operation).toBe('*');
       expect(modifier.rightValue).toBe(0.9);
 
       // invalid case
-      const invalidModifier: Modifier<PokemonInstanceExt> = {
-        type: 'PokemonInstance',
+      const invalidModifier: Modifier<PokemonInstance> = {
+        type: 'PokemonInstanceDto',
         // @ts-expect-error - invalid leftValue
         leftValue: 'invalid',
         operation: '*',

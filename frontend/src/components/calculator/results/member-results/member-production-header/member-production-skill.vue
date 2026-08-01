@@ -13,7 +13,7 @@
 <script lang="ts">
 import { mainskillImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { MathUtils, ModifiedMainskill } from 'sleepapi-common'
 import { defineAsyncComponent, defineComponent, type PropType } from 'vue'
 
@@ -21,7 +21,7 @@ export default defineComponent({
   name: 'MemberProductionSkill',
   props: {
     memberWithProduction: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<MemberWithProduction>,
       required: true
     }
   },

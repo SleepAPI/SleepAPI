@@ -11,8 +11,8 @@ import type {
   DetailedProduce,
   MemberProductionBase,
   Pokemon,
-  TeamMemberExt,
-  TeamSettingsExt
+  TeamMember,
+  TeamSettings
 } from 'sleepapi-common';
 import { CarrySizeUtils, getAllIngredientLists, limitSubSkillsToLevel, nature, subskill } from 'sleepapi-common';
 
@@ -134,7 +134,7 @@ export function calculatePokemonProduction(
 
 // 5110 days is 14 years or 730 weeks
 export function calculateTeam(
-  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; userRecipes: UserRecipes },
+  params: { settings: TeamSettings; members: TeamMember[]; userRecipes: UserRecipes },
   iterations = 5110
 ) {
   const { settings, members, userRecipes } = params;
@@ -151,7 +151,7 @@ export function calculateTeam(
 }
 
 export function calculateSimple(
-  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; userRecipes: UserRecipes },
+  params: { settings: TeamSettings; members: TeamMember[]; userRecipes: UserRecipes },
   iterations = 700
 ) {
   const { settings, members, userRecipes } = params;
@@ -174,7 +174,7 @@ export function calculateSimple(
 }
 
 export function calculateIv(
-  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; variants: TeamMemberExt[] },
+  params: { settings: TeamSettings; members: TeamMember[]; variants: TeamMember[] },
   iterations = 1400
 ): CalculateIvResponse {
   const { settings, members, variants } = params;

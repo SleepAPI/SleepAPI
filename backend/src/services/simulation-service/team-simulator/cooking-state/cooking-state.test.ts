@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 describe('CookingState', () => {
   it('shall include provided meal times in results', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true }),
+      mocks.teamSettings({ camp: true }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -36,7 +36,7 @@ describe('CookingState', () => {
 
   it('shall cook the best recipe for which it has ingredients', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true, potSize: MAX_POT_SIZE }),
+      mocks.teamSettings({ camp: true, potSize: MAX_POT_SIZE }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -60,7 +60,7 @@ describe('CookingState', () => {
 
   it('shall fallback to mixed meal if team cant cook', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true }),
+      mocks.teamSettings({ camp: true }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -87,7 +87,7 @@ describe('CookingState', () => {
 
   it('shall cook mixed meal if team cant cook better', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true }),
+      mocks.teamSettings({ camp: true }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -116,7 +116,7 @@ describe('CookingState', () => {
 
   it('shall crit with max bonus on sunday', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true, potSize: MAX_POT_SIZE }),
+      mocks.teamSettings({ camp: true, potSize: MAX_POT_SIZE }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -137,7 +137,7 @@ describe('CookingState', () => {
 
   it('shall be able to cook macarons with pot skill proc', () => {
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true, potSize: MAX_POT_SIZE }),
+      mocks.teamSettings({ camp: true, potSize: MAX_POT_SIZE }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );
@@ -159,7 +159,7 @@ describe('CookingState', () => {
       { amount: 5, ingredient: ingredient.BEAN_SAUSAGE }
     ]);
     const cookingState = new CookingState(
-      mocks.teamSettingsExt({ camp: true, stockpiledIngredients: initialStockpile }),
+      mocks.teamSettings({ camp: true, stockpiledIngredients: initialStockpile }),
       defaultUserRecipes(),
       createPreGeneratedRandom()
     );

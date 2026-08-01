@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstance } from 'sleepapi-common'
 import { ref } from 'vue'
 
 export const useDialogStore = defineStore('dialog', () => {
   // ==================== POKEMON SEARCH DIALOG ====================
   const pokemonSearchDialog = ref(false)
-  const pokemonSearchCallback = ref<((pokemonInstance: PokemonInstanceExt) => void) | null>(null)
-  const pokemonSearchCurrentInstance = ref<PokemonInstanceExt | null>(null)
+  const pokemonSearchCallback = ref<((pokemonInstance: PokemonInstance) => void) | null>(null)
+  const pokemonSearchCurrentInstance = ref<PokemonInstance | null>(null)
 
   const openPokemonSearch = (
-    callback: (pokemonInstance: PokemonInstanceExt) => void,
-    currentInstance?: PokemonInstanceExt
+    callback: (pokemonInstance: PokemonInstance) => void,
+    currentInstance?: PokemonInstance
   ) => {
     pokemonSearchCallback.value = callback
     pokemonSearchCurrentInstance.value = currentInstance || null
@@ -23,7 +23,7 @@ export const useDialogStore = defineStore('dialog', () => {
     pokemonSearchCurrentInstance.value = null
   }
 
-  const handlePokemonSelected = (pokemonInstance: PokemonInstanceExt) => {
+  const handlePokemonSelected = (pokemonInstance: PokemonInstance) => {
     if (pokemonSearchCallback.value) {
       pokemonSearchCallback.value(pokemonInstance)
     }
@@ -32,14 +32,14 @@ export const useDialogStore = defineStore('dialog', () => {
 
   // ==================== POKEMON INPUT DIALOG ====================
   const pokemonInputDialog = ref(false)
-  const pokemonInputCallback = ref<((pokemon: PokemonInstanceExt) => void) | null>(null)
-  const pokemonInputProps = ref<{ preSelectedPokemonInstance: PokemonInstanceExt | null }>({
+  const pokemonInputCallback = ref<((pokemon: PokemonInstance) => void) | null>(null)
+  const pokemonInputProps = ref<{ preSelectedPokemonInstance: PokemonInstance | null }>({
     preSelectedPokemonInstance: null
   })
 
   const openPokemonInput = (
-    callback: (pokemon: PokemonInstanceExt) => void,
-    preSelectedPokemonInstance: PokemonInstanceExt
+    callback: (pokemon: PokemonInstance) => void,
+    preSelectedPokemonInstance: PokemonInstance
   ) => {
     pokemonInputCallback.value = callback
     pokemonInputProps.value = { preSelectedPokemonInstance }
@@ -52,7 +52,7 @@ export const useDialogStore = defineStore('dialog', () => {
     pokemonInputProps.value = { preSelectedPokemonInstance: null }
   }
 
-  const savePokemonInput = (pokemon: PokemonInstanceExt) => {
+  const savePokemonInput = (pokemon: PokemonInstance) => {
     if (pokemonInputCallback.value) {
       pokemonInputCallback.value(pokemon)
     }
@@ -62,9 +62,9 @@ export const useDialogStore = defineStore('dialog', () => {
   // ==================== FILLED SLOT DIALOG ====================
   const filledSlotDialog = ref(false)
   const filledSlotProps = ref<{
-    pokemon: PokemonInstanceExt | null
+    pokemon: PokemonInstance | null
     fullTeam: boolean
-    onUpdate?: (pokemon: PokemonInstanceExt) => void
+    onUpdate?: (pokemon: PokemonInstance) => void
     onDuplicate?: () => void
     onToggleSaved?: (state: boolean) => void
     onRemove?: () => void
@@ -74,10 +74,10 @@ export const useDialogStore = defineStore('dialog', () => {
   })
 
   const openFilledSlot = (
-    pokemon: PokemonInstanceExt,
+    pokemon: PokemonInstance,
     fullTeam: boolean,
     callbacks: {
-      onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
+      onUpdate?: (pokemonInstance: PokemonInstance) => void
       onDuplicate?: () => void
       onToggleSaved?: (state: boolean) => void
       onRemove?: () => void

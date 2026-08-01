@@ -6,10 +6,10 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { berry, BRAVIARY, compactNumber, MathUtils } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: BRAVIARY }),
   production: {
-    ...mocks.createMockMemberProductionExt().production,
+    ...mocks.createMockMemberWithProduction().production,
     produceFromSkill: {
       berries: [
         { amount: 100, berry: BRAVIARY.berry, level: 1 },

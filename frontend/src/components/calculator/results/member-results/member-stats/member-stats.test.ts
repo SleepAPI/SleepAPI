@@ -1,13 +1,13 @@
 import MemberStats from '@/components/calculator/results/member-results/member-stats/member-stats.vue'
 import SkillDistribution from '@/components/calculator/results/member-results/member-stats/skill-distribution.vue'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { mocks } from '@/vitest'
 import { mount } from '@vue/test-utils'
 import { commonMocks, subskill } from 'sleepapi-common'
 import { describe, expect, it, vi } from 'vitest'
 
 // Create a dummy production with additional properties: level, ingredient list, and dayPeriod values
-const pokemonProduction: MemberProductionExt = mocks.createMockMemberProductionExt({
+const pokemonProduction: MemberWithProduction = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({
     rp: 100,
     level: 5,
@@ -107,7 +107,7 @@ describe('MemberStats.vue', () => {
 
   it('does not render spilled ingredients section when none exist', () => {
     // Create a production with no spilled ingredients
-    const productionWithoutSpilled: MemberProductionExt = mocks.createMockMemberProductionExt({
+    const productionWithoutSpilled: MemberWithProduction = mocks.createMockMemberWithProduction({
       member: mocks.createMockPokemon({
         rp: 100,
         level: 5,
@@ -145,7 +145,7 @@ describe('MemberStats.vue', () => {
   })
 
   it('renders subskill carry bonus when greater than 0', () => {
-    const productionWithSubskills: MemberProductionExt = mocks.createMockMemberProductionExt({
+    const productionWithSubskills: MemberWithProduction = mocks.createMockMemberWithProduction({
       member: mocks.createMockPokemon({
         subskills: [
           { subskill: subskill.INVENTORY_S, level: 10 },
@@ -161,7 +161,7 @@ describe('MemberStats.vue', () => {
   })
 
   it('renders ribbon carry bonus when greater than 0', () => {
-    const productionWithRibbon: MemberProductionExt = mocks.createMockMemberProductionExt({
+    const productionWithRibbon: MemberWithProduction = mocks.createMockMemberWithProduction({
       member: mocks.createMockPokemon({ ribbon: 2 })
     })
 
@@ -182,7 +182,7 @@ describe('MemberStats.vue', () => {
   })
 
   it('renders both subskill and ribbon bonuses when both are greater than 0', () => {
-    const productionWithBoth: MemberProductionExt = mocks.createMockMemberProductionExt({
+    const productionWithBoth: MemberWithProduction = mocks.createMockMemberWithProduction({
       member: mocks.createMockPokemon({
         ribbon: 2,
         subskills: [

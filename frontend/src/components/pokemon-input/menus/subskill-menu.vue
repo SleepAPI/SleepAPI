@@ -216,14 +216,14 @@
 <script lang="ts">
 import CustomLabel from '@/components/custom-components/custom-label.vue'
 import SubskillButton from '@/components/pokemon-input/menus/subskill-button.vue'
-import { type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { type Subskill, type SubskillInstance } from 'sleepapi-common'
 
 export default {
   name: 'SubskillMenu',
   components: { SubskillButton, CustomLabel },
   props: {
     currentSubskills: {
-      type: Array<SubskillInstanceExt>,
+      type: Array<SubskillInstance>,
       required: true,
       default: []
     },
@@ -234,7 +234,7 @@ export default {
   },
   emits: ['cancel', 'update-subskills'],
   data: () => ({
-    selectedSubskills: [] as SubskillInstanceExt[],
+    selectedSubskills: [] as SubskillInstance[],
     availableLevels: [10, 25, 50, 70, 80]
   }),
   computed: {
@@ -254,7 +254,7 @@ export default {
   },
   methods: {
     subskillForLevel(subskillLevel: number): Subskill | undefined {
-      return this.currentSubskills.find((ssExt) => ssExt.level === subskillLevel)?.subskill
+      return this.currentSubskills.find((subskillInstance) => subskillInstance.level === subskillLevel)?.subskill
     },
     toggleSubskill(ss: Subskill) {
       const index = this.selectedSubskills.findIndex((s) => s.subskill.name.toLowerCase() === ss.name.toLowerCase())

@@ -6,12 +6,12 @@
 
 <script setup lang="ts">
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstance } from 'sleepapi-common'
 import PokemonSearch from './PokemonSearch.vue'
 
 const dialogStore = useDialogStore()
 
-const handlePokemonSave = (instance: PokemonInstanceExt) => {
+const handlePokemonSave = (instance: PokemonInstance) => {
   dialogStore.handlePokemonSelected(instance)
 }
 </script>

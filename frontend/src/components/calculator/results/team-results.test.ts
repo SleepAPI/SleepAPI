@@ -57,8 +57,8 @@ describe('TeamResults', () => {
     const pokemonStore = usePokemonStore()
     pokemonStore.upsertLocalPokemon(mocks.createMockPokemon())
 
-    const baseProduction = mocks.createMockMemberProductionExt().production
-    const memberProduction = mocks.createMockMemberProductionExt({
+    const baseProduction = mocks.createMockMemberWithProduction().production
+    const memberProduction = mocks.createMockMemberWithProduction({
       production: {
         ...baseProduction,
         produceTotal: {

@@ -7,10 +7,10 @@ import { NotificationType, uuid, type BaseUser, type NotificationResponse } from
 
 class NotificationServiceImpl {
   public async getNotifications(user: DBUser): Promise<NotificationResponse> {
-    const notifications = await NotificationDAO.findMultiple({ fk_receiver_id: user.id });
+    const notificationsDto = await NotificationDAO.findMultiple({ fk_receiver_id: user.id });
 
-    const notificationsExt: UserNotification[] = [];
-    for (const notification of notifications) {
+    const notifications: UserNotification[] = [];
+    for (const notification of notificationsDto) {
       const senderRaw = await UserDAO.get({ id: notification.fk_sender_id });
       const receiverRaw = await UserDAO.get({ id: notification.fk_receiver_id });
 
@@ -25,10 +25,10 @@ class NotificationServiceImpl {
       const template = notification.template;
       if (template === NotificationType.News) {
         const news = await this.getNewsNotification(notification);
-        notificationsExt.push({ sender, receiver, template, news, externalId });
-      } else notificationsExt.push({ sender, receiver, template, externalId });
+        notifications.push({ sender, receiver, template, news, externalId });
+      } else notifications.push({ sender, receiver, template, externalId });
     }
-    return { notifications: notificationsExt };
+    return { notifications: notifications };
   }
 
   public async dismissNotification(externalId: string) {

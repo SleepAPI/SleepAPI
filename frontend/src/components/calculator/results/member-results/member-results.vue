@@ -199,13 +199,13 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { UnexpectedError } from '@/types/errors/unexpected-error'
-import type { MemberProductionExt, PerformanceDetails } from '@/types/member/instanced'
+import type { MemberWithProduction, PerformanceDetails } from '@/types/member/instanced'
 import {
   MathUtils,
   type MemberProductionBase,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   subskill,
-  type SubskillInstanceExt
+  type SubskillInstance
 } from 'sleepapi-common'
 import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 import { useTheme } from 'vuetify'
@@ -230,7 +230,7 @@ export default defineComponent({
     const { isMobile } = useBreakpoint()
 
     const subskillMenuOpen = ref(false)
-    const editingMember = ref<MemberProductionExt | null | undefined>(null)
+    const editingMember = ref<MemberWithProduction | null | undefined>(null)
 
     const currentMember = computed(() => {
       return teamStore.getCurrentMember
@@ -300,18 +300,18 @@ export default defineComponent({
       window.removeEventListener('resize', updateClipPath)
     })
 
-    const openSubskillMenu = (memberWithProd: MemberProductionExt) => {
+    const openSubskillMenu = (memberWithProd: MemberWithProduction) => {
       editingMember.value = memberWithProd
       subskillMenuOpen.value = true
     }
 
-    const handleUpdateSubskills = (updatedSubskills: SubskillInstanceExt[]) => {
+    const handleUpdateSubskills = (updatedSubskills: SubskillInstance[]) => {
       if (!editingMember.value || !editingMember.value.member) {
         console.error('Error: editingMember is not defined when updating subskills.')
         return
       }
 
-      const updatedMember: PokemonInstanceExt = {
+      const updatedMember: PokemonInstance = {
         ...editingMember.value.member,
         subskills: updatedSubskills
       }
@@ -351,7 +351,7 @@ export default defineComponent({
     }
   },
   computed: {
-    membersWithProduction(): (MemberProductionExt | undefined)[] {
+    membersWithProduction(): (MemberWithProduction | undefined)[] {
       const result = []
       for (const member of this.teamStore.getCurrentMembersWithProduction) {
         result.push(member)

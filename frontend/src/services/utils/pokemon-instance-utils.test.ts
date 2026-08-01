@@ -10,30 +10,30 @@ import {
   Ribbon,
   RP,
   subskill,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type PokemonInstanceWithMeta
 } from 'sleepapi-common'
 import { describe, expect, it } from 'vitest'
 
-const mockPokemonInstanceExt: PokemonInstanceExt = mocks.createMockPokemon({
+const mockPokemonInstance: PokemonInstance = mocks.createMockPokemon({
   subskills: [
     { level: 10, subskill: subskill.HELPING_BONUS },
     { level: 25, subskill: subskill.BERRY_FINDING_S }
   ]
 })
 const mockPokemonInstanceWithMeta: PokemonInstanceWithMeta = {
-  version: mockPokemonInstanceExt.version,
-  saved: mockPokemonInstanceExt.saved,
-  shiny: mockPokemonInstanceExt.shiny,
-  gender: mockPokemonInstanceExt.gender,
-  externalId: mockPokemonInstanceExt.externalId,
-  pokemon: mockPokemonInstanceExt.pokemon.name,
-  name: mockPokemonInstanceExt.name,
-  level: mockPokemonInstanceExt.level,
-  ribbon: mockPokemonInstanceExt.ribbon,
-  carrySize: CarrySizeUtils.baseCarrySize(mockPokemonInstanceExt.pokemon),
-  skillLevel: mockPokemonInstanceExt.skillLevel,
-  nature: mockPokemonInstanceExt.nature.name,
+  version: mockPokemonInstance.version,
+  saved: mockPokemonInstance.saved,
+  shiny: mockPokemonInstance.shiny,
+  gender: mockPokemonInstance.gender,
+  externalId: mockPokemonInstance.externalId,
+  pokemon: mockPokemonInstance.pokemon.name,
+  name: mockPokemonInstance.name,
+  level: mockPokemonInstance.level,
+  ribbon: mockPokemonInstance.ribbon,
+  carrySize: CarrySizeUtils.baseCarrySize(mockPokemonInstance.pokemon),
+  skillLevel: mockPokemonInstance.skillLevel,
+  nature: mockPokemonInstance.nature.name,
   subskills: [
     { level: 10, subskill: 'Helping Bonus' },
     { level: 25, subskill: 'Berry Finding S' }
@@ -46,10 +46,10 @@ const mockPokemonInstanceWithMeta: PokemonInstanceWithMeta = {
   sneakySnacking: false
 }
 
-describe('toPokemonInstanceExt', () => {
-  it('should convert a valid PokemonInstanceWithMeta to PokemonInstanceExt', () => {
-    const result = PokemonInstanceUtils.toPokemonInstanceExt(mockPokemonInstanceWithMeta)
-    expect(result).toEqual({ ...mockPokemonInstanceExt, rp: 834 })
+describe('toPokemonInstance', () => {
+  it('should convert a valid PokemonInstanceWithMeta to PokemonInstance', () => {
+    const result = PokemonInstanceUtils.toPokemonInstance(mockPokemonInstanceWithMeta)
+    expect(result).toEqual({ ...mockPokemonInstance, rp: 834 })
   })
 
   it('should throw an error if ingredient data is corrupt (not exactly 3)', () => {
@@ -58,7 +58,7 @@ describe('toPokemonInstanceExt', () => {
       ingredients: [{ level: 0, name: 'incorrect', amount: 2 }]
     }
 
-    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow('Received corrupt ingredient data')
+    expect(() => PokemonInstanceUtils.toPokemonInstance(corruptInstance)).toThrow('Received corrupt ingredient data')
   })
 
   it('should throw an error if subskill data is corrupt (more than 5)', () => {
@@ -74,19 +74,19 @@ describe('toPokemonInstanceExt', () => {
       ]
     }
 
-    expect(() => PokemonInstanceUtils.toPokemonInstanceExt(corruptInstance)).toThrow('Received corrupt subskill data')
+    expect(() => PokemonInstanceUtils.toPokemonInstance(corruptInstance)).toThrow('Received corrupt subskill data')
   })
 })
 
 describe('toUpsertTeamMemberRequest', () => {
-  it('should convert a valid PokemonInstanceExt to PokemonInstanceWithMeta', () => {
-    const result = PokemonInstanceUtils.toUpsertTeamMemberRequest(mockPokemonInstanceExt)
+  it('should convert a valid PokemonInstance to PokemonInstanceWithMeta', () => {
+    const result = PokemonInstanceUtils.toUpsertTeamMemberRequest(mockPokemonInstance)
     expect(result).toEqual(mockPokemonInstanceWithMeta)
   })
 
   it('should throw an error if ingredient data is corrupt (not exactly 3)', () => {
-    const corruptInstance: PokemonInstanceExt = {
-      ...mockPokemonInstanceExt,
+    const corruptInstance: PokemonInstance = {
+      ...mockPokemonInstance,
       ingredients: [{ level: 0, ingredient: ingredient.BEAN_SAUSAGE, amount: 2 }]
     }
 
@@ -97,7 +97,7 @@ describe('toUpsertTeamMemberRequest', () => {
 
   it('should throw an error if subskill data is corrupt (more than 5)', () => {
     const corruptInstance = {
-      ...mockPokemonInstanceExt,
+      ...mockPokemonInstance,
       subskills: [
         { level: 10, subskill: subskill.HELPING_BONUS },
         { level: 25, subskill: subskill.DREAM_SHARD_BONUS },
@@ -115,27 +115,27 @@ describe('toUpsertTeamMemberRequest', () => {
 })
 
 describe('toPokemonInstanceIdentity', () => {
-  it('should convert a valid PokemonInstanceExt to PokemonInstanceIdentity', () => {
-    const mockPokemonInstanceExt: PokemonInstanceExt = mocks.createMockPokemon()
-    const result = PokemonInstanceUtils.toPokemonInstanceIdentity(mockPokemonInstanceExt)
+  it('should convert a valid PokemonInstance to PokemonInstanceIdentity', () => {
+    const mockPokemonInstance: PokemonInstance = mocks.createMockPokemon()
+    const result = PokemonInstanceUtils.toPokemonInstanceIdentity(mockPokemonInstance)
 
     expect(result).toEqual({
-      pokemon: mockPokemonInstanceExt.pokemon.name,
-      nature: mockPokemonInstanceExt.nature.name,
-      subskills: mockPokemonInstanceExt.subskills.map((subskill) => ({
+      pokemon: mockPokemonInstance.pokemon.name,
+      nature: mockPokemonInstance.nature.name,
+      subskills: mockPokemonInstance.subskills.map((subskill) => ({
         level: subskill.level,
         subskill: subskill.subskill.name
       })),
-      ingredients: mockPokemonInstanceExt.ingredients.map((ingredientSet) => ({
+      ingredients: mockPokemonInstance.ingredients.map((ingredientSet) => ({
         level: ingredientSet.level,
         name: ingredientSet.ingredient.name,
         amount: ingredientSet.amount
       })),
-      carrySize: CarrySizeUtils.baseCarrySize(mockPokemonInstanceExt.pokemon),
-      level: mockPokemonInstanceExt.level,
-      ribbon: mockPokemonInstanceExt.ribbon,
-      skillLevel: mockPokemonInstanceExt.skillLevel,
-      externalId: mockPokemonInstanceExt.externalId,
+      carrySize: CarrySizeUtils.baseCarrySize(mockPokemonInstance.pokemon),
+      level: mockPokemonInstance.level,
+      ribbon: mockPokemonInstance.ribbon,
+      skillLevel: mockPokemonInstance.skillLevel,
+      externalId: mockPokemonInstance.externalId,
       sneakySnacking: false
     })
   })
@@ -196,7 +196,7 @@ describe('createDefaultPokemonInstance', () => {
 describe('createPokemonInstanceWithPreservedAttributes', () => {
   it('should preserve existing attributes while updating Pokemon-specific ones', () => {
     // Create existing Pikachu instance with custom attributes
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       pokemon: PIKACHU,
       level: 45,
       name: 'Custom Name',
@@ -244,7 +244,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
 
   it('should cap skill level to new Pokemon max skill level', () => {
     // Create instance with high skill level
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       skillLevel: 10 // Very high skill level
     })
 
@@ -256,7 +256,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should preserve skill level when within new Pokemon limits', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       skillLevel: 3 // Reasonable skill level
     })
 
@@ -267,7 +267,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should update ingredients to match new Pokemon species', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       pokemon: PIKACHU,
       ingredients: [
         { level: 0, ingredient: ingredient.FANCY_APPLE, amount: 2 },
@@ -288,7 +288,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should update carry size to match new Pokemon species', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       pokemon: PIKACHU,
       carrySize: CarrySizeUtils.baseCarrySize(PIKACHU)
     })
@@ -304,7 +304,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should force shiny to false when the new Pokemon species is shiny-locked', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       pokemon: PIKACHU,
       shiny: true
     })
@@ -318,7 +318,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should preserve shiny when the new Pokemon species is not shiny-locked', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       pokemon: PIKACHU,
       shiny: true
     })
@@ -329,7 +329,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should generate new gender for new Pokemon species', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       gender: 'male'
     })
 
@@ -348,7 +348,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
       { level: 80, subskill: subskill.HELPING_SPEED_S }
     ]
 
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       subskills: complexSubskills
     })
 
@@ -358,7 +358,7 @@ describe('createPokemonInstanceWithPreservedAttributes', () => {
   })
 
   it('should preserve empty subskills array', () => {
-    const existingInstance: PokemonInstanceExt = mocks.createMockPokemon({
+    const existingInstance: PokemonInstance = mocks.createMockPokemon({
       subskills: []
     })
 

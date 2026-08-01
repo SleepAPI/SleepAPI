@@ -1,5 +1,5 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-header/member-production-skill.vue'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
@@ -8,7 +8,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { DARKRAI, MathUtils, compactNumber, type MemberSkillValue } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mockMember: MemberProductionExt = mocks.createMockMemberProductionExt({
+const mockMember: MemberWithProduction = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: DARKRAI })
 })
 

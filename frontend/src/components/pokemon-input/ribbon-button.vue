@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 import CarrySizeDisplay from './carry-size-display.vue'
 
@@ -37,7 +37,7 @@ export default {
   },
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },
