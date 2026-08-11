@@ -9,32 +9,19 @@ import type {
   TeamMemberSettingsExt,
   TeamSettingsExt
 } from 'sleepapi-common';
-import {
-  ALL_BERRY_SPECIALISTS,
-  ALL_INGREDIENT_SPECIALISTS,
-  CarrySizeUtils,
-  EnergizingCheerS,
-  EnergyForEveryoneS,
-  ExtraHelpfulS,
-  HelperBoost,
-  nature,
-  OPTIMAL_SKILL_SPECIALISTS,
-  subskill
-} from 'sleepapi-common';
+import { CarrySizeUtils, hasSpecialty, nature, OPTIMAL_POKEDEX, subskill } from 'sleepapi-common';
 import { describe, expect, it } from 'vitest';
 import { TeamSimulator } from './team-simulator.js';
 
 const isBenchmarking = process.env.MODE === 'benchmarking';
 
-const energySupportPokemon: Pokemon[] = OPTIMAL_SKILL_SPECIALISTS.filter((pokemon) =>
-  pokemon.skill.isOrModifies(EnergyForEveryoneS, EnergizingCheerS)
-);
+const energySupportPokemon: Pokemon[] = OPTIMAL_POKEDEX.filter((pokemon) => pokemon.skill.hasUnit('energy'));
 
-const helpSupportPokemon: Pokemon[] = OPTIMAL_SKILL_SPECIALISTS.filter((pokemon) =>
-  pokemon.skill.isOrModifies(ExtraHelpfulS, HelperBoost)
-);
+const helpSupportPokemon: Pokemon[] = OPTIMAL_POKEDEX.filter((pokemon) => pokemon.skill.hasUnit('helps'));
 
-const primaryPokemon: Pokemon[] = ALL_BERRY_SPECIALISTS.concat(ALL_INGREDIENT_SPECIALISTS);
+const primaryPokemon: Pokemon[] = OPTIMAL_POKEDEX.filter(
+  (pokemon) => hasSpecialty(pokemon, 'berry') || hasSpecialty(pokemon, 'ingredient')
+);
 
 const rng: PreGeneratedRandom = createPreGeneratedRandom();
 

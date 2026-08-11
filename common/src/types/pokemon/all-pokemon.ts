@@ -115,7 +115,3 @@ export const DARKRAI: Pokemon = createAllSpecialist({
   skill: ChargeStrengthMBadDreams,
   shinyLocked: true
 });
-
-export const OPTIMAL_ALL_SPECIALISTS: Pokemon[] = [MEW, DARKRAI];
-export const INFERIOR_ALL_SPECIALISTS: Pokemon[] = [];
-export const ALL_ALL_SPECIALISTS: Pokemon[] = [...OPTIMAL_ALL_SPECIALISTS, ...INFERIOR_ALL_SPECIALISTS];

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import pokemonNames from '../../locales/en/pokemonNames';
+import { COMPLETE_POKEDEX } from './pokedex';
 import type { Pokemon } from './pokemon';
-import { COMPLETE_POKEDEX } from './pokemon';
 
 describe('remainingEvolutions', () => {
   it('shall never be negative', () => {
