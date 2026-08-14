@@ -1,6 +1,13 @@
 import {
   BASE_FAVORED_BERRY_MULTIPLIER,
+  CBEX_MAIN_FREQUENCY_BUFF,
+  CBEX_MAIN_INV_BUFF,
+  CBEX_OFF_FREQUENCY_NERF,
   EXPERT_MODE_BERRY_BONUS_MULTIPLIER,
+  EXPERT_MODE_MAIN_SKILL_LEVEL_BONUS,
+  EXPERT_MODE_SKILL_PERCENT_BONUS,
+  GGEX_MAIN_FREQUENCY_BUFF,
+  GGEX_OFF_FREQUENCY_NERF,
   type IslandShortName
 } from 'sleepapi-common'
 
@@ -19,20 +26,20 @@ export interface ExpertIslandEffectConfig {
 
 export const EXPERT_ISLAND_EFFECTS: Partial<Record<IslandShortName, ExpertIslandEffectConfig>> = {
   GGEX: {
-    mainFavoriteExtraEffects: [expertMainFasterHelps('10%')],
-    unfavoredExtraEffects: [expertUnfavoredSlowerHelps('15%')]
+    mainFavoriteExtraEffects: [expertMainFasterHelps(GGEX_MAIN_FREQUENCY_BUFF)],
+    unfavoredExtraEffects: [expertUnfavoredSlowerHelps(GGEX_OFF_FREQUENCY_NERF)]
   },
   CBEX: {
     mainFavoriteExtraEffects: [
-      expertMainFasterHelps('20%'),
+      expertMainFasterHelps(CBEX_MAIN_FREQUENCY_BUFF),
       {
         icon: 'mdi-bag-personal-outline',
-        value: '+5',
+        value: `+${CBEX_MAIN_INV_BUFF}`,
         valueClass: 'text-help',
         text: 'carry size'
       }
     ],
-    unfavoredExtraEffects: [expertUnfavoredSlowerHelps('35%')]
+    unfavoredExtraEffects: [expertUnfavoredSlowerHelps(CBEX_OFF_FREQUENCY_NERF)]
   }
 }
 
@@ -45,7 +52,7 @@ export const baseFavoriteBerryEffect: IslandEffect = {
 
 export const expertMainFavoriteSkillLevel: IslandEffect = {
   image: '/images/misc/skillproc.png',
-  value: '+1',
+  value: `+${EXPERT_MODE_MAIN_SKILL_LEVEL_BONUS}`,
   valueClass: 'text-skill',
   text: 'main skill level'
 }
@@ -73,24 +80,24 @@ export const expertBerryBonus: IslandEffect = {
 
 export const expertSkillChanceBonus: IslandEffect = {
   image: '/images/misc/skillproc.png',
-  value: '1.25x',
+  value: `1.${EXPERT_MODE_SKILL_PERCENT_BONUS}x`,
   valueClass: 'text-skill',
   text: 'main skill chance'
 }
 
-function expertMainFasterHelps(helpIncrease: string): IslandEffect {
+function expertMainFasterHelps(helpIncrease: number): IslandEffect {
   return {
     image: '/images/mainskill/helps.png',
-    value: helpIncrease,
+    value: `${helpIncrease}%`,
     valueClass: 'text-help',
     text: 'faster helps'
   }
 }
 
-function expertUnfavoredSlowerHelps(helpDecrease: string): IslandEffect {
+function expertUnfavoredSlowerHelps(helpDecrease: number): IslandEffect {
   return {
     image: '/images/mainskill/helps.png',
-    value: helpDecrease,
+    value: `${helpDecrease}%`,
     valueClass: 'text-help',
     text: 'slower helps'
   }

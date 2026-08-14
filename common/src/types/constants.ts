@@ -28,6 +28,15 @@ export const AVERAGE_WEEKLY_CRIT_MULTIPLIER = 1.171428571;
 // island
 export const MAX_ISLAND_BONUS = 85;
 
+// expert island buffs and nerfs
+export const GGEX_MAIN_FREQUENCY_BUFF = 10; // 10% faster
+export const GGEX_OFF_FREQUENCY_NERF = 15; // 15% slower
+export const CBEX_MAIN_FREQUENCY_BUFF = 20; // 20% faster
+export const CBEX_OFF_FREQUENCY_NERF = 35; // 35% slower
+export const CBEX_MAIN_INV_BUFF = 5; // +5 inventory
+export const EXPERT_MODE_SKILL_PERCENT_BONUS = 25; // +25% skill%
+export const EXPERT_MODE_MAIN_SKILL_LEVEL_BONUS = 1; // +1 skill level
+
 // berries
 export const BASE_FAVORED_BERRY_MULTIPLIER = 2;
 export const EXPERT_MODE_BERRY_BONUS_MULTIPLIER = 2.4;
