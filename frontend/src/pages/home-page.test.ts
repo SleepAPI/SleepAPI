@@ -40,11 +40,6 @@ describe('HomePage.vue', () => {
         title: 'Compare',
         description: 'Compare your Pokémon to each other before deciding on your investments.',
         enabled: true
-      },
-      {
-        title: 'Tier lists',
-        description: 'Cooking tier lists based on millions of simulated recipe solutions.',
-        enabled: true
       }
     ]
 

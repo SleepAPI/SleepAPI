@@ -121,14 +121,6 @@ export default defineComponent({
         icon: 'mdi-compare-horizontal',
         to: '/compare',
         enabled: true
-      },
-      {
-        description: 'Cooking tier lists based on millions of simulated recipe solutions.',
-        title: 'Tier lists',
-        src: '/images/misc/doctor3.png',
-        icon: 'mdi-chart-line',
-        to: '/tierlist',
-        enabled: true
       }
     ]
   })
