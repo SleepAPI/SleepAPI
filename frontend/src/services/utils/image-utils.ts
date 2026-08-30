@@ -1,12 +1,40 @@
 import { useAvatarStore } from '@/stores/avatar-store/avatar-store'
 import { useUserStore } from '@/stores/user-store'
-import { HelperBoost, type Berry, type Island, type Pokemon } from 'sleepapi-common'
+import { HelperBoost, type Berry, type Island, type MainskillUnit, type Pokemon } from 'sleepapi-common'
 
 export function mainskillImage(pokemon: Pokemon) {
   if (pokemon.skill.is(HelperBoost)) {
     return `/images/type/${pokemon.berry.type}.png`
   } else {
     return `/images/mainskill/${pokemon.skill.image}.png`
+  }
+}
+
+export function mainskillUnitImage(unit: MainskillUnit) {
+  switch (unit) {
+    case 'berries':
+      return '/images/unit/berry.png'
+    case 'candy':
+      return '/images/misc/candy.png'
+    case 'crit chance':
+      return '/images/unit/crit.png'
+    case 'dream shards':
+      return '/images/unit/shard.png'
+    case 'energy':
+      return '/images/unit/energy.png'
+    case 'helps':
+      return '/images/unit/help.png'
+    case 'ingredients':
+      return '/images/unit/ingredient.png'
+    case 'items':
+      // TODO: replace unit with more specific name. Currently, only Shuckle finds items, so it's okay to always display that item.
+      return '/images/misc/berry-juice.png'
+    case 'pot size':
+      return '/images/unit/pot.png'
+    case 'skill helps':
+      return '/images/unit/help.png'
+    case 'strength':
+      return '/images/unit/strength.png'
   }
 }
 

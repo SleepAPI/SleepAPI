@@ -48,8 +48,13 @@
           </template>
 
           <template #item.ingredients="{ item }">
-            <v-row dense style="flex-wrap: nowrap; overflow-x: auto">
-              <v-col v-for="(ingredient, index) in item.ingredientList" :key="index" class="flex-start" cols="4">
+            <v-row dense style="flex-wrap: nowrap; overflow-x: auto" class="px-4">
+              <v-col
+                v-for="(ingredient, index) in item.ingredientList"
+                :key="index"
+                class="flex-start"
+                :cols="ingColumnSize"
+              >
                 <div class="flex-center flex-column">
                   <v-img
                     :src="ingredientImage(ingredient.name)"
@@ -139,6 +144,12 @@ export default defineComponent({
       }
 
       return production
+    },
+    ingColumnSize() {
+      const maxIngCount = this.members
+        .map((item) => item.ingredientList.length)
+        .reduce((max, curr) => Math.max(max, curr))
+      return Math.floor(12 / maxIngCount)
     }
   },
   methods: {
