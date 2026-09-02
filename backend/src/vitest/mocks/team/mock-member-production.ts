@@ -63,7 +63,6 @@ export function memberProductionAdvanced(attrs?: Partial<MemberProductionAdvance
     nightHelpsAfterSS: 0,
     nightHelpsBeforeSS: 0,
     skillCrits: 0,
-    skillCritValue: 0,
     skillPercentage: 0,
     berryProductionDistribution: {},
     ingredientDistributions: {},
@@ -79,7 +78,6 @@ export function memberProductionAdvanced(attrs?: Partial<MemberProductionAdvance
       energy: 0,
       helps: 0
     },
-    skillRegularValue: 0,
     sneakySnack: commonMocks.mockBerrySet(),
     dayPeriod: {
       averageEnergy: 0,
