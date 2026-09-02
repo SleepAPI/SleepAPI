@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  ActivationValue,
   SkillActivation,
-  TeamActivationValue,
   UnitActivation
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
@@ -544,7 +544,7 @@ describe('recoverMemberEnergy', () => {
       iterations: 1
     }) as any;
 
-    const energy: TeamActivationValue = {
+    const energy: ActivationValue = {
       crit: 0,
       regular: 50
     };
@@ -564,7 +564,7 @@ describe('recoverMemberEnergy', () => {
     }) as any;
     simulator.memberStates[0].recoverEnergy(100, simulator.memberStates[0]);
 
-    const energy: TeamActivationValue = {
+    const energy: ActivationValue = {
       crit: 0,
       regular: 50
     };
@@ -582,7 +582,7 @@ describe('recoverMemberEnergy', () => {
       iterations: 1
     }) as any;
 
-    const energy: TeamActivationValue = {
+    const energy: ActivationValue = {
       crit: 0,
       regular: 50
     };

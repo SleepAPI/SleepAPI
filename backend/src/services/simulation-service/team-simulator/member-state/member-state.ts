@@ -3,8 +3,8 @@ import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/en
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { calculateDistribution } from '@src/services/simulation-service/team-simulator/member-state/member-state-utils.js';
 import type {
-  SkillActivation,
-  TeamActivationValue
+  ActivationValue,
+  SkillActivation
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import { SkillState } from '@src/services/simulation-service/team-simulator/skill-state/skill-state.js';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
@@ -381,7 +381,7 @@ export class MemberState {
     };
   }
 
-  public addSkillValue(skillValue: TeamActivationValue) {
+  public addSkillValue(skillValue: ActivationValue) {
     this.skillState.addValue(skillValue);
   }
 
@@ -394,7 +394,7 @@ export class MemberState {
    * @param helps The activation that provides the extra helps
    * @param invoker The member whose main skill provided the extra helps
    */
-  public addHelpsFromSkill(helps: TeamActivationValue, invoker: MemberState) {
+  public addHelpsFromSkill(helps: ActivationValue, invoker: MemberState) {
     const { regular, crit } = helps;
     const totalHelps = regular + crit;
 
@@ -413,7 +413,7 @@ export class MemberState {
    * @param helps The activation that provides the extra skill helps
    * @param invoker The member whose main skill provided the extra skill helps
    */
-  public addSkillHelps(helps: TeamActivationValue): SkillActivation[] {
+  public addSkillHelps(helps: ActivationValue): SkillActivation | void {
     const { regular, crit } = helps;
     const totalHelps = regular + crit;
     let successfulActivation = false;
@@ -426,10 +426,8 @@ export class MemberState {
     }
 
     if (successfulActivation) {
-      return [this.skillState.addBonusActivation()];
+      return this.skillState.addBonusActivation();
     }
-
-    return [];
   }
 
   public updateIngredientBag() {
@@ -524,17 +522,17 @@ export class MemberState {
     }
   }
 
-  public attemptDayHelp(currentMinutesSincePeriodStart: number): SkillActivation[] {
+  public attemptDayHelp(currentMinutesSincePeriodStart: number): SkillActivation | void {
     const frequency = this.calculateFrequencyWithEnergy();
     this.countFrequencyAndEnergyIntervals('day', frequency);
 
     if (currentMinutesSincePeriodStart < this.nextHelp) {
-      return [];
+      return;
     }
 
     if (this.isSneakySnacking) {
       this.attemptSneakySnackingHelp('day');
-      return [];
+      return;
     }
 
     this.addBerriesAndIngredientsForHelp('day');
@@ -633,9 +631,9 @@ export class MemberState {
       if (currentMorningProcs > 1) {
         break;
       } else {
-        const activations = this.skillState.attemptSkill();
-        if (activations.length > 0) {
-          bankedSkillProcs.push(...activations);
+        const maybeActivation = this.skillState.attemptSkill();
+        if (maybeActivation) {
+          bankedSkillProcs.push(maybeActivation);
           currentMorningProcs += 1;
         }
       }
