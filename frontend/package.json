@@ -18,7 +18,7 @@
     "vuetify-mcp": "npx -y @vuetify/mcp"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.4.1",
+    "@faker-js/faker": "^10.5.0",
     "@mdi/font": "^7.4.47",
     "axios": "^1.20.0",
     "axios-mock-adapter": "^2.1.0",
