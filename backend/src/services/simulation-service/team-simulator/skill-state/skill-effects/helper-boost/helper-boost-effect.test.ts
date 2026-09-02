@@ -56,7 +56,7 @@ describe('HelperBoostEffect', () => {
       activations: [
         {
           unit: 'helps',
-          team: { regular: regularAmount + extraAmount, crit: 0 }
+          team: { regular: (regularAmount + extraAmount) * memberState.teamSize, crit: 0 }
         }
       ]
     });

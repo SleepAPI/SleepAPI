@@ -47,11 +47,14 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
       activations: [
         {
           unit: 'berries',
-          self: { regular: expectedSelfBerryAmount + expectedTeamBerryAmount, crit: 0 }
+          self: {
+            regular: expectedSelfBerryAmount + expectedTeamBerryAmount * memberState.otherMembers.length,
+            crit: 0
+          }
         },
         {
           unit: 'energy',
-          team: { regular: energyForEveryoneAmount, crit: 0 }
+          team: { regular: energyForEveryoneAmount * memberState.teamSize, crit: 0 }
         }
       ]
     });
@@ -108,11 +111,14 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
       activations: [
         {
           unit: 'berries',
-          self: { regular: expectedSelfBerryAmount + expectedTeamBerryAmount, crit: 0 }
+          self: {
+            regular: expectedSelfBerryAmount + expectedTeamBerryAmount * skillState.memberState.otherMembers.length,
+            crit: 0
+          }
         },
         {
           unit: 'energy',
-          team: { regular: energyForEveryoneAmount, crit: 0 }
+          team: { regular: energyForEveryoneAmount * skillState.memberState.teamSize, crit: 0 }
         }
       ]
     });
@@ -174,11 +180,14 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
       activations: [
         {
           unit: 'berries',
-          self: { regular: expectedSelfBerryAmount + expectedTeamBerryAmount, crit: 0 }
+          self: {
+            regular: expectedSelfBerryAmount + expectedTeamBerryAmount * skillState.memberState.otherMembers.length,
+            crit: 0
+          }
         },
         {
           unit: 'energy',
-          team: { regular: energyForEveryoneAmount, crit: 0 }
+          team: { regular: energyForEveryoneAmount * skillState.memberState.teamSize, crit: 0 }
         }
       ]
     });

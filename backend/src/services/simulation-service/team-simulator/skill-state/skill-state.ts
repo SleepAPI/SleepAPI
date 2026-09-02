@@ -164,19 +164,27 @@ export class SkillState {
   }
 
   // TODO: apparently returning early here makes the team sim insanely fast, so skill handling is slower than expected
-  public attemptSkill(): SkillActivation | void {
+  /**
+   * @returns Whether a skill activated
+   */
+  public attemptSkill(): boolean {
     this.helpsSinceLastSkillProc += 1;
     const pityThresholdReached =
       this.helpsSinceLastSkillProc > this.memberState.member.pokemonWithIngredients.pokemon.pityProcThreshold;
     if (pityThresholdReached || this.rng() < this.skillPercentage) {
       this.todaysSkillProcs += 1;
-      return this.activateSkill(this.skill);
+      this.activateSkill(this.skill);
+      return true;
     }
+    return false;
   }
 
-  public addBonusActivation(): SkillActivation {
+  public addBonusActivation(recursionDepth: number) {
+    if (recursionDepth > 10) {
+      return;
+    }
     this.todaysSkillProcs += 1;
-    return this.activateSkill(this.skill, false);
+    this.activateSkill(this.skill, false, recursionDepth + 1);
   }
 
   public wakeup() {
@@ -247,13 +255,13 @@ export class SkillState {
     });
   }
 
-  private activateSkill(skill: Mainskill, resetPityProcCount: boolean = true): SkillActivation {
+  private activateSkill(skill: Mainskill, resetPityProcCount: boolean = true, recursionDepth?: number) {
     const effect = this.skillEffects.get(skill);
     if (!effect) {
       throw new NotImplementedError(`No SkillEffect implemented for skill: ${skill.name}`);
     }
 
-    const skillActivation: SkillActivation = effect.activate(this);
+    const skillActivation: SkillActivation = effect.activate(this, recursionDepth);
 
     // update state
     this.skillProcs += 1;
@@ -280,6 +288,28 @@ export class SkillState {
     if (hadACrit) {
       this.skillCrits += 1;
     }
-    return skillActivation;
+  }
+
+  public findTargetGroup(params: { numMonsTargeted?: number; chanceToTargetLowestMembers?: number }): MemberState[] {
+    const { numMonsTargeted, chanceToTargetLowestMembers } = params;
+    const teamMemberStates = [this.memberState, ...this.memberState.otherMembers];
+    const shuffledMembers = teamMemberStates
+      .map((member) => {
+        return {
+          member,
+          randVal: this.rng()
+        };
+      })
+      .sort((a, b) => a.randVal - b.randVal)
+      .map((member) => member.member);
+    const sortedMembers = shuffledMembers.sort((a, b) => a.energy - b.energy);
+
+    const useLowestMembers = chanceToTargetLowestMembers !== undefined && this.rng() < chanceToTargetLowestMembers;
+    return (useLowestMembers ? shuffledMembers : sortedMembers).slice(0, numMonsTargeted ?? 5);
+  }
+
+  public findTargetMon(params: { numMonsTargeted?: number; chanceToTargetLowestMembers?: number }): MemberState {
+    const { chanceToTargetLowestMembers } = params;
+    return this.findTargetGroup({ numMonsTargeted: 1, chanceToTargetLowestMembers })[0];
   }
 }

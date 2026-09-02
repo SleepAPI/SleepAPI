@@ -2,10 +2,6 @@ import type { SleepInfo } from '@src/domain/sleep/sleep-info.js';
 import { calculateSleepEnergyRecovery } from '@src/services/calculator/energy/energy-calculator.js';
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { calculateDistribution } from '@src/services/simulation-service/team-simulator/member-state/member-state-utils.js';
-import type {
-  ActivationValue,
-  SkillActivation
-} from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import { SkillState } from '@src/services/simulation-service/team-simulator/skill-state/skill-state.js';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
 import { getMealRecoveryAmount } from '@src/utils/meal-utils/meal-utils.js';
@@ -390,16 +386,13 @@ export class MemberState {
    * @param helps The activation that provides the extra helps
    * @param invoker The member whose main skill provided the extra helps
    */
-  public addHelpsFromSkill(helps: ActivationValue, invoker: MemberState) {
-    const { regular, crit } = helps;
-    const totalHelps = regular + crit;
-
+  public addHelpsFromSkill(helps: number, invoker: MemberState) {
     if (invoker.id !== this.id) {
-      this.totalHelpsByMembers += totalHelps;
+      this.totalHelpsByMembers += helps;
     }
 
     // Perform rolls for each help
-    for (let i = 0; i < totalHelps; i++) {
+    for (let i = 0; i < helps; i++) {
       this.addBerriesAndIngredientsForHelp('day', false);
     }
   }
@@ -408,13 +401,14 @@ export class MemberState {
    * Add skill-only helps coming from main skills like Nuzzle (Energizing Cheer S)
    * @param helps The activation that provides the extra skill helps
    * @param invoker The member whose main skill provided the extra skill helps
+   * @param recursionDepth While it's technically possible for bonus skill activations to lead to more bonus skill activations,
+   * this simulator puts a cap on the recursion depth to prevent the possibility of infinite loops.
+   * @returns The number of successful activations (0 or 1)
    */
-  public addSkillHelps(helps: ActivationValue, _invoker: MemberState): SkillActivation | void {
-    const { regular, crit } = helps;
-    const totalHelps = regular + crit;
+  public addSkillHelps(helps: number, _invoker: MemberState, recursionDepth: number): number {
     let successfulActivation = false;
 
-    for (let i = 0; i < totalHelps; ++i) {
+    for (let i = 0; i < helps; ++i) {
       if (this.rng() < this.skillState.skillPercentage) {
         successfulActivation = true;
         break;
@@ -422,8 +416,10 @@ export class MemberState {
     }
 
     if (successfulActivation) {
-      return this.skillState.addBonusActivation();
+      this.skillState.addBonusActivation(recursionDepth);
+      return 1;
     }
+    return 0;
   }
 
   public updateIngredientBag() {
@@ -518,7 +514,7 @@ export class MemberState {
     }
   }
 
-  public attemptDayHelp(currentMinutesSincePeriodStart: number): SkillActivation | void {
+  public attemptDayHelp(currentMinutesSincePeriodStart: number) {
     const frequency = this.calculateFrequencyWithEnergy();
     this.countFrequencyAndEnergyIntervals('day', frequency);
 
@@ -532,7 +528,7 @@ export class MemberState {
     }
 
     this.addBerriesAndIngredientsForHelp('day');
-    return this.skillState.attemptSkill();
+    this.skillState.attemptSkill();
   }
 
   public attemptSneakySnackingHelp(period: HelpPeriod) {
@@ -620,16 +616,14 @@ export class MemberState {
    *
    * @returns team skill value for any skill procs that were stored in the inventory
    */
-  public collectInventory(): SkillActivation[] {
+  public collectInventory() {
     let currentMorningProcs = 0;
-    const bankedSkillProcs: SkillActivation[] = [];
     for (let help = 0; help < this.currentNightHelps; help++) {
       if (currentMorningProcs > 1) {
         break;
       } else {
-        const maybeActivation = this.skillState.attemptSkill();
-        if (maybeActivation) {
-          bankedSkillProcs.push(maybeActivation);
+        const activationHappened = this.skillState.attemptSkill();
+        if (activationHappened) {
           currentMorningProcs += 1;
         }
       }
@@ -638,8 +632,6 @@ export class MemberState {
     this.morningProcs += currentMorningProcs;
     this.currentNightHelps = 0;
     this.carriedAmount = 0;
-
-    return bankedSkillProcs;
   }
 
   public degradeEnergy(amount?: number) {

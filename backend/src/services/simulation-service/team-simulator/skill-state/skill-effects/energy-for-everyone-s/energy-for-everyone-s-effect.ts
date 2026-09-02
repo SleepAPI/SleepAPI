@@ -6,15 +6,20 @@ import { EnergyForEveryoneS } from 'sleepapi-common';
 export class EnergyForEveryoneSEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = EnergyForEveryoneS;
+    const invoker = skillState.memberState;
+    const energyAmount = skillState.skillAmount(skill.activations.energy);
+
+    let recovered = 0;
+    for (const member of [invoker, ...invoker.otherMembers]) {
+      recovered += member.recoverEnergy(energyAmount, invoker).recovered;
+    }
+
     return {
       skill,
       activations: [
         {
           unit: 'energy',
-          team: {
-            regular: skillState.skillAmount(skill.activations.energy),
-            crit: 0
-          }
+          team: { regular: recovered, crit: 0 }
         }
       ]
     };

@@ -24,10 +24,7 @@ export class IngredientDrawSHyperCutterEffect implements SkillEffect {
       activations: [
         {
           unit: 'ingredients',
-          self: {
-            regular: amount,
-            crit: critAmount
-          }
+          self: { regular: amount, crit: critAmount }
         }
       ]
     };

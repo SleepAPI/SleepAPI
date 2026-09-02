@@ -26,7 +26,7 @@ describe('SkillCopyTransformEffect', () => {
     const skillCopyTransformEffect = new SkillCopyTransformEffect();
     const result = skillCopyTransformEffect.activate(skillState);
 
-    expect(skillEffect.activate).toHaveBeenCalledWith(skillState);
+    expect(skillEffect.activate).toHaveBeenCalledWith(skillState, undefined);
     expect(result).toBe(teamSkillActivation);
   });
 

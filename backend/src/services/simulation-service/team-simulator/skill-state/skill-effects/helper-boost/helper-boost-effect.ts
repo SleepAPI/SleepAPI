@@ -6,26 +6,26 @@ import { HelperBoost, MAX_TEAM_SIZE, uniqueMembersWithBerry } from 'sleepapi-com
 export class HelperBoostEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = HelperBoost;
-    const memberState = skillState.memberState;
+    const invoker = skillState.memberState;
     const unique =
-      memberState.team.length > MAX_TEAM_SIZE // accounts for bogus members
+      invoker.team.length > MAX_TEAM_SIZE // accounts for bogus members
         ? 1
         : uniqueMembersWithBerry({
-            berry: memberState.berry,
-            members: memberState.team.map((member) => member.pokemonWithIngredients.pokemon)
+            berry: invoker.berry,
+            members: invoker.team.map((member) => member.pokemonWithIngredients.pokemon)
           });
 
     const helps = skillState.skillAmount(HelperBoost.activations.helps, { extra: unique });
+    for (const member of [invoker, ...invoker.otherMembers]) {
+      member.addHelpsFromSkill(helps, invoker);
+    }
 
     return {
       skill,
       activations: [
         {
           unit: 'helps',
-          team: {
-            regular: helps,
-            crit: 0
-          }
+          team: { regular: helps * invoker.teamSize, crit: 0 }
         }
       ]
     };

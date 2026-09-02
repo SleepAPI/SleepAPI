@@ -4,14 +4,13 @@ import type { SkillState } from '@src/services/simulation-service/team-simulator
 import { mocks } from '@src/vitest/index.js';
 import { berry, ChargeStrengthMBadDreams } from 'sleepapi-common';
 import { vimic } from 'vimic';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('ChargeStrengthMBadDreamsEffect', () => {
   let memberState: MemberState;
   let skillState: SkillState;
   let chargeStrengthMBadDreamsEffect: ChargeStrengthMBadDreamsEffect;
   let mockOtherMembers: MemberState[];
-  let addSkillValueMock: ReturnType<typeof vi.fn<SkillState['addSkillValue']>>;
 
   beforeEach(() => {
     memberState = mocks.memberState();
@@ -24,9 +23,6 @@ describe('ChargeStrengthMBadDreamsEffect', () => {
     Object.defineProperty(skillState.memberState, 'otherMembers', {
       get: () => mockOtherMembers
     });
-
-    addSkillValueMock = vi.fn<SkillState['addSkillValue']>();
-    skillState.addSkillValue = addSkillValueMock;
   });
 
   it('should activate skill and return correct self values', () => {
@@ -52,13 +48,6 @@ describe('ChargeStrengthMBadDreamsEffect', () => {
     mockOtherMembers.forEach((member) => {
       expect(member.degradeEnergy).toHaveBeenCalledWith(ChargeStrengthMBadDreams.energyReduction);
     });
-
-    // Verify addSkillValue was called with the correct values
-    expect(addSkillValueMock).toHaveBeenCalledWith({
-      unit: 'energy',
-      amountToSelf: 0,
-      amountToTeam: -20 // 10 energy degraded per member × 2 members
-    });
   });
 
   it('should not degrade energy for members with Wiki berries', () => {
@@ -82,13 +71,6 @@ describe('ChargeStrengthMBadDreamsEffect', () => {
     // The member with Wiki berry should not have energy degraded
     expect(mockOtherMembers[0].degradeEnergy).not.toHaveBeenCalled();
     expect(mockOtherMembers[1].degradeEnergy).toHaveBeenCalledWith(ChargeStrengthMBadDreams.energyReduction);
-
-    // Verify addSkillValue was called with the correct values (only one member's energy was degraded)
-    expect(addSkillValueMock).toHaveBeenCalledWith({
-      unit: 'energy',
-      amountToSelf: 0,
-      amountToTeam: -10
-    });
   });
 
   it('should handle a team with only Wiki berry members', () => {
@@ -110,13 +92,6 @@ describe('ChargeStrengthMBadDreamsEffect', () => {
     // No members should have energy degraded
     mockOtherMembers.forEach((member) => {
       expect(member.degradeEnergy).not.toHaveBeenCalled();
-    });
-
-    // Verify addSkillValue was called with zero energy degraded
-    expect(addSkillValueMock).toHaveBeenCalledWith({
-      unit: 'energy',
-      amountToSelf: 0,
-      amountToTeam: -0
     });
   });
 });

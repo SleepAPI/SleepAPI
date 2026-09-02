@@ -56,7 +56,8 @@ describe('SkillCopyEffect', () => {
 
     expect(result).toEqual(mockActivation);
     expect(skillState.skillEffects.get(skillState.memberState.otherMembers[0].skill)?.activate).toHaveBeenCalledWith(
-      skillState
+      skillState,
+      undefined
     );
   });
 
@@ -70,7 +71,7 @@ describe('SkillCopyEffect', () => {
     const result = skillCopyEffect.activate(skillState);
 
     expect(result).toEqual(mockActivation);
-    expect(skillState.skillEffects.get(ChargeStrengthS)?.activate).toHaveBeenCalledWith(skillState);
+    expect(skillState.skillEffects.get(ChargeStrengthS)?.activate).toHaveBeenCalledWith(skillState, undefined);
   });
 
   it('should log an error if activation fails', () => {
@@ -95,6 +96,6 @@ describe('SkillCopyEffect', () => {
     const result = skillCopyEffect.activate(skillState);
 
     expect(result).toEqual(mockActivation);
-    expect(skillState.skillEffects.get(ChargeStrengthS)?.activate).toHaveBeenCalledWith(skillState);
+    expect(skillState.skillEffects.get(ChargeStrengthS)?.activate).toHaveBeenCalledWith(skillState, undefined);
   });
 });

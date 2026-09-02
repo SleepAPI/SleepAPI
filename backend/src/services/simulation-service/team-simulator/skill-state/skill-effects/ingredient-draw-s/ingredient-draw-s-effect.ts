@@ -35,10 +35,7 @@ abstract class IngredientDrawSEffect implements SkillEffect {
       activations: [
         {
           unit: 'ingredients',
-          self: {
-            regular: nrOfIngredients,
-            crit: 0
-          }
+          self: { regular: nrOfIngredients, crit: 0 }
         }
       ]
     };

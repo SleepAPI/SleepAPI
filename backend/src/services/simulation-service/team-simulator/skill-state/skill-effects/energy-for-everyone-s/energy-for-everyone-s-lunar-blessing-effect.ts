@@ -6,13 +6,13 @@ import { EnergyForEveryoneSLunarBlessing, MAX_TEAM_SIZE, uniqueMembersWithBerry 
 export class EnergyForEveryoneSLunarBlessingEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = EnergyForEveryoneSLunarBlessing;
-    const memberState = skillState.memberState;
+    const invoker = skillState.memberState;
     const unique =
-      memberState.team.length > MAX_TEAM_SIZE // accounts for bogus members
+      invoker.team.length > MAX_TEAM_SIZE // accounts for bogus members
         ? 1
         : uniqueMembersWithBerry({
-            berry: memberState.berry,
-            members: memberState.team.map((member) => member.pokemonWithIngredients.pokemon)
+            berry: invoker.berry,
+            members: invoker.team.map((member) => member.pokemonWithIngredients.pokemon)
           });
 
     const energyAmount = skillState.skillAmount(skill.activations.energy);
@@ -23,33 +23,35 @@ export class EnergyForEveryoneSLunarBlessingEffect implements SkillEffect {
       extra: unique
     });
 
-    const berries = memberState.otherMembers.map((member) => ({
+    let recovered = 0;
+    for (const member of [invoker, ...invoker.otherMembers]) {
+      recovered += member.recoverEnergy(energyAmount, invoker).recovered;
+    }
+
+    const berries = invoker.otherMembers.map((member) => ({
       berry: member.berry,
       amount: teamBerryAmount,
       level: member.level
     }));
 
     berries.push({
-      berry: memberState.berry,
+      berry: invoker.berry,
       amount: selfBerryAmount,
-      level: memberState.level
+      level: invoker.level
     });
 
-    memberState.addSkillProduce({ ingredients: [], berries });
+    invoker.addSkillProduce({ ingredients: [], berries });
 
     return {
       skill,
       activations: [
         {
           unit: 'berries',
-          self: { regular: selfBerryAmount + teamBerryAmount, crit: 0 }
+          self: { regular: selfBerryAmount + teamBerryAmount * invoker.otherMembers.length, crit: 0 }
         },
         {
           unit: 'energy',
-          team: {
-            regular: energyAmount,
-            crit: 0
-          }
+          team: { regular: recovered, crit: 0 }
         }
       ]
     };

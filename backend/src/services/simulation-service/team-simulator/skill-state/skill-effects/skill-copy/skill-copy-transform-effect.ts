@@ -4,7 +4,7 @@ import type { SkillState } from '@src/services/simulation-service/team-simulator
 import { SkillCopy } from 'sleepapi-common';
 
 export class SkillCopyTransformEffect implements SkillEffect {
-  activate(skillState: SkillState): SkillActivation {
-    return skillState.skillEffects.get(SkillCopy)!.activate(skillState);
+  activate(skillState: SkillState, recursionDepth?: number): SkillActivation {
+    return skillState.skillEffects.get(SkillCopy)!.activate(skillState, recursionDepth);
   }
 }

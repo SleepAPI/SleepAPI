@@ -137,6 +137,143 @@ exports[`addHelpsFromSkill > shall add 1 average produce help 1`] = `
 }
 `;
 
+exports[`addHelpsFromSkill > shall add 2 average produce help 1`] = `
+{
+  "advanced": {
+    "averageHelps": 2,
+    "berryProductionDistribution": {
+      "2": 100,
+    },
+    "carrySize": 10,
+    "dayHelps": 2,
+    "dayPeriod": {
+      "averageEnergy": 0,
+      "averageFrequency": 0,
+      "spilledIngredients": [],
+    },
+    "frequencySplit": {
+      "eighty": 0,
+      "forty": 0,
+      "one": 0,
+      "sixty": 0,
+      "zero": 0,
+    },
+    "ingredientDistributions": {
+      "Tail": {
+        "0": 100,
+      },
+    },
+    "ingredientPercentage": 0.2,
+    "maxFrequency": 1428.75,
+    "morningProcs": 0,
+    "nightHelps": 0,
+    "nightHelpsAfterSS": 0,
+    "nightHelpsBeforeSS": 0,
+    "nightPeriod": {
+      "averageEnergy": 0,
+      "averageFrequency": 0,
+      "spilledIngredients": [],
+    },
+    "skillCrits": 0,
+    "skillPercentage": 0.02,
+    "skillProcDistribution": {},
+    "sneakySnack": {
+      "amount": 0,
+      "berry": {
+        "name": "BELUE",
+        "type": "steel",
+        "value": 33,
+      },
+      "level": 60,
+    },
+    "teamSupport": {
+      "energy": 0,
+      "helps": 0,
+    },
+    "totalHelps": 2,
+    "totalRecovery": 0,
+    "wastedEnergy": 0,
+  },
+  "externalId": "some id",
+  "pokemonWithIngredients": {
+    "ingredients": Int16Array [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+    ],
+    "pokemon": "MOCKEMON",
+  },
+  "produceFromSkill": {
+    "berries": [],
+    "ingredients": [],
+  },
+  "produceTotal": {
+    "berries": [
+      {
+        "amount": 2,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+        "level": 60,
+      },
+    ],
+    "ingredients": [],
+  },
+  "produceWithoutSkill": {
+    "berries": [
+      {
+        "amount": 2,
+        "berry": {
+          "name": "BELUE",
+          "type": "steel",
+          "value": 33,
+        },
+        "level": 60,
+      },
+    ],
+    "ingredients": [],
+  },
+  "skillLevel": 6,
+  "skillProcs": 0,
+  "skillValue": {},
+  "strength": {
+    "berries": {
+      "breakdown": {
+        "base": 284,
+        "favored": 0,
+        "islandBonus": 0,
+      },
+      "total": 284,
+    },
+    "skill": {
+      "breakdown": {
+        "base": 0,
+        "islandBonus": 0,
+      },
+      "total": 0,
+    },
+  },
+}
+`;
+
 exports[`addHelpsFromSkill > shall not add produce if adding 0 helps 1`] = `
 {
   "advanced": {

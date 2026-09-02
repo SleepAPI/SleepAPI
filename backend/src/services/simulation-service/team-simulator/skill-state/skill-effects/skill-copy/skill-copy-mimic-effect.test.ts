@@ -26,7 +26,7 @@ describe('SkillCopyMimicEffect', () => {
     const skillCopyMimicEffect = new SkillCopyMimicEffect();
     const result = skillCopyMimicEffect.activate(skillState);
 
-    expect(skillEffect.activate).toHaveBeenCalledWith(skillState);
+    expect(skillEffect.activate).toHaveBeenCalledWith(skillState, undefined);
     expect(result).toBe(teamSkillActivation);
   });
 

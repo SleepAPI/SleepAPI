@@ -5,38 +5,37 @@ import { BerryBurstDracoMeteor, MAX_TEAM_SIZE, uniqueMembersWithBerry } from 'sl
 
 export class BerryBurstDracoMeteorEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
-    const memberState = skillState.memberState;
+    const invoker = skillState.memberState;
     const skill = BerryBurstDracoMeteor;
 
     const pairedWithLatias =
-      skillState.memberState.otherMembers.find(
-        (member) => member.member.pokemonWithIngredients.pokemon.name === 'LATIAS'
-      ) !== undefined;
+      invoker.otherMembers.find((member) => member.member.pokemonWithIngredients.pokemon.name === 'LATIAS') !==
+      undefined;
     const skillActivation = pairedWithLatias ? skill.activations.paired : skill.activations.solo;
     const sameTypeSpeciesCount =
-      memberState.team.length > MAX_TEAM_SIZE
+      invoker.team.length > MAX_TEAM_SIZE
         ? 1
         : uniqueMembersWithBerry({
-            berry: memberState.berry,
-            members: memberState.team.map((member) => member.pokemonWithIngredients.pokemon)
+            berry: invoker.berry,
+            members: invoker.team.map((member) => member.pokemonWithIngredients.pokemon)
           });
 
     const selfAmount = skillState.skillAmount(skillActivation, { extra: sameTypeSpeciesCount });
     const teamAmount = skillState.skillTeamAmount(skillActivation, { extra: sameTypeSpeciesCount });
 
-    const berries = memberState.otherMembers.map((member) => ({
+    const berries = invoker.otherMembers.map((member) => ({
       berry: member.berry,
       amount: teamAmount,
       level: member.level
     }));
 
     berries.push({
-      berry: memberState.berry,
+      berry: invoker.berry,
       amount: selfAmount,
-      level: memberState.level
+      level: invoker.level
     });
 
-    memberState.addSkillProduce({ ingredients: [], berries });
+    invoker.addSkillProduce({ ingredients: [], berries });
 
     return {
       skill,
@@ -44,7 +43,7 @@ export class BerryBurstDracoMeteorEffect implements SkillEffect {
         {
           unit: 'berries',
           self: {
-            regular: selfAmount + teamAmount * memberState.otherMembers.length,
+            regular: selfAmount + teamAmount * invoker.otherMembers.length,
             crit: 0
           }
         }
