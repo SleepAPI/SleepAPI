@@ -17,7 +17,6 @@ skillValue.strength = { amountToSelf: 100, amountToTeam: 0 }
 skillValue.energy = { amountToSelf: 0, amountToTeam: -24 }
 
 mockMember.production.skillProcs = 5
-mockMember.production.skillAmount = 100
 mockMember.production.skillValue = skillValue
 
 describe('BadDreamsChargeStrengthMDetails', () => {

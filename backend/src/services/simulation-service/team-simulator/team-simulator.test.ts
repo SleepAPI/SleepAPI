@@ -260,15 +260,8 @@ describe('TeamSimulator', () => {
     const result = simulator.results();
 
     expect(result.members).toHaveLength(5);
-    const skillAmount = MathUtils.round(result.members[0].skillAmount, 1);
     const wasteAmount = MathUtils.round(result.members[0].advanced.wastedEnergy, 1);
-    expect(skillAmount).toMatchInlineSnapshot(`726.5`);
     expect(wasteAmount).toMatchInlineSnapshot(`4070`);
-    expect(
-      5 *
-        result.members[0].skillProcs *
-        EnergyForEveryoneS.activations.energy.amount({ skillLevel: EnergyForEveryoneS.maxLevel })
-    ).toEqual(skillAmount + wasteAmount);
   });
 
   it('shall give pity procs when threshold met', () => {

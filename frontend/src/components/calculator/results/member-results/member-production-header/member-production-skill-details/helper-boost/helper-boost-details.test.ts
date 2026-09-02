@@ -6,7 +6,7 @@ import { mocks } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
-import { ENTEI, MathUtils, compactNumber } from 'sleepapi-common'
+import { ENTEI, MathUtils } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = mocks.createMockMemberWithProduction({
@@ -61,11 +61,5 @@ describe('MemberProductionSkill', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct total skill value', () => {
-    const totalSkillValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center.ml-1')
-    const expectedValue = MathUtils.round(mockMember.production.skillAmount * timeWindowFactor('24H'), 1)
-    expect(totalSkillValue.text()).toContain(compactNumber(expectedValue))
   })
 })

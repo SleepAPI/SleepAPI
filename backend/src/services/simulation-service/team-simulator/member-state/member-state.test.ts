@@ -110,7 +110,6 @@ describe('results', () => {
 
     expect(results.produceTotal.berries.length).toBe(0);
     expect(results.produceTotal.ingredients.length).toBe(0);
-    expect(results.skillAmount).toBe(0);
     expect(results.skillProcs).toBe(0);
   });
 
@@ -655,7 +654,6 @@ describe('addSkillValue', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
     memberState.addSkillValue({ regular: 10, crit: 20 });
     expect(memberState.results(1).advanced.skillCritValue).toBe(20);
-    expect(memberState.results(1).skillAmount).toBe(30);
   });
 });
 

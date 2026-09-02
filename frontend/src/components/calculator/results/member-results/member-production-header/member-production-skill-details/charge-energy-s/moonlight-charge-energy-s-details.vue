@@ -31,12 +31,11 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
-            >x{{ skillValuePerProc }}</span
+            >x{{ selfEnergyPerProc }}</span
           >
           <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
-          <!-- TODO: convey that the crit doesn't apply to every trigger -->
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
-            >x{{ critValuePerProc }}</span
+            >x{{ teamEnergyPerProc }}</span
           >
           <v-img
             src="/images/unit/energy_crit.png"
@@ -52,11 +51,11 @@
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
         <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ selfSkillValue }} total</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSelfEnergy }} total</span>
       </div>
       <div class="flex-center">
         <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ teamSkillValue }} team</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalTeamEnergy }} team</span>
       </div>
     </v-col>
   </v-row>
@@ -88,21 +87,24 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
+    selfEnergyPerProc() {
       return ChargeEnergySMoonlight.activations.energy.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    critValuePerProc() {
-      return ChargeEnergySMoonlight.activations.energy.critAmount!({ skillLevel: this.effectiveSkillLevel })
-    },
-    selfSkillValue() {
+    teamEnergyPerProc() {
       return compactNumber(
-        (this.memberWithProduction.production.skillAmount -
-          this.memberWithProduction.production.advanced.skillCritValue) *
-          this.timeWindowFactor
+        ChargeEnergySMoonlight.activations.energy.critAmount!({ skillLevel: this.effectiveSkillLevel }) *
+          ChargeEnergySMoonlight.critChance
       )
     },
-    teamSkillValue() {
-      return compactNumber(this.memberWithProduction.production.advanced.skillCritValue * this.timeWindowFactor)
+    totalSelfEnergy() {
+      return compactNumber(
+        this.memberWithProduction.production.skillValue['energy']?.amountToSelf * this.timeWindowFactor
+      )
+    },
+    totalTeamEnergy() {
+      return compactNumber(
+        this.memberWithProduction.production.skillValue['energy']?.amountToTeam * this.timeWindowFactor
+      )
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

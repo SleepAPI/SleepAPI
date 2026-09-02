@@ -3,7 +3,7 @@ import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
-import { MathUtils, UMBREON, compactNumber } from 'sleepapi-common'
+import { MathUtils, UMBREON } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const mockMember = mocks.createMockMemberWithProduction({
@@ -49,11 +49,5 @@ describe('Moonlight details', () => {
     expect(skillProcs.text()).toBe(
       MathUtils.round(mockMember.production.skillProcs * timeWindowFactor('24H'), 1).toString()
     )
-  })
-
-  it('displays the correct total skill value', () => {
-    const totalSkillValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center.ml-1')
-    const expectedValue = MathUtils.round(mockMember.production.skillAmount * timeWindowFactor('24H'), 1)
-    expect(totalSkillValue.text()).toContain(compactNumber(expectedValue))
   })
 })

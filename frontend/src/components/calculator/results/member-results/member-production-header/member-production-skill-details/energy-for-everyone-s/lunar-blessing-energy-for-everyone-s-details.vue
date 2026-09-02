@@ -148,7 +148,11 @@ export default defineComponent({
       })
     },
     totalEnergy() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+      const energySkillValue = this.memberWithProduction.production.skillValue['energy'] ?? {
+        amountToSelf: 0,
+        amountToTeam: 0
+      }
+      return compactNumber((energySkillValue.amountToSelf + energySkillValue.amountToTeam) * this.timeWindowFactor)
     },
     skillValueSelf() {
       const amount =

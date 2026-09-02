@@ -101,10 +101,6 @@ export interface MemberStrength {
 export interface MemberProduction extends MemberProductionBase {
   produceFromSkill: Produce;
   produceWithoutSkill: Produce;
-  /**
-   * @deprecated Use `skillValue` instead
-   */
-  skillAmount: number;
   skillValue: MemberSkillValue;
   skillLevel: number; // effective skill level after bonuses and capped at max
   advanced: MemberProductionAdvanced;

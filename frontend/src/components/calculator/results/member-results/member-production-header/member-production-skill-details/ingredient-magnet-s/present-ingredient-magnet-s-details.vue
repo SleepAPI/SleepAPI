@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
-            >x{{ skillValuePerProc }}</span
+            >x{{ ingredientsPerProc }}</span
           >
           <v-img
             src="/images/ingredient/ingredients.png"
@@ -59,7 +59,7 @@
           alt="ingredients"
           title="ingredients"
         ></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ totalSkillValue }} total</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-2"> {{ totalIngredients }} total</span>
       </div>
       <span class="font-weight-light font-italic text-x-small text-center">
         {{ amountOfEachIngredient }} of each ing</span
@@ -99,7 +99,7 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
+    ingredientsPerProc() {
       return this.memberWithProduction.member.pokemon.skill.activations.ingredients.amount({
         skillLevel: this.effectiveSkillLevel
       })
@@ -107,18 +107,17 @@ export default defineComponent({
     candyPerProc() {
       return IngredientMagnetSPresent.candyAmount
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalIngredientsNumber() {
+      return this.memberWithProduction.production.skillValue['ingredients']?.amountToSelf * this.timeWindowFactor
+    },
+    totalIngredients() {
+      return compactNumber(this.totalIngredientsNumber)
     },
     totalCandy() {
       return compactNumber(this.memberWithProduction.production.skillValue.candy?.amountToTeam ?? 0, 2)
     },
     amountOfEachIngredient() {
-      return compactNumber(
-        (this.memberWithProduction.production.skillAmount * this.timeWindowFactor) /
-          ingredient.TOTAL_NUMBER_OF_INGREDIENTS,
-        2
-      )
+      return compactNumber(this.totalIngredientsNumber / ingredient.TOTAL_NUMBER_OF_INGREDIENTS, 2)
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

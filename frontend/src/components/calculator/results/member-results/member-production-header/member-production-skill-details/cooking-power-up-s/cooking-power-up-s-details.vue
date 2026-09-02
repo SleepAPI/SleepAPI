@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
-            >x{{ skillValuePerProc }}</span
+            >x{{ potAmountPerProc }}</span
           >
           <v-img
             src="/images/unit/pot.png"
@@ -53,7 +53,7 @@
           alt="cooking pot size"
           title="cooking pot size"
         ></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }} total</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalPotAmount }} total</span>
       </div>
     </v-col>
   </v-row>
@@ -85,11 +85,13 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
+    potAmountPerProc() {
       return CookingPowerUpS.activations.potSize.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalPotAmount() {
+      return compactNumber(
+        this.memberWithProduction.production.skillValue['pot size']?.amountToSelf * this.timeWindowFactor
+      )
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

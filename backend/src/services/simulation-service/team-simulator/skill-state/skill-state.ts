@@ -209,7 +209,6 @@ export class SkillState {
   public results(iterations: number) {
     const skillProcsPerDay = this.skillProcsPerDay.slice(1); // remove first wakeup when nothing has happened yet
     return {
-      skillAmount: (this.regularValue + this.critValue) / iterations,
       skillValue: Object.fromEntries(
         Object.entries(this.skillValue)
           .filter(([_d, value]) => value.amountToSelf !== 0 || value.amountToTeam !== 0)

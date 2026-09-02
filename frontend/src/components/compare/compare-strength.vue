@@ -334,7 +334,8 @@ export default defineComponent({
       const pokemon = getPokemon(member.pokemonWithIngredients.pokemon)
       const skill = pokemon.skill
       const critAmount = member.advanced.skillCritValue
-      const amountWithoutCrit = member.skillAmount - critAmount
+      const amountWithoutCrit =
+        (member.skillValue['energy']?.amountToSelf ?? 0) + (member.skillValue['energy']?.amountToTeam ?? 0) - critAmount
 
       const e4eSuffix = skill.isOrModifies(EnergyForEveryoneS) ? 'x5' : ''
       return `${MathUtils.round(amountWithoutCrit, 1)} ${e4eSuffix}${critAmount > 0 ? `+${MathUtils.round(critAmount, 1)}` : ''}`

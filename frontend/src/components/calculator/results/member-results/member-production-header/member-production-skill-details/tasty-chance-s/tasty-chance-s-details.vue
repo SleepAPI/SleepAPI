@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
-            >x{{ skillValuePerProc }}%
+            >x{{ tastyChancePerProc }}%
           </span>
           <v-img
             src="/images/unit/crit.png"
@@ -46,7 +46,7 @@
 
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }}% total crit</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalTastyChance }}% total crit</span>
       </div>
     </v-col>
   </v-row>
@@ -78,11 +78,13 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
+    tastyChancePerProc() {
       return TastyChanceS.activations.critChance.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalTastyChance() {
+      return compactNumber(
+        this.memberWithProduction.production.skillValue['crit chance']?.amountToSelf * this.timeWindowFactor
+      )
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

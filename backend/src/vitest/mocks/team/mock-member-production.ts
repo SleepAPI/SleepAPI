@@ -35,7 +35,6 @@ export function memberProduction(attrs?: Partial<MemberProduction>): MemberProdu
     produceFromSkill: produce(),
     produceTotal: produce(),
     produceWithoutSkill: produce(),
-    skillAmount: 0,
     skillLevel: 1,
     skillProcs: 0,
     skillValue: Object.fromEntries(

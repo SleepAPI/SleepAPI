@@ -79,13 +79,6 @@ describe('PresentIngredientMagnetSDetails', () => {
     expect(candyImages.length).toBeGreaterThan(0)
   })
 
-  it('displays the correct total skill value', () => {
-    const totalSkillValueElements = wrapper.findAll('.font-weight-medium.text-no-wrap.text-center')
-    const teamStore = useTeamStore()
-    const expectedValue = MathUtils.round(mockMember.production.skillAmount * teamStore.timeWindowFactor, 1)
-    expect(totalSkillValueElements[0].text()).toContain(compactNumber(expectedValue))
-  })
-
   it('displays the correct total candy value', () => {
     const totalCandyElements = wrapper.findAll('.font-weight-medium.text-no-wrap.text-center')
     const expectedTotalCandy = mockMember.production.skillValue.candy?.amountToTeam ?? 0
