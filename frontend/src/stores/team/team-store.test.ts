@@ -63,6 +63,28 @@ describe('Team Store', () => {
               "name": "Greengrass Isle",
               "shortName": "greengrass",
             },
+            "mealPlan": {
+              "breakfast": {
+                "kind": "best",
+              },
+              "dinner": {
+                "kind": "best",
+              },
+              "lunch": {
+                "kind": "best",
+              },
+              "sunday": {
+                "breakfast": {
+                  "kind": "best",
+                },
+                "dinner": {
+                  "kind": "best",
+                },
+                "lunch": {
+                  "kind": "best",
+                },
+              },
+            },
             "memberIndex": 0,
             "memberIvs": {},
             "members": [
@@ -159,6 +181,28 @@ describe('Team Store', () => {
               "expert": false,
               "name": "Greengrass Isle",
               "shortName": "greengrass",
+            },
+            "mealPlan": {
+              "breakfast": {
+                "kind": "best",
+              },
+              "dinner": {
+                "kind": "best",
+              },
+              "lunch": {
+                "kind": "best",
+              },
+              "sunday": {
+                "breakfast": {
+                  "kind": "best",
+                },
+                "dinner": {
+                  "kind": "best",
+                },
+                "lunch": {
+                  "kind": "best",
+                },
+              },
             },
             "memberIndex": 0,
             "memberIvs": {},
@@ -350,6 +394,28 @@ describe('Team Store', () => {
           "expert": false,
           "name": "Greengrass Isle",
           "shortName": "greengrass",
+        },
+        "mealPlan": {
+          "breakfast": {
+            "kind": "best",
+          },
+          "dinner": {
+            "kind": "best",
+          },
+          "lunch": {
+            "kind": "best",
+          },
+          "sunday": {
+            "breakfast": {
+              "kind": "best",
+            },
+            "dinner": {
+              "kind": "best",
+            },
+            "lunch": {
+              "kind": "best",
+            },
+          },
         },
         "memberIndex": 0,
         "memberIvs": {},

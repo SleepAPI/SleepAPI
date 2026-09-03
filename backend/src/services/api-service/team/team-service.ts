@@ -51,6 +51,7 @@ export async function upsertTeamMeta(params: {
       bedtime: request.bedtime,
       wakeup: request.wakeup,
       recipe_type: request.recipeType,
+      meal_plan: TeamDAO.mealPlanToString(request.mealPlan),
       stockpiled_ingredients: TeamDAO.stockpileToString(request.stockpiledIngredients),
       stockpiled_berries: TeamDAO.stockpileToString(request.stockpiledBerries)
     };

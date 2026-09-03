@@ -29,6 +29,7 @@ import {
   commonMocks,
   type CalculateTeamResponse,
   type FunctionalEvent,
+  type MealSlot,
   type MemberProductionBase,
   type SimpleTeamResult,
   type TeamMemberExt,
@@ -36,6 +37,7 @@ import {
 } from 'sleepapi-common';
 
 export class TeamSimulator {
+  private readonly simulationTickMinutes = 5;
   private run = 0;
   private rng: PreGeneratedRandom;
 
@@ -46,6 +48,7 @@ export class TeamSimulator {
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
+  private mealWindowsMinutesSinceStart: { meal: MealSlot; start: number; end: number }[];
   private cookedMealsCounter = 0;
   private fullDayDuration = 1440;
   private energyDegradeCounter = -1; // -1 so it takes 3 iterations and first degrade is after 10 minutes, then 10 minutes between each
@@ -64,12 +67,14 @@ export class TeamSimulator {
 
     this.cookingState = cookingState;
 
-    const { nightStartMinutes, mealTimeMinutesSinceStart } = TeamSimulatorUtils.setupSimulationTimes({
-      settings,
-      cookingState: this.cookingState
-    });
+    const { nightStartMinutes, mealTimeMinutesSinceStart, mealWindowsMinutesSinceStart } =
+      TeamSimulatorUtils.setupSimulationTimes({
+        settings,
+        cookingState: this.cookingState
+      });
     this.nightStartMinutes = nightStartMinutes;
     this.mealTimeMinutesSinceStart = mealTimeMinutesSinceStart;
+    this.mealWindowsMinutesSinceStart = mealWindowsMinutesSinceStart;
 
     const expertModeSettings = settings.island?.expertMode;
     this.expertModeEvent = expertModeSettings ? settings.island?.bonuses(expertModeSettings) : undefined;
@@ -115,7 +120,7 @@ export class TeamSimulator {
       }
 
       this.maybeDegradeEnergy();
-      minutesSinceWakeup += 5;
+      minutesSinceWakeup += this.simulationTickMinutes;
     }
 
     this.collectInventory();
@@ -127,7 +132,7 @@ export class TeamSimulator {
       }
 
       this.maybeDegradeEnergy();
-      minutesSinceWakeup += 5;
+      minutesSinceWakeup += this.simulationTickMinutes;
     }
   }
 
@@ -178,6 +183,7 @@ export class TeamSimulator {
     if (this.cookingState && this.run % 7 === 1) {
       this.cookingState?.startNewWeek();
     }
+    this.cookingState?.startNewDay();
 
     for (const member of this.memberStates) {
       member.wakeUp();
@@ -185,13 +191,45 @@ export class TeamSimulator {
   }
 
   private attemptCooking(currentMinutesSincePeriodStart: number) {
+    const sunday = this.run % 7 === 0;
+    if (this.cookingState?.hasMealPlan(sunday)) {
+      for (const mealWindow of this.mealWindowsMinutesSinceStart) {
+        if (this.cookingState.isMealCompleted(mealWindow.meal) || currentMinutesSincePeriodStart < mealWindow.start) {
+          continue;
+        }
+
+        // A meal deadline can fall between five-minute simulation ticks. Treat the
+        // final tick before it as the deadline, rather than skipping the meal.
+        const finalAttempt = currentMinutesSincePeriodStart + this.simulationTickMinutes > mealWindow.end;
+        for (const member of this.memberStates) {
+          member.updateIngredientBag();
+        }
+        const cooked = this.cookingState.cookPlannedMeal({
+          meal: mealWindow.meal,
+          finalAttempt,
+          sunday
+        });
+        if (cooked) {
+          this.cookingState.recordMealCookTime(mealWindow.meal, currentMinutesSincePeriodStart);
+          for (const member of this.memberStates) {
+            member.recoverMeal();
+          }
+        }
+      }
+      return;
+    }
+
     if (currentMinutesSincePeriodStart >= this.mealTimeMinutesSinceStart[this.cookedMealsCounter]) {
       for (const member of this.memberStates) {
         member.updateIngredientBag();
         member.recoverMeal();
       }
       // mod 7 for if Sunday
-      this.cookingState?.cook(this.run % 7 === 0);
+      this.cookingState?.cook(sunday);
+      const meal = this.mealWindowsMinutesSinceStart[this.cookedMealsCounter]?.meal;
+      if (meal) {
+        this.cookingState?.recordMealCookTime(meal, currentMinutesSincePeriodStart);
+      }
       this.cookedMealsCounter++;
     }
   }

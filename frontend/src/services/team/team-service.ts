@@ -8,6 +8,7 @@ import { type TeamCombinedProduction, type TeamInstance, type TeamProductionExt 
 import {
   berry,
   DEFAULT_ISLAND,
+  defaultMealPlan,
   getIsland,
   MAX_TEAM_SIZE,
   Optimal,
@@ -63,6 +64,7 @@ class TeamServiceImpl {
           bedtime: '21:30',
           wakeup: '06:00',
           recipeType: 'curry',
+          mealPlan: defaultMealPlan(),
           island: { ...DEFAULT_ISLAND },
           stockpiledBerries: [],
           stockpiledIngredients: [],
@@ -113,6 +115,7 @@ class TeamServiceImpl {
           bedtime: serverTeam.bedtime,
           wakeup: serverTeam.wakeup,
           recipeType: serverTeam.recipeType,
+          mealPlan: serverTeam.mealPlan ?? defaultMealPlan(),
           island: islandInstance,
           stockpiledBerries: serverTeam.stockpiledBerries ?? [],
           stockpiledIngredients: serverTeam.stockpiledIngredients ?? [],

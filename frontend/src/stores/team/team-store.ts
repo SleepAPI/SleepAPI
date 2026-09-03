@@ -13,6 +13,7 @@ import { timeWindowFactor, type TimeWindowDay } from '@/types/time/time-window'
 import { defineStore } from 'pinia'
 import {
   DEFAULT_ISLAND,
+  defaultMealPlan,
   DOMAIN_VERSION,
   EnergizingCheerS,
   EnergizingCheerSHealPulse,
@@ -26,6 +27,7 @@ import {
   type BerrySetSimple,
   type IngredientSetSimple,
   type IslandInstance,
+  type MealPlan,
   type PokemonInstanceExt,
   type RecipeType,
   type TeamAreaDTO,
@@ -60,6 +62,7 @@ const defaultState = (attrs?: Partial<TeamState>): TeamState => ({
       bedtime: '21:30',
       wakeup: '06:00',
       recipeType: 'curry',
+      mealPlan: defaultMealPlan(),
       island: { ...DEFAULT_ISLAND },
       stockpiledBerries: [],
       stockpiledIngredients: [],
@@ -154,6 +157,9 @@ export const useTeamStore = defineStore('team', {
         }
         if (!team.island) {
           team.island = { ...DEFAULT_ISLAND }
+        }
+        if (!team.mealPlan) {
+          team.mealPlan = defaultMealPlan()
         }
       }
     },
@@ -258,8 +264,17 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          const { island, name, camp, bedtime, wakeup, recipeType, stockpiledBerries, stockpiledIngredients } =
-            this.getCurrentTeam
+          const {
+            island,
+            name,
+            camp,
+            bedtime,
+            wakeup,
+            recipeType,
+            mealPlan,
+            stockpiledBerries,
+            stockpiledIngredients
+          } = this.getCurrentTeam
 
           const islandDTO: TeamAreaDTO = {
             islandName: island.shortName,
@@ -275,6 +290,7 @@ export const useTeamStore = defineStore('team', {
             bedtime,
             wakeup,
             recipeType,
+            mealPlan,
             island: islandDTO,
             stockpiledBerries,
             stockpiledIngredients
@@ -299,6 +315,7 @@ export const useTeamStore = defineStore('team', {
         bedtime: '21:30',
         wakeup: '06:00',
         recipeType: 'curry',
+        mealPlan: defaultMealPlan(),
         island: { ...DEFAULT_ISLAND },
         stockpiledBerries: [],
         stockpiledIngredients: [],
@@ -375,7 +392,9 @@ export const useTeamStore = defineStore('team', {
         bedtime: this.teams[teamIndex].bedtime,
         wakeup: this.teams[teamIndex].wakeup,
         stockpiledIngredients: this.teams[teamIndex].stockpiledIngredients,
-        island: this.teams[teamIndex].island
+        island: this.teams[teamIndex].island,
+        recipeType: this.teams[teamIndex].recipeType,
+        mealPlan: this.teams[teamIndex].mealPlan
       }
       this.teams[teamIndex].production = await TeamService.calculateProduction({
         members,
@@ -465,8 +484,16 @@ export const useTeamStore = defineStore('team', {
     },
     async updateRecipeType(recipeType: RecipeType) {
       this.getCurrentTeam.recipeType = recipeType
+      this.getCurrentTeam.mealPlan = defaultMealPlan()
 
       this.updateTeam()
+      await this.calculateProduction(this.currentIndex)
+    },
+    async updateMealPlan(mealPlan: MealPlan) {
+      this.getCurrentTeam.mealPlan = mealPlan
+
+      this.updateTeam()
+      await this.calculateProduction(this.currentIndex)
     },
     async updateIsland(island: IslandInstance) {
       this.getCurrentTeam.island = island

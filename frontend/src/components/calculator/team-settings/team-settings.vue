@@ -153,7 +153,6 @@
                 format="24hr"
                 :allowed-hours="allowedBedtimeHours"
                 :allowed-minutes="allowedStep"
-                @update:model-value="toggleBedtimeMenu"
               ></v-time-picker>
             </v-card-text>
             <v-card-actions>
@@ -177,7 +176,6 @@
                 format="24hr"
                 :allowed-hours="allowedWakeupHours"
                 :allowed-minutes="allowedStep"
-                @update:model-value="toggleWakeupMenu"
               ></v-time-picker>
             </v-card-text>
             <v-card-actions>
@@ -280,7 +278,7 @@ export default defineComponent({
       await this.teamStore.updateStockpile(params)
     },
     allowedStep(minute: number) {
-      return minute % 5 === 0
+      return minute % 5 === 0 || minute === 59
     },
     allowedBedtimeHours(hour: number) {
       const wakeupHour = +this.wakeup.split(':')[0]
