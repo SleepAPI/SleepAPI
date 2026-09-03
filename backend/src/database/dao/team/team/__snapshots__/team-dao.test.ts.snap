@@ -13,6 +13,7 @@ exports[`findTeamsWithMembers > shall get team with members 1`] = `
       "mainFavoriteBerry": undefined,
       "subFavoriteBerries": undefined,
     },
+    "mealPlan": undefined,
     "members": [
       {
         "carrySize": 22,

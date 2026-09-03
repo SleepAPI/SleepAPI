@@ -9,6 +9,7 @@ import {
   BULBASAUR,
   CarrySizeUtils,
   DEFAULT_ISLAND,
+  defaultMealPlan,
   ingredient,
   MAX_TEAM_SIZE,
   nature,
@@ -93,12 +94,14 @@ describe('getTeams', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         recipeType: 'curry',
+        mealPlan: defaultMealPlan(),
         island: { ...DEFAULT_ISLAND },
         stockpiledBerries: [],
         stockpiledIngredients: [],
         version: 0,
         members: new Array(MAX_TEAM_SIZE).fill(undefined),
-        memberIvs: {}
+        memberIvs: {},
+        production: undefined
       })
     })
   })
@@ -155,12 +158,14 @@ describe('getTeams', () => {
       bedtime: '21:30',
       wakeup: '06:00',
       recipeType: 'curry',
+      mealPlan: defaultMealPlan(),
       island: { ...DEFAULT_ISLAND },
       stockpiledBerries: [],
       stockpiledIngredients: [],
       version: 1,
       members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined],
-      memberIvs: {}
+      memberIvs: {},
+      production: undefined
     })
   })
 
@@ -203,8 +208,11 @@ describe('getTeams', () => {
         memberIndex: 0,
         name: `Team ${teamIndex + 1}`,
         camp: teamIndex % 2 === 0,
+        bedtime: undefined,
+        wakeup: undefined,
         version: 1,
         recipeType: 'curry',
+        mealPlan: defaultMealPlan(),
         island: { ...DEFAULT_ISLAND },
         stockpiledBerries: [],
         stockpiledIngredients: [],
@@ -215,7 +223,8 @@ describe('getTeams', () => {
           '000000000000000000000000000000000000',
           '000000000000000000000000000000000000'
         ],
-        memberIvs: {}
+        memberIvs: {},
+        production: undefined
       })
     })
     const pokemonStore = usePokemonStore()
