@@ -1,9 +1,22 @@
 <template>
-  <v-row class="flex-center" dense>
+  <v-row
+    class="meal-plan-header flex-center"
+    role="button"
+    tabindex="0"
+    :aria-expanded="isExpanded"
+    @click="toggleExpanded"
+    @keyup.enter="toggleExpanded"
+    @keyup.space.prevent="toggleExpanded"
+  >
     <v-col cols="12" class="flex-center">
-      <span class="text-h6 text-center">Meal Plan</span>
+      <span class="text-h6 text-center">Meal plan</span>
     </v-col>
+    <v-col cols="auto" class="meal-plan-toggle-icon flex-center">
+      <v-icon>{{ isExpanded ? 'mdi-minus' : 'mdi-plus' }}</v-icon>
+    </v-col>
+  </v-row>
 
+  <v-row v-if="isExpanded" class="flex-center" dense>
     <v-col v-for="meal in meals" :key="meal" cols="4" class="meal-plan-column">
       <v-btn
         class="meal-plan-tile text-none"
@@ -68,9 +81,13 @@ export default defineComponent({
     return { teamStore, recipeImage }
   },
   data: () => ({
+    isExpanded: false,
     meals: ['breakfast', 'lunch', 'dinner'] as MealSlot[]
   }),
   methods: {
+    toggleExpanded() {
+      this.isExpanded = !this.isExpanded
+    },
     choice(meal: MealSlot): MealPlanChoice {
       return this.teamStore.getCurrentTeam.mealPlan?.[meal] ?? defaultMealPlan()[meal]
     },
@@ -94,6 +111,18 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.meal-plan-header {
+  cursor: pointer;
+  position: relative;
+}
+
+.meal-plan-toggle-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .meal-plan-column {
   container-type: inline-size;
   display: flex;
