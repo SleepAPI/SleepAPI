@@ -371,12 +371,24 @@ export class CookingState {
 
   private cookingDataForType(type: RecipeType) {
     if (type === 'curry') {
-      return { inventory: this.currentCurryInventory, stockpile: this.currentCurryStockpile, cooked: this.cookedCurries };
+      return {
+        inventory: this.currentCurryInventory,
+        stockpile: this.currentCurryStockpile,
+        cooked: this.cookedCurries
+      };
     }
     if (type === 'salad') {
-      return { inventory: this.currentSaladInventory, stockpile: this.currentSaladStockpile, cooked: this.cookedSalads };
+      return {
+        inventory: this.currentSaladInventory,
+        stockpile: this.currentSaladStockpile,
+        cooked: this.cookedSalads
+      };
     }
-    return { inventory: this.currentDessertInventory, stockpile: this.currentDessertStockpile, cooked: this.cookedDesserts };
+    return {
+      inventory: this.currentDessertInventory,
+      stockpile: this.currentDessertStockpile,
+      cooked: this.cookedDesserts
+    };
   }
 
   private cookExactRecipe(

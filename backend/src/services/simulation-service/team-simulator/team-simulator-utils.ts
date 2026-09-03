@@ -2,7 +2,14 @@ import { calculateHelpSpeedBeforeEnergy } from '@src/services/calculator/help/he
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { getDefaultMealTimes, getMealWindows } from '@src/utils/meal-utils/meal-utils.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
-import type { FunctionalEvent, MealSlot, ProduceFlat, TeamMemberExt, TeamSettingsExt, TimePeriod } from 'sleepapi-common';
+import type {
+  FunctionalEvent,
+  MealSlot,
+  ProduceFlat,
+  TeamMemberExt,
+  TeamSettingsExt,
+  TimePeriod
+} from 'sleepapi-common';
 import {
   berrySetToFlat,
   calculateAveragePokemonIngredientSet,

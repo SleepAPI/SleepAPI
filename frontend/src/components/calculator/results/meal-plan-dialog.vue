@@ -25,7 +25,9 @@
               </v-avatar>
             </template>
             <v-list-item-title class="text-body-1 font-weight-medium">Best Recipe</v-list-item-title>
-            <v-list-item-subtitle>Cook the best recipe available, without using important ingredients.</v-list-item-subtitle>
+            <v-list-item-subtitle
+              >Cook the best recipe available, without using important ingredients.</v-list-item-subtitle
+            >
           </v-list-item>
 
           <v-list-item class="meal-plan-option" @click="selectChoice({ kind: 'none' })">
@@ -65,7 +67,11 @@
             </v-list-item-subtitle>
             <template #append>
               <div class="meal-plan-option-stats">
-                <span><v-img src="/images/misc/strength.png" width="18" height="18" />{{ localizeNumber(recipe.userStrength) }}</span>
+                <span
+                  ><v-img src="/images/misc/strength.png" width="18" height="18" />{{
+                    localizeNumber(recipe.userStrength)
+                  }}</span
+                >
                 <span><v-img src="/images/misc/pot.png" width="18" height="18" />{{ recipe.nrOfIngredients }}</span>
               </div>
             </template>
@@ -161,7 +167,8 @@ const filteredRecipes = computed(() => {
     .sort((a, b) => {
       const valueA = sortValue(a.recipe)
       const valueB = sortValue(b.recipe)
-      const comparison = typeof valueA === 'string' ? valueA.localeCompare(valueB as string) : valueA - (valueB as number)
+      const comparison =
+        typeof valueA === 'string' ? valueA.localeCompare(valueB as string) : valueA - (valueB as number)
       return comparison === 0 ? (a.score ?? 0) - (b.score ?? 0) : comparison * direction
     })
     .map(({ recipe }) => recipe)
@@ -197,7 +204,12 @@ function sortValue(recipe: UserRecipe): number | string {
 
 function recipeSearchScore(recipe: Recipe, query: string): number | undefined {
   if (!query) return 0
-  const text = [recipe.displayName, recipe.name, recipe.type, ...recipe.ingredients.map(({ ingredient }) => ingredient.name)]
+  const text = [
+    recipe.displayName,
+    recipe.name,
+    recipe.type,
+    ...recipe.ingredients.map(({ ingredient }) => ingredient.name)
+  ]
     .join(' ')
     .toLowerCase()
 

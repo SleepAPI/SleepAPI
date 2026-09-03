@@ -178,9 +178,7 @@ class TimeUtilsImpl {
 
     if (overlaps.length === 0) return undefined;
 
-    return overlaps
-      .map((period) => period.start)
-      .sort((time1, time2) => this.sortTimesForPeriod(time1, time2, b))[0];
+    return overlaps.map((period) => period.start).sort((time1, time2) => this.sortTimesForPeriod(time1, time2, b))[0];
   }
 
   public sortTimesForPeriod(time1: Time, time2: Time, period: TimePeriod): number {

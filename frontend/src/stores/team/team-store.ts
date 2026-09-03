@@ -264,8 +264,17 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          const { island, name, camp, bedtime, wakeup, recipeType, mealPlan, stockpiledBerries, stockpiledIngredients } =
-            this.getCurrentTeam
+          const {
+            island,
+            name,
+            camp,
+            bedtime,
+            wakeup,
+            recipeType,
+            mealPlan,
+            stockpiledBerries,
+            stockpiledIngredients
+          } = this.getCurrentTeam
 
           const islandDTO: TeamAreaDTO = {
             islandName: island.shortName,

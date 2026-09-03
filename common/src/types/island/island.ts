@@ -2,7 +2,15 @@ import type { Berry } from '../berry/berry';
 import type { ExpertModeBonuses, ExpertModeSettings, ExpertRandomBonusType } from '../expert-mode';
 
 export type IslandShortName =
-  'greengrass' | 'cyan' | 'taupe' | 'snowdrop' | 'lapis' | 'powerplant' | 'amber' | 'GGEX' | 'CBEX';
+  | 'greengrass'
+  | 'cyan'
+  | 'taupe'
+  | 'snowdrop'
+  | 'lapis'
+  | 'powerplant'
+  | 'amber'
+  | 'GGEX'
+  | 'CBEX';
 
 interface IslandBase {
   name: string;
