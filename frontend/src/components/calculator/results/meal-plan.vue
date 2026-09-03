@@ -17,60 +17,67 @@
   </v-row>
 
   <v-row v-if="isExpanded" class="flex-center" dense>
-    <v-col v-for="meal in meals" :key="meal" cols="4" class="meal-plan-column">
-      <v-btn
-        class="meal-plan-tile text-none"
-        variant="tonal"
-        :color="teamStore.getCurrentTeam.recipeType"
-        :aria-label="`select ${meal} recipe`"
-        @click="$emit('select-meal', meal)"
-      >
-        <span class="meal-plan-tile-content">
-          <span class="meal-plan-title text-body-1 text-capitalize font-weight-medium">{{ meal }}</span>
-          <span class="meal-plan-image-frame">
-            <v-img
-              :src="choiceImage(meal)"
-              contain
-              :class="['meal-plan-image', `meal-plan-image--${choice(meal).kind}`]"
-            />
+    <template v-for="day in planDays" :key="day">
+      <v-col v-if="day === 'sunday'" cols="12" class="flex-center py-0">
+        <span class="text-subtitle-1 text-center">Sunday Meals</span>
+      </v-col>
+      <v-col v-for="meal in meals" :key="`${day}-${meal}`" cols="4" class="meal-plan-column">
+        <v-btn
+          class="meal-plan-tile text-none"
+          variant="tonal"
+          :color="teamStore.getCurrentTeam.recipeType"
+          :aria-label="`select ${day} ${meal} recipe`"
+          @click="$emit('select-meal', { day, meal })"
+        >
+          <span class="meal-plan-tile-content">
+            <span class="meal-plan-title text-body-1 text-capitalize font-weight-medium">{{ meal }}</span>
+            <span class="meal-plan-image-frame">
+              <v-img
+                :src="choiceImage(meal, day)"
+                contain
+                :class="['meal-plan-image', `meal-plan-image--${choice(meal, day).kind}`]"
+              />
+            </span>
+            <span class="meal-plan-selection">
+              <template v-if="choice(meal, day).kind === 'recipe'">
+                <span class="meal-plan-selection-name text-body-1 text-center">{{
+                  recipeFor(meal, day)?.displayName
+                }}</span>
+                <span class="meal-plan-stats">
+                  <span class="meal-plan-stat">
+                    <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />
+                    {{ recipeFor(meal, day)?.value }}
+                  </span>
+                  <span class="meal-plan-stat">
+                    <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />
+                    {{ recipeFor(meal, day)?.nrOfIngredients }}
+                  </span>
+                </span>
+              </template>
+              <template v-else-if="choice(meal, day).kind === 'none'">
+                <span class="text-body-1">None</span>
+                <span class="meal-plan-stats">
+                  <span class="meal-plan-stat">
+                    <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />0
+                  </span>
+                  <span class="meal-plan-stat">
+                    <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />0
+                  </span>
+                </span>
+              </template>
+              <span v-else class="text-body-1">Best Recipe</span>
+            </span>
           </span>
-          <span class="meal-plan-selection">
-            <template v-if="choice(meal).kind === 'recipe'">
-              <span class="meal-plan-selection-name text-body-1 text-center">{{ recipeFor(meal)?.displayName }}</span>
-              <span class="meal-plan-stats">
-                <span class="meal-plan-stat">
-                  <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />
-                  {{ recipeFor(meal)?.value }}
-                </span>
-                <span class="meal-plan-stat">
-                  <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />
-                  {{ recipeFor(meal)?.nrOfIngredients }}
-                </span>
-              </span>
-            </template>
-            <template v-else-if="choice(meal).kind === 'none'">
-              <span class="text-body-1">None</span>
-              <span class="meal-plan-stats">
-                <span class="meal-plan-stat">
-                  <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />0
-                </span>
-                <span class="meal-plan-stat">
-                  <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />0
-                </span>
-              </span>
-            </template>
-            <span v-else class="text-body-1">Best Recipe</span>
-          </span>
-        </span>
-      </v-btn>
-    </v-col>
+        </v-btn>
+      </v-col>
+    </template>
   </v-row>
 </template>
 
 <script lang="ts">
 import { recipeImage } from '@/services/utils/image-utils'
 import { useTeamStore } from '@/stores/team/team-store'
-import { defaultMealPlan, getRecipe, type MealPlanChoice, type MealSlot } from 'sleepapi-common'
+import { defaultDailyMealPlan, defaultMealPlan, getRecipe, type MealPlanChoice, type MealSlot } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -82,21 +89,23 @@ export default defineComponent({
   },
   data: () => ({
     isExpanded: false,
-    meals: ['breakfast', 'lunch', 'dinner'] as MealSlot[]
+    meals: ['breakfast', 'lunch', 'dinner'] as MealSlot[],
+    planDays: ['weekday', 'sunday'] as const
   }),
   methods: {
     toggleExpanded() {
       this.isExpanded = !this.isExpanded
     },
-    choice(meal: MealSlot): MealPlanChoice {
-      return this.teamStore.getCurrentTeam.mealPlan?.[meal] ?? defaultMealPlan()[meal]
+    choice(meal: MealSlot, day: 'weekday' | 'sunday'): MealPlanChoice {
+      const mealPlan = this.teamStore.getCurrentTeam.mealPlan ?? defaultMealPlan()
+      return day === 'sunday' ? (mealPlan.sunday?.[meal] ?? defaultDailyMealPlan()[meal]) : mealPlan[meal]
     },
-    recipeFor(meal: MealSlot) {
-      const choice = this.choice(meal)
+    recipeFor(meal: MealSlot, day: 'weekday' | 'sunday') {
+      const choice = this.choice(meal, day)
       return choice.kind === 'recipe' ? getRecipe(choice.recipe) : undefined
     },
-    choiceImage(meal: MealSlot) {
-      const choice = this.choice(meal)
+    choiceImage(meal: MealSlot, day: 'weekday' | 'sunday') {
+      const choice = this.choice(meal, day)
       if (choice.kind === 'recipe') {
         return this.recipeImage(choice.recipe)
       }

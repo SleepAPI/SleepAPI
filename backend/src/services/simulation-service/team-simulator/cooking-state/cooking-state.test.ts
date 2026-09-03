@@ -4,6 +4,7 @@ import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-
 import type { PreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import { mocks } from '@src/vitest/index.js';
 import {
+  defaultMealPlan,
   dessert,
   emptyIngredientInventoryFloat,
   ingredient,
@@ -213,6 +214,68 @@ describe('CookingState', () => {
     );
     expect(result.dessert.cookedRecipes[0].averageFillerValue).toBe(5 * ingredient.SLOWPOKE_TAIL.value);
     expect(result.dessert.cookedRecipes[0].isPlannedRecipe).toBe(true);
+  });
+
+  it('shall use the Sunday meal plan only on Sunday', () => {
+    const cookingState = new CookingState(
+      mocks.teamSettingsExt({
+        recipeType: 'dessert',
+        mealPlan: {
+          ...defaultMealPlan(),
+          sunday: {
+            breakfast: { kind: 'recipe', recipe: dessert.WARM_MOOMOO_MILK.name },
+            lunch: { kind: 'best' },
+            dinner: { kind: 'best' }
+          }
+        }
+      }),
+      defaultUserRecipes(),
+      noCritRandom()
+    );
+
+    expect(cookingState.hasMealPlan(false)).toBe(false);
+    expect(cookingState.hasMealPlan(true)).toBe(true);
+  });
+
+  it('shall allow weekday Best Recipe meals to use only Sunday ingredient surplus', () => {
+    const cookingState = new CookingState(
+      mocks.teamSettingsExt({
+        recipeType: 'dessert',
+        mealPlan: {
+          ...defaultMealPlan(),
+          sunday: {
+            breakfast: { kind: 'recipe', recipe: dessert.FANCY_APPLE_JUICE.name },
+            lunch: { kind: 'best' },
+            dinner: { kind: 'best' }
+          }
+        }
+      }),
+      defaultUserRecipes(),
+      noCritRandom()
+    );
+    cookingState.addIngredients(ingredientSetToFloatFlat([{ amount: 16, ingredient: ingredient.FANCY_APPLE }]));
+
+    expect(cookingState.cookPlannedMeal({ meal: 'breakfast', finalAttempt: true, sunday: false })).toBe(true);
+    expect(cookingState.results(1).dessert.cookedRecipes[0].recipe.name).toBe(dessert.FANCY_APPLE_JUICE.name);
+  });
+
+  it('shall not spend ingredients reserved by weekday planned meals on Best Recipe meals', () => {
+    const cookingState = new CookingState(
+      mocks.teamSettingsExt({
+        recipeType: 'dessert',
+        mealPlan: {
+          breakfast: { kind: 'best' },
+          lunch: { kind: 'recipe', recipe: dessert.FANCY_APPLE_JUICE.name },
+          dinner: { kind: 'best' }
+        }
+      }),
+      defaultUserRecipes(),
+      noCritRandom()
+    );
+    cookingState.addIngredients(ingredientSetToFloatFlat([{ amount: 16, ingredient: ingredient.FANCY_APPLE }]));
+
+    expect(cookingState.cookPlannedMeal({ meal: 'breakfast', finalAttempt: true, sunday: false })).toBe(true);
+    expect(cookingState.results(1).dessert.cookedRecipes[0].recipe.name).toBe(dessert.MIXED_JUICE.name);
   });
 
   it('shall skip None meals without consuming a pot-size bonus', () => {

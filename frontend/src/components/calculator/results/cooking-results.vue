@@ -306,6 +306,7 @@ import {
   MathUtils,
   capitalize,
   combineSameIngredientsInDrop,
+  defaultDailyMealPlan,
   defaultMealPlan,
   getIsland,
   ingredient,
@@ -337,7 +338,8 @@ export default defineComponent({
       userStore: useUserStore(),
       showDetailsState: [] as boolean[],
       isMealPlanSelectionOpen: false,
-      selectedMealPlanSlot: undefined as MealSlot | undefined
+      selectedMealPlanSlot: undefined as MealSlot | undefined,
+      selectedMealPlanDay: 'weekday' as 'weekday' | 'sunday'
     }
   },
   computed: {
@@ -462,8 +464,9 @@ export default defineComponent({
     }
   },
   methods: {
-    openMealPlanSelection(meal: MealSlot) {
-      this.selectedMealPlanSlot = meal
+    openMealPlanSelection(params: { day: 'weekday' | 'sunday'; meal: MealSlot }) {
+      this.selectedMealPlanSlot = params.meal
+      this.selectedMealPlanDay = params.day
       this.isMealPlanSelectionOpen = true
     },
     async updateMealPlanSelection(choice: MealPlanChoice) {
@@ -471,10 +474,14 @@ export default defineComponent({
         return
       }
 
-      const mealPlan = {
-        ...(this.teamStore.getCurrentTeam.mealPlan ?? defaultMealPlan()),
-        [this.selectedMealPlanSlot]: choice
-      }
+      const currentMealPlan = this.teamStore.getCurrentTeam.mealPlan ?? defaultMealPlan()
+      const mealPlan =
+        this.selectedMealPlanDay === 'sunday'
+          ? {
+              ...currentMealPlan,
+              sunday: { ...(currentMealPlan.sunday ?? defaultDailyMealPlan()), [this.selectedMealPlanSlot]: choice }
+            }
+          : { ...currentMealPlan, [this.selectedMealPlanSlot]: choice }
       await this.teamStore.updateMealPlan(mealPlan)
       this.selectedMealPlanSlot = undefined
     },

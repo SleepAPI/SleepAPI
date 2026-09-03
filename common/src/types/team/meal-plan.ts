@@ -8,18 +8,34 @@ export type MealPlanChoice =
       recipe: string;
     };
 
-export type MealPlan = Record<MealSlot, MealPlanChoice>;
+export type DailyMealPlan = Record<MealSlot, MealPlanChoice>;
 
-export const DEFAULT_MEAL_PLAN: MealPlan = {
+export type MealPlan = DailyMealPlan & {
+  sunday?: DailyMealPlan;
+};
+
+export const DEFAULT_DAILY_MEAL_PLAN: DailyMealPlan = {
   breakfast: { kind: 'best' },
   lunch: { kind: 'best' },
   dinner: { kind: 'best' }
 };
 
-export function defaultMealPlan(): MealPlan {
+export const DEFAULT_MEAL_PLAN: MealPlan = {
+  ...DEFAULT_DAILY_MEAL_PLAN,
+  sunday: { ...DEFAULT_DAILY_MEAL_PLAN }
+};
+
+export function defaultDailyMealPlan(): DailyMealPlan {
   return {
     breakfast: { kind: 'best' },
     lunch: { kind: 'best' },
     dinner: { kind: 'best' }
+  };
+}
+
+export function defaultMealPlan(): MealPlan {
+  return {
+    ...defaultDailyMealPlan(),
+    sunday: defaultDailyMealPlan()
   };
 }

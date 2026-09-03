@@ -8,6 +8,7 @@ import type {
   CookingResult,
   IngredientIndexToFloatAmount,
   MealPlan,
+  DailyMealPlan,
   MealSlot,
   MealTimes,
   RecipeType,
@@ -16,6 +17,7 @@ import type {
 import {
   curry,
   defaultMealPlan,
+  defaultDailyMealPlan,
   dessert,
   emptyIngredientInventoryFloat,
   flatToIngredientSet,
@@ -54,7 +56,8 @@ export class CookingState {
   private mealCookCounts: Record<MealSlot, number> = { breakfast: 0, lunch: 0, dinner: 0 };
   private recipeType: RecipeType;
   private mealPlan: MealPlan;
-  private reservedIngredientIndexes = new Set<number>();
+  private weekdayReservedIngredientIndexes = new Set<number>();
+  private sundayReservedIngredients: IngredientIndexToFloatAmount = emptyIngredientInventoryFloat();
   private completedMeals = new Set<MealSlot>();
 
   private userCurries: UserRecipeFlat[];
@@ -95,10 +98,16 @@ export class CookingState {
     this.currentSaladStockpile = settings.stockpiledIngredients.slice();
     this.currentDessertStockpile = settings.stockpiledIngredients.slice();
 
-    for (const choice of Object.values(this.mealPlan)) {
+    for (const choice of Object.values(this.mealPlanForDay(false))) {
       if (choice.kind === 'recipe') {
         const recipe = this.recipesForType(this.recipeType).find((candidate) => candidate.name === choice.recipe);
-        recipe?.ingredients.forEach((amount, index) => amount > 0 && this.reservedIngredientIndexes.add(index));
+        recipe?.ingredients.forEach((amount, index) => amount > 0 && this.weekdayReservedIngredientIndexes.add(index));
+      }
+    }
+    for (const choice of Object.values(this.mealPlanForDay(true))) {
+      if (choice.kind === 'recipe') {
+        const recipe = this.recipesForType(this.recipeType).find((candidate) => candidate.name === choice.recipe);
+        recipe?.ingredients.forEach((amount, index) => (this.sundayReservedIngredients[index] += amount));
       }
     }
   }
@@ -113,8 +122,8 @@ export class CookingState {
     this.completedMeals.clear();
   }
 
-  public hasMealPlan() {
-    return Object.values(this.mealPlan).some((choice) => choice.kind !== 'best');
+  public hasMealPlan(sunday: boolean) {
+    return Object.values(this.mealPlanForDay(sunday)).some((choice) => choice.kind !== 'best');
   }
 
   public isMealCompleted(meal: MealSlot) {
@@ -125,7 +134,7 @@ export class CookingState {
     const { meal, finalAttempt, sunday } = params;
     if (this.completedMeals.has(meal)) return false;
 
-    const choice = this.mealPlan[meal];
+    const choice = this.mealPlanForDay(sunday)[meal];
     if (choice.kind === 'none') {
       if (finalAttempt) this.completedMeals.add(meal);
       return false;
@@ -134,6 +143,7 @@ export class CookingState {
     if (choice.kind === 'recipe' && !finalAttempt) {
       const recipe = this.recipesForType(this.recipeType).find((candidate) => candidate.name === choice.recipe);
       if (recipe && this.cookExactRecipe(recipe, sunday, true, true)) {
+        if (sunday) this.releaseSundayReservation(recipe);
         this.completedMeals.add(meal);
         return true;
       }
@@ -145,7 +155,11 @@ export class CookingState {
     this.completedMeals.add(meal);
     if (choice.kind === 'recipe') {
       const selectedRecipe = this.recipesForType(this.recipeType).find((candidate) => candidate.name === choice.recipe);
-      if (selectedRecipe && this.cookExactRecipe(selectedRecipe, sunday, true, true)) return true;
+      if (selectedRecipe && this.cookExactRecipe(selectedRecipe, sunday, true, true)) {
+        if (sunday) this.releaseSundayReservation(selectedRecipe);
+        return true;
+      }
+      if (selectedRecipe && sunday) this.releaseSundayReservation(selectedRecipe);
     }
 
     return this.cookBestUnreservedRecipe(sunday);
@@ -369,6 +383,15 @@ export class CookingState {
     return this.userDesserts;
   }
 
+  private mealPlanForDay(sunday: boolean): DailyMealPlan {
+    const plan = sunday ? (this.mealPlan.sunday ?? defaultDailyMealPlan()) : this.mealPlan;
+    return {
+      breakfast: plan.breakfast,
+      lunch: plan.lunch,
+      dinner: plan.dinner
+    };
+  }
+
   private cookingDataForType(type: RecipeType) {
     if (type === 'curry') {
       return {
@@ -412,8 +435,9 @@ export class CookingState {
   }
 
   private cookBestUnreservedRecipe(sunday: boolean): boolean {
+    const { inventory, stockpile } = this.cookingDataForType(this.recipeType);
     const recipes = this.recipesForType(this.recipeType).filter((recipe) =>
-      recipe.ingredients.every((amount, index) => amount === 0 || !this.reservedIngredientIndexes.has(index))
+      this.canUseRecipeForFallback(recipe, inventory, stockpile)
     );
     for (const recipe of recipes) {
       if (this.cookExactRecipe(recipe, sunday)) return true;
@@ -426,6 +450,24 @@ export class CookingState {
           ? { ...salad.MIXED_SALAD_FLAT, level: 1 }
           : { ...dessert.MIXED_JUICE_FLAT, level: 1 };
     return this.cookExactRecipe(mixedRecipe, sunday);
+  }
+
+  private canUseRecipeForFallback(
+    recipe: UserRecipeFlat,
+    inventory: IngredientIndexToFloatAmount,
+    stockpile: IngredientIndexToFloatAmount
+  ) {
+    return recipe.ingredients.every((amount, index) => {
+      if (amount === 0) return true;
+      if (this.weekdayReservedIngredientIndexes.has(index)) return false;
+      return inventory[index] + stockpile[index] - amount >= this.sundayReservedIngredients[index];
+    });
+  }
+
+  private releaseSundayReservation(recipe: UserRecipeFlat) {
+    recipe.ingredients.forEach((amount, index) => {
+      this.sundayReservedIngredients[index] -= amount;
+    });
   }
 
   private consumeIngredients(
@@ -452,12 +494,13 @@ export class CookingState {
     let fillerTotal = 0;
 
     const ingredientIndexes = ingredient.INGREDIENTS.map((_, index) => index)
-      .filter((index) => !this.reservedIngredientIndexes.has(index))
+      .filter((index) => !this.weekdayReservedIngredientIndexes.has(index))
       .sort((a, b) => ingredient.INGREDIENTS[b].value - ingredient.INGREDIENTS[a].value);
 
     for (const index of ingredientIndexes) {
       if (remainingSlots <= 0) break;
-      const amount = Math.min(remainingSlots, inventory[index] + stockpile[index]);
+      const availableFiller = Math.max(inventory[index] + stockpile[index] - this.sundayReservedIngredients[index], 0);
+      const amount = Math.min(remainingSlots, availableFiller);
       const fromInventory = Math.min(amount, inventory[index]);
       inventory[index] -= fromInventory;
       stockpile[index] -= amount - fromInventory;
@@ -503,7 +546,8 @@ export class CookingState {
     // TODO: we can solve this in fewer iterations.
     // TODO: CookedCurries/salads etc are all same length always, we can do the entire thing in a single loop
     const plannedCookedRecipes = this.cookingDataForType(this.recipeType).cooked;
-    const critCookedRecipes = this.hasMealPlan() ? plannedCookedRecipes : this.cookedCurries;
+    const critCookedRecipes =
+      this.hasMealPlan(false) || this.hasMealPlan(true) ? plannedCookedRecipes : this.cookedCurries;
     const critCookCount = Math.max(critCookedRecipes.length, 1);
 
     return {
