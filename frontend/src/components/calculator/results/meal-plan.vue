@@ -12,34 +12,42 @@
         :aria-label="`select ${meal} recipe`"
         @click="$emit('select-meal', meal)"
       >
-        <span class="meal-plan-title text-body-1 text-capitalize font-weight-medium">{{ meal }}</span>
-        <v-img :src="choiceImage(meal)" width="144" height="144" contain class="meal-plan-image" />
-        <span class="meal-plan-selection">
-          <template v-if="choice(meal).kind === 'recipe'">
-            <span class="text-body-1 text-center text-wrap">{{ recipeFor(meal)?.displayName }}</span>
-            <span class="meal-plan-stats">
-              <span class="meal-plan-stat">
-                <v-img src="/images/misc/strength.png" width="16" height="16" contain />
-                {{ recipeFor(meal)?.value }}
+        <span class="meal-plan-tile-content">
+          <span class="meal-plan-title text-body-1 text-capitalize font-weight-medium">{{ meal }}</span>
+          <span class="meal-plan-image-frame">
+            <v-img
+              :src="choiceImage(meal)"
+              contain
+              :class="['meal-plan-image', `meal-plan-image--${choice(meal).kind}`]"
+            />
+          </span>
+          <span class="meal-plan-selection">
+            <template v-if="choice(meal).kind === 'recipe'">
+              <span class="meal-plan-selection-name text-body-1 text-center">{{ recipeFor(meal)?.displayName }}</span>
+              <span class="meal-plan-stats">
+                <span class="meal-plan-stat">
+                  <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />
+                  {{ recipeFor(meal)?.value }}
+                </span>
+                <span class="meal-plan-stat">
+                  <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />
+                  {{ recipeFor(meal)?.nrOfIngredients }}
+                </span>
               </span>
-              <span class="meal-plan-stat">
-                <v-img src="/images/misc/pot.png" width="16" height="16" contain />
-                {{ recipeFor(meal)?.nrOfIngredients }}
+            </template>
+            <template v-else-if="choice(meal).kind === 'none'">
+              <span class="text-body-1">None</span>
+              <span class="meal-plan-stats">
+                <span class="meal-plan-stat">
+                  <v-img src="/images/misc/strength.png" contain class="meal-plan-stat-icon" />0
+                </span>
+                <span class="meal-plan-stat">
+                  <v-img src="/images/misc/pot.png" contain class="meal-plan-stat-icon" />0
+                </span>
               </span>
-            </span>
-          </template>
-          <template v-else-if="choice(meal).kind === 'none'">
-            <span class="text-body-1">None</span>
-            <span class="meal-plan-stats">
-              <span class="meal-plan-stat">
-                <v-img src="/images/misc/strength.png" width="16" height="16" contain />0
-              </span>
-              <span class="meal-plan-stat">
-                <v-img src="/images/misc/pot.png" width="16" height="16" contain />0
-              </span>
-            </span>
-          </template>
-          <span v-else class="text-body-1">Best Recipe</span>
+            </template>
+            <span v-else class="text-body-1">Best Recipe</span>
+          </span>
         </span>
       </v-btn>
     </v-col>
@@ -87,31 +95,66 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .meal-plan-column {
+  container-type: inline-size;
   display: flex;
 }
 
 .meal-plan-tile {
-  height: 232px;
+  box-sizing: border-box;
+  height: clamp(230px, 74cqw, 340px);
   min-width: 0;
-  padding: 8px;
+  overflow: hidden;
+  padding: 0;
   width: 100%;
 
   :deep(.v-btn__content) {
-    align-items: center;
-    display: grid;
-    grid-template-rows: 1fr auto 1fr;
+    display: block;
     height: 100%;
-    justify-items: center;
     width: 100%;
   }
 }
 
+.meal-plan-tile-content {
+  align-items: center;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  justify-items: center;
+  min-height: 0;
+  padding: clamp(8px, 3cqw, 16px) clamp(8px, 3cqw, 16px) clamp(12px, 5cqw, 24px);
+  width: 100%;
+}
+
 .meal-plan-title {
   align-self: start;
+  font-size: clamp(0.75rem, 6cqw, 1rem) !important;
+}
+
+.meal-plan-image-frame {
+  align-self: center;
+  display: block;
+  height: clamp(96px, 20vw, 144px);
+  max-height: 100%;
+  position: relative;
+  width: clamp(96px, 20vw, 144px);
 }
 
 .meal-plan-image {
-  align-self: center;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform-origin: center;
+  width: 100%;
+}
+
+.meal-plan-image--best {
+  transform: scale(1.1);
+}
+
+.meal-plan-image--none {
+  transform: scale(0.65);
 }
 
 .meal-plan-selection {
@@ -119,18 +162,35 @@ export default defineComponent({
   align-self: end;
   display: flex;
   flex-direction: column;
-  min-height: 24px;
+  font-size: clamp(0.75rem, 6cqw, 1rem) !important;
+  gap: clamp(4px, 3cqw, 8px);
+  justify-content: flex-start;
+  min-height: clamp(52px, 14cqw, 64px);
+  max-width: 100%;
+  position: relative;
+  bottom: clamp(16px, 6cqw, 32px);
+  width: 100%;
+}
+
+.meal-plan-selection-name {
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .meal-plan-stats {
   display: flex;
-  gap: 8px;
+  gap: clamp(6px, 5cqw, 14px);
 }
 
 .meal-plan-stat {
   align-items: center;
   display: flex;
-  font-size: 0.75rem;
-  gap: 2px;
+  font-size: clamp(0.75rem, 5cqw, 0.9rem);
+  gap: clamp(2px, 2cqw, 4px);
+}
+
+.meal-plan-stat-icon {
+  height: clamp(16px, 8cqw, 22px);
+  width: clamp(16px, 8cqw, 22px);
 }
 </style>

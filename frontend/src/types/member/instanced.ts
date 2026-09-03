@@ -43,7 +43,7 @@ export interface TeamInstance {
   stockpiledIngredients: IngredientSetSimple[]
   stockpiledBerries: BerrySetSimple[]
   recipeType: RecipeType
-  mealPlan: MealPlan
+  mealPlan?: MealPlan
   island: IslandInstance
   version: number
   members: (string | undefined)[]

@@ -51,6 +51,12 @@
 
           <MealPlan @select-meal="openMealPlanSelection" />
 
+          <MealPlanDialog
+            v-model="isMealPlanSelectionOpen"
+            :meal="selectedMealPlanSlot"
+            @select="updateMealPlanSelection"
+          />
+
           <Divider />
 
           <v-row v-if="mealTimes" class="flex-center" dense>
@@ -278,6 +284,7 @@ import { defineComponent } from 'vue'
 
 import Divider from '@/components/custom-components/divider/divider.vue'
 import MealPlan from '@/components/calculator/results/meal-plan.vue'
+import MealPlanDialog from '@/components/calculator/results/meal-plan-dialog.vue'
 import { ingredientImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
@@ -286,10 +293,13 @@ import {
   MathUtils,
   capitalize,
   combineSameIngredientsInDrop,
+  defaultMealPlan,
   getIsland,
   ingredient,
   prettifyTime,
   type CookedRecipeResult,
+  type MealPlanChoice,
+  type MealSlot,
   type RecipeTypeResult,
   type Time
 } from 'sleepapi-common'
@@ -304,14 +314,17 @@ export default defineComponent({
   name: 'CookingResults',
   components: {
     Divider,
-    MealPlan
+    MealPlan,
+    MealPlanDialog
   },
   data() {
     return {
       teamStore: useTeamStore(),
       pokemonStore: usePokemonStore(),
       userStore: useUserStore(),
-      showDetailsState: [] as boolean[]
+      showDetailsState: [] as boolean[],
+      isMealPlanSelectionOpen: false,
+      selectedMealPlanSlot: undefined as MealSlot | undefined
     }
   },
   computed: {
@@ -436,8 +449,21 @@ export default defineComponent({
     }
   },
   methods: {
-    openMealPlanSelection() {
-      // The recipe picker is added in the next UI step.
+    openMealPlanSelection(meal: MealSlot) {
+      this.selectedMealPlanSlot = meal
+      this.isMealPlanSelectionOpen = true
+    },
+    async updateMealPlanSelection(choice: MealPlanChoice) {
+      if (!this.selectedMealPlanSlot) {
+        return
+      }
+
+      const mealPlan = {
+        ...(this.teamStore.getCurrentTeam.mealPlan ?? defaultMealPlan()),
+        [this.selectedMealPlanSlot]: choice
+      }
+      await this.teamStore.updateMealPlan(mealPlan)
+      this.selectedMealPlanSlot = undefined
     },
     toggleDetails(index: number) {
       this.showDetailsState[index] = !this.showDetailsState[index]
