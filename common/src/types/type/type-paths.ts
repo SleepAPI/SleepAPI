@@ -19,12 +19,11 @@
 type PathsOfObject<T, Prefix extends string = ''> = {
   [K in keyof T & string]: NonNullable<T[K]> extends Array<infer U>
     ? U extends object
-      ?
-          | `${Prefix}${K}`
-          | `${Prefix}${K}.${number}`
-          | `${Prefix}${K}.*`
-          | PathsOfObject<U, `${Prefix}${K}.${number}.`>
-          | PathsOfObject<U, `${Prefix}${K}.*.`>
+      ? | `${Prefix}${K}`
+        | `${Prefix}${K}.${number}`
+        | `${Prefix}${K}.*`
+        | PathsOfObject<U, `${Prefix}${K}.${number}.`>
+        | PathsOfObject<U, `${Prefix}${K}.*.`>
       : `${Prefix}${K}` | `${Prefix}${K}.${number}` | `${Prefix}${K}.*`
     : NonNullable<T[K]> extends object
       ? `${Prefix}${K}` | PathsOfObject<NonNullable<T[K]>, `${Prefix}${K}.`>

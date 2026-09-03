@@ -23,8 +23,10 @@
           packages = with pkgs; [
             bun
             nodejs_24
-            prettier
           ];
+          shellHook = ''
+            export PATH="$PWD/node_modules/.bin:$PATH"
+          '';
         };
       });
     };

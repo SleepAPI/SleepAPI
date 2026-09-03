@@ -55,9 +55,7 @@ export type ModifierComplexValue<T extends ModifierTargetType, P extends PathKey
  * }
  */
 export type ModifierValue<T extends ModifierTargetType, P extends PathKeys<T>> =
-  | PathValue<T, P>
-  | PathReference<T>
-  | ModifierComplexValue<T, P>;
+  PathValue<T, P> | PathReference<T> | ModifierComplexValue<T, P>;
 
 /**
  * Modifier options that define how to modify a target object

@@ -213,12 +213,10 @@ const snackbar = ref({ show: false, text: '', color: 'success' })
 
 const displayedTiersOrder: Tier[] = ['S', 'A', 'B', 'C', 'D', 'E', 'F']
 
-const currentSettings = computed(
-  (): TierlistSettings => ({
-    level: selectedLevel.value,
-    camp: camp.value
-  })
-)
+const currentSettings = computed((): TierlistSettings => ({
+  level: selectedLevel.value,
+  camp: camp.value
+}))
 
 const filteredTierList = computed(() => {
   if (!searchQuery.value) {

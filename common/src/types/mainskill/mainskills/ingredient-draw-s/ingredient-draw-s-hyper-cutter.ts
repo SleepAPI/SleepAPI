@@ -83,14 +83,7 @@ class IngredientDrawSHyperCutterImpl extends ModifiedMainskill {
 }
 
 export type HyperCutterOutput =
-  | 'Potato'
-  | 'Oil'
-  | 'Tomato'
-  | 'Corn'
-  | 'Potato (L)'
-  | 'Oil (L)'
-  | 'Tomato (L)'
-  | 'Corn (L)';
+  'Potato' | 'Oil' | 'Tomato' | 'Corn' | 'Potato (L)' | 'Oil (L)' | 'Tomato (L)' | 'Corn (L)';
 
 export interface HyperCutterResult {
   amountFunc: AmountFunction;
