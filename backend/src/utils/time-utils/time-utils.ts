@@ -173,6 +173,16 @@ class TimeUtilsImpl {
     };
   }
 
+  public getEarliestMinuteInOverlap(a: TimePeriod, b: TimePeriod): Time | undefined {
+    const overlaps = this.getTimePeriodOverlap(a, b);
+
+    if (overlaps.length === 0) return undefined;
+
+    return overlaps
+      .map((period) => period.start)
+      .sort((time1, time2) => this.sortTimesForPeriod(time1, time2, b))[0];
+  }
+
   public sortTimesForPeriod(time1: Time, time2: Time, period: TimePeriod): number {
     // Convert a time object to minutes since the start of the day for comparison
     const timeToMinutes = (time: Time) => time.hour * 60 + time.minute;

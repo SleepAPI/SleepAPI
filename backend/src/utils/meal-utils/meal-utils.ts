@@ -1,6 +1,6 @@
 import { MealError } from '@src/domain/error/meal/meal-error.js';
 import { TimeUtils } from '@src/utils/time-utils/time-utils.js';
-import type { MealTimes, Recipe, Time, TimePeriod } from 'sleepapi-common';
+import type { MealSlot, MealTimes, Recipe, Time, TimePeriod } from 'sleepapi-common';
 import { parseTime, RECIPES } from 'sleepapi-common';
 
 export function getMeal(name: string) {
@@ -33,6 +33,25 @@ export function getMealsForFilter(params: {
 }
 
 export function getDefaultMealTimes(dayPeriod: TimePeriod): { meals: MealTimes; sorted: Time[] } {
+  const windows = getMealWindows(dayPeriod);
+  const meals: MealTimes = {};
+  for (const window of windows) {
+    meals[window.meal] = window.end;
+  }
+
+  return {
+    meals,
+    sorted: windows.map((window) => window.end)
+  };
+}
+
+export interface MealWindow {
+  meal: MealSlot;
+  start: Time;
+  end: Time;
+}
+
+export function getMealWindows(dayPeriod: TimePeriod): MealWindow[] {
   const breakfastWindow: TimePeriod = {
     start: parseTime('04:00'),
     end: parseTime('12:00')
@@ -46,30 +65,17 @@ export function getDefaultMealTimes(dayPeriod: TimePeriod): { meals: MealTimes; 
     end: parseTime('04:00')
   };
 
-  const mealTimes: Time[] = [];
-
-  const latestBreakfastTime = TimeUtils.getLatestMinuteInOverlap(breakfastWindow, dayPeriod);
-  const latestLunchTime = TimeUtils.getLatestMinuteInOverlap(lunchWindow, dayPeriod);
-  const latestDinnerTime = TimeUtils.getLatestMinuteInOverlap(dinnerWindow, dayPeriod);
-
-  if (latestBreakfastTime) {
-    mealTimes.push(latestBreakfastTime);
-  }
-  if (latestLunchTime) {
-    mealTimes.push(latestLunchTime);
-  }
-  if (latestDinnerTime) {
-    mealTimes.push(latestDinnerTime);
-  }
-
-  return {
-    meals: {
-      breakfast: latestBreakfastTime,
-      lunch: latestLunchTime,
-      dinner: latestDinnerTime
-    },
-    sorted: mealTimes.sort((a, b) => TimeUtils.sortTimesForPeriod(a, b, dayPeriod))
-  };
+  return [
+    { meal: 'breakfast' as const, period: breakfastWindow },
+    { meal: 'lunch' as const, period: lunchWindow },
+    { meal: 'dinner' as const, period: dinnerWindow }
+  ]
+    .flatMap(({ meal, period }) => {
+      const start = TimeUtils.getEarliestMinuteInOverlap(period, dayPeriod);
+      const end = TimeUtils.getLatestMinuteInOverlap(period, dayPeriod);
+      return start && end ? [{ meal, start, end }] : [];
+    })
+    .sort((a, b) => TimeUtils.sortTimesForPeriod(a.start, b.start, dayPeriod));
 }
 
 export function getMealRecoveryAmount(currentEnergy: number) {

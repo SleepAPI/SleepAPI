@@ -97,6 +97,7 @@ describe('TeamSettings', () => {
   it('allows correct step for minutes in time picker', () => {
     const allowedStep = wrapper.vm.allowedStep
     expect(allowedStep(5)).toBe(true)
+    expect(allowedStep(59)).toBe(true)
     expect(allowedStep(3)).toBe(false)
   })
 

@@ -4,7 +4,10 @@ import type {
   TeamActivationValue,
   UnitActivation
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
+import { defaultUserRecipes } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-utils.js';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
+import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import { mocks } from '@src/vitest/index.js';
 import type { Berry, PokemonSpecialty, PokemonWithIngredients, TeamMemberExt, TeamSettingsExt } from 'sleepapi-common';
 import {
@@ -63,6 +66,23 @@ const mockMembers: TeamMemberExt[] = [
 ];
 
 describe('TeamSimulator', () => {
+  it('shall cook a Best Recipe meal on the final simulation tick before bedtime', () => {
+    const settings = mocks.teamSettingsExt({
+      bedtime: parseTime('23:59'),
+      mealPlan: {
+        breakfast: { kind: 'none' },
+        lunch: { kind: 'none' },
+        dinner: { kind: 'best' }
+      }
+    });
+    const cookingState = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
+    const simulator = new TeamSimulator({ settings, members: [], cookingState, iterations: 1 });
+
+    simulator.simulate();
+
+    expect(simulator.results().cooking?.mealTimes.dinner).toEqual(parseTime('23:55'));
+  });
+
   it('shall return expected production from mocked pokemon', () => {
     const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, iterations: 1 });
 

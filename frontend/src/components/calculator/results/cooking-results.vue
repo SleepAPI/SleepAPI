@@ -61,7 +61,7 @@
 
           <v-row v-if="mealTimes" class="flex-center" dense>
             <v-col cols="12" class="flex-center">
-              <span class="text-h6 text-center"> Daily meal times </span>
+              <span class="text-h6 text-center"> Average meal times </span>
             </v-col>
             <v-col v-for="meal in ['breakfast', 'lunch', 'dinner']" cols="12" class="meal-time">
               <v-img
@@ -177,7 +177,7 @@
                 <v-divider />
               </v-col>
 
-              <v-col cols="3" class="flex-center"> Recipe </v-col>
+              <v-col cols="3" class="flex-left recipe-row-label"> Recipe </v-col>
               <v-col
                 v-for="(ingredient, i) in cookedRecipe.recipe.ingredients"
                 :key="i"
@@ -193,6 +193,19 @@
                 />
                 {{ ingredient.amount }}
               </v-col>
+
+              <template v-if="cookedRecipe.isPlannedRecipe">
+                <v-col cols="12" class="py-0">
+                  <v-divider />
+                </v-col>
+                <v-col cols="3" class="flex-left text-body-1 recipe-row-label"> Average Filler </v-col>
+                <v-col cols="8" class="filler-value-row text-body-1">
+                  <span class="filler-value-group">
+                    <v-img src="/images/misc/strength.png" contain width="22" height="22" class="mr-1" />
+                    {{ round(cookedRecipe.averageFillerValue ?? 0) }}
+                  </span>
+                </v-col>
+              </template>
 
               <template v-if="totalCooks - (cookedRecipe.count + cookedRecipe.totalSkipped) > 0">
                 <v-col cols="10">
@@ -488,6 +501,21 @@ export default defineComponent({
 .expansion-panel {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+}
+
+.recipe-row-label,
+.filler-value-row {
+  min-height: 48px;
+}
+
+.filler-value-row,
+.filler-value-group {
+  display: flex;
+  align-items: center;
+}
+
+.filler-value-row {
+  justify-content: center;
 }
 
 .expansion-panel:hover {
