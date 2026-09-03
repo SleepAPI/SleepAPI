@@ -50,6 +50,7 @@ describe('TeamResults', () => {
     expect(strengthSpan.text()).toBe('1,000')
     const totalStrength = wrapper.vm.totalStrengthString
     expect(totalStrength).toBe('1,000')
+    expect(wrapper.text()).toContain('Basic 1')
   })
 
   it('renders the stacked bar with correct percentages', async () => {
