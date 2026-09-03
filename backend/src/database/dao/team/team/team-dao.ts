@@ -12,6 +12,7 @@ import {
   type BerrySetSimple,
   type GetTeamResponse,
   type IngredientSetSimple,
+  type MealPlan,
   type MemberInstance,
   type SubskillInstance
 } from 'sleepapi-common';
@@ -27,6 +28,7 @@ const DBTeamSchema = Type.Composite([
     bedtime: Type.String(),
     wakeup: Type.String(),
     recipe_type: Type.Union([Type.Literal('curry'), Type.Literal('salad'), Type.Literal('dessert')]),
+    meal_plan: Type.Optional(Type.String()),
     stockpiled_ingredients: Type.Optional(Type.String()),
     stockpiled_berries: Type.Optional(Type.String())
   })
@@ -96,6 +98,7 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
         bedtime: team.bedtime,
         wakeup: team.wakeup,
         recipeType: team.recipe_type,
+        mealPlan: this.stringToMealPlan(team.meal_plan),
         island: {
           islandName: userArea.area,
           favoredBerries: teamArea.favored_berries,
@@ -116,6 +119,20 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
     return stockpile
       ?.map(({ name, amount, level }) => `${name}:${amount}${level !== undefined ? `:${level}` : ''}`)
       .join(',');
+  }
+
+  public mealPlanToString(mealPlan?: MealPlan) {
+    return mealPlan ? JSON.stringify(mealPlan) : undefined;
+  }
+
+  public stringToMealPlan(mealPlan?: string): MealPlan | undefined {
+    if (!mealPlan) return undefined;
+
+    try {
+      return JSON.parse(mealPlan) as MealPlan;
+    } catch {
+      return undefined;
+    }
   }
 
   public stringToStockpile(stockpileStr?: string, isBerry?: true): BerrySetSimple[] | undefined;

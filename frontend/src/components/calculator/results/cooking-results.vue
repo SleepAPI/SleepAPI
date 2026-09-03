@@ -49,6 +49,10 @@
 
           <Divider />
 
+          <MealPlan @select-meal="openMealPlanSelection" />
+
+          <Divider />
+
           <v-row v-if="mealTimes" class="flex-center" dense>
             <v-col cols="12" class="flex-center">
               <span class="text-h6 text-center"> Daily meal times </span>
@@ -273,6 +277,7 @@
 import { defineComponent } from 'vue'
 
 import Divider from '@/components/custom-components/divider/divider.vue'
+import MealPlan from '@/components/calculator/results/meal-plan.vue'
 import { ingredientImage } from '@/services/utils/image-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
@@ -298,7 +303,8 @@ export interface CookedRecipeResultDetails extends CookedRecipeResult {
 export default defineComponent({
   name: 'CookingResults',
   components: {
-    Divider
+    Divider,
+    MealPlan
   },
   data() {
     return {
@@ -430,6 +436,9 @@ export default defineComponent({
     }
   },
   methods: {
+    openMealPlanSelection() {
+      // The recipe picker is added in the next UI step.
+    },
     toggleDetails(index: number) {
       this.showDetailsState[index] = !this.showDetailsState[index]
     },

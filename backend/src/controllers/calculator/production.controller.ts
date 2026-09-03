@@ -36,6 +36,7 @@ import type {
 import {
   calculateRecipeValue,
   CarrySizeUtils,
+  defaultMealPlan,
   curry,
   dessert,
   EnergyForEveryoneS,
@@ -183,7 +184,9 @@ export default class ProductionController {
       includeCooking,
       stockpiledIngredients,
       potSize,
-      island: this.#parseIsland(settings.island)
+      island: this.#parseIsland(settings.island),
+      recipeType: settings.recipeType ?? 'curry',
+      mealPlan: settings.mealPlan ?? defaultMealPlan()
     };
   }
 

@@ -1,8 +1,10 @@
 import type { IngredientIndexToFloatAmount, IngredientSet, IngredientSetSimple } from '../ingredient/ingredient';
 import type { IslandInstance, IslandInstanceDto } from '../island';
+import type { RecipeType } from '../recipe/recipe';
 import type { Time } from '../time/time';
 import type { TeamMemberWithProduce } from './member';
 import type { CalculateTeamResponse } from './team-calculate';
+import type { MealPlan } from './meal-plan';
 
 export interface TeamSettings {
   camp: boolean;
@@ -10,6 +12,8 @@ export interface TeamSettings {
   wakeup: string;
   island: IslandInstanceDto;
   stockpiledIngredients?: IngredientSetSimple[];
+  recipeType?: RecipeType;
+  mealPlan?: MealPlan;
 }
 export interface TeamSettingsExt {
   camp: boolean;
@@ -19,6 +23,8 @@ export interface TeamSettingsExt {
   stockpiledIngredients: IngredientIndexToFloatAmount;
   potSize: number;
   island: IslandInstance;
+  recipeType?: RecipeType;
+  mealPlan?: MealPlan;
 }
 
 export interface TeamSolution {
