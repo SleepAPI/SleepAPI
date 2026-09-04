@@ -8,6 +8,6 @@ describe('projectedRankForStrength', () => {
   })
 
   it('uses the expert-map thresholds', () => {
-    expect(projectedRankForStrength(14780152, 'CBEX')).toBe('Master 20')
+    expect(projectedRankForStrength(3500000, 'CBEX')).toBe('Master 5')
   })
 })
