@@ -436,7 +436,15 @@ export const useTeamStore = defineStore('team', {
     getSchedule(slotIndex: number): TeamScheduleShift[] {
       const primaryId = this.getCurrentTeam.members[slotIndex]
       const explicit = (this.getCurrentTeam.schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
-      if (explicit.length > 0) return explicit.slice().sort((a, b) => a.startTime.localeCompare(b.startTime))
+      if (explicit.length > 0) {
+        const [wakeupHour, wakeupMinute] = this.getCurrentTeam.wakeup.split(':').map(Number)
+        const wakeupMinutes = wakeupHour * 60 + wakeupMinute
+        const minutesSinceWakeup = (time: string) => {
+          const [hour, minute] = time.split(':').map(Number)
+          return (hour * 60 + minute - wakeupMinutes + 1440) % 1440
+        }
+        return explicit.slice().sort((a, b) => minutesSinceWakeup(a.startTime) - minutesSinceWakeup(b.startTime))
+      }
       return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.getCurrentTeam.wakeup }] : []
     },
     async setSchedule(slotIndex: number, shifts: TeamScheduleShift[]) {

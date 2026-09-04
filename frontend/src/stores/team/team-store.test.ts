@@ -461,6 +461,22 @@ describe('removeMember', () => {
   })
 })
 
+describe('getSchedule', () => {
+  it('sorts shifts from wake-up time, wrapping overnight shifts to the end', () => {
+    const teamStore = useTeamStore()
+    teamStore.teams = createMockTeams(1, {
+      wakeup: '06:00',
+      schedule: [
+        { slotIndex: 0, externalId: 'overnight', startTime: '04:00' },
+        { slotIndex: 0, externalId: 'second', startTime: '13:15' },
+        { slotIndex: 0, externalId: 'first', startTime: '06:00' }
+      ]
+    })
+
+    expect(teamStore.getSchedule(0).map((shift) => shift.externalId)).toEqual(['first', 'second', 'overnight'])
+  })
+})
+
 describe('updateTeamMember', () => {
   it('shall upsert local pokemon and calculate production', () => {
     const teamStore = useTeamStore()
