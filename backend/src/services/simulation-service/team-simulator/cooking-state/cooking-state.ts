@@ -165,6 +165,14 @@ export class CookingState {
     this.bonusPotSize = Math.min(200, this.bonusPotSize + amount);
   }
 
+  public extraTastyChancePercentage(): number {
+    return this.bonusCritChance * 100;
+  }
+
+  public potSizeWithBonus(): number {
+    return Math.round((this.userPotSize + this.bonusPotSize) * (this.camp ? 1.5 : 1));
+  }
+
   private cookRecipeType(params: {
     availableRecipes: UserRecipeFlat[];
     currentIngredients: IngredientIndexToFloatAmount;

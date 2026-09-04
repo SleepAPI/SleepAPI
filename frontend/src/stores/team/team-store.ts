@@ -31,7 +31,7 @@ import {
   type TeamAreaDTO,
   type TeamSettings
 } from 'sleepapi-common'
-import type { TeamScheduleShift } from 'sleepapi-common'
+import type { TeamScheduleShift, TeamScheduleType } from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
@@ -446,6 +446,9 @@ export const useTeamStore = defineStore('team', {
         return explicit.slice().sort((a, b) => minutesSinceWakeup(a.startTime) - minutesSinceWakeup(b.startTime))
       }
       return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.getCurrentTeam.wakeup }] : []
+    },
+    getScheduleType(slotIndex: number): TeamScheduleType {
+      return this.getSchedule(slotIndex)[0]?.type ?? 'time'
     },
     async setSchedule(slotIndex: number, shifts: TeamScheduleShift[]) {
       this.getCurrentTeam.schedule = [

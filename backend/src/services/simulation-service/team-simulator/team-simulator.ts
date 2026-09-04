@@ -32,6 +32,7 @@ import {
   type MemberProductionBase,
   type SimpleTeamResult,
   type TeamMemberExt,
+  type TeamScheduleShift,
   type TeamSettingsExt
 } from 'sleepapi-common';
 
@@ -48,6 +49,8 @@ export class TeamSimulator {
   private settings: TeamSettingsExt;
   private scheduledMembersBySlot = new Map<number, Array<{ externalId: string; startMinutes: number }>>();
   private scheduledShiftTickOffsets = new Set<number>();
+  private conditionalSchedulesBySlot = new Map<number, TeamScheduleShift[]>();
+  private conditionalScheduleIndexBySlot = new Map<number, number>();
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
@@ -68,6 +71,12 @@ export class TeamSimulator {
     this.rng = rng || createPreGeneratedRandom();
     this.settings = settings;
     for (const shift of settings.schedule ?? []) {
+      if (shift.type === 'tasty-chance' || shift.type === 'pot-size') {
+        const slot = this.conditionalSchedulesBySlot.get(shift.slotIndex) ?? [];
+        slot.push(shift);
+        this.conditionalSchedulesBySlot.set(shift.slotIndex, slot);
+        continue;
+      }
       const [hour, minute] = shift.startTime.split(':').map(Number);
       const startMinutes = hour * 60 + minute;
       if (!Number.isInteger(startMinutes) || startMinutes < 0 || startMinutes >= this.fullDayDuration) continue;
@@ -86,6 +95,11 @@ export class TeamSimulator {
     }
     for (const shifts of this.scheduledMembersBySlot.values()) {
       shifts.sort((a, b) => a.startMinutes - b.startMinutes);
+    }
+    for (const [slotIndex, shifts] of this.conditionalSchedulesBySlot) {
+      this.conditionalScheduleIndexBySlot.set(slotIndex, 0);
+      // Conditional schedules retain the dialog order, including repeated members.
+      this.conditionalSchedulesBySlot.set(slotIndex, shifts);
     }
 
     this.cookingState = cookingState;
@@ -387,7 +401,7 @@ export class TeamSimulator {
 
   /** Applies scheduled swaps only after the current five-minute tick has fully resolved. */
   private updateActiveMembers(minutesSinceWakeup: number) {
-    if (this.scheduledMembersBySlot.size === 0) {
+    if (this.scheduledMembersBySlot.size === 0 && this.conditionalSchedulesBySlot.size === 0) {
       if (this.activeMemberStates.length === 0) this.setActiveMembers(this.memberStatesWithoutFillers);
       return;
     }
@@ -397,7 +411,13 @@ export class TeamSimulator {
       this.fullDayDuration;
     // The active team cannot change between scheduled start times. This avoids
     // rebuilding team relationships and helping-speed data on every tick.
-    if (this.activeMemberStates.length > 0 && !this.scheduledShiftTickOffsets.has(minutesSinceWakeup)) return;
+    const conditionChanged = this.advanceConditionalSchedules();
+    if (
+      this.activeMemberStates.length > 0 &&
+      !conditionChanged &&
+      !this.scheduledShiftTickOffsets.has(minutesSinceWakeup)
+    )
+      return;
 
     const ids = new Set<string>();
     for (const shifts of this.scheduledMembersBySlot.values()) {
@@ -406,6 +426,10 @@ export class TeamSimulator {
         if (shift.startMinutes > currentMinutes) break;
         current = shift;
       }
+      if (current) ids.add(current.externalId);
+    }
+    for (const [slotIndex, shifts] of this.conditionalSchedulesBySlot) {
+      const current = shifts[this.conditionalScheduleIndexBySlot.get(slotIndex) ?? 0];
       if (current) ids.add(current.externalId);
     }
     const next = this.memberStatesWithoutFillers.filter((member) => ids.has(member.id));
@@ -427,6 +451,37 @@ export class TeamSimulator {
     if (wasInitialized) {
       for (const member of incoming) member.resetHelpTimer(minutesSinceWakeup);
     }
+  }
+
+  /** Evaluated after a tick has resolved, so rotation never suppresses that tick's drops or skills. */
+  private advanceConditionalSchedules(): boolean {
+    let changed = false;
+    for (const [slotIndex, shifts] of this.conditionalSchedulesBySlot) {
+      if (shifts.length < 2) continue;
+      const index = this.conditionalScheduleIndexBySlot.get(slotIndex) ?? 0;
+      const primary = shifts[0];
+      const targetReached = this.conditionReached(primary);
+      if (index === 0 && targetReached) {
+        this.conditionalScheduleIndexBySlot.set(slotIndex, 1);
+        changed = true;
+      } else if (index === 1 && !targetReached) {
+        this.conditionalScheduleIndexBySlot.set(slotIndex, 0);
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
+  private conditionReached(shift: TeamScheduleShift): boolean {
+    const cookingState = this.cookingState;
+    if (!cookingState) return false;
+    if (shift.type === 'tasty-chance') {
+      return cookingState.extraTastyChancePercentage() >= Math.min(70, shift.tastyChanceTarget ?? Number.POSITIVE_INFINITY);
+    }
+    if (shift.type === 'pot-size') {
+      return cookingState.potSizeWithBonus() >= (shift.potSizeTarget ?? Number.POSITIVE_INFINITY);
+    }
+    return false;
   }
 
   private setActiveMembers(members: MemberState[]) {
