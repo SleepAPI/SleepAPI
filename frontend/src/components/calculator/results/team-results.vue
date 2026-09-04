@@ -176,8 +176,15 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { timeWindowFactor } from '@/types/time/time-window'
-import { projectedRankForStrength } from '@/services/map-rank-service'
-import { MathUtils, berryPowerForLevel, compactNumber, getBerry, type RecipeTypeResult } from 'sleepapi-common'
+import {
+  MathUtils,
+  berryPowerForLevel,
+  compactNumber,
+  getBerry,
+  getIsland,
+  rankForProjectedStrength,
+  type RecipeTypeResult
+} from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   components: { StackedBar },
@@ -238,7 +245,8 @@ export default defineComponent({
       return Math.floor(this.cookingStrength + this.berryStrength + this.skillStrength + this.stockpiledBerryStrength)
     },
     projectedRank() {
-      return projectedRankForStrength(this.totalStrength, this.teamStore.getCurrentTeam.island.shortName)
+      const island = getIsland(this.teamStore.getCurrentTeam.island.shortName)
+      return rankForProjectedStrength(this.totalStrength, island)
     },
     rankBallImage() {
       const rankName = this.projectedRank.split(' ')[0].toLowerCase()

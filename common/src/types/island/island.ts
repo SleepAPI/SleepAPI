@@ -12,6 +12,7 @@ interface IslandBase {
 export interface Island extends IslandBase {
   berries: Berry[];
   expert: false;
+  rankThresholds: number[];
 }
 
 // An expert island definition has no fixed favorite berries
@@ -19,6 +20,7 @@ export interface ExpertIsland extends IslandBase {
   expert: true;
   base: Island;
   bonuses: ExpertModeBonuses;
+  rankThresholds: number[];
 }
 
 /**
@@ -52,10 +54,16 @@ export type IslandInstanceDto = IslandBase & {
  * Factory for expert island definitions. Derives `name` from the base island as
  * `${base.name} (Expert Mode)`.
  */
-export function createExpertIsland(base: Island, shortName: IslandShortName, bonuses: ExpertModeBonuses): ExpertIsland {
+export function createExpertIsland(
+  base: Island,
+  shortName: IslandShortName,
+  bonuses: ExpertModeBonuses,
+  rankThresholds: number[]
+): ExpertIsland {
   return {
     name: `${base.name} (Expert Mode)`,
     shortName,
+    rankThresholds,
     bonuses,
     expert: true,
     base
