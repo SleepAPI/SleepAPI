@@ -325,12 +325,14 @@ export class MemberState {
     this.nextHelp = currentMinutesSinceWakeup + this.calculateFrequencyWithEnergy() / 60;
   }
 
-  public wakeUp(recoverFromSleep: boolean = true) {
+  public wakeUp(sleepRecovery: 'team' | 'box' | 'none' = 'team') {
     const nrOfErb = TeamSimulatorUtils.countMembersWithSubskill(this.team, subskill.ENERGY_RECOVERY_BONUS.name);
     const sleepInfo: SleepInfo = {
       period: this.nightPeriod,
       incense: false,
-      erb: nrOfErb,
+      // Energy Recovery Bonus only affects the helper team. Boxed Pokémon use
+      // their own nature modifier, but do not receive the active team's bonus.
+      erb: sleepRecovery === 'team' ? nrOfErb : 0,
       nature: this.member.settings.nature
     };
     this.skillState.wakeup();
@@ -342,9 +344,13 @@ export class MemberState {
       ? MAX_ENERGY_RECOVERY_ERB
       : MAX_ENERGY_RECOVERY;
 
-    if (recoverFromSleep) {
+    if (sleepRecovery !== 'none') {
       const missingEnergy = Math.max(0, maxEnergyRecovery - this.currentEnergy);
-      const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo, maxEnergyRecovery));
+      const recoveryMultiplier = sleepRecovery === 'box' ? 0.05 : 1;
+      const recoveredEnergy = Math.min(
+        missingEnergy,
+        calculateSleepEnergyRecovery(sleepInfo, Number.POSITIVE_INFINITY) * recoveryMultiplier
+      );
       this.currentEnergy += recoveredEnergy;
     }
 
@@ -606,6 +612,14 @@ export class MemberState {
     }
 
     this.nextHelp += frequency / 60;
+  }
+
+  /**
+   * Boxed Pokémon do not help or lose Energy, but their displayed averages
+   * should retain the last values from their active shift.
+   */
+  public sampleInactiveInterval(period: HelpPeriod) {
+    this.countFrequencyAndEnergyIntervals(period, this.calculateFrequencyWithEnergy());
   }
 
   public scheduleHelp(currentMinutesSincePeriodStart: number) {

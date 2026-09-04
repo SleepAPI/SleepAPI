@@ -375,6 +375,39 @@ describe('startDay', () => {
     memberState.collectInventory();
     expect(memberState.energy).toBe(105);
   });
+
+  it('shall recover five percent of sleep in the box without team erb', () => {
+    const member: TeamMemberExt = {
+      pokemonWithIngredients: mockPokemonSet,
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.MILD,
+        skillLevel: 6,
+        subskills: new Set(),
+        externalId: 'boxed member',
+        sneakySnacking: false
+      }
+    };
+    const erbTeammate: TeamMemberExt = {
+      ...member,
+      settings: {
+        ...member.settings,
+        externalId: 'erb teammate',
+        nature: nature.BASHFUL,
+        subskills: new Set([subskill.ENERGY_RECOVERY_BONUS.name])
+      }
+    };
+
+    const memberState = new MemberState({ member, settings, team: [member, erbTeammate], cookingState });
+
+    memberState.wakeUp('box');
+
+    // A full sleep score restores 5% in the box. The boxed member's Energy-
+    // recovery nature applies, but the active team's ERB does not.
+    expect(memberState.energy).toBeCloseTo(4.4);
+  });
 });
 
 describe('recoverEnergy', () => {

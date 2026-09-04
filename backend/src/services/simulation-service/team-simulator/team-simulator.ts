@@ -15,7 +15,10 @@
  */
 
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
-import { MemberState } from '@src/services/simulation-service/team-simulator/member-state/member-state.js';
+import {
+  type HelpPeriod,
+  MemberState
+} from '@src/services/simulation-service/team-simulator/member-state/member-state.js';
 import type {
   SkillActivation,
   TeamActivationValue,
@@ -88,10 +91,6 @@ export class TeamSimulator {
         this.fullDayDuration;
       const tickOffset = Math.ceil(relativeStart / 5) * 5;
       this.scheduledShiftTickOffsets.add(tickOffset);
-      // The simulation includes the final 1440-minute tick. A shift at wake-up
-      // must also be applied there so the next simulated day starts with the
-      // correct active roster and no overdue-help backlog.
-      if (tickOffset === 0) this.scheduledShiftTickOffsets.add(this.fullDayDuration);
     }
     for (const shifts of this.scheduledMembersBySlot.values()) {
       shifts.sort((a, b) => a.startMinutes - b.startMinutes);
@@ -135,11 +134,12 @@ export class TeamSimulator {
     this.memberStates.forEach((memberState, _, allMembers) => {
       memberState.otherMembers = allMembers.filter((other) => other.id !== memberState.id);
     });
-    this.updateActiveMembers(0);
+    // A shift that begins at wake-up is processed after that tick. Start with
+    // the previous shift so it receives sleep recovery and supplies ERB.
+    this.updateActiveMembers(-5);
   }
 
   public simulate() {
-    this.updateActiveMembers(0);
     this.init();
 
     let minutesSinceWakeup = 0;
@@ -155,6 +155,7 @@ export class TeamSimulator {
       for (const member of this.activeMemberStates) {
         member.scheduleHelp(minutesSinceWakeup);
       }
+      this.sampleInactiveMembers('day');
 
       this.maybeDegradeEnergy();
       this.updateActiveMembers(minutesSinceWakeup);
@@ -168,6 +169,7 @@ export class TeamSimulator {
       for (const member of this.activeMemberStates) {
         member.attemptNightHelp(minutesSinceWakeup);
       }
+      this.sampleInactiveMembers('night');
 
       this.maybeDegradeEnergy();
       this.updateActiveMembers(minutesSinceWakeup);
@@ -224,7 +226,7 @@ export class TeamSimulator {
     }
 
     for (const member of this.memberStates) {
-      member.wakeUp(this.activeMemberStates.includes(member));
+      member.wakeUp(this.activeMemberStates.includes(member) ? 'team' : 'box');
     }
   }
 
@@ -244,9 +246,15 @@ export class TeamSimulator {
     // degrade energy every 10 minutes, so every 2nd chunk of 5 minutes
     if (++this.energyDegradeCounter >= 2) {
       this.energyDegradeCounter = 0;
-      for (const member of this.memberStates) {
+      for (const member of this.activeMemberStates) {
         member.degradeEnergy();
       }
+    }
+  }
+
+  private sampleInactiveMembers(period: HelpPeriod) {
+    for (const member of this.memberStatesWithoutFillers) {
+      if (!this.activeMemberStates.includes(member)) member.sampleInactiveInterval(period);
     }
   }
 
@@ -476,7 +484,9 @@ export class TeamSimulator {
     const cookingState = this.cookingState;
     if (!cookingState) return false;
     if (shift.type === 'tasty-chance') {
-      return cookingState.extraTastyChancePercentage() >= Math.min(70, shift.tastyChanceTarget ?? Number.POSITIVE_INFINITY);
+      return (
+        cookingState.extraTastyChancePercentage() >= Math.min(70, shift.tastyChanceTarget ?? Number.POSITIVE_INFINITY)
+      );
     }
     if (shift.type === 'pot-size') {
       return cookingState.potSizeWithBonus() >= (shift.potSizeTarget ?? Number.POSITIVE_INFINITY);

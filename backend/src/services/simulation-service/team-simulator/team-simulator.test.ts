@@ -89,6 +89,58 @@ describe('TeamSimulator', () => {
     expect(result.skillProcs).toMatchInlineSnapshot(`35`);
   });
 
+  it('shall retain energy and frequency samples for inactive scheduled members', () => {
+    const primary: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'primary' }
+    };
+    const inactive: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'inactive' }
+    };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      schedule: [{ slotIndex: 0, externalId: primary.settings.externalId, startTime: '06:00' }]
+    };
+    const simulator = new TeamSimulator({ settings, members: [primary, inactive], iterations: 1 });
+
+    simulator.simulate();
+
+    const result = simulator.results().members.find((member) => member.externalId === inactive.settings.externalId)!;
+    expect(result.advanced.dayPeriod.averageEnergy).toBeGreaterThan(0);
+    expect(result.advanced.dayPeriod.averageFrequency).toBeGreaterThan(0);
+  });
+
+  it('shall use the pre-wake roster for sleep recovery and erb', () => {
+    const previous: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'previous', nature: nature.MILD }
+    };
+    const incoming: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: {
+        ...mockMembers[0].settings,
+        externalId: 'incoming',
+        nature: nature.BASHFUL,
+        subskills: new Set([subskill.ENERGY_RECOVERY_BONUS.name])
+      }
+    };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      schedule: [
+        { slotIndex: 0, externalId: previous.settings.externalId, startTime: '05:55' },
+        { slotIndex: 0, externalId: incoming.settings.externalId, startTime: '06:00' }
+      ]
+    };
+    const simulator = new TeamSimulator({ settings, members: [previous, incoming], iterations: 1 }) as any;
+
+    simulator.init();
+
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['previous']);
+    expect(simulator.memberStates.find((member: any) => member.id === 'previous').energy).toBe(88);
+    expect(simulator.memberStates.find((member: any) => member.id === 'incoming').energy).toBe(5);
+  });
+
   it('shall calculate production with uneven sleep times', () => {
     const settings: TeamSettingsExt = mocks.teamSettingsExt({
       includeCooking: true,
