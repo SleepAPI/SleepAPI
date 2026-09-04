@@ -93,11 +93,11 @@ export class MemberState {
   private level60IngredientSet?: IngredientSet;
 
   // stats
-  private frequency0;
-  private frequency1;
-  private frequency40;
-  private frequency60;
-  private frequency80;
+  private frequency0!: number;
+  private frequency1!: number;
+  private frequency40!: number;
+  private frequency60!: number;
+  private frequency80!: number;
   public skillPercentage: number;
   private ingredientPercentage: number;
 

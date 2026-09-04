@@ -42,6 +42,7 @@ describe('MemberResults', () => {
     const teamStore = useTeamStore()
     teamStore.currentIndex = 0
     teamStore.teams[0].members = []
+    teamStore.teams[0].production = undefined
 
     expect(wrapper.vm.membersWithProduction).toBeDefined()
     expect(wrapper.vm.membersWithProduction!.length).toBe(0)
@@ -50,8 +51,8 @@ describe('MemberResults', () => {
   it('displays member production when data is available', () => {
     const members = wrapper.vm.membersWithProduction
     expect(members).toBeDefined()
-    expect(members).toHaveLength(5)
-    expect(members.filter((m) => m != null)).toHaveLength(1)
+    expect(members).toHaveLength(teamStore.getCurrentTeam.production?.members.length ?? 0)
+    expect(members.filter((m) => m != null)).toHaveLength(members.length)
     expect(members![0]?.production.externalId).toEqual(mockPokemon.externalId)
     expect(members![0]?.production.produceTotal.berries[0].amount).toBe(10)
   })

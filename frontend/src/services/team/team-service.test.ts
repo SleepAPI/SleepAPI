@@ -98,7 +98,9 @@ describe('getTeams', () => {
         stockpiledIngredients: [],
         version: 0,
         members: new Array(MAX_TEAM_SIZE).fill(undefined),
-        memberIvs: {}
+        memberIvs: {},
+        schedule: [],
+        production: undefined
       })
     })
   })
@@ -160,7 +162,9 @@ describe('getTeams', () => {
       stockpiledIngredients: [],
       version: 1,
       members: [existingTeams[0].members[0].externalId, undefined, undefined, undefined, undefined],
-      memberIvs: {}
+      memberIvs: {},
+      schedule: [],
+      production: undefined
     })
   })
 
@@ -215,7 +219,9 @@ describe('getTeams', () => {
           '000000000000000000000000000000000000',
           '000000000000000000000000000000000000'
         ],
-        memberIvs: {}
+        memberIvs: {},
+        schedule: [],
+        production: undefined
       })
     })
     const pokemonStore = usePokemonStore()
@@ -561,7 +567,8 @@ describe('calculateIv', () => {
           areaBonus: island.areaBonus,
           berries: island.berries,
           ...(island.expertMode ? { expertMode: island.expertMode } : {})
-        }
+        },
+        schedule: []
       }
     })
 

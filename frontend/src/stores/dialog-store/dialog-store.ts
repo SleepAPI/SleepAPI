@@ -78,12 +78,14 @@ export const useDialogStore = defineStore('dialog', () => {
   const openFilledSlot = (
     pokemon: PokemonInstanceExt,
     fullTeam: boolean,
-    slotIndexOrCallbacks: number | {
-      onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
-      onDuplicate?: () => void
-      onToggleSaved?: (state: boolean) => void
-      onRemove?: () => void
-    },
+    slotIndexOrCallbacks:
+      | number
+      | {
+          onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
+          onDuplicate?: () => void
+          onToggleSaved?: (state: boolean) => void
+          onRemove?: () => void
+        },
     maybeCallbacks?: {
       onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
       onDuplicate?: () => void
@@ -92,7 +94,7 @@ export const useDialogStore = defineStore('dialog', () => {
     }
   ) => {
     const slotIndex = typeof slotIndexOrCallbacks === 'number' ? slotIndexOrCallbacks : undefined
-    const callbacks = typeof slotIndexOrCallbacks === 'number' ? maybeCallbacks ?? {} : slotIndexOrCallbacks
+    const callbacks = typeof slotIndexOrCallbacks === 'number' ? (maybeCallbacks ?? {}) : slotIndexOrCallbacks
     filledSlotProps.value = {
       pokemon,
       fullTeam,

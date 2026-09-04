@@ -121,6 +121,7 @@ export class TeamSimulator {
     this.memberStates.forEach((memberState, _, allMembers) => {
       memberState.otherMembers = allMembers.filter((other) => other.id !== memberState.id);
     });
+    this.updateActiveMembers(0);
   }
 
   public simulate() {
@@ -392,7 +393,7 @@ export class TeamSimulator {
     }
     const wakeup = this.settings.wakeup;
     const currentMinutes =
-      ((wakeup.hour * 60 + wakeup.minute + minutesSinceWakeup) % this.fullDayDuration + this.fullDayDuration) %
+      (((wakeup.hour * 60 + wakeup.minute + minutesSinceWakeup) % this.fullDayDuration) + this.fullDayDuration) %
       this.fullDayDuration;
     // The active team cannot change between scheduled start times. This avoids
     // rebuilding team relationships and helping-speed data on every tick.

@@ -3,7 +3,12 @@
     <v-card v-if="slotIndex !== null" title="Schedule">
       <v-card-text>
         <v-row class="schedule-row flex-nowrap" dense>
-          <v-col v-for="shift in shifts" :key="`${shift.externalId}-${shift.startTime}`" class="schedule-tile" cols="auto">
+          <v-col
+            v-for="shift in shifts"
+            :key="`${shift.externalId}-${shift.startTime}`"
+            class="schedule-tile"
+            cols="auto"
+          >
             <v-card class="fill-height frosted-glass" @click="selectedShift = shift">
               <v-img v-if="pokemonFor(shift.externalId)" :src="image(shift.externalId)" height="104" width="104" />
               <v-card-text class="text-center pa-1">{{ shift.startTime }}</v-card-text>
@@ -38,7 +43,10 @@
   <v-dialog v-model="timePicker" max-width="400px">
     <v-card title="Select shift start time">
       <v-time-picker v-model="updatedTime" color="primary" format="24hr" :allowed-minutes="allowedStep" />
-      <v-card-actions><v-spacer /><v-btn @click="timePicker = false">Cancel</v-btn><v-btn color="primary" @click="saveTime">Save</v-btn></v-card-actions>
+      <v-card-actions
+        ><v-spacer /><v-btn @click="timePicker = false">Cancel</v-btn
+        ><v-btn color="primary" @click="saveTime">Save</v-btn></v-card-actions
+      >
     </v-card>
   </v-dialog>
 </template>
@@ -60,9 +68,14 @@ const updatedTime = ref<string | null>(null)
 
 const slotIndex = computed(() => dialogStore.scheduleSlotIndex)
 const shifts = computed(() => (slotIndex.value === null ? [] : teamStore.getSchedule(slotIndex.value)))
-const shiftMenu = computed({ get: () => selectedShift.value !== null, set: (open) => !open && (selectedShift.value = null) })
+const shiftMenu = computed({
+  get: () => selectedShift.value !== null,
+  set: (open) => !open && (selectedShift.value = null)
+})
 
-watch(selectedShift, (shift) => { updatedTime.value = shift?.startTime ?? null })
+watch(selectedShift, (shift) => {
+  updatedTime.value = shift?.startTime ?? null
+})
 
 const pokemonFor = (externalId: string) => pokemonStore.getPokemon(externalId)
 const image = (externalId: string) => {
@@ -123,6 +136,11 @@ const editPokemon = () => {
 </script>
 
 <style scoped>
-.schedule-row { overflow-x: auto; padding-bottom: 8px; }
-.schedule-tile { min-width: 112px; }
+.schedule-row {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.schedule-tile {
+  min-width: 112px;
+}
 </style>
