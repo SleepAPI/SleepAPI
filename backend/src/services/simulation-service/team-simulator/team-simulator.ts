@@ -46,6 +46,8 @@ export class TeamSimulator {
   private cookingState?: CookingState = undefined;
   private expertModeEvent?: FunctionalEvent;
   private settings: TeamSettingsExt;
+  private scheduledMembersBySlot = new Map<number, Array<{ externalId: string; startMinutes: number }>>();
+  private scheduledShiftTickOffsets = new Set<number>();
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
@@ -65,6 +67,26 @@ export class TeamSimulator {
     // Initialize with pre-generated random numbers if not provided
     this.rng = rng || createPreGeneratedRandom();
     this.settings = settings;
+    for (const shift of settings.schedule ?? []) {
+      const [hour, minute] = shift.startTime.split(':').map(Number);
+      const startMinutes = hour * 60 + minute;
+      if (!Number.isInteger(startMinutes) || startMinutes < 0 || startMinutes >= this.fullDayDuration) continue;
+      const slot = this.scheduledMembersBySlot.get(shift.slotIndex) ?? [];
+      slot.push({ externalId: shift.externalId, startMinutes });
+      this.scheduledMembersBySlot.set(shift.slotIndex, slot);
+      const relativeStart =
+        (startMinutes - (settings.wakeup.hour * 60 + settings.wakeup.minute) + this.fullDayDuration) %
+        this.fullDayDuration;
+      const tickOffset = Math.ceil(relativeStart / 5) * 5;
+      this.scheduledShiftTickOffsets.add(tickOffset);
+      // The simulation includes the final 1440-minute tick. A shift at wake-up
+      // must also be applied there so the next simulated day starts with the
+      // correct active roster and no overdue-help backlog.
+      if (tickOffset === 0) this.scheduledShiftTickOffsets.add(this.fullDayDuration);
+    }
+    for (const shifts of this.scheduledMembersBySlot.values()) {
+      shifts.sort((a, b) => a.startMinutes - b.startMinutes);
+    }
 
     this.cookingState = cookingState;
 
@@ -364,23 +386,34 @@ export class TeamSimulator {
 
   /** Applies scheduled swaps only after the current five-minute tick has fully resolved. */
   private updateActiveMembers(minutesSinceWakeup: number) {
-    const schedule = this.settings.schedule ?? [];
-    if (schedule.length === 0) {
-      this.setActiveMembers(this.memberStatesWithoutFillers);
+    if (this.scheduledMembersBySlot.size === 0) {
+      if (this.activeMemberStates.length === 0) this.setActiveMembers(this.memberStatesWithoutFillers);
       return;
     }
     const wakeup = this.settings.wakeup;
-    const currentMinutes = ((wakeup.hour * 60 + wakeup.minute + minutesSinceWakeup) % this.fullDayDuration + this.fullDayDuration) % this.fullDayDuration;
+    const currentMinutes =
+      ((wakeup.hour * 60 + wakeup.minute + minutesSinceWakeup) % this.fullDayDuration + this.fullDayDuration) %
+      this.fullDayDuration;
+    // The active team cannot change between scheduled start times. This avoids
+    // rebuilding team relationships and helping-speed data on every tick.
+    if (this.activeMemberStates.length > 0 && !this.scheduledShiftTickOffsets.has(minutesSinceWakeup)) return;
+
     const ids = new Set<string>();
-    for (const slot of new Set(schedule.map((shift) => shift.slotIndex))) {
-      const shifts = schedule.filter((shift) => shift.slotIndex === slot).sort((a, b) => a.startTime.localeCompare(b.startTime));
-      const current = shifts.filter((shift) => {
-        const [hour, minute] = shift.startTime.split(':').map(Number);
-        return hour * 60 + minute <= currentMinutes;
-      }).at(-1) ?? shifts.at(-1);
+    for (const shifts of this.scheduledMembersBySlot.values()) {
+      let current = shifts.at(-1);
+      for (const shift of shifts) {
+        if (shift.startMinutes > currentMinutes) break;
+        current = shift;
+      }
       if (current) ids.add(current.externalId);
     }
     const next = this.memberStatesWithoutFillers.filter((member) => ids.has(member.id));
+    if (
+      next.length === this.activeMemberStates.length &&
+      next.every((member, index) => member === this.activeMemberStates[index])
+    ) {
+      return;
+    }
     const wasInitialized = this.activeMemberStates.length > 0;
     const departing = this.activeMemberStates.filter((member) => !next.includes(member));
     const incoming = next.filter((member) => !this.activeMemberStates.includes(member));
