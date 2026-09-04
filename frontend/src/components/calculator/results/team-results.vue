@@ -242,7 +242,7 @@ export default defineComponent({
     },
     rankBallImage() {
       const rankName = this.projectedRank.split(' ')[0].toLowerCase()
-      return `/images/misc/rank-${rankName}.webp`
+      return `/images/misc/rank-${rankName}.png`
     },
     cookingStrengthString() {
       const userLocale = navigator.language || 'en-US'
