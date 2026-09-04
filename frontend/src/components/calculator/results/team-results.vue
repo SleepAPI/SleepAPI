@@ -15,7 +15,7 @@
 
           <v-row dense class="flex-center">
             <v-col cols="auto" class="flex-center projected-rank">
-              <v-img :src="rankBallImage" :alt="`${projectedRank} Ball`" width="36" height="36" contain />
+              <v-img :src="rankBallImage" :alt="rankBallName" :title="rankBallName" width="36" height="36" contain />
               <span class="text-h6 text-no-wrap font-weight-medium ml-2">{{ projectedRank }}</span>
             </v-col>
           </v-row>
@@ -243,6 +243,17 @@ export default defineComponent({
     rankBallImage() {
       const rankName = this.projectedRank.split(' ')[0].toLowerCase()
       return `/images/misc/rank-${rankName}.png`
+    },
+    rankBallName() {
+      const rankName = this.projectedRank.split(' ')[0]
+      const ballNames: Record<string, string> = {
+        Basic: 'Poké Ball',
+        Great: 'Great Ball',
+        Ultra: 'Ultra Ball',
+        Master: 'Master Ball'
+      }
+
+      return ballNames[rankName]
     },
     cookingStrengthString() {
       const userLocale = navigator.language || 'en-US'

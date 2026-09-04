@@ -51,6 +51,8 @@ describe('TeamResults', () => {
     const totalStrength = wrapper.vm.totalStrengthString
     expect(totalStrength).toBe('1,000')
     expect(wrapper.text()).toContain('Basic 1')
+    expect(wrapper.html()).toContain('alt="Poké Ball"')
+    expect(wrapper.html()).toContain('title="Poké Ball"')
   })
 
   it('renders the stacked bar with correct percentages', async () => {
