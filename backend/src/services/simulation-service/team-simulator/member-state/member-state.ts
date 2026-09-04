@@ -172,12 +172,8 @@ export class MemberState {
     this.camp = settings.camp;
     this.cookingState = cookingState;
 
-    // list already filtered for level
-    const teamHelpingBonus = team.filter(
-      (otherMember) =>
-        otherMember.settings.externalId !== member.settings.externalId &&
-        otherMember.settings.subskills.has(subskill.HELPING_BONUS.name)
-    ).length;
+    this.member = member;
+    this.team = team;
 
     const nightPeriod = {
       start: settings.bedtime,
@@ -242,20 +238,7 @@ export class MemberState {
     this.berryDropAmounts = memberBerryInList.map((amount: number) => amount * berriesPerDrop);
     this.berryDropAmount = Math.max(...this.berryDropAmounts);
 
-    const frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
-      member,
-      settings,
-      teamHelpingBonus
-    });
-    // TODO: not nice to duplicate this between here and energy utils in case brackets change
-    this.frequency0 = frequency * 1; // 0 energy
-    this.frequency1 = frequency * 0.66; // 1-39 energy
-    this.frequency40 = frequency * 0.58; // 40-59 energy
-    this.frequency60 = frequency * 0.52; // 60-79 energy
-    this.frequency80 = frequency * 0.45; // 80+ energy
-
-    this.member = member;
-    this.team = team; // this needs updating when we add team rotation
+    this.updateFrequencies();
     this.skillState = new SkillState(this, this.rng);
 
     // Calculate thresholds locally
@@ -332,7 +315,17 @@ export class MemberState {
     return this.member.settings.sneakySnacking;
   }
 
-  public wakeUp() {
+  public setTeam(team: TeamMemberExt[]) {
+    this.team = team;
+    this.updateFrequencies();
+  }
+
+  /** A Pokémon that was off-team must not catch up on helps it missed while rotated out. */
+  public resetHelpTimer(currentMinutesSinceWakeup: number) {
+    this.nextHelp = currentMinutesSinceWakeup + this.calculateFrequencyWithEnergy() / 60;
+  }
+
+  public wakeUp(recoverFromSleep: boolean = true) {
     const nrOfErb = TeamSimulatorUtils.countMembersWithSubskill(this.team, subskill.ENERGY_RECOVERY_BONUS.name);
     const sleepInfo: SleepInfo = {
       period: this.nightPeriod,
@@ -349,9 +342,11 @@ export class MemberState {
       ? MAX_ENERGY_RECOVERY_ERB
       : MAX_ENERGY_RECOVERY;
 
-    const missingEnergy = Math.max(0, maxEnergyRecovery - this.currentEnergy);
-    const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo, maxEnergyRecovery));
-    this.currentEnergy += recoveredEnergy;
+    if (recoverFromSleep) {
+      const missingEnergy = Math.max(0, maxEnergyRecovery - this.currentEnergy);
+      const recoveredEnergy = Math.min(missingEnergy, calculateSleepEnergyRecovery(sleepInfo, maxEnergyRecovery));
+      this.currentEnergy += recoveredEnergy;
+    }
 
     this.disguiseBusted = false;
 
@@ -903,5 +898,23 @@ export class MemberState {
     }
     this.helpsAtFrequency0++;
     return this.frequency0;
+  }
+
+  private updateFrequencies() {
+    const teamHelpingBonus = this.team.filter(
+      (otherMember) =>
+        otherMember.settings.externalId !== this.member.settings.externalId &&
+        otherMember.settings.subskills.has(subskill.HELPING_BONUS.name)
+    ).length;
+    const frequency = TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
+      member: this.member,
+      settings: this.settings,
+      teamHelpingBonus
+    });
+    this.frequency0 = frequency;
+    this.frequency1 = frequency * 0.66;
+    this.frequency40 = frequency * 0.58;
+    this.frequency60 = frequency * 0.52;
+    this.frequency80 = frequency * 0.45;
   }
 }

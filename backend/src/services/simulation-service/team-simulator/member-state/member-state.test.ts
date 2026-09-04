@@ -91,6 +91,29 @@ const settings: TeamSettingsExt = {
 const cookingState: CookingState = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
 
 describe('results', () => {
+  it('recalculates helping speed when its active team changes', () => {
+    const helpingMember: TeamMemberExt = {
+      ...member,
+      settings: { ...member.settings, externalId: 'helper', subskills: new Set([subskill.HELPING_BONUS.name]) }
+    };
+    const memberState = new MemberState({ member, settings, team: [member, helpingMember], cookingState });
+    const withHelpingBonus = memberState.results(1).advanced.maxFrequency;
+
+    memberState.setTeam([member]);
+
+    expect(memberState.results(1).advanced.maxFrequency).toBeGreaterThan(withHelpingBonus);
+  });
+
+  it('does not catch up helps missed while rotated out', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.wakeUp();
+    memberState.resetHelpTimer(900);
+
+    memberState.attemptDayHelp(900);
+
+    expect(memberState.results(1).produceTotal.ingredients).toEqual([]);
+  });
+
   it('should return correct results after multiple iterations', () => {
     const memberState = new MemberState({ member: guaranteedSkillProcMember, settings, team: [member], cookingState });
     for (let i = 0; i < 100; i++) {

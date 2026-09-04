@@ -69,6 +69,7 @@ class TeamServiceImpl {
           stockpiledIngredients: [],
           version: 0,
           members: new Array(MAX_TEAM_SIZE).fill(undefined),
+          schedule: [],
           memberIvs: {},
           production: undefined
         }
@@ -119,6 +120,7 @@ class TeamServiceImpl {
           stockpiledIngredients: serverTeam.stockpiledIngredients ?? [],
           version: serverTeam.version,
           members,
+          schedule: serverTeam.schedule ?? [],
           memberIvs: {},
           production: undefined
         }
@@ -194,7 +196,8 @@ class TeamServiceImpl {
       bedtime: currentTeam.bedtime,
       wakeup: currentTeam.wakeup,
       stockpiledIngredients: currentTeam.stockpiledIngredients,
-      island: this.toIslandDto(currentTeam.island)
+      island: this.toIslandDto(currentTeam.island),
+      schedule: currentTeam.schedule ?? []
     }
 
     const berrySetup: PokemonInstanceIdentity = PokemonInstanceUtils.toPokemonInstanceIdentity({

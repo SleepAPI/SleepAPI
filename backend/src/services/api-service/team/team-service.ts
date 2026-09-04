@@ -52,7 +52,8 @@ export async function upsertTeamMeta(params: {
       wakeup: request.wakeup,
       recipe_type: request.recipeType,
       stockpiled_ingredients: TeamDAO.stockpileToString(request.stockpiledIngredients),
-      stockpiled_berries: TeamDAO.stockpileToString(request.stockpiledBerries)
+      stockpiled_berries: TeamDAO.stockpileToString(request.stockpiledBerries),
+      schedule: request.schedule ? JSON.stringify(request.schedule) : undefined
     };
 
     const upsertedTeam = await TeamDAO.upsert({

@@ -64,28 +64,39 @@ export const useDialogStore = defineStore('dialog', () => {
   const filledSlotProps = ref<{
     pokemon: PokemonInstanceExt | null
     fullTeam: boolean
+    slotIndex?: number
     onUpdate?: (pokemon: PokemonInstanceExt) => void
     onDuplicate?: () => void
     onToggleSaved?: (state: boolean) => void
     onRemove?: () => void
   }>({
     pokemon: null,
-    fullTeam: false
+    fullTeam: false,
+    slotIndex: undefined
   })
 
   const openFilledSlot = (
     pokemon: PokemonInstanceExt,
     fullTeam: boolean,
-    callbacks: {
+    slotIndexOrCallbacks: number | {
+      onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
+      onDuplicate?: () => void
+      onToggleSaved?: (state: boolean) => void
+      onRemove?: () => void
+    },
+    maybeCallbacks?: {
       onUpdate?: (pokemonInstance: PokemonInstanceExt) => void
       onDuplicate?: () => void
       onToggleSaved?: (state: boolean) => void
       onRemove?: () => void
     }
   ) => {
+    const slotIndex = typeof slotIndexOrCallbacks === 'number' ? slotIndexOrCallbacks : undefined
+    const callbacks = typeof slotIndexOrCallbacks === 'number' ? maybeCallbacks ?? {} : slotIndexOrCallbacks
     filledSlotProps.value = {
       pokemon,
       fullTeam,
+      slotIndex,
       onUpdate: callbacks.onUpdate,
       onDuplicate: callbacks.onDuplicate,
       onToggleSaved: callbacks.onToggleSaved,
@@ -104,11 +115,26 @@ export const useDialogStore = defineStore('dialog', () => {
     filledSlotProps.value = {
       pokemon: null,
       fullTeam: false,
+      slotIndex: undefined,
       onUpdate: undefined,
       onDuplicate: undefined,
       onToggleSaved: undefined,
       onRemove: undefined
     }
+  }
+
+  // ==================== TEAM SCHEDULE DIALOG ====================
+  const scheduleDialog = ref(false)
+  const scheduleSlotIndex = ref<number | null>(null)
+
+  const openSchedule = (slotIndex: number) => {
+    scheduleSlotIndex.value = slotIndex
+    scheduleDialog.value = true
+  }
+
+  const closeSchedule = () => {
+    scheduleDialog.value = false
+    scheduleSlotIndex.value = null
   }
 
   // ==================== PUBLIC API ====================
@@ -133,6 +159,12 @@ export const useDialogStore = defineStore('dialog', () => {
     filledSlotDialog,
     filledSlotProps,
     openFilledSlot,
-    closeFilledSlot
+    closeFilledSlot,
+
+    // Team schedule
+    scheduleDialog,
+    scheduleSlotIndex,
+    openSchedule,
+    closeSchedule
   }
 })

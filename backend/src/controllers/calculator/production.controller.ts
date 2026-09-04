@@ -183,7 +183,8 @@ export default class ProductionController {
       includeCooking,
       stockpiledIngredients,
       potSize,
-      island: this.#parseIsland(settings.island)
+      island: this.#parseIsland(settings.island),
+      schedule: settings.schedule ?? []
     };
   }
 

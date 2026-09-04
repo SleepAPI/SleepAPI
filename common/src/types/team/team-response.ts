@@ -3,6 +3,7 @@ import type { IngredientSetSimple } from '../ingredient';
 import type { TeamAreaDTO } from '../island';
 import type { RecipeType } from '../recipe/recipe';
 import type { MemberInstance } from './member-instance';
+import type { TeamScheduleShift } from './team';
 
 export interface GetTeamResponse {
   index: number;
@@ -17,6 +18,7 @@ export interface GetTeamResponse {
   version: number;
 
   members: MemberInstance[];
+  schedule?: TeamScheduleShift[];
 }
 
 export interface GetTeamsResponse {

@@ -9,6 +9,7 @@ import type {
   PokemonInstanceExt,
   RecipeType
 } from 'sleepapi-common'
+import type { TeamScheduleShift } from 'sleepapi-common'
 
 export interface TeamCombinedProduction {
   berries: BerrySet[]
@@ -45,6 +46,7 @@ export interface TeamInstance {
   island: IslandInstance
   version: number
   members: (string | undefined)[]
+  schedule?: TeamScheduleShift[]
   memberIvs: Record<string, PerformanceDetails | undefined>
   production?: TeamProductionExt
 }

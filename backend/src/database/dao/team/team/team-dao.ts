@@ -28,7 +28,8 @@ const DBTeamSchema = Type.Composite([
     wakeup: Type.String(),
     recipe_type: Type.Union([Type.Literal('curry'), Type.Literal('salad'), Type.Literal('dessert')]),
     stockpiled_ingredients: Type.Optional(Type.String()),
-    stockpiled_berries: Type.Optional(Type.String())
+    stockpiled_berries: Type.Optional(Type.String()),
+    schedule: Type.Optional(Type.String())
   })
 ]);
 export type DBTeam = Static<typeof DBTeamSchema>;
@@ -106,7 +107,8 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
         stockpiledBerries: this.stringToStockpile(team.stockpiled_berries, true),
         stockpiledIngredients: this.stringToStockpile(team.stockpiled_ingredients, false),
         version: team.version,
-        members
+        members,
+        schedule: team.schedule ? JSON.parse(team.schedule) : []
       });
     }
     return teamsWithMembers;

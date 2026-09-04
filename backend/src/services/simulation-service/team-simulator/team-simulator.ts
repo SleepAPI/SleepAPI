@@ -36,13 +36,16 @@ import {
 } from 'sleepapi-common';
 
 export class TeamSimulator {
+  private readonly simulationTickMinutes = 5;
   private run = 0;
   private rng: PreGeneratedRandom;
 
   private memberStates: MemberState[] = [];
   private memberStatesWithoutFillers: MemberState[] = [];
+  private activeMemberStates: MemberState[] = [];
   private cookingState?: CookingState = undefined;
   private expertModeEvent?: FunctionalEvent;
+  private settings: TeamSettingsExt;
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
@@ -61,6 +64,7 @@ export class TeamSimulator {
 
     // Initialize with pre-generated random numbers if not provided
     this.rng = rng || createPreGeneratedRandom();
+    this.settings = settings;
 
     this.cookingState = cookingState;
 
@@ -98,6 +102,7 @@ export class TeamSimulator {
   }
 
   public simulate() {
+    this.updateActiveMembers(0);
     this.init();
 
     let minutesSinceWakeup = 0;
@@ -105,29 +110,31 @@ export class TeamSimulator {
     while (minutesSinceWakeup <= this.nightStartMinutes) {
       this.attemptCooking(minutesSinceWakeup);
 
-      for (const member of this.memberStatesWithoutFillers) {
+      for (const member of this.activeMemberStates) {
         for (const skillActivation of member.attemptDayHelp(minutesSinceWakeup)) {
           this.maybeActivateTeamSkill(skillActivation, member);
         }
       }
-      for (const member of this.memberStatesWithoutFillers) {
+      for (const member of this.activeMemberStates) {
         member.scheduleHelp(minutesSinceWakeup);
       }
 
       this.maybeDegradeEnergy();
-      minutesSinceWakeup += 5;
+      this.updateActiveMembers(minutesSinceWakeup);
+      minutesSinceWakeup += this.simulationTickMinutes;
     }
 
     this.collectInventory();
 
     // Night loop
     while (minutesSinceWakeup <= this.fullDayDuration) {
-      for (const member of this.memberStatesWithoutFillers) {
+      for (const member of this.activeMemberStates) {
         member.attemptNightHelp(minutesSinceWakeup);
       }
 
       this.maybeDegradeEnergy();
-      minutesSinceWakeup += 5;
+      this.updateActiveMembers(minutesSinceWakeup);
+      minutesSinceWakeup += this.simulationTickMinutes;
     }
   }
 
@@ -163,7 +170,7 @@ export class TeamSimulator {
   private init() {
     this.startDay();
 
-    for (const member of this.memberStatesWithoutFillers) {
+    for (const member of this.activeMemberStates) {
       for (const proc of member.collectInventory()) {
         this.maybeActivateTeamSkill(proc, member);
       }
@@ -180,13 +187,13 @@ export class TeamSimulator {
     }
 
     for (const member of this.memberStates) {
-      member.wakeUp();
+      member.wakeUp(this.activeMemberStates.includes(member));
     }
   }
 
   private attemptCooking(currentMinutesSincePeriodStart: number) {
     if (currentMinutesSincePeriodStart >= this.mealTimeMinutesSinceStart[this.cookedMealsCounter]) {
-      for (const member of this.memberStates) {
+      for (const member of this.activeMemberStates) {
         member.updateIngredientBag();
         member.recoverMeal();
       }
@@ -229,13 +236,13 @@ export class TeamSimulator {
       return;
     }
     if (activation.unit === 'helps') {
-      this.processTeamHelpActivation(activation, invoker, this.memberStatesWithoutFillers);
+      this.processTeamHelpActivation(activation, invoker, this.activeMemberStates);
     }
     if (activation.unit === 'skill helps') {
-      this.processTeamSkillHelpActivation(activation, invoker, this.memberStatesWithoutFillers, recursionDepth);
+      this.processTeamSkillHelpActivation(activation, invoker, this.activeMemberStates, recursionDepth);
     }
     if (activation.unit === 'energy') {
-      this.processTeamEnergyActivation(activation, invoker, this.memberStatesWithoutFillers);
+      this.processTeamEnergyActivation(activation, invoker, this.activeMemberStates);
     }
   }
 
@@ -266,7 +273,7 @@ export class TeamSimulator {
   }
 
   private findTargetGroup(numMonsTargeted?: number, chanceToTargetLowestMembers?: number): MemberState[] {
-    const copyOfMemberStates = this.memberStatesWithoutFillers.slice();
+    const copyOfMemberStates = this.activeMemberStates.slice();
     const shuffledMembers = copyOfMemberStates
       .map((member) => {
         return {
@@ -348,10 +355,52 @@ export class TeamSimulator {
   }
 
   private collectInventory() {
-    for (const member of this.memberStatesWithoutFillers) {
+    for (const member of this.activeMemberStates) {
       for (const activation of member.collectInventory()) {
         this.maybeActivateTeamSkill(activation, member);
       }
+    }
+  }
+
+  /** Applies scheduled swaps only after the current five-minute tick has fully resolved. */
+  private updateActiveMembers(minutesSinceWakeup: number) {
+    const schedule = this.settings.schedule ?? [];
+    if (schedule.length === 0) {
+      this.setActiveMembers(this.memberStatesWithoutFillers);
+      return;
+    }
+    const wakeup = this.settings.wakeup;
+    const currentMinutes = ((wakeup.hour * 60 + wakeup.minute + minutesSinceWakeup) % this.fullDayDuration + this.fullDayDuration) % this.fullDayDuration;
+    const ids = new Set<string>();
+    for (const slot of new Set(schedule.map((shift) => shift.slotIndex))) {
+      const shifts = schedule.filter((shift) => shift.slotIndex === slot).sort((a, b) => a.startTime.localeCompare(b.startTime));
+      const current = shifts.filter((shift) => {
+        const [hour, minute] = shift.startTime.split(':').map(Number);
+        return hour * 60 + minute <= currentMinutes;
+      }).at(-1) ?? shifts.at(-1);
+      if (current) ids.add(current.externalId);
+    }
+    const next = this.memberStatesWithoutFillers.filter((member) => ids.has(member.id));
+    const wasInitialized = this.activeMemberStates.length > 0;
+    const departing = this.activeMemberStates.filter((member) => !next.includes(member));
+    const incoming = next.filter((member) => !this.activeMemberStates.includes(member));
+    for (const member of departing) {
+      for (const proc of member.collectInventory()) this.maybeActivateTeamSkill(proc, member);
+    }
+    this.setActiveMembers(next);
+    // Do not allow a member to bank the helps elapsed while it was rotated out.
+    // The initial roster is prepared by wakeUp(), which intentionally starts at zero.
+    if (wasInitialized) {
+      for (const member of incoming) member.resetHelpTimer(minutesSinceWakeup);
+    }
+  }
+
+  private setActiveMembers(members: MemberState[]) {
+    this.activeMemberStates = members;
+    const team = members.map((member) => member.member);
+    for (const member of members) {
+      member.setTeam(team);
+      member.otherMembers = members.filter((other) => other.id !== member.id);
     }
   }
 }

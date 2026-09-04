@@ -439,6 +439,26 @@ describe('removeMember', () => {
     await teamStore.removeMember(1)
     expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
   })
+
+  it('clears every shift in the removed slot', async () => {
+    const teamStore = useTeamStore()
+    const primary = mocks.createMockPokemon()
+    const replacement = mocks.createMockPokemon()
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(primary)
+    pokemonStore.upsertLocalPokemon(replacement)
+    teamStore.teams = createMockTeams(1, {
+      members: [primary.externalId],
+      schedule: [
+        { slotIndex: 0, externalId: primary.externalId, startTime: '06:00' },
+        { slotIndex: 0, externalId: replacement.externalId, startTime: '12:00' }
+      ]
+    })
+
+    await teamStore.removeMember(0, false)
+
+    expect(teamStore.getCurrentTeam.schedule).toEqual([])
+  })
 })
 
 describe('updateTeamMember', () => {
