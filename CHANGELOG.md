@@ -1,3 +1,12 @@
+## [2.64.1](https://github.com/nerolis-lab/nerolis-lab/compare/v2.64.0...v2.64.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* **bad dreams:** skill detail display ([d28d84e](https://github.com/nerolis-lab/nerolis-lab/commit/d28d84ed66b5cb40d6569cdb10ce750d9ef23192))
+* per proc berries in berry burst ([cbe766b](https://github.com/nerolis-lab/nerolis-lab/commit/cbe766b8d2895c7e3240e72d932d197f7bbd60a6))
+* vite Windows bug ([8e67fbe](https://github.com/nerolis-lab/nerolis-lab/commit/8e67fbe05dccc9ecf43776df024aebc5c42daa86))
+
 # [2.64.0](https://github.com/nerolis-lab/nerolis-lab/compare/v2.63.0...v2.64.0) (2026-08-21)
 
 
