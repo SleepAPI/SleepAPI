@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
-    "globby": "^16.2.2",
-    "sass-embedded": "^1.100.0",
+    "globby": "^16.2.4",
+    "sass-embedded": "^1.104.0",
     "typescript": "^6.0.3",
     "vitepress": "^1.6.4",
     "vitest": "^5.0.0"
