@@ -57,7 +57,13 @@
               <ol class="pokemon-list">
                 <li v-for="(entry, index) in row.entries" :key="entry.pokemon.name" class="pokemon-entry">
                   <img
-                    :src="avatarImage({ pokemonName: entry.pokemon.name, shiny: false, happy: false })"
+                    :src="
+                      avatarImage({
+                        pokemonName: entry.pokemon.name,
+                        shiny: false,
+                        happy: false
+                      })
+                    "
                     :alt="entry.pokemon.displayName"
                     :title="`${entry.pokemon.displayName} · ${entry.pokemon.specialty} · ${formatBfsIndex(entry.score)}`"
                     width="72"
@@ -74,7 +80,6 @@
                   </v-card>
                 </li>
               </ol>
-              <span v-if="row.entries.length === 0" class="empty-row">No Pokémon in this range</span>
             </td>
           </tr>
           <tr v-if="filteredRows.length === 0">
@@ -216,6 +221,7 @@ function rangeColor(min: number): string {
 .pokemon-list {
   display: flex;
   flex-wrap: wrap;
+  min-height: 88px;
   list-style: none;
   padding: 0;
   margin: 0;
