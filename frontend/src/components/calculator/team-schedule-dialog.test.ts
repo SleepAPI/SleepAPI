@@ -390,6 +390,40 @@ describe('TeamScheduleDialog', () => {
     expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(1)
   })
 
+  it('saves multiple time shifts for the same Pokemon without duplicating its saved record', async () => {
+    useUserStore().setInitialLoginData(commonMocks.loginResponse())
+    server.onPut('team/meta/0').reply(200, { version: 1 })
+    await open('time')
+    const team = useTeamStore().getCurrentTeam
+    const original = usePokemonStore().getPokemon(team.members[0]!)!
+    const partner = mocks.createMockPokemon({ externalId: 'rotation-partner', saved: true })
+    for (const pokemon of [partner, original]) {
+      await wrapper
+        .findAllComponents({ name: 'VCard' })
+        .find((card) => card.classes().includes('schedule-add-card'))!
+        .trigger('click')
+      useDialogStore().handlePokemonSelected(pokemon)
+      await flushPromises()
+    }
+    const payload = JSON.parse(server.history.put.at(-1)!.data)
+    expect(payload.schedule.map((shift: { externalId: string }) => shift.externalId)).toEqual([
+      original.externalId,
+      partner.externalId,
+      original.externalId
+    ])
+    expect(new Set(payload.schedule.map((shift: { startTime: string }) => shift.startTime)).size).toBe(3)
+    expect(payload.scheduledMembers).toHaveLength(2)
+    await actionButton('Close')
+    useDialogStore().openSchedule(0)
+    await flushPromises()
+    expect(wrapper.findAllComponents(PokemonSlotDisplay)).toHaveLength(3)
+    expect(team.schedule!.map((shift) => shift.externalId)).toEqual([
+      original.externalId,
+      partner.externalId,
+      original.externalId
+    ])
+  })
+
   it('displays each scheduled Pokemon level, name, and team subskills', async () => {
     const pokemonStore = usePokemonStore()
     const team = useTeamStore().getCurrentTeam

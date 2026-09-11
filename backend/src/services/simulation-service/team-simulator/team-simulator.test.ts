@@ -66,6 +66,28 @@ const mockMembers: TeamMemberExt[] = [
 ];
 
 describe('TeamSimulator', () => {
+  it('returns the same Pokemon to work for a later time shift', () => {
+    const members = ['original', 'partner'].map((externalId) => ({
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId }
+    }));
+    const settings = mocks.teamSettingsExt({
+      schedule: [
+        { slotIndex: 0, externalId: 'original', startTime: '06:00' },
+        { slotIndex: 0, externalId: 'partner', startTime: '12:00' },
+        { slotIndex: 0, externalId: 'original', startTime: '18:00' }
+      ]
+    });
+    const simulator = new TeamSimulator({ settings, members, iterations: 1 });
+    const switches = vi.spyOn(simulator as any, 'setActiveMembers');
+    simulator.simulate();
+    expect(switches.mock.calls.map(([active]: any) => active.map((member: any) => member.id))).toEqual([
+      ['partner'],
+      ['original']
+    ]);
+    expect(simulator.results().members.map((member) => member.externalId)).toEqual(['original', 'partner']);
+  });
+
   it('makes an outgoing ingredient specialist’s produce available to meals while it is boxed', () => {
     const producer = {
       ...mockMembers[0],
