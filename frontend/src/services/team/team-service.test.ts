@@ -514,6 +514,66 @@ describe('calculateProduction', () => {
 })
 
 describe('calculateIv', () => {
+  it('includes rotation partners and unchanged slots when checking a scheduled member', async () => {
+    const team = useTeamStore(),
+      pokemon = usePokemonStore()
+    for (const externalId of ['primary', 'static', 'partner'])
+      pokemon.upsertLocalPokemon(mocks.createMockPokemon({ externalId }))
+    team.teams = createMockTeams(1, {
+      members: ['primary', 'static'],
+      selectedMemberId: 'partner',
+      schedule: [
+        { slotIndex: 0, externalId: 'primary', startTime: '06:00' },
+        { slotIndex: 0, externalId: 'partner', startTime: '12:00' }
+      ]
+    })
+    mockedServerAxios
+      .onPost('/calculator/iv')
+      .replyOnce(200, { variants: [mocks.createMockMemberProduction({ externalId: uuid.v4() })] })
+    await TeamService.calculateCurrentMemberIv()
+    const body = JSON.parse(mockedServerAxios.history.post[0].data)
+    expect(body.replacedMemberId).toBe('partner')
+    expect(body.members.map((member: { externalId: string }) => member.externalId)).toEqual(['primary', 'static'])
+    expect(body.settings.schedule).toEqual([
+      { slotIndex: 0, externalId: 'primary', startTime: '06:00' },
+      { slotIndex: 0, externalId: 'partner', startTime: '12:00' },
+      { slotIndex: 1, externalId: 'static', startTime: '06:00' }
+    ])
+  })
+
+  it('sends the actual build and returns its reference production for conditional comparisons', async () => {
+    const team = useTeamStore()
+    const current = mocks.createMockPokemon({ externalId: 'original' })
+    usePokemonStore().upsertLocalPokemon(current)
+    team.teams = createMockTeams(1, {
+      members: [current.externalId],
+      schedule: [
+        { slotIndex: 0, externalId: current.externalId, startTime: '06:00', type: 'pot-size', potSizeTarget: 150 }
+      ]
+    })
+    const reference = mocks.createMockMemberProduction({ externalId: current.externalId })
+    mockedServerAxios.onPost('/calculator/iv').replyOnce((request) => {
+      const body = JSON.parse(request.data)
+      return [
+        200,
+        {
+          reference,
+          variants: body.variants.map((variant: { externalId: string }) =>
+            mocks.createMockMemberProduction({ externalId: variant.externalId })
+          )
+        }
+      ]
+    })
+    const result = await TeamService.calculateCurrentMemberIv()
+    const body = JSON.parse(mockedServerAxios.history.post[0].data)
+    expect(body.referenceMember).toMatchObject({
+      externalId: current.externalId,
+      level: current.level,
+      nature: current.nature.name
+    })
+    expect(result?.reference).toEqual(JSON.parse(JSON.stringify(reference)))
+  })
+
   it.each([
     { label: 'regular', island: mocks.islandInstance({ areaBonus: 35 }) },
     {
@@ -563,6 +623,7 @@ describe('calculateIv', () => {
 
     const requestData = JSON.parse(lastPostCall.data)
     expect(requestData).toEqual({
+      replacedMemberId: currentMember.externalId,
       members: [
         {
           externalId: 'member2',

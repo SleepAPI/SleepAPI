@@ -359,8 +359,8 @@ export const useTeamStore = defineStore('team', {
       if (!(this.getCurrentTeam.schedule ?? []).some((shift) => shift.externalId === updatedMember.externalId)) return
       usePokemonStore().upsertLocalPokemon(updatedMember)
       await this.updateTeam()
-      this.resetCurrentTeamIvs()
       await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs()
     },
     async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number, calculateProduction = true) {
       this.loadingMembers[memberIndex] = true
@@ -405,6 +405,15 @@ export const useTeamStore = defineStore('team', {
     upsertIv(externalId: string, performanceDetails?: PerformanceDetails) {
       this.getCurrentTeam.memberIvs[externalId] = performanceDetails
     },
+    getCalculationSchedule(index?: number): TeamScheduleShift[] {
+      const teamIndex = index ?? this.currentIndex
+      return Array.from({ length: MAX_TEAM_SIZE }).flatMap((_, slotIndex) => {
+        const explicit = (this.teams[teamIndex].schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
+        if (explicit.length > 0) return explicit
+        const primaryId = this.teams[teamIndex].members[slotIndex]
+        return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.teams[teamIndex].wakeup }] : []
+      })
+    },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
       this.loadingTeams = true
@@ -426,12 +435,7 @@ export const useTeamStore = defineStore('team', {
         wakeup: this.teams[teamIndex].wakeup,
         stockpiledIngredients: this.teams[teamIndex].stockpiledIngredients,
         island: this.teams[teamIndex].island,
-        schedule: Array.from({ length: MAX_TEAM_SIZE }).flatMap((_, slotIndex) => {
-          const explicit = (this.teams[teamIndex].schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
-          if (explicit.length > 0) return explicit
-          const primaryId = this.teams[teamIndex].members[slotIndex]
-          return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.teams[teamIndex].wakeup }] : []
-        })
+        schedule: this.getCalculationSchedule(teamIndex)
       }
       this.teams[teamIndex].production = await TeamService.calculateProduction({
         members,
@@ -485,6 +489,7 @@ export const useTeamStore = defineStore('team', {
       ]
       await this.updateTeam()
       await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs()
     },
     async removeMember(memberIndex: number, calculateProduction = true) {
       this.loadingMembers[memberIndex] = true

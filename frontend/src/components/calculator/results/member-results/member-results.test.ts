@@ -85,6 +85,20 @@ describe('MemberResults', () => {
     expect(teamStore.getCurrentTeam.members).toEqual([mockPokemon.externalId, undefined, other.externalId])
   })
 
+  it('rates a conditional comparison against its matching reference production', async () => {
+    const reference = mocks.createMockMemberProduction()
+    const optimal = mocks.createMockMemberProduction()
+    TeamService.calculateCurrentMemberIv = vi.fn().mockResolvedValue({
+      reference,
+      optimalBerry: optimal,
+      optimalIngredient: optimal,
+      optimalSkill: optimal
+    })
+    const rate = vi.spyOn(wrapper.vm, 'calculatePercentagesOfSetup')
+    await wrapper.vm.populateIv()
+    expect(rate).toHaveBeenCalledWith(expect.objectContaining({ current: reference }))
+  })
+
   it('changes window item correctly', async () => {
     TeamService.calculateCurrentMemberIv = vi.fn().mockResolvedValue({
       optimalBerry: mocks.createMockMemberProduction(),

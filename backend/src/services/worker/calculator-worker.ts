@@ -15,9 +15,9 @@ async function calculateTeam(body: any, maybeUser?: DBUser) {
   return await controller.calculateTeam(body, maybeUser);
 }
 
-async function calculateIv(body: any) {
+async function calculateIv(body: any, user?: DBUser) {
   const controller = new ProductionController();
-  return await controller.calculateIv(body);
+  return await controller.calculateIv(body, user);
 }
 
 workerpool.worker({

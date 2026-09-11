@@ -460,7 +460,7 @@ export default defineComponent({
       if (response) {
         const performanceDetails = this.calculatePercentagesOfSetup({
           ...response,
-          current: memberProduction
+          current: response.reference ?? memberProduction
         })
 
         this.teamStore.upsertIv(calculatedExternalId, performanceDetails)

@@ -25,7 +25,7 @@ import {
   subskill
 } from 'sleepapi-common';
 import { vimic } from 'vimic';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 const mockPokemonWithIngredients: PokemonWithIngredients = {
   pokemon: commonMocks.mockPokemon({
@@ -779,5 +779,54 @@ describe('maybeActivateTeamSkill (energy)', () => {
     expect(simulator.memberStates[0].energy).toBe(50);
     expect(simulator.memberStates[1].energy).toBe(60);
     expect(simulator.memberStates[2].energy).toBe(40);
+  });
+});
+
+describe('conditional rotation replay', () => {
+  it('replays all conditional slots across days while retaining time-based switches', () => {
+    const members = ['a', 'b', 'c', 'd', 'e', 'f'].map((externalId) =>
+      mocks.teamMemberExt({
+        settings: { ...mockMembers[0].settings, externalId },
+        pokemonWithIngredients: mockPokemonWithIngredients
+      })
+    );
+    const settings = mocks.teamSettingsExt({
+      schedule: [
+        { slotIndex: 0, externalId: 'a', startTime: '06:00', type: 'pot-size', potSizeTarget: 200 },
+        { slotIndex: 0, externalId: 'b', startTime: '06:05', type: 'pot-size' },
+        { slotIndex: 1, externalId: 'c', startTime: '06:00', type: 'tasty-chance', tastyChanceTarget: 30 },
+        { slotIndex: 1, externalId: 'd', startTime: '06:05', type: 'tasty-chance' },
+        { slotIndex: 2, externalId: 'e', startTime: '06:00' },
+        { slotIndex: 2, externalId: 'f', startTime: '12:00' }
+      ]
+    });
+    const reference = new TeamSimulator({ settings, members, iterations: 3 }) as any;
+    const comparison = new TeamSimulator({ settings, members, iterations: 3 }) as any;
+    const referenceChanges = vi.spyOn(reference, 'setActiveMembers');
+    const comparisonChanges = vi.spyOn(comparison, 'setActiveMembers');
+    const condition = vi.spyOn(reference, 'conditionReached');
+    const comparisonCondition = vi.spyOn(comparison, 'conditionReached').mockImplementation(() => {
+      throw new Error('A comparison must not decide when to rotate');
+    });
+    const trace = new Map<number, Map<number, number>>();
+    for (let day = 0; day < 3; day++) {
+      const calls = [0, 0];
+      condition.mockImplementation((shift: any) => {
+        const tick = calls[shift.slotIndex]++;
+        if (day === 2) return false;
+        return tick >= 2 + shift.slotIndex && (day === 1 || tick < 4 + shift.slotIndex);
+      });
+      referenceChanges.mockClear();
+      comparisonChanges.mockClear();
+      reference.simulate({ record: trace });
+      if (day === 0) expect([...trace.keys()]).toEqual([10, 15, 20, 25]);
+      if (day === 1) expect([...trace.keys()]).toEqual([10, 15]);
+      if (day === 2) expect([...trace.keys()]).toEqual([0]);
+      comparison.simulate({ replay: trace });
+      const ids = (spy: any) => spy.mock.calls.map(([active]: any) => active.map((member: any) => member.id));
+      expect(ids(comparisonChanges)).toEqual(ids(referenceChanges));
+      expect(ids(referenceChanges).some((active: string[]) => active.includes('f'))).toBe(true);
+    }
+    expect(comparisonCondition).not.toHaveBeenCalled();
   });
 });

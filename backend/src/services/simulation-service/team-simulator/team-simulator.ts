@@ -39,6 +39,9 @@ import {
   type TeamSettingsExt
 } from 'sleepapi-common';
 
+/** Conditional slot selections keyed by minutes since wakeup, for one simulated day. */
+export type RotationTrace = Map<number, Map<number, number>>;
+
 export class TeamSimulator {
   private readonly simulationTickMinutes = 5;
   private run = 0;
@@ -54,6 +57,7 @@ export class TeamSimulator {
   private scheduledShiftTickOffsets = new Set<number>();
   private conditionalSchedulesBySlot = new Map<number, TeamScheduleShift[]>();
   private conditionalScheduleIndexBySlot = new Map<number, number>();
+  private rotationTrace?: { record?: RotationTrace; replay?: RotationTrace };
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
@@ -139,7 +143,9 @@ export class TeamSimulator {
     this.updateActiveMembers(-5);
   }
 
-  public simulate() {
+  public simulate(rotationTrace?: { record?: RotationTrace; replay?: RotationTrace }) {
+    this.rotationTrace = rotationTrace;
+    rotationTrace?.record?.clear();
     this.init();
 
     let minutesSinceWakeup = 0;
@@ -419,7 +425,7 @@ export class TeamSimulator {
       this.fullDayDuration;
     // The active team cannot change between scheduled start times. This avoids
     // rebuilding team relationships and helping-speed data on every tick.
-    const conditionChanged = this.advanceConditionalSchedules();
+    const conditionChanged = this.advanceConditionalSchedules(minutesSinceWakeup);
     if (
       this.activeMemberStates.length > 0 &&
       !conditionChanged &&
@@ -462,7 +468,13 @@ export class TeamSimulator {
   }
 
   /** Evaluated after a tick has resolved, so rotation never suppresses that tick's drops or skills. */
-  private advanceConditionalSchedules(): boolean {
+  private advanceConditionalSchedules(minutesSinceWakeup: number): boolean {
+    if (this.rotationTrace?.replay) {
+      const indices = this.rotationTrace.replay.get(minutesSinceWakeup);
+      if (!indices) return false;
+      this.conditionalScheduleIndexBySlot = new Map(indices);
+      return true;
+    }
     let changed = false;
     for (const [slotIndex, shifts] of this.conditionalSchedulesBySlot) {
       if (shifts.length < 2) continue;
@@ -477,6 +489,7 @@ export class TeamSimulator {
         changed = true;
       }
     }
+    if (changed) this.rotationTrace?.record?.set(minutesSinceWakeup, new Map(this.conditionalScheduleIndexBySlot));
     return changed;
   }
 

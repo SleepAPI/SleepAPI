@@ -253,7 +253,6 @@ const persistSchedule = (next: TeamScheduleShift[]) => {
   scheduleShifts.value = next
   return runSave(async () => {
     await teamStore.setSchedule(index, next)
-    teamStore.resetCurrentTeamIvs()
   })
 }
 

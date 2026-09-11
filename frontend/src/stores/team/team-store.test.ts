@@ -52,6 +52,18 @@ describe('Team Store', () => {
     expect(pokemonStore.getPokemon(partner.externalId)?.level).toBe(42)
   })
 
+  it('invalidates cached IVs when a schedule changes', async () => {
+    const team = useTeamStore()
+    team.teams = createMockTeams(1)
+    expect(Object.keys(team.getCurrentTeam.memberIvs)).not.toHaveLength(0)
+    vi.mocked(TeamService.calculateProduction).mockImplementationOnce(async () => {
+      expect(Object.keys(team.getCurrentTeam.memberIvs)).not.toHaveLength(0)
+      return undefined
+    })
+    await team.setSchedule(0, [{ slotIndex: 0, externalId: mockPokemon.externalId, startTime: '12:00' }])
+    expect(team.getCurrentTeam.memberIvs).toEqual({})
+  })
+
   it('should have expected default state', () => {
     const teamStore = useTeamStore()
     expect(teamStore.$state).toMatchSnapshot()
