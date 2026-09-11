@@ -5,6 +5,13 @@
         <div id="filledMenu">
           <v-list-item id="editButton" prepend-icon="mdi-pencil" @click="handleEditClick">Edit</v-list-item>
           <v-list-item
+            v-if="dialogStore.filledSlotProps.slotIndex !== undefined"
+            id="scheduleButton"
+            prepend-icon="mdi-clock-outline"
+            @click="openSchedule"
+            >Schedule</v-list-item
+          >
+          <v-list-item
             id="saveButton"
             :disabled="!userStore.loggedIn"
             :prepend-icon="savedState.state ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
@@ -64,6 +71,13 @@ const handleEditClick = () => {
       onUpdate(editedPokemon)
     }
   }, pokemon)
+}
+
+const openSchedule = () => {
+  const slotIndex = dialogStore.filledSlotProps.slotIndex
+  if (slotIndex === undefined) return
+  dialogStore.closeFilledSlot()
+  dialogStore.openSchedule(slotIndex)
 }
 
 const save = () => {

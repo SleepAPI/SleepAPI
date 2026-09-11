@@ -42,6 +42,7 @@ describe('MemberResults', () => {
     const teamStore = useTeamStore()
     teamStore.currentIndex = 0
     teamStore.teams[0].members = []
+    teamStore.teams[0].production = undefined
 
     expect(wrapper.vm.membersWithProduction).toBeDefined()
     expect(wrapper.vm.membersWithProduction!.length).toBe(0)
@@ -50,10 +51,52 @@ describe('MemberResults', () => {
   it('displays member production when data is available', () => {
     const members = wrapper.vm.membersWithProduction
     expect(members).toBeDefined()
-    expect(members).toHaveLength(5)
-    expect(members.filter((m) => m != null)).toHaveLength(1)
+    expect(members).toHaveLength(teamStore.getCurrentTeam.production?.members.length ?? 0)
+    expect(members.filter((m) => m != null)).toHaveLength(members.length)
     expect(members![0]?.production.externalId).toEqual(mockPokemon.externalId)
     expect(members![0]?.production.produceTotal.berries[0].amount).toBe(10)
+  })
+
+  it('selects and edits the displayed Pokemon when primary slots have gaps', async () => {
+    const other = mocks.createMockPokemon({ externalId: 'other' })
+    pokemonStore.upsertLocalPokemon(other)
+    teamStore.teams = createMockTeams(1, {
+      members: [mockPokemon.externalId, undefined, other.externalId],
+      production: {
+        ...teamStore.getCurrentTeam.production!,
+        members: [
+          mocks.createMockMemberProduction({ externalId: mockPokemon.externalId }),
+          mocks.createMockMemberProduction({ externalId: other.externalId })
+        ]
+      },
+      memberIvs: {
+        [mockPokemon.externalId]: mocks.createMockMemberIv(),
+        [other.externalId]: mocks.createMockMemberIv()
+      }
+    })
+    wrapper.vm.currentMemberIndex = 1
+    await nextTick()
+    expect(teamStore.getCurrentMember).toBe(other.externalId)
+    expect(wrapper.vm.currentMemberWithProduction?.member.externalId).toBe(other.externalId)
+    const update = vi.spyOn(teamStore, 'updateMemberById').mockResolvedValue()
+    wrapper.vm.openSubskillMenu(wrapper.vm.currentMemberWithProduction!)
+    wrapper.vm.handleUpdateSubskills([])
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ externalId: other.externalId }))
+    expect(teamStore.getCurrentTeam.members).toEqual([mockPokemon.externalId, undefined, other.externalId])
+  })
+
+  it('rates a conditional comparison against its matching reference production', async () => {
+    const reference = mocks.createMockMemberProduction()
+    const optimal = mocks.createMockMemberProduction()
+    TeamService.calculateCurrentMemberIv = vi.fn().mockResolvedValue({
+      reference,
+      optimalBerry: optimal,
+      optimalIngredient: optimal,
+      optimalSkill: optimal
+    })
+    const rate = vi.spyOn(wrapper.vm, 'calculatePercentagesOfSetup')
+    await wrapper.vm.populateIv()
+    expect(rate).toHaveBeenCalledWith(expect.objectContaining({ current: reference }))
   })
 
   it('changes window item correctly', async () => {

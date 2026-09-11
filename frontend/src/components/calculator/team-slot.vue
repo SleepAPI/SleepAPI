@@ -9,7 +9,7 @@
             'rounded-b-0',
             teamStore.getCurrentMember === pokemonInstance.externalId &&
             teamStore.tab === 'members' &&
-            memberIndex === teamStore.getCurrentTeam.memberIndex
+            pokemonInstance.externalId === teamStore.getCurrentMember
               ? 'bg-surface'
               : 'frosted-glass'
           ]"
@@ -19,6 +19,7 @@
             {{ pokemonInstance.name }}
           </div>
           <v-img :src="imageUrl" class="pokemon-image" style="left: 10%" />
+          <v-icon v-if="hasSchedule" class="schedule-clock" color="primary" size="22">mdi-clock-outline</v-icon>
 
           <div style="position: absolute; bottom: 0%; width: 100%">
             <v-card class="text-center text-x-small rounded-t-0" color="subskillGold" location="bottom center">
@@ -92,6 +93,7 @@
         </v-row>
         <v-col cols="6">
           <v-img :src="imageUrl" style="aspect-ratio: 1 / 1" />
+          <v-icon v-if="hasSchedule" class="schedule-clock" color="primary" size="24">mdi-clock-outline</v-icon>
           <v-card
             v-if="isLeader && teamStore.tab !== 'members'"
             class="text-center leader-card"
@@ -213,11 +215,14 @@ export default defineComponent({
     },
     fullTeam() {
       return this.teamStore.getTeamSize === MAX_TEAM_SIZE
+    },
+    hasSchedule() {
+      return new Set(this.teamStore.getSchedule(this.memberIndex).map((shift) => shift.externalId)).size > 1
     }
   },
   methods: {
     openFilledSlotActions(pokemonInstance: PokemonInstanceExt) {
-      this.dialogStore.openFilledSlot(pokemonInstance, this.fullTeam, {
+      this.dialogStore.openFilledSlot(pokemonInstance, this.fullTeam, this.memberIndex, {
         onUpdate: (pokemonInstance: PokemonInstanceExt) => {
           this.updateTeamMember(pokemonInstance)
         },
@@ -294,5 +299,12 @@ export default defineComponent({
   left: 50%;
   width: 50%;
   white-space: nowrap;
+}
+.schedule-clock {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
 }
 </style>

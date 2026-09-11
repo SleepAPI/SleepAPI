@@ -1,3 +1,4 @@
+import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { TeamService } from '@/services/team/team-service'
 import { randomName } from '@/services/utils/name-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -12,6 +13,7 @@ import type { TeamData } from '@/types/team/team-data'
 import { timeWindowFactor, type TimeWindowDay } from '@/types/time/time-window'
 import { defineStore } from 'pinia'
 import {
+  isConditionalSchedule,
   DEFAULT_ISLAND,
   DOMAIN_VERSION,
   EnergizingCheerS,
@@ -31,6 +33,7 @@ import {
   type TeamAreaDTO,
   type TeamSettings
 } from 'sleepapi-common'
+import type { TeamScheduleShift, TeamScheduleType } from 'sleepapi-common'
 
 export interface TeamState {
   currentIndex: number
@@ -65,6 +68,7 @@ const defaultState = (attrs?: Partial<TeamState>): TeamState => ({
       stockpiledIngredients: [],
       version: 0,
       members: new Array(MAX_TEAM_SIZE).fill(undefined),
+      schedule: [],
       memberIvs: {},
       production: undefined
     }
@@ -92,7 +96,10 @@ export const useTeamStore = defineStore('team', {
     },
     getCurrentMember: (state: TeamState) => {
       const currentTeam = state.teams[state.currentIndex]
-      return currentTeam.members.at(currentTeam.memberIndex)
+      const ids = [...currentTeam.members, ...(currentTeam.schedule ?? []).map((shift) => shift.externalId)]
+      return currentTeam.selectedMemberId && ids.includes(currentTeam.selectedMemberId)
+        ? currentTeam.selectedMemberId
+        : (currentTeam.members.at(currentTeam.memberIndex) ?? ids.find(Boolean))
     },
     getMemberIvLoading: (state: TeamState) => (externalId: string) => {
       const currentTeam = state.teams[state.currentIndex]
@@ -106,7 +113,8 @@ export const useTeamStore = defineStore('team', {
 
       const currentTeam = state.teams[state.currentIndex]
       const result: (MemberProductionExt | undefined)[] = []
-      for (const memberId of currentTeam.members) {
+      const memberIds = currentTeam.production?.members.map((member) => member.externalId) ?? currentTeam.members
+      for (const memberId of memberIds) {
         const memberInstance = memberId && pokemonStore.getPokemon(memberId)
         const production = currentTeam.production?.members.find((member) => member.externalId === memberId)
 
@@ -155,6 +163,9 @@ export const useTeamStore = defineStore('team', {
         if (!team.island) {
           team.island = { ...DEFAULT_ISLAND }
         }
+        if (!team.schedule) {
+          team.schedule = []
+        }
       }
     },
     invalidateCache() {
@@ -183,7 +194,8 @@ export const useTeamStore = defineStore('team', {
         // grab previous teams so we may compare it to updated teams from server
         const previousTeams = this.teams.map((team) => ({
           ...team,
-          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined))
+          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined)),
+          scheduledMembers: (team.schedule ?? []).map((shift) => pokemonStore.getPokemon(shift.externalId))
         }))
 
         // get updated teams from server
@@ -219,6 +231,10 @@ export const useTeamStore = defineStore('team', {
             }
 
             // if neither team nor members have been update we copy production from cache
+            memberUpdated ||= (serverTeam.schedule ?? []).some((shift) => {
+              const previous = previousTeam.scheduledMembers.find((pokemon) => pokemon?.externalId === shift.externalId)
+              return !previous || previous.version !== pokemonStore.getPokemon(shift.externalId)?.version
+            })
             if (!memberUpdated) {
               this.teams[serverTeam.index].production = previousTeam.production
               this.teams[serverTeam.index].memberIvs = previousTeam.memberIvs
@@ -241,6 +257,7 @@ export const useTeamStore = defineStore('team', {
       this.teams[this.currentIndex] = {
         ...teamData,
         members: teamData.members.map((member) => member.externalId),
+        schedule: [],
         memberIvs: {},
         production: undefined,
         version: 0
@@ -258,8 +275,17 @@ export const useTeamStore = defineStore('team', {
       const userStore = useUserStore()
       if (userStore.loggedIn) {
         try {
-          const { island, name, camp, bedtime, wakeup, recipeType, stockpiledBerries, stockpiledIngredients } =
-            this.getCurrentTeam
+          const {
+            island,
+            name,
+            camp,
+            bedtime,
+            wakeup,
+            recipeType,
+            stockpiledBerries,
+            stockpiledIngredients,
+            schedule
+          } = this.getCurrentTeam
 
           const islandDTO: TeamAreaDTO = {
             islandName: island.shortName,
@@ -277,7 +303,13 @@ export const useTeamStore = defineStore('team', {
             recipeType,
             island: islandDTO,
             stockpiledBerries,
-            stockpiledIngredients
+            stockpiledIngredients,
+            schedule,
+            scheduledMembers: [...new Set((schedule ?? []).map((shift) => shift.externalId))].map((id) => {
+              const pokemon = usePokemonStore().getPokemon(id)
+              if (!pokemon) throw new Error(`Scheduled Pokémon ${id} is missing`)
+              return PokemonInstanceUtils.toUpsertTeamMemberRequest(pokemon)
+            })
           })
 
           this.getCurrentTeam.version = version
@@ -304,6 +336,7 @@ export const useTeamStore = defineStore('team', {
         stockpiledIngredients: [],
         version: 0,
         members: new Array(MAX_TEAM_SIZE).fill(undefined),
+        schedule: [],
         memberIvs: {},
         production: undefined
       }
@@ -315,6 +348,20 @@ export const useTeamStore = defineStore('team', {
           logger.error('Error updating teams')
         }
       }
+    },
+    selectMember(externalId: string) {
+      this.getCurrentTeam.selectedMemberId = externalId
+      const slotIndex = this.getCurrentTeam.members.indexOf(externalId)
+      if (slotIndex >= 0) this.getCurrentTeam.memberIndex = slotIndex
+    },
+    async updateMemberById(updatedMember: PokemonInstanceExt) {
+      const slotIndex = this.getCurrentTeam.members.indexOf(updatedMember.externalId)
+      if (slotIndex >= 0) return this.updateTeamMember(updatedMember, slotIndex)
+      if (!(this.getCurrentTeam.schedule ?? []).some((shift) => shift.externalId === updatedMember.externalId)) return
+      usePokemonStore().upsertLocalPokemon(updatedMember)
+      await this.updateTeam()
+      await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs()
     },
     async updateTeamMember(updatedMember: PokemonInstanceExt, memberIndex: number, calculateProduction = true) {
       this.loadingMembers[memberIndex] = true
@@ -359,12 +406,25 @@ export const useTeamStore = defineStore('team', {
     upsertIv(externalId: string, performanceDetails?: PerformanceDetails) {
       this.getCurrentTeam.memberIvs[externalId] = performanceDetails
     },
+    getCalculationSchedule(index?: number): TeamScheduleShift[] {
+      const teamIndex = index ?? this.currentIndex
+      return Array.from({ length: MAX_TEAM_SIZE }).flatMap((_, slotIndex) => {
+        const explicit = (this.teams[teamIndex].schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
+        if (explicit.length > 0) return explicit
+        const primaryId = this.teams[teamIndex].members[slotIndex]
+        return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.teams[teamIndex].wakeup }] : []
+      })
+    },
     async calculateProduction(teamIndex: number) {
       const pokemonStore = usePokemonStore()
       this.loadingTeams = true
 
       const members: PokemonInstanceExt[] = []
-      for (const member of this.teams[teamIndex].members) {
+      const memberIds = new Set(this.teams[teamIndex].members.filter(Boolean) as string[])
+      for (const shift of this.teams[teamIndex].schedule ?? []) {
+        memberIds.add(shift.externalId)
+      }
+      for (const member of memberIds) {
         if (member) {
           const pokemon = pokemonStore.getPokemon(member)
           pokemon && members.push(pokemon)
@@ -375,7 +435,8 @@ export const useTeamStore = defineStore('team', {
         bedtime: this.teams[teamIndex].bedtime,
         wakeup: this.teams[teamIndex].wakeup,
         stockpiledIngredients: this.teams[teamIndex].stockpiledIngredients,
-        island: this.teams[teamIndex].island
+        island: this.teams[teamIndex].island,
+        schedule: this.getCalculationSchedule(teamIndex)
       }
       this.teams[teamIndex].production = await TeamService.calculateProduction({
         members,
@@ -405,6 +466,33 @@ export const useTeamStore = defineStore('team', {
       await this.updateTeamMember(duplicatedMember, openSlotIndex)
       this.loadingMembers[openSlotIndex] = false
     },
+    getSchedule(slotIndex: number): TeamScheduleShift[] {
+      const primaryId = this.getCurrentTeam.members[slotIndex]
+      const explicit = (this.getCurrentTeam.schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
+      if (explicit.length > 0) {
+        if (isConditionalSchedule(explicit[0].type)) return explicit.slice()
+        const [wakeupHour, wakeupMinute] = this.getCurrentTeam.wakeup.split(':').map(Number)
+        const wakeupMinutes = wakeupHour * 60 + wakeupMinute
+        const minutesSinceWakeup = (time: string) => {
+          const [hour, minute] = time.split(':').map(Number)
+          return (hour * 60 + minute - wakeupMinutes + 1440) % 1440
+        }
+        return explicit.slice().sort((a, b) => minutesSinceWakeup(a.startTime) - minutesSinceWakeup(b.startTime))
+      }
+      return primaryId ? [{ slotIndex, externalId: primaryId, startTime: this.getCurrentTeam.wakeup }] : []
+    },
+    getScheduleType(slotIndex: number): TeamScheduleType {
+      return this.getSchedule(slotIndex)[0]?.type ?? 'time'
+    },
+    async setSchedule(slotIndex: number, shifts: TeamScheduleShift[]) {
+      this.getCurrentTeam.schedule = [
+        ...(this.getCurrentTeam.schedule ?? []).filter((shift) => shift.slotIndex !== slotIndex),
+        ...shifts
+      ]
+      await this.updateTeam()
+      await this.calculateProduction(this.currentIndex)
+      this.resetCurrentTeamIvs()
+    },
     async removeMember(memberIndex: number, calculateProduction = true) {
       this.loadingMembers[memberIndex] = true
 
@@ -431,6 +519,11 @@ export const useTeamStore = defineStore('team', {
       const member = this.getPokemon(memberIndex) // grab mon
 
       this.teams[this.currentIndex].members[memberIndex] = undefined // remove mon from team
+      // A rotation belongs to its visible slot. Leaving secondary shifts behind after
+      // its primary is removed makes the empty slot impossible to reclaim.
+      this.getCurrentTeam.schedule = (this.getCurrentTeam.schedule ?? []).filter(
+        (shift) => shift.slotIndex !== memberIndex
+      )
       if (member != null) {
         if (this.isSupportMember(member)) {
           this.resetCurrentTeamIvs()
@@ -439,6 +532,7 @@ export const useTeamStore = defineStore('team', {
       }
 
       this.loadingMembers[memberIndex] = false
+      await this.updateTeam()
       if (calculateProduction) {
         await this.calculateProduction(this.currentIndex)
       }

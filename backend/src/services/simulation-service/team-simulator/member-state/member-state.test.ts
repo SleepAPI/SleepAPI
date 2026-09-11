@@ -91,6 +91,29 @@ const settings: TeamSettingsExt = {
 const cookingState: CookingState = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
 
 describe('results', () => {
+  it('recalculates helping speed when its active team changes', () => {
+    const helpingMember: TeamMemberExt = {
+      ...member,
+      settings: { ...member.settings, externalId: 'helper', subskills: new Set([subskill.HELPING_BONUS.name]) }
+    };
+    const memberState = new MemberState({ member, settings, team: [member, helpingMember], cookingState });
+    const withHelpingBonus = memberState.results(1).advanced.maxFrequency;
+
+    memberState.setTeam([member]);
+
+    expect(memberState.results(1).advanced.maxFrequency).toBeGreaterThan(withHelpingBonus);
+  });
+
+  it('does not catch up helps missed while rotated out', () => {
+    const memberState = new MemberState({ member, settings, team: [member], cookingState });
+    memberState.wakeUp();
+    memberState.resetHelpTimer(900);
+
+    memberState.attemptDayHelp(900);
+
+    expect(memberState.results(1).produceTotal.ingredients).toEqual([]);
+  });
+
   it('should return correct results after multiple iterations', () => {
     const memberState = new MemberState({ member: guaranteedSkillProcMember, settings, team: [member], cookingState });
     for (let i = 0; i < 100; i++) {
@@ -351,6 +374,39 @@ describe('startDay', () => {
     memberState.wakeUp();
     memberState.collectInventory();
     expect(memberState.energy).toBe(105);
+  });
+
+  it('shall recover five percent of sleep in the box without team erb', () => {
+    const member: TeamMemberExt = {
+      pokemonWithIngredients: mockPokemonSet,
+      settings: {
+        carrySize: 10,
+        level: 60,
+        ribbon: 0,
+        nature: nature.MILD,
+        skillLevel: 6,
+        subskills: new Set(),
+        externalId: 'boxed member',
+        sneakySnacking: false
+      }
+    };
+    const erbTeammate: TeamMemberExt = {
+      ...member,
+      settings: {
+        ...member.settings,
+        externalId: 'erb teammate',
+        nature: nature.BASHFUL,
+        subskills: new Set([subskill.ENERGY_RECOVERY_BONUS.name])
+      }
+    };
+
+    const memberState = new MemberState({ member, settings, team: [member, erbTeammate], cookingState });
+
+    memberState.wakeUp('box');
+
+    // A full sleep score restores 5% in the box. The boxed member's Energy-
+    // recovery nature applies, but the active team's ERB does not.
+    expect(memberState.energy).toBeCloseTo(4.4);
   });
 });
 

@@ -25,7 +25,10 @@ import {
   subskill
 } from 'sleepapi-common';
 import { vimic } from 'vimic';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { CookingState } from './cooking-state/cooking-state.js';
+import { defaultUserRecipes } from './cooking-state/cooking-utils.js';
+import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 
 const mockPokemonWithIngredients: PokemonWithIngredients = {
   pokemon: commonMocks.mockPokemon({
@@ -63,6 +66,102 @@ const mockMembers: TeamMemberExt[] = [
 ];
 
 describe('TeamSimulator', () => {
+  it('returns the same Pokemon to work for a later time shift', () => {
+    const members = ['original', 'partner'].map((externalId) => ({
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId }
+    }));
+    const settings = mocks.teamSettingsExt({
+      schedule: [
+        { slotIndex: 0, externalId: 'original', startTime: '06:00' },
+        { slotIndex: 0, externalId: 'partner', startTime: '12:00' },
+        { slotIndex: 0, externalId: 'original', startTime: '18:00' }
+      ]
+    });
+    const simulator = new TeamSimulator({ settings, members, iterations: 1 });
+    const switches = vi.spyOn(simulator as any, 'setActiveMembers');
+    simulator.simulate();
+    expect(switches.mock.calls.map(([active]: any) => active.map((member: any) => member.id))).toEqual([
+      ['partner'],
+      ['original']
+    ]);
+    expect(simulator.results().members.map((member) => member.externalId)).toEqual(['original', 'partner']);
+  });
+
+  it('makes an outgoing ingredient specialist’s produce available to meals while it is boxed', () => {
+    const producer = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'producer' },
+      pokemonWithIngredients: {
+        ...mockPokemonWithIngredients,
+        pokemon: { ...mockPokemonWithIngredients.pokemon, ingredientPercentage: 100 }
+      }
+    };
+    const replacement = {
+      ...producer,
+      settings: { ...producer.settings, externalId: 'replacement' },
+      pokemonWithIngredients: {
+        ...producer.pokemonWithIngredients,
+        pokemon: { ...producer.pokemonWithIngredients.pokemon, ingredientPercentage: 0 }
+      }
+    };
+    const settings = {
+      ...mockSettings,
+      schedule: [
+        { slotIndex: 0, externalId: 'producer', startTime: '06:05' },
+        { slotIndex: 0, externalId: 'replacement', startTime: '11:50' }
+      ]
+    };
+    const cooking = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
+    let transferred = 0;
+    const addIngredients = cooking.addIngredients.bind(cooking);
+    vi.spyOn(cooking, 'addIngredients').mockImplementation((ingredients) => {
+      transferred += ingredients.reduce((sum, amount) => sum + amount, 0);
+      addIngredients(ingredients);
+    });
+    const simulator = new TeamSimulator({
+      settings,
+      members: [producer, replacement],
+      cookingState: cooking,
+      iterations: 1
+    });
+    simulator.simulate();
+    const produced = simulator
+      .results()
+      .members.find((member) => member.externalId === 'producer')!
+      .produceTotal.ingredients.reduce((sum, ingredient) => sum + ingredient.amount, 0);
+    expect(produced).toBeGreaterThan(0);
+    expect(transferred).toBeCloseTo(produced);
+  });
+
+  it('uses Sunday pot capacity for rotation and returns to weekday capacity on Monday', () => {
+    const primary = { ...mockMembers[0], settings: { ...mockMembers[0].settings, externalId: 'primary' } };
+    const partner = { ...primary, settings: { ...primary.settings, externalId: 'partner' } };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      camp: false,
+      potSize: 100,
+      schedule: [
+        { slotIndex: 0, externalId: 'primary', startTime: '06:00', type: 'pot-size', potSizeTarget: 180 },
+        { slotIndex: 0, externalId: 'partner', startTime: '06:05', type: 'pot-size' }
+      ]
+    };
+    const cooking = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
+    const simulator = new TeamSimulator({
+      settings,
+      members: [primary, partner],
+      cookingState: cooking,
+      iterations: 8
+    }) as any;
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+    for (let day = 0; day < 6; day++) simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+    simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['partner']);
+    simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+  });
+
   it('shall return expected production from mocked pokemon', () => {
     const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, iterations: 1 });
 
@@ -87,6 +186,58 @@ describe('TeamSimulator', () => {
     expect(result.produceTotal.berries[0].amount).toMatchInlineSnapshot(`37`);
     expect(result.produceTotal.ingredients[0].amount).toMatchInlineSnapshot(`8`);
     expect(result.skillProcs).toMatchInlineSnapshot(`35`);
+  });
+
+  it('shall retain energy and frequency samples for inactive scheduled members', () => {
+    const primary: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'primary' }
+    };
+    const inactive: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'inactive' }
+    };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      schedule: [{ slotIndex: 0, externalId: primary.settings.externalId, startTime: '06:00' }]
+    };
+    const simulator = new TeamSimulator({ settings, members: [primary, inactive], iterations: 1 });
+
+    simulator.simulate();
+
+    const result = simulator.results().members.find((member) => member.externalId === inactive.settings.externalId)!;
+    expect(result.advanced.dayPeriod.averageEnergy).toBeGreaterThan(0);
+    expect(result.advanced.dayPeriod.averageFrequency).toBeGreaterThan(0);
+  });
+
+  it('shall use the pre-wake roster for sleep recovery and erb', () => {
+    const previous: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'previous', nature: nature.MILD }
+    };
+    const incoming: TeamMemberExt = {
+      ...mockMembers[0],
+      settings: {
+        ...mockMembers[0].settings,
+        externalId: 'incoming',
+        nature: nature.BASHFUL,
+        subskills: new Set([subskill.ENERGY_RECOVERY_BONUS.name])
+      }
+    };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      schedule: [
+        { slotIndex: 0, externalId: previous.settings.externalId, startTime: '05:55' },
+        { slotIndex: 0, externalId: incoming.settings.externalId, startTime: '06:00' }
+      ]
+    };
+    const simulator = new TeamSimulator({ settings, members: [previous, incoming], iterations: 1 }) as any;
+
+    simulator.init();
+
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['previous']);
+    expect(simulator.memberStates.find((member: any) => member.id === 'previous').energy).toBe(88);
+    expect(simulator.memberStates.find((member: any) => member.id === 'incoming').energy).toBe(5);
   });
 
   it('shall calculate production with uneven sleep times', () => {
@@ -727,5 +878,54 @@ describe('maybeActivateTeamSkill (energy)', () => {
     expect(simulator.memberStates[0].energy).toBe(50);
     expect(simulator.memberStates[1].energy).toBe(60);
     expect(simulator.memberStates[2].energy).toBe(40);
+  });
+});
+
+describe('conditional rotation replay', () => {
+  it('replays all conditional slots across days while retaining time-based switches', () => {
+    const members = ['a', 'b', 'c', 'd', 'e', 'f'].map((externalId) =>
+      mocks.teamMemberExt({
+        settings: { ...mockMembers[0].settings, externalId },
+        pokemonWithIngredients: mockPokemonWithIngredients
+      })
+    );
+    const settings = mocks.teamSettingsExt({
+      schedule: [
+        { slotIndex: 0, externalId: 'a', startTime: '06:00', type: 'pot-size', potSizeTarget: 200 },
+        { slotIndex: 0, externalId: 'b', startTime: '06:05', type: 'pot-size' },
+        { slotIndex: 1, externalId: 'c', startTime: '06:00', type: 'tasty-chance', tastyChanceTarget: 30 },
+        { slotIndex: 1, externalId: 'd', startTime: '06:05', type: 'tasty-chance' },
+        { slotIndex: 2, externalId: 'e', startTime: '06:00' },
+        { slotIndex: 2, externalId: 'f', startTime: '12:00' }
+      ]
+    });
+    const reference = new TeamSimulator({ settings, members, iterations: 3 }) as any;
+    const comparison = new TeamSimulator({ settings, members, iterations: 3 }) as any;
+    const referenceChanges = vi.spyOn(reference, 'setActiveMembers');
+    const comparisonChanges = vi.spyOn(comparison, 'setActiveMembers');
+    const condition = vi.spyOn(reference, 'conditionReached');
+    const comparisonCondition = vi.spyOn(comparison, 'conditionReached').mockImplementation(() => {
+      throw new Error('A comparison must not decide when to rotate');
+    });
+    const trace = new Map<number, Map<number, number>>();
+    for (let day = 0; day < 3; day++) {
+      const calls = [0, 0];
+      condition.mockImplementation((shift: any) => {
+        const tick = calls[shift.slotIndex]++;
+        if (day === 2) return false;
+        return tick >= 2 + shift.slotIndex && (day === 1 || tick < 4 + shift.slotIndex);
+      });
+      referenceChanges.mockClear();
+      comparisonChanges.mockClear();
+      reference.simulate({ record: trace });
+      if (day === 0) expect([...trace.keys()]).toEqual([10, 15, 20, 25]);
+      if (day === 1) expect([...trace.keys()]).toEqual([10, 15]);
+      if (day === 2) expect([...trace.keys()]).toEqual([0]);
+      comparison.simulate({ replay: trace });
+      const ids = (spy: any) => spy.mock.calls.map(([active]: any) => active.map((member: any) => member.id));
+      expect(ids(comparisonChanges)).toEqual(ids(referenceChanges));
+      expect(ids(referenceChanges).some((active: string[]) => active.includes('f'))).toBe(true);
+    }
+    expect(comparisonCondition).not.toHaveBeenCalled();
   });
 });

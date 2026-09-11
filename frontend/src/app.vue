@@ -23,6 +23,7 @@
     <PokemonSearchDialog />
     <PokemonInputDialog />
     <FilledSlotMenu />
+    <TeamScheduleDialog />
   </v-app>
 </template>
 
@@ -31,6 +32,7 @@ import TheBackground from '@/components/background/background.vue'
 import TheFooter from '@/components/footer/footer.vue'
 import TheNavbar from '@/components/nav-bar/nav-bar.vue'
 import FilledSlotMenu from '@/components/pokemon-input/menus/FilledSlotMenu.vue'
+import TeamScheduleDialog from '@/components/calculator/team-schedule-dialog.vue'
 import PokemonInputDialog from '@/components/pokemon-input/PokemonInputDialog.vue'
 import PokemonSearchDialog from '@/components/pokemon-input/PokemonSearchDialog.vue'
 import SleepApiReferrerWelcomeDialog from '@/components/referrer-welcome/sleep-api-referrer-welcome-dialog.vue'
@@ -46,7 +48,8 @@ export default defineComponent({
     SleepApiReferrerWelcomeDialog,
     PokemonSearchDialog,
     PokemonInputDialog,
-    FilledSlotMenu
+    FilledSlotMenu,
+    TeamScheduleDialog
   }
 })
 </script>

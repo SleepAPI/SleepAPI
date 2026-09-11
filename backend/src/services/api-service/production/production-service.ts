@@ -1,8 +1,12 @@
+import { isConditionalSchedule } from 'sleepapi-common';
 import type { ProductionStats } from '@src/domain/computed/production.js';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
-import type { UserRecipes } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-utils.js';
-import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
+import {
+  defaultUserRecipes,
+  type UserRecipes
+} from '@src/services/simulation-service/team-simulator/cooking-state/cooking-utils.js';
+import { TeamSimulator, type RotationTrace } from '@src/services/simulation-service/team-simulator/team-simulator.js';
 import { getIngredientSet } from '@src/utils/production-utils/production-utils.js';
 import type { PreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
@@ -174,22 +178,65 @@ export function calculateSimple(
 }
 
 export function calculateIv(
-  params: { settings: TeamSettingsExt; members: TeamMemberExt[]; variants: TeamMemberExt[] },
+  params: {
+    settings: TeamSettingsExt;
+    members: TeamMemberExt[];
+    variants: TeamMemberExt[];
+    replacedMemberId?: string;
+    referenceMember?: TeamMemberExt;
+    userRecipes?: UserRecipes;
+  },
   iterations = 1400
 ): CalculateIvResponse {
-  const { settings, members, variants } = params;
+  const { settings, members, variants, replacedMemberId, referenceMember, userRecipes } = params;
+  const conditional = settings.schedule?.some((shift) => isConditionalSchedule(shift.type));
+  if (conditional && (!referenceMember || referenceMember.settings.externalId !== replacedMemberId)) {
+    throw new Error('Target-based IV calculations require the original member');
+  }
 
   const rng: PreGeneratedRandom = createPreGeneratedRandom();
+  const createSimulator = (member: TeamMemberExt, reference = false) => {
+    const variantSettings = {
+      ...settings,
+      schedule: settings.schedule?.map((shift) =>
+        !reference && shift.externalId === replacedMemberId
+          ? { ...shift, externalId: member.settings.externalId }
+          : shift
+      )
+    };
+    // Independent streams keep the reference run independent of the number of variants.
+    const simulationRng = conditional ? createPreGeneratedRandom() : rng;
+    const cookingState = settings.includeCooking
+      ? new CookingState(variantSettings, userRecipes ?? defaultUserRecipes(), simulationRng)
+      : undefined;
+    return new TeamSimulator({
+      settings: variantSettings,
+      members: [member, ...members],
+      cookingState,
+      iterations,
+      rng: simulationRng
+    });
+  };
+
+  if (conditional && referenceMember) {
+    const reference = createSimulator(referenceMember, true);
+    const comparisons = variants.map((variant) => createSimulator(variant));
+    const trace: RotationTrace = new Map();
+    for (let i = 0; i < iterations; i++) {
+      reference.simulate({ record: trace });
+      for (const comparison of comparisons) comparison.simulate({ replay: trace });
+    }
+    return {
+      reference: reference.ivResults(referenceMember.settings.externalId),
+      variants: comparisons.map((comparison, index) => comparison.ivResults(variants[index].settings.externalId))
+    };
+  }
+
   const variantResults: MemberProductionBase[] = [];
   for (const variant of variants) {
-    const teamWithVariant = [variant, ...members];
-    const teamSimulator = new TeamSimulator({ settings, members: teamWithVariant, iterations, rng });
-
-    for (let i = 0; i < iterations; i++) {
-      teamSimulator.simulate();
-    }
-
-    variantResults.push(teamSimulator.ivResults(variant.settings.externalId));
+    const simulator = createSimulator(variant);
+    for (let i = 0; i < iterations; i++) simulator.simulate();
+    variantResults.push(simulator.ivResults(variant.settings.externalId));
   }
 
   return { variants: variantResults };

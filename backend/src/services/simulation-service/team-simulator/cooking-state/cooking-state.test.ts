@@ -14,6 +14,24 @@ import {
 import { describe, expect, it } from 'vitest';
 
 describe('CookingState', () => {
+  it.each([
+    { camp: false, sunday: false, expected: 120 },
+    { camp: true, sunday: false, expected: 180 },
+    { camp: false, sunday: true, expected: 220 },
+    { camp: true, sunday: true, expected: 330 }
+  ])(
+    'uses the same pot capacity for cooking and rotation with camp=$camp, sunday=$sunday',
+    ({ camp, sunday, expected }) => {
+      const cooking = new CookingState(
+        mocks.teamSettingsExt({ potSize: 100, camp }),
+        defaultUserRecipes(),
+        createPreGeneratedRandom()
+      );
+      cooking.addPotSize(20);
+      expect(cooking.currentPotSize(sunday)).toBe(expected);
+    }
+  );
+
   it('shall include provided meal times in results', () => {
     const cookingState = new CookingState(
       mocks.teamSettingsExt({ camp: true }),

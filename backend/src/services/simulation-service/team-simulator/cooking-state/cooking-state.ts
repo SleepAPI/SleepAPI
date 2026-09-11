@@ -165,6 +165,10 @@ export class CookingState {
     this.bonusPotSize = Math.min(200, this.bonusPotSize + amount);
   }
 
+  public extraTastyChancePercentage(): number {
+    return this.bonusCritChance * 100;
+  }
+
   private cookRecipeType(params: {
     availableRecipes: UserRecipeFlat[];
     currentIngredients: IngredientIndexToFloatAmount;
@@ -273,7 +277,7 @@ export class CookingState {
     return (sunday ? 0.3 : 0.1) + this.bonusCritChance;
   }
 
-  private currentPotSize(sunday: boolean): number {
+  public currentPotSize(sunday: boolean): number {
     const basePotSize = this.userPotSize * (sunday ? 2 : 1);
     const potSizeWithCPU = basePotSize + this.bonusPotSize;
     return Math.round(this.camp ? potSizeWithCPU * 1.5 : potSizeWithCPU);

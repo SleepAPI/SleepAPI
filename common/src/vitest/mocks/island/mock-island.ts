@@ -8,7 +8,7 @@ import type {
   IslandInstance,
   TeamAreaDTO
 } from '../../../types';
-import { GREENGRASS } from '../../../types';
+import { GREENGRASS, GREENGRASS_EXPERT } from '../../../types';
 import { BELUE, BLUK, GREPA } from '../../../types/berry/berries';
 
 export function island(attrs?: Partial<Island>): Island {
@@ -16,6 +16,7 @@ export function island(attrs?: Partial<Island>): Island {
     name: 'Mock Island',
     berries: [],
     shortName: 'greengrass',
+    rankThresholds: GREENGRASS.rankThresholds,
     ...attrs,
     expert: false
   };
@@ -27,6 +28,7 @@ export function expertIsland(attrs?: Partial<ExpertIsland>): ExpertIsland {
     shortName: 'GGEX',
     base: GREENGRASS,
     bonuses: greengrassExpertMode,
+    rankThresholds: GREENGRASS_EXPERT.rankThresholds,
     ...attrs,
     expert: true
   };

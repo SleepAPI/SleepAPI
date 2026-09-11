@@ -14,6 +14,13 @@
           </v-row>
 
           <v-row dense class="flex-center">
+            <v-col cols="auto" class="flex-center projected-rank">
+              <v-img :src="rankBallImage" :alt="rankBallName" :title="rankBallName" width="36" height="36" contain />
+              <span class="text-h6 text-no-wrap font-weight-medium ml-2">{{ projectedRank }}</span>
+            </v-col>
+          </v-row>
+
+          <v-row dense class="flex-center">
             <v-col cols="auto" class="flex-center">
               <div class="legend" :class="`bg-${teamStore.getCurrentTeam.recipeType}`">
                 <v-img :src="recipeTypeImage" contain width="32" height="32" alt="Cooking" title="Cooking" />
@@ -169,7 +176,14 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { timeWindowFactor } from '@/types/time/time-window'
-import { MathUtils, berryPowerForLevel, compactNumber, getBerry, type RecipeTypeResult } from 'sleepapi-common'
+import {
+  MathUtils,
+  berryPowerForLevel,
+  compactNumber,
+  getBerry,
+  rankForStrength,
+  type RecipeTypeResult
+} from 'sleepapi-common'
 export default defineComponent({
   name: 'TeamResults',
   components: { StackedBar },
@@ -228,6 +242,25 @@ export default defineComponent({
     },
     totalStrength() {
       return Math.floor(this.cookingStrength + this.berryStrength + this.skillStrength + this.stockpiledBerryStrength)
+    },
+    projectedRank() {
+      const island = this.teamStore.getCurrentTeam.island
+      return rankForStrength(this.totalStrength, island)
+    },
+    rankBallImage() {
+      const rankName = this.projectedRank.split(' ')[0].toLowerCase()
+      return `/images/misc/rank-${rankName}.png`
+    },
+    rankBallName() {
+      const rankName = this.projectedRank.split(' ')[0]
+      const ballNames: Record<string, string> = {
+        Basic: 'Poké Ball',
+        Great: 'Great Ball',
+        Ultra: 'Ultra Ball',
+        Master: 'Master Ball'
+      }
+
+      return ballNames[rankName]
     },
     cookingStrengthString() {
       const userLocale = navigator.language || 'en-US'
@@ -339,5 +372,9 @@ export default defineComponent({
 
 .pokemon-image-img {
   transform: translate(20px, -25px);
+}
+
+.projected-rank {
+  min-width: 140px;
 }
 </style>

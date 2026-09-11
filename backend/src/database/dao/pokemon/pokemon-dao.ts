@@ -2,7 +2,13 @@ import type { Static } from '@sinclair/typebox';
 import { Type } from '@sinclair/typebox';
 import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
 import { IngredientError } from '@src/domain/error/ingredient/ingredient-error.js';
-import { getPokemon, type IngredientInstance, type SubskillInstance } from 'sleepapi-common';
+import {
+  CarrySizeUtils,
+  getPokemon,
+  type PokemonInstanceWithMeta,
+  type IngredientInstance,
+  type SubskillInstance
+} from 'sleepapi-common';
 
 const DBPokemonSchema = Type.Composite([
   DBWithVersionedIdSchema,
@@ -35,6 +41,26 @@ export type DBPokemonWithoutVersion = Omit<DBPokemon, 'id' | 'version'>;
 class PokemonDAOImpl extends AbstractDAO<typeof DBPokemonSchema> {
   public tableName = 'pokemon';
   public schema = DBPokemonSchema;
+
+  public toInstance(member: DBPokemon, sneakySnacking: boolean): PokemonInstanceWithMeta {
+    return {
+      version: member.version,
+      saved: member.saved,
+      shiny: member.shiny,
+      gender: member.gender,
+      externalId: member.external_id,
+      pokemon: member.pokemon,
+      name: member.name,
+      level: member.level,
+      ribbon: member.ribbon,
+      carrySize: CarrySizeUtils.baseCarrySize(getPokemon(member.pokemon)),
+      skillLevel: member.skill_level,
+      nature: member.nature,
+      subskills: this.filterFilledSubskills(member),
+      sneakySnacking: sneakySnacking,
+      ingredients: this.filterChosenIngredientList(member)
+    };
+  }
 
   public filterFilledSubskills(subskills: DBPokemon): SubskillInstance[] {
     const filledSubskills: SubskillInstance[] = [];

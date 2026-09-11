@@ -60,11 +60,12 @@ class ProductionRouterImpl {
 
     BaseRouter.router.post(
       '/calculator/iv',
+      withMaybeUser,
       async (req: Request<unknown, unknown, CalculateIvRequest, unknown>, res: Response<CalculateIvResponse>) => {
         try {
           logger.log('Entered /calculator/iv');
 
-          const data = await calculatorPool.exec('calculateIv', [req.body]);
+          const data = await calculatorPool.exec('calculateIv', [req.body, (req as MaybeAuthenticatedRequest).user]);
 
           res.json(data);
         } catch (err) {

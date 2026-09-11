@@ -1,32 +1,16 @@
 <template>
-  <div class="w-100 fill-height transparent">
-    <!-- TODO: set loading while production is calculating -->
-    <v-card :loading="false" class="w-100 fill-height frosted-glass rounded-b-0" @click="openDialog">
-      <div class="text-center vertical-text" style="position: absolute; top: 0%; width: 100%; height: 100%">
-        {{ pokemonInstance.name }}
-      </div>
-      <v-img :src="imageUrl" class="pokemon-image" data-testid="pokemon-image" />
-
-      <div style="position: absolute; bottom: 0%; width: 100%">
-        <v-card class="text-center text-x-small rounded-t-0" color="subskillWhite" location="bottom center">
-          {{ rpBadge }}
-        </v-card>
-      </div>
-    </v-card>
-
-    <v-card
-      class="text-center text-x-small text-no-wrap"
-      rounded="lg"
-      style="position: absolute; top: 0%; width: 80%"
-      color="primary"
-      location="top center"
-    >
-      {{ level }}
-    </v-card>
-  </div>
+  <PokemonSlotDisplay
+    :name="pokemonInstance.name"
+    :image-url="imageUrl"
+    :level="level"
+    :badge="rpBadge"
+    badge-color="subskillWhite"
+    @click="openDialog"
+  />
 </template>
 
 <script lang="ts">
+import PokemonSlotDisplay from '@/components/custom-components/pokemon-slot-display.vue'
 import { pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
@@ -36,6 +20,7 @@ import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({
   name: 'CompareSlot',
+  components: { PokemonSlotDisplay },
   props: {
     pokemonInstance: {
       type: Object as PropType<PokemonInstanceExt>,
@@ -95,25 +80,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.transparent {
-  background: rgba($surface, 0) !important;
-}
-
-.pokemon-image {
-  width: 100%;
-  height: 100%;
-  transform: scale(1.5);
-  left: 10%;
-}
-
-.vertical-text {
-  color: rgba(white, 0.6) !important;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  text-align: center;
-}
-</style>

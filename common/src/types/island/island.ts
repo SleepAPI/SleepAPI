@@ -7,6 +7,7 @@ export type IslandShortName =
 interface IslandBase {
   name: string;
   shortName: IslandShortName;
+  rankThresholds: number[];
 }
 
 export interface Island extends IslandBase {
@@ -42,7 +43,7 @@ export type ExpertIslandInstance = ExpertIsland & {
  */
 export type IslandInstance = BaseIslandInstance | ExpertIslandInstance;
 
-export type IslandInstanceDto = IslandBase & {
+export type IslandInstanceDto = Pick<IslandBase, 'name' | 'shortName'> & {
   areaBonus: number;
   berries: Berry[];
   expertMode?: ExpertModeSettings;
@@ -52,10 +53,16 @@ export type IslandInstanceDto = IslandBase & {
  * Factory for expert island definitions. Derives `name` from the base island as
  * `${base.name} (Expert Mode)`.
  */
-export function createExpertIsland(base: Island, shortName: IslandShortName, bonuses: ExpertModeBonuses): ExpertIsland {
+export function createExpertIsland(
+  base: Island,
+  shortName: IslandShortName,
+  bonuses: ExpertModeBonuses,
+  rankThresholds: number[]
+): ExpertIsland {
   return {
     name: `${base.name} (Expert Mode)`,
     shortName,
+    rankThresholds,
     bonuses,
     expert: true,
     base

@@ -26,7 +26,11 @@
         @click="goToNext"
       ></v-btn>
     </template>
-    <v-window-item v-for="(memberWithProduction, index) in membersWithProduction" :key="index">
+    <v-window-item
+      v-for="(memberWithProduction, index) in membersWithProduction"
+      :key="memberWithProduction?.member.externalId ?? index"
+      :value="index"
+    >
       <template v-if="memberWithProduction">
         <v-row
           no-gutters
@@ -316,7 +320,7 @@ export default defineComponent({
         subskills: updatedSubskills
       }
 
-      teamStore.updateTeamMember(updatedMember, teamStore.getCurrentTeam.memberIndex)
+      teamStore.updateMemberById(updatedMember)
 
       subskillMenuOpen.value = false
       editingMember.value = null
@@ -359,7 +363,7 @@ export default defineComponent({
       return result
     },
     currentMemberWithProduction() {
-      return this.membersWithProduction[this.teamStore.getCurrentTeam.memberIndex]
+      return this.membersWithProduction.find((member) => member?.member.externalId === this.teamStore.getCurrentMember)
     },
     // used by watch to trigger recalc
     currentExternalId(): string | undefined {
@@ -376,14 +380,14 @@ export default defineComponent({
     },
     currentMemberIndex: {
       get() {
-        const currentIndex = this.teamStore.getCurrentTeam.memberIndex
-        if (this.filteredMembersIndices.includes(currentIndex)) {
-          return currentIndex
-        }
-        return this.filteredMembersIndices[0] ?? 0
+        const index = this.membersWithProduction.findIndex(
+          (member) => member?.member.externalId === this.teamStore.getCurrentMember
+        )
+        return index >= 0 ? index : (this.filteredMembersIndices[0] ?? 0)
       },
       set(value: number) {
-        this.teamStore.getCurrentTeam.memberIndex = value
+        const member = this.membersWithProduction[value]
+        if (member) this.teamStore.selectMember(member.member.externalId)
       }
     }
   },
@@ -456,7 +460,7 @@ export default defineComponent({
       if (response) {
         const performanceDetails = this.calculatePercentagesOfSetup({
           ...response,
-          current: memberProduction
+          current: response.reference ?? memberProduction
         })
 
         this.teamStore.upsertIv(calculatedExternalId, performanceDetails)

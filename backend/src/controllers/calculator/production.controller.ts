@@ -35,6 +35,8 @@ import type {
 } from 'sleepapi-common';
 import {
   calculateRecipeValue,
+  getConditionalScheduleDefinition,
+  isConditionalSchedule,
   CarrySizeUtils,
   curry,
   dessert,
@@ -67,16 +69,24 @@ export default class ProductionController {
     return calculateTeam(parsedInput);
   }
 
-  public async calculateIv(body: CalculateIvRequest) {
-    const parsedInput = await this.#parseIvInput(body);
+  public async calculateIv(body: CalculateIvRequest, maybeUser?: DBUser) {
+    const parsedInput = await this.#parseIvInput(body, maybeUser);
     return calculateIv(parsedInput);
   }
 
-  async #parseIvInput(body: CalculateIvRequest) {
+  async #parseIvInput(body: CalculateIvRequest, maybeUser?: DBUser) {
     const { members, variants } = body;
-    const settings = await this.#parseSettings({ settings: body.settings, includeCooking: false });
+    const includeCooking =
+      body.settings.schedule?.some((shift) => getConditionalScheduleDefinition(shift.type)?.requiresCooking) ?? false;
+    const settings = await this.#parseSettings({ settings: body.settings, includeCooking, maybeUser });
+    if (
+      settings.schedule?.length &&
+      (!body.replacedMemberId || !settings.schedule.some((shift) => shift.externalId === body.replacedMemberId))
+    ) {
+      throw new BadRequestError('Scheduled IV calculations must identify the member being replaced');
+    }
 
-    if (members.length > 4) {
+    if (members.length > 4 && !settings.schedule?.length) {
       throw new BadRequestError(
         'Max team length allowed is 4, to allow space for the IV-checked mon, but was: ' + members.length
       );
@@ -85,13 +95,25 @@ export default class ProductionController {
       throw new BadRequestError('Max variants to check is 10');
     }
 
+    const conditional = settings.schedule?.some((shift) => isConditionalSchedule(shift.type));
+    if (conditional && (!body.referenceMember || body.referenceMember.externalId !== body.replacedMemberId)) {
+      throw new BadRequestError('Target-based IV calculations require the original member');
+    }
+    const referenceMember =
+      conditional && body.referenceMember
+        ? this.#parseTeamMembers([body.referenceMember], settings.camp)[0]
+        : undefined;
+
     const parsedMembers = this.#parseTeamMembers(members, settings.camp);
     const parsedVariants = this.#parseTeamMembers(variants, settings.camp);
 
     return {
       settings,
       members: parsedMembers,
-      variants: parsedVariants
+      variants: parsedVariants,
+      replacedMemberId: body.replacedMemberId,
+      referenceMember,
+      userRecipes: includeCooking ? await this.#parseUserRecipes(maybeUser) : undefined
     };
   }
 
@@ -183,7 +205,8 @@ export default class ProductionController {
       includeCooking,
       stockpiledIngredients,
       potSize,
-      island: this.#parseIsland(settings.island)
+      island: this.#parseIsland(settings.island),
+      schedule: settings.schedule ?? []
     };
   }
 

@@ -35,55 +35,63 @@ describe('Team Store', () => {
   const externalId = 'external-id'
   const mockPokemon = mocks.createMockPokemon()
 
+  it('edits a scheduled-only member without changing the five primary slots', async () => {
+    const teamStore = useTeamStore()
+    const partner = mocks.createMockPokemon({ externalId: 'partner' })
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(partner)
+    teamStore.teams = createMockTeams(1, {
+      members: [mockPokemon.externalId, undefined, undefined, undefined, undefined],
+      schedule: [{ slotIndex: 0, externalId: partner.externalId, startTime: '12:00' }]
+    })
+    const primarySlots = [...teamStore.getCurrentTeam.members]
+    teamStore.selectMember(partner.externalId)
+    expect(teamStore.getCurrentMember).toBe(partner.externalId)
+    await teamStore.updateMemberById({ ...partner, level: 42 })
+    expect(teamStore.getCurrentTeam.members).toEqual(primarySlots)
+    expect(pokemonStore.getPokemon(partner.externalId)?.level).toBe(42)
+  })
+
+  it('invalidates cached IVs when a schedule changes', async () => {
+    const team = useTeamStore()
+    team.teams = createMockTeams(1)
+    expect(Object.keys(team.getCurrentTeam.memberIvs)).not.toHaveLength(0)
+    vi.mocked(TeamService.calculateProduction).mockImplementationOnce(async () => {
+      expect(Object.keys(team.getCurrentTeam.memberIvs)).not.toHaveLength(0)
+      return undefined
+    })
+    await team.setSchedule(0, [{ slotIndex: 0, externalId: mockPokemon.externalId, startTime: '12:00' }])
+    expect(team.getCurrentTeam.memberIvs).toEqual({})
+  })
+
+  it.each(['tasty-chance', 'pot-size'] as const)('preserves %s order and target when wakeup changes', async (type) => {
+    const team = useTeamStore()
+    const schedule = [
+      { slotIndex: 0, externalId: 'producer', startTime: '06:00', type, tastyChanceTarget: 35, potSizeTarget: 180 },
+      { slotIndex: 0, externalId: 'replacement', startTime: '06:05', type }
+    ]
+    team.teams = createMockTeams(1, { wakeup: '06:05', schedule })
+    const opened = team.getSchedule(0)
+    expect(opened).toEqual(schedule)
+    expect(opened).not.toBe(schedule)
+    await team.setSchedule(0, opened)
+    expect(team.getCurrentTeam.schedule).toEqual(schedule)
+  })
+
+  it('orders time-based shifts relative to wakeup without changing their persisted order', () => {
+    const team = useTeamStore()
+    const schedule = [
+      { slotIndex: 0, externalId: 'a', startTime: '06:00' },
+      { slotIndex: 0, externalId: 'b', startTime: '06:05' }
+    ]
+    team.teams = createMockTeams(1, { wakeup: '06:05', schedule })
+    expect(team.getSchedule(0).map((shift) => shift.externalId)).toEqual(['b', 'a'])
+    expect(team.getCurrentTeam.schedule).toEqual(schedule)
+  })
+
   it('should have expected default state', () => {
     const teamStore = useTeamStore()
-    expect(teamStore.$state).toMatchInlineSnapshot(`
-      {
-        "currentIndex": 0,
-        "domainVersion": 0,
-        "loadingMembers": [
-          false,
-          false,
-          false,
-          false,
-          false,
-        ],
-        "loadingTeams": false,
-        "maxAvailableTeams": 10,
-        "tab": "overview",
-        "teams": [
-          {
-            "bedtime": "21:30",
-            "camp": false,
-            "index": 0,
-            "island": {
-              "areaBonus": 0,
-              "berries": [],
-              "expert": false,
-              "name": "Greengrass Isle",
-              "shortName": "greengrass",
-            },
-            "memberIndex": 0,
-            "memberIvs": {},
-            "members": [
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-            ],
-            "name": "Team 1",
-            "production": undefined,
-            "recipeType": "curry",
-            "stockpiledBerries": [],
-            "stockpiledIngredients": [],
-            "version": 0,
-            "wakeup": "06:00",
-          },
-        ],
-        "timeWindow": "24H",
-      }
-    `)
+    expect(teamStore.$state).toMatchSnapshot()
   })
 
   it('should populate teams correctly when user is logged in', async () => {
@@ -134,53 +142,7 @@ describe('Team Store', () => {
 
     teamStore.$reset()
 
-    expect(teamStore.$state).toMatchInlineSnapshot(`
-      {
-        "currentIndex": 0,
-        "domainVersion": 0,
-        "loadingMembers": [
-          false,
-          false,
-          false,
-          false,
-          false,
-        ],
-        "loadingTeams": false,
-        "maxAvailableTeams": 10,
-        "tab": "overview",
-        "teams": [
-          {
-            "bedtime": "21:30",
-            "camp": false,
-            "index": 0,
-            "island": {
-              "areaBonus": 0,
-              "berries": [],
-              "expert": false,
-              "name": "Greengrass Isle",
-              "shortName": "greengrass",
-            },
-            "memberIndex": 0,
-            "memberIvs": {},
-            "members": [
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-            ],
-            "name": "Team 1",
-            "production": undefined,
-            "recipeType": "curry",
-            "stockpiledBerries": [],
-            "stockpiledIngredients": [],
-            "version": 0,
-            "wakeup": "06:00",
-          },
-        ],
-        "timeWindow": "24H",
-      }
-    `)
+    expect(teamStore.$state).toMatchSnapshot()
   })
 
   it('should increment currentIndex correctly on next()', () => {
@@ -339,36 +301,7 @@ describe('Team Store', () => {
     teamStore.deleteTeam()
 
     expect(teamStore.teams[0]).toEqual(team1)
-    expect(teamStore.getCurrentTeam).toMatchInlineSnapshot(`
-      {
-        "bedtime": "21:30",
-        "camp": false,
-        "index": 1,
-        "island": {
-          "areaBonus": 0,
-          "berries": [],
-          "expert": false,
-          "name": "Greengrass Isle",
-          "shortName": "greengrass",
-        },
-        "memberIndex": 0,
-        "memberIvs": {},
-        "members": [
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-        ],
-        "name": "Helper team 2",
-        "production": undefined,
-        "recipeType": "curry",
-        "stockpiledBerries": [],
-        "stockpiledIngredients": [],
-        "version": 0,
-        "wakeup": "06:00",
-      }
-    `)
+    expect(teamStore.getCurrentTeam).toMatchSnapshot()
   })
 
   it('deleteTeam shall call server to delete team if user logged in', () => {
@@ -560,6 +493,42 @@ describe('removeMember', () => {
     await teamStore.removeMember(1)
     expect(teamStore.resetCurrentTeamIvs).toHaveBeenCalled()
   })
+
+  it('clears every shift in the removed slot', async () => {
+    const teamStore = useTeamStore()
+    const primary = mocks.createMockPokemon()
+    const replacement = mocks.createMockPokemon()
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(primary)
+    pokemonStore.upsertLocalPokemon(replacement)
+    teamStore.teams = createMockTeams(1, {
+      members: [primary.externalId],
+      schedule: [
+        { slotIndex: 0, externalId: primary.externalId, startTime: '06:00' },
+        { slotIndex: 0, externalId: replacement.externalId, startTime: '12:00' }
+      ]
+    })
+
+    await teamStore.removeMember(0, false)
+
+    expect(teamStore.getCurrentTeam.schedule).toEqual([])
+  })
+})
+
+describe('getSchedule', () => {
+  it('sorts shifts from wake-up time, wrapping overnight shifts to the end', () => {
+    const teamStore = useTeamStore()
+    teamStore.teams = createMockTeams(1, {
+      wakeup: '06:00',
+      schedule: [
+        { slotIndex: 0, externalId: 'overnight', startTime: '04:00' },
+        { slotIndex: 0, externalId: 'second', startTime: '13:15' },
+        { slotIndex: 0, externalId: 'first', startTime: '06:00' }
+      ]
+    })
+
+    expect(teamStore.getSchedule(0).map((shift) => shift.externalId)).toEqual(['first', 'second', 'overnight'])
+  })
 })
 
 describe('updateTeamMember', () => {
@@ -573,15 +542,7 @@ describe('updateTeamMember', () => {
 
     expect(teamStore.calculateProduction).toHaveBeenCalled()
     expect(pokemonStore.upsertLocalPokemon).toHaveBeenCalled()
-    expect(teamStore.getCurrentTeam.members).toMatchInlineSnapshot(`
-      [
-        undefined,
-        undefined,
-        "external-id",
-        undefined,
-        undefined,
-      ]
-    `)
+    expect(teamStore.getCurrentTeam.members).toMatchSnapshot()
   })
 
   it('shall reset the iv', async () => {
@@ -906,7 +867,7 @@ describe('getCurrentMembersWithProduction', () => {
     teamStore.teams = mockTeams
 
     const result = teamStore.getCurrentMembersWithProduction
-    expect(result).toHaveLength(5)
+    expect(result).toHaveLength(mockTeams[0].production?.members.length ?? 0)
     expect(result[0]).toEqual({
       member: mockPokemon,
       production: mockTeams[0].production?.members[0],
@@ -939,7 +900,7 @@ describe('getCurrentMembersWithProduction', () => {
     teamStore.teams = createMockTeams()
 
     const result = teamStore.getCurrentMembersWithProduction
-    expect(result).toHaveLength(5)
+    expect(result).toHaveLength(teamStore.getCurrentTeam.production?.members.length ?? 0)
     result.forEach((res) => expect(res).toBeUndefined())
   })
 })

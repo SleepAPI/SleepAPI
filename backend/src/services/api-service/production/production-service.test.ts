@@ -18,7 +18,9 @@ import {
   PINSIR,
   subskill
 } from 'sleepapi-common';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
+import { mocks } from '@src/vitest/index.js';
 
 describe('calculatePokemonProduction', () => {
   it('should calculate production for PINSIR with given details', () => {
@@ -188,5 +190,108 @@ describe('calculateIv', () => {
     expect(result.variants[0]).toHaveProperty('produceTotal');
     expect(result.variants[0].produceTotal.ingredients).toBeDefined();
     expect(result.variants[0].produceTotal.berries).toBeDefined();
+  });
+});
+
+describe('scheduled IVs', () => {
+  it('replaces every occurrence of the selected Pokemon with each variant without mutating the schedule', () => {
+    const original = mocks.teamMemberExt({
+      pokemonWithIngredients: { pokemon: CHARMANDER, ingredientList: [{ ingredient: ingredient.HONEY, amount: 2 }] }
+    });
+    const variant = { ...original, settings: { ...original.settings, externalId: 'variant' } };
+    const partner = { ...original, settings: { ...original.settings, externalId: 'partner' } };
+    const schedule = [
+      { slotIndex: 0, externalId: 'original', startTime: '06:00' },
+      { slotIndex: 0, externalId: 'partner', startTime: '12:00' },
+      { slotIndex: 0, externalId: 'original', startTime: '18:00' }
+    ];
+    const result = calculateIv(
+      {
+        settings: mocks.teamSettingsExt({ schedule }),
+        members: [partner],
+        variants: [variant],
+        replacedMemberId: 'original'
+      },
+      2
+    );
+    expect(result.variants[0].produceTotal.berries.reduce((sum, berry) => sum + berry.amount, 0)).toBeGreaterThan(0);
+    expect(schedule.map((shift) => shift.externalId)).toEqual(['original', 'partner', 'original']);
+  });
+
+  it('requires the original build for target-based comparisons', () => {
+    expect(() =>
+      calculateIv(
+        {
+          settings: mocks.teamSettingsExt({
+            schedule: [
+              { slotIndex: 0, externalId: 'original', startTime: '06:00', type: 'pot-size', potSizeTarget: 200 }
+            ]
+          }),
+          members: [],
+          variants: [],
+          replacedMemberId: 'original'
+        },
+        1
+      )
+    ).toThrow('Target-based IV calculations require the original member');
+  });
+
+  it('returns reference production from the same working windows as an identical variant', () => {
+    const referenceMember = mocks.teamMemberExt({
+      pokemonWithIngredients: { pokemon: CHARMANDER, ingredientList: [{ ingredient: ingredient.HONEY, amount: 2 }] }
+    });
+    const id = referenceMember.settings.externalId;
+    const variant = { ...referenceMember, settings: { ...referenceMember.settings, externalId: 'variant' } };
+    const partner = { ...referenceMember, settings: { ...referenceMember.settings, externalId: 'partner' } };
+    const result = calculateIv(
+      {
+        settings: mocks.teamSettingsExt({
+          includeCooking: true,
+          schedule: [
+            { slotIndex: 0, externalId: id, startTime: '06:00', type: 'pot-size', potSizeTarget: 200 },
+            { slotIndex: 0, externalId: 'partner', startTime: '06:05', type: 'pot-size' }
+          ]
+        }),
+        members: [partner],
+        variants: [variant],
+        replacedMemberId: id,
+        referenceMember
+      },
+      8
+    );
+    expect(result.reference).toBeDefined();
+    expect(result.reference!.produceTotal).toEqual(result.variants[0].produceTotal);
+    expect(result.reference!.skillProcs).toEqual(result.variants[0].skillProcs);
+    expect(result.reference!.produceTotal.berries.reduce((sum, berry) => sum + berry.amount, 0)).toBeGreaterThan(0);
+  });
+
+  it('runs cooking during conditional IV simulations so meal bonuses can reset', () => {
+    const original = mocks.teamMemberExt({
+      pokemonWithIngredients: { pokemon: CHARMANDER, ingredientList: [{ ingredient: ingredient.HONEY, amount: 2 }] }
+    });
+    const variant = { ...original, settings: { ...original.settings, externalId: 'variant' } };
+    const partner = { ...original, settings: { ...original.settings, externalId: 'partner' } };
+    const cook = vi.spyOn(CookingState.prototype, 'cook');
+    try {
+      calculateIv(
+        {
+          settings: mocks.teamSettingsExt({
+            includeCooking: true,
+            schedule: [
+              { slotIndex: 0, externalId: 'original', startTime: '06:00', type: 'pot-size', potSizeTarget: 200 },
+              { slotIndex: 0, externalId: 'partner', startTime: '06:05', type: 'pot-size' }
+            ]
+          }),
+          members: [partner],
+          variants: [variant],
+          replacedMemberId: 'original',
+          referenceMember: { ...original, settings: { ...original.settings, externalId: 'original' } }
+        },
+        1
+      );
+      expect(cook).toHaveBeenCalledTimes(6);
+    } finally {
+      cook.mockRestore();
+    }
   });
 });
