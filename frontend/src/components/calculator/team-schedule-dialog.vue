@@ -6,10 +6,10 @@
     @update:model-value="!$event && closeSchedule()"
   >
     <v-card v-if="slotIndex !== null" title="Schedule">
-      <v-card-text>
+      <v-card-text class="pb-2">
         <v-select
           :model-value="scheduleType"
-          class="mb-3"
+          class="mb-6"
           density="compact"
           hide-details
           item-title="title"
@@ -39,6 +39,7 @@
               :level="`Level ${pokemon.level}`"
               :badge="subskillBadge"
               badge-color="subskillGold"
+              background-color="secondary"
               @click="selectedShift = shift"
             />
             <v-btn
@@ -63,6 +64,7 @@
           </p>
           <v-text-field
             id="rotationTarget"
+            hide-details="auto"
             v-model="conditionTarget"
             :label="conditionalDefinition.targetLabel"
             :inputmode="conditionalDefinition.inputmode"

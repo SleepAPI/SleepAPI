@@ -1,6 +1,12 @@
 <template>
   <div class="w-100 fill-height transparent">
-    <v-card :loading="false" class="w-100 fill-height frosted-glass rounded-b-0" @click="$emit('click')">
+    <v-card
+      :loading="false"
+      :color="backgroundColor"
+      class="w-100 fill-height rounded-b-0"
+      :class="{ 'frosted-glass': !backgroundColor }"
+      @click="$emit('click')"
+    >
       <div class="text-center vertical-text">{{ name }}</div>
       <v-img :src="imageUrl" :alt="name" class="pokemon-image" data-testid="pokemon-image" />
       <div class="slot-footer">
@@ -23,6 +29,7 @@ defineProps<{
   level: string
   badge: string
   badgeColor: string
+  backgroundColor?: string
 }>()
 defineEmits<{ click: [] }>()
 </script>
