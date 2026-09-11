@@ -112,6 +112,34 @@ describe('TeamSimulator', () => {
     expect(transferred).toBeCloseTo(produced);
   });
 
+  it('uses Sunday pot capacity for rotation and returns to weekday capacity on Monday', () => {
+    const primary = { ...mockMembers[0], settings: { ...mockMembers[0].settings, externalId: 'primary' } };
+    const partner = { ...primary, settings: { ...primary.settings, externalId: 'partner' } };
+    const settings: TeamSettingsExt = {
+      ...mockSettings,
+      camp: false,
+      potSize: 100,
+      schedule: [
+        { slotIndex: 0, externalId: 'primary', startTime: '06:00', type: 'pot-size', potSizeTarget: 180 },
+        { slotIndex: 0, externalId: 'partner', startTime: '06:05', type: 'pot-size' }
+      ]
+    };
+    const cooking = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
+    const simulator = new TeamSimulator({
+      settings,
+      members: [primary, partner],
+      cookingState: cooking,
+      iterations: 8
+    }) as any;
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+    for (let day = 0; day < 6; day++) simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+    simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['partner']);
+    simulator.simulate();
+    expect(simulator.activeMemberStates.map((member: any) => member.id)).toEqual(['primary']);
+  });
+
   it('shall return expected production from mocked pokemon', () => {
     const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, iterations: 1 });
 

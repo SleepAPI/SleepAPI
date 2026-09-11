@@ -504,7 +504,10 @@ export class TeamSimulator {
       );
     }
     if (shift.type === 'pot-size') {
-      return cookingState.potSizeWithBonus() >= (shift.potSizeTarget ?? Number.POSITIVE_INFINITY);
+      return (
+        cookingState.currentPotSize(this.run > 0 && this.run % 7 === 0) >=
+        (shift.potSizeTarget ?? Number.POSITIVE_INFINITY)
+      );
     }
     return false;
   }
