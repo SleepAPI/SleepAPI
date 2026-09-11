@@ -27,5 +27,10 @@ exports[`migration-utils > getMigrations > should return migrations sorted by ve
     "up": [Function],
     "version": 5,
   },
+  {
+    "description": "Adds rank thresholds to stored team and user islands.",
+    "up": [Function],
+    "version": 6,
+  },
 ]
 `;

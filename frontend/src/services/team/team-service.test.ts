@@ -356,14 +356,20 @@ describe('deleteTeam', () => {
 })
 
 describe('calculateProduction', () => {
-  it('should call server to calculate team production', async () => {
+  it.each([
+    { label: 'regular', island: mocks.islandInstance({ areaBonus: 35 }) },
+    {
+      label: 'expert',
+      island: mocks.expertIslandInstance({ areaBonus: 60, expertMode: mocks.expertModeSettings() })
+    }
+  ])('should call server to calculate team production on a $label island', async ({ island }) => {
     const members: PokemonInstanceExt[] = [mocks.createMockPokemon()]
     const settings: TeamSettings = {
       camp: false,
       bedtime: '21:00',
       wakeup: '07:00',
       stockpiledIngredients: [],
-      island: { ...DEFAULT_ISLAND }
+      island
     }
 
     mockedServerAxios.onPost('/calculator/team').replyOnce(200, {
@@ -417,8 +423,19 @@ describe('calculateProduction', () => {
         })),
         sneakySnacking: false
       })),
-      settings
+      settings: {
+        ...settings,
+        island: {
+          name: island.name,
+          shortName: island.shortName,
+          areaBonus: island.areaBonus,
+          berries: island.berries,
+          ...(island.expertMode ? { expertMode: island.expertMode } : {})
+        }
+      }
     })
+    expect(settings.island).toBe(island)
+    expect(island.rankThresholds.length).toBeGreaterThan(0)
 
     expect(result).toEqual({
       members: [
@@ -462,7 +479,13 @@ describe('calculateProduction', () => {
 })
 
 describe('calculateIv', () => {
-  it('should calculate IV for the current team member', async () => {
+  it.each([
+    { label: 'regular', island: mocks.islandInstance({ areaBonus: 35 }) },
+    {
+      label: 'expert',
+      island: mocks.expertIslandInstance({ areaBonus: 60, expertMode: mocks.expertModeSettings() })
+    }
+  ])('should calculate IV for the current team member on a $label island', async ({ island }) => {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 
@@ -470,7 +493,8 @@ describe('calculateIv', () => {
     const otherMember = mocks.createMockPokemon({ externalId: 'member2' })
 
     teamStore.teams = createMockTeams(1, {
-      members: [currentMember.externalId, otherMember.externalId]
+      members: [currentMember.externalId, otherMember.externalId],
+      island
     })
 
     pokemonStore.upsertLocalPokemon(currentMember)
@@ -531,10 +555,18 @@ describe('calculateIv', () => {
         bedtime: '21:30',
         wakeup: '06:00',
         stockpiledIngredients: [],
-        island: mocks.islandInstance()
+        island: {
+          name: island.name,
+          shortName: island.shortName,
+          areaBonus: island.areaBonus,
+          berries: island.berries,
+          ...(island.expertMode ? { expertMode: island.expertMode } : {})
+        }
       }
     })
 
+    expect(teamStore.getCurrentTeam.island.rankThresholds).toEqual(island.rankThresholds)
+    expect(island.rankThresholds.length).toBeGreaterThan(0)
     expect(requestData.variants).toHaveLength(3)
 
     expect(result).toEqual({
