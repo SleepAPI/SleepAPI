@@ -1,3 +1,4 @@
+import { isConditionalSchedule } from 'sleepapi-common'
 import serverAxios from '@/router/server-axios'
 import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -231,7 +232,7 @@ class TeamServiceImpl {
 
     const response = await serverAxios.post<CalculateIvResponse>('/calculator/iv', {
       replacedMemberId: currentMember.externalId,
-      ...(settings.schedule?.some((shift) => shift.type && shift.type !== 'time')
+      ...(settings.schedule?.some((shift) => isConditionalSchedule(shift.type))
         ? { referenceMember: PokemonInstanceUtils.toPokemonInstanceIdentity(currentMember) }
         : {}),
       members: parsedMembers,

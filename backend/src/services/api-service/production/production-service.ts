@@ -1,3 +1,4 @@
+import { isConditionalSchedule } from 'sleepapi-common';
 import type { ProductionStats } from '@src/domain/computed/production.js';
 import { setupAndRunProductionSimulation } from '@src/services/simulation-service/simulation-service.js';
 import { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
@@ -188,7 +189,7 @@ export function calculateIv(
   iterations = 1400
 ): CalculateIvResponse {
   const { settings, members, variants, replacedMemberId, referenceMember, userRecipes } = params;
-  const conditional = settings.schedule?.some((shift) => shift.type && shift.type !== 'time');
+  const conditional = settings.schedule?.some((shift) => isConditionalSchedule(shift.type));
   if (conditional && (!referenceMember || referenceMember.settings.externalId !== replacedMemberId)) {
     throw new Error('Target-based IV calculations require the original member');
   }

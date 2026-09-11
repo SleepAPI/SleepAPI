@@ -57,19 +57,15 @@
             </v-card>
           </v-col>
         </v-row>
-        <template v-if="scheduleType === 'tasty-chance' || scheduleType === 'pot-size'">
+        <template v-if="conditionalDefinition">
           <p class="text-body-2 mt-4">
-            {{
-              scheduleType === 'tasty-chance'
-                ? 'Rotate after accumulated Extra Tasty chance reaches the target.'
-                : 'Rotate after cooking pot size reaches the target.'
-            }}
+            {{ conditionalDefinition.description }}
           </p>
           <v-text-field
             id="rotationTarget"
             v-model="conditionTarget"
-            :label="scheduleType === 'tasty-chance' ? 'Extra Tasty chance %' : 'Pot size'"
-            :inputmode="scheduleType === 'tasty-chance' ? 'decimal' : 'numeric'"
+            :label="conditionalDefinition.targetLabel"
+            :inputmode="conditionalDefinition.inputmode"
             :error-messages="targetError"
             :loading="saving"
             @keydown.enter.prevent="saveTarget"
@@ -126,10 +122,11 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import {
-  CookingAssistSBulkUp,
-  CookingPowerUpS,
-  CookingPowerUpSMinus,
-  TastyChanceS,
+  conditionalScheduleDefinitions,
+  getConditionalScheduleDefinition,
+  getScheduleTarget,
+  withScheduleTarget,
+  validateScheduleTarget,
   subskill,
   type PokemonInstanceExt,
   type TeamScheduleShift,
@@ -178,29 +175,20 @@ const scheduleTiles = computed(() =>
     return { shift, pokemon, subskillBadge }
   })
 )
-const limitedToTwo = computed(() => scheduleType.value === 'tasty-chance' || scheduleType.value === 'pot-size')
-const targetError = computed(() => {
-  if (!limitedToTwo.value) return ''
-  const target = Number(conditionTarget.value)
-  if (!Number.isFinite(target) || target < 1) return 'Enter a number of at least 1.'
-  if (scheduleType.value === 'tasty-chance' && target > 70) return 'Enter a chance of 70% or less.'
-  if (scheduleType.value === 'pot-size' && !Number.isSafeInteger(target)) return 'Enter a whole number for pot size.'
-  return ''
-})
+const conditionalDefinition = computed(() => getConditionalScheduleDefinition(scheduleType.value))
+const limitedToTwo = computed(() => !!conditionalDefinition.value)
+const targetError = computed(() => validateScheduleTarget(scheduleType.value, Number(conditionTarget.value)))
 const primaryPokemon = computed(() => {
   const externalId = slotIndex.value === null ? undefined : teamStore.getCurrentTeam.members[slotIndex.value]
   return externalId ? pokemonFor(externalId) : undefined
 })
-const canUseTastyChance = computed(
-  () => primaryPokemon.value?.pokemon.skill.is(TastyChanceS, CookingAssistSBulkUp) ?? false
-)
-const canUsePotSize = computed(
-  () => primaryPokemon.value?.pokemon.skill.is(CookingPowerUpS, CookingPowerUpSMinus) ?? false
-)
 const scheduleTypes = computed(() => [
   { title: 'Time', value: 'time', disabled: false },
-  { title: 'Extra tasty chance', value: 'tasty-chance', disabled: !canUseTastyChance.value },
-  { title: 'Pot size', value: 'pot-size', disabled: !canUsePotSize.value }
+  ...Object.entries(conditionalScheduleDefinitions).map(([value, definition]) => ({
+    title: definition.title,
+    value,
+    disabled: !(primaryPokemon.value?.pokemon.skill.is(...definition.eligibleSkills) ?? false)
+  }))
 ])
 const scheduleTypeItemProps = (item: { disabled: boolean }) => ({ disabled: item.disabled })
 const shiftMenu = computed({
@@ -220,9 +208,9 @@ watch(
     }
     const next = teamStore.getSchedule(slotIndex.value).map((shift) => ({ ...shift }))
     scheduleShifts.value = next
-    scheduleType.value = next[0]?.type === 'tasty-chance' || next[0]?.type === 'pot-size' ? next[0].type : 'time'
+    scheduleType.value = next[0]?.type ?? 'time'
     conditionTarget.value = String(
-      scheduleType.value === 'tasty-chance' ? (next[0]?.tastyChanceTarget ?? 30) : (next[0]?.potSizeTarget ?? 1)
+      (next[0] && getScheduleTarget(next[0])) ?? conditionalDefinition.value?.defaultTarget ?? 1
     )
   },
   { immediate: true }
@@ -258,17 +246,21 @@ const persistSchedule = (next: TeamScheduleShift[]) => {
 
 const changeScheduleType = async (type: TeamScheduleType) => {
   if (saving.value) return
-  if ((type === 'tasty-chance' && !canUseTastyChance.value) || (type === 'pot-size' && !canUsePotSize.value)) return
+  const definition = getConditionalScheduleDefinition(type)
+  if (definition && !primaryPokemon.value?.pokemon.skill.is(...definition.eligibleSkills)) return
   const currentShifts = scheduleShifts.value
   scheduleType.value = type
-  const next = (limitedToTwo.value ? currentShifts.slice(0, 2) : currentShifts).map((shift, index) => ({
-    ...shift,
-    type,
-    tastyChanceTarget: type === 'tasty-chance' && index === 0 ? (shift.tastyChanceTarget ?? 30) : undefined,
-    potSizeTarget: type === 'pot-size' && index === 0 ? (shift.potSizeTarget ?? 1) : undefined
-  }))
+  const next = (limitedToTwo.value ? currentShifts.slice(0, 2) : currentShifts).map((shift, index) =>
+    withScheduleTarget(
+      shift,
+      type,
+      index === 0
+        ? ((shift.type === type ? getScheduleTarget(shift) : undefined) ?? definition?.defaultTarget)
+        : undefined
+    )
+  )
   conditionTarget.value = String(
-    scheduleType.value === 'tasty-chance' ? (next[0]?.tastyChanceTarget ?? 30) : (next[0]?.potSizeTarget ?? 1)
+    (next[0] && getScheduleTarget(next[0])) ?? conditionalDefinition.value?.defaultTarget ?? 1
   )
   await persistSchedule(next)
 }
@@ -281,11 +273,9 @@ const saveTarget = async () => {
   if (targetError.value || !limitedToTwo.value || slotIndex.value === null) return
   const target = Number(conditionTarget.value)
   await persistSchedule(
-    scheduleShifts.value.map((shift, index) => ({
-      ...shift,
-      tastyChanceTarget: scheduleType.value === 'tasty-chance' && index === 0 ? target : undefined,
-      potSizeTarget: scheduleType.value === 'pot-size' && index === 0 ? target : undefined
-    }))
+    scheduleShifts.value.map((shift, index) =>
+      withScheduleTarget(shift, scheduleType.value, index === 0 ? target : undefined)
+    )
   )
 }
 const addPokemon = () => {
@@ -311,11 +301,7 @@ const removeShift = async () => {
   selectedShift.value = null
   const remaining = scheduleShifts.value.filter((_, shiftIndex) => shiftIndex !== index)
   if (limitedToTwo.value && index === 0) {
-    remaining[0] = {
-      ...remaining[0],
-      tastyChanceTarget: scheduleShifts.value[0].tastyChanceTarget,
-      potSizeTarget: scheduleShifts.value[0].potSizeTarget
-    }
+    remaining[0] = withScheduleTarget(remaining[0], scheduleType.value, getScheduleTarget(scheduleShifts.value[0]))
   }
   await persistSchedule(remaining)
 }

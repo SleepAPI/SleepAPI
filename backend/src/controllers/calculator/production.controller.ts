@@ -35,6 +35,8 @@ import type {
 } from 'sleepapi-common';
 import {
   calculateRecipeValue,
+  getConditionalScheduleDefinition,
+  isConditionalSchedule,
   CarrySizeUtils,
   curry,
   dessert,
@@ -75,7 +77,7 @@ export default class ProductionController {
   async #parseIvInput(body: CalculateIvRequest, maybeUser?: DBUser) {
     const { members, variants } = body;
     const includeCooking =
-      body.settings.schedule?.some((shift) => shift.type === 'tasty-chance' || shift.type === 'pot-size') ?? false;
+      body.settings.schedule?.some((shift) => getConditionalScheduleDefinition(shift.type)?.requiresCooking) ?? false;
     const settings = await this.#parseSettings({ settings: body.settings, includeCooking, maybeUser });
     if (
       settings.schedule?.length &&
@@ -93,7 +95,7 @@ export default class ProductionController {
       throw new BadRequestError('Max variants to check is 10');
     }
 
-    const conditional = settings.schedule?.some((shift) => shift.type && shift.type !== 'time');
+    const conditional = settings.schedule?.some((shift) => isConditionalSchedule(shift.type));
     if (conditional && (!body.referenceMember || body.referenceMember.externalId !== body.replacedMemberId)) {
       throw new BadRequestError('Target-based IV calculations require the original member');
     }

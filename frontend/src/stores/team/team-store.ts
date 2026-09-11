@@ -13,6 +13,7 @@ import type { TeamData } from '@/types/team/team-data'
 import { timeWindowFactor, type TimeWindowDay } from '@/types/time/time-window'
 import { defineStore } from 'pinia'
 import {
+  isConditionalSchedule,
   DEFAULT_ISLAND,
   DOMAIN_VERSION,
   EnergizingCheerS,
@@ -469,7 +470,7 @@ export const useTeamStore = defineStore('team', {
       const primaryId = this.getCurrentTeam.members[slotIndex]
       const explicit = (this.getCurrentTeam.schedule ?? []).filter((shift) => shift.slotIndex === slotIndex)
       if (explicit.length > 0) {
-        if (explicit[0].type === 'tasty-chance' || explicit[0].type === 'pot-size') return explicit.slice()
+        if (isConditionalSchedule(explicit[0].type)) return explicit.slice()
         const [wakeupHour, wakeupMinute] = this.getCurrentTeam.wakeup.split(':').map(Number)
         const wakeupMinutes = wakeupHour * 60 + wakeupMinute
         const minutesSinceWakeup = (time: string) => {

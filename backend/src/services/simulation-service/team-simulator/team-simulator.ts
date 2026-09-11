@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { scheduleTargetReached } from './conditional-schedule.js';
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import {
   type HelpPeriod,
@@ -30,6 +31,7 @@ import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-
 import type { MainskillTargeting } from 'sleepapi-common';
 import {
   commonMocks,
+  isConditionalSchedule,
   type CalculateTeamResponse,
   type FunctionalEvent,
   type MemberProductionBase,
@@ -78,7 +80,7 @@ export class TeamSimulator {
     this.rng = rng || createPreGeneratedRandom();
     this.settings = settings;
     for (const shift of settings.schedule ?? []) {
-      if (shift.type === 'tasty-chance' || shift.type === 'pot-size') {
+      if (isConditionalSchedule(shift.type)) {
         const slot = this.conditionalSchedulesBySlot.get(shift.slotIndex) ?? [];
         slot.push(shift);
         this.conditionalSchedulesBySlot.set(shift.slotIndex, slot);
@@ -496,20 +498,10 @@ export class TeamSimulator {
   }
 
   private conditionReached(shift: TeamScheduleShift): boolean {
-    const cookingState = this.cookingState;
-    if (!cookingState) return false;
-    if (shift.type === 'tasty-chance') {
-      return (
-        cookingState.extraTastyChancePercentage() >= Math.min(70, shift.tastyChanceTarget ?? Number.POSITIVE_INFINITY)
-      );
-    }
-    if (shift.type === 'pot-size') {
-      return (
-        cookingState.currentPotSize(this.run > 0 && this.run % 7 === 0) >=
-        (shift.potSizeTarget ?? Number.POSITIVE_INFINITY)
-      );
-    }
-    return false;
+    return scheduleTargetReached(shift, {
+      cookingState: this.cookingState,
+      sunday: this.run > 0 && this.run % 7 === 0
+    });
   }
 
   private setActiveMembers(members: MemberState[]) {
