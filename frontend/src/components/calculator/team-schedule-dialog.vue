@@ -104,6 +104,13 @@
       <v-list>
         <v-list-item prepend-icon="mdi-pencil" title="Edit" @click="editPokemon" />
         <v-list-item
+          id="schedule-pokebox-button"
+          :disabled="!userStore.loggedIn"
+          :prepend-icon="selectedPokemon?.saved ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
+          @click="togglePokebox"
+          >{{ selectedPokemon?.saved ? 'Remove from Pokebox' : 'Save to Pokebox' }}</v-list-item
+        >
+        <v-list-item
           :disabled="shifts.length === 1"
           prepend-icon="mdi-delete"
           title="Remove from schedule"
@@ -126,10 +133,12 @@
 
 <script setup lang="ts">
 import PokemonSlotDisplay from '@/components/custom-components/pokemon-slot-display.vue'
+import { UserService } from '@/services/user/user-service'
 import { pokemonImage } from '@/services/utils/image-utils'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { useUserStore } from '@/stores/user-store'
 import {
   CookingAssistSBulkUp,
   CookingPowerUpS,
@@ -145,6 +154,7 @@ import { computed, ref, watch } from 'vue'
 const dialogStore = useDialogStore()
 const teamStore = useTeamStore()
 const pokemonStore = usePokemonStore()
+const userStore = useUserStore()
 const selectedShift = ref<TeamScheduleShift | null>(null)
 const timeShift = ref<TeamScheduleShift | null>(null)
 const timePicker = ref(false)
@@ -155,6 +165,7 @@ const draftShifts = ref<TeamScheduleShift[]>([])
 const draftPokemon = ref<Record<string, PokemonInstanceExt>>({})
 const initialSchedule = ref('[]')
 const pokemonFor = (externalId: string) => draftPokemon.value[externalId] ?? pokemonStore.getPokemon(externalId)
+const selectedPokemon = computed(() => selectedShift.value && pokemonFor(selectedShift.value.externalId))
 
 const slotIndex = computed(() => dialogStore.scheduleSlotIndex)
 const shifts = computed(() => {
@@ -274,6 +285,10 @@ const saveSchedule = async () => {
   try {
     if (JSON.stringify(next) !== initialSchedule.value || Object.keys(draftPokemon.value).length > 0) {
       for (const pokemon of Object.values(draftPokemon.value)) {
+        const wasSaved = pokemonStore.getPokemon(pokemon.externalId)?.saved ?? false
+        if (userStore.loggedIn && pokemon.saved !== wasSaved) {
+          await UserService.upsertPokemon(pokemon)
+        }
         pokemonStore.upsertLocalPokemon(pokemon)
       }
       await teamStore.setSchedule(slotIndex.value, next)
@@ -333,6 +348,11 @@ const editPokemon = () => {
     draftPokemon.value[updated.externalId] = updated
   }, pokemon)
   selectedShift.value = null
+}
+const togglePokebox = () => {
+  const pokemon = selectedPokemon.value
+  if (!userStore.loggedIn || !pokemon) return
+  draftPokemon.value[pokemon.externalId] = { ...pokemon, saved: !pokemon.saved }
 }
 </script>
 

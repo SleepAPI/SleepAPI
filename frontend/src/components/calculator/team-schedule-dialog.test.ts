@@ -4,12 +4,13 @@ import serverAxios from '@/router/server-axios'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
+import { useUserStore } from '@/stores/user-store'
 import { mocks } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import type { VueWrapper } from '@vue/test-utils'
 import { flushPromises, mount } from '@vue/test-utils'
 import MockAdapter from 'axios-mock-adapter'
-import { subskill, type TeamScheduleType } from 'sleepapi-common'
+import { commonMocks, subskill, type TeamScheduleType } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -58,6 +59,51 @@ describe('TeamScheduleDialog', () => {
     await button.trigger('click')
     await flushPromises()
   }
+
+  it.each([
+    { saved: false, action: 'Save' },
+    { saved: true, action: 'Save' },
+    { saved: false, action: 'Cancel' },
+    { saved: true, action: 'Cancel' }
+  ])('handles $action after toggling Pokebox membership from saved=$saved', async ({ saved, action }) => {
+    useUserStore().setInitialLoginData(commonMocks.loginResponse())
+    server.onPut('user/pokemon').reply(200)
+    server.onPut('team/meta/0').reply(200, { version: 1 })
+    const pokemonStore = usePokemonStore()
+    const externalId = useTeamStore().getCurrentTeam.members[0]!
+    pokemonStore.upsertLocalPokemon({ ...pokemonStore.getPokemon(externalId)!, saved })
+    await open('time')
+    wrapper.findComponent(PokemonSlotDisplay).vm.$emit('click')
+    await flushPromises()
+    const pokeboxButton = () =>
+      wrapper
+        .findAllComponents({ name: 'VListItem' })
+        .find((item) => item.attributes('id') === 'schedule-pokebox-button')!
+    expect(pokeboxButton().text()).toBe(saved ? 'Remove from Pokebox' : 'Save to Pokebox')
+    await pokeboxButton().trigger('click')
+    expect(pokeboxButton().text()).toBe(saved ? 'Save to Pokebox' : 'Remove from Pokebox')
+    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(saved)
+    expect(server.history.put).toHaveLength(0)
+
+    await actionButton(action)
+
+    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(action === 'Save' ? !saved : saved)
+    const pokeboxRequests = server.history.put.filter((request) => request.url === 'user/pokemon')
+    expect(pokeboxRequests).toHaveLength(action === 'Save' ? 1 : 0)
+    if (action === 'Save') {
+      expect(JSON.parse(pokeboxRequests[0].data)).toMatchObject({ externalId, saved: !saved })
+    }
+  })
+
+  it('disables Pokebox actions for logged-out users', async () => {
+    await open('time')
+    wrapper.findComponent(PokemonSlotDisplay).vm.$emit('click')
+    await flushPromises()
+    const button = wrapper
+      .findAllComponents({ name: 'VListItem' })
+      .find((item) => item.attributes('id') === 'schedule-pokebox-button')!
+    expect(button.props('disabled')).toBe(true)
+  })
 
   it.each([
     { type: 'tasty-chance' as const, value: '35.5', field: 'tastyChanceTarget', inputmode: 'decimal' },
