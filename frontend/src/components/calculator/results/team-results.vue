@@ -181,7 +181,6 @@ import {
   berryPowerForLevel,
   compactNumber,
   getBerry,
-  getIsland,
   rankForStrength,
   type RecipeTypeResult
 } from 'sleepapi-common'
@@ -245,7 +244,7 @@ export default defineComponent({
       return Math.floor(this.cookingStrength + this.berryStrength + this.skillStrength + this.stockpiledBerryStrength)
     },
     projectedRank() {
-      const island = getIsland(this.teamStore.getCurrentTeam.island.shortName)
+      const island = this.teamStore.getCurrentTeam.island
       return rankForStrength(this.totalStrength, island)
     },
     rankBallImage() {
