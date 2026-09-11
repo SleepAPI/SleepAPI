@@ -50,9 +50,10 @@ describe('TeamResults', () => {
     expect(strengthSpan.text()).toBe('1,000')
     const totalStrength = wrapper.vm.totalStrengthString
     expect(totalStrength).toBe('1,000')
-    expect(wrapper.text()).toContain('Basic 1')
-    expect(wrapper.html()).toContain('alt="Poké Ball"')
-    expect(wrapper.html()).toContain('title="Poké Ball"')
+    const projectedRank = wrapper.find('.projected-rank')
+    expect(projectedRank.text()).toBe('Basic 1')
+    expect(projectedRank.html()).toContain('alt="Poké Ball"')
+    expect(projectedRank.html()).toContain('title="Poké Ball"')
   })
 
   it('uses canonical thresholds for legacy island instances', async () => {
