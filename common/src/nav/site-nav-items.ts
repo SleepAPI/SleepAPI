@@ -39,6 +39,13 @@ export const SITE_NAV_ITEMS: readonly SiteNavItem[] = [
     spa: true
   },
   {
+    id: 'bfs-index',
+    label: 'Berry Finding S Index',
+    path: '/bfs-index',
+    icon: 'mdi-chart-bar',
+    spa: true
+  },
+  {
     id: 'recipes',
     label: 'Recipes',
     path: '/recipes',

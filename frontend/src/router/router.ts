@@ -8,6 +8,7 @@ export enum RouteName {
   Calculator = 'Calculator',
   Compare = 'Compare',
   Recipes = 'Recipes',
+  BfsIndex = 'Berry Finding S Index',
 
   // Settings
   Settings = 'Settings',
@@ -35,6 +36,7 @@ const CalculatorPage = () => import('@/pages/calculator-page.vue')
 const ComparisonPage = () => import('@/pages/compare/comparison-page.vue')
 const RecipesPage = () => import('@/pages/recipe/recipes-page.vue')
 const TierlistPage = () => import('@/pages/tierlist/tierlist-page.vue')
+const BfsIndexPage = () => import('@/pages/bfs-index/bfs-index-page.vue')
 const DishInfographicPage = () => import('@/pages/dish-infographic/dish-infographic-page.vue')
 
 // User
@@ -77,6 +79,11 @@ const router = createRouter({
       path: '/recipes',
       name: RouteName.Recipes,
       component: RecipesPage
+    },
+    {
+      path: '/bfs-index',
+      name: RouteName.BfsIndex,
+      component: BfsIndexPage
     },
     {
       path: '/dish-infographic',
