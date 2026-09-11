@@ -69,7 +69,7 @@ describe('Berry Finding S Index page', () => {
         row.entries.map((entry) => formatBfsIndex(entry.score))
       )
     })
-    expect(wrapper.text()).toContain('“All” specialists use the skill formula by default')
+    expect(wrapper.text()).toContain('Skill and “All” specialists:')
     expect(wrapper.find('a').attributes('href')).toContain('/1m9nnh3/')
     wrapper.unmount()
   })

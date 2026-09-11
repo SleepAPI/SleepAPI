@@ -91,7 +91,7 @@
 
     <v-card class="mt-5 pa-4" variant="tonal">
       <h2 class="text-h6 mb-2">How the index is calculated</h2>
-      <p class="mb-3">Skill specialists: <code>(864 / f) × (1 − i) × b</code></p>
+      <p class="mb-3">Skill and “All” specialists: <code>(864 / f) × (1 − i) × b</code></p>
       <p>
         Ingredient specialists:
         <code>{{ ingredientFinderM ? '(864 / f) × (1 − 1.36 × i) × b' : '(864 / f) × (1 − i) × b' }}</code>
@@ -101,10 +101,6 @@
         <code>f</code> is base helping frequency in seconds.<br />
         <code>i</code> is base ingredient rate as a fraction.<br />
         <code>b</code> is base berry strength.
-      </p>
-      <p class="mt-3">
-        “All” specialists use the skill formula by default: <code>(864 / f) × (1 − i) × b</code>, with their base
-        ingredient rate. The Ingredient Finder M toggle does not affect them.
       </p>
       <p class="mt-3">
         Formula and chart concept by
