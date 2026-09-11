@@ -113,6 +113,9 @@ class TeamServiceImpl {
         const instancedTeam: TeamInstance = {
           index: serverTeam.index,
           memberIndex: teamStore.teams[serverTeam.index]?.memberIndex ?? 0,
+          ...(teamStore.teams[serverTeam.index]?.selectedMemberId
+            ? { selectedMemberId: teamStore.teams[serverTeam.index].selectedMemberId }
+            : {}),
           name: serverTeam.name,
           camp: serverTeam.camp,
           bedtime: serverTeam.bedtime,

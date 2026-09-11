@@ -9,7 +9,7 @@
             'rounded-b-0',
             teamStore.getCurrentMember === pokemonInstance.externalId &&
             teamStore.tab === 'members' &&
-            memberIndex === teamStore.getCurrentTeam.memberIndex
+            pokemonInstance.externalId === teamStore.getCurrentMember
               ? 'bg-surface'
               : 'frosted-glass'
           ]"

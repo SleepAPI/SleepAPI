@@ -36,6 +36,7 @@ export interface TeamProductionExt {
 export interface TeamInstance {
   index: number
   memberIndex: number
+  selectedMemberId?: string
   name: string
   camp: boolean
   bedtime: string

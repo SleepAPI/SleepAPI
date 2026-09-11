@@ -57,6 +57,34 @@ describe('MemberResults', () => {
     expect(members![0]?.production.produceTotal.berries[0].amount).toBe(10)
   })
 
+  it('selects and edits the displayed Pokemon when primary slots have gaps', async () => {
+    const other = mocks.createMockPokemon({ externalId: 'other' })
+    pokemonStore.upsertLocalPokemon(other)
+    teamStore.teams = createMockTeams(1, {
+      members: [mockPokemon.externalId, undefined, other.externalId],
+      production: {
+        ...teamStore.getCurrentTeam.production!,
+        members: [
+          mocks.createMockMemberProduction({ externalId: mockPokemon.externalId }),
+          mocks.createMockMemberProduction({ externalId: other.externalId })
+        ]
+      },
+      memberIvs: {
+        [mockPokemon.externalId]: mocks.createMockMemberIv(),
+        [other.externalId]: mocks.createMockMemberIv()
+      }
+    })
+    wrapper.vm.currentMemberIndex = 1
+    await nextTick()
+    expect(teamStore.getCurrentMember).toBe(other.externalId)
+    expect(wrapper.vm.currentMemberWithProduction?.member.externalId).toBe(other.externalId)
+    const update = vi.spyOn(teamStore, 'updateMemberById').mockResolvedValue()
+    wrapper.vm.openSubskillMenu(wrapper.vm.currentMemberWithProduction!)
+    wrapper.vm.handleUpdateSubskills([])
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ externalId: other.externalId }))
+    expect(teamStore.getCurrentTeam.members).toEqual([mockPokemon.externalId, undefined, other.externalId])
+  })
+
   it('changes window item correctly', async () => {
     TeamService.calculateCurrentMemberIv = vi.fn().mockResolvedValue({
       optimalBerry: mocks.createMockMemberProduction(),

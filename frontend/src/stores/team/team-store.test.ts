@@ -35,6 +35,23 @@ describe('Team Store', () => {
   const externalId = 'external-id'
   const mockPokemon = mocks.createMockPokemon()
 
+  it('edits a scheduled-only member without changing the five primary slots', async () => {
+    const teamStore = useTeamStore()
+    const partner = mocks.createMockPokemon({ externalId: 'partner' })
+    const pokemonStore = usePokemonStore()
+    pokemonStore.upsertLocalPokemon(partner)
+    teamStore.teams = createMockTeams(1, {
+      members: [mockPokemon.externalId, undefined, undefined, undefined, undefined],
+      schedule: [{ slotIndex: 0, externalId: partner.externalId, startTime: '12:00' }]
+    })
+    const primarySlots = [...teamStore.getCurrentTeam.members]
+    teamStore.selectMember(partner.externalId)
+    expect(teamStore.getCurrentMember).toBe(partner.externalId)
+    await teamStore.updateMemberById({ ...partner, level: 42 })
+    expect(teamStore.getCurrentTeam.members).toEqual(primarySlots)
+    expect(pokemonStore.getPokemon(partner.externalId)?.level).toBe(42)
+  })
+
   it('should have expected default state', () => {
     const teamStore = useTeamStore()
     expect(teamStore.$state).toMatchSnapshot()
