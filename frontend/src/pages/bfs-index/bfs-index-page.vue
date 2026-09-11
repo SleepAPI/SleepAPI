@@ -96,7 +96,6 @@
         i is base ingredient rate as a fraction.<br />
         b is base berry strength.
       </p>
-      <p class="mt-3">The Ingredient Finder M toggle applies +36% ingredient rate to ingredient specialists only.</p>
       <p class="mt-3">
         “All” specialists use the skill formula by default: <code>(864 / f) × (1 − i) × b</code>, with their base
         ingredient rate. The Ingredient Finder M toggle does not affect them.
