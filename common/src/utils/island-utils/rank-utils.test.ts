@@ -1,12 +1,12 @@
 import { CYAN_EXPERT, GREENGRASS } from '../../types';
-import { rankForProjectedStrength } from './rank-utils';
+import { rankForStrength } from './rank-utils';
 
-describe('rankForProjectedStrength', () => {
+describe('rankForStrength', () => {
   it('uses the selected island thresholds', () => {
-    expect(rankForProjectedStrength(100000, GREENGRASS)).toBe('Ultra 2');
+    expect(rankForStrength(100000, GREENGRASS)).toBe('Ultra 2');
   });
 
   it('uses the expert island thresholds', () => {
-    expect(rankForProjectedStrength(3500000, CYAN_EXPERT)).toBe('Master 5');
+    expect(rankForStrength(3500000, CYAN_EXPERT)).toBe('Master 5');
   });
 });

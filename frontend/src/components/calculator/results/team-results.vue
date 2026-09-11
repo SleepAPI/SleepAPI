@@ -182,7 +182,7 @@ import {
   compactNumber,
   getBerry,
   getIsland,
-  rankForProjectedStrength,
+  rankForStrength,
   type RecipeTypeResult
 } from 'sleepapi-common'
 export default defineComponent({
@@ -246,7 +246,7 @@ export default defineComponent({
     },
     projectedRank() {
       const island = getIsland(this.teamStore.getCurrentTeam.island.shortName)
-      return rankForProjectedStrength(this.totalStrength, island)
+      return rankForStrength(this.totalStrength, island)
     },
     rankBallImage() {
       const rankName = this.projectedRank.split(' ')[0].toLowerCase()
