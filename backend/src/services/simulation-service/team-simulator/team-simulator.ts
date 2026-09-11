@@ -459,6 +459,8 @@ export class TeamSimulator {
     for (const member of departing) {
       for (const proc of member.collectInventory()) this.maybeActivateTeamSkill(proc, member);
     }
+    // Resolve every departing member's skills before transferring their shared ingredients.
+    for (const member of departing) member.updateIngredientBag();
     this.setActiveMembers(next);
     // Do not allow a member to bank the helps elapsed while it was rotated out.
     // The initial roster is prepared by wakeUp(), which intentionally starts at zero.

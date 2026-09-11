@@ -26,6 +26,9 @@ import {
 } from 'sleepapi-common';
 import { vimic } from 'vimic';
 import { describe, expect, it, vi } from 'vitest';
+import { CookingState } from './cooking-state/cooking-state.js';
+import { defaultUserRecipes } from './cooking-state/cooking-utils.js';
+import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 
 const mockPokemonWithIngredients: PokemonWithIngredients = {
   pokemon: commonMocks.mockPokemon({
@@ -63,6 +66,52 @@ const mockMembers: TeamMemberExt[] = [
 ];
 
 describe('TeamSimulator', () => {
+  it('makes an outgoing ingredient specialist’s produce available to meals while it is boxed', () => {
+    const producer = {
+      ...mockMembers[0],
+      settings: { ...mockMembers[0].settings, externalId: 'producer' },
+      pokemonWithIngredients: {
+        ...mockPokemonWithIngredients,
+        pokemon: { ...mockPokemonWithIngredients.pokemon, ingredientPercentage: 100 }
+      }
+    };
+    const replacement = {
+      ...producer,
+      settings: { ...producer.settings, externalId: 'replacement' },
+      pokemonWithIngredients: {
+        ...producer.pokemonWithIngredients,
+        pokemon: { ...producer.pokemonWithIngredients.pokemon, ingredientPercentage: 0 }
+      }
+    };
+    const settings = {
+      ...mockSettings,
+      schedule: [
+        { slotIndex: 0, externalId: 'producer', startTime: '06:05' },
+        { slotIndex: 0, externalId: 'replacement', startTime: '11:50' }
+      ]
+    };
+    const cooking = new CookingState(settings, defaultUserRecipes(), createPreGeneratedRandom());
+    let transferred = 0;
+    const addIngredients = cooking.addIngredients.bind(cooking);
+    vi.spyOn(cooking, 'addIngredients').mockImplementation((ingredients) => {
+      transferred += ingredients.reduce((sum, amount) => sum + amount, 0);
+      addIngredients(ingredients);
+    });
+    const simulator = new TeamSimulator({
+      settings,
+      members: [producer, replacement],
+      cookingState: cooking,
+      iterations: 1
+    });
+    simulator.simulate();
+    const produced = simulator
+      .results()
+      .members.find((member) => member.externalId === 'producer')!
+      .produceTotal.ingredients.reduce((sum, ingredient) => sum + ingredient.amount, 0);
+    expect(produced).toBeGreaterThan(0);
+    expect(transferred).toBeCloseTo(produced);
+  });
+
   it('shall return expected production from mocked pokemon', () => {
     const simulator = new TeamSimulator({ settings: mockSettings, members: mockMembers, iterations: 1 });
 
