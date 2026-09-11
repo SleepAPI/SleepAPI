@@ -31,7 +31,7 @@ export const usePokemonStore = defineStore('pokemon', {
         const teamStore = useTeamStore()
         const memberIds = new Set<string>()
         for (const team of teamStore.teams) {
-          for (const member of team.members) {
+          for (const member of [...team.members, ...(team.schedule ?? []).map((shift) => shift.externalId)]) {
             if (member) {
               memberIds.add(member)
             }
@@ -68,7 +68,10 @@ export const usePokemonStore = defineStore('pokemon', {
         (source === 'team' && nrOfOccurencesTeam < 2) || (source !== 'team' && nrOfOccurencesTeam === 0)
       const safeRemoveFromCompare =
         (source === 'compare' && nrOfOccurencesCompare < 2) || (source !== 'compare' && nrOfOccurencesCompare === 0)
-      const safeRemoval = safeRemoveFromTeam && safeRemoveFromCompare
+      const usedInSchedule = teamStore.teams.some((team) =>
+        (team.schedule ?? []).some((shift) => shift.externalId === externalId)
+      )
+      const safeRemoval = safeRemoveFromTeam && safeRemoveFromCompare && !usedInSchedule
 
       if (!member.saved && safeRemoval) {
         delete this.pokemon[externalId]

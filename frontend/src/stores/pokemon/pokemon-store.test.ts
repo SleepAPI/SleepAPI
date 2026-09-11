@@ -22,6 +22,32 @@ describe('Pokemon Store', () => {
 
   beforeEach(() => {})
 
+  it('retains an unsaved rotation partner across cache invalidation', () => {
+    const pokemon = usePokemonStore()
+    pokemon.domainVersion = -1
+    pokemon.upsertLocalPokemon(mockPokemon)
+    useTeamStore().teams = createMockTeams(1, {
+      members: [],
+      schedule: [{ slotIndex: 0, externalId, startTime: '06:00' }]
+    })
+    pokemon.invalidateCache()
+    expect(pokemon.getPokemon(externalId)).toBeDefined()
+  })
+
+  it.each(['team', 'compare', 'pokebox'] as const)('retains a rotation partner when removing its %s use', (source) => {
+    const pokemon = usePokemonStore()
+    pokemon.upsertLocalPokemon(mockPokemon)
+    useTeamStore().teams = createMockTeams(1, {
+      members: [],
+      schedule: [{ slotIndex: 0, externalId, startTime: '06:00' }]
+    })
+    pokemon.removePokemon(externalId, source)
+    expect(pokemon.getPokemon(externalId)).toBeDefined()
+    useTeamStore().getCurrentTeam.schedule = []
+    pokemon.removePokemon(externalId, source)
+    expect(pokemon.getPokemon(externalId)).toBeUndefined()
+  })
+
   it('should have expected default state', () => {
     const pokemonStore = usePokemonStore()
     expect(pokemonStore.$state).toMatchInlineSnapshot(`
