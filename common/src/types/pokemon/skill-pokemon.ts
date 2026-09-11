@@ -55,6 +55,7 @@ import {
   WARMING_GINGER
 } from '../ingredient/ingredients';
 import {
+  Psystrike,
   BerryBurst,
   BerryBurstDisguise,
   BerryBurstDracoMeteor,
@@ -1323,7 +1324,32 @@ export const PAWMOT: Pokemon = evolvedPokemon(PAWMO, {
   carrySize: 18
 });
 
+// Prototype only: speed, rates, ingredients, specialty and pity are provisional.
+export const MEWTWO: Pokemon = {
+  ...createSkillSpecialist({
+    name: 'MEWTWO',
+    pokedexNumber: 150,
+    frequency: toSeconds(0, 45, 0),
+    ingredientPercentage: 20,
+    skillPercentage: 5,
+    berry: MAGO,
+    genders: GENDER_UNKNOWN,
+    carrySize: 24,
+    previousEvolutions: 0,
+    remainingEvolutions: 0,
+    ingredients: {
+      a: MOOMOO_MILK,
+      b: SOOTHING_CACAO,
+      c: BEAN_SAUSAGE
+    },
+    skill: Psystrike,
+    shinyLocked: true
+  }),
+  pityProcThreshold: 40
+};
+
 export const OPTIMAL_SKILL_SPECIALISTS: Pokemon[] = [
+  MEWTWO,
   WIGGLYTUFF,
   PERSIAN,
   GOLDUCK,

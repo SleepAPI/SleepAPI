@@ -1,5 +1,6 @@
 import type { ActivationsType, AmountParams } from '../../mainskill';
 import { Mainskill, MAINSKILLS } from '../../mainskill';
+import { Psystrike } from '../berry-zone/psystrike';
 import { BerryBurstDisguise } from '../berry-burst/berry-burst-disguise';
 import { ChargeStrengthMBadDreams } from '../charge-strength-m/charge-strength-m-bad-dreams';
 import { IngredientDrawSCutiefly, IngredientDrawSDwebble, IngredientDrawSSandshrew } from '../ingredient-draw-s';
@@ -18,6 +19,7 @@ export const Metronome = new (class extends Mainskill {
     this,
     BerryBurstDisguise,
     ChargeStrengthMBadDreams,
+    Psystrike, // Keep the prototype out of random skill rolls until availability is confirmed.
     IngredientDrawSSandshrew,
     IngredientDrawSDwebble,
     IngredientDrawSCutiefly,
