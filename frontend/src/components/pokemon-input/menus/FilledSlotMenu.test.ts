@@ -62,6 +62,28 @@ describe('FilledSlotMenu', () => {
     expect(saveButton.classList).toContain('v-list-item--disabled')
   })
 
+  it('hides Schedule for Pokemon outside team slots', async () => {
+    dialogStore.openFilledSlot(mockPokemon, false, {})
+    await wrapper.vm.$nextTick()
+
+    expect(document.querySelector('#filledMenu')).not.toBeNull()
+    expect(document.querySelector('#scheduleButton')).toBeNull()
+  })
+
+  it('opens Schedule for the first team slot', async () => {
+    dialogStore.openFilledSlot(mockPokemon, false, 0, {})
+    await wrapper.vm.$nextTick()
+
+    const scheduleButton = document.querySelector('#scheduleButton') as HTMLElement
+    expect(scheduleButton).not.toBeNull()
+    scheduleButton.click()
+    await wrapper.vm.$nextTick()
+
+    expect(dialogStore.scheduleDialog).toBe(true)
+    expect(dialogStore.scheduleSlotIndex).toBe(0)
+    expect(dialogStore.filledSlotDialog).toBe(false)
+  })
+
   it('toggles save and calls server', async () => {
     vitest.useFakeTimers()
 
