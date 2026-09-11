@@ -1,4 +1,5 @@
 export * from './berry-burst';
+export * from './berry-zone/psystrike';
 export * from './charge-energy-s';
 export * from './charge-strength-m';
 export * from './charge-strength-s';

@@ -831,3 +831,86 @@ describe('expert mode ingredient bonus', () => {
     expect(totalIngredient).toBe(1);
   });
 });
+
+describe('berry-zone strength accounting', () => {
+  it.each(berry.BERRIES)(
+    'applies a $name zone to day, night, sneaky-snacking and skill berry strength',
+    (producedBerry) => {
+      const makeMember = () => {
+        const state = new MemberState({
+          member: {
+            ...member,
+            pokemonWithIngredients: {
+              ...mockPokemonSet,
+              pokemon: { ...mockPokemonSet.pokemon, berry: producedBerry, ingredientPercentage: 0 }
+            }
+          },
+          team: [member],
+          settings: { ...settings, island: { ...settings.island, berries: [producedBerry], areaBonus: 50 } },
+          cookingState: undefined
+        });
+        state.wakeUp();
+        return state;
+      };
+      const baseline = makeMember();
+      const boosted = makeMember();
+      boosted.berryZoneState.addBonus(producedBerry, 12, 24);
+      for (const state of [baseline, boosted]) {
+        state.addBerriesAndIngredientsForHelp('day');
+        state.attemptNightHelp(0);
+        state.attemptSneakySnackingHelp('night');
+        state.addSkillProduce({
+          ingredients: [],
+          berries: [
+            { berry: producedBerry, level: 30, amount: 10 },
+            { berry: producedBerry, level: 60, amount: 20 }
+          ]
+        });
+      }
+      const original = baseline.results(1);
+      const actual = boosted.results(1);
+      expect(actual.produceTotal).toEqual(original.produceTotal);
+      expect(actual.strength.berries.total).toBeCloseTo(original.strength.berries.total * 1.12);
+      expect(actual.strength.skill.total).toBeCloseTo(original.strength.skill.total * 1.12);
+    }
+  );
+
+  it.each([berry.MAGO, berry.GREPA])(
+    'boosts $name strength only while the zone is active without changing berry counts',
+    (producedBerry) => {
+      const makeMember = () => {
+        const state = new MemberState({
+          member: {
+            ...member,
+            pokemonWithIngredients: {
+              ...mockPokemonSet,
+              pokemon: { ...mockPokemonSet.pokemon, berry: producedBerry, ingredientPercentage: 0 }
+            }
+          },
+          team: [member],
+          settings,
+          cookingState: undefined
+        });
+        state.wakeUp();
+        return state;
+      };
+      const baseline = makeMember();
+      const boosted = makeMember();
+      for (const state of [baseline, boosted]) state.addBerriesAndIngredientsForHelp('day');
+      boosted.berryZoneState.addBonus(berry.MAGO, 24, 24);
+      for (const state of [baseline, boosted]) {
+        state.attemptSneakySnackingHelp('night');
+        state.addSkillProduce({ ingredients: [], berries: [{ berry: producedBerry, level: state.level, amount: 10 }] });
+      }
+      const original = baseline.results(1);
+      const actual = boosted.results(1);
+      expect(actual.produceTotal).toEqual(original.produceTotal);
+      expect(actual.strength.berries.total).toBeCloseTo(
+        original.strength.berries.total * (producedBerry === berry.MAGO ? 1.12 : 1)
+      );
+      expect(actual.strength.skill.total).toBeCloseTo(
+        original.strength.skill.total * (producedBerry === berry.MAGO ? 1.24 : 1)
+      );
+    }
+  );
+});

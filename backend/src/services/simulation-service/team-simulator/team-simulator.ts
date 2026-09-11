@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { BerryZoneState } from './berry-zone-state.js';
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state/member-state.js';
 import type {
@@ -43,6 +44,7 @@ export class TeamSimulator {
   private memberStatesWithoutFillers: MemberState[] = [];
   private cookingState?: CookingState = undefined;
   private expertModeEvent?: FunctionalEvent;
+  private berryZoneState = new BerryZoneState();
 
   private nightStartMinutes: number;
   private mealTimeMinutesSinceStart: number[];
@@ -84,6 +86,7 @@ export class TeamSimulator {
         team: preparedMembers,
         settings,
         cookingState: this.cookingState,
+        berryZoneState: this.berryZoneState,
         iterations,
         rng: this.rng
       });
@@ -175,6 +178,8 @@ export class TeamSimulator {
 
   private startDay() {
     this.run++;
+    // Each simulated week represents a fresh site, even with cooking disabled.
+    if (this.run % 7 === 1) this.berryZoneState.reset();
     if (this.cookingState && this.run % 7 === 1) {
       this.cookingState?.startNewWeek();
     }

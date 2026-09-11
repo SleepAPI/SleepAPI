@@ -49,6 +49,7 @@ import {
   subskill
 } from 'sleepapi-common';
 
+import { BerryZoneState } from '../berry-zone-state.js';
 import { StrengthCalculator } from '../strength-calculator/strength-calculator.js';
 
 export type HelpPeriod = 'day' | 'night';
@@ -108,6 +109,9 @@ export class MemberState {
   // summary
 
   // TODO: move to skill-state
+  public berryZoneState: BerryZoneState;
+  private berryZoneHelpBonus = 0;
+  private berryZoneSkillBonus: Produce = CarrySizeUtils.getEmptyInventory();
   private skillProduce: Produce = CarrySizeUtils.getEmptyInventory();
   private totalRecovery = 0;
   private wastedEnergy = 0;
@@ -155,12 +159,14 @@ export class MemberState {
     team: TeamMemberExt[];
     settings: TeamSettingsExt;
     cookingState: CookingState | undefined;
+    berryZoneState?: BerryZoneState;
     iterations?: number;
     rng?: PreGeneratedRandom;
   }) {
     const { member, team, settings, cookingState, iterations = 1, rng } = params;
 
     this.rng = rng || createPreGeneratedRandom();
+    this.berryZoneState = params.berryZoneState ?? new BerryZoneState();
 
     // Initialize the daily production arrays with the total number of days we'll simulate
     // Each iteration is one day
@@ -387,6 +393,13 @@ export class MemberState {
 
   public addSkillProduce(produce: Produce) {
     this.skillProduce = CarrySizeUtils.addToInventory(this.skillProduce, produce);
+    const bonusBerries = this.berryZoneState.bonusBerries(produce.berries);
+    if (bonusBerries.length > 0) {
+      this.berryZoneSkillBonus = CarrySizeUtils.addToInventory(this.berryZoneSkillBonus, {
+        ingredients: [],
+        berries: bonusBerries
+      });
+    }
   }
 
   /**
@@ -506,6 +519,7 @@ export class MemberState {
 
     if (ingredientId === undefined) {
       this.totalBerryProduction += totalDropAmount;
+      this.berryZoneHelpBonus += totalDropAmount * this.berryZoneState.bonusFraction(this.berry);
       this.berryProductionPerDay[this.currentDay] += totalDropAmount;
     } else {
       let dropAmount = totalDropAmount;
@@ -552,6 +566,7 @@ export class MemberState {
 
     // Berry drop
     this.totalBerryProduction += this.berryDropAmount;
+    this.berryZoneHelpBonus += this.berryDropAmount * this.berryZoneState.bonusFraction(this.berry);
     this.berryProductionPerDay[this.currentDay] += this.berryDropAmount;
 
     // Track spilled ingredients
@@ -600,6 +615,7 @@ export class MemberState {
     if (ingredientId === undefined) {
       // Berry drop
       this.totalBerryProduction += dropAmount;
+      this.berryZoneHelpBonus += dropAmount * this.berryZoneState.bonusFraction(this.berry);
       this.berryProductionPerDay[this.currentDay] += dropAmount;
     } else {
       // Ingredient drop
@@ -713,8 +729,17 @@ export class MemberState {
 
     const strength = new StrengthCalculator().calculateStrength({
       settings: this.settings,
-      produceWithoutSkill: totalHelpProduce,
-      produceFromSkill: totalSkillProduce,
+      produceWithoutSkill: {
+        ...totalHelpProduce,
+        berries: totalHelpProduce.berries.map((set) => ({
+          ...set,
+          amount: set.amount + this.berryZoneHelpBonus / iterations
+        }))
+      },
+      produceFromSkill: CarrySizeUtils.addToInventory(
+        totalSkillProduce,
+        multiplyProduce(this.berryZoneSkillBonus, 1 / iterations)
+      ),
       skillValue,
       areaBonus: this.settings.island.areaBonus ?? 0
     });
