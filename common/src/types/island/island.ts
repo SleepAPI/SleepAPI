@@ -7,12 +7,12 @@ export type IslandShortName =
 interface IslandBase {
   name: string;
   shortName: IslandShortName;
+  rankThresholds: number[];
 }
 
 export interface Island extends IslandBase {
   berries: Berry[];
   expert: false;
-  rankThresholds: number[];
 }
 
 // An expert island definition has no fixed favorite berries
@@ -20,7 +20,6 @@ export interface ExpertIsland extends IslandBase {
   expert: true;
   base: Island;
   bonuses: ExpertModeBonuses;
-  rankThresholds: number[];
 }
 
 /**
@@ -44,7 +43,7 @@ export type ExpertIslandInstance = ExpertIsland & {
  */
 export type IslandInstance = BaseIslandInstance | ExpertIslandInstance;
 
-export type IslandInstanceDto = IslandBase & {
+export type IslandInstanceDto = Pick<IslandBase, 'name' | 'shortName'> & {
   areaBonus: number;
   berries: Berry[];
   expertMode?: ExpertModeSettings;
