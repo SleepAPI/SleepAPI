@@ -64,6 +64,31 @@ describe('Team Store', () => {
     expect(team.getCurrentTeam.memberIvs).toEqual({})
   })
 
+  it.each(['tasty-chance', 'pot-size'] as const)('preserves %s order and target when wakeup changes', async (type) => {
+    const team = useTeamStore()
+    const schedule = [
+      { slotIndex: 0, externalId: 'producer', startTime: '06:00', type, tastyChanceTarget: 35, potSizeTarget: 180 },
+      { slotIndex: 0, externalId: 'replacement', startTime: '06:05', type }
+    ]
+    team.teams = createMockTeams(1, { wakeup: '06:05', schedule })
+    const opened = team.getSchedule(0)
+    expect(opened).toEqual(schedule)
+    expect(opened).not.toBe(schedule)
+    await team.setSchedule(0, opened)
+    expect(team.getCurrentTeam.schedule).toEqual(schedule)
+  })
+
+  it('orders time-based shifts relative to wakeup without changing their persisted order', () => {
+    const team = useTeamStore()
+    const schedule = [
+      { slotIndex: 0, externalId: 'a', startTime: '06:00' },
+      { slotIndex: 0, externalId: 'b', startTime: '06:05' }
+    ]
+    team.teams = createMockTeams(1, { wakeup: '06:05', schedule })
+    expect(team.getSchedule(0).map((shift) => shift.externalId)).toEqual(['b', 'a'])
+    expect(team.getCurrentTeam.schedule).toEqual(schedule)
+  })
+
   it('should have expected default state', () => {
     const teamStore = useTeamStore()
     expect(teamStore.$state).toMatchSnapshot()
