@@ -217,15 +217,62 @@ describe('TeamScheduleDialog', () => {
     expect(tiles).toHaveLength(2)
     expect(tiles[0].text()).toContain('Level 30')
     expect(tiles[0].text()).toContain('First helper')
-    expect(tiles[0].text()).toContain('06:00')
+    expect(tiles[0].text()).not.toContain('06:00')
     expect(tiles[0].props('badge')).toBe('HB')
     expect(tiles[1].text()).toContain('Level 60')
     expect(tiles[1].text()).toContain('Night helper')
-    expect(tiles[1].text()).toContain('18:00')
+    expect(tiles[1].text()).not.toContain('18:00')
+    const timeButtons = wrapper
+      .findAllComponents({ name: 'VBtn' })
+      .filter((button) => button.classes().includes('schedule-time-button'))
+    expect(timeButtons.map((button) => button.text())).toEqual(['06:00', '18:00'])
     expect(tiles[1].props('badge')).toBe('HB + ERB')
 
     await tiles[1].get('.v-card').trigger('click')
     await flushPromises()
     expect(wrapper.findAllComponents({ name: 'VListItem' }).some((item) => item.props('title') === 'Edit')).toBe(true)
+  })
+
+  it.each(['Save', 'Cancel'])('edits time through its button and respects the outer %s action', async (action) => {
+    await open('time')
+    const originalTime = useTeamStore().getCurrentTeam.schedule![0].startTime
+    const timeButton = wrapper
+      .findAllComponents({ name: 'VBtn' })
+      .find((button) => button.classes().includes('schedule-time-button'))!
+    await timeButton.trigger('click')
+    await flushPromises()
+    const dialogs = wrapper.findAllComponents({ name: 'VDialog' })
+    expect(dialogs[1].props('modelValue')).toBe(false)
+    expect(dialogs[2].props('modelValue')).toBe(true)
+    const picker = wrapper.findComponent({ name: 'VTimePicker' })
+    expect(picker.props('modelValue')).toBe(originalTime)
+    picker.vm.$emit('update:modelValue', '12:30')
+    await nextTick()
+    await dialogs[2]
+      .findAllComponents({ name: 'VBtn' })
+      .find((button) => button.text() === 'Save')!
+      .trigger('click')
+    await flushPromises()
+    expect(dialogs[2].props('modelValue')).toBe(false)
+    expect(
+      wrapper
+        .findAllComponents({ name: 'VBtn' })
+        .find((button) => button.classes().includes('schedule-time-button'))!
+        .text()
+    ).toBe('12:30')
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe(originalTime)
+    expect(server.history.post).toHaveLength(0)
+
+    await actionButton(action)
+
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe(action === 'Save' ? '12:30' : originalTime)
+    expect(server.history.post).toHaveLength(action === 'Save' ? 1 : 0)
+  })
+
+  it('does not show time buttons for target-based rotations', async () => {
+    await open('pot-size')
+    expect(
+      wrapper.findAllComponents({ name: 'VBtn' }).some((button) => button.classes().includes('schedule-time-button'))
+    ).toBe(false)
   })
 })

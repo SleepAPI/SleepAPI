@@ -21,7 +21,7 @@
           :disabled="shifts.length === 0"
           @update:model-value="changeScheduleType"
         />
-        <v-row class="schedule-row flex-nowrap" dense>
+        <v-row class="schedule-row flex-nowrap" :class="{ 'schedule-row-timed': scheduleType === 'time' }" dense>
           <v-col
             v-for="{ shift, pokemon, subskillBadge } in scheduleTiles"
             :key="`${shift.externalId}-${shift.startTime}`"
@@ -36,11 +36,15 @@
               :badge="subskillBadge"
               badge-color="subskillGold"
               @click="selectedShift = shift"
+            />
+            <v-btn
+              v-if="scheduleType === 'time'"
+              class="schedule-time-button"
+              color="primary"
+              :aria-label="`Edit shift start time for ${pokemon?.name ?? 'Pokemon'}: ${shift.startTime}`"
+              @click="openTimePicker(shift)"
+              >{{ shift.startTime }}</v-btn
             >
-              <template v-if="scheduleType === 'time'" #footer>
-                <div class="text-center text-x-small bg-surface">{{ shift.startTime }}</div>
-              </template>
-            </PokemonSlotDisplay>
           </v-col>
           <v-col v-if="!limitedToTwo || shifts.length < 2" class="schedule-tile schedule-add-slot" cols="auto">
             <v-card class="schedule-add-card w-100 fill-height frosted-glass d-flex align-center" @click="addPokemon">
@@ -100,12 +104,6 @@
       <v-list>
         <v-list-item prepend-icon="mdi-pencil" title="Edit" @click="editPokemon" />
         <v-list-item
-          v-if="scheduleType === 'time'"
-          prepend-icon="mdi-clock-outline"
-          title="Change start time"
-          @click="timePicker = true"
-        />
-        <v-list-item
           :disabled="shifts.length === 1"
           prepend-icon="mdi-delete"
           title="Remove from schedule"
@@ -148,6 +146,7 @@ const dialogStore = useDialogStore()
 const teamStore = useTeamStore()
 const pokemonStore = usePokemonStore()
 const selectedShift = ref<TeamScheduleShift | null>(null)
+const timeShift = ref<TeamScheduleShift | null>(null)
 const timePicker = ref(false)
 const updatedTime = ref<string | null>(null)
 const conditionTarget = ref('1')
@@ -214,13 +213,11 @@ const shiftMenu = computed({
   set: (open) => !open && (selectedShift.value = null)
 })
 
-watch(selectedShift, (shift) => {
-  updatedTime.value = shift?.startTime ?? null
-})
 watch(
   [() => dialogStore.scheduleDialog, () => slotIndex.value],
   ([open]) => {
     selectedShift.value = null
+    timeShift.value = null
     timePicker.value = false
     draftPokemon.value = {}
     if (!open || slotIndex.value === null) {
@@ -313,15 +310,20 @@ const removeShift = () => {
   draftShifts.value = nextShifts
 }
 const saveTime = () => {
-  if (!selectedShift.value || !updatedTime.value) return
-  if (shifts.value.some((shift) => shift !== selectedShift.value && shift.startTime === updatedTime.value)) return
-  const shiftToUpdate = selectedShift.value
+  if (!timeShift.value || !updatedTime.value) return
+  if (shifts.value.some((shift) => shift !== timeShift.value && shift.startTime === updatedTime.value)) return
+  const shiftToUpdate = timeShift.value
   const nextShifts = shifts.value.map((shift) =>
     shift === shiftToUpdate ? { ...shift, startTime: updatedTime.value! } : shift
   )
-  selectedShift.value = null
+  timeShift.value = null
   timePicker.value = false
   draftShifts.value = nextShifts
+}
+const openTimePicker = (shift: TeamScheduleShift) => {
+  timeShift.value = shift
+  updatedTime.value = shift.startTime
+  timePicker.value = true
 }
 const editPokemon = () => {
   const shift = selectedShift.value
@@ -338,6 +340,19 @@ const editPokemon = () => {
 .schedule-row {
   overflow-x: auto;
   padding-bottom: 8px;
+}
+.schedule-row-timed {
+  padding-bottom: 52px;
+}
+.schedule-time-button {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  /* Match the Pokémon card inside the dense column's 4px side padding. */
+  width: calc(100% - 8px);
+  min-width: 0;
+  margin-top: 8px;
+  transform: translateX(-50%);
 }
 .schedule-tile {
   position: relative;
