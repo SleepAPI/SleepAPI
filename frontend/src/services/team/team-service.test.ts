@@ -1,4 +1,5 @@
 import serverAxios from '@/router/server-axios'
+import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { TeamService } from '@/services/team/team-service'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
@@ -63,6 +64,34 @@ describe('createOrUpdateTeam', () => {
 })
 
 describe('getTeams', () => {
+  it('loads a scheduled-only Pokemon on a fresh device without filling a primary slot', async () => {
+    const pokemon = mocks.createMockPokemon({ externalId: 'scheduled-only', saved: false })
+    const scheduledMember = PokemonInstanceUtils.toUpsertTeamMemberRequest(pokemon)
+    mockedServerAxios.onGet('/team').replyOnce(200, {
+      teams: [
+        {
+          index: 0,
+          name: 'Team',
+          camp: false,
+          bedtime: '21:30',
+          wakeup: '06:00',
+          recipeType: 'curry',
+          version: 1,
+          island: { islandName: 'greengrass', favoredBerries: '' },
+          members: [],
+          scheduledMembers: [scheduledMember],
+          schedule: [{ slotIndex: 0, externalId: pokemon.externalId, startTime: '12:00' }]
+        }
+      ]
+    })
+    const teams = await TeamService.getTeams()
+    expect(teams[0].members.filter(Boolean)).toEqual([])
+    expect(usePokemonStore().getPokemon(pokemon.externalId)).toMatchObject({
+      externalId: pokemon.externalId,
+      saved: false
+    })
+  })
+
   it('should call server to get teams', async () => {
     const mockTeamStore = useTeamStore()
     mockedServerAxios.onGet('/team').replyOnce(200, { teams: [] })

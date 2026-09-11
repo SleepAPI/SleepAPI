@@ -1,13 +1,12 @@
 <template>
   <v-dialog
     :model-value="dialogStore.scheduleDialog"
-    :persistent="saving"
     max-width="900px"
     scrollable
-    @update:model-value="!$event && cancelSchedule()"
+    @update:model-value="!$event && closeSchedule()"
   >
     <v-card v-if="slotIndex !== null" title="Schedule">
-      <v-card-text :inert="saving">
+      <v-card-text>
         <v-select
           :model-value="scheduleType"
           class="mb-3"
@@ -18,10 +17,15 @@
           :item-props="scheduleTypeItemProps"
           :items="scheduleTypes"
           label="Rotate by"
-          :disabled="shifts.length === 0"
+          :disabled="saving || shifts.length === 0"
           @update:model-value="changeScheduleType"
         />
-        <v-row class="schedule-row flex-nowrap" :class="{ 'schedule-row-timed': scheduleType === 'time' }" dense>
+        <v-row
+          :inert="saving"
+          class="schedule-row flex-nowrap"
+          :class="{ 'schedule-row-timed': scheduleType === 'time' }"
+          dense
+        >
           <v-col
             v-for="{ shift, pokemon, subskillBadge } in scheduleTiles"
             :key="`${shift.externalId}-${shift.startTime}`"
@@ -42,6 +46,7 @@
               class="schedule-time-button"
               color="primary"
               :aria-label="`Edit shift start time for ${pokemon?.name ?? 'Pokemon'}: ${shift.startTime}`"
+              :disabled="saving"
               @click="openTimePicker(shift)"
               >{{ shift.startTime }}</v-btn
             >
@@ -66,52 +71,33 @@
             :label="scheduleType === 'tasty-chance' ? 'Extra Tasty chance %' : 'Pot size'"
             :inputmode="scheduleType === 'tasty-chance' ? 'decimal' : 'numeric'"
             :error-messages="targetError"
-            :disabled="saving"
+            :loading="saving"
+            @keydown.enter.prevent="saveTarget"
+            @blur="saveTarget"
             type="text"
           />
         </template>
       </v-card-text>
-      <v-row dense class="ma-2 mt-2">
-        <v-col cols="6">
-          <v-btn
-            class="w-100 text-body"
-            size="large"
-            rounded="lg"
-            color="surface"
-            :disabled="saving"
-            @click="cancelSchedule"
-            >Cancel</v-btn
-          >
-        </v-col>
-        <v-col cols="6">
-          <v-btn
-            class="w-100 text-body"
-            size="large"
-            rounded="lg"
-            color="primary"
-            :disabled="!!targetError"
-            :loading="saving"
-            @click="saveSchedule"
-            >Save</v-btn
-          >
-        </v-col>
-      </v-row>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn class="text-body" size="large" rounded="lg" color="primary" @click="closeSchedule">Close</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 
   <v-dialog v-model="shiftMenu" max-width="360px">
     <v-card v-if="selectedShift" title="Scheduled Pokémon">
       <v-list>
-        <v-list-item prepend-icon="mdi-pencil" title="Edit" @click="editPokemon" />
+        <v-list-item prepend-icon="mdi-pencil" :disabled="saving" title="Edit" @click="editPokemon" />
         <v-list-item
           id="schedule-pokebox-button"
-          :disabled="!userStore.loggedIn"
+          :disabled="saving || !userStore.loggedIn"
           :prepend-icon="selectedPokemon?.saved ? 'mdi-checkbox-marked-outline' : 'mdi-checkbox-blank-outline'"
           @click="togglePokebox"
           >{{ selectedPokemon?.saved ? 'Remove from Pokebox' : 'Save to Pokebox' }}</v-list-item
         >
         <v-list-item
-          :disabled="shifts.length === 1"
+          :disabled="saving || shifts.length === 1"
           prepend-icon="mdi-delete"
           title="Remove from schedule"
           @click="removeShift"
@@ -132,8 +118,8 @@
 </template>
 
 <script setup lang="ts">
-import PokemonSlotDisplay from '@/components/custom-components/pokemon-slot-display.vue'
 import { UserService } from '@/services/user/user-service'
+import PokemonSlotDisplay from '@/components/custom-components/pokemon-slot-display.vue'
 import { pokemonImage } from '@/services/utils/image-utils'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -161,22 +147,20 @@ const timePicker = ref(false)
 const updatedTime = ref<string | null>(null)
 const conditionTarget = ref('1')
 const saving = ref(false)
-const draftShifts = ref<TeamScheduleShift[]>([])
-const draftPokemon = ref<Record<string, PokemonInstanceExt>>({})
-const initialSchedule = ref('[]')
-const pokemonFor = (externalId: string) => draftPokemon.value[externalId] ?? pokemonStore.getPokemon(externalId)
+const scheduleShifts = ref<TeamScheduleShift[]>([])
+const pokemonFor = (externalId: string) => pokemonStore.getPokemon(externalId)
 const selectedPokemon = computed(() => selectedShift.value && pokemonFor(selectedShift.value.externalId))
 
 const slotIndex = computed(() => dialogStore.scheduleSlotIndex)
 const shifts = computed(() => {
-  if (scheduleType.value !== 'time') return draftShifts.value
+  if (scheduleType.value !== 'time') return scheduleShifts.value
   const minutes = (time: string) => {
     const [hour, minute] = time.split(':').map(Number)
     return hour * 60 + minute
   }
   const wakeup = minutes(teamStore.getCurrentTeam.wakeup)
   const sinceWakeup = (time: string) => (minutes(time) - wakeup + 1440) % 1440
-  return draftShifts.value.slice().sort((a, b) => sinceWakeup(a.startTime) - sinceWakeup(b.startTime))
+  return scheduleShifts.value.slice().sort((a, b) => sinceWakeup(a.startTime) - sinceWakeup(b.startTime))
 })
 const scheduleType = ref<TeamScheduleType>('time')
 const scheduleTiles = computed(() =>
@@ -230,14 +214,12 @@ watch(
     selectedShift.value = null
     timeShift.value = null
     timePicker.value = false
-    draftPokemon.value = {}
     if (!open || slotIndex.value === null) {
-      draftShifts.value = []
+      scheduleShifts.value = []
       return
     }
     const next = teamStore.getSchedule(slotIndex.value).map((shift) => ({ ...shift }))
-    draftShifts.value = next
-    initialSchedule.value = JSON.stringify(next)
+    scheduleShifts.value = next
     scheduleType.value = next[0]?.type === 'tasty-chance' || next[0]?.type === 'pot-size' ? next[0].type : 'time'
     conditionTarget.value = String(
       scheduleType.value === 'tasty-chance' ? (next[0]?.tastyChanceTarget ?? 30) : (next[0]?.potSizeTarget ?? 1)
@@ -252,9 +234,33 @@ const image = (externalId: string) => {
 }
 const allowedStep = (minute: number) => minute % 5 === 0
 
-const changeScheduleType = (type: TeamScheduleType) => {
+// Serialize saves so a slower earlier calculation cannot replace a later edit.
+let saveQueue = Promise.resolve()
+let pendingSaves = 0
+const runSave = (action: () => Promise<void>) => {
+  pendingSaves++
+  saving.value = true
+  const save = saveQueue.then(action, action)
+  saveQueue = save.finally(() => {
+    pendingSaves--
+    saving.value = pendingSaves > 0
+  })
+  return saveQueue
+}
+const persistSchedule = (next: TeamScheduleShift[]) => {
+  const index = slotIndex.value
+  if (index === null || JSON.stringify(next) === JSON.stringify(scheduleShifts.value)) return Promise.resolve()
+  scheduleShifts.value = next
+  return runSave(async () => {
+    await teamStore.setSchedule(index, next)
+    teamStore.resetCurrentTeamIvs()
+  })
+}
+
+const changeScheduleType = async (type: TeamScheduleType) => {
+  if (saving.value) return
   if ((type === 'tasty-chance' && !canUseTastyChance.value) || (type === 'pot-size' && !canUsePotSize.value)) return
-  const currentShifts = shifts.value
+  const currentShifts = scheduleShifts.value
   scheduleType.value = type
   const next = (limitedToTwo.value ? currentShifts.slice(0, 2) : currentShifts).map((shift, index) => ({
     ...shift,
@@ -262,97 +268,103 @@ const changeScheduleType = (type: TeamScheduleType) => {
     tastyChanceTarget: type === 'tasty-chance' && index === 0 ? (shift.tastyChanceTarget ?? 30) : undefined,
     potSizeTarget: type === 'pot-size' && index === 0 ? (shift.potSizeTarget ?? 1) : undefined
   }))
-  draftShifts.value = next
   conditionTarget.value = String(
     scheduleType.value === 'tasty-chance' ? (next[0]?.tastyChanceTarget ?? 30) : (next[0]?.potSizeTarget ?? 1)
   )
+  await persistSchedule(next)
 }
-const cancelSchedule = () => {
-  if (!saving.value) dialogStore.closeSchedule()
+const closeSchedule = async () => {
+  // Closing never saves a separate draft, but lets already requested saves finish.
+  while (saving.value) await saveQueue
+  dialogStore.closeSchedule()
 }
-const saveSchedule = async () => {
-  if (saving.value || targetError.value || slotIndex.value === null) return
+const saveTarget = async () => {
+  if (targetError.value || !limitedToTwo.value || slotIndex.value === null) return
   const target = Number(conditionTarget.value)
-  const next = limitedToTwo.value
-    ? shifts.value.map((shift, index) => ({
-        ...shift,
-        type: scheduleType.value,
-        tastyChanceTarget: scheduleType.value === 'tasty-chance' && index === 0 ? target : undefined,
-        potSizeTarget: scheduleType.value === 'pot-size' && index === 0 ? target : undefined
-      }))
-    : shifts.value
-  saving.value = true
-  try {
-    if (JSON.stringify(next) !== initialSchedule.value || Object.keys(draftPokemon.value).length > 0) {
-      for (const pokemon of Object.values(draftPokemon.value)) {
-        const wasSaved = pokemonStore.getPokemon(pokemon.externalId)?.saved ?? false
-        if (userStore.loggedIn && pokemon.saved !== wasSaved) {
-          await UserService.upsertPokemon(pokemon)
-        }
-        pokemonStore.upsertLocalPokemon(pokemon)
-      }
-      await teamStore.setSchedule(slotIndex.value, next)
-    }
-    dialogStore.closeSchedule()
-  } finally {
-    saving.value = false
-  }
+  await persistSchedule(
+    scheduleShifts.value.map((shift, index) => ({
+      ...shift,
+      tastyChanceTarget: scheduleType.value === 'tasty-chance' && index === 0 ? target : undefined,
+      potSizeTarget: scheduleType.value === 'pot-size' && index === 0 ? target : undefined
+    }))
+  )
 }
 const addPokemon = () => {
-  if (limitedToTwo.value && shifts.value.length >= 2) return
-  dialogStore.openPokemonSearch((pokemon) => {
-    if (slotIndex.value === null) return
-    draftPokemon.value[pokemon.externalId] = pokemon
+  if (saving.value || (limitedToTwo.value && shifts.value.length >= 2)) return
+  dialogStore.openPokemonSearch(async (pokemon) => {
+    if (slotIndex.value === null || saving.value) return
+    pokemonStore.upsertLocalPokemon(pokemon)
     const latest = shifts.value.at(-1)?.startTime ?? teamStore.getCurrentTeam.wakeup
     const [hour, minute] = latest.split(':').map(Number)
     const nextMinutes = (hour * 60 + minute + 5) % 1440
-    draftShifts.value = [
-      ...shifts.value,
-      {
-        slotIndex: slotIndex.value!,
-        externalId: pokemon.externalId,
-        startTime: `${String(Math.floor(nextMinutes / 60)).padStart(2, '0')}:${String(nextMinutes % 60).padStart(2, '0')}`,
-        type: scheduleType.value
-      }
-    ]
+    const added: TeamScheduleShift = {
+      slotIndex: slotIndex.value,
+      externalId: pokemon.externalId,
+      startTime: `${String(Math.floor(nextMinutes / 60)).padStart(2, '0')}:${String(nextMinutes % 60).padStart(2, '0')}`,
+      type: scheduleType.value
+    }
+    await persistSchedule([...scheduleShifts.value, added])
   })
 }
-const removeShift = () => {
-  if (!selectedShift.value || shifts.value.length === 1) return
-  const shiftToRemove = selectedShift.value
-  const nextShifts = shifts.value.filter((shift) => shift !== shiftToRemove)
+const removeShift = async () => {
+  if (saving.value || !selectedShift.value || shifts.value.length === 1) return
+  const index = scheduleShifts.value.indexOf(selectedShift.value)
   selectedShift.value = null
-  draftShifts.value = nextShifts
+  const remaining = scheduleShifts.value.filter((_, shiftIndex) => shiftIndex !== index)
+  if (limitedToTwo.value && index === 0) {
+    remaining[0] = {
+      ...remaining[0],
+      tastyChanceTarget: scheduleShifts.value[0].tastyChanceTarget,
+      potSizeTarget: scheduleShifts.value[0].potSizeTarget
+    }
+  }
+  await persistSchedule(remaining)
 }
-const saveTime = () => {
+const saveTime = async () => {
+  if (saving.value) return
   if (!timeShift.value || !updatedTime.value) return
   if (shifts.value.some((shift) => shift !== timeShift.value && shift.startTime === updatedTime.value)) return
   const shiftToUpdate = timeShift.value
-  const nextShifts = shifts.value.map((shift) =>
+  const nextShifts = scheduleShifts.value.map((shift) =>
     shift === shiftToUpdate ? { ...shift, startTime: updatedTime.value! } : shift
   )
   timeShift.value = null
   timePicker.value = false
-  draftShifts.value = nextShifts
+  await persistSchedule(nextShifts)
 }
 const openTimePicker = (shift: TeamScheduleShift) => {
   timeShift.value = shift
   updatedTime.value = shift.startTime
   timePicker.value = true
 }
+const savePokemon = (updated: PokemonInstanceExt) =>
+  runSave(async () => {
+    pokemonStore.upsertLocalPokemon(updated)
+    const inSchedule = teamStore.getCurrentTeam.schedule?.some((shift) => shift.externalId === updated.externalId)
+    const primaryIndex = teamStore.getCurrentTeam.members.indexOf(updated.externalId)
+    if (inSchedule) {
+      await teamStore.updateTeam()
+      await teamStore.calculateProduction(teamStore.currentIndex)
+      teamStore.resetCurrentTeamIvs()
+    } else if (primaryIndex >= 0) {
+      await teamStore.updateTeamMember(updated, primaryIndex)
+    } else {
+      if (userStore.loggedIn) await UserService.upsertPokemon(updated)
+      await teamStore.calculateProduction(teamStore.currentIndex)
+      teamStore.resetCurrentTeamIvs()
+    }
+  })
 const editPokemon = () => {
   const shift = selectedShift.value
   const pokemon = shift && pokemonFor(shift.externalId)
-  if (!pokemon) return
-  dialogStore.openPokemonInput((updated) => {
-    draftPokemon.value[updated.externalId] = updated
-  }, pokemon)
+  if (!pokemon || saving.value) return
+  dialogStore.openPokemonInput(savePokemon, pokemon)
   selectedShift.value = null
 }
-const togglePokebox = () => {
+const togglePokebox = async () => {
   const pokemon = selectedPokemon.value
-  if (!userStore.loggedIn || !pokemon) return
-  draftPokemon.value[pokemon.externalId] = { ...pokemon, saved: !pokemon.saved }
+  if (!userStore.loggedIn || !pokemon || saving.value) return
+  await savePokemon({ ...pokemon, saved: !pokemon.saved })
 }
 </script>
 

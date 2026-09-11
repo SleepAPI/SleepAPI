@@ -1098,3 +1098,81 @@ describe('deleteTeam', () => {
     expect(await UserDAO.findMultiple()).toHaveLength(1);
   });
 });
+
+describe('scheduled member persistence', () => {
+  const externalId = 's'.repeat(36);
+  const member: UpsertTeamMemberRequest = {
+    version: 0,
+    externalId,
+    saved: false,
+    shiny: false,
+    gender: 'female',
+    pokemon: 'bulbasaur',
+    name: 'Rotation partner',
+    level: 25,
+    ribbon: 0,
+    carrySize: 10,
+    skillLevel: 2,
+    nature: 'brave',
+    subskills: [],
+    sneakySnacking: false,
+    ingredients: [
+      { level: 0, name: 'apple', amount: 2 },
+      { level: 30, name: 'apple', amount: 5 },
+      { level: 60, name: 'apple', amount: 7 }
+    ]
+  };
+  const request = () => ({
+    name: 'Rotation team',
+    camp: false,
+    bedtime: '21:30',
+    wakeup: '06:00',
+    recipeType: 'curry' as const,
+    island: mocks.islandDTO(),
+    schedule: [{ slotIndex: 0, externalId, startTime: '12:00' }],
+    scheduledMembers: [member]
+  });
+
+  it('loads an unsaved scheduled Pokemon and its edits without occupying a primary slot', async () => {
+    await upsertTeamMeta({ index: 0, user, request: request() });
+    let response = await getTeams(user);
+    expect(response.teams[0].members).toEqual([]);
+    expect(response.teams[0].scheduledMembers).toEqual([
+      expect.objectContaining({ externalId, level: 25, saved: false })
+    ]);
+    await upsertTeamMeta({
+      index: 0,
+      user,
+      request: { ...request(), scheduledMembers: [{ ...member, level: 42, saved: true }] }
+    });
+    response = await getTeams(user);
+    expect(response.teams[0].scheduledMembers).toEqual([
+      expect.objectContaining({ externalId, level: 42, saved: true })
+    ]);
+  });
+
+  it('rolls back the schedule and members when a Pokemon cannot be saved', async () => {
+    await upsertTeamMeta({ index: 0, user, request: request() });
+    await expect(
+      upsertTeamMeta({
+        index: 0,
+        user,
+        request: { ...request(), name: 'Changed', scheduledMembers: [{ ...member, ingredients: [] }] }
+      })
+    ).rejects.toThrow(IngredientError);
+    expect((await getTeams(user)).teams[0]).toMatchObject({
+      name: 'Rotation team',
+      scheduledMembers: [expect.objectContaining({ level: 25 })]
+    });
+  });
+
+  it('keeps a scheduled Pokemon when another team using it is deleted', async () => {
+    await upsertTeamMeta({ index: 0, user, request: request() });
+    await upsertTeamMeta({ index: 1, user, request: request() });
+    await upsertTeamMember({ teamIndex: 1, memberIndex: 0, user, request: member });
+    await deleteTeam(1, user);
+    expect((await getTeams(user)).teams[0].scheduledMembers).toHaveLength(1);
+    await upsertTeamMeta({ index: 0, user, request: { ...request(), schedule: [], scheduledMembers: [] } });
+    expect(await PokemonDAO.find({ external_id: externalId })).toBeUndefined();
+  });
+});

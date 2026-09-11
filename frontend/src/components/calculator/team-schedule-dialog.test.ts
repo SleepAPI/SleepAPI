@@ -54,20 +54,24 @@ describe('TeamScheduleDialog', () => {
       .get('input')
   }
 
-  async function actionButton(label = 'Save') {
+  async function actionButton(label = 'Close') {
+    if (label === 'dismiss') {
+      wrapper.findAllComponents({ name: 'VDialog' })[0].vm.$emit('update:modelValue', false)
+      await flushPromises()
+      return
+    }
     const button = wrapper.findAllComponents({ name: 'VBtn' }).find((button) => button.text() === label)!
     await button.trigger('click')
     await flushPromises()
   }
 
   it.each([
-    { saved: false, action: 'Save' },
-    { saved: true, action: 'Save' },
-    { saved: false, action: 'Cancel' },
-    { saved: true, action: 'Cancel' }
+    { saved: false, action: 'Close' },
+    { saved: true, action: 'Close' },
+    { saved: false, action: 'dismiss' },
+    { saved: true, action: 'dismiss' }
   ])('handles $action after toggling Pokebox membership from saved=$saved', async ({ saved, action }) => {
     useUserStore().setInitialLoginData(commonMocks.loginResponse())
-    server.onPut('user/pokemon').reply(200)
     server.onPut('team/meta/0').reply(200, { version: 1 })
     const pokemonStore = usePokemonStore()
     const externalId = useTeamStore().getCurrentTeam.members[0]!
@@ -82,17 +86,18 @@ describe('TeamScheduleDialog', () => {
     expect(pokeboxButton().text()).toBe(saved ? 'Remove from Pokebox' : 'Save to Pokebox')
     await pokeboxButton().trigger('click')
     expect(pokeboxButton().text()).toBe(saved ? 'Save to Pokebox' : 'Remove from Pokebox')
-    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(saved)
-    expect(server.history.put).toHaveLength(0)
+    await flushPromises()
+    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(!saved)
+    expect(server.history.put).toHaveLength(1)
 
     await actionButton(action)
 
-    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(action === 'Save' ? !saved : saved)
-    const pokeboxRequests = server.history.put.filter((request) => request.url === 'user/pokemon')
-    expect(pokeboxRequests).toHaveLength(action === 'Save' ? 1 : 0)
-    if (action === 'Save') {
-      expect(JSON.parse(pokeboxRequests[0].data)).toMatchObject({ externalId, saved: !saved })
-    }
+    expect(pokemonStore.getPokemon(externalId)?.saved).toBe(!saved)
+    const pokeboxRequests = server.history.put.filter((request) => request.url === 'team/meta/0')
+    expect(pokeboxRequests).toHaveLength(1)
+    expect(JSON.parse(pokeboxRequests[0].data).scheduledMembers).toEqual([
+      expect.objectContaining({ externalId, saved: !saved })
+    ])
   })
 
   it('disables Pokebox actions for logged-out users', async () => {
@@ -108,36 +113,65 @@ describe('TeamScheduleDialog', () => {
   it.each([
     { type: 'tasty-chance' as const, value: '35.5', field: 'tastyChanceTarget', inputmode: 'decimal' },
     { type: 'pot-size' as const, value: '180', field: 'potSizeTarget', inputmode: 'numeric' }
-  ])('saves the $type target and recalculates when saved', async ({ type, value, field, inputmode }) => {
+  ])('saves the $type target and recalculates without closing', async ({ type, value, field, inputmode }) => {
     await open(type)
     expect(targetInput().attributes('type')).toBe('text')
     expect(targetInput().attributes('inputmode')).toBe(inputmode)
     await targetInput().setValue(value)
+    await flushPromises()
     expect(server.history.post).toHaveLength(0)
-
-    await actionButton()
-
-    expect(useDialogStore().scheduleDialog).toBe(false)
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+    expect(useDialogStore().scheduleDialog).toBe(true)
     expect(useTeamStore().getCurrentTeam.schedule![0]).toHaveProperty(field, Number(value))
     expect(server.history.post).toHaveLength(1)
     expect(JSON.parse(server.history.post[0].data).settings.schedule[0]).toHaveProperty(field, Number(value))
+    await actionButton()
     useDialogStore().openSchedule(0)
     await flushPromises()
     expect(targetInput().element.value).toBe(value)
+    expect(server.history.post).toHaveLength(1)
   })
 
-  it('discards the target when the dialog is dismissed', async () => {
+  it.each(['Close', 'dismiss'])('retains the target after %s', async (action) => {
     await open('pot-size')
     await targetInput().setValue('200')
-    wrapper.findAllComponents({ name: 'VDialog' })[0].vm.$emit('update:modelValue', false)
-    await flushPromises()
-
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await actionButton(action)
     expect(useDialogStore().scheduleDialog).toBe(false)
-    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(100)
-    expect(server.history.post).toHaveLength(0)
+    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(200)
+    expect(server.history.post).toHaveLength(1)
     useDialogStore().openSchedule(0)
     await flushPromises()
-    expect(targetInput().element.value).toBe('100')
+    expect(targetInput().element.value).toBe('200')
+  })
+
+  it.each(['Close', 'dismiss'])('saves the target on blur and retains it after %s', async (action) => {
+    await open('pot-size')
+    await targetInput().setValue('200')
+    await flushPromises()
+    expect(server.history.post).toHaveLength(0)
+    await targetInput().trigger('blur')
+    await flushPromises()
+    expect(server.history.post).toHaveLength(1)
+    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(200)
+    expect(useDialogStore().scheduleDialog).toBe(true)
+    await actionButton(action)
+    useDialogStore().openSchedule(0)
+    await flushPromises()
+    expect(targetInput().element.value).toBe('200')
+    expect(server.history.post).toHaveLength(1)
+  })
+
+  it('does not save twice when Enter is followed by blur', async () => {
+    await open('tasty-chance')
+    await targetInput().setValue('35.5')
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await targetInput().trigger('blur')
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule![0].tastyChanceTarget).toBe(35.5)
+    expect(server.history.post).toHaveLength(1)
+    expect(useDialogStore().scheduleDialog).toBe(true)
   })
 
   it.each([
@@ -146,10 +180,14 @@ describe('TeamScheduleDialog', () => {
     { type: 'tasty-chance' as const, value: '71' },
     { type: 'pot-size' as const, value: '0' },
     { type: 'pot-size' as const, value: '2.5' }
-  ])('keeps the dialog open for invalid $type target "$value"', async ({ type, value }) => {
+  ])('does not save an invalid $type target "$value"', async ({ type, value }) => {
     await open(type)
     await targetInput().setValue(value)
-    await actionButton()
+    await flushPromises()
+    expect(server.history.post).toHaveLength(0)
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await targetInput().trigger('blur')
+    await flushPromises()
 
     expect(useDialogStore().scheduleDialog).toBe(true)
     expect(server.history.post).toHaveLength(0)
@@ -163,48 +201,106 @@ describe('TeamScheduleDialog', () => {
 
   it('does not recalculate when the target is unchanged', async () => {
     await open('tasty-chance')
+    await targetInput().setValue('20')
+    await targetInput().trigger('keydown', { key: 'Enter' })
     await actionButton()
 
     expect(useDialogStore().scheduleDialog).toBe(false)
     expect(server.history.post).toHaveLength(0)
   })
 
-  it('discards target and schedule type changes on Cancel', async () => {
+  it.each(['Close', 'dismiss'])('finishes rapid target edits in order before %s', async (action) => {
+    server.resetHandlers()
+    let finishFirst!: () => void
+    server.onPost('/calculator/team').replyOnce(
+      () =>
+        new Promise((resolve) => {
+          finishFirst = () => resolve([200, { members: [] }])
+        })
+    )
+    server.onPost('/calculator/team').reply(200, { members: [] })
     await open('pot-size')
-    await targetInput().setValue('200')
-    wrapper.findComponent({ name: 'VSelect' }).vm.$emit('update:modelValue', 'time')
-    await nextTick()
-    await actionButton('Cancel')
-
+    await targetInput().setValue('110')
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+    await targetInput().setValue('120')
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+    expect(targetInput().element.value).toBe('120')
+    expect(targetInput().attributes('disabled')).toBeUndefined()
+    expect(useDialogStore().scheduleDialog).toBe(true)
+    expect(server.history.post).toHaveLength(1)
+    await actionButton(action)
+    expect(useDialogStore().scheduleDialog).toBe(true)
+    finishFirst()
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(120)
+    expect(server.history.post).toHaveLength(2)
+    expect(JSON.parse(server.history.post[1].data).settings.schedule[0].potSizeTarget).toBe(120)
     expect(useDialogStore().scheduleDialog).toBe(false)
-    expect(useTeamStore().getCurrentTeam.schedule![0].type).toBe('pot-size')
-    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(100)
-    expect(server.history.post).toHaveLength(0)
   })
 
-  it('saves a schedule type change only on Save', async () => {
+  it('saves a schedule type change immediately', async () => {
     await open('pot-size')
     wrapper.findComponent({ name: 'VSelect' }).vm.$emit('update:modelValue', 'time')
-    await nextTick()
-    expect(useTeamStore().getCurrentTeam.schedule![0].type).toBe('pot-size')
-    expect(server.history.post).toHaveLength(0)
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule![0].type).toBe('time')
+    expect(server.history.post).toHaveLength(1)
     await actionButton()
 
     expect(useTeamStore().getCurrentTeam.schedule![0].type).toBe('time')
     expect(server.history.post).toHaveLength(1)
   })
 
-  it('allows cancelling an invalid target', async () => {
+  it('allows closing with an invalid target while retaining the last valid value', async () => {
     await open('pot-size')
     await targetInput().setValue('')
-    await actionButton('Cancel')
+    await actionButton('Close')
 
     expect(useDialogStore().scheduleDialog).toBe(false)
     expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(100)
     expect(server.history.post).toHaveLength(0)
   })
 
-  it.each(['Cancel', 'Save'])('keeps added Pokemon local until %s', async (action) => {
+  it.each(['Close', 'dismiss'])('keeps an edited rotation partner saved after schedule %s', async (action) => {
+    useUserStore().setInitialLoginData(commonMocks.loginResponse())
+    server.onPut('team/meta/0').reply(200, { version: 1 })
+    await open('pot-size')
+    const team = useTeamStore().getCurrentTeam
+    const partner = mocks.createMockPokemon({ externalId: 'rotation-partner', level: 25 })
+    usePokemonStore().upsertLocalPokemon(partner)
+    team.schedule!.push({ slotIndex: 0, externalId: partner.externalId, startTime: '12:00', type: 'pot-size' })
+    useDialogStore().closeSchedule()
+    await nextTick()
+    useDialogStore().openSchedule(0)
+    await flushPromises()
+    wrapper.findAllComponents(PokemonSlotDisplay)[1].vm.$emit('click')
+    await flushPromises()
+    await wrapper
+      .findAllComponents({ name: 'VListItem' })
+      .find((item) => item.props('title') === 'Edit')!
+      .trigger('click')
+    useDialogStore().savePokemonInput({ ...partner, level: 42 })
+    await flushPromises()
+
+    expect(useDialogStore().scheduleDialog).toBe(true)
+    expect(usePokemonStore().getPokemon(partner.externalId)?.level).toBe(42)
+    expect(server.history.post).toHaveLength(1)
+    expect(JSON.parse(server.history.put[0].data).scheduledMembers).toEqual(
+      expect.arrayContaining([expect.objectContaining({ externalId: partner.externalId, level: 42 })])
+    )
+    await actionButton(action)
+    await flushPromises()
+    expect(usePokemonStore().getPokemon(partner.externalId)?.level).toBe(42)
+    expect(team.schedule).toHaveLength(2)
+    expect(team.schedule![0].potSizeTarget).toBe(100)
+    expect(JSON.parse(server.history.put[0].data).schedule[0].potSizeTarget).toBe(100)
+    expect(server.history.post).toHaveLength(1)
+  })
+
+  it.each(['Close', 'dismiss'])('persists added Pokemon immediately before outer %s', async (action) => {
+    useUserStore().setInitialLoginData(commonMocks.loginResponse())
+    server.onPut('team/meta/0').reply(200, { version: 1 })
     await open('pot-size')
     const added = mocks.createMockPokemon({ externalId: 'rotation-partner' })
     const addCard = wrapper
@@ -212,20 +308,86 @@ describe('TeamScheduleDialog', () => {
       .find((card) => card.classes().includes('schedule-add-card'))!
     await addCard.trigger('click')
     useDialogStore().handlePokemonSelected(added)
-    await nextTick()
-    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(1)
-    expect(usePokemonStore().getPokemon(added.externalId)).toBeUndefined()
-    expect(server.history.post).toHaveLength(0)
-
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(2)
+    expect(usePokemonStore().getPokemon(added.externalId)).toBeDefined()
+    expect(server.history.post).toHaveLength(1)
+    expect(JSON.parse(server.history.put[0].data).scheduledMembers).toEqual(
+      expect.arrayContaining([expect.objectContaining({ externalId: added.externalId })])
+    )
+    expect(JSON.parse(server.history.put[0].data).schedule[0].potSizeTarget).toBe(100)
     await actionButton(action)
+    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(2)
+    expect(useTeamStore().getCurrentTeam.schedule![0].potSizeTarget).toBe(100)
+    expect(server.history.post).toHaveLength(1)
+    expect(usePokemonStore().getPokemon(added.externalId)).toBeDefined()
+  })
 
-    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(action === 'Save' ? 2 : 1)
-    expect(server.history.post).toHaveLength(action === 'Save' ? 1 : 0)
-    if (action === 'Save') {
-      expect(usePokemonStore().getPokemon(added.externalId)).toBeDefined()
-    } else {
-      expect(usePokemonStore().getPokemon(added.externalId)).toBeUndefined()
-    }
+  it('keeps the saved target when removing the first conditional member', async () => {
+    await open('pot-size')
+    await wrapper
+      .findAllComponents({ name: 'VCard' })
+      .find((card) => card.classes().includes('schedule-add-card'))!
+      .trigger('click')
+    const added = mocks.createMockPokemon({ externalId: 'rotation-partner' })
+    useDialogStore().handlePokemonSelected(added)
+    await flushPromises()
+    await targetInput().setValue('200')
+    await targetInput().trigger('keydown', { key: 'Enter' })
+    await flushPromises()
+    wrapper.findAllComponents(PokemonSlotDisplay)[0].vm.$emit('click')
+    await flushPromises()
+    await wrapper
+      .findAllComponents({ name: 'VListItem' })
+      .find((item) => item.props('title') === 'Remove from schedule')!
+      .trigger('click')
+    await flushPromises()
+    await actionButton('Close')
+    expect(useTeamStore().getCurrentTeam.schedule).toEqual([
+      expect.objectContaining({ externalId: added.externalId, potSizeTarget: 200 })
+    ])
+  })
+
+  it('starts a new member five minutes after the displayed saved shift time', async () => {
+    await open('time')
+    const timeButton = wrapper
+      .findAllComponents({ name: 'VBtn' })
+      .find((button) => button.classes().includes('schedule-time-button'))!
+    await timeButton.trigger('click')
+    await flushPromises()
+    wrapper.findComponent({ name: 'VTimePicker' }).vm.$emit('update:modelValue', '12:30')
+    await nextTick()
+    await wrapper
+      .findAllComponents({ name: 'VDialog' })[2]
+      .findAllComponents({ name: 'VBtn' })
+      .find((button) => button.text() === 'Save')!
+      .trigger('click')
+    await flushPromises()
+    await wrapper
+      .findAllComponents({ name: 'VCard' })
+      .find((card) => card.classes().includes('schedule-add-card'))!
+      .trigger('click')
+    const added = mocks.createMockPokemon({ externalId: 'rotation-partner' })
+    useDialogStore().handlePokemonSelected(added)
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe('12:30')
+    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(2)
+    expect(server.history.post).toHaveLength(2)
+    expect(useTeamStore().getCurrentTeam.schedule![1].startTime).toBe('12:35')
+    expect(useDialogStore().scheduleDialog).toBe(true)
+    wrapper.findAllComponents(PokemonSlotDisplay)[1].vm.$emit('click')
+    await flushPromises()
+    await wrapper
+      .findAllComponents({ name: 'VListItem' })
+      .find((item) => item.props('title') === 'Remove from schedule')!
+      .trigger('click')
+    await flushPromises()
+    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(1)
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe('12:30')
+    expect(server.history.post).toHaveLength(3)
+    await actionButton('Close')
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe('12:30')
+    expect(useTeamStore().getCurrentTeam.schedule).toHaveLength(1)
   })
 
   it('displays each scheduled Pokemon level, name, and team subskills', async () => {
@@ -279,7 +441,7 @@ describe('TeamScheduleDialog', () => {
     expect(wrapper.findAllComponents({ name: 'VListItem' }).some((item) => item.props('title') === 'Edit')).toBe(true)
   })
 
-  it.each(['Save', 'Cancel'])('edits time through its button and respects the outer %s action', async (action) => {
+  it.each(['Close', 'dismiss'])('saves time through its button and retains it after %s', async (action) => {
     await open('time')
     const originalTime = useTeamStore().getCurrentTeam.schedule![0].startTime
     const timeButton = wrapper
@@ -306,13 +468,14 @@ describe('TeamScheduleDialog', () => {
         .find((button) => button.classes().includes('schedule-time-button'))!
         .text()
     ).toBe('12:30')
-    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe(originalTime)
-    expect(server.history.post).toHaveLength(0)
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe('12:30')
+    expect(server.history.post).toHaveLength(1)
+    expect(useDialogStore().scheduleDialog).toBe(true)
 
     await actionButton(action)
 
-    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe(action === 'Save' ? '12:30' : originalTime)
-    expect(server.history.post).toHaveLength(action === 'Save' ? 1 : 0)
+    expect(useTeamStore().getCurrentTeam.schedule![0].startTime).toBe('12:30')
+    expect(server.history.post).toHaveLength(1)
   })
 
   it('does not show time buttons for target-based rotations', async () => {

@@ -1,3 +1,4 @@
+import { PokemonInstanceUtils } from '@/services/utils/pokemon-instance-utils'
 import { TeamService } from '@/services/team/team-service'
 import { randomName } from '@/services/utils/name-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
@@ -189,7 +190,8 @@ export const useTeamStore = defineStore('team', {
         // grab previous teams so we may compare it to updated teams from server
         const previousTeams = this.teams.map((team) => ({
           ...team,
-          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined))
+          members: team.members.map((member) => (member ? pokemonStore.getPokemon(member) : undefined)),
+          scheduledMembers: (team.schedule ?? []).map((shift) => pokemonStore.getPokemon(shift.externalId))
         }))
 
         // get updated teams from server
@@ -225,6 +227,10 @@ export const useTeamStore = defineStore('team', {
             }
 
             // if neither team nor members have been update we copy production from cache
+            memberUpdated ||= (serverTeam.schedule ?? []).some((shift) => {
+              const previous = previousTeam.scheduledMembers.find((pokemon) => pokemon?.externalId === shift.externalId)
+              return !previous || previous.version !== pokemonStore.getPokemon(shift.externalId)?.version
+            })
             if (!memberUpdated) {
               this.teams[serverTeam.index].production = previousTeam.production
               this.teams[serverTeam.index].memberIvs = previousTeam.memberIvs
@@ -294,7 +300,12 @@ export const useTeamStore = defineStore('team', {
             island: islandDTO,
             stockpiledBerries,
             stockpiledIngredients,
-            schedule
+            schedule,
+            scheduledMembers: [...new Set((schedule ?? []).map((shift) => shift.externalId))].map((id) => {
+              const pokemon = usePokemonStore().getPokemon(id)
+              if (!pokemon) throw new Error(`Scheduled Pokémon ${id} is missing`)
+              return PokemonInstanceUtils.toUpsertTeamMemberRequest(pokemon)
+            })
           })
 
           this.getCurrentTeam.version = version
