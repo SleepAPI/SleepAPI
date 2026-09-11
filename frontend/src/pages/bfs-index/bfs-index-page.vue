@@ -97,9 +97,10 @@
         <code>{{ ingredientFinderM ? '(864 / f) × (1 − 1.36 × i) × b' : '(864 / f) × (1 − i) × b' }}</code>
       </p>
       <p class="mt-3">
-        f is base helping frequency in seconds.<br />
-        i is base ingredient rate as a fraction.<br />
-        b is base berry strength.
+        <code>864</code> is the number of seconds in a day (86,400) divided by 100 to keep index scores compact.<br />
+        <code>f</code> is base helping frequency in seconds.<br />
+        <code>i</code> is base ingredient rate as a fraction.<br />
+        <code>b</code> is base berry strength.
       </p>
       <p class="mt-3">
         “All” specialists use the skill formula by default: <code>(864 / f) × (1 − i) × b</code>, with their base
