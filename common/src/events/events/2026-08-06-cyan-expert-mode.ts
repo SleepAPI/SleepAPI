@@ -1,4 +1,12 @@
-import type { ExpertModeSettings, TeamMemberExt } from '../../types';
+import {
+  CBEX_MAIN_FREQUENCY_BUFF,
+  CBEX_MAIN_INV_BUFF,
+  CBEX_OFF_FREQUENCY_NERF,
+  EXPERT_MODE_MAIN_SKILL_LEVEL_BONUS,
+  EXPERT_MODE_SKILL_PERCENT_BONUS,
+  type ExpertModeSettings,
+  type TeamMemberExt
+} from '../../types';
 import { EventBuilder } from '../builders/event-builder';
 
 function isMainBerry(input: ExpertModeSettings, member: TeamMemberExt) {
@@ -17,17 +25,17 @@ export const cyanExpertMode = EventBuilder.create<ExpertModeSettings>()
   .forTeam((input, member) => ({
     'pokemonWithIngredients.pokemon.frequency': (freq) => {
       if (isMainBerry(input, member)) {
-        return freq * 0.8;
+        return freq * (1 - CBEX_MAIN_FREQUENCY_BUFF / 100);
       }
       if (isFavoredBerry(input, member)) {
         return freq;
       }
-      return freq * 1.35;
+      return freq * (1 + CBEX_OFF_FREQUENCY_NERF / 100);
     },
 
     'pokemonWithIngredients.pokemon.carrySize': (carry) => {
       if (isMainBerry(input, member)) {
-        return carry + 5;
+        return carry + CBEX_MAIN_INV_BUFF;
       }
       return carry;
     },
@@ -35,14 +43,14 @@ export const cyanExpertMode = EventBuilder.create<ExpertModeSettings>()
     'settings.skillLevel': (level) => {
       if (isMainBerry(input, member)) {
         const maxLevel = member.pokemonWithIngredients.pokemon.skill.maxLevel;
-        return Math.min(level + 1, maxLevel);
+        return Math.min(level + EXPERT_MODE_MAIN_SKILL_LEVEL_BONUS, maxLevel);
       }
       return level;
     },
 
     'pokemonWithIngredients.pokemon.skillPercentage': (percentage) => {
       if (isFavoredBerry(input, member) && input.randomBonus === 'skill') {
-        return percentage * 1.25;
+        return percentage * (1 + EXPERT_MODE_SKILL_PERCENT_BONUS / 100);
       }
       return percentage;
     }
