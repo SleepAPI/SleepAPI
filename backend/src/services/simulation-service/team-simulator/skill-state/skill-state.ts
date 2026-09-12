@@ -48,8 +48,8 @@ import { SkillCopyTransformEffect } from '@src/services/simulation-service/team-
 import { TastyChanceSEffect } from '@src/services/simulation-service/team-simulator/skill-state/skill-effects/tasty-chance-s/tasty-chance-s-effect.js';
 import { VersatileSEffect } from '@src/services/simulation-service/team-simulator/skill-state/skill-effects/versatile/versatile-effect.js';
 import type {
-  SkillActivation,
-  TeamActivationValue
+  ActivationValue,
+  SkillActivation
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import type { PreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import type { AmountParams, Mainskill, MainskillActivation, MainskillUnit, MemberSkillValue } from 'sleepapi-common';
@@ -169,19 +169,14 @@ export class SkillState {
   }
 
   // TODO: apparently returning early here makes the team sim insanely fast, so skill handling is slower than expected
-  public attemptSkill(): SkillActivation[] {
-    const activations: SkillActivation[] = [];
+  public attemptSkill(): SkillActivation | void {
     this.helpsSinceLastSkillProc += 1;
-
-    if (
-      this.helpsSinceLastSkillProc > this.memberState.member.pokemonWithIngredients.pokemon.pityProcThreshold ||
-      this.rng() < this.skillPercentage
-    ) {
+    const pityThresholdReached =
+      this.helpsSinceLastSkillProc > this.memberState.member.pokemonWithIngredients.pokemon.pityProcThreshold;
+    if (pityThresholdReached || this.rng() < this.skillPercentage) {
       this.todaysSkillProcs += 1;
-      activations.push(this.activateSkill(this.skill));
+      return this.activateSkill(this.skill);
     }
-
-    return activations;
   }
 
   public addBonusActivation(): SkillActivation {
@@ -194,7 +189,7 @@ export class SkillState {
     this.todaysSkillProcs = 0;
   }
 
-  public addValue(value: TeamActivationValue) {
+  public addValue(value: ActivationValue) {
     this.regularValue += value.regular;
     this.critValue += value.crit;
   }

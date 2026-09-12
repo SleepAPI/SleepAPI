@@ -17,8 +17,8 @@
 import type { CookingState } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-state.js';
 import { MemberState } from '@src/services/simulation-service/team-simulator/member-state/member-state.js';
 import type {
+  ActivationValue,
   SkillActivation,
-  TeamActivationValue,
   UnitActivation
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
@@ -106,8 +106,9 @@ export class TeamSimulator {
       this.attemptCooking(minutesSinceWakeup);
 
       for (const member of this.memberStatesWithoutFillers) {
-        for (const skillActivation of member.attemptDayHelp(minutesSinceWakeup)) {
-          this.maybeActivateTeamSkill(skillActivation, member);
+        const maybeSkillActivation = member.attemptDayHelp(minutesSinceWakeup);
+        if (maybeSkillActivation) {
+          this.maybeActivateTeamSkill(maybeSkillActivation, member);
         }
       }
       for (const member of this.memberStatesWithoutFillers) {
@@ -302,14 +303,15 @@ export class TeamSimulator {
       return;
     }
     for (const member of membersHelped) {
-      const bonusActivations: SkillActivation[] = member.addSkillHelps(activation.team);
-      invoker.addSkillValue({ regular: bonusActivations.length, crit: 0 });
+      const maybeBonusActivation = member.addSkillHelps(activation.team);
+      if (!maybeBonusActivation) {
+        break;
+      }
+      invoker.addSkillValue({ regular: 1, crit: 0 });
       if (recursionDepth < 10) {
         // In theory, a team of all Togedemaru could keep giving each other bonus activations.
         // The odds are very slim, so I'm making the simulation slightly less accurate in order to avoid potential infinite recursion.
-        for (const bonusActivation of bonusActivations) {
-          this.maybeActivateTeamSkill(bonusActivation, member, recursionDepth + 1);
-        }
+        this.maybeActivateTeamSkill(maybeBonusActivation, member, recursionDepth + 1);
       }
     }
   }
@@ -322,7 +324,7 @@ export class TeamSimulator {
     invoker.addSkillValue({ regular: recovered.regular.skillValue, crit: recovered.crit.skillValue });
   }
 
-  private recoverMemberEnergy(activation: TeamActivationValue, invoker: MemberState, targetGroup: MemberState[]) {
+  private recoverMemberEnergy(activation: ActivationValue, invoker: MemberState, targetGroup: MemberState[]) {
     const { crit, regular } = activation;
     let valueRegular = 0;
     let valueCrit = 0;
