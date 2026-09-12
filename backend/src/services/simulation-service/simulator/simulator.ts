@@ -308,7 +308,7 @@ export function simulation(params: {
           skillDreamShardValue += skillActivation.adjustedAmount;
         } else if (skillActivation.skill.hasUnit('pot size')) {
           skillPotSizeValue += skillActivation.adjustedAmount;
-        } else if (skillActivation.skill.hasUnit('chance')) {
+        } else if (skillActivation.skill.hasUnit('crit chance')) {
           skillTastyChanceValue += skillActivation.adjustedAmount;
         }
       } else break;
