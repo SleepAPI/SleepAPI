@@ -15,7 +15,7 @@
  */
 
 import type { IngredientSet } from '../../types/ingredient';
-import type { PokemonInstanceExt } from '../../types/instance/pokemon-instance';
+import type { PokemonInstance } from '../../types/instance/pokemon-instance';
 import type { Nature } from '../../types/nature/nature';
 import type { Pokemon } from '../../types/pokemon';
 import {
@@ -39,7 +39,7 @@ import {
   calculateSkillPercentage
 } from '../../utils/stat-utils';
 
-export type PokemonInstanceWithoutRP = Omit<PokemonInstanceExt, 'rp' | 'carrySize'>;
+export type PokemonInstanceWithoutRP = Omit<PokemonInstance, 'rp' | 'carrySize'>;
 
 export class RP {
   private pokemon: Pokemon;

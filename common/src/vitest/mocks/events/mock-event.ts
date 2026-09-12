@@ -7,7 +7,7 @@ export function event(attrs?: Partial<Event>): Event {
     description: 'Test event description',
     modifiers: [
       {
-        type: 'PokemonInstance',
+        type: 'PokemonInstanceDto',
         leftValue: 'pokemon.frequency',
         operation: '*',
         rightValue: 0.9

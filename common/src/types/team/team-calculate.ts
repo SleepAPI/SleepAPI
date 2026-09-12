@@ -4,25 +4,25 @@ import type {
   IngredientSet,
   MainskillUnit,
   MealTimes,
-  PokemonInstance,
+  PokemonInstanceDto,
   PokemonWithIngredientsIndexed,
-  TeamMemberExt,
-  TeamSettings
+  TeamMember,
+  TeamSettingsDto
 } from '..';
 import type { Produce } from '../production';
 import type { Recipe } from '../recipe/recipe';
 
-export interface PokemonInstanceIdentity extends PokemonInstance {
+export interface PokemonInstanceIdentity extends PokemonInstanceDto {
   externalId: string;
 }
 
 export interface CalculateTeamRequest {
-  settings: TeamSettings;
+  settings: TeamSettingsDto;
   members: PokemonInstanceIdentity[];
 }
 
 export interface CalculateIvRequest {
-  settings: TeamSettings;
+  settings: TeamSettingsDto;
   members: PokemonInstanceIdentity[];
   variants: PokemonInstanceIdentity[];
 }
@@ -157,5 +157,5 @@ export interface SimpleTeamResult {
   critMultiplier: number;
   averageWeekdayPotSize: number;
   ingredientPercentage: number;
-  member: TeamMemberExt;
+  member: TeamMember;
 }

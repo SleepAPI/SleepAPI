@@ -7,20 +7,20 @@ import {
   ingredient,
   PIKACHU,
   PINSIR,
-  type IngredientInstanceExt,
+  type IngredientInstance,
   type IngredientSet,
-  type PokemonInstanceExt
+  type PokemonInstance
 } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it, vitest } from 'vitest'
 
 describe('IngredientButton', () => {
   let wrapper: VueWrapper<InstanceType<typeof IngredientButton>>
 
-  const mockPokemon: PokemonInstanceExt = {
+  const mockPokemon: PokemonInstance = {
     level: 60,
     pokemon: PIKACHU,
-    ingredients: [] as IngredientInstanceExt[]
-  } as PokemonInstanceExt
+    ingredients: [] as IngredientInstance[]
+  } as PokemonInstance
 
   beforeEach(() => {
     wrapper = mount(IngredientButton, {

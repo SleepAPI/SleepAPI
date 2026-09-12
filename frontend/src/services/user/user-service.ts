@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/user-store'
 import type {
   GetRecipeLevelsResponse,
   IslandShortName,
-  PokemonInstanceExt,
+  PokemonInstance,
   PokemonInstanceWithMeta,
   UpdateUserRequest,
   UpsertAreaBonusRequest,
@@ -25,10 +25,10 @@ class UserServiceImpl {
 
     const savedPokemon = response.data
 
-    return savedPokemon.map(PokemonInstanceUtils.toPokemonInstanceExt)
+    return savedPokemon.map(PokemonInstanceUtils.toPokemonInstance)
   }
 
-  public async upsertPokemon(pokemonInstance: PokemonInstanceExt) {
+  public async upsertPokemon(pokemonInstance: PokemonInstance) {
     const request = PokemonInstanceUtils.toUpsertTeamMemberRequest(pokemonInstance)
     return serverAxios.put('user/pokemon', request)
   }

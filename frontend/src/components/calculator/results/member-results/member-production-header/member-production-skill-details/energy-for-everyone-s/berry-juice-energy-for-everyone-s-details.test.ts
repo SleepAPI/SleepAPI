@@ -9,7 +9,7 @@ import { EnergyForEveryoneSBerryJuice, MathUtils, commonMocks, compactNumber } f
 import { beforeEach, describe, expect, it } from 'vitest'
 import BerryJuiceEnergyForEveryoneDetails from './berry-juice-energy-for-everyone-s-details.vue'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({
     pokemon: commonMocks.mockPokemon({ skill: EnergyForEveryoneSBerryJuice }),
     skillLevel: 6

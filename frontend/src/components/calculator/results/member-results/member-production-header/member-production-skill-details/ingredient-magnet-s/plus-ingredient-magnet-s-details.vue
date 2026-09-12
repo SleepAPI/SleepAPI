@@ -79,7 +79,7 @@ import { ingredientImage, mainskillImage } from '@/services/utils/image-utils'
 import { skillLevelBadgeText } from '@/services/utils/skill-display-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { MathUtils, compactNumber, ingredient, isPlusOrMinus } from 'sleepapi-common'
 import { defineComponent, type PropType } from 'vue'
 
@@ -87,7 +87,7 @@ export default defineComponent({
   name: 'IngredientMagnetSPlusDetails',
   props: {
     memberWithProduction: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<MemberWithProduction>,
       required: true
     }
   },

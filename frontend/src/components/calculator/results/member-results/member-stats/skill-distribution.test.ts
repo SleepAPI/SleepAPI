@@ -9,7 +9,7 @@ describe('SkillDistribution.vue', () => {
   registerChartJS()
   let wrapper: VueWrapper<InstanceType<typeof SkillDistribution>>
 
-  const pokemonProduction = mocks.createMockMemberProductionExt({
+  const pokemonProduction = mocks.createMockMemberWithProduction({
     member: mocks.createMockPokemon({ name: 'Test member' }),
     production: mocks.createMockMemberProduction({
       skillProcs: 5.5,

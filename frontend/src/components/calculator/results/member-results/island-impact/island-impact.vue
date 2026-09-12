@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { berryImage } from '@/services/utils/image-utils'
 import { useUserStore } from '@/stores/user-store'
-import { capitalize, hasSpecialty, type IslandInstance, type PokemonInstanceExt } from 'sleepapi-common'
+import { capitalize, hasSpecialty, type IslandInstance, type PokemonInstance } from 'sleepapi-common'
 import { computed } from 'vue'
 import {
   baseFavoriteBerryEffect,
@@ -61,7 +61,7 @@ import {
 } from './island-effects'
 
 const props = defineProps<{
-  member: PokemonInstanceExt
+  member: PokemonInstance
   island: IslandInstance
   effectiveSkillLevel: number
 }>()

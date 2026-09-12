@@ -3,19 +3,19 @@ import { useUserStore } from '@/stores/user-store'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import { berry, commonMocks, type IslandInstance, type PokemonInstanceExt } from 'sleepapi-common'
+import { berry, commonMocks, type IslandInstance, type PokemonInstance } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 const expertIsland = (attrs?: Partial<Parameters<typeof commonMocks.expertModeSettings>[0]>): IslandInstance =>
   commonMocks.expertIslandInstance({ expertMode: commonMocks.expertModeSettings(attrs) })
 
-const mainFavoriteMember = (): PokemonInstanceExt =>
+const mainFavoriteMember = (): PokemonInstance =>
   mocks.createMockPokemon({ pokemon: commonMocks.mockPokemon({ berry: berry.BELUE }) })
 
-const subFavoriteMember = (): PokemonInstanceExt =>
+const subFavoriteMember = (): PokemonInstance =>
   mocks.createMockPokemon({ pokemon: commonMocks.mockPokemon({ berry: berry.GREPA }) })
 
-const notFavoredMember = (): PokemonInstanceExt =>
+const notFavoredMember = (): PokemonInstance =>
   mocks.createMockPokemon({ pokemon: commonMocks.mockPokemon({ berry: berry.CHERI }) })
 
 describe('IslandImpact', () => {

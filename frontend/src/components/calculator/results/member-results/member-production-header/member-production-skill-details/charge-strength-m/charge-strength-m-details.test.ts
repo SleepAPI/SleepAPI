@@ -1,6 +1,6 @@
 import MemberProductionSkill from '@/components/calculator/results/member-results/member-production-header/member-production-skill.vue'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { timeWindowFactor } from '@/types/time/time-window'
 import { mocks } from '@/vitest'
 import type { VueWrapper } from '@vue/test-utils'
@@ -8,7 +8,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { ChargeStrengthM, ESPEON, MathUtils, compactNumber, localizeNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember: MemberProductionExt = mocks.createMockMemberProductionExt({
+const mockMember: MemberWithProduction = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: ESPEON })
 })
 describe('ChargeStrengthMDetails', () => {

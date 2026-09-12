@@ -1,12 +1,12 @@
-import type { MemberStrength, PokemonInstanceExt, TeamMemberExt } from '../../types';
+import type { MemberStrength, PokemonInstance, TeamMember } from '../../types';
 import type { PathValue } from '../../types/type/path-value';
 import type { PathKeys } from '../../types/type/type-paths';
 
 export interface FunctionalEvent {
   name: string;
   description: string;
-  applyToPokemon: (target: PokemonInstanceExt) => PokemonInstanceExt;
-  applyToTeam: (target: TeamMemberExt) => TeamMemberExt;
+  applyToPokemon: (target: PokemonInstance) => PokemonInstance;
+  applyToTeam: (target: TeamMember) => TeamMember;
   applyToStrength: (target: MemberStrength) => MemberStrength;
 }
 
@@ -26,8 +26,8 @@ export class EventBuilder<TInput = void> {
   private eventName?: string;
   private eventDescription?: string;
 
-  private pokemonModifiers: Array<(input: TInput, target: PokemonInstanceExt) => Record<string, unknown>> = [];
-  private teamModifiers: Array<(input: TInput, target: TeamMemberExt) => Record<string, unknown>> = [];
+  private pokemonModifiers: Array<(input: TInput, target: PokemonInstance) => Record<string, unknown>> = [];
+  private teamModifiers: Array<(input: TInput, target: TeamMember) => Record<string, unknown>> = [];
   private strengthModifiers: Array<(input: TInput, target: MemberStrength) => Record<string, unknown>> = [];
 
   /**
@@ -63,7 +63,7 @@ export class EventBuilder<TInput = void> {
    *   'skillLevel': (level) => level + 1
    * }))
    */
-  forPokemon(factory: (input: TInput, target: PokemonInstanceExt) => ModifierMap<PokemonInstanceExt>): this {
+  forPokemon(factory: (input: TInput, target: PokemonInstance) => ModifierMap<PokemonInstance>): this {
     this.pokemonModifiers.push((input, target) => factory(input, target));
     return this;
   }
@@ -77,7 +77,7 @@ export class EventBuilder<TInput = void> {
    *   'pokemonWithIngredients.pokemon.frequency': (freq) => freq * 0.9,
    * }))
    */
-  forTeam(factory: (input: TInput, target: TeamMemberExt) => ModifierMap<TeamMemberExt>): this {
+  forTeam(factory: (input: TInput, target: TeamMember) => ModifierMap<TeamMember>): this {
     this.teamModifiers.push((input, target) => factory(input, target));
     return this;
   }
@@ -114,8 +114,8 @@ export class EventBuilder<TInput = void> {
       const noOpEvent: FunctionalEvent = {
         name: this.eventName,
         description: this.eventDescription,
-        applyToPokemon: (p: PokemonInstanceExt) => p,
-        applyToTeam: (t: TeamMemberExt) => t,
+        applyToPokemon: (p: PokemonInstance) => p,
+        applyToTeam: (t: TeamMember) => t,
         applyToStrength: (s: MemberStrength) => s
       };
       return noOpEvent as TInput extends void ? FunctionalEvent : (input: TInput) => FunctionalEvent;
@@ -126,7 +126,7 @@ export class EventBuilder<TInput = void> {
         name: this.eventName!,
         description: this.eventDescription!,
 
-        applyToPokemon: (target: PokemonInstanceExt): PokemonInstanceExt => {
+        applyToPokemon: (target: PokemonInstance): PokemonInstance => {
           let result = target;
           for (const factory of this.pokemonModifiers) {
             result = this.applyModifierMap(result, factory(input, result));
@@ -134,7 +134,7 @@ export class EventBuilder<TInput = void> {
           return result;
         },
 
-        applyToTeam: (target: TeamMemberExt): TeamMemberExt => {
+        applyToTeam: (target: TeamMember): TeamMember => {
           let result = target;
           for (const factory of this.teamModifiers) {
             result = this.applyModifierMap(result, factory(input, result));

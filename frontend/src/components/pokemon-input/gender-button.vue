@@ -16,14 +16,14 @@
 </template>
 
 <script lang="ts">
-import { allowsGenderToggle, fixedGenderForSpecies, type PokemonInstanceExt } from 'sleepapi-common'
+import { allowsGenderToggle, fixedGenderForSpecies, type PokemonInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'GenderButton',
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },

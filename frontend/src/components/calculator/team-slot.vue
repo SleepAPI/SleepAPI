@@ -116,7 +116,7 @@ import { rarityColor } from '@/services/utils/color-utils'
 import { avatarImage, pokemonImage } from '@/services/utils/image-utils'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import { MAX_TEAM_SIZE, subskill, type PokemonInstanceExt } from 'sleepapi-common'
+import { MAX_TEAM_SIZE, subskill, type PokemonInstance } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -216,9 +216,9 @@ export default defineComponent({
     }
   },
   methods: {
-    openFilledSlotActions(pokemonInstance: PokemonInstanceExt) {
+    openFilledSlotActions(pokemonInstance: PokemonInstance) {
       this.dialogStore.openFilledSlot(pokemonInstance, this.fullTeam, {
-        onUpdate: (pokemonInstance: PokemonInstanceExt) => {
+        onUpdate: (pokemonInstance: PokemonInstance) => {
           this.updateTeamMember(pokemonInstance)
         },
         onDuplicate: () => {
@@ -233,11 +233,11 @@ export default defineComponent({
       })
     },
     openPokemonSearch() {
-      this.dialogStore.openPokemonSearch((pokemonInstance: PokemonInstanceExt) => {
+      this.dialogStore.openPokemonSearch((pokemonInstance: PokemonInstance) => {
         this.updateTeamMember(pokemonInstance)
       })
     },
-    updateTeamMember(pokemonInstance: PokemonInstanceExt) {
+    updateTeamMember(pokemonInstance: PokemonInstance) {
       this.teamStore.updateTeamMember(pokemonInstance, this.memberIndex)
     },
     duplicateTeamMember() {

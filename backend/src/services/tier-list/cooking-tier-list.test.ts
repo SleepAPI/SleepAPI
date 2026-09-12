@@ -1,4 +1,4 @@
-import { teamMemberSettings } from '@src/vitest/mocks/index.js';
+import { teamMemberSettingsDto } from '@src/vitest/mocks/index.js';
 import type { PokemonWithFinalContribution, PokemonWithRecipeContributions, PokemonWithTiering } from 'sleepapi-common';
 import { describe, expect, it } from 'vitest';
 import { CookingTierlist } from './cooking-tier-list.js';
@@ -11,7 +11,7 @@ describe('tierAndDiff', () => {
       totalIngredients: Float32Array.prototype,
       critMultiplier: 1,
       averageWeekdayPotSize: 1,
-      settings: teamMemberSettings.prototype
+      settings: teamMemberSettingsDto.prototype
     };
 
     // Create 20 Pokemon with decreasing scores to ensure we exhaust all tier buckets
@@ -43,7 +43,7 @@ describe('tierAndDiff', () => {
       totalIngredients: Float32Array.prototype,
       critMultiplier: 1,
       averageWeekdayPotSize: 1,
-      settings: teamMemberSettings.prototype
+      settings: teamMemberSettingsDto.prototype
     };
 
     const mockContributions: PokemonWithFinalContribution[] = [
@@ -65,7 +65,7 @@ describe('tierAndDiff', () => {
       totalIngredients: Float32Array.prototype,
       critMultiplier: 1,
       averageWeekdayPotSize: 1,
-      settings: teamMemberSettings.prototype
+      settings: teamMemberSettingsDto.prototype
     };
 
     // Close scores that should not exhaust all tiers

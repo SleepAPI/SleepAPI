@@ -41,7 +41,7 @@
 <script lang="ts">
 import SubskillMenu from '@/components/pokemon-input/menus/subskill-menu.vue'
 import { rarityColor } from '@/services/utils/color-utils'
-import { subskill, type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { subskill, type Subskill, type SubskillInstance } from 'sleepapi-common'
 
 export default {
   name: 'SubskillButtons',
@@ -54,7 +54,7 @@ export default {
       required: true
     },
     selectedSubskills: {
-      type: Array<SubskillInstanceExt>,
+      type: Array<SubskillInstance>,
       required: true,
       default: () => []
     }
@@ -92,9 +92,9 @@ export default {
   },
   methods: {
     subskillForLevel(subskillLevel: number): Subskill | undefined {
-      return this.selectedSubskills.find((ssExt) => ssExt.level === subskillLevel)?.subskill
+      return this.selectedSubskills.find((subskillInstance) => subskillInstance.level === subskillLevel)?.subskill
     },
-    updateSubskills(updatedSubskills: SubskillInstanceExt[]) {
+    updateSubskills(updatedSubskills: SubskillInstance[]) {
       this.toggleSubskillMenu()
       this.$emit('update-subskills', updatedSubskills)
     },

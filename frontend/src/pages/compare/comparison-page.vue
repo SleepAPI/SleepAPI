@@ -75,7 +75,7 @@ import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { UnexpectedError } from '@/types/errors/unexpected-error'
-import { DEFAULT_ISLAND, uuid, type PokemonInstanceExt, type TeamSettings } from 'sleepapi-common'
+import { DEFAULT_ISLAND, uuid, type PokemonInstance, type TeamSettingsDto } from 'sleepapi-common'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -104,7 +104,7 @@ export default defineComponent({
   }),
   computed: {
     members() {
-      const members: PokemonInstanceExt[] = []
+      const members: PokemonInstance[] = []
       for (const member of this.comparisonStore.members) {
         const pokemon = this.pokemonStore.getPokemon(member.externalId)
         pokemon && members.push(pokemon)
@@ -118,7 +118,7 @@ export default defineComponent({
         this.addToCompareMembers(pokemonInstance)
       })
     },
-    async addToCompareMembers(pokemonInstance: PokemonInstanceExt) {
+    async addToCompareMembers(pokemonInstance: PokemonInstance) {
       this.loading = true
       const memberProduction = await this.fetchCompareMemberProduction(pokemonInstance)
       this.comparisonStore.members.push(memberProduction)
@@ -132,10 +132,10 @@ export default defineComponent({
 
       this.loading = false
     },
-    async removeCompareMember(pokemonInstance: PokemonInstanceExt, index: number) {
+    async removeCompareMember(pokemonInstance: PokemonInstance, index: number) {
       this.comparisonStore.removeMember(pokemonInstance.externalId, index)
     },
-    async editCompareMember(pokemonInstance: PokemonInstanceExt) {
+    async editCompareMember(pokemonInstance: PokemonInstance) {
       this.loading = true
       const memberProduction = await this.fetchCompareMemberProduction(pokemonInstance)
 
@@ -153,8 +153,8 @@ export default defineComponent({
       this.comparisonStore.members[indexToUpdate] = memberProduction
       this.loading = false
     },
-    async fetchCompareMemberProduction(pokemonInstance: PokemonInstanceExt) {
-      const members: PokemonInstanceExt[] = [pokemonInstance]
+    async fetchCompareMemberProduction(pokemonInstance: PokemonInstance) {
+      const members: PokemonInstance[] = [pokemonInstance]
       const maybeTeam = this.comparisonStore.currentTeam
       for (const member of maybeTeam?.members ?? []) {
         if (member) {
@@ -162,7 +162,7 @@ export default defineComponent({
           pokemon && members.push(pokemon)
         }
       }
-      const settings: TeamSettings = {
+      const settings: TeamSettingsDto = {
         camp: maybeTeam?.camp ?? false,
         bedtime: maybeTeam?.bedtime ?? '21:30',
         wakeup: maybeTeam?.wakeup ?? '06:00',
@@ -180,14 +180,14 @@ export default defineComponent({
 
       return production
     },
-    duplicateCompareMember(pokemonInstance: PokemonInstanceExt) {
+    duplicateCompareMember(pokemonInstance: PokemonInstance) {
       const copiedProduction = this.comparisonStore.members.find(
         (pkmn) => pkmn.externalId === pokemonInstance.externalId
       )
       if (!copiedProduction) {
         console.error("Can't find pokemon to duplicate in the list, contact developer")
       } else {
-        const duplicatedMember: PokemonInstanceExt = {
+        const duplicatedMember: PokemonInstance = {
           ...pokemonInstance,
           version: 0,
           saved: false,
@@ -201,7 +201,7 @@ export default defineComponent({
         this.pokemonStore.upsertLocalPokemon(duplicatedMember)
       }
     },
-    toggleSaveState(pokemonInstance: PokemonInstanceExt) {
+    toggleSaveState(pokemonInstance: PokemonInstance) {
       const previouslyExisted = this.pokemonStore.getPokemon(pokemonInstance.externalId)
       if (previouslyExisted?.saved || pokemonInstance.saved) {
         this.pokemonStore.upsertServerPokemon(pokemonInstance)

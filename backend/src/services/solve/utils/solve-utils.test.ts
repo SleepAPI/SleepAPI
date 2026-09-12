@@ -19,8 +19,7 @@ import {
   settingsToArraySubskills
 } from '@src/services/solve/utils/solve-utils.js';
 import { mocks } from '@src/vitest/index.js';
-import type { IngredientSet, Pokedex, SolveSettingsExt } from 'sleepapi-common';
-import { splitArrayByCondition } from 'sleepapi-common';
+import type { IngredientSet, Pokedex, SolveSettings } from 'sleepapi-common';
 import {
   CookingPowerUpS,
   ENTEI,
@@ -33,7 +32,8 @@ import {
   flatToIngredientSet,
   ingredient,
   ingredientSetToIntFlat,
-  prettifyIngredientDrop
+  prettifyIngredientDrop,
+  splitArrayByCondition
 } from 'sleepapi-common';
 import { vimic } from 'vimic';
 import type { MockInstance } from 'vitest';
@@ -46,10 +46,8 @@ describe('solve-utils', () => {
   // TEST: this function is tested too little, function is probably also too big
   describe('calculateProductionAll', () => {
     it('should calculate all pokemon, including user pokemon', () => {
-      const userIncludedMembers = [
-        mocks.teamMemberExt({ settings: mocks.teamMemberSettingsExt({ externalId: 'user1' }) })
-      ];
-      const settings: SolveSettingsExt = { ...mocks.teamSettingsExt(), level: 60 };
+      const userIncludedMembers = [mocks.teamMember({ settings: mocks.teamMemberSettings({ externalId: 'user1' }) })];
+      const settings: SolveSettings = { ...mocks.teamSettings(), level: 60 };
 
       const teamSpy = vimic(productionService, 'calculateTeam', () =>
         mocks.teamResults({
@@ -57,7 +55,7 @@ describe('solve-utils', () => {
         })
       );
       const simpleSpy = vimic(productionService, 'calculateSimple', () => [
-        mocks.simpleTeamResult({ member: mocks.teamMemberExt() })
+        mocks.simpleTeamResult({ member: mocks.teamMember() })
       ]);
 
       const result = calculateProductionAll({
@@ -81,7 +79,7 @@ describe('solve-utils', () => {
 
   describe('filterPokedex', () => {
     it('should return COMPLETE_POKEDEX if input array has no helper boost Pokémon', () => {
-      expect(filterPokedex([mocks.teamMemberExt()])).toEqual(OPTIMAL_POKEDEX);
+      expect(filterPokedex([mocks.teamMember()])).toEqual(OPTIMAL_POKEDEX);
     });
 
     it('should return COMPLETE_POKEDEX if input array is empty', () => {
@@ -90,8 +88,8 @@ describe('solve-utils', () => {
 
     it('should remove helper boost pokemon in input array from COMPLETE_POKEDEX', () => {
       const filteredPokedex = filterPokedex([
-        mocks.teamMemberExt({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: SUICUNE }) }),
-        mocks.teamMemberExt({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: RAIKOU }) })
+        mocks.teamMember({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: SUICUNE }) }),
+        mocks.teamMember({ pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: RAIKOU }) })
       ]);
 
       expect(filteredPokedex).toContain(ENTEI);
@@ -170,11 +168,11 @@ Set {
 
   describe('calculateSupportPokemon', () => {
     it('should calculate production one by one for each support member', () => {
-      const supportPokemon1 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
+      const supportPokemon1 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon1' })
       });
-      const supportPokemon2 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon2' })
+      const supportPokemon2 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon2' })
       });
 
       const simpleCalcSpy = vimic(
@@ -187,7 +185,7 @@ Set {
       const result = calculateSupportPokemon({
         supportMembers: [supportPokemon1, supportPokemon2],
         userMembers: [],
-        settings: mocks.teamSettingsExt(),
+        settings: mocks.teamSettings(),
         userRecipes: defaultUserRecipes()
       });
       expect(result).toHaveLength(2);
@@ -198,8 +196,8 @@ Set {
     });
 
     it('should not return supportMembers not returned by simulator', () => {
-      const supportPokemon1 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
+      const supportPokemon1 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon1' })
       });
 
       const simpleCalcSpy = vimic(productionService, 'calculateSimple', () => []);
@@ -207,7 +205,7 @@ Set {
       const result = calculateSupportPokemon({
         supportMembers: [supportPokemon1],
         userMembers: [],
-        settings: mocks.teamSettingsExt(),
+        settings: mocks.teamSettings(),
         userRecipes: defaultUserRecipes()
       });
       expect(result).toHaveLength(0);
@@ -215,17 +213,17 @@ Set {
     });
 
     it("should include user's members in every simulation", () => {
-      const userPokemon1 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'userPokemon1' })
+      const userPokemon1 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'userPokemon1' })
       });
-      const userPokemon2 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'userPokemon2' })
+      const userPokemon2 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'userPokemon2' })
       });
-      const supportPokemon1 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
+      const supportPokemon1 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon1' })
       });
-      const supportPokemon2 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon2' })
+      const supportPokemon2 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon2' })
       });
 
       const simpleCalcSpy: MockInstance = vimic(
@@ -238,7 +236,7 @@ Set {
       const result = calculateSupportPokemon({
         supportMembers: [supportPokemon1, supportPokemon2],
         userMembers: [userPokemon1, userPokemon2],
-        settings: mocks.teamSettingsExt(),
+        settings: mocks.teamSettings(),
         userRecipes: defaultUserRecipes()
       });
       expect(result).toHaveLength(2);
@@ -266,8 +264,8 @@ Set {
     });
 
     it('should include a bogus member for each empty space in the simulator', () => {
-      const supportPokemon1 = mocks.teamMemberExt({
-        settings: mocks.teamMemberSettingsExt({ externalId: 'supportPokemon1' })
+      const supportPokemon1 = mocks.teamMember({
+        settings: mocks.teamMemberSettings({ externalId: 'supportPokemon1' })
       });
 
       const simpleSpy = vimic(productionService, 'calculateSimple', () => [
@@ -277,13 +275,13 @@ Set {
       const result = calculateSupportPokemon({
         supportMembers: [supportPokemon1],
         userMembers: [],
-        settings: mocks.teamSettingsExt(),
+        settings: mocks.teamSettings(),
         userRecipes: defaultUserRecipes()
       });
       expect(result).toHaveLength(1);
       expect(result[0].member.settings.externalId).toEqual(supportPokemon1.settings.externalId);
 
-      const bogusMember = mocks.teamMemberExt();
+      const bogusMember = mocks.teamMember();
 
       expect(simpleSpy).toHaveBeenCalledTimes(1);
       expect(simpleSpy.mock.calls[0][0]).toEqual(
@@ -322,9 +320,9 @@ Set {
         ingredient30: [ingredientListA],
         ingredient60: [ingredientListA, ingredientListB]
       });
-      const member = mocks.teamMemberExt({
+      const member = mocks.teamMember({
         pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon }),
-        settings: mocks.teamMemberSettingsExt({ level: 60 })
+        settings: mocks.teamMemberSettings({ level: 60 })
       });
       const simpleResults = mocks.simpleTeamResult({ member });
 
@@ -357,9 +355,9 @@ Set {
         ingredient60: [ingredientListA],
         ingredientPercentage: 100
       });
-      const member = mocks.teamMemberExt({
+      const member = mocks.teamMember({
         pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon }),
-        settings: mocks.teamMemberSettingsExt({ level: 60 })
+        settings: mocks.teamMemberSettings({ level: 60 })
       });
       const simpleResults = mocks.simpleTeamResult({ member, totalHelps: 10 });
 
@@ -598,9 +596,9 @@ Set {
 
   describe('calculateNonSupportPokemon', () => {
     it('should calculate non-support pokemon production without cooking', () => {
-      const nonSupportMembers = [mocks.teamMemberExt()];
-      const userMembers = [mocks.teamMemberExt()];
-      const settings = mocks.teamSettingsExt({ includeCooking: true });
+      const nonSupportMembers = [mocks.teamMember()];
+      const userMembers = [mocks.teamMember()];
+      const settings = mocks.teamSettings({ includeCooking: true });
 
       const simpleSpy = vimic(productionService, 'calculateSimple', () => [
         mocks.simpleTeamResult({ member: nonSupportMembers[0] })
@@ -620,19 +618,19 @@ Set {
 
     it('should calculate non-support pokemon production with cooking', () => {
       const nonSupportMembers = [
-        mocks.teamMemberExt({
+        mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: commonMocks.mockPokemon({ skill: TastyChanceS })
           })
         }),
-        mocks.teamMemberExt({
+        mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: commonMocks.mockPokemon({ skill: CookingPowerUpS })
           })
         })
       ];
-      const userMembers = [mocks.teamMemberExt()];
-      const settings = mocks.teamSettingsExt({ includeCooking: true });
+      const userMembers = [mocks.teamMember()];
+      const settings = mocks.teamSettings({ includeCooking: true });
 
       const simpleSpy = vimic(
         productionService,
@@ -658,7 +656,7 @@ Set {
 
   describe('settingsToArraySubskills', () => {
     it('should convert subskills set to array', () => {
-      const settings = mocks.teamMemberSettingsExt();
+      const settings = mocks.teamMemberSettings();
       const result = settingsToArraySubskills(settings);
       expect(result.subskills).toBeInstanceOf(Array);
     });

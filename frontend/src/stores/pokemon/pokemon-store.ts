@@ -3,10 +3,10 @@ import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { defineStore } from 'pinia'
-import { DOMAIN_VERSION, getPokemon, type PokemonInstanceExt } from 'sleepapi-common'
+import { DOMAIN_VERSION, getPokemon, type PokemonInstance } from 'sleepapi-common'
 
 export interface PokemonState {
-  pokemon: Record<string, PokemonInstanceExt>
+  pokemon: Record<string, PokemonInstance>
   domainVersion: number
 }
 
@@ -46,7 +46,7 @@ export const usePokemonStore = defineStore('pokemon', {
         this.domainVersion = DOMAIN_VERSION
       }
     },
-    upsertLocalPokemon(pokemon: PokemonInstanceExt) {
+    upsertLocalPokemon(pokemon: PokemonInstance) {
       this.pokemon[pokemon.externalId] = pokemon
     },
     removePokemon(externalId: string, source: 'team' | 'compare' | 'pokebox') {
@@ -74,7 +74,7 @@ export const usePokemonStore = defineStore('pokemon', {
         delete this.pokemon[externalId]
       }
     },
-    upsertServerPokemon(pokemon: PokemonInstanceExt) {
+    upsertServerPokemon(pokemon: PokemonInstance) {
       const userStore = useUserStore()
 
       if (userStore.loggedIn) {

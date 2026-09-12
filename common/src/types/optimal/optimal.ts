@@ -1,5 +1,5 @@
 import { CarrySizeUtils } from '../../utils/carry-size-utils/carry-size-utils';
-import type { SubskillInstanceExt } from '../instance/subskill-instance';
+import type { SubskillInstance } from '../instance/subskill-instance';
 import type { Nature } from '../nature/nature';
 import { ADAMANT, CAREFUL, QUIET } from '../nature/nature';
 import type { Pokemon } from '../pokemon/pokemon';
@@ -14,10 +14,10 @@ import {
   SKILL_TRIGGER_M,
   SKILL_TRIGGER_S
 } from '../subskill/subskills';
-import type { TeamMemberSettingsExt } from '../team';
+import type { TeamMemberSettings } from '../team';
 
 export interface Optimal {
-  subskills: SubskillInstanceExt[];
+  subskills: SubskillInstance[];
   nature: Nature;
   carrySize: number;
   skillLevel: number;
@@ -75,14 +75,14 @@ class OptimalImpl {
 
   /**
    * Filters subskills on level
-   * @returns {TeamMemberSettingsExt}
+   * @returns {TeamMemberSettings}
    */
   public toMemberSettings(params: {
     stats: Optimal;
     level: number;
     externalId: string;
     sneakySnacking: boolean;
-  }): TeamMemberSettingsExt {
+  }): TeamMemberSettings {
     const { stats, level, externalId, sneakySnacking } = params;
 
     const subskills = new Set<string>();

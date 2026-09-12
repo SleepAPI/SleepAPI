@@ -1,8 +1,8 @@
 import type { PokemonGender } from '../gender/gender';
 import type { Nature } from '../nature/nature';
 import type { Pokemon } from '../pokemon/pokemon';
-import type { IngredientInstance, IngredientInstanceExt } from './ingredient-instance';
-import type { SubskillInstance, SubskillInstanceExt } from './subskill-instance';
+import type { IngredientInstance, IngredientInstanceDto } from './ingredient-instance';
+import type { SubskillInstance, SubskillInstanceDto } from './subskill-instance';
 
 export interface PokemonInstanceBase<PokemonType, NatureType, SubskillType, IngredientType> {
   pokemon: PokemonType;
@@ -15,11 +15,11 @@ export interface PokemonInstanceBase<PokemonType, NatureType, SubskillType, Ingr
   ingredients: IngredientType[];
   sneakySnacking: boolean;
 }
-export type PokemonInstance = PokemonInstanceBase<
+export type PokemonInstanceDto = PokemonInstanceBase<
   string, // Pokemon as a simple string ID
   string, // Nature as a string
-  SubskillInstance, // Simple representation of subskills
-  IngredientInstance // simple representation of ingredients
+  SubskillInstanceDto, // Simple representation of subskills
+  IngredientInstanceDto // simple representation of ingredients
 >;
 
 export interface PokemonInstanceMeta {
@@ -30,9 +30,9 @@ export interface PokemonInstanceMeta {
   gender: PokemonGender;
   name: string;
 }
-export type PokemonInstanceWithMeta = PokemonInstance & PokemonInstanceMeta;
+export type PokemonInstanceWithMeta = PokemonInstanceDto & PokemonInstanceMeta;
 
-export interface PokemonInstanceExt
-  extends PokemonInstanceBase<Pokemon, Nature, SubskillInstanceExt, IngredientInstanceExt>, PokemonInstanceMeta {
+export interface PokemonInstance
+  extends PokemonInstanceBase<Pokemon, Nature, SubskillInstance, IngredientInstance>, PokemonInstanceMeta {
   rp: number;
 }

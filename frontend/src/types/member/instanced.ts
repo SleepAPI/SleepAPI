@@ -6,7 +6,7 @@ import type {
   IngredientSetSimple,
   IslandInstance,
   MemberProduction,
-  PokemonInstanceExt,
+  PokemonInstance,
   RecipeType
 } from 'sleepapi-common'
 
@@ -22,13 +22,13 @@ export interface PerformanceDetails {
   ingredient: number
 }
 
-export interface MemberProductionExt {
-  member: PokemonInstanceExt
+export interface MemberWithProduction {
+  member: PokemonInstance
   production: MemberProduction
   iv?: PerformanceDetails
 }
 
-export interface TeamProductionExt {
+export interface TeamProduction {
   team: TeamCombinedProduction
   members: MemberProduction[]
 }
@@ -46,7 +46,7 @@ export interface TeamInstance {
   version: number
   members: (string | undefined)[]
   memberIvs: Record<string, PerformanceDetails | undefined>
-  production?: TeamProductionExt
+  production?: TeamProduction
 }
 
 export const MAX_TEAMS = 10

@@ -6,7 +6,7 @@ import type {
 } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import { TeamSimulator } from '@src/services/simulation-service/team-simulator/team-simulator.js';
 import { mocks } from '@src/vitest/index.js';
-import type { Berry, PokemonSpecialty, PokemonWithIngredients, TeamMemberExt, TeamSettingsExt } from 'sleepapi-common';
+import type { Berry, PokemonSpecialty, PokemonWithIngredients, TeamMember, TeamSettings } from 'sleepapi-common';
 import {
   BASE_FAVORED_BERRY_MULTIPLIER,
   BerryBurstDisguise,
@@ -45,8 +45,8 @@ const mockPokemonWithIngredients: PokemonWithIngredients = {
     { amount: 1, ingredient: ingredient.SLOWPOKE_TAIL }
   ]
 };
-const mockSettings: TeamSettingsExt = mocks.teamSettingsExt({ includeCooking: true });
-const mockMembers: TeamMemberExt[] = [
+const mockSettings: TeamSettings = mocks.teamSettings({ includeCooking: true });
+const mockMembers: TeamMember[] = [
   {
     pokemonWithIngredients: mockPokemonWithIngredients,
     settings: {
@@ -90,12 +90,12 @@ describe('TeamSimulator', () => {
   });
 
   it('shall calculate production with uneven sleep times', () => {
-    const settings: TeamSettingsExt = mocks.teamSettingsExt({
+    const settings: TeamSettings = mocks.teamSettings({
       includeCooking: true,
       wakeup: parseTime('06:01')
     });
 
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       {
         pokemonWithIngredients: {
           pokemon: PINSIR,
@@ -129,7 +129,7 @@ describe('TeamSimulator', () => {
   });
 
   it('shall calculate team with multiple members', () => {
-    const mockMember: TeamMemberExt = {
+    const mockMember: TeamMember = {
       pokemonWithIngredients: mockPokemonWithIngredients,
       settings: {
         carrySize: 10,
@@ -143,7 +143,7 @@ describe('TeamSimulator', () => {
       }
     };
 
-    const members: TeamMemberExt[] = [mockMember, mockMember, mockMember, mockMember, mockMember];
+    const members: TeamMember[] = [mockMember, mockMember, mockMember, mockMember, mockMember];
     const simulator = new TeamSimulator({ settings: mockSettings, members, iterations: 1 });
 
     simulator.simulate();
@@ -174,7 +174,7 @@ describe('TeamSimulator', () => {
   });
 
   it('team members shall affect each other', () => {
-    const mockMember: TeamMemberExt = {
+    const mockMember: TeamMember = {
       pokemonWithIngredients: mockPokemonWithIngredients,
       settings: {
         carrySize: 10,
@@ -192,7 +192,7 @@ describe('TeamSimulator', () => {
       skillPercentage: 100,
       skill: EnergyForEveryoneS
     };
-    const mockMemberSupport: TeamMemberExt = {
+    const mockMemberSupport: TeamMember = {
       pokemonWithIngredients: {
         ...mockPokemonWithIngredients,
         pokemon: mockMemberSupportPokemon
@@ -209,7 +209,7 @@ describe('TeamSimulator', () => {
       }
     };
 
-    const members: TeamMemberExt[] = [mockMember, mockMemberSupport];
+    const members: TeamMember[] = [mockMember, mockMemberSupport];
     const simulator = new TeamSimulator({ settings: mockSettings, members, iterations: 1 });
 
     simulator.simulate();
@@ -229,7 +229,7 @@ describe('TeamSimulator', () => {
       skillPercentage: 100,
       skill: EnergyForEveryoneS
     };
-    const mockMemberSupport: TeamMemberExt = {
+    const mockMemberSupport: TeamMember = {
       pokemonWithIngredients: {
         ...mockPokemonWithIngredients,
         pokemon: mockMemberSupportPokemon
@@ -246,7 +246,7 @@ describe('TeamSimulator', () => {
       }
     };
 
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       mockMemberSupport,
       mockMemberSupport,
       mockMemberSupport,
@@ -281,7 +281,7 @@ describe('TeamSimulator', () => {
         pityProcThreshold: calculatePityProcThreshold('skill', 3000)
       }
     };
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       {
         pokemonWithIngredients: mockMember,
         settings: {
@@ -326,7 +326,7 @@ describe('TeamSimulator', () => {
       // 100% chance to activate skill per help
       skillPercentage: 100
     };
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       {
         pokemonWithIngredients: {
           ...mockPokemonWithIngredients,
@@ -361,7 +361,7 @@ describe('TeamSimulator', () => {
   });
 
   describe('expert mode event modifiers', () => {
-    const settings: TeamSettingsExt = mocks.teamSettingsExt({
+    const settings: TeamSettings = mocks.teamSettings({
       includeCooking: false,
       island: commonMocks.islandInstance({
         expert: true,
@@ -374,7 +374,7 @@ describe('TeamSimulator', () => {
       })
     });
 
-    const buildMember = (memberBerry: Berry): TeamMemberExt => {
+    const buildMember = (memberBerry: Berry): TeamMember => {
       const pokemon = commonMocks.mockPokemon({
         berry: memberBerry,
         frequency: 1800,
@@ -434,8 +434,8 @@ describe('TeamSimulator', () => {
     const buildExpertModeSettings = (params: {
       randomBonus: 'berry' | 'ingredient' | 'skill';
       areaBonus?: number;
-    }): TeamSettingsExt =>
-      mocks.teamSettingsExt({
+    }): TeamSettings =>
+      mocks.teamSettings({
         includeCooking: false,
         island: commonMocks.islandInstance({
           expert: true,
@@ -453,7 +453,7 @@ describe('TeamSimulator', () => {
       carrySize: number;
       specialty: PokemonSpecialty;
       externalId: string;
-    }): TeamMemberExt => {
+    }): TeamMember => {
       const pokemon = commonMocks.mockPokemon({
         carrySize: params.carrySize,
         frequency: 3600,

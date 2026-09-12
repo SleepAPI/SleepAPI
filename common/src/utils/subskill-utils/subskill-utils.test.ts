@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { PokemonInstanceExt } from '../../types/instance/pokemon-instance';
+import type { PokemonInstance } from '../../types/instance/pokemon-instance';
 import type { Subskill } from '../../types/subskill/subskill';
 import {
   DREAM_SHARD_BONUS,
@@ -131,7 +131,7 @@ describe('filterMembersWithSubskill', () => {
       subskills: [{ subskill: { name: 'Other Subskill' } as Subskill, level: 10 }],
       level: 10
     }
-  ] as PokemonInstanceExt[];
+  ] as PokemonInstance[];
 
   it('shall return members with the specified subskill and level less than or equal to member level', () => {
     expect(filterMembersWithSubskill(members, subskill)).toEqual([
@@ -158,7 +158,7 @@ describe('filterMembersWithSubskill', () => {
         subskills: [{ subskill: highLevelSubskill, level: 20 }],
         level: 10
       }
-    ] as PokemonInstanceExt[];
+    ] as PokemonInstance[];
     expect(filterMembersWithSubskill(highLevelMembers, highLevelSubskill)).toEqual([]);
   });
 });

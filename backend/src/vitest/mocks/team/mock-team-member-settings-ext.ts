@@ -1,7 +1,7 @@
-import type { TeamMemberSettings, TeamMemberSettingsExt, TeamMemberSettingsResult } from 'sleepapi-common';
+import type { TeamMemberSettings, TeamMemberSettingsDto, TeamMemberSettingsResult } from 'sleepapi-common';
 import { nature } from 'sleepapi-common';
 
-export function teamMemberSettings(attrs?: Partial<TeamMemberSettings>): TeamMemberSettings {
+export function teamMemberSettingsDto(attrs?: Partial<TeamMemberSettingsDto>): TeamMemberSettingsDto {
   return {
     carrySize: 0,
     externalId: 'mock id',
@@ -15,7 +15,7 @@ export function teamMemberSettings(attrs?: Partial<TeamMemberSettings>): TeamMem
   };
 }
 
-export function teamMemberSettingsExt(attrs?: Partial<TeamMemberSettingsExt>): TeamMemberSettingsExt {
+export function teamMemberSettings(attrs?: Partial<TeamMemberSettings>): TeamMemberSettings {
   return {
     carrySize: 1,
     externalId: 'mock id',

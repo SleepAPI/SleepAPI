@@ -5,7 +5,7 @@ import {
 } from '@src/services/api-service/production/production-service.js';
 import { defaultUserRecipes } from '@src/services/simulation-service/team-simulator/cooking-state/cooking-utils.js';
 import { MOCKED_OPTIMAL_PRODUCTION_STATS } from '@src/utils/test-utils/defaults.js';
-import type { TeamMemberExt, TeamSettingsExt } from 'sleepapi-common';
+import type { TeamMember, TeamSettings } from 'sleepapi-common';
 import {
   BULBASAUR,
   CHARMANDER,
@@ -66,7 +66,7 @@ describe('calculatePokemonProduction', () => {
 
 describe('calculateTeam', () => {
   it('shall calculate production with uneven sleep times', () => {
-    const settings: TeamSettingsExt = {
+    const settings: TeamSettings = {
       bedtime: parseTime('21:30'),
       wakeup: parseTime('06:01'),
       camp: false,
@@ -76,7 +76,7 @@ describe('calculateTeam', () => {
       island: { ...DEFAULT_ISLAND }
     };
 
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       {
         pokemonWithIngredients: {
           pokemon: PINSIR,
@@ -133,7 +133,7 @@ describe('calculateTeam', () => {
 
 describe('calculateIv', () => {
   it('should calculate IVs for a given team and variants', () => {
-    const settings: TeamSettingsExt = {
+    const settings: TeamSettings = {
       bedtime: parseTime('22:00'),
       wakeup: parseTime('06:00'),
       camp: true,
@@ -143,7 +143,7 @@ describe('calculateIv', () => {
       island: { ...DEFAULT_ISLAND }
     };
 
-    const members: TeamMemberExt[] = [
+    const members: TeamMember[] = [
       {
         pokemonWithIngredients: {
           pokemon: BULBASAUR,
@@ -162,7 +162,7 @@ describe('calculateIv', () => {
       }
     ];
 
-    const variants: TeamMemberExt[] = [
+    const variants: TeamMember[] = [
       {
         pokemonWithIngredients: {
           pokemon: CHARMANDER,

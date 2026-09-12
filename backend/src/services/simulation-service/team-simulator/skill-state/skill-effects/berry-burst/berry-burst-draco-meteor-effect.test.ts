@@ -13,7 +13,7 @@ describe('BerryBurstDracoMeteorEffect', () => {
 
   beforeEach(() => {
     memberState = mocks.memberState({
-      member: mocks.teamMemberExt({
+      member: mocks.teamMember({
         pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: LATIOS })
       })
     });
@@ -64,7 +64,7 @@ describe('BerryBurstDracoMeteorEffect', () => {
     const preExistingSkillProduce = mocks.produce();
     memberState.otherMembers = [
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: LATIAS })
         })
       })
@@ -150,28 +150,28 @@ describe('BerryBurstDracoMeteorEffect', () => {
 
     memberState.otherMembers = [
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'same-berry-1', berry: LATIOS.berry })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'same-berry-2', berry: LATIOS.berry })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'off-berry-1' })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'off-berry-2' })
           })
@@ -222,26 +222,26 @@ describe('BerryBurstDracoMeteorEffect', () => {
 
     memberState.otherMembers = [
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: LATIAS })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'same-berry-1', berry: LATIOS.berry })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'same-berry-2', berry: LATIOS.berry })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'same-berry-3', berry: LATIOS.berry })
           })
@@ -293,24 +293,24 @@ describe('BerryBurstDracoMeteorEffect', () => {
     const duplicateSpecies = mocks.mockPokemon({ name: 'same-berry-1', berry: LATIOS.berry });
     memberState.otherMembers = [
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: duplicateSpecies })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: duplicateSpecies })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'off-berry-1' })
           })
         })
       }),
       mocks.memberState({
-        member: mocks.teamMemberExt({
+        member: mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: 'off-berry-2' })
           })

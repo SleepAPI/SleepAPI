@@ -27,7 +27,7 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
     const expectedSelfBerryAmount = EnergyForEveryoneSLunarBlessing.selfBerries[unique][skillLevel - 1];
     const expectedTeamBerryAmount = EnergyForEveryoneSLunarBlessing.teamBerries[unique][skillLevel - 1];
 
-    const mockTeam = [mocks.teamMemberExt()];
+    const mockTeam = [mocks.teamMember()];
     Object.defineProperty(memberState, 'team', {
       get: () => mockTeam
     });
@@ -71,7 +71,7 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
     const team = Array(5)
       .fill(null)
       .map((_, index) =>
-        mocks.teamMemberExt({
+        mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: `member ${index}` })
           })
@@ -143,7 +143,7 @@ describe('EnergyForEveryoneSLunarBlessingEffect', () => {
     const largeTeam = Array(MAX_TEAM_SIZE + 2)
       .fill(null)
       .map((_, index) =>
-        mocks.teamMemberExt({
+        mocks.teamMember({
           pokemonWithIngredients: mocks.pokemonWithIngredients({
             pokemon: mocks.mockPokemon({ name: `member ${index}` })
           })

@@ -17,8 +17,8 @@ import {
   type CalculateIvResponse,
   type GetTeamResponse,
   type MemberProductionBase,
-  type PokemonInstanceExt,
-  type TeamSettings,
+  type PokemonInstance,
+  type TeamSettingsDto,
   type UpsertTeamMetaRequest
 } from 'sleepapi-common'
 
@@ -244,7 +244,7 @@ describe('createOrUpdateMember', () => {
   it('should call server to create or update a member and return the updated member', async () => {
     const teamIndex = 0
     const memberIndex = 0
-    const member: PokemonInstanceExt = mocks.createMockPokemon()
+    const member: PokemonInstance = mocks.createMockPokemon()
     serverAxios.put = vi.fn().mockResolvedValueOnce({
       data: {
         index: 1,
@@ -357,8 +357,8 @@ describe('deleteTeam', () => {
 
 describe('calculateProduction', () => {
   it('should call server to calculate team production', async () => {
-    const members: PokemonInstanceExt[] = [mocks.createMockPokemon()]
-    const settings: TeamSettings = {
+    const members: PokemonInstance[] = [mocks.createMockPokemon()]
+    const settings: TeamSettingsDto = {
       camp: false,
       bedtime: '21:00',
       wakeup: '07:00',

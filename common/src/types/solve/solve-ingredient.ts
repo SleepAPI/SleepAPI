@@ -1,8 +1,8 @@
 import type { TeamMemberWithProduce } from '../../types/team/member';
-import type { SolveSettings } from '../../types/team/team';
+import type { SolveSettingsDto } from '../../types/team/team';
 
 export interface SolveIngredientRequest {
-  settings: SolveSettings;
+  settings: SolveSettingsDto;
 }
 
 export interface SolveIngredientResponse {

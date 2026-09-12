@@ -44,14 +44,14 @@
 
 <script lang="ts">
 import { mainskillImage } from '@/services/utils/image-utils'
-import { type PokemonInstanceExt } from 'sleepapi-common'
+import { type PokemonInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'MainskillButton',
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },
@@ -59,7 +59,7 @@ export default {
   setup() {
     return { mainskillImage }
   },
-  data(this: { pokemonInstance: PokemonInstanceExt }) {
+  data(this: { pokemonInstance: PokemonInstance }) {
     return {
       mainskillLevel: this.pokemonInstance.skillLevel,
       menu: false

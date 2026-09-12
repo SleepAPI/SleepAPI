@@ -2,7 +2,7 @@ import type { Static } from '@sinclair/typebox';
 import { Type } from '@sinclair/typebox';
 import { AbstractDAO, DBWithVersionedIdSchema } from '@src/database/dao/abstract-dao.js';
 import { IngredientError } from '@src/domain/error/ingredient/ingredient-error.js';
-import { getPokemon, type IngredientInstance, type SubskillInstance } from 'sleepapi-common';
+import { getPokemon, type IngredientInstanceDto, type SubskillInstanceDto } from 'sleepapi-common';
 
 const DBPokemonSchema = Type.Composite([
   DBWithVersionedIdSchema,
@@ -36,8 +36,8 @@ class PokemonDAOImpl extends AbstractDAO<typeof DBPokemonSchema> {
   public tableName = 'pokemon';
   public schema = DBPokemonSchema;
 
-  public filterFilledSubskills(subskills: DBPokemon): SubskillInstance[] {
-    const filledSubskills: SubskillInstance[] = [];
+  public filterFilledSubskills(subskills: DBPokemon): SubskillInstanceDto[] {
+    const filledSubskills: SubskillInstanceDto[] = [];
 
     if (subskills.subskill_10) {
       filledSubskills.push({ level: 10, subskill: subskills.subskill_10 });
@@ -58,11 +58,11 @@ class PokemonDAOImpl extends AbstractDAO<typeof DBPokemonSchema> {
     return filledSubskills;
   }
 
-  public subskillForLevel(level: number, subskills: SubskillInstance[]) {
+  public subskillForLevel(level: number, subskills: SubskillInstanceDto[]) {
     return subskills.find((subskill) => subskill.level === level)?.subskill;
   }
 
-  public ingredientForLevel(level: number, ingredients: IngredientInstance[]) {
+  public ingredientForLevel(level: number, ingredients: IngredientInstanceDto[]) {
     const ingredient = ingredients.find((ingredient) => ingredient.level === level)?.name;
     if (!ingredient) {
       throw new IngredientError('Missing required ingredient in upsert member request for level: ' + level);
@@ -70,7 +70,7 @@ class PokemonDAOImpl extends AbstractDAO<typeof DBPokemonSchema> {
     return ingredient;
   }
 
-  public filterChosenIngredientList(pokemonInstance: DBPokemon): IngredientInstance[] {
+  public filterChosenIngredientList(pokemonInstance: DBPokemon): IngredientInstanceDto[] {
     const { ingredient_0, ingredient_30, ingredient_60, pokemon } = pokemonInstance;
     const member = getPokemon(pokemon);
     return [

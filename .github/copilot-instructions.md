@@ -148,7 +148,7 @@ Example:
 ```typescript
 // Good - using mock factory
 import { mocks } from '@/vitest';
-const pokemon = mocks.pokemonInstanceExt({ level: 50 });
+const pokemon = mocks.pokemonInstance({ level: 50 });
 
 // Bad - hard-coded inline mock
 const pokemon = { level: 50, name: 'Test' } as any;

@@ -4,7 +4,7 @@ import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
 import { useUserStore } from '@/stores/user-store'
 import { UnexpectedError } from '@/types/errors/unexpected-error'
-import { type TeamCombinedProduction, type TeamInstance, type TeamProductionExt } from '@/types/member/instanced'
+import { type TeamCombinedProduction, type TeamInstance, type TeamProduction } from '@/types/member/instanced'
 import {
   berry,
   DEFAULT_ISLAND,
@@ -20,10 +20,10 @@ import {
   type GetTeamsResponse,
   type IngredientSet,
   type IslandInstance,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type PokemonInstanceIdentity,
   type TeamAreaDTO,
-  type TeamSettings,
+  type TeamSettingsDto,
   type UpsertTeamMemberResponse,
   type UpsertTeamMetaRequest,
   type UpsertTeamMetaResponse
@@ -36,7 +36,7 @@ class TeamServiceImpl {
     return response.data
   }
 
-  public async createOrUpdateMember(params: { teamIndex: number; memberIndex: number; member: PokemonInstanceExt }) {
+  public async createOrUpdateMember(params: { teamIndex: number; memberIndex: number; member: PokemonInstance }) {
     const { teamIndex, memberIndex, member } = params
 
     const request = PokemonInstanceUtils.toUpsertTeamMemberRequest(member)
@@ -80,7 +80,7 @@ class TeamServiceImpl {
           if (!serverMember) {
             members.push(undefined)
           } else {
-            const cachedMember = PokemonInstanceUtils.toPokemonInstanceExt(serverMember)
+            const cachedMember = PokemonInstanceUtils.toPokemonInstance(serverMember)
             pokemonStore.upsertLocalPokemon(cachedMember)
             members.push(cachedMember.externalId)
           }
@@ -138,9 +138,9 @@ class TeamServiceImpl {
   }
 
   public async calculateProduction(params: {
-    members: PokemonInstanceExt[]
-    settings: TeamSettings
-  }): Promise<TeamProductionExt | undefined> {
+    members: PokemonInstance[]
+    settings: TeamSettingsDto
+  }): Promise<TeamProduction | undefined> {
     const { members, settings } = params
     if (members.length === 0) {
       return undefined
@@ -180,7 +180,7 @@ class TeamServiceImpl {
     }
     const currentTeam = teamStore.getCurrentTeam
 
-    const members: PokemonInstanceExt[] = []
+    const members: PokemonInstance[] = []
     for (const memberId of currentTeam.members) {
       if (memberId && memberId !== teamStore.getCurrentMember) {
         const member = pokemonStore.getPokemon(memberId)
@@ -188,7 +188,7 @@ class TeamServiceImpl {
       }
     }
 
-    const settings: TeamSettings = {
+    const settings: TeamSettingsDto = {
       camp: currentTeam.camp,
       bedtime: currentTeam.bedtime,
       wakeup: currentTeam.wakeup,

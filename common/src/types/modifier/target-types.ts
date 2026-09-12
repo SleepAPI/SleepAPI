@@ -1,8 +1,8 @@
-import type { PokemonInstanceExt } from '../instance';
-import type { MemberStrength, TeamMemberExt } from '../team';
+import type { PokemonInstance } from '../instance';
+import type { MemberStrength, TeamMember } from '../team';
 
-export type ModifierTargetTypeDTO = 'PokemonInstance' | 'MemberStrength' | 'TeamMember';
-export type ModifierTargetType = PokemonInstanceExt | MemberStrength | TeamMemberExt;
+export type ModifierTargetTypeDTO = 'PokemonInstanceDto' | 'MemberStrengthDto' | 'TeamMemberDto';
+export type ModifierTargetType = PokemonInstance | MemberStrength | TeamMember;
 
 /**
  * Used for mapping API strings to actual types
@@ -13,12 +13,12 @@ export type ModifierTargetType = PokemonInstanceExt | MemberStrength | TeamMembe
  * 3. Add the mapping entry here
  *
  * Example for adding a new "Item" type:
- * - ModifierTargetTypeDTO = 'Pokemon' | 'PokemonInstanceExt' | 'Item'
- * - ModifierTargetType = Pokemon | PokemonInstanceExt | Item
- * - TargetTypeMap = { Pokemon: Pokemon, PokemonInstanceExt: PokemonInstanceExt, Item: Item } *
+ * - ModifierTargetTypeDTO = 'PokemonDto' | 'PokemonInstanceDto' | 'ItemDto'
+ * - ModifierTargetType = Pokemon | PokemonInstance | Item
+ * - TargetTypeMap = { PokemonDto: Pokemon, PokemonInstanceDto: PokemonInstance, ItemDto: Item } *
  */
 export type TargetTypeMap = {
-  PokemonInstance: PokemonInstanceExt;
-  MemberStrength: MemberStrength;
-  TeamMember: TeamMemberExt;
+  PokemonInstanceDto: PokemonInstance;
+  MemberStrengthDto: MemberStrength;
+  TeamMemberDto: TeamMember;
 };

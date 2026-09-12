@@ -4,5 +4,5 @@ import { createPreGeneratedRandom } from '@src/utils/random-utils/pre-generated-
 import { mocks } from '@src/vitest/index.js';
 
 export function cookingState(provided?: CookingState): CookingState {
-  return provided ?? new CookingState(mocks.teamSettingsExt(), defaultUserRecipes(), createPreGeneratedRandom());
+  return provided ?? new CookingState(mocks.teamSettings(), defaultUserRecipes(), createPreGeneratedRandom());
 }

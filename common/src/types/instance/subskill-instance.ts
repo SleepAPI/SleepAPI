@@ -1,10 +1,10 @@
 import type { Subskill } from '../subskill/subskill';
 
-export interface SubskillInstance {
+export interface SubskillInstanceDto {
   level: number;
   subskill: string;
 }
-export interface SubskillInstanceExt {
+export interface SubskillInstance {
   level: number;
   subskill: Subskill;
 }

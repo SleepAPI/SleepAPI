@@ -1,7 +1,7 @@
 import { BASHFUL } from '../../../types/nature';
-import type { TeamMemberSettingsExt } from '../../../types/team/member';
+import type { TeamMemberSettings } from '../../../types/team/member';
 
-export function teamMemberSettingsExt(attrs?: Partial<TeamMemberSettingsExt>): TeamMemberSettingsExt {
+export function teamMemberSettings(attrs?: Partial<TeamMemberSettings>): TeamMemberSettings {
   return {
     carrySize: 1,
     externalId: 'mock id',

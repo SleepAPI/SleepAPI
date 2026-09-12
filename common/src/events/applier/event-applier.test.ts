@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import type { PokemonInstanceExt } from '../../types';
+import type { PokemonInstance } from '../../types';
 import type { Event } from '../../types/events/event-types';
 import { ChargeEnergyS } from '../../types/mainskill/mainskills/charge-energy-s';
 import type { ExternalCondition, Modifier } from '../../types/modifier/modifier';
 import { PathReference } from '../../types/modifier/path-reference';
 import type { ModifierTargetType } from '../../types/modifier/target-types';
 import { mockPokemon } from '../../vitest/mocks/pokemon/mock-pokemon';
-import { pokemonInstanceExt } from '../../vitest/mocks/pokemon/mock-pokemon-instance';
+import { pokemonInstance } from '../../vitest/mocks/pokemon/mock-pokemon-instance';
 import { EventApplier } from './event-applier';
 
 describe('EventApplier', () => {
   describe('applyModifiers', () => {
     it('should apply a simple modifier to a PokemonInstance', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -20,7 +20,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9
@@ -34,7 +34,7 @@ describe('EventApplier', () => {
     });
 
     it('should not apply modifiers with non-existent paths', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -42,7 +42,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             // @ts-expect-error - Testing non-existent property
             leftValue: 'nonExistentProperty',
             operation: '*',
@@ -57,7 +57,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply modifier with condition when condition is met', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400, specialty: 'skill' })
       });
       const event: Event = {
@@ -65,7 +65,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -87,7 +87,7 @@ describe('EventApplier', () => {
     });
 
     it('should not apply modifier when condition is not met', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400, specialty: 'skill' })
       });
       const event: Event = {
@@ -95,7 +95,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -117,7 +117,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply all modifiers when multiple conditions are met', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400, specialty: 'skill' })
       });
       const event: Event = {
@@ -125,7 +125,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -152,7 +152,7 @@ describe('EventApplier', () => {
     });
 
     it('should not apply modifier when any condition in conditions array is not met', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400, specialty: 'skill' })
       });
       const event: Event = {
@@ -160,7 +160,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -187,7 +187,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle path reference in condition value', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         level: 50,
         skillLevel: 3,
         pokemon: mockPokemon({
@@ -200,7 +200,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -222,7 +222,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply multiple operations correctly', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -230,13 +230,13 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '+',
             rightValue: 100
           },
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.5
@@ -251,7 +251,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle = operation', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -259,7 +259,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '=',
             rightValue: 1000
@@ -273,7 +273,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle - operation', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -281,7 +281,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '-',
             rightValue: 100
@@ -295,7 +295,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle / operation', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -303,7 +303,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '/',
             rightValue: 2
@@ -317,7 +317,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply constrained subtraction with min floor', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -325,7 +325,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '-',
             rightValue: {
@@ -343,7 +343,7 @@ describe('EventApplier', () => {
     });
 
     it("should not apply modifiers that don't match target type", () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -351,7 +351,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'MemberStrength', // Different type
+            type: 'MemberStrengthDto', // Different type
             // @ts-expect-error - Testing type mismatch
             leftValue: 'memberProduction.berries',
             operation: '*',
@@ -367,7 +367,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply constrained addition with max ceiling', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -375,7 +375,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '+',
             rightValue: {
@@ -393,7 +393,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply constrained addition with PathReference max', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         level: 50,
         skillLevel: 3,
         pokemon: mockPokemon({
@@ -406,7 +406,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'skillLevel',
             operation: '+',
             rightValue: {
@@ -424,7 +424,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply constrained subtraction with min floor on skill level', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         level: 50,
         skillLevel: 3,
         pokemon: mockPokemon({
@@ -437,7 +437,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'skillLevel',
             operation: '-',
             rightValue: {
@@ -455,7 +455,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply operation with both min and max constraints', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 1000 })
       });
       const event: Event = {
@@ -463,7 +463,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: {
@@ -482,7 +482,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle complex modifier without constraint', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -490,7 +490,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: {
@@ -506,7 +506,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle in operator in conditions', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ specialty: 'skill' })
       });
       const event: Event = {
@@ -514,7 +514,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.specialty',
             operation: '=',
             rightValue: 'berry',
@@ -536,7 +536,7 @@ describe('EventApplier', () => {
     });
 
     it('should handle not-in operator in conditions', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ specialty: 'all' })
       });
       const event: Event = {
@@ -544,7 +544,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.specialty',
             operation: '=',
             rightValue: 'berry',
@@ -566,7 +566,7 @@ describe('EventApplier', () => {
     });
 
     it('should apply external conditions correctly', () => {
-      const pokemon = pokemonInstanceExt({
+      const pokemon = pokemonInstance({
         pokemon: mockPokemon({ frequency: 2400 })
       });
       const event: Event = {
@@ -574,7 +574,7 @@ describe('EventApplier', () => {
         description: 'Test',
         modifiers: [
           {
-            type: 'PokemonInstance',
+            type: 'PokemonInstanceDto',
             leftValue: 'pokemon.frequency',
             operation: '*',
             rightValue: 0.9,
@@ -590,7 +590,7 @@ describe('EventApplier', () => {
       };
 
       // Mock external condition to return true
-      const applyModifiersWithExternals = (target: PokemonInstanceExt, modifiers: Modifier<ModifierTargetType>[]) => {
+      const applyModifiersWithExternals = (target: PokemonInstance, modifiers: Modifier<ModifierTargetType>[]) => {
         // This is a simplified version - actual implementation would need to handle externals
         return EventApplier.applyModifiers(target, modifiers);
       };

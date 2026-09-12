@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { rarityColor } from '@/services/utils/color-utils'
-import { type Subskill, type SubskillInstanceExt } from 'sleepapi-common'
+import { type Subskill, type SubskillInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
@@ -34,7 +34,7 @@ export default {
       default: undefined
     },
     selectedSubskills: {
-      type: Array<SubskillInstanceExt>,
+      type: Array<SubskillInstance>,
       required: true,
       default: () => []
     }
@@ -48,7 +48,7 @@ export default {
     },
     level() {
       return this.selectedSubskills.find(
-        (ssExt) => ssExt.subskill.name.toLowerCase() === this.subskill.name.toLowerCase()
+        (subskillInstance) => subskillInstance.subskill.name.toLowerCase() === this.subskill.name.toLowerCase()
       )?.level
     }
   }

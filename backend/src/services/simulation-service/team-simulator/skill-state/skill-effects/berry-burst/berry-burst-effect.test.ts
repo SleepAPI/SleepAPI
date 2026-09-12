@@ -66,12 +66,12 @@ describe('BerryBurstEffect', () => {
   it('should add berries to inventory correctly', () => {
     memberState = mocks.memberState({
       team: [
-        mocks.teamMemberExt({
-          settings: mocks.teamMemberSettingsExt({ externalId: 'member1' }),
+        mocks.teamMember({
+          settings: mocks.teamMemberSettings({ externalId: 'member1' }),
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: BUTTERFREE })
         }),
-        mocks.teamMemberExt({
-          settings: mocks.teamMemberSettingsExt({ externalId: 'member1' }),
+        mocks.teamMember({
+          settings: mocks.teamMemberSettings({ externalId: 'member1' }),
           pokemonWithIngredients: mocks.pokemonWithIngredients({ pokemon: NINETALES_ALOLAN })
         })
       ]

@@ -98,7 +98,7 @@ import { ingredientImage } from '@/services/utils/image-utils'
 import { TimeUtils } from '@/services/utils/time-utils'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useTeamStore } from '@/stores/team/team-store'
-import type { MemberProductionExt } from '@/types/member/instanced'
+import type { MemberWithProduction } from '@/types/member/instanced'
 import { calculateRibbonCarrySize, calculateSubskillCarrySize, limitSubSkillsToLevel, MathUtils } from 'sleepapi-common'
 import { computed, defineComponent, ref, type PropType } from 'vue'
 
@@ -109,11 +109,11 @@ export default defineComponent({
   },
   props: {
     pokemonProduction: {
-      type: Object as PropType<MemberProductionExt>,
+      type: Object as PropType<MemberWithProduction>,
       required: true
     }
   },
-  setup(props: { pokemonProduction: MemberProductionExt }) {
+  setup(props: { pokemonProduction: MemberWithProduction }) {
     const teamStore = useTeamStore()
     const pokemonStore = usePokemonStore()
 

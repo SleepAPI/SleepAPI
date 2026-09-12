@@ -1,7 +1,7 @@
 import type { IngredientSetSimple } from '../ingredient';
 import type { PokemonWithIngredientsSimple } from '../pokemon/pokemon';
 import type { Recipe } from '../recipe/recipe';
-import type { TeamMemberSettings } from '../team';
+import type { TeamMemberSettingsDto } from '../team';
 import type { Tier } from './tier';
 
 export interface TeamMemberProduction extends PokemonWithIngredientsSimple {
@@ -29,7 +29,7 @@ export interface PokemonWithRecipeContributions {
     totalIngredients: Float32Array;
     critMultiplier: number;
     averageWeekdayPotSize: number;
-    settings: TeamMemberSettings;
+    settings: TeamMemberSettingsDto;
   };
   contributions: RecipeContributionSimple[];
 }

@@ -7,8 +7,8 @@ import { mount } from '@vue/test-utils'
 import { GENGAR, MathUtils, berry, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const baseProduction = mocks.createMockMemberProductionExt().production
-const mockMember = mocks.createMockMemberProductionExt({
+const baseProduction = mocks.createMockMemberWithProduction().production
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: GENGAR }),
   production: {
     ...baseProduction,

@@ -1,11 +1,11 @@
 import { pokemonWithIngredients } from '@src/vitest/mocks/pokemon/mock-pokemon-with-ingredients.js';
-import { teamMemberSettingsExt } from '@src/vitest/mocks/team/mock-team-member-settings-ext.js';
-import type { TeamMemberExt } from 'sleepapi-common';
+import { teamMemberSettings } from '@src/vitest/mocks/team/mock-team-member-settings-ext.js';
+import type { TeamMember } from 'sleepapi-common';
 
-export function teamMemberExt(attrs?: Partial<TeamMemberExt>): TeamMemberExt {
+export function teamMember(attrs?: Partial<TeamMember>): TeamMember {
   return {
     pokemonWithIngredients: pokemonWithIngredients(),
-    settings: teamMemberSettingsExt(),
+    settings: teamMemberSettings(),
     ...attrs
   };
 }

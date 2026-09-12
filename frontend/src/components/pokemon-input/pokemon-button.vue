@@ -19,20 +19,20 @@
 <script setup lang="ts">
 import { pokemonImage } from '@/services/utils/image-utils'
 import { useDialogStore } from '@/stores/dialog-store/dialog-store'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstance } from 'sleepapi-common'
 
 const props = defineProps<{
-  pokemonInstance: PokemonInstanceExt
+  pokemonInstance: PokemonInstance
 }>()
 
 const emit = defineEmits<{
-  'update-pokemon': [pokemon: PokemonInstanceExt]
+  'update-pokemon': [pokemon: PokemonInstance]
 }>()
 
 const dialogStore = useDialogStore()
 
 const openMenu = () => {
-  dialogStore.openPokemonSearch((pokemon: PokemonInstanceExt) => {
+  dialogStore.openPokemonSearch((pokemon: PokemonInstance) => {
     emit('update-pokemon', pokemon)
   }, props.pokemonInstance)
 }

@@ -6,7 +6,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { MathUtils, VAPOREON, compactNumber } from 'sleepapi-common'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({ pokemon: VAPOREON })
 })
 

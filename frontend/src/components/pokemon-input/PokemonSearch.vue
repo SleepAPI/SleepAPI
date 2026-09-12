@@ -156,20 +156,20 @@ import {
   COMPLETE_POKEDEX,
   hasSpecialty,
   type Pokemon,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type PokemonSpecialty
 } from 'sleepapi-common'
 import { computed, ref, watch, type ComputedRef, type Ref } from 'vue'
 
 const emit = defineEmits<{
   cancel: []
-  save: [pokemon: PokemonInstanceExt]
+  save: [pokemon: PokemonInstance]
 }>()
 
 export interface PokemonWithPath {
   path: string
   pokemon: Pokemon
-  instance: PokemonInstanceExt
+  instance: PokemonInstance
 }
 
 const pokemonSearchStore = usePokemonSearchStore()
@@ -332,7 +332,7 @@ const selectFirstOption = () => {
   }
 }
 
-const selectPokemon = (instance: PokemonInstanceExt) => {
+const selectPokemon = (instance: PokemonInstance) => {
   if (dialogStore.pokemonSearchCallback) {
     // If selecting from Pokebox, use the instance directly
     if (pokemonSearchStore.showPokebox) {
@@ -350,7 +350,7 @@ const selectPokemon = (instance: PokemonInstanceExt) => {
         emit('save', finalInstance)
       } else {
         // No current instance (new pokemon scenario) - open pokemon input for customization
-        dialogStore.openPokemonInput((updatedInstance: PokemonInstanceExt) => {
+        dialogStore.openPokemonInput((updatedInstance: PokemonInstance) => {
           dialogStore.handlePokemonSelected(updatedInstance)
           emit('save', updatedInstance)
         }, instance)
@@ -358,7 +358,7 @@ const selectPokemon = (instance: PokemonInstanceExt) => {
     }
   } else {
     // No callback - open pokemon input dialog for standalone usage
-    dialogStore.openPokemonInput((updatedInstance: PokemonInstanceExt) => {
+    dialogStore.openPokemonInput((updatedInstance: PokemonInstance) => {
       emit('save', updatedInstance)
     }, instance)
   }

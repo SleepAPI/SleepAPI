@@ -22,11 +22,11 @@ import type {
   PokemonWithIngredients,
   PokemonWithIngredientsIndexed,
   SimpleTeamResult,
-  SolveSettingsExt,
-  TeamMemberExt,
-  TeamMemberSettingsExt,
+  SolveSettings,
+  TeamMember,
+  TeamMemberSettings,
   TeamMemberSettingsResult,
-  TeamSettingsExt
+  TeamSettings
 } from 'sleepapi-common';
 import {
   CarrySizeUtils,
@@ -52,8 +52,8 @@ import {
 } from 'sleepapi-common';
 
 export function calculateProductionAll(params: {
-  settings: SolveSettingsExt;
-  userMembers: TeamMemberExt[];
+  settings: SolveSettings;
+  userMembers: TeamMember[];
   userRecipes: UserRecipes;
 }): {
   userProduction: SetCoverPokemonSetupWithSettings[];
@@ -135,7 +135,7 @@ export function calculateProductionAll(params: {
   return { userProduction, nonSupportProduction, supportProduction };
 }
 
-export function settingsToArraySubskills(settings: TeamMemberSettingsExt): TeamMemberSettingsResult {
+export function settingsToArraySubskills(settings: TeamMemberSettings): TeamMemberSettingsResult {
   return { ...settings, subskills: [...settings.subskills] };
 }
 
@@ -143,7 +143,7 @@ export function settingsToArraySubskills(settings: TeamMemberSettingsExt): TeamM
  * Filters Pokédex to return relevant Pokémon for the solve.
  * Currently only make sure we remove any legendaries (helper boost) if the included user Pokémon already have them
  */
-export function filterPokedex(members: TeamMemberExt[]) {
+export function filterPokedex(members: TeamMember[]) {
   const helperBoostIncludedMembers = new Set(
     members
       .filter((member) => member.pokemonWithIngredients.pokemon.skill.is(HelperBoost))
@@ -155,9 +155,9 @@ export function filterPokedex(members: TeamMemberExt[]) {
 }
 
 /**
- * Converts a Pokedex into an array of `TeamMemberExt` objects with optimal settings and ingredients.
+ * Converts a Pokedex into an array of `TeamMember` objects with optimal settings and ingredients.
  *
- * This function processes each Pokémon in the Pokedex to create a corresponding `TeamMemberExt` object.
+ * This function processes each Pokémon in the Pokedex to create a corresponding `TeamMember` object.
  * For each Pokémon, an `AAA` ingredient list is generated, and either ingredient-focused or skill-focused
  * settings are applied based on specific criteria.
  *
@@ -165,21 +165,21 @@ export function filterPokedex(members: TeamMemberExt[]) {
  * @param {boolean} params.support - Determines if support-focused settings should be applied.
  *        When `true`, skill-focused settings are prioritized for Pokémon with a supporting skill.
  * @param {number} params.level - The level to assign to all team members.
- * @returns {TeamMemberExt[]} An array of `TeamMemberExt` objects, where each object represents:
+ * @returns {TeamMember[]} An array of `TeamMember` objects, where each object represents:
  *        - Optimal settings for the Pokémon, based on its type and role.
  *        - A derived `AAA` ingredient list containing ingredients for different skill thresholds.
  *
  * ### Behavior:
- * - Generates one `TeamMemberExt` per Pokémon in the Pokedex.
+ * - Generates one `TeamMember` per Pokémon in the Pokedex.
  * - Applies ingredient-focused subskills and nature by default.
  * - Conditionally uses skill-focused subskills when all of the following are true:
  *   1. `params.support` is `true`.
  *   2. The Pokémon is classified as a skill specialist.
  *   3. The Pokémon's skill belongs to the set of predefined supporting skills (e.g., "E4E", "Extra Helpful").
  */
-export function pokedexToMembers(params: { pokedex: Pokedex; level: number; camp: boolean }): TeamMemberExt[] {
+export function pokedexToMembers(params: { pokedex: Pokedex; level: number; camp: boolean }): TeamMember[] {
   const { pokedex, level, camp } = params;
-  const pokedexAsMembers: TeamMemberExt[] = [];
+  const pokedexAsMembers: TeamMember[] = [];
 
   const INGREDIENT_SUPPORT_MAINSKILLS_SET = new Set(INGREDIENT_SUPPORT_MAINSKILLS.map((ms) => ms.name));
   // TODO: there needs to be a better way to do this
@@ -225,9 +225,9 @@ export function pokedexToMembers(params: { pokedex: Pokedex; level: number; camp
 }
 
 export function calculateNonSupportPokemon(params: {
-  nonSupportMembers: TeamMemberExt[];
-  userMembers: TeamMemberExt[];
-  settings: TeamSettingsExt;
+  nonSupportMembers: TeamMember[];
+  userMembers: TeamMember[];
+  settings: TeamSettings;
   userRecipes: UserRecipes;
 }): SimpleTeamResult[] {
   const { nonSupportMembers, userMembers, settings, userRecipes } = params;
@@ -300,9 +300,9 @@ export function calculateNonSupportPokemon(params: {
 }
 
 export function calculateSupportPokemon(params: {
-  supportMembers: TeamMemberExt[];
-  userMembers: TeamMemberExt[];
-  settings: TeamSettingsExt;
+  supportMembers: TeamMember[];
+  userMembers: TeamMember[];
+  settings: TeamSettings;
   userRecipes: UserRecipes;
 }): SimpleTeamResult[] {
   const { supportMembers, userMembers, settings, userRecipes } = params;
@@ -336,7 +336,7 @@ export function convertAAAToAllIngredientSets(
     skillIngredients: IngredientIndexToFloatAmount;
     critMultiplier: number;
     averageWeekdayPotSize: number;
-    settings: TeamMemberSettingsExt;
+    settings: TeamMemberSettings;
   }[]
 ): SetCoverPokemonSetupWithSettings[] {
   const result: SetCoverPokemonSetupWithSettings[] = [];
@@ -346,7 +346,7 @@ export function convertAAAToAllIngredientSets(
     const skillIngredientsPerMealWindow = aaaResult.skillIngredients._mutateUnary((ing) => ing / MEALS_IN_DAY);
 
     for (const ingredientList of getAllIngredientLists(pokemon, aaaResult.settings.level)) {
-      const memberWithIngList: TeamMemberExt = {
+      const memberWithIngList: TeamMember = {
         pokemonWithIngredients: { pokemon, ingredientList },
         settings: aaaResult.settings
       };
@@ -428,8 +428,8 @@ export function combineProduction(members: SetCoverPokemonSetup[]) {
   );
 }
 
-export function bogusMembers(nrOfMembers: number): TeamMemberExt[] {
-  const bogusMember: TeamMemberExt = mocks.teamMemberExt();
+export function bogusMembers(nrOfMembers: number): TeamMember[] {
+  const bogusMember: TeamMember = mocks.teamMember();
   return new Array(nrOfMembers).fill(bogusMember);
 }
 

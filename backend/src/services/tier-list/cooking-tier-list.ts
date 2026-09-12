@@ -23,8 +23,8 @@ import type {
   PokemonWithFinalContribution,
   PokemonWithTiering,
   Recipe,
-  SolveSettingsExt,
-  TeamMemberExt,
+  SolveSettings,
+  TeamMember,
   Tier,
   TierlistSettings,
   Time
@@ -126,7 +126,7 @@ class CookingTierlistImpl {
 
   private generate(settings: TierlistSettings, userRecipes: UserRecipes) {
     const { level, camp } = settings;
-    const solveSettings: SolveSettingsExt = {
+    const solveSettings: SolveSettings = {
       bedtime: this.bedtime,
       camp,
       level,
@@ -210,8 +210,8 @@ class CookingTierlistImpl {
   }
 
   private calculateProductionAll(params: {
-    solveSettings: SolveSettingsExt;
-    supportMember?: TeamMemberExt;
+    solveSettings: SolveSettings;
+    supportMember?: TeamMember;
     userRecipes: UserRecipes;
   }): {
     productionMap: Map<string, SetCoverPokemonSetupWithSettings>;
@@ -240,7 +240,7 @@ class CookingTierlistImpl {
   private getIngredientListsAndSupportMap(params: {
     pkmn: Pokemon;
     isSupport: boolean;
-    solveSettings: SolveSettingsExt;
+    solveSettings: SolveSettings;
     userRecipes: UserRecipes;
     defaultProductionMap: Map<string, SetCoverPokemonSetupWithSettings>;
   }): {
@@ -255,7 +255,7 @@ class CookingTierlistImpl {
     // if this is a support mon
     // re-calculate production for all other pokemon with this support mon included in team
     if (isSupport) {
-      const supportMember: TeamMemberExt = pokedexToMembers({
+      const supportMember: TeamMember = pokedexToMembers({
         pokedex: [pkmn],
         level: solveSettings.level,
         camp: solveSettings.camp

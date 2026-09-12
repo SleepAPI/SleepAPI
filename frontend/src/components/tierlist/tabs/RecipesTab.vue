@@ -254,7 +254,7 @@ import {
   MAX_RIBBON_LEVEL,
   MAX_TEAM_SIZE,
   uuid,
-  type PokemonInstanceExt,
+  type PokemonInstance,
   type PokemonWithTiering,
   type RecipeContribution,
   type TeamMemberProduction,
@@ -507,7 +507,7 @@ const simulateRecipe = async (contribution: RecipeContribution) => {
           saved: false,
           externalId: uuid.v4(),
           name: randomName(pokemon, 12, getRandomGender(pokemon))
-        } as PokemonInstanceExt
+        } as PokemonInstance
       })
     }
 

@@ -42,14 +42,14 @@
 <script lang="ts">
 import { useHighlightText } from '@/composables/highlight-text/use-highlight-text'
 import { randomName } from '@/services/utils/name-utils'
-import type { PokemonInstanceExt } from 'sleepapi-common'
+import type { PokemonInstance } from 'sleepapi-common'
 import type { PropType } from 'vue'
 
 export default {
   name: 'PokemonName',
   props: {
     pokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },

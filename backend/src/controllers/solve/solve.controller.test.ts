@@ -15,7 +15,7 @@ describe('solve.controller', () => {
     });
 
     it('should enrich solve settings with valid inputs', () => {
-      const settings = mocks.solveSettings();
+      const settings = mocks.solveSettingsDto();
 
       const enrichSolveSettings = controller._testAccess().enrichSolveSettings;
       const result = enrichSolveSettings(settings);
@@ -36,7 +36,7 @@ describe('solve.controller', () => {
     });
 
     it('should map expert mode settings when provided', () => {
-      const settings = mocks.solveSettings({
+      const settings = mocks.solveSettingsDto({
         island: mocks.islandInstance({
           expert: true,
           berries: [common.berry.ORAN, common.berry.MAGO],
@@ -55,7 +55,7 @@ describe('solve.controller', () => {
     });
 
     it('should throw BadRequestError for invalid sleep duration', () => {
-      const settings = mocks.solveSettings({ wakeup: '12:00', bedtime: '12:01' });
+      const settings = mocks.solveSettingsDto({ wakeup: '12:00', bedtime: '12:01' });
 
       const enrichSolveSettings = controller._testAccess().enrichSolveSettings;
 
@@ -71,7 +71,7 @@ describe('solve.controller', () => {
     });
 
     it('should enrich member settings with valid inputs', () => {
-      const settings = mocks.teamMemberSettings();
+      const settings = mocks.teamMemberSettingsDto();
 
       const natureMock = vimic(common, 'getNature', () => common.nature.BASHFUL);
 

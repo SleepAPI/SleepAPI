@@ -1,11 +1,11 @@
-import type { BerrySet, MemberProduction, MemberStrength, TeamSettingsExt } from 'sleepapi-common';
+import type { BerrySet, MemberProduction, MemberStrength, TeamSettings } from 'sleepapi-common';
 import { BASE_FAVORED_BERRY_MULTIPLIER, berryPowerForLevel, EXPERT_MODE_BERRY_BONUS_MULTIPLIER } from 'sleepapi-common';
 
-type IslandBerries = Pick<TeamSettingsExt['island'], 'berries' | 'expertMode'>;
+type IslandBerries = Pick<TeamSettings['island'], 'berries' | 'expertMode'>;
 
 export class StrengthCalculator {
   public calculateStrength(params: {
-    settings: TeamSettingsExt;
+    settings: TeamSettings;
     produceWithoutSkill: MemberProduction['produceWithoutSkill'];
     produceFromSkill: MemberProduction['produceFromSkill'];
     skillValue: MemberProduction['skillValue'];

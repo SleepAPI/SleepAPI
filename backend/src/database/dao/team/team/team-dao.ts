@@ -13,7 +13,7 @@ import {
   type GetTeamResponse,
   type IngredientSetSimple,
   type MemberInstance,
-  type SubskillInstance
+  type SubskillInstanceDto
 } from 'sleepapi-common';
 
 const DBTeamSchema = Type.Composite([
@@ -49,7 +49,7 @@ class TeamDAOImpl extends AbstractDAO<typeof DBTeamSchema> {
       for (const memberData of memberMetaData) {
         const member: DBPokemon = await PokemonDAO.get({ id: memberData.fk_pokemon_id });
 
-        const subskills: SubskillInstance[] = [];
+        const subskills: SubskillInstanceDto[] = [];
         if (member.subskill_10) {
           subskills.push({ level: 10, subskill: member.subskill_10 });
         }

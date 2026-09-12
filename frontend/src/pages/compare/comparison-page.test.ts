@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TeamService } from '@/services/team/team-service'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
-import type { TeamProductionExt } from '@/types/member/instanced'
+import type { TeamProduction } from '@/types/member/instanced'
 import { mocks } from '@/vitest'
 import { nextTick } from 'vue'
 
@@ -17,7 +17,7 @@ describe('ComparisonPage', () => {
   let wrapper: VueWrapper<InstanceType<typeof ComparisonPage>>
   let pokemonStore: ReturnType<typeof usePokemonStore>
 
-  const mockResponse: TeamProductionExt = mocks.createMockTeamProduction()
+  const mockResponse: TeamProduction = mocks.createMockTeamProduction()
   const mockPokemon = mocks.createMockPokemon()
   const mockMemberProduction: MemberProduction = mocks.createMockMemberProduction()
 

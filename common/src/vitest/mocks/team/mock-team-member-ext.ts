@@ -1,11 +1,11 @@
-import type { TeamMemberExt } from '../../../types/team/member';
+import type { TeamMember } from '../../../types/team/member';
 import { pokemonWithIngredients } from '../pokemon/mock-pokemon-with-ingredients';
-import { teamMemberSettingsExt } from './mock-team-member-settings-ext';
+import { teamMemberSettings } from './mock-team-member-settings-ext';
 
-export function teamMemberExt(attrs?: Partial<TeamMemberExt>): TeamMemberExt {
+export function teamMember(attrs?: Partial<TeamMember>): TeamMember {
   return {
     pokemonWithIngredients: pokemonWithIngredients(),
-    settings: teamMemberSettingsExt(),
+    settings: teamMemberSettings(),
     ...attrs
   };
 }

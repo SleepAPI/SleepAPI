@@ -1,6 +1,6 @@
 import { TeamSimulatorUtils } from '@src/services/simulation-service/team-simulator/team-simulator-utils.js';
 import { mocks } from '@src/vitest/index.js';
-import type { PokemonWithIngredients, TeamMemberExt, TeamMemberSettingsExt } from 'sleepapi-common';
+import type { PokemonWithIngredients, TeamMember, TeamMemberSettings } from 'sleepapi-common';
 import { berry, commonMocks, GREENGRASS_EXPERT, ingredient, nature, Optimal } from 'sleepapi-common';
 import { describe, expect, it } from 'vitest';
 
@@ -8,7 +8,7 @@ describe('calculateSkillPercentage', () => {
   const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
     pokemon: commonMocks.mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
   });
-  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+  const member: TeamMember = mocks.teamMember({ pokemonWithIngredients: mockPokemonSet });
 
   it('shall calculate skill percentage for member', () => {
     expect(
@@ -21,7 +21,7 @@ describe('calculateIngredientPercentage', () => {
   const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
     pokemon: commonMocks.mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
   });
-  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+  const member: TeamMember = mocks.teamMember({ pokemonWithIngredients: mockPokemonSet });
 
   it('shall calculate ingredient percentage for member', () => {
     expect(
@@ -37,14 +37,14 @@ describe('calculateHelpSpeedBeforeEnergy', () => {
   const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
     pokemon: commonMocks.mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
   });
-  const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockPokemonSet });
+  const member: TeamMember = mocks.teamMember({ pokemonWithIngredients: mockPokemonSet });
 
   it('should calculate help speed without energy applied', () => {
     expect(
       TeamSimulatorUtils.calculateHelpSpeedBeforeEnergy({
         member: { ...member, settings: { ...member.settings, nature: nature.LONELY, level: 1 } },
         teamHelpingBonus: 0,
-        settings: mocks.teamSettingsExt()
+        settings: mocks.teamSettings()
       })
     ).toBe(3240);
   });
@@ -72,11 +72,11 @@ describe('calculateAverageProduce', () => {
         commonMocks.mockIngredientSet({ amount: 7, ingredient: ingredient.WARMING_GINGER })
       ]
     });
-    const member: TeamMemberExt = mocks.teamMemberExt({ pokemonWithIngredients: mockTyranitar });
+    const member: TeamMember = mocks.teamMember({ pokemonWithIngredients: mockTyranitar });
 
     it('should calculate average level 29 produce', () => {
       const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
-      const settings: TeamMemberSettingsExt = {
+      const settings: TeamMemberSettings = {
         carrySize: 0,
         ribbon: 0,
         skillLevel: 0,
@@ -97,7 +97,7 @@ describe('calculateAverageProduce', () => {
 
     it('should calculate average level 30 produce', () => {
       const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
-      const settings: TeamMemberSettingsExt = {
+      const settings: TeamMemberSettings = {
         carrySize: 0,
         ribbon: 0,
         skillLevel: 0,
@@ -118,7 +118,7 @@ describe('calculateAverageProduce', () => {
 
     it('should calculate average level 60 produce', () => {
       const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
-      const settings: TeamMemberSettingsExt = {
+      const settings: TeamMemberSettings = {
         carrySize: 0,
         ribbon: 0,
         skillLevel: 0,
@@ -139,7 +139,7 @@ describe('calculateAverageProduce', () => {
 
     it('should calculate average level 75 produce', () => {
       const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
-      const settings: TeamMemberSettingsExt = {
+      const settings: TeamMemberSettings = {
         carrySize: 0,
         ribbon: 0,
         skillLevel: 0,
@@ -157,7 +157,7 @@ describe('calculateAverageProduce', () => {
 
     it('should calculate average level 100 produce', () => {
       const optimalSettings = Optimal.ingredient(member.pokemonWithIngredients.pokemon);
-      const settings: TeamMemberSettingsExt = {
+      const settings: TeamMemberSettings = {
         carrySize: 0,
         ribbon: 0,
         skillLevel: 0,
@@ -180,7 +180,7 @@ describe('calculateAverageProduce', () => {
 
 describe('prepareMembers', () => {
   const createMember = () =>
-    mocks.teamMemberExt({
+    mocks.teamMember({
       pokemonWithIngredients: mocks.pokemonWithIngredients({
         pokemon: commonMocks.mockPokemon({
           berry: berry.ORAN,
@@ -188,7 +188,7 @@ describe('prepareMembers', () => {
           skillPercentage: 0.2
         })
       }),
-      settings: mocks.teamMemberSettingsExt({ skillLevel: 3 })
+      settings: mocks.teamMemberSettings({ skillLevel: 3 })
     });
 
   it('returns members untouched when no event present', () => {
@@ -219,7 +219,7 @@ describe('prepareMembers', () => {
   });
 
   it('applies no frequency change for sub berry pokemon', () => {
-    const subBerryMember = mocks.teamMemberExt({
+    const subBerryMember = mocks.teamMember({
       pokemonWithIngredients: mocks.pokemonWithIngredients({
         pokemon: commonMocks.mockPokemon({
           berry: berry.MAGO,
@@ -227,7 +227,7 @@ describe('prepareMembers', () => {
           skillPercentage: 0.2
         })
       }),
-      settings: mocks.teamMemberSettingsExt({ skillLevel: 3 })
+      settings: mocks.teamMemberSettings({ skillLevel: 3 })
     });
 
     const event = GREENGRASS_EXPERT.bonuses({
@@ -247,7 +247,7 @@ describe('prepareMembers', () => {
   });
 
   it('applies 15% frequency nerf for non-favored pokemon', () => {
-    const unfavoredMember = mocks.teamMemberExt({
+    const unfavoredMember = mocks.teamMember({
       pokemonWithIngredients: mocks.pokemonWithIngredients({
         pokemon: commonMocks.mockPokemon({
           berry: berry.BELUE,
@@ -255,7 +255,7 @@ describe('prepareMembers', () => {
           skillPercentage: 0.2
         })
       }),
-      settings: mocks.teamMemberSettingsExt({ skillLevel: 3 })
+      settings: mocks.teamMemberSettings({ skillLevel: 3 })
     });
 
     const event = GREENGRASS_EXPERT.bonuses({
@@ -295,17 +295,17 @@ describe('countMembersWithSubskill', () => {
   const mockPokemonSet: PokemonWithIngredients = mocks.pokemonWithIngredients({
     pokemon: commonMocks.mockPokemon({ frequency: 3600, ingredientPercentage: 20, skillPercentage: 2 })
   });
-  const member1: TeamMemberExt = mocks.teamMemberExt({
+  const member1: TeamMember = mocks.teamMember({
     pokemonWithIngredients: mockPokemonSet,
-    settings: mocks.teamMemberSettingsExt({ subskills: new Set(['subskill1', 'subskill2']) })
+    settings: mocks.teamMemberSettings({ subskills: new Set(['subskill1', 'subskill2']) })
   });
-  const member2: TeamMemberExt = mocks.teamMemberExt({
+  const member2: TeamMember = mocks.teamMember({
     pokemonWithIngredients: mockPokemonSet,
-    settings: mocks.teamMemberSettingsExt({ subskills: new Set(['subskill2', 'subskill3']) })
+    settings: mocks.teamMemberSettings({ subskills: new Set(['subskill2', 'subskill3']) })
   });
-  const member3: TeamMemberExt = mocks.teamMemberExt({
+  const member3: TeamMember = mocks.teamMember({
     pokemonWithIngredients: mockPokemonSet,
-    settings: mocks.teamMemberSettingsExt({ subskills: new Set(['subskill1', 'subskill3']) })
+    settings: mocks.teamMemberSettings({ subskills: new Set(['subskill1', 'subskill3']) })
   });
 
   it('should count members with a specific subskill', () => {

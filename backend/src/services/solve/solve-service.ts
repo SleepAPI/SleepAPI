@@ -9,7 +9,7 @@ import {
   groupProducersByIngredient,
   pokemonProductionToRecipeSolutions
 } from '@src/services/solve/utils/solve-utils.js';
-import type { Ingredient, Recipe, SolveSettingsExt } from 'sleepapi-common';
+import type { Ingredient, Recipe, SolveSettings } from 'sleepapi-common';
 import { ingredientSetToIntFlat } from 'sleepapi-common';
 
 class SolveServiceImpl {
@@ -55,7 +55,7 @@ class SolveServiceImpl {
 
   // TODO: Implement for new site
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public solveIngredient(ingredient: Ingredient, settings: SolveSettingsExt) {
+  public solveIngredient(ingredient: Ingredient, settings: SolveSettings) {
     //
   }
 }

@@ -1,10 +1,10 @@
 import type { IngredientSet } from '../../types/ingredient/ingredient';
-import type { TeamMember } from '../../types/team/member';
-import type { SolveSettings, TeamSolution } from '../../types/team/team';
+import type { TeamMemberDto } from '../../types/team/member';
+import type { SolveSettingsDto, TeamSolution } from '../../types/team/team';
 
 export interface SolveRecipeRequest {
-  settings: SolveSettings;
-  includedMembers?: TeamMember[];
+  settings: SolveSettingsDto;
+  includedMembers?: TeamMemberDto[];
   maxTeamSize?: number;
 }
 

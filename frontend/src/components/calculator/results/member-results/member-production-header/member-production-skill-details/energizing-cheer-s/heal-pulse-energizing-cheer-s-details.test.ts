@@ -15,7 +15,7 @@ import {
 import { beforeEach, describe, expect, it } from 'vitest'
 import HealPulseEnergizingCheerSDetails from './heal-pulse-energizing-cheer-s-details.vue'
 
-const mockMember = mocks.createMockMemberProductionExt({
+const mockMember = mocks.createMockMemberWithProduction({
   member: mocks.createMockPokemon({
     pokemon: commonMocks.mockPokemon({ skill: EnergizingCheerSHealPulse }),
     skillLevel: 6

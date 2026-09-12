@@ -6,16 +6,7 @@ import type { PerformanceDetails, TeamInstance } from '@/types/member/instanced'
 import { mocks } from '@/vitest'
 import { createMockTeams } from '@/vitest/mocks/calculator/team-instance'
 import { createMockTeamData } from '@/vitest/mocks/team-data'
-import {
-  berry,
-  commonMocks,
-  LEAFEON,
-  Logger,
-  subskill,
-  uuid,
-  WIGGLYTUFF,
-  type PokemonInstanceExt
-} from 'sleepapi-common'
+import { berry, commonMocks, LEAFEON, Logger, subskill, uuid, WIGGLYTUFF, type PokemonInstance } from 'sleepapi-common'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -274,7 +265,7 @@ describe('Team Store', () => {
   it('should get number of members in team', async () => {
     const teamStore = useTeamStore()
 
-    const member = { name: 'Pikachu' } as PokemonInstanceExt
+    const member = { name: 'Pikachu' } as PokemonInstance
     teamStore.teams = [
       {
         index: 0,

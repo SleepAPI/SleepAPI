@@ -14,7 +14,7 @@ describe('SolveService', () => {
     const recipe: Recipe = commonMocks.mockRecipe({
       ingredients: ingredientList
     });
-    const member = mocks.teamMemberExt({
+    const member = mocks.teamMember({
       pokemonWithIngredients: mocks.pokemonWithIngredients({
         ingredientList,
         pokemon: commonMocks.mockPokemon({ skill: BerryBurst })
@@ -27,7 +27,7 @@ describe('SolveService', () => {
     }));
 
     const input: SolveRecipeInput = {
-      solveSettings: mocks.solveSettingsExt(),
+      solveSettings: mocks.solveSettings(),
       includedMembers: [member],
       maxTeamSize: 5
     };

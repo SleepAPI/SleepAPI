@@ -5,7 +5,7 @@ import type { ModifierTargetType } from './target-types';
  * Wrapper type to explicitly mark a value as a path reference
  * This allows us to distinguish between literal values and path references at runtime
  *
- * @template T - The target type (Pokemon | PokemonInstanceExt) for type-safe path validation
+ * @template T - The target type (Pokemon | PokemonInstance) for type-safe path validation
  */
 export class PathReference<T extends ModifierTargetType = ModifierTargetType> {
   constructor(public readonly path: PathKeys<T>) {}

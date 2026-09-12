@@ -169,8 +169,8 @@ import {
   RP,
   type IngredientSet,
   type PokemonGender,
-  type PokemonInstanceExt,
-  type SubskillInstanceExt
+  type PokemonInstance,
+  type SubskillInstance
 } from 'sleepapi-common'
 import { defineComponent, nextTick, type PropType } from 'vue'
 
@@ -190,7 +190,7 @@ export default defineComponent({
   },
   props: {
     preSelectedPokemonInstance: {
-      type: Object as PropType<PokemonInstanceExt>,
+      type: Object as PropType<PokemonInstance>,
       required: true
     }
   },
@@ -204,7 +204,7 @@ export default defineComponent({
 
     return { teamStore, userStore, viewportWidth, pokemonNameBreakpoint }
   },
-  data(this: { preSelectedPokemonInstance: PokemonInstanceExt }) {
+  data(this: { preSelectedPokemonInstance: PokemonInstance }) {
     const { pokemon: _, ...pokemonInstanceWithoutPokemon } = this.preSelectedPokemonInstance
 
     return {
@@ -213,13 +213,13 @@ export default defineComponent({
         ...JSON.parse(JSON.stringify(pokemonInstanceWithoutPokemon)),
         // Get fresh pokemon instance with classes intact
         pokemon: getPokemon(this.preSelectedPokemonInstance.pokemon.name)
-      } as PokemonInstanceExt
+      } as PokemonInstance
     }
   },
   watch: {
     pokemonInstance: {
       deep: true,
-      handler(newPokemon: PokemonInstanceExt) {
+      handler(newPokemon: PokemonInstance) {
         nextTick(() => {
           const rp = new RP({ ...newPokemon, ingredients: newPokemon.ingredients.filter(Boolean) })
           this.pokemonInstance.rp = rp.calc()
@@ -255,11 +255,11 @@ export default defineComponent({
     updateGender(gender: PokemonGender) {
       this.pokemonInstance.gender = gender
     },
-    updateSubskills(updatedSubskills: SubskillInstanceExt[]) {
+    updateSubskills(updatedSubskills: SubskillInstance[]) {
       this.pokemonInstance.subskills = updatedSubskills
       this.pokemonInstance.subskills.sort((a, b) => a.level - b.level)
     },
-    updatePokemon(instance: PokemonInstanceExt) {
+    updatePokemon(instance: PokemonInstance) {
       this.pokemonInstance = instance
     },
     updateName(newName: string) {

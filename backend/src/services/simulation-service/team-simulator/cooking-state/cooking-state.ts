@@ -8,7 +8,7 @@ import type {
   CookingResult,
   IngredientIndexToFloatAmount,
   MealTimes,
-  TeamSettingsExt
+  TeamSettings
 } from 'sleepapi-common';
 import { curry, dessert, emptyIngredientInventoryFloat, flatToIngredientSet, ingredient, salad } from 'sleepapi-common';
 
@@ -57,7 +57,7 @@ export class CookingState {
   private currentSaladStockpile: IngredientIndexToFloatAmount;
   private currentDessertStockpile: IngredientIndexToFloatAmount;
 
-  constructor(settings: TeamSettingsExt, userRecipes: UserRecipes, rng: PreGeneratedRandom) {
+  constructor(settings: TeamSettings, userRecipes: UserRecipes, rng: PreGeneratedRandom) {
     const { curries, salads, desserts } = userRecipes;
     this.userCurries = curries;
     this.userSalads = salads;

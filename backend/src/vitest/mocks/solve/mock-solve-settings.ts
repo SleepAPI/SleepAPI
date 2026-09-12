@@ -1,7 +1,7 @@
 import { mocks } from '@src/vitest/index.js';
-import { type SolveSettings, type SolveSettingsExt } from 'sleepapi-common';
+import { type SolveSettings, type SolveSettingsDto } from 'sleepapi-common';
 
-export function solveSettings(attrs?: Partial<SolveSettings>): SolveSettings {
+export function solveSettingsDto(attrs?: Partial<SolveSettingsDto>): SolveSettingsDto {
   return {
     camp: false,
     bedtime: mocks.BEDTIME,
@@ -13,7 +13,7 @@ export function solveSettings(attrs?: Partial<SolveSettings>): SolveSettings {
   };
 }
 
-export function solveSettingsExt(attrs?: Partial<SolveSettingsExt>): SolveSettingsExt {
+export function solveSettings(attrs?: Partial<SolveSettings>): SolveSettings {
   return {
     camp: false,
     bedtime: mocks.bedtime(),

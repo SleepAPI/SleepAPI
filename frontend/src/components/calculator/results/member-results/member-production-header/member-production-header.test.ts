@@ -7,7 +7,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-const mockMember = mocks.createMockMemberProductionExt()
+const mockMember = mocks.createMockMemberWithProduction()
 
 describe('MemberProductionHeader', () => {
   let wrapper: VueWrapper<InstanceType<typeof MemberProductionHeader>>

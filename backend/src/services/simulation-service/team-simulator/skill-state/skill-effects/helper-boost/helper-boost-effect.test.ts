@@ -45,7 +45,7 @@ describe('HelperBoostEffect', () => {
     HelperBoost.baseAmounts[0] = regularAmount;
 
     memberState = mocks.memberState({
-      team: new Array(MAX_TEAM_SIZE + 1).fill(mocks.teamMemberExt())
+      team: new Array(MAX_TEAM_SIZE + 1).fill(mocks.teamMember())
     });
     skillState = mocks.skillState(memberState);
 

@@ -1,6 +1,6 @@
-import { CarrySizeUtils, ingredient, nature, PIKACHU, type PokemonInstanceExt } from 'sleepapi-common'
+import { CarrySizeUtils, ingredient, nature, PIKACHU, type PokemonInstance } from 'sleepapi-common'
 
-export function createMockPokemon(attrs?: Partial<PokemonInstanceExt>): PokemonInstanceExt {
+export function createMockPokemon(attrs?: Partial<PokemonInstance>): PokemonInstance {
   return {
     name: 'Bubbles',
     externalId: 'external-id',

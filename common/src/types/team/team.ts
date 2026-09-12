@@ -4,14 +4,14 @@ import type { Time } from '../time/time';
 import type { TeamMemberWithProduce } from './member';
 import type { CalculateTeamResponse } from './team-calculate';
 
-export interface TeamSettings {
+export interface TeamSettingsDto {
   camp: boolean;
   bedtime: string;
   wakeup: string;
   island: IslandInstanceDto;
   stockpiledIngredients?: IngredientSetSimple[];
 }
-export interface TeamSettingsExt {
+export interface TeamSettings {
   camp: boolean;
   bedtime: Time;
   wakeup: Time;
@@ -28,9 +28,9 @@ export interface TeamSolution {
 
 export type TeamResults = CalculateTeamResponse;
 
-export interface SolveSettings extends TeamSettings {
+export interface SolveSettingsDto extends TeamSettingsDto {
   level: number;
 }
-export interface SolveSettingsExt extends TeamSettingsExt {
+export interface SolveSettings extends TeamSettings {
   level: number;
 }
