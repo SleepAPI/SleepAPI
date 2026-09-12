@@ -10,8 +10,8 @@
           <v-row>
             <v-col cols="12" class="px-6">
               <p class="text-center mb-3">
-                Neroli's Lab is a free, open source toolkit for Pokémon Sleep. We build simulations, calculators, and
-                tier lists to help you get the most out of your team.
+                Neroli's Lab is a free, open source toolkit for Pokémon Sleep. We build simulations and calculators to
+                help you get the most out of your team.
               </p>
               <p class="text-center mb-2">
                 The project is open source and we welcome contributions. Discord is our main channel for communication,

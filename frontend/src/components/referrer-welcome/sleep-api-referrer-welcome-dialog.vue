@@ -25,10 +25,6 @@
             <strong><router-link class="simple" to="/recipes/">Recipes</router-link></strong
             >: browse dishes and set your recipe levels
           </li>
-          <li>
-            <strong><router-link class="simple" to="/tier-lists/">Tier lists</router-link></strong
-            >: just like in Sleep API.
-          </li>
         </ul>
         <p class="text-strength mb-3"><strong>You can optionally log in to save your teams and settings!</strong></p>
         <p class="mb-3">

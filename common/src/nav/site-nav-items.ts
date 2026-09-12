@@ -31,13 +31,13 @@ export const SITE_NAV_ITEMS: readonly SiteNavItem[] = [
     icon: 'mdi-compare-horizontal',
     spa: true
   },
-  {
-    id: 'tierlist',
-    label: 'Tier lists',
-    path: '/tierlist',
-    icon: 'mdi-podium',
-    spa: true
-  },
+  // {
+  //   id: 'tierlist',
+  //   label: 'Tier lists',
+  //   path: '/tierlist',
+  //   icon: 'mdi-podium',
+  //   spa: true
+  // },
   {
     id: 'recipes',
     label: 'Recipes',
