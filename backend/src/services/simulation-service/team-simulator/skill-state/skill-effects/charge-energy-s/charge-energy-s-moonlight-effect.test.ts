@@ -30,7 +30,6 @@ describe('ChargeEnergySMoonlightEffect', () => {
     expect(activation.activations[0].unit).toBe('energy');
     expect(activation.activations[0].self?.regular).toBe(selfAmount);
     expect(activation.activations[0].self?.crit).toBe(0);
-    expect(activation.activations[0].team).toBe(undefined);
   });
 
   it('should activate skill with critical hit', () => {
@@ -43,15 +42,12 @@ describe('ChargeEnergySMoonlightEffect', () => {
     const teamAmount = ChargeEnergySMoonlight.critAmounts[skillState.skillLevel - 1];
 
     expect(activation.skill).toBe(skill);
-    expect(activation.activations.length).toBe(2);
+    expect(activation.activations.length).toBe(1);
     expect(activation.activations[0].unit).toBe('energy');
     expect(activation.activations[0].self?.regular).toBe(selfAmount);
     expect(activation.activations[0].self?.crit).toBe(0);
-    expect(activation.activations[0].team).toBe(undefined);
-    expect(activation.activations[1].unit).toBe('energy');
-    expect(activation.activations[1].self).toBe(undefined);
-    expect(activation.activations[1].team?.regular).toBe(0);
-    expect(activation.activations[1].team?.crit).toBe(teamAmount);
+    expect(activation.activations[0].team?.regular).toBe(0);
+    expect(activation.activations[0].team?.crit).toBe(teamAmount);
     expect(activation.targeting?.chanceToTargetLowestMembers).toBe(skill.targeting.chanceToTargetLowestMembers);
   });
 });

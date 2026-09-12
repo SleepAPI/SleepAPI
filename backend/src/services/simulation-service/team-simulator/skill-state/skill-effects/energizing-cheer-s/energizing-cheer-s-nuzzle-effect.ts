@@ -4,27 +4,26 @@ import type { SkillState } from '@src/services/simulation-service/team-simulator
 import { EnergizingCheerSNuzzle } from 'sleepapi-common';
 
 export class EnergizingCheerSNuzzleEffect implements SkillEffect {
-  activate(skillState: SkillState): SkillActivation {
+  activate(skillState: SkillState, recursionDepth: number = 0): SkillActivation {
     const skill = EnergizingCheerSNuzzle;
+    const invoker = skillState.memberState;
     const energyAmount = skillState.skillAmount(skill.activations.energy);
     const skillHelpsAmount = skillState.skillAmount(skill.activations.skillHelps);
+
+    const targetedMon = skillState.findTargetMon(skill.targeting);
+    const recovered = targetedMon.recoverEnergy(energyAmount, invoker).recovered;
+    const bonusActivations = targetedMon.addSkillHelps(skillHelpsAmount, invoker, recursionDepth);
 
     return {
       skill,
       activations: [
         {
           unit: 'energy',
-          team: {
-            regular: energyAmount,
-            crit: 0
-          }
+          team: { regular: recovered, crit: 0 }
         },
         {
           unit: 'skill helps',
-          team: {
-            regular: skillHelpsAmount,
-            crit: 0
-          }
+          team: { regular: skillHelpsAmount, crit: bonusActivations }
         }
       ],
       targeting: skill.targeting

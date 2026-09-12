@@ -6,17 +6,19 @@ import { EnergizingCheerS } from 'sleepapi-common';
 export class EnergizingCheerSEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = EnergizingCheerS;
-    const regularEnergyAmount = skillState.skillAmount(skill.activations.energy);
+    const invoker = skillState.memberState;
+    const energyAmount = skillState.skillAmount(skill.activations.energy);
+
+    const targetedMon = skillState.findTargetMon(skill.targeting);
+    let recovered = 0;
+    recovered += targetedMon.recoverEnergy(energyAmount, invoker).recovered;
 
     return {
       skill,
       activations: [
         {
           unit: 'energy',
-          team: {
-            regular: regularEnergyAmount,
-            crit: 0
-          }
+          team: { regular: recovered, crit: 0 }
         }
       ],
       targeting: skill.targeting

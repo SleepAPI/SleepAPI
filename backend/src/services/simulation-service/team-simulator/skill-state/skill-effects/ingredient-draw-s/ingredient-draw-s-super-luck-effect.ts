@@ -27,10 +27,7 @@ export class IngredientDrawSSuperLuckEffect implements SkillEffect {
       activations: [
         {
           unit: unit,
-          self: {
-            regular: amount,
-            crit: critAmount
-          }
+          self: { regular: amount, crit: critAmount }
         }
       ]
     };

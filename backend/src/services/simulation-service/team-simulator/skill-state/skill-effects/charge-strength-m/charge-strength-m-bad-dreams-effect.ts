@@ -15,16 +15,17 @@ export class ChargeStrengthMBadDreamsEffect implements SkillEffect {
       energyDegraded += otherMember.degradeEnergy(ChargeStrengthMBadDreams.energyReduction);
     }
 
-    skillState.addSkillValue({ unit: 'energy', amountToSelf: 0, amountToTeam: -energyDegraded });
-
     return {
       skill,
       activations: [
         {
           unit: 'strength',
           self: { regular: skillState.skillAmount(skill.activations.strength), crit: 0 }
+        },
+        {
+          unit: 'energy',
+          team: { regular: -energyDegraded, crit: 0 }
         }
-        // TODO: Add energy activation for degredation after team activations are refactored into effect files
       ]
     };
   }

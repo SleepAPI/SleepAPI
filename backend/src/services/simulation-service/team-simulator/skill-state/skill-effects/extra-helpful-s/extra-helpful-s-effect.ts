@@ -6,17 +6,19 @@ import { ExtraHelpfulS } from 'sleepapi-common';
 export class ExtraHelpfulSEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = ExtraHelpfulS;
-    const regularAmount = skillState.skillAmount(skill.activations.helps);
+    const invoker = skillState.memberState;
+    const helpsAmount = skillState.skillAmount(skill.activations.helps);
+
+    for (const member of skillState.findTargetGroup(skill.targeting)) {
+      member.addHelpsFromSkill(helpsAmount, invoker);
+    }
 
     return {
       skill,
       activations: [
         {
           unit: 'helps',
-          team: {
-            regular: regularAmount,
-            crit: 0
-          }
+          team: { regular: helpsAmount, crit: 0 }
         }
       ],
       targeting: skill.targeting

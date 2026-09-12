@@ -23,7 +23,7 @@ describe('MetronomeEffect', () => {
     const result = metronomeEffect.activate(skillState);
 
     expect(skillState.rng.randomElement).toHaveBeenCalledWith(Metronome.metronomeSkills);
-    expect(mockActivate).toHaveBeenCalledWith(skillState);
+    expect(mockActivate).toHaveBeenCalledWith(skillState, undefined);
     expect(result).toEqual({ skill: skillState.skill });
   });
 

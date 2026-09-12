@@ -67,8 +67,7 @@ describe('SkillState', () => {
 
   it('should activate skill correctly', () => {
     const skill = BerryBurst;
-    const activation = skillState['activateSkill'](skill);
-    expect(activation).toBeDefined();
+    skillState['activateSkill'](skill);
     expect(skillState['skillProcs']).toBe(1);
   });
 
@@ -81,8 +80,7 @@ describe('SkillState', () => {
 
     skillState['helpsSinceLastSkillProc'] =
       skillState['memberState'].member.pokemonWithIngredients.pokemon.pityProcThreshold;
-    const activation = skillState['addBonusActivation']();
-    expect(activation).toBeDefined();
+    skillState['addBonusActivation'](0);
     expect(skillState['skillProcs']).toBe(1);
     expect(skillState['helpsSinceLastSkillProc']).toBe(
       skillState['memberState'].member.pokemonWithIngredients.pokemon.pityProcThreshold

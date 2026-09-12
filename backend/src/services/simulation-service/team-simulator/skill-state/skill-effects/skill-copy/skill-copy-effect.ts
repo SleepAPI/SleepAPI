@@ -4,7 +4,7 @@ import type { SkillState } from '@src/services/simulation-service/team-simulator
 import { ChargeStrengthS, commonMocks, SkillCopy } from 'sleepapi-common';
 
 export class SkillCopyEffect implements SkillEffect {
-  activate(skillState: SkillState): SkillActivation {
+  activate(skillState: SkillState, recursionDepth?: number): SkillActivation {
     const otherMembers = skillState.memberState.otherMembers;
     const selectedMember = otherMembers.length > 0 ? skillState.rng.randomElement(otherMembers) : undefined;
 
@@ -14,7 +14,7 @@ export class SkillCopyEffect implements SkillEffect {
       copiedSkill = ChargeStrengthS;
     }
 
-    const copiedActivation = skillState.skillEffects.get(copiedSkill!)?.activate(skillState);
+    const copiedActivation = skillState.skillEffects.get(copiedSkill!)?.activate(skillState, recursionDepth);
     // mockPokemon is used for filling in bogus members in the set cover
     if (!copiedActivation && copiedSkill.name !== commonMocks.mockPokemon().skill.name) {
       logger.error(`[${skillState.skill.name}] Couldn't activate ${copiedSkill?.name}`);

@@ -395,9 +395,9 @@ describe('recoverEnergy', () => {
 });
 
 describe('addHelpsFromSkill', () => {
-  it('shall add 1 average produce help', () => {
+  it('shall add 2 average produce help', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelpsFromSkill({ regular: 1, crit: 1 }, memberState);
+    memberState.addHelpsFromSkill(2, memberState);
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchSnapshot();
@@ -405,7 +405,7 @@ describe('addHelpsFromSkill', () => {
 
   it('shall not add produce if adding 0 helps', () => {
     const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addHelpsFromSkill({ regular: 0, crit: 0 }, memberState);
+    memberState.addHelpsFromSkill(0, memberState);
     memberState.collectInventory();
 
     expect(memberState.results(1)).toMatchSnapshot();
@@ -418,7 +418,7 @@ describe('addHelpsFromSkill', () => {
       team: [sneakySnackingMember],
       cookingState
     });
-    memberState.addHelpsFromSkill({ regular: 10, crit: 0 }, memberState);
+    memberState.addHelpsFromSkill(10, memberState);
     memberState.collectInventory();
 
     expect(memberState.results(1).produceTotal.ingredients.length).toBeGreaterThan(0);

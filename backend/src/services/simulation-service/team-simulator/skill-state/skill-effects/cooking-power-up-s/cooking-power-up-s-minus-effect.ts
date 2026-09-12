@@ -6,12 +6,17 @@ import { CookingPowerUpSMinus, isPlusOrMinus } from 'sleepapi-common';
 export class CookingPowerUpSMinusEffect implements SkillEffect {
   activate(skillState: SkillState): SkillActivation {
     const skill = CookingPowerUpSMinus;
+    const invoker = skillState.memberState;
     const potAmount = skillState.skillAmount(skill.activations.solo);
-    skillState.memberState.cookingState?.addPotSize(potAmount);
-    const energyAmount =
-      skillState.memberState.otherMembers.filter((member) => isPlusOrMinus(member.skill)).length === 0
-        ? 0
-        : skillState.skillAmount(skill.activations.paired);
+    invoker.cookingState?.addPotSize(potAmount);
+    const energyAmount = skillState.skillAmount(skill.activations.paired);
+    const paired = invoker.otherMembers.filter((member) => isPlusOrMinus(member.skill)).length === 0;
+
+    const targetedMon = skillState.findTargetMon(skill.targeting);
+    let recovered = 0;
+    if (paired) {
+      recovered += targetedMon.recoverEnergy(energyAmount, invoker).recovered;
+    }
 
     return {
       skill,
@@ -22,10 +27,7 @@ export class CookingPowerUpSMinusEffect implements SkillEffect {
         },
         {
           unit: 'energy',
-          team: {
-            regular: energyAmount,
-            crit: 0
-          }
+          team: { regular: recovered, crit: 0 }
         }
       ],
       targeting: skill.targeting
