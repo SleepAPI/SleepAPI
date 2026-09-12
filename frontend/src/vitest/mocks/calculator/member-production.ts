@@ -62,7 +62,6 @@ export function createMockMemberProduction(attrs?: Partial<MemberProduction>): M
         }
       ]
     },
-    skillAmount: 100,
     skillValue: Object.fromEntries(
       mainskillUnits.map((key) => [key, { amountToSelf: 0, amountToTeam: 0 }])
     ) as MemberSkillValue,

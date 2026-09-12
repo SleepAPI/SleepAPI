@@ -55,12 +55,6 @@ describe('LunarBlessingEnergyForEveryoneDetails', () => {
     )
   })
 
-  it('displays the correct total energy value', () => {
-    const totalEnergyValue = wrapper.find('.font-weight-medium.text-no-wrap.text-center.ml-1')
-    const expectedValue = MathUtils.round(mockMember.production.skillAmount * timeWindowFactor('24H'), 1)
-    expect(totalEnergyValue.text()).toContain(compactNumber(expectedValue))
-  })
-
   it('displays the correct self berry energy value', () => {
     const selfBerryValue = wrapper.find('.flex-center:nth-child(2) .font-weight-medium.text-no-wrap.text-center.ml-2')
     const berryAmount =

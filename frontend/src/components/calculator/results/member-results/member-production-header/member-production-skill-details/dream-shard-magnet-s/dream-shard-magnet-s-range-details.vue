@@ -41,7 +41,7 @@
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
         <v-img src="/images/unit/shard.png" height="20" width="20" alt="dream shards" title="dream shards"></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }} total</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalShards }} total</span>
       </div>
     </v-col>
   </v-row>
@@ -79,8 +79,10 @@ export default defineComponent({
     maxShardsPerProc() {
       return DreamShardMagnetSRange.activations.high.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalShards() {
+      return compactNumber(
+        this.memberWithProduction.production.skillValue['dream shards']?.amountToSelf * this.timeWindowFactor
+      )
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

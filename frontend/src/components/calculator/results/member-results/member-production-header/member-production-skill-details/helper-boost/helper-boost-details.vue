@@ -30,9 +30,7 @@
           ></v-img>
         </div>
         <div class="flex-left">
-          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
-            >x{{ skillValuePerProc }}
-          </span>
+          <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center">x{{ helpsPerProc }} </span>
           <v-img src="/images/unit/help.png" height="20" width="20" alt="Pokemon helps" title="Pokemon helps"></v-img>
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center ml-1 mr-1"
             >x{{ teamStore.getTeamSize }}
@@ -44,7 +42,7 @@
 
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }} total helps </span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalHelps }} total helps </span>
       </div>
     </v-col>
   </v-row>
@@ -86,14 +84,18 @@ export default defineComponent({
           .map((member) => this.pokemonStore.getPokemon(member!)!.pokemon)
       })
     },
-    skillValuePerProc() {
+    helpsPerProc() {
       return HelperBoost.activations.helps.amount({
         skillLevel: this.effectiveSkillLevel,
         extra: this.uniqueSameTypeMembers
       })
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalHelps() {
+      const helpsSkillValue = this.memberWithProduction.production.skillValue['helps'] ?? {
+        amountToSelf: 0,
+        amountToTeam: 0
+      }
+      return compactNumber((helpsSkillValue.amountToSelf + helpsSkillValue.amountToTeam) * this.timeWindowFactor)
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

@@ -72,7 +72,6 @@ describe('SkillState', () => {
     skillState['skillCrits'] = skillCrits;
 
     const results = skillState.results(iterations);
-    expect(results.skillAmount).toBe((regularValue + critValue) / iterations);
     expect(results.skillProcs).toBe(skillProcs / iterations);
     expect(results.skillCrits).toBe(skillCrits / iterations);
     expect(results.skillRegularValue).toBe(regularValue / iterations);

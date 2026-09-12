@@ -91,13 +91,11 @@ export class StrengthCalculator {
 
     // 2. Strength from 'strength' unit skills
     const strengthSkillValue = skillValue['strength'] ?? { amountToSelf: 0, amountToTeam: 0 };
-    const skillAmount = strengthSkillValue.amountToSelf + strengthSkillValue.amountToTeam;
-
-    const skillBase = skillAmount;
-    const skillIslandBonus = skillAmount * (areaBonus / 100);
+    const skillStrengthBase = strengthSkillValue.amountToSelf + strengthSkillValue.amountToTeam;
+    const skillIslandBonus = skillStrengthBase * (areaBonus / 100);
 
     // Combine
-    const totalBase = skillBerryStrength.breakdown.base + skillBerryStrength.breakdown.favored + skillBase;
+    const totalBase = skillBerryStrength.breakdown.base + skillBerryStrength.breakdown.favored + skillStrengthBase;
     const totalIslandBonus = skillBerryStrength.breakdown.islandBonus + skillIslandBonus;
 
     return {

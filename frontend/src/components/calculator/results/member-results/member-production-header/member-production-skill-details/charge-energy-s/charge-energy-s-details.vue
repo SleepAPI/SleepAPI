@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
-            >x{{ skillValuePerProc }}</span
+            >x{{ strengthPerProc }}</span
           >
           <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
         </div>
@@ -41,7 +41,7 @@
     <v-col cols="auto" class="flex-center flex-column">
       <div class="flex-center">
         <v-img src="/images/unit/energy.png" height="20" width="20" alt="energy" title="energy"></v-img>
-        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalSkillValue }} total</span>
+        <span class="font-weight-medium text-no-wrap text-center ml-1"> {{ totalStrength }} total</span>
       </div>
     </v-col>
   </v-row>
@@ -73,11 +73,15 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
+    strengthPerProc() {
       return ChargeEnergyS.activations.energy.amount({ skillLevel: this.effectiveSkillLevel })
     },
-    totalSkillValue() {
-      return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)
+    totalStrength() {
+      const strengthSkillValue = this.memberWithProduction.production.skillValue['strength'] ?? {
+        amountToSelf: 0,
+        amountToTeam: 0
+      }
+      return compactNumber((strengthSkillValue.amountToSelf + strengthSkillValue.amountToTeam) * this.timeWindowFactor)
     },
     timeWindowFactor() {
       return this.teamStore.timeWindowFactor

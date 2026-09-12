@@ -680,15 +680,8 @@ export class MemberState {
       )
     };
 
-    const {
-      skillAmount,
-      skillValue,
-      skillProcs,
-      skillCritValue,
-      skillCrits,
-      skillRegularValue,
-      skillProcDistribution
-    } = this.skillState.results(iterations);
+    const { skillValue, skillProcs, skillCritValue, skillCrits, skillRegularValue, skillProcDistribution } =
+      this.skillState.results(iterations);
 
     const totalHelps = (this.totalDayHelps + this.totalNightHelps) / iterations;
     const fiveMinIntervalsTotalDay = iterations * (TimeUtils.durationInMinutes(this.dayPeriod) / 5);
@@ -723,7 +716,6 @@ export class MemberState {
       produceTotal,
       produceWithoutSkill: totalHelpProduce,
       produceFromSkill: totalSkillProduce,
-      skillAmount,
       skillValue,
       skillLevel: this.skillState.skillLevel,
       skillProcs,
