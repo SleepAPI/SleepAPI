@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center mr-1"
-            >{{ skillValuePerProc }} avg.</span
+            >{{ minShardsPerProc }}-{{ maxShardsPerProc }}</span
           >
           <v-img src="/images/unit/shard.png" height="20" width="20" alt="dream shards" title="dream shards"></v-img>
         </div>
@@ -73,8 +73,11 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
-      return DreamShardMagnetSRange.activations.mean.amount({ skillLevel: this.effectiveSkillLevel })
+    minShardsPerProc() {
+      return DreamShardMagnetSRange.activations.low.amount({ skillLevel: this.effectiveSkillLevel })
+    },
+    maxShardsPerProc() {
+      return DreamShardMagnetSRange.activations.high.amount({ skillLevel: this.effectiveSkillLevel })
     },
     totalSkillValue() {
       return compactNumber(this.memberWithProduction.production.skillAmount * this.timeWindowFactor)

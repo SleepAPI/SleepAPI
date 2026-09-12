@@ -31,7 +31,7 @@
         </div>
         <div class="flex-left">
           <span class="font-weight-light text-body-2 text-no-wrap font-italic text-center"
-            >{{ localizeNumber(skillValuePerProc) }} avg.</span
+            >{{ localizeNumber(minStrengthPerProc) }}-{{ localizeNumber(maxStrengthPerProc) }}</span
           >
           <v-img src="/images/unit/strength.png" height="20" width="20" alt="strength" title="strength"></v-img>
         </div>
@@ -73,8 +73,12 @@ export default defineComponent({
     baseSkillLevel() {
       return this.memberWithProduction.member.skillLevel
     },
-    skillValuePerProc() {
-      const rawAmount = ChargeStrengthSRange.activations.mean.amount({ skillLevel: this.effectiveSkillLevel })
+    minStrengthPerProc() {
+      const rawAmount = ChargeStrengthSRange.activations.low.amount({ skillLevel: this.effectiveSkillLevel })
+      return applyAreaBonus(rawAmount, this.teamStore.getCurrentTeam.island.areaBonus)
+    },
+    maxStrengthPerProc() {
+      const rawAmount = ChargeStrengthSRange.activations.high.amount({ skillLevel: this.effectiveSkillLevel })
       return applyAreaBonus(rawAmount, this.teamStore.getCurrentTeam.island.areaBonus)
     },
     totalSkillValue() {
