@@ -153,17 +153,28 @@
 
           <template #item.skillProcs="{ item }">
             <div class="flex-center">
-              <div v-if="!item.skill.is(Metronome, SkillCopy)">
-                <div class="flex-center">
-                  <v-img :src="mainskillImage(item.pokemon)" height="24" width="24"></v-img>
-                </div>
-                <div v-if="item.energyPerMember">
-                  <div>{{ item.energyPerMember }}</div>
-                </div>
-                <div v-else>
-                  {{ item.skillValue }}
-                </div>
-              </div>
+              <v-row dense style="flex-wrap: nowrap; overflow-x: auto">
+                <v-col
+                  v-for="(skill, index) in item.skillValues"
+                  :key="index"
+                  class="flex-start"
+                  :cols="skillColumnSize"
+                >
+                  <div class="flex-center flex-column">
+                    <v-img
+                      :src="mainskillUnitImage(skill.unit)"
+                      height="24"
+                      width="24"
+                      :alt="skill.unit"
+                      :title="skill.unit"
+                      data-testid="mainskill-unit-image"
+                    ></v-img>
+                    <div class="text-center">
+                      {{ skill.amount }}
+                    </div>
+                  </div>
+                </v-col>
+              </v-row>
             </div>
           </template>
 
@@ -185,7 +196,7 @@
 import { defineComponent } from 'vue'
 
 import StackedBar from '@/components/custom-components/stacked-bar.vue'
-import { mainskillImage, pokemonImage } from '@/services/utils/image-utils'
+import { mainskillUnitImage, pokemonImage } from '@/services/utils/image-utils'
 import { useComparisonStore } from '@/stores/comparison-store/comparison-store'
 import { usePokemonStore } from '@/stores/pokemon/pokemon-store'
 import { useUserStore } from '@/stores/user-store'
@@ -195,13 +206,12 @@ import {
   EnergyForEveryoneS,
   MAX_RECIPE_LEVEL,
   MathUtils,
-  Metronome,
-  SkillCopy,
   compactNumber,
   defaultZero,
   getMaxIngredientBonus,
   getPokemon,
   recipeLevelBonus,
+  type MainskillUnit,
   type MemberProduction
 } from 'sleepapi-common'
 
@@ -216,10 +226,8 @@ export default defineComponent({
       comparisonStore,
       userStore,
       pokemonStore,
-      mainskillImage,
-      pokemonImage,
-      Metronome,
-      SkillCopy
+      mainskillUnitImage,
+      pokemonImage
     }
   },
   data: () => ({
@@ -276,15 +284,16 @@ export default defineComponent({
 
         const skillStrength = this.showSkills ? Math.floor(memberProduction.strength.skill.total * timeWindowFactor) : 0
 
-        // TODO: this feels hacky, we're just summing all skill values, even with completely unrelated units. Doesn't make sense. But we're reworking how compare tool is working anyway, this has always worked suboptimally.
-        let skillValue = 0
-        for (const activation of memberPokemon.skill.getUnits()) {
-          skillValue += this.showSkills
-            ? defaultZero(memberProduction.skillValue[activation]?.amountToSelf) +
-              defaultZero(memberProduction.skillValue[activation]?.amountToTeam)
+        const skillValues: { unit: MainskillUnit; amount: number }[] = []
+        for (const unit of memberPokemon.skill.getUnits()) {
+          const amount = this.showSkills
+            ? defaultZero(memberProduction.skillValue[unit]?.amountToSelf) +
+              defaultZero(memberProduction.skillValue[unit]?.amountToTeam)
             : 0
+          if (amount > 0) {
+            skillValues.push({ unit, amount: MathUtils.round(amount * timeWindowFactor, 1) })
+          }
         }
-        skillValue = MathUtils.round(skillValue * timeWindowFactor, 1)
 
         const total = Math.floor(berryPower + ingredientPower + skillStrength)
 
@@ -300,7 +309,7 @@ export default defineComponent({
           ingredientCompact: compactNumber(ingredientPower),
           skill: memberPokemon.skill,
           skillStrength,
-          skillValue,
+          skillValues,
           skillCompact: skillStrength > 0 ? compactNumber(skillStrength) : '',
           energyPerMember: memberPokemon.skill.hasUnit('energy') ? this.energyPerMember(memberProduction) : 0,
           total,
@@ -327,6 +336,12 @@ export default defineComponent({
         })
       }
       return result
+    },
+    skillColumnSize() {
+      const maxUnitCount = this.members
+        .map((item) => item.skillValues.length)
+        .reduce((max, curr) => Math.max(max, curr))
+      return Math.floor(12 / maxUnitCount)
     }
   },
   methods: {
