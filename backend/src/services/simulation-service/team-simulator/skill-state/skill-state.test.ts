@@ -35,13 +35,6 @@ describe('SkillState', () => {
     expect([activation1, activation2]).toHaveLength(2);
   });
 
-  it('should add value correctly', () => {
-    const value = { regular: 10, crit: 5 };
-    skillState.addValue(value);
-    expect(skillState['regularValue']).toBe(10);
-    expect(skillState['critValue']).toBe(5);
-  });
-
   it('should add skill value correctly', () => {
     const unit = 'energy';
     const amountToSelf = 15;
@@ -61,21 +54,15 @@ describe('SkillState', () => {
 
   it('should return correct results', () => {
     const iterations = 100;
-    const regularValue = 100;
-    const critValue = 20;
     const skillProcs = 10;
     const skillCrits = 2;
 
-    skillState['regularValue'] = regularValue;
-    skillState['critValue'] = critValue;
     skillState['skillProcs'] = skillProcs;
     skillState['skillCrits'] = skillCrits;
 
     const results = skillState.results(iterations);
     expect(results.skillProcs).toBe(skillProcs / iterations);
     expect(results.skillCrits).toBe(skillCrits / iterations);
-    expect(results.skillRegularValue).toBe(regularValue / iterations);
-    expect(results.skillCritValue).toBe(critValue / iterations);
   });
 
   it('should activate skill correctly', () => {

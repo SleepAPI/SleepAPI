@@ -37,11 +37,9 @@ exports[`addHelpsFromSkill > shall add 1 average produce help 1`] = `
       "averageFrequency": 0,
       "spilledIngredients": [],
     },
-    "skillCritValue": 0,
     "skillCrits": 0,
     "skillPercentage": 0.02,
     "skillProcDistribution": {},
-    "skillRegularValue": 0,
     "sneakySnack": {
       "amount": 0,
       "berry": {
@@ -176,11 +174,9 @@ exports[`addHelpsFromSkill > shall not add produce if adding 0 helps 1`] = `
       "averageFrequency": 0,
       "spilledIngredients": [],
     },
-    "skillCritValue": 0,
     "skillCrits": 0,
     "skillPercentage": 0.02,
     "skillProcDistribution": {},
-    "skillRegularValue": 0,
     "sneakySnack": {
       "amount": 0,
       "berry": {
@@ -305,11 +301,9 @@ exports[`attemptDayHelp > shall not perform a help if time has not passed schedu
       "averageFrequency": 0,
       "spilledIngredients": [],
     },
-    "skillCritValue": 0,
     "skillCrits": 0,
     "skillPercentage": 0.02,
     "skillProcDistribution": {},
-    "skillRegularValue": 0,
     "sneakySnack": {
       "amount": 0,
       "berry": {
@@ -434,11 +428,9 @@ exports[`attemptDayHelp > shall perform a help if time surpasses scheduled help 
       "averageFrequency": 0,
       "spilledIngredients": [],
     },
-    "skillCritValue": 0,
     "skillCrits": 0,
     "skillPercentage": 0,
     "skillProcDistribution": {},
-    "skillRegularValue": 0,
     "sneakySnack": {
       "amount": 0,
       "berry": {
@@ -573,11 +565,9 @@ exports[`attemptNightHelp > shall roll skill proc on helps before inventory full
       "averageFrequency": 14.007352941176471,
       "spilledIngredients": [],
     },
-    "skillCritValue": 0,
     "skillCrits": 0,
     "skillPercentage": 1,
     "skillProcDistribution": {},
-    "skillRegularValue": 2066,
     "sneakySnack": {
       "amount": 0,
       "berry": {

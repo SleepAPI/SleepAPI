@@ -47,10 +47,7 @@ import { SkillCopyMimicEffect } from '@src/services/simulation-service/team-simu
 import { SkillCopyTransformEffect } from '@src/services/simulation-service/team-simulator/skill-state/skill-effects/skill-copy/skill-copy-transform-effect.js';
 import { TastyChanceSEffect } from '@src/services/simulation-service/team-simulator/skill-state/skill-effects/tasty-chance-s/tasty-chance-s-effect.js';
 import { VersatileSEffect } from '@src/services/simulation-service/team-simulator/skill-state/skill-effects/versatile/versatile-effect.js';
-import type {
-  ActivationValue,
-  SkillActivation
-} from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
+import type { SkillActivation } from '@src/services/simulation-service/team-simulator/skill-state/skill-state-types.js';
 import type { PreGeneratedRandom } from '@src/utils/random-utils/pre-generated-random.js';
 import type { AmountParams, Mainskill, MainskillActivation, MainskillUnit, MemberSkillValue } from 'sleepapi-common';
 import {
@@ -113,8 +110,6 @@ export class SkillState {
   private skillValue: MemberSkillValue = Object.fromEntries(
     mainskillUnits.map((key) => [key, { amountToSelf: 0, amountToTeam: 0 }])
   ) as MemberSkillValue;
-  private regularValue = 0;
-  private critValue = 0;
   private skillProcs = 0;
   private skillCrits = 0;
   private skillProcsPerDay: number[] = [];
@@ -189,11 +184,6 @@ export class SkillState {
     this.todaysSkillProcs = 0;
   }
 
-  public addValue(value: ActivationValue) {
-    this.regularValue += value.regular;
-    this.critValue += value.crit;
-  }
-
   public addSkillValue(params: { unit: MainskillUnit; amountToSelf: number; amountToTeam: number }) {
     const { unit, amountToSelf, amountToTeam } = params;
     const entry = this.skillValue[unit];
@@ -217,8 +207,6 @@ export class SkillState {
       ) as MemberSkillValue,
       skillProcs: this.skillProcs / iterations,
       skillCrits: this.skillCrits / iterations,
-      skillRegularValue: this.regularValue / iterations,
-      skillCritValue: this.critValue / iterations,
       skillProcDistribution: calculateDistribution(skillProcsPerDay)
     };
   }
@@ -283,10 +271,6 @@ export class SkillState {
       if (selfCrit > 0 || teamCrit > 0) {
         hadACrit = true;
       }
-
-      // only add self value directly, team value is added after team feedback in addValue
-      this.regularValue += selfRegular;
-      this.critValue += selfCrit;
 
       const entry = this.skillValue[activation.unit];
       entry.amountToSelf += selfRegular + selfCrit;

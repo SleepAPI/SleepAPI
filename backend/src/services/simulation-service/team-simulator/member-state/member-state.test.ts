@@ -649,14 +649,6 @@ describe('degradeEnergy', () => {
   });
 });
 
-describe('addSkillValue', () => {
-  it('should count regular and crit value', () => {
-    const memberState = new MemberState({ member, settings, team: [member], cookingState });
-    memberState.addSkillValue({ regular: 10, crit: 20 });
-    expect(memberState.results(1).advanced.skillCritValue).toBe(20);
-  });
-});
-
 describe('expert mode ingredient bonus', () => {
   // Builds a fake RNG with a fixed uint8 roll (forces an ingredient drop when
   // ingredientPercentage is 100%) and a scripted float sequence for specialist

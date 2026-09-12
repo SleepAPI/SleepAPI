@@ -192,6 +192,7 @@ import { useUserStore } from '@/stores/user-store'
 import type { DataTableHeader } from '@/types/vuetify/table/table-header'
 import {
   AVERAGE_WEEKLY_CRIT_MULTIPLIER,
+  ChargeEnergySMoonlight,
   EnergyForEveryoneS,
   MAX_RECIPE_LEVEL,
   MathUtils,
@@ -333,12 +334,20 @@ export default defineComponent({
     energyPerMember(member: MemberProduction): string | undefined {
       const pokemon = getPokemon(member.pokemonWithIngredients.pokemon)
       const skill = pokemon.skill
-      const critAmount = member.advanced.skillCritValue
-      const amountWithoutCrit =
-        (member.skillValue['energy']?.amountToSelf ?? 0) + (member.skillValue['energy']?.amountToTeam ?? 0) - critAmount
+      const energySkillValue = member.skillValue['energy'] ?? { amountToSelf: 0, amountToTeam: 0 }
+      const energyAmount = energySkillValue.amountToSelf + energySkillValue.amountToTeam
 
-      const e4eSuffix = skill.isOrModifies(EnergyForEveryoneS) ? 'x5' : ''
-      return `${MathUtils.round(amountWithoutCrit, 1)} ${e4eSuffix}${critAmount > 0 ? `+${MathUtils.round(critAmount, 1)}` : ''}`
+      if (energyAmount === 0) {
+        return undefined
+      }
+      if (skill.isOrModifies(EnergyForEveryoneS)) {
+        // TODO: Remove the 'x5' when `skillValue` better tracks energy.
+        return `${compactNumber(energyAmount)} x5`
+      }
+      if (skill.is(ChargeEnergySMoonlight)) {
+        return `${compactNumber(energySkillValue.amountToSelf)} +${compactNumber(energySkillValue.amountToTeam)}`
+      }
+      return `${compactNumber(energyAmount)}`
     },
     lowestIngredientPower(memberProduction: MemberProduction) {
       const islandBonus = this.userStore.islandBonus(

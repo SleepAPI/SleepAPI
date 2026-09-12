@@ -289,7 +289,6 @@ export class TeamSimulator {
     }
     for (const member of membersHelped) {
       member.addHelpsFromSkill(activation.team, invoker);
-      invoker.addSkillValue(activation.team);
     }
   }
 
@@ -303,11 +302,10 @@ export class TeamSimulator {
       return;
     }
     for (const member of membersHelped) {
-      const maybeBonusActivation = member.addSkillHelps(activation.team);
+      const maybeBonusActivation = member.addSkillHelps(activation.team, invoker);
       if (!maybeBonusActivation) {
         break;
       }
-      invoker.addSkillValue({ regular: 1, crit: 0 });
       if (recursionDepth < 10) {
         // In theory, a team of all Togedemaru could keep giving each other bonus activations.
         // The odds are very slim, so I'm making the simulation slightly less accurate in order to avoid potential infinite recursion.
@@ -320,8 +318,7 @@ export class TeamSimulator {
     if (activation.unit !== 'energy' || activation.team === undefined) {
       return;
     }
-    const recovered = this.recoverMemberEnergy(activation.team, invoker, membersHelped);
-    invoker.addSkillValue({ regular: recovered.regular.skillValue, crit: recovered.crit.skillValue });
+    this.recoverMemberEnergy(activation.team, invoker, membersHelped);
   }
 
   private recoverMemberEnergy(activation: ActivationValue, invoker: MemberState, targetGroup: MemberState[]) {

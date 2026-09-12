@@ -381,10 +381,6 @@ export class MemberState {
     };
   }
 
-  public addSkillValue(skillValue: ActivationValue) {
-    this.skillState.addValue(skillValue);
-  }
-
   public addSkillProduce(produce: Produce) {
     this.skillProduce = CarrySizeUtils.addToInventory(this.skillProduce, produce);
   }
@@ -413,7 +409,7 @@ export class MemberState {
    * @param helps The activation that provides the extra skill helps
    * @param invoker The member whose main skill provided the extra skill helps
    */
-  public addSkillHelps(helps: ActivationValue): SkillActivation | void {
+  public addSkillHelps(helps: ActivationValue, _invoker: MemberState): SkillActivation | void {
     const { regular, crit } = helps;
     const totalHelps = regular + crit;
     let successfulActivation = false;
@@ -678,8 +674,7 @@ export class MemberState {
       )
     };
 
-    const { skillValue, skillProcs, skillCritValue, skillCrits, skillRegularValue, skillProcDistribution } =
-      this.skillState.results(iterations);
+    const { skillValue, skillProcs, skillCrits, skillProcDistribution } = this.skillState.results(iterations);
 
     const totalHelps = (this.totalDayHelps + this.totalNightHelps) / iterations;
     const fiveMinIntervalsTotalDay = iterations * (TimeUtils.durationInMinutes(this.dayPeriod) / 5);
@@ -733,8 +728,6 @@ export class MemberState {
         nightHelpsBeforeSS: this.nightHelpsBeforeSS / iterations,
         sneakySnack,
         skillCrits,
-        skillRegularValue,
-        skillCritValue,
         wastedEnergy: this.wastedEnergy / iterations,
         totalRecovery: this.totalRecovery / iterations,
         morningProcs: this.morningProcs / iterations,
